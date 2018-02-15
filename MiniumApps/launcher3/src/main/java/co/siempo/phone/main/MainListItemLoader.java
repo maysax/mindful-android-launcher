@@ -72,8 +72,6 @@ public class MainListItemLoader {
 
         HashMap<Integer, AppMenu> toolsSettings = CoreApplication.getInstance().getToolsSettings
                 ();
-
-
         if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_MAP)
                 .getApplicationName())) {
             items.add(new MainListItem(TOOLS_MAP, getString(R.string.title_map), R.drawable.ic_menu_map));

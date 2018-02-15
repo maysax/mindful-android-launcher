@@ -1,5 +1,6 @@
 package co.siempo.phone.adapters.viewholder;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
@@ -61,7 +62,11 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final ResolveInfo item = resolveInfoList.get(position);
-        if (item != null) {
+        if (id == 5 && item == null) {
+            holder.txtAppName.setText("Note");
+            holder.btnHideApps.setVisibility(View.GONE);
+            holder.imgIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_menu_notes));
+        } else if (item != null) {
             holder.txtAppName.setText(item.loadLabel(context.getPackageManager()));
             String packageName = item.activityInfo.packageName;
             if (PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>()).contains(packageName)) {
@@ -79,20 +84,38 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
                 holder.imgIcon.setImageDrawable(CoreApplication.getInstance().getApplicationIconFromPackageName(item.activityInfo.packageName));
                 holder.btnHideApps.setVisibility(View.GONE);
                 holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.app_assignment_normal));
-                holder.linearList.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (holder.btnHideApps.getVisibility() != View.VISIBLE) {
-                            HashMap<Integer, AppMenu> map = CoreApplication.getInstance().getToolsSettings();
-                            map.get(id).setApplicationName(item.activityInfo.packageName);
-                            String hashMapToolSettings = new Gson().toJson(map);
-                            PrefSiempo.getInstance(context).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
-                            ((AppAssignmentActivity) context).finish();
-                        }
-                    }
-                });
+
             }
         }
+        holder.linearList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (holder.btnHideApps.getVisibility() != View.VISIBLE) {
+                    HashMap<Integer, AppMenu> map = CoreApplication.getInstance().getToolsSettings();
+                    boolean isSameApp;
+                    if (id == 5 && item == null) {
+                        if (map.get(id).getApplicationName().equalsIgnoreCase("Notes")) {
+                            isSameApp = true;
+                        } else {
+                            isSameApp = false;
+                            map.get(id).setApplicationName(context.getString(R.string.notes));
+                        }
+                    } else {
+                        if (map.get(id).getApplicationName().equalsIgnoreCase(item.activityInfo.packageName)) {
+                            isSameApp = true;
+                        } else {
+                            isSameApp = false;
+                            map.get(id).setApplicationName(item.activityInfo.packageName);
+                        }
+                    }
+                    String hashMapToolSettings = new Gson().toJson(map);
+                    PrefSiempo.getInstance(context).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
+                    Intent returnIntent = new Intent();
+                    ((AppAssignmentActivity) context).setResult(isSameApp ? Activity.RESULT_CANCELED : Activity.RESULT_OK, returnIntent);
+                    ((AppAssignmentActivity) context).finish();
+                }
+            }
+        });
     }
 
     @Override

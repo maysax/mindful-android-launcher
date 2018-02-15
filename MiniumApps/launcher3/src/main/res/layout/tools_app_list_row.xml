@@ -1,63 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/linearList"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearList"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:showDividers="none"
+    tools:ignore="UseCompoundDrawables">
 
-              android:gravity="center"
-              android:orientation="vertical"
-              android:showDividers="none"
-              tools:ignore="UseCompoundDrawables">
-
-    <LinearLayout
-
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@drawable/rounded_tools_list_item"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        >
+        android:padding="@dimen/dp_10">
 
         <ImageView
-            android:id="@+id/imv_appicon"
-            android:layout_width="28dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center_vertical"
-            android:layout_margin="12dp"
-            android:src="@drawable/ic_event_note_black_24dp"
-            tools:ignore="ContentDescription,PrivateResource"/>
+            android:id="@+id/imgAppIcon"
+            android:layout_width="32dp"
+            android:layout_height="28dp"
+            android:layout_centerVertical="true"
+            tools:ignore="ContentDescription,PrivateResource" />
 
         <TextView
-            android:id="@+id/txt_app_name"
-            android:layout_width="0dp"
+            android:id="@+id/txtAppName"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_gravity="center"
-
-            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_toLeftOf="@+id/txtAssignApp"
+            android:layout_toRightOf="@+id/imgAppIcon"
             android:ellipsize="end"
             android:fontFamily="sans-serif"
             android:gravity="center|left"
             android:lines="1"
             android:maxLines="2"
             android:minLines="1"
-            android:padding="4dp"
-            android:paddingLeft="@dimen/dp_20"
-            android:paddingRight="@dimen/dp_20"
+            android:paddingLeft="@dimen/dp_1"
+            android:paddingRight="@dimen/dp_1"
             android:text="Sound"
             android:textColor="#000000"
             android:textSize="16sp"
-            tools:ignore="HardcodedText"/>
+            tools:ignore="HardcodedText" />
 
+        <TextView
+            android:id="@+id/txtAssignApp"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp_10"
+            android:layout_toLeftOf="@+id/checkbox"
+            android:background="@drawable/select_tools"
+            android:gravity="center"
+            android:paddingLeft="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_5"
+            android:text="@string/assign_app"
+            android:textColor="@color/colorAccent" />
 
-    </LinearLayout>
-
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:layout_marginLeft="@dimen/dp_10"
-        android:layout_marginRight="@dimen/dp_10"
-        android:background="@android:color/transparent"/>
-
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:background="@null"
+            android:button="@drawable/checkbox_selector"
+            android:clickable="false" />
+    </RelativeLayout>
 
 </LinearLayout>

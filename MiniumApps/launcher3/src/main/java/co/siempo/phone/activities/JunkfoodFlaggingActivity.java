@@ -101,6 +101,9 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
             }
         }
         bindListView();
+        if (PrefSiempo.getInstance(this).read(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, true)) {
+            showFirstTimeDialog();
+        }
     }
 
     @Override
@@ -130,6 +133,26 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.JUNKFOOD_APPS, list);
                 finish();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.dialog_blue));
+    }
+
+
+    /**
+     * Show save dialog for saving the user filter data.
+     */
+    private void showFirstTimeDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(JunkfoodFlaggingActivity.this, R.style.AlertDialogTheme);
+        builder.setTitle(getString(R.string.flag_app));
+        builder.setMessage(R.string.flag_first_time_install);
+        builder.setPositiveButton(R.string.gotit, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, false);
+                dialog.dismiss();
             }
         });
         AlertDialog dialog = builder.create();

@@ -21,7 +21,7 @@ public class MainListItem implements Serializable {
     private String icon;
     private int iconRes;
     private ApplicationInfo applicationInfo = null;
-
+    private boolean isVisable = false;
 
     public MainListItem(int id, String title, ApplicationInfo applicationInfo) {
         this.id = id;
@@ -128,6 +128,14 @@ public class MainListItem implements Serializable {
 
     public void setDrawable(int drawable) {
         this.drawable = drawable;
+    }
+
+    public boolean isVisable() {
+        return isVisable;
+    }
+
+    public void setVisable(boolean visable) {
+        isVisable = visable;
     }
 
     @Override
