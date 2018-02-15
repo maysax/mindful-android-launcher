@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -14,8 +15,6 @@ import java.util.List;
 import co.siempo.phone.models.MainListItem;
 
 import static java.util.Collections.sort;
-
-import co.siempo.phone.models.MainListItem;
 
 /**
  * Created by rajeshjadi on 9/2/18.

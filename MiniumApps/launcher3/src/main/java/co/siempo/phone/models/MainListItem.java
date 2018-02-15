@@ -28,7 +28,6 @@ public class MainListItem implements Serializable {
     private ApplicationInfo applicationInfo = null;
     private boolean isVisable = false;
 
-    public MainListItem(int id, String title, ApplicationInfo applicationInfo) {
     private Date currentDateTime;
     /**
      * Contact Information
@@ -37,6 +36,7 @@ public class MainListItem implements Serializable {
     private String contactName;
     private List<ContactNumber> numbers;
     private String imageUri;
+
 
     public MainListItem(int id, String title, String packageName) {
         this.id = id;

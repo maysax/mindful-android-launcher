@@ -453,7 +453,7 @@ public class DashboardActivity extends CoreActivity {
 
     }
 
-//Move to utils
+    //Move to utils
     private static class FadePageTransformer implements ViewPager.PageTransformer {
         public void transformPage(View view, float position) {
 

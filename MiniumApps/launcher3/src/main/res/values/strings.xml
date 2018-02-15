@@ -121,7 +121,7 @@
         <item>3</item>
     </string-array>
 
-    <string-array name="multi_select_list_preference_default_value" tools:ignore="UnusedResources" />
+    <string-array name="multi_select_list_preference_default_value" tools:ignore="UnusedResources"/>
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
