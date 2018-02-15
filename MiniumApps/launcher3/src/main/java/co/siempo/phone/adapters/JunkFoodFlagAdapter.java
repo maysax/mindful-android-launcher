@@ -21,12 +21,14 @@ import co.siempo.phone.R;
 
 public class JunkFoodFlagAdapter extends ArrayAdapter<ResolveInfo> {
     private final Context context;
+    boolean isFlagList;
     private List<ResolveInfo> resolveInfoList = null;
 
-    public JunkFoodFlagAdapter(Context context, List<ResolveInfo> resolveInfoList) {
+    public JunkFoodFlagAdapter(Context context, List<ResolveInfo> resolveInfoList, boolean isFlagList) {
         super(context, 0);
         this.context = context;
         this.resolveInfoList = resolveInfoList;
+        this.isFlagList = isFlagList;
     }
 
     @Override
@@ -53,8 +55,11 @@ public class JunkFoodFlagAdapter extends ArrayAdapter<ResolveInfo> {
         if (convertView == null) {
             holder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(context);
-
-            convertView = inflater.inflate(R.layout.list_item_junkfoodflag, parent, false);
+            if (!isFlagList) {
+                convertView = inflater.inflate(R.layout.list_item_junkfoodflag, parent, false);
+            } else {
+                convertView = inflater.inflate(R.layout.list_item_junkfoodflag_red, parent, false);
+            }
             holder.txtAppName = convertView.findViewById(R.id.txtAppName);
             holder.imgAppIcon = convertView.findViewById(R.id.imgAppIcon);
             holder.imgChevron = convertView.findViewById(R.id.imgChevron);
@@ -63,7 +68,6 @@ public class JunkFoodFlagAdapter extends ArrayAdapter<ResolveInfo> {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
         ResolveInfo resolveInfo = resolveInfoList.get(position);
         try {
             holder.txtAppName.setText(resolveInfo.loadLabel(context.getPackageManager()));

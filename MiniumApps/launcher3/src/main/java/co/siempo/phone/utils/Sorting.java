@@ -15,6 +15,8 @@ import co.siempo.phone.models.MainListItem;
 
 import static java.util.Collections.sort;
 
+import co.siempo.phone.models.MainListItem;
+
 /**
  * Created by rajeshjadi on 9/2/18.
  */
@@ -31,7 +33,21 @@ public class Sorting {
         sort(list, new Comparator<ResolveInfo>() {
             @Override
             public int compare(final ResolveInfo object1, final ResolveInfo object2) {
-                return object1.loadLabel(context.getPackageManager()).toString().compareTo(object2.loadLabel(context.getPackageManager()).toString());
+                if (object1 != null && object2 != null) {
+                    return object1.loadLabel(context.getPackageManager()).toString().compareTo(object2.loadLabel(context.getPackageManager()).toString());
+                } else {
+                    return 1;
+                }
+            }
+        });
+        return list;
+    }
+
+    public static ArrayList<MainListItem> sortToolAppAssignment(final Context context, ArrayList<MainListItem> list) {
+        Collections.sort(list, new Comparator<MainListItem>() {
+            @Override
+            public int compare(final MainListItem object1, final MainListItem object2) {
+                return object1.getTitle().compareTo(object2.getTitle());
             }
         });
         return list;

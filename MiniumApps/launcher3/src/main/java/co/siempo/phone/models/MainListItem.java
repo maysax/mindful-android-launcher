@@ -26,6 +26,9 @@ public class MainListItem implements Serializable {
     private String icon;
     private int iconRes;
     private ApplicationInfo applicationInfo = null;
+    private boolean isVisable = false;
+
+    public MainListItem(int id, String title, ApplicationInfo applicationInfo) {
     private Date currentDateTime;
     /**
      * Contact Information
@@ -144,9 +147,6 @@ public class MainListItem implements Serializable {
         return iconRes;
     }
 
-//    public ApplicationInfo getApplicationInfo() {
-//        return applicationInfo;
-//    }
 
     public void setApplicationInfo(ApplicationInfo applicationInfo) {
         this.applicationInfo = applicationInfo;
@@ -166,6 +166,14 @@ public class MainListItem implements Serializable {
 
     public void setDate(Date date) {
         this.currentDateTime = date;
+    }
+
+    public boolean isVisable() {
+        return isVisable;
+    }
+
+    public void setVisable(boolean visable) {
+        isVisable = visable;
     }
 
     @Override

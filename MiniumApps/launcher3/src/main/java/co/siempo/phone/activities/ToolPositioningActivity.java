@@ -1,5 +1,6 @@
 package co.siempo.phone.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
@@ -7,6 +8,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -38,11 +41,17 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
     private Parcelable mListState;
     private RecyclerView recyclerView;
     private Toolbar toolbar;
+    private TextView txtSelectTools;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tool_positioning);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         map = CoreApplication.getInstance().getToolsSettings();
         initView();
     }
@@ -78,6 +87,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         items = PackageUtil.getToolsMenuData(this, items);
 
         recyclerView = findViewById(R.id.recyclerView);
+        txtSelectTools = findViewById(R.id.txtSelectTools);
         recyclerView.setHasFixedSize(true);
         mLayoutManager = new GridLayoutManager(this, 4);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -92,6 +102,14 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
         recyclerView.setAdapter(mAdapter);
+        txtSelectTools.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ToolPositioningActivity.this, ToolSelectionActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override

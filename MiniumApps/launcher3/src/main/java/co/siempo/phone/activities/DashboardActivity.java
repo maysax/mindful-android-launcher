@@ -124,6 +124,7 @@ public class DashboardActivity extends CoreActivity {
 
             loadViews();
         }
+        //Need to change as it is heavy call for onResume
         initView();
     }
 
@@ -139,7 +140,6 @@ public class DashboardActivity extends CoreActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         if (PrefSiempo.getInstance(this).read(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, true)) {
-            PrefSiempo.getInstance(this).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, false);
             Intent intent = new Intent(this, JunkfoodFlaggingActivity.class);
             startActivity(intent);
         }
@@ -162,8 +162,6 @@ public class DashboardActivity extends CoreActivity {
         launcher3Prefs =
                 getSharedPreferences("Launcher3Prefs", 0);
         checknavigatePermissions();
-
-
     }
 
     public void loadViews() {
@@ -455,7 +453,7 @@ public class DashboardActivity extends CoreActivity {
 
     }
 
-
+//Move to utils
     private static class FadePageTransformer implements ViewPager.PageTransformer {
         public void transformPage(View view, float position) {
 
