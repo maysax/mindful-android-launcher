@@ -26,16 +26,11 @@ public class SmsObserver extends ContentObserver {
 
     public SmsObserver(Context context, String address, String body) {
         super(handler);
+        this.context = context;
+        this.resolver = context.getContentResolver();
+        this.address = address;
+        this.body = body;
 
-        if (context instanceof OnSmsSentListener) {
-            this.context = context;
-            this.resolver = context.getContentResolver();
-            this.address = address;
-            this.body = body;
-        } else {
-            throw new IllegalArgumentException(
-                    "Context must implement OnSmsSentListener interface");
-        }
     }
 
     public void start() {

@@ -208,7 +208,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                 return true;
             }
         });
-
+        resetSearchList();
     }
 
     private void bindBottomDoc() {
@@ -379,11 +379,15 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                     } else {
                         mediator.resetData();
                         if (current.getTitle().trim().isEmpty()) {
-                            if (adapter != null)
+                            if (adapter != null) {
+                                mediator.loadDefaultData();
                                 adapter.getFilter().filter("^");
+                            }
                         } else {
-                            if (adapter != null)
+                            if (adapter != null) {
+                                mediator.loadDefaultData();
                                 adapter.getFilter().filter(current.getTitle());
+                            }
                         }
 
                     }
@@ -537,5 +541,18 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         }
     }
 
+    public void resetSearchList() {
+        parser.parse("");
+        if (adapter != null) {
+            adapter.getFilter().filter("");
+        }
+    }
 
+
+    public void setCurrentPage(int viewPagerPage) {
+        pagerPane.setCurrentItem(viewPagerPage);
+        if (inputMethodManager != null) {
+            inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
+        }
+    }
 }
