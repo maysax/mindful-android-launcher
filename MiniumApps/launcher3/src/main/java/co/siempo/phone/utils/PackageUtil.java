@@ -132,7 +132,7 @@ public class PackageUtil {
                 NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 String applicationNameFromPackageName = CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName());
                 if (Build.VERSION.SDK_INT >= 26) {
-                    NotificationChannel notificationChannel = createChannel(applicationNameFromPackageName);
+                    NotificationChannel notificationChannel = createChannel(context, applicationNameFromPackageName);
                     if (notificationManager != null) {
                         notificationManager.createNotificationChannel(notificationChannel);
                     }
@@ -177,7 +177,7 @@ public class PackageUtil {
         String time = sdf.format(notification.get_date());
 
         String title = getNotificationTitle(notification.get_contact_title(), notification.getPackageName(), context);
-
+        int priority = PrefSiempo.getInstance(context).read(PrefSiempo.ALLOW_PEAKING, true) ? Notification.PRIORITY_LOW : Notification.PRIORITY_HIGH;
 
         RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.custom_notification_card);
         contentView.setImageViewBitmap(R.id.imgAppIcon, CoreApplication.getInstance().iconList.get(notification.getPackageName()));
@@ -190,7 +190,7 @@ public class PackageUtil {
                 .setGroup(applicationNameFromPackageName)
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.siempo_notification_icon)
-                .setPriority(Notification.PRIORITY_HIGH)
+                .setPriority(priority)
                 .setContentTitle(title)
                 .setContentText(notification.get_message())
                 .setContentIntent(contentIntent)
@@ -308,9 +308,10 @@ public class PackageUtil {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private static NotificationChannel createChannel(String channelName) {
+    private static NotificationChannel createChannel(Context context, String channelName) {
+        int priority = PrefSiempo.getInstance(context).read(PrefSiempo.ALLOW_PEAKING, true) ? NotificationManager.IMPORTANCE_DEFAULT : NotificationManager.IMPORTANCE_HIGH;
         NotificationChannel chan = new NotificationChannel(channelName,
-                channelName, NotificationManager.IMPORTANCE_HIGH);
+                channelName, priority);
         chan.setLightColor(Color.BLUE);
         chan.setDescription("");
         chan.enableLights(true);
