@@ -6,9 +6,12 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
@@ -167,6 +170,11 @@ public class MainFragmentMediator {
                     break;
                 case ACTION:
                     if (getAdapter() != null && TextUtils.isEmpty(getAdapter().getItem(position).getPackageName())) {
+
+                        SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance
+                                (DateFormat.FULL, Locale
+                                        .getDefault());
+
                         items.get(position).setDate(Calendar.getInstance().getTime());
                         items.set(position, items.get(position));
                         items = Sorting.sortList(items);
