@@ -273,4 +273,8 @@
     <color name="light.highlight">#DDDDDD</color>
     <color name="dark.highlight">#414141</color>
 
+
+    <color name="section_title_bg">#666666</color>
+    <color name="section_title_text">#57000000</color>
+
 </resources>
