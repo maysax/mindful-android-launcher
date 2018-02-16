@@ -387,7 +387,8 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                                 filterableString = originalData.get(i).getTitle();
                                 if (!TextUtils.isEmpty(filterableString)) {
                                     if (!TextUtils.isEmpty(originalData.get(i).getPackageName())) {
-                                        if (filterableString.contains(searchString.toLowerCase().trim())) {
+                                        if (filterableString.toLowerCase().contains
+                                                (searchString.toLowerCase().trim())) {
                                             buildData.add(originalData.get(i));
                                             break;
                                         }
