@@ -55,7 +55,7 @@ public class MainFragmentMediator {
 
     public void loadData() {
 
-        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, ""))) {
+        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, ""))) {
             items = new ArrayList<>();
             contactItems = new ArrayList<>();
             loadActions();
@@ -71,7 +71,7 @@ public class MainFragmentMediator {
     public void resetData() {
         items = new ArrayList<>();
 
-        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, ""))) {
+        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, ""))) {
             items = new ArrayList<>();
 
             contactItems = new ArrayList<>();
@@ -252,7 +252,7 @@ public class MainFragmentMediator {
     public void loadDefaultData() {
         items = new ArrayList<>();
 
-        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, ""))) {
+        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, ""))) {
             items = new ArrayList<>();
 
             contactItems = new ArrayList<>();
@@ -283,7 +283,7 @@ public class MainFragmentMediator {
     public void contactPicker() {
         items = new ArrayList<>();
 
-        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, ""))) {
+        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, ""))) {
             items = new ArrayList<>();
 
             contactItems = new ArrayList<>();
@@ -334,7 +334,7 @@ public class MainFragmentMediator {
     public void defaultData() {
         items = new ArrayList<>();
 
-        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, ""))) {
+        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, ""))) {
             items = new ArrayList<>();
 
             contactItems = new ArrayList<>();

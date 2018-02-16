@@ -47,7 +47,7 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
     private Context context;
     private long startTime = 0;
     private LinearLayout ln_suppressedNotifications;
-    private ImageView icon_AppNotifications,icon_SuppressedNotifications;
+    private ImageView icon_SuppressedNotifications;
     private LinearLayout ln_permissions;
     private ImageView icon_permissions;
 
@@ -72,11 +72,10 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
         ln_permissions = findViewById(R.id.ln_permissions);
         icon_SuppressedNotifications = findViewById(R.id.icon_SuppressedNotifications);
         icon_permissions = findViewById(R.id.icon_permissions);
-        icon_AppNotifications.setImageDrawable(new IconDrawable(context,"fa-bell").colorRes(R.color.text_primary).sizeDp(18));
-        icon_permissions.setImageDrawable(new IconDrawable(context,"fa-bell").colorRes(R.color.text_primary).sizeDp(18));
+        icon_permissions.setImageDrawable(new IconDrawable(context, "fa-bell").colorRes(R.color.text_primary).sizeDp(18));
         try {
             icon_SuppressedNotifications.setImageDrawable(new IconDrawable(context, "fa-exclamation").colorRes(R.color.text_primary).sizeDp(18));
-        }catch (Exception e){
+        } catch (Exception e) {
             //Todo log exception to fabric
             e.printStackTrace();
 //            Crashlytics.logException(e);
@@ -88,14 +87,13 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
                 txt_UserId.setText(String.format("UserId: %s", telephonyManager.getDeviceId()));
             }
-        }
-        else{
+        } else {
             txt_UserId.setText(String.format("UserId: %s", telephonyManager.getDeviceId()));
         }
 
     }
 
-    public void onClickEvents(){
+    public void onClickEvents() {
 
         ln_suppressedNotifications.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,7 +109,7 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
                 Intent intent = new Intent(SiempoAlphaSettingsActivity.this, SiempoPermissionActivity_.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                intent.putExtra(IS_FROM_HOME,false);
+                intent.putExtra(IS_FROM_HOME, false);
                 startActivity(intent);
             }
         });

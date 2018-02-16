@@ -365,7 +365,7 @@ public class PackageUtil {
             Type baseType = new TypeToken<List<MainListItem>>() {
             }.getType();
             List<MainListItem> searchItems = new ArrayList<MainListItem>();
-            String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, "");
+            String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, "");
             if (!TextUtils.isEmpty(searchList)) {
                 Gson gson = new Gson();
                 searchItems = gson.fromJson(searchList, baseType);
@@ -398,7 +398,7 @@ public class PackageUtil {
         Type baseType = new TypeToken<List<MainListItem>>() {
         }.getType();
         List<MainListItem> searchItems = new ArrayList<MainListItem>();
-        String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, "");
+        String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, "");
         if (!TextUtils.isEmpty(searchList)) {
             Gson gson = new Gson();
             searchItems = gson.fromJson(searchList, baseType);
@@ -437,7 +437,7 @@ public class PackageUtil {
         }.getType();
         Gson gson = new Gson();
         String searchValues = gson.toJson(items, baseType);
-        PrefSiempo.getInstance(context).write(PrefSiempo.SERACH_LIST, searchValues);
+        PrefSiempo.getInstance(context).write(PrefSiempo.SEARCH_LIST, searchValues);
     }
 
     public static void addAppInSearchList(String packageName, Context context) {
@@ -451,7 +451,7 @@ public class PackageUtil {
             Type baseType = new TypeToken<List<MainListItem>>() {
             }.getType();
             List<MainListItem> searchItems = new ArrayList<MainListItem>();
-            String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, "");
+            String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, "");
             if (!TextUtils.isEmpty(searchList)) {
                 Gson gson = new Gson();
                 searchItems = gson.fromJson(searchList, baseType);
@@ -482,7 +482,7 @@ public class PackageUtil {
         Type baseType = new TypeToken<List<MainListItem>>() {
         }.getType();
         List<MainListItem> searchItems = new ArrayList<MainListItem>();
-        String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, "");
+        String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, "");
         if (!TextUtils.isEmpty(searchList)) {
             Gson gson = new Gson();
             searchItems = gson.fromJson(searchList, baseType);
@@ -505,7 +505,7 @@ public class PackageUtil {
         Type baseType = new TypeToken<List<MainListItem>>() {
         }.getType();
         List<MainListItem> searchItems = new ArrayList<MainListItem>();
-        String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, "");
+        String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, "");
         if (!TextUtils.isEmpty(searchList)) {
             Gson gson = new Gson();
             searchItems = gson.fromJson(searchList, baseType);

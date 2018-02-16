@@ -318,7 +318,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         chipsEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
+                if (hasFocus && isVisible()) {
 
                     linPane.setVisibility(View.GONE);
                     linBottomDoc.setVisibility(View.GONE);
