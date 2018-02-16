@@ -3,10 +3,10 @@ package co.siempo.phone.fragments;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -19,6 +19,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.activities.TempoAppNotificationActivity;
 import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.app.Launcher3Prefs_;
+import co.siempo.phone.utils.PrefSiempo;
 
 /**
  * Note : AllowPicking related stuff is now disable.
@@ -43,11 +44,15 @@ public class TempoNotificationFragment extends CoreFragment {
     @ViewById
     TextView txtAllowApps;
 
+    @ViewById
+    Switch switchAllowPicking;
+
 
     @ViewById
     RelativeLayout relAllowSpecificApps;
-    private boolean isDisableChecked;
-    private AlertDialog alertDialog;
+
+    @ViewById
+    RelativeLayout relAllowPicking;
 
 
     public TempoNotificationFragment() {
@@ -68,15 +73,23 @@ public class TempoNotificationFragment extends CoreFragment {
                 fm.popBackStack();
             }
         });
+        switchAllowPicking.setChecked(PrefSiempo.getInstance(context).read(PrefSiempo.ALLOW_PEAKING, true));
 
     }
 
     @Click
     void relAllowSpecificApps() {
-
-        Intent i = new Intent(getActivity(),TempoAppNotificationActivity.class);
+        Intent i = new Intent(getActivity(), TempoAppNotificationActivity.class);
         startActivity(i);
-  }
+    }
+
+    @Click
+    void relAllowPicking() {
+        boolean allowPeaking = PrefSiempo.getInstance(context).read(PrefSiempo.ALLOW_PEAKING, true);
+        allowPeaking = !allowPeaking;
+        switchAllowPicking.setChecked(allowPeaking);
+        PrefSiempo.getInstance(context).write(PrefSiempo.ALLOW_PEAKING, allowPeaking);
+    }
 
 
 }
