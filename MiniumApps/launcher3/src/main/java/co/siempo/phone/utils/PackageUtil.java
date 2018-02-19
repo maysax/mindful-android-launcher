@@ -27,6 +27,7 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -367,7 +368,8 @@ public class PackageUtil {
             List<MainListItem> searchItems = new ArrayList<MainListItem>();
             String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, "");
             if (!TextUtils.isEmpty(searchList)) {
-                Gson gson = new Gson();
+                Gson gson = new GsonBuilder()
+                        .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
                 searchItems = gson.fromJson(searchList, baseType);
             }
             int i = 0;
@@ -400,7 +402,8 @@ public class PackageUtil {
         List<MainListItem> searchItems = new ArrayList<MainListItem>();
         String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, "");
         if (!TextUtils.isEmpty(searchList)) {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder()
+                    .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
             searchItems = gson.fromJson(searchList, baseType);
             List<MainListItem> removeItems = new ArrayList<>();
             for (MainListItem item : searchItems) {
@@ -435,7 +438,8 @@ public class PackageUtil {
     public static void storeSearchList(List<MainListItem> items, Context context) {
         Type baseType = new TypeToken<List<MainListItem>>() {
         }.getType();
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+                .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
         String searchValues = gson.toJson(items, baseType);
         PrefSiempo.getInstance(context).write(PrefSiempo.SEARCH_LIST, searchValues);
     }
@@ -453,7 +457,8 @@ public class PackageUtil {
             List<MainListItem> searchItems = new ArrayList<MainListItem>();
             String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, "");
             if (!TextUtils.isEmpty(searchList)) {
-                Gson gson = new Gson();
+                Gson gson = new GsonBuilder()
+                        .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
                 searchItems = gson.fromJson(searchList, baseType);
             }
             int i = 0;
@@ -484,7 +489,8 @@ public class PackageUtil {
         List<MainListItem> searchItems = new ArrayList<MainListItem>();
         String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, "");
         if (!TextUtils.isEmpty(searchList)) {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder()
+                    .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
             searchItems = gson.fromJson(searchList, baseType);
         }
 
@@ -507,7 +513,8 @@ public class PackageUtil {
         List<MainListItem> searchItems = new ArrayList<MainListItem>();
         String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, "");
         if (!TextUtils.isEmpty(searchList)) {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder()
+                    .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
             searchItems = gson.fromJson(searchList, baseType);
         }
         searchItems = Sorting.sortList(searchItems);
@@ -530,7 +537,8 @@ public class PackageUtil {
         if (!jsonListOfSortedToolsId.isEmpty()) {
 
             //convert onNoteListChangedJSON array into a List<Long>
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder()
+                    .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
             List<Long> listOfSortedCustomersId = gson.fromJson(jsonListOfSortedToolsId, new TypeToken<List<Long>>() {
             }.getType());
 
