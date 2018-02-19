@@ -6,7 +6,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -62,7 +61,6 @@ public class DashboardActivity extends CoreActivity {
      * and next wizard steps.
      */
     private ViewPager mPager;
-    private SharedPreferences launcher3Prefs;
     private String TAG = "DashboardActivity";
     /**
      * The pager adapter, which provides the pages to the view pager widget.
@@ -159,8 +157,6 @@ public class DashboardActivity extends CoreActivity {
 
         isApplicationLaunch = true;
 
-        launcher3Prefs =
-                getSharedPreferences("Launcher3Prefs", 0);
         checknavigatePermissions();
     }
 
@@ -197,7 +193,9 @@ public class DashboardActivity extends CoreActivity {
 
     public void checknavigatePermissions() {
 
-        if (!launcher3Prefs.getBoolean("isAppInstalledFirstTime", true)) {
+
+        if (!PrefSiempo.getInstance(this).read(PrefSiempo
+                .IS_APP_INSTALLED_FIRSTTIME, true)) {
             Log.d(TAG, "Display upgrade dialog.");
             if (isApplicationLaunch) {
                 checkUpgradeVersion();
@@ -223,8 +221,10 @@ public class DashboardActivity extends CoreActivity {
     }
 
     private void checkAppLoadFirstTime() {
-        if (launcher3Prefs.getBoolean("isAppInstalledFirstTime", true)) {
-            launcher3Prefs.edit().putBoolean("isAppInstalledFirstTime", false).apply();
+        if (PrefSiempo.getInstance(this).read(PrefSiempo
+                .IS_APP_INSTALLED_FIRSTTIME, true)) {
+            PrefSiempo.getInstance(this).write(PrefSiempo
+                    .IS_APP_INSTALLED_FIRSTTIME, false);
             final ActivityHelper activityHelper = new ActivityHelper(DashboardActivity.this);
             if (!UIUtils.isMyLauncherDefault(DashboardActivity.this)) {
 
@@ -238,20 +238,27 @@ public class DashboardActivity extends CoreActivity {
                 }, 1000);
             }
         } else {
-            if (launcher3Prefs.getInt("getCurrentVersion", 0) != 0) {
+
+            if (PrefSiempo.getInstance(this).read(PrefSiempo
+                    .GET_CURRENT_VERSION, 0) != 0) {
                 if (!UIUtils.isMyLauncherDefault(this)
-                        && BuildConfig.VERSION_CODE > launcher3Prefs.getInt("getCurrentVersion", 0)) {
+                        && BuildConfig.VERSION_CODE > PrefSiempo.getInstance(this).read(PrefSiempo
+                        .GET_CURRENT_VERSION, 0)) {
                     new ActivityHelper(this).handleDefaultLauncher(this);
                     loadDialog();
-                    launcher3Prefs.edit().putInt("getCurrentVersion", UIUtils
-                            .getCurrentVersionCode(this)).apply();
+                    PrefSiempo.getInstance(this).write(PrefSiempo
+                            .GET_CURRENT_VERSION, UIUtils
+                            .getCurrentVersionCode(this));
+
                 } else {
-                    launcher3Prefs.edit().putInt("getCurrentVersion", UIUtils
-                            .getCurrentVersionCode(this)).apply();
+                    PrefSiempo.getInstance(this).write(PrefSiempo
+                            .GET_CURRENT_VERSION, UIUtils
+                            .getCurrentVersionCode(this));
                 }
             } else {
-                launcher3Prefs.edit().putInt("getCurrentVersion", UIUtils
-                        .getCurrentVersionCode(this)).apply();
+                PrefSiempo.getInstance(this).write(PrefSiempo
+                        .GET_CURRENT_VERSION, UIUtils
+                        .getCurrentVersionCode(this));
             }
         }
     }
@@ -364,8 +371,11 @@ public class DashboardActivity extends CoreActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if (which == DialogInterface.BUTTON_POSITIVE) {
-                        launcher3Prefs.edit().putBoolean("updatePrompt", false)
-                                .apply();
+                        PrefSiempo.getInstance(DashboardActivity.this).write
+                                (PrefSiempo
+                                        .UPDATE_PROMPT, false);
+//                        launcher3Prefs.edit().putBoolean("updatePrompt", false)
+//                                .apply();
                         new ActivityHelper(DashboardActivity.this).openBecomeATester();
                     }
                 }

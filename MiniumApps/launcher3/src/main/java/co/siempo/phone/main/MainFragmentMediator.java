@@ -52,8 +52,8 @@ public class MainFragmentMediator {
     public MainFragmentMediator(PaneFragment paneFragment) {
         this.fragment = paneFragment;
         context = this.fragment.getActivity();
-        launcher3Prefs =
-                context.getSharedPreferences("Launcher3Prefs", 0);
+//        launcher3Prefs =
+//                context.getSharedPreferences("Launcher3Prefs", 0);
     }
 
     public void loadData() {

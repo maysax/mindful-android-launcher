@@ -104,7 +104,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         //onCreateAnimation(savedInstanceState);
         windowManager = (WindowManager) getBaseContext().getSystemService(Context.WINDOW_SERVICE);
 
-        launcherPrefs = getApplicationContext().getSharedPreferences("Launcher3Prefs", 0);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_USER_PRESENT);
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);

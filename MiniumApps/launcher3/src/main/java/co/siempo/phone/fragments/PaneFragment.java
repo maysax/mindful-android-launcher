@@ -297,6 +297,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
     }
 
     private void searchEditTextFocusChanged() {
+
         //Circular Edit Text
         edtSearchToolsRounded.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -306,13 +307,12 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                     searchLayout.setVisibility(View.VISIBLE);
                     cardViewEdtSearch.setVisibility(View.VISIBLE);
                     relSearchTools.setVisibility(View.GONE);
-                    InputMethodManager imm = (InputMethodManager) getActivity()
-                            .getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInputFromWindow(
+                    inputMethodManager.toggleSoftInputFromWindow(
                             searchLayout.getApplicationWindowToken(),
                             InputMethodManager.SHOW_FORCED, 0);
 
                 }
+
             }
         });
 

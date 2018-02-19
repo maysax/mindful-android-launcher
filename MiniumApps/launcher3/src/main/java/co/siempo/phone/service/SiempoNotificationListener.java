@@ -5,7 +5,6 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -165,8 +164,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 e.printStackTrace();
             }
 
-            SharedPreferences prefs = getSharedPreferences("Launcher3Prefs", 0);
-            String strEnableApps = prefs.getString(Constants.HELPFUL_ROBOTS, "");
+            String strEnableApps = PrefSiempo.getInstance(context).read(PrefSiempo.HELPFUL_ROBOTS, "");
 
             if (!TextUtils.isEmpty(strEnableApps)) {
                 Type type = new TypeToken<ArrayList<String>>() {
@@ -174,7 +172,9 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 enableNotificationList = new Gson().fromJson(strEnableApps, type);
             }
 
-            String block_AppList = prefs.getString(Constants.BLOCKED_APPLIST, "");
+
+            String block_AppList = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST,
+                    "");
             if (!TextUtils.isEmpty(block_AppList)) {
                 Type type = new TypeToken<ArrayList<String>>() {
                 }.getType();

@@ -513,23 +513,23 @@ public abstract class CoreApplication extends MultiDexApplication {
         });
         this.packagesList = packagesList;
 
-        SharedPreferences sharedPreferences = getSharedPreferences("Launcher3Prefs", 0);
 
-
-        String disable_AppList = sharedPreferences.getString(DISABLE_APPLIST, "");
+        String disable_AppList = PrefSiempo.getInstance(this).read
+                (PrefSiempo.DISABLE_APPLIST, "");
         if (!TextUtils.isEmpty(disable_AppList)) {
             Type type = new TypeToken<ArrayList<String>>() {
             }.getType();
             disableNotificationApps = new Gson().fromJson(disable_AppList, type);
         }
-        String block_AppList = sharedPreferences.getString(BLOCKED_APPLIST, "");
+        String block_AppList = PrefSiempo.getInstance(this).read(PrefSiempo
+                .BLOCKED_APPLIST, "");
         if (!TextUtils.isEmpty(block_AppList)) {
             Type type = new TypeToken<ArrayList<String>>() {
             }.getType();
             blockedApps = new Gson().fromJson(block_AppList, type);
         }
-
-        boolean isAppInstallFirstTime = sharedPreferences.getBoolean("isAppInstalledFirstTime", true);
+        boolean isAppInstallFirstTime = PrefSiempo.getInstance(this).read(PrefSiempo
+                .IS_APP_INSTALLED_FIRSTTIME, true);
         if (isAppInstallFirstTime) {
             blockedApps.clear();
         }
@@ -557,10 +557,14 @@ public abstract class CoreApplication extends MultiDexApplication {
 
 
         String blockedList = new Gson().toJson(blockedApps);
-        sharedPreferences.edit().putString(BLOCKED_APPLIST, blockedList).apply();
+        PrefSiempo.getInstance(this).write(PrefSiempo
+                .BLOCKED_APPLIST, blockedList);
+//        sharedPreferences.edit().putString(BLOCKED_APPLIST, blockedList).apply();
 
         String disableList = new Gson().toJson(disableNotificationApps);
-        sharedPreferences.edit().putString(DISABLE_APPLIST, disableList).apply();
+        PrefSiempo.getInstance(this).write(PrefSiempo
+                .DISABLE_APPLIST, disableList);
+//        sharedPreferences.edit().putString(DISABLE_APPLIST, disableList).apply();
 
 
     }

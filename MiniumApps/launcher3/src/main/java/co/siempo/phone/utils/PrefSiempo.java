@@ -73,8 +73,6 @@ public class PrefSiempo {
     public static final String GET_CURRENT_VERSION = "getCurrentVersion";
     public static final String IS_PERMISSION_GIVEN_AND_CONTINUED =
             "isPermissionGivenAndContinued";
-
-
     //DroidPrefs
     public static final String SELECTED_THEME_COLOR = "selectedThemeColor";
     public static final String SELECTED_THEME_ID = "selectedThemeId";
@@ -147,9 +145,16 @@ public class PrefSiempo {
     public static final String ONLY_AT = "onlyAt";
     public static final String TEMPO_SOUNDPROFILE = "tempoSoundProfile";
     public static final String USER_EMAILID = "userEmailId";
-
-
+    public static final String IS_CONTACT_UPDATE = "isContactUpdate";
     private static final PrefSiempo ourInstance = new PrefSiempo();
+    public static String DISABLE_APPLIST = "DISABLE_APPLIST";
+    public static String HELPFUL_ROBOTS = "HELPFUL_ROBOTS";
+    public static String BLOCKED_APPLIST = "BLOCKED_APPLIST";
+    public static String SOCIAL_DISABLE_COUNT = "SOCIAL_DISABLE_COUNT";
+    public static String MESSENGER_DISABLE_COUNT = "MESSENGER_DISABLE_COUNT";
+    public static String APP_DISABLE_COUNT = "APP_DISABLE_COUNT";
+    public static String HEADER_APPLIST = "HEADER_APPLIST";
+    public static String INTENT_MAINLISTITEM = "MainListItem";
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
 
@@ -231,9 +236,10 @@ public class PrefSiempo {
      * @param key      name of retrieve from preference
      * @param defValue user provided default value
      */
-    public float read(String key, int defValue) {
+    public int read(String key, int defValue) {
         return sharedPreferences.getInt(key, defValue);
     }
+
 
     /**
      * Store the boolean data in local preference

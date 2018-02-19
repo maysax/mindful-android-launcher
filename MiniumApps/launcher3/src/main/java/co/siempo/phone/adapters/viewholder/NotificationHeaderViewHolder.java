@@ -1,7 +1,6 @@
 package co.siempo.phone.adapters.viewholder;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -15,8 +14,8 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import co.siempo.phone.R;
-import co.siempo.phone.app.Constants;
 import co.siempo.phone.models.AppListInfo;
+import co.siempo.phone.utils.PrefSiempo;
 
 public class NotificationHeaderViewHolder extends RecyclerView.ViewHolder {
 
@@ -60,7 +59,6 @@ public class NotificationHeaderViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void changeNotification(AppListInfo headerAppList, boolean ischecked, ArrayList<String> disableHeaderApps, Context context) {
-        SharedPreferences launcherPrefs = context.getSharedPreferences("Launcher3Prefs", 0);
         if (ischecked && disableHeaderApps.contains(headerAppList.headerName)) {
             disableHeaderApps.remove(headerAppList.headerName);
         }
@@ -69,7 +67,8 @@ public class NotificationHeaderViewHolder extends RecyclerView.ViewHolder {
         }
 
         String disableList = new Gson().toJson(disableHeaderApps);
-        launcherPrefs.edit().putString(Constants.HEADER_APPLIST, disableList).apply();
+        PrefSiempo.getInstance(context).write(PrefSiempo.HEADER_APPLIST, disableList);
+//        launcherPrefs.edit().putString(Constants.HEADER_APPLIST, disableList).apply();
         switch_headerNotification.setChecked(ischecked);
 
 

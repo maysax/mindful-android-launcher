@@ -39,6 +39,7 @@ import co.siempo.phone.main.OnStartDragListener;
 import co.siempo.phone.main.OnToolItemListChangedListener;
 import co.siempo.phone.main.SimpleItemTouchHelperCallback;
 import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 
 /**
@@ -87,7 +88,8 @@ public class OldMenuFragment extends CoreFragment implements OnToolItemListChang
         super.onResume();
         items = new ArrayList<>();
         new MainListItemLoader(getActivity()).loadItems(items, this);
-        if (prefs.isMenuGrid().get()) {
+
+        if (PrefSiempo.getInstance(context).read(PrefSiempo.IS_MENU_GRID, false)) {
             items = getSampleData();
             bindAsGrid();
         } else {
@@ -99,7 +101,7 @@ public class OldMenuFragment extends CoreFragment implements OnToolItemListChang
         btnListOrGrid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (prefs.isMenuGrid().get()) {
+                if (PrefSiempo.getInstance(context).read(PrefSiempo.IS_MENU_GRID, false)) {
                     items = getSampleData();
                     bindAsList();
                 } else {
@@ -211,7 +213,7 @@ public class OldMenuFragment extends CoreFragment implements OnToolItemListChang
         mItemTouchHelper.attachToRecyclerView(activity_grid_view);
         activity_grid_view.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
-        prefs.isMenuGrid().put(false);
+        PrefSiempo.getInstance(context).write(PrefSiempo.IS_MENU_GRID, false);
 
     }
 
@@ -235,7 +237,7 @@ public class OldMenuFragment extends CoreFragment implements OnToolItemListChang
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(activity_grid_view);
         activity_grid_view.setAdapter(mAdapter);
-        prefs.isMenuGrid().put(true);
+        PrefSiempo.getInstance(context).write(PrefSiempo.IS_MENU_GRID, true);
 
     }
 

@@ -39,7 +39,6 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         //We listen to two intents.  The new outgoing call only tells us of an outgoing call.  We use it to get the number.
         mContext = context;
-        sharedPref = context.getSharedPreferences("Launcher3Prefs", 0);
         droidPref = context.getSharedPreferences("DroidPrefs", 0);
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
