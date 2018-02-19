@@ -220,6 +220,7 @@
         <activity android:name="com.evernote.client.android.login.EvernoteLoginActivity"/>
         <activity android:name=".activities.AppAssignmentActivity"/>
         <activity android:name=".activities.JunkfoodFlaggingActivity"/>
+        <activity android:name=".activities.FavoritesSelectionActivity"/>
         <activity android:name=".activities.ToolPositioningActivity"/>
         <activity android:name=".activities.ToolSelectionActivity"></activity>
     </application>
