@@ -34,12 +34,18 @@ public class PrefSiempo {
 
     // This field is used for to store junkfood application package name.
     public static final String JUNKFOOD_APPS = "junkfood_apps";
+
+    // This field is used for to store favorites application package name.
+    public static final String FAVORITE_APPS = "favorite_apps";
     //
     //This field is used for to store search List.
     public static final String SEARCH_LIST = "searchList";
 
-    //
+    // used for sorting of tools menu.
     public static final String SORTED_MENU = "sortedMenu";
+
+    // used for Allow peaking.
+    public static final String ALLOW_PEAKING = "Allowpeaking";
 
 
     //Launcher 3 preferences

@@ -513,18 +513,26 @@
     <string name="title_flagging_screen">Flag apps</string>
     <string name="all_other_installed_apps">All other installed apps</string>
     <string name="tap_apps_below_to_move_them_into_this_section">Tap apps below to move them into this section.</string>
+    <string name="str_frequently_used_apps">Frequently used apps</string>
+    <string name="str_all_other_installed_apps">All other installed apps</string>
     <string name="msg_congratulations">Congratulations!</string>
-    <string name="flag_app">Apps you want to use less</string>
+    <string name="flag_app">Flag this app to use it less</string>
     <string name="unflagapp">Un-flag this app</string>
+    <string name="favorite_menu_unselect">Unselect as frequently used</string>
+    <string name="favorite_menu_select">select as frequently used app</string>
     <string name="get_info_or_uninstall_app">Get info or uninstall app</string>
     <string name="msg_flage_save_dialog">You\'ve taken an important step towards reducing the use of apps that can make you feel bad when you overuse them.</string>
     <string name="flag_first_time_install">When you flag an app, Siempo will gently discourage you from over-using it. We\'ve flagged some apps that most users say they want to use less.  You can change these flags now or later.</string>
     <string name="msg_flag_first_time">Most users report that the more apps they flag, the less they use their phones.  Flagging will make these apps just a bit harder to launch and use unintentionally.</string>
+    <string name="str_blank_validation_below">Taps apps below to move them into this section</string>
+    <string name="str_blank_validation_above">Taps apps above to move them into this section</string>
     <string name="yes_unhide">YES, UNHIDE</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="editing_tools">Editing tools</string>
     <string name="select_tools">Select Tools</string>
     <string name="assign_app">ASSIGN APP</string>
+    <string name="msg_allowpeaking">Off.The status bar will show you when you have new notifications in your tray, but your tray won\'t pop up automatically.</string>
+    <string name="allow_peaking">Allow peaking</string>
 
 
 </resources>

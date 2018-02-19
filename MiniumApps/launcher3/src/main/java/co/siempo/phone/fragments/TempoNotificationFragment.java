@@ -42,11 +42,15 @@ public class TempoNotificationFragment extends CoreFragment {
     @ViewById
     TextView txtAllowApps;
 
+    @ViewById
+    Switch switchAllowPicking;
+
 
     @ViewById
     RelativeLayout relAllowSpecificApps;
-    private boolean isDisableChecked;
-    private AlertDialog alertDialog;
+
+    @ViewById
+    RelativeLayout relAllowPicking;
 
 
     public TempoNotificationFragment() {
@@ -67,15 +71,23 @@ public class TempoNotificationFragment extends CoreFragment {
                 fm.popBackStack();
             }
         });
+        switchAllowPicking.setChecked(PrefSiempo.getInstance(context).read(PrefSiempo.ALLOW_PEAKING, true));
 
     }
 
     @Click
     void relAllowSpecificApps() {
-
-        Intent i = new Intent(getActivity(),TempoAppNotificationActivity.class);
+        Intent i = new Intent(getActivity(), TempoAppNotificationActivity.class);
         startActivity(i);
-  }
+    }
+
+    @Click
+    void relAllowPicking() {
+        boolean allowPeaking = PrefSiempo.getInstance(context).read(PrefSiempo.ALLOW_PEAKING, true);
+        allowPeaking = !allowPeaking;
+        switchAllowPicking.setChecked(allowPeaking);
+        PrefSiempo.getInstance(context).write(PrefSiempo.ALLOW_PEAKING, allowPeaking);
+    }
 
 
 }

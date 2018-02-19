@@ -310,6 +310,7 @@ public class IntentionEditActivity extends BaseActivity implements View.OnClickL
                 txtSave();
                 break;
             case R.id.imgClear:
+                imgClear();
                 break;
             case R.id.txtHelp:
                 txtHelp();

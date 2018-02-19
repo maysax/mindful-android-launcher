@@ -1,5 +1,6 @@
 package co.siempo.phone.fragments;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
@@ -11,12 +12,15 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -25,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.eyeem.chips.ChipsEditText;
 
@@ -319,11 +324,10 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus && isVisible()) {
+                    hidePaneAndBottomView(context);
+                    searchListVisible(context);
 
-                    linPane.setVisibility(View.GONE);
-                    linBottomDoc.setVisibility(View.GONE);
                     blueLineDivider.setVisibility(View.GONE);
-                    linSearchList.setVisibility(View.VISIBLE);
                     imageClear.setVisibility(View.VISIBLE);
                 } else {
 
@@ -333,6 +337,8 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                     cardViewEdtSearch.setVisibility(View.GONE);
                     relSearchTools.setVisibility(View.VISIBLE);
                     linBottomDoc.setVisibility(View.VISIBLE);
+                    ObjectAnimator fadeOut = ObjectAnimator.ofFloat(linSearchList, "alpha",  1f, .3f);
+                    fadeOut.setDuration(10000);
                     linSearchList.setVisibility(View.GONE);
                     imageClear.setVisibility(View.VISIBLE);
 
@@ -341,6 +347,26 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         });
     }
 
+
+    public void searchListVisible(Context context){
+        Animation fadeOutAnim = AnimationUtils.loadAnimation(context, R.anim.fade_in);
+
+        fadeOutAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                linSearchList.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+        linSearchList.startAnimation(fadeOutAnim);
+    }
 
     @Subscribe
     public void searchLayoutEvent(SearchLayoutEvent event) {
@@ -556,5 +582,27 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         if (inputMethodManager != null) {
             inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
         }
+    }
+
+    public void hidePaneAndBottomView(Context context){
+        Animation fadeOutAnim = AnimationUtils.loadAnimation(context, R.anim.fade_out);
+
+        fadeOutAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                linPane.setVisibility(View.GONE);
+                linBottomDoc.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+        linPane.startAnimation(fadeOutAnim);
+        linBottomDoc.startAnimation(fadeOutAnim);
     }
 }

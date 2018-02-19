@@ -1,6 +1,7 @@
 package co.siempo.phone.service;
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -47,6 +48,13 @@ public class AlarmService extends IntentService {
 
     public AlarmService(String name) {
         super(name);
+    }
+
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        startForeground(1, new Notification());
     }
 
     @Override

@@ -309,9 +309,10 @@ public class PackageUtil {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private static NotificationChannel createChannel(String channelName) {
+    private static NotificationChannel createChannel(Context context, String channelName) {
+        int priority = PrefSiempo.getInstance(context).read(PrefSiempo.ALLOW_PEAKING, true) ? NotificationManager.IMPORTANCE_DEFAULT : NotificationManager.IMPORTANCE_HIGH;
         NotificationChannel chan = new NotificationChannel(channelName,
-                channelName, NotificationManager.IMPORTANCE_HIGH);
+                channelName, priority);
         chan.setLightColor(Color.BLUE);
         chan.setDescription("");
         chan.enableLights(true);
@@ -392,7 +393,8 @@ public class PackageUtil {
             searchItems = Sorting.sortList(searchItems);
             storeSearchList(searchItems, context);
         } catch (Exception e) {
-            e.printStackTrace();
+            Tracer.e(e, e.getMessage());
+            CoreApplication.getInstance().logException(e);
         }
     }
 
