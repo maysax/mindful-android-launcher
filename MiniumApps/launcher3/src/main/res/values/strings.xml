@@ -531,6 +531,8 @@
     <string name="editing_tools">Editing tools</string>
     <string name="select_tools">Select Tools</string>
     <string name="assign_app">ASSIGN APP</string>
+    <string name="msg_allowpeaking">Off.The status bar will show you when you have new notifications in your tray, but your tray won\'t pop up automatically.</string>
+    <string name="allow_peaking">Allow peaking</string>
 
 
 </resources>

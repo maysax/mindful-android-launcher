@@ -41,8 +41,11 @@ public class PrefSiempo {
     //This field is used for to store search List.
     public static final String SERACH_LIST = "searchList";
 
-    //
+    // used for sorting of tools menu.
     public static final String SORTED_MENU = "sortedMenu";
+
+    // used for Allow peaking.
+    public static final String ALLOW_PEAKING = "Allowpeaking";
 
     private static final PrefSiempo ourInstance = new PrefSiempo();
     private static SharedPreferences sharedPreferences;
