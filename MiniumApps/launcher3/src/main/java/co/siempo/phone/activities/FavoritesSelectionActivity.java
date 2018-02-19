@@ -1,7 +1,5 @@
 package co.siempo.phone.activities;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
@@ -13,7 +11,6 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,11 +20,12 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.FavoritesFlagAdapter;
 import co.siempo.phone.event.AppInstalledEvent;
@@ -51,7 +49,7 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
     private PopupMenu popup;
     private ScrollView scrollView;
     private boolean isLoadFirstTime = true;
-    private int count=0;
+    private int count = 0;
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
@@ -88,13 +86,13 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
         listFavoriteApps = findViewById(R.id.lst_favoritesApps);
         listAllOtherApps = findViewById(R.id.lst_OtherApps);
         scrollView = findViewById(R.id.scrollView);
-        count=list.size();
+        count = list.size();
         setToolBarText(count);
     }
 
-    public void setToolBarText(int count){
-        int remainapps=12-count;
-        toolbar.setTitle("Select up to "+remainapps+ " more apps");
+    public void setToolBarText(int count) {
+        int remainapps = 12 - count;
+        toolbar.setTitle("Select up to " + remainapps + " more apps");
     }
 
     /**
@@ -108,12 +106,12 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
         allOtherAppList = new ArrayList<>();
         for (ResolveInfo resolveInfo : installedPackageList) {
             if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
-                if(!junkFoodList.contains(resolveInfo.activityInfo.packageName)){
-                if (list.contains(resolveInfo.activityInfo.packageName)) {
-                    favoriteAppList.add(resolveInfo);
-                } else {
-                    allOtherAppList.add(resolveInfo);
-                }
+                if (!junkFoodList.contains(resolveInfo.activityInfo.packageName)) {
+                    if (list.contains(resolveInfo.activityInfo.packageName)) {
+                        favoriteAppList.add(resolveInfo);
+                    } else {
+                        allOtherAppList.add(resolveInfo);
+                    }
                 }
             }
         }
@@ -136,9 +134,6 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
         });
         return super.onCreateOptionsMenu(menu);
     }
-
-
-
 
 
     /**
@@ -237,15 +232,14 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
                                 setToolBarText(favoriteAppList.size());
                             }
                         } else {
-                            if(favoriteAppList!=null && favoriteAppList.size()<12){
+                            if (favoriteAppList != null && favoriteAppList.size() < 12) {
                                 list.add(allOtherAppList.get(position).activityInfo.packageName);
                                 isLoadFirstTime = false;
                                 favoriteAppList.add(allOtherAppList.get(position));
                                 allOtherAppList.remove(allOtherAppList.get(position));
                                 bindListView();
-                            }
-                            else{
-                                Toast.makeText(getApplicationContext(),"Please unselect any of the apps from Frequenty used apps section",Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Please unselect any of the apps from Frequenty used apps section", Toast.LENGTH_LONG).show();
                             }
                             setToolBarText(favoriteAppList.size());
                         }

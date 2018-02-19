@@ -68,6 +68,7 @@ public class PrefSiempo {
     public static final String IS_APPINSTALLED_FIRST_TIME =
             "isAppInstalledFirstTime";
     public static final String IS_KEYBOARD_DISPLAY = "isKeyBoardDisplay";
+    public static final String CALL_RUNNING = "CALLRUNNING";
     public static final String IS_APP_DEFAULT_OR_FRONT = "isAppDefaultOrFront";
     public static final String GET_CURRENT_VERSION = "getCurrentVersion";
     public static final String IS_PERMISSION_GIVEN_AND_CONTINUED =
@@ -146,10 +147,6 @@ public class PrefSiempo {
     public static final String ONLY_AT = "onlyAt";
     public static final String TEMPO_SOUNDPROFILE = "tempoSoundProfile";
     public static final String USER_EMAILID = "userEmailId";
-
-
-
-
 
 
     private static final PrefSiempo ourInstance = new PrefSiempo();

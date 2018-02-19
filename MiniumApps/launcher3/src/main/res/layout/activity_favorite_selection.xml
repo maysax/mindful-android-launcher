@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:background="@color/toolbar_bg"
         android:elevation="@dimen/dp_5"
-        android:minHeight="?android:attr/actionBarSize" />
+        android:minHeight="?android:attr/actionBarSize"/>
 
     <ScrollView
         android:id="@+id/scrollView"

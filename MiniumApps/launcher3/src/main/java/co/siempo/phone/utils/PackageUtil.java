@@ -42,6 +42,7 @@ import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.models.MainListItemType;
 import co.siempo.phone.service.AlarmBroadcast;
@@ -133,7 +134,8 @@ public class PackageUtil {
                 NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 String applicationNameFromPackageName = CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName());
                 if (Build.VERSION.SDK_INT >= 26) {
-                    NotificationChannel notificationChannel = createChannel(applicationNameFromPackageName);
+                    NotificationChannel notificationChannel = createChannel(context,
+                            applicationNameFromPackageName);
                     if (notificationManager != null) {
                         notificationManager.createNotificationChannel(notificationChannel);
                     }

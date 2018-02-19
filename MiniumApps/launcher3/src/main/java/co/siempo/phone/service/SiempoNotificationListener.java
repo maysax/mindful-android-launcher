@@ -38,7 +38,6 @@ import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.app.Launcher3App;
-import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.DBClient;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.DaoSession;
@@ -66,9 +65,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
 
     @Pref
     DroidPrefs_ droidPrefs;
-
-    @Pref
-    Launcher3Prefs_ launcherPrefs;
 
     @SystemService
     AudioManager audioManager;
@@ -401,7 +397,9 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 && !statusBarNotification.getPackageName().equalsIgnoreCase("com.google.android.apps.messaging")
                 && !statusBarNotification.getPackageName().trim().equalsIgnoreCase("android"))) {
 
-            if (launcherPrefs.getSharedPreferences().getBoolean(Constants.CALL_RUNNING, false)) {
+
+//            if (launcherPrefs.getSharedPreferences().getBoolean(Constants.CALL_RUNNING, false)) {
+            if (PrefSiempo.getInstance(context).read(PrefSiempo.CALL_RUNNING, false)) {
                 Log.d(TAG, "OnGoing Call is Running.. no need to generate notification");
                 return;
             }

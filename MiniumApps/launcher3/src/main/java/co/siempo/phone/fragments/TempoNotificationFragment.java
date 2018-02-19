@@ -3,10 +3,10 @@ package co.siempo.phone.fragments;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -18,6 +18,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import co.siempo.phone.R;
 import co.siempo.phone.activities.TempoAppNotificationActivity;
 import co.siempo.phone.app.DroidPrefs_;
+import co.siempo.phone.utils.PrefSiempo;
 
 /**
  * Note : AllowPicking related stuff is now disable.

@@ -12,7 +12,6 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,7 +28,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.eyeem.chips.ChipsEditText;
 
@@ -337,7 +335,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                     cardViewEdtSearch.setVisibility(View.GONE);
                     relSearchTools.setVisibility(View.VISIBLE);
                     linBottomDoc.setVisibility(View.VISIBLE);
-                    ObjectAnimator fadeOut = ObjectAnimator.ofFloat(linSearchList, "alpha",  1f, .3f);
+                    ObjectAnimator fadeOut = ObjectAnimator.ofFloat(linSearchList, "alpha", 1f, .3f);
                     fadeOut.setDuration(10000);
                     linSearchList.setVisibility(View.GONE);
                     imageClear.setVisibility(View.VISIBLE);
@@ -348,7 +346,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
     }
 
 
-    public void searchListVisible(Context context){
+    public void searchListVisible(Context context) {
         Animation fadeOutAnim = AnimationUtils.loadAnimation(context, R.anim.fade_in);
 
         fadeOutAnim.setAnimationListener(new Animation.AnimationListener() {
@@ -584,7 +582,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         }
     }
 
-    public void hidePaneAndBottomView(Context context){
+    public void hidePaneAndBottomView(Context context) {
         Animation fadeOutAnim = AnimationUtils.loadAnimation(context, R.anim.fade_out);
 
         fadeOutAnim.setAnimationListener(new Animation.AnimationListener() {
