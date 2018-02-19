@@ -42,6 +42,7 @@ import co.siempo.phone.log.LogConfig;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.old.PreferenceListAdapter;
 import co.siempo.phone.utils.PackageUtil;
+import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -56,8 +57,8 @@ public class Launcher3App extends CoreApplication {
     @Pref
     public DroidPrefs_ prefs;
     public Dialog dialog;
-    @Pref
-    Launcher3Prefs_ launcherPrefs;
+    //    @Pref
+//    Launcher3Prefs_ launcherPrefs;
     @SystemService
     AudioManager audioManager;
     @SystemService
@@ -484,7 +485,9 @@ public class Launcher3App extends CoreApplication {
             if (numStarted == 0) {
                 // app went to foreground
                 Log.d(TAG, "Siempo is on foreground");
-                launcherPrefs.isAppDefaultOrFront().put(true);
+                PrefSiempo.getInstance(activity).write(PrefSiempo
+                        .IS_APP_DEFAULT_OR_FRONT, true);
+//                launcherPrefs.isAppDefaultOrFront().put(true);
 
             }
             numStarted++;
@@ -525,10 +528,14 @@ public class Launcher3App extends CoreApplication {
 
                 if (PackageUtil.isSiempoLauncher(getApplicationContext())) {
                     isSiempoLauncher = true;
-                    launcherPrefs.isAppDefaultOrFront().put(true);
+                    PrefSiempo.getInstance(activity).write(PrefSiempo
+                            .IS_APP_DEFAULT_OR_FRONT, true);
+//                    launcherPrefs.isAppDefaultOrFront().put(true);
 
                 } else {
-                    launcherPrefs.isAppDefaultOrFront().put(false);
+                    PrefSiempo.getInstance(activity).write(PrefSiempo
+                            .IS_APP_DEFAULT_OR_FRONT, false);
+//                    launcherPrefs.isAppDefaultOrFront().put(false);
                 }
             }
         }

@@ -18,7 +18,6 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import co.siempo.phone.R;
 import co.siempo.phone.activities.TempoAppNotificationActivity;
 import co.siempo.phone.app.DroidPrefs_;
-import co.siempo.phone.app.Launcher3Prefs_;
 
 /**
  * Note : AllowPicking related stuff is now disable.
@@ -32,8 +31,8 @@ public class TempoNotificationFragment extends CoreFragment {
     @ViewById
     TextView titleActionBar;
 
-    @Pref
-    Launcher3Prefs_ launcherPrefs;
+//    @Pref
+//    Launcher3Prefs_ launcherPrefs;
 
     @Pref
     DroidPrefs_ droidPrefs;

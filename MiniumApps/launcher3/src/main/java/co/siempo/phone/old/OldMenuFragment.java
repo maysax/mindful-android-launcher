@@ -32,7 +32,6 @@ import java.util.List;
 import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.app.DroidPrefs_;
-import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.fragments.CoreFragment;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainListItemLoader;
@@ -51,8 +50,8 @@ public class OldMenuFragment extends CoreFragment implements OnToolItemListChang
 
     @Pref
     public DroidPrefs_ prefs;
-    @Pref
-    public Launcher3Prefs_ launcher3Prefs_;
+    //    @Pref
+//    public Launcher3Prefs_ launcher3Prefs_;
     @ViewById
     RecyclerView activity_grid_view;
     @ViewById
@@ -206,7 +205,7 @@ public class OldMenuFragment extends CoreFragment implements OnToolItemListChang
         }
         itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_066);
         activity_grid_view.addItemDecoration(itemDecoration);
-        mAdapter = new MenuAdapter(getActivity(), activity_grid_view, launcher3Prefs_, prefs, items, false, this, this);
+        mAdapter = new MenuAdapter(getActivity(), activity_grid_view, prefs, items, false, this, this);
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mAdapter, OldMenuFragment.this);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(activity_grid_view);
@@ -231,7 +230,7 @@ public class OldMenuFragment extends CoreFragment implements OnToolItemListChang
         }
         itemDecoration = new ItemOffsetDecoration(context, R.dimen.menu_grid_margin);
         activity_grid_view.addItemDecoration(itemDecoration);
-        mAdapter = new MenuAdapter(getActivity(), activity_grid_view, launcher3Prefs_, prefs, items, true, this, this);
+        mAdapter = new MenuAdapter(getActivity(), activity_grid_view, prefs, items, true, this, this);
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mAdapter, OldMenuFragment.this);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(activity_grid_view);

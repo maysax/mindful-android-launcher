@@ -28,14 +28,12 @@ import com.joanzapata.iconify.IconDrawable;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.SystemService;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.app.Launcher3App;
-import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.CheckVersionEvent;
 import co.siempo.phone.helper.ActivityHelper;
@@ -44,6 +42,7 @@ import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.utils.PackageUtil;
+import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.Subscribe;
 
@@ -59,8 +58,8 @@ public class SiempoSettingsActivity extends CoreActivity {
     private final String TAG = "SiempoSettingsActivity";
     @SystemService
     ConnectivityManager connectivityManager;
-    @Pref
-    Launcher3Prefs_ launcherPrefs;
+    //    @Pref
+//    Launcher3Prefs_ launcherPrefs;
     private Context context;
     private ImageView icon_launcher, icon_KeyBoardNotification, icon_Faq, icon_Feedback, icon_version, icon_changeDefaultApp, icon_AppNotifications, icon_SuppressedNotifications;
     private TextView txt_version;
@@ -106,7 +105,9 @@ public class SiempoSettingsActivity extends CoreActivity {
             txt_version.setText("Version : " + "BETA-" + BuildConfig.VERSION_NAME);
         }
 
-        boolean isKeyboardDisplay = launcherPrefs.isKeyBoardDisplay().get();
+        boolean isKeyboardDisplay = PrefSiempo.getInstance(this).read(PrefSiempo.IS_KEYBOARD_DISPLAY,
+                false);
+//        boolean isKeyboardDisplay = launcherPrefs.isKeyBoardDisplay().get();
         ln_launcher = findViewById(R.id.ln_launcher);
         ln_version = findViewById(R.id.ln_version);
         ln_version = findViewById(R.id.ln_version);
@@ -238,7 +239,11 @@ public class SiempoSettingsActivity extends CoreActivity {
         switch_KeyBoardnotification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                launcherPrefs.isKeyBoardDisplay().put(isChecked);
+
+                PrefSiempo.getInstance(context).write(PrefSiempo
+                                .IS_KEYBOARD_DISPLAY,
+                        isChecked);
+//                launcherPrefs.isKeyBoardDisplay().put(isChecked);
             }
         });
 
@@ -335,7 +340,9 @@ public class SiempoSettingsActivity extends CoreActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if (which == DialogInterface.BUTTON_POSITIVE) {
-                        launcherPrefs.updatePrompt().put(false);
+                        PrefSiempo.getInstance(SiempoSettingsActivity.this).write(PrefSiempo
+                                .UPDATE_PROMPT, false);
+//                        launcherPrefs.updatePrompt().put(false);
                         new ActivityHelper(SiempoSettingsActivity.this).openBecomeATester();
                     }
                 }

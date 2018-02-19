@@ -50,6 +50,7 @@ import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.utils.NotificationUtility;
 import co.siempo.phone.utils.PackageUtil;
+import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 
@@ -877,7 +878,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
         Tracer.d("Notification removed: " + getNotificationToString(notification));
 
         if (!PackageUtil.isSiempoLauncher(this)
-                && !launcherPrefs.isAppDefaultOrFront().get()) {
+                && !PrefSiempo.getInstance(context).read(PrefSiempo
+                .IS_APP_DEFAULT_OR_FRONT, false)) {
             if (PackageUtil.isMsgPackage(notification.getPackageName())) {
                 new DBClient().deleteMsgByType(NotificationUtility.NOTIFICATION_TYPE_SMS);
             } else if (PackageUtil.isCallPackage(notification.getPackageName())) {

@@ -36,7 +36,6 @@ import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 
@@ -45,7 +44,6 @@ import co.siempo.phone.activities.SiempoPermissionActivity_;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.app.Launcher3App;
-import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.CheckVersionEvent;
 import co.siempo.phone.event.NFCEvent;
@@ -58,6 +56,7 @@ import co.siempo.phone.msg.SmsObserver;
 import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.service.SiempoNotificationListener_;
 import co.siempo.phone.utils.PermissionUtil;
+import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
@@ -72,8 +71,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     public static String isTextLenghGreater = "";
 
 
-    @Pref
-    Launcher3Prefs_ launcher3Prefs;
+    //    @Pref
+//    Launcher3Prefs_ launcher3Prefs;
     @ViewById
     ViewPager pager;
 
@@ -89,8 +88,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @SystemService
     ConnectivityManager connectivityManager;
 
-    @Pref
-    Launcher3Prefs_ launcherPrefs;
+    //    @Pref
+//    Launcher3Prefs_ launcherPrefs;
     ActivityState state;
     long startTime;
     boolean isApplicationLaunch = false;
@@ -145,8 +144,9 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         loadViews();
         logFirebase();
         checknavigatePermissions();
-
-        launcherPrefs.updatePrompt().put(true);
+        PrefSiempo.getInstance(MainActivity.this).write(PrefSiempo
+                .UPDATE_PROMPT, true);
+//        launcherPrefs.updatePrompt().put(true);
 
     }
 
@@ -158,8 +158,12 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     }
 
     private void checkAppLoadFirstTime() {
-        if (launcherPrefs.isAppInstalledFirstTime().get()) {
-            launcherPrefs.isAppInstalledFirstTime().put(false);
+        if (PrefSiempo.getInstance(this).read(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME,
+                false)) {
+            PrefSiempo.getInstance(this).write(PrefSiempo
+                            .IS_APP_INSTALLED_FIRSTTIME,
+                    false);
+//            launcherPrefs.isAppInstalledFirstTime().put(false);
             final ActivityHelper activityHelper = new ActivityHelper(MainActivity.this);
             if (!UIUtils.isMyLauncherDefault(MainActivity.this)) {
 
@@ -173,17 +177,25 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 }, 1000);
             }
         } else {
-            if (launcherPrefs.getCurrentVersion().get() != 0) {
+            if (PrefSiempo.getInstance(this).read(PrefSiempo.GET_CURRENT_VERSION,
+                    0) != 0) {
                 if (!UIUtils.isMyLauncherDefault(this)
-                        && BuildConfig.VERSION_CODE > launcherPrefs.getCurrentVersion().get()) {
+                        && BuildConfig.VERSION_CODE > PrefSiempo.getInstance(this).read(PrefSiempo.GET_CURRENT_VERSION,
+                        0)) {
                     new ActivityHelper(this).handleDefaultLauncher(this);
                     loadDialog();
-                    launcherPrefs.getCurrentVersion().put(UIUtils.getCurrentVersionCode(this));
+                    PrefSiempo.getInstance(this).write(PrefSiempo
+                                    .GET_CURRENT_VERSION,
+                            UIUtils.getCurrentVersionCode(this));
                 } else {
-                    launcherPrefs.getCurrentVersion().put(UIUtils.getCurrentVersionCode(this));
+                    PrefSiempo.getInstance(this).write(PrefSiempo
+                                    .GET_CURRENT_VERSION,
+                            UIUtils.getCurrentVersionCode(this));
                 }
             } else {
-                launcherPrefs.getCurrentVersion().put(UIUtils.getCurrentVersionCode(this));
+                PrefSiempo.getInstance(this).write(PrefSiempo
+                                .GET_CURRENT_VERSION,
+                        UIUtils.getCurrentVersionCode(this));
             }
         }
     }
@@ -349,7 +361,9 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if (which == DialogInterface.BUTTON_POSITIVE) {
-                        launcherPrefs.updatePrompt().put(false);
+                        PrefSiempo.getInstance(MainActivity.this).write(PrefSiempo
+                                .UPDATE_PROMPT, false);
+//                        launcherPrefs.updatePrompt().put(false);
                         new ActivityHelper(MainActivity.this).openBecomeATester();
                     }
                 }
@@ -586,7 +600,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     }
 
     public void checknavigatePermissions() {
-        if (!launcherPrefs.isAppInstalledFirstTime().get()) {
+        if (!PrefSiempo.getInstance(this).read(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME,
+                false)) {
             Log.d(TAG, "Display upgrade dialog.");
             if (isApplicationLaunch) {
                 checkUpgradeVersion();

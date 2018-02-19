@@ -23,7 +23,6 @@ import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.app.Launcher3App;
-import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.DaoSession;
 import co.siempo.phone.db.TableNotificationSms;
@@ -31,6 +30,7 @@ import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.NewNotificationEvent;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.utils.NotificationUtility;
+import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -41,8 +41,8 @@ public class SmsReceiver extends BroadcastReceiver {
 
     @Pref
     DroidPrefs_ prefs;
-    @Pref
-    Launcher3Prefs_ launcherPrefs;
+    //    @Pref
+//    Launcher3Prefs_ launcherPrefs;
     ArrayList<String> disableNotificationApps = new ArrayList<>();
     ArrayList<String> blockedApps = new ArrayList<>();
     private String mAddress;
@@ -77,7 +77,9 @@ public class SmsReceiver extends BroadcastReceiver {
                 mAddress = sms.getDisplayOriginatingAddress(); // sms..getOriginatingAddress();
                 mDate = new Date(sms.getTimestampMillis());
 
-                if (launcherPrefs.isAppDefaultOrFront().get()) {
+
+                if (PrefSiempo.getInstance(context).read(PrefSiempo
+                        .IS_APP_DEFAULT_OR_FRONT, false)) {
                     SharedPreferences prefs1 = context.getSharedPreferences("Launcher3Prefs", 0);
                     String disable_AppList = prefs1.getString(Constants.HELPFUL_ROBOTS, "");
                     if (!TextUtils.isEmpty(disable_AppList)) {

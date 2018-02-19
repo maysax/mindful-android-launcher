@@ -30,7 +30,6 @@ import co.siempo.phone.activities.HelpActivity;
 import co.siempo.phone.activities.IntentionEditActivity;
 import co.siempo.phone.activities.SettingsActivity_;
 import co.siempo.phone.app.DroidPrefs_;
-import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.dialog.Dialog_Tempo;
 import co.siempo.phone.service.StatusBarService;
 import co.siempo.phone.utils.UIUtils;
@@ -66,8 +65,8 @@ public class IntentionFieldFragment extends CoreFragment {
     @Pref
     DroidPrefs_ prefs;
 
-    @Pref
-    Launcher3Prefs_ launcherPrefs;
+//    @Pref
+//    Launcher3Prefs_ launcherPrefs;
 
     @ViewById
     ImageView pullTab;

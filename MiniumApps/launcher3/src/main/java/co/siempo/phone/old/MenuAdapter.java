@@ -19,7 +19,6 @@ import java.util.Collections;
 import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.app.DroidPrefs_;
-import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.interfaces.ItemTouchHelperAdapter;
 import co.siempo.phone.interfaces.ItemTouchHelperViewHolder;
@@ -39,7 +38,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    MenuAdapter(Activity context, RecyclerView activity_grid_view, Launcher3Prefs_ prefs, DroidPrefs_ droidPrefs_, ArrayList<MainListItem> arrayList, boolean isGrid, OnStartDragListener dragListener,
+    MenuAdapter(Activity context, RecyclerView activity_grid_view, DroidPrefs_ droidPrefs_, ArrayList<MainListItem> arrayList, boolean isGrid, OnStartDragListener dragListener,
                 OnToolItemListChangedListener listChangedListener) {
         this.context = context;
         this.arrayList = arrayList;

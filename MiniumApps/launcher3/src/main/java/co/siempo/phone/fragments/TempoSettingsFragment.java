@@ -15,7 +15,6 @@ import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.app.DroidPrefs_;
-import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.helper.ActivityHelper;
 
 @EFragment(R.layout.fragment_tempo_settings)
@@ -35,8 +34,8 @@ public class TempoSettingsFragment extends CoreFragment {
     TextView txtAlphaSettings;
     @ViewById
     TextView titleActionBar;
-    @Pref
-    Launcher3Prefs_ launcherPrefs;
+    //    @Pref
+//    Launcher3Prefs_ launcherPrefs;
     @Pref
     DroidPrefs_ droidPrefs_;
 
