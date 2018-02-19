@@ -38,6 +38,7 @@ import de.greenrobot.event.Subscribe;
 
 public class JunkfoodFlaggingActivity extends AppCompatActivity {
     Set<String> list = new HashSet<>();
+    Set<String> favoriteList = new HashSet<>();
     private Toolbar toolbar;
     private TextView txtFlaggedMessage1;
     private ListView listFlaggedApps;
@@ -63,6 +64,9 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_junkfood_flagging);
         initView();
         list = PrefSiempo.getInstance(this).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
+        favoriteList = PrefSiempo.getInstance(this).read(PrefSiempo.FAVORITE_APPS, new HashSet<String>());
+        favoriteList.removeAll(list);
+        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
         loadApps();
     }
 
@@ -131,6 +135,8 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
         builder.setPositiveButton(R.string.strcontinue, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                favoriteList.removeAll(list);
+                PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
                 PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.JUNKFOOD_APPS, list);
                 finish();
             }
