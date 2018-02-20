@@ -208,6 +208,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                 if (null != imageClear && imageClear.getVisibility() == View
                         .VISIBLE) {
                     imageClear.performClick();
+                    chipsEditText.setText("");
                 }
                 return true;
             }
@@ -538,6 +539,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         if (!isVisibleToUser && null != imageClear && linSearchList
                 .getVisibility() == View.VISIBLE) {
             imageClear.performClick();
+            chipsEditText.setText("");
         }
 
         super.setUserVisibleHint(isVisibleToUser);
@@ -564,6 +566,11 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         }
         if (inputMethodManager != null) {
             inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
+        }
+        if (null != imageClear && imageClear.getVisibility() == View
+                .VISIBLE) {
+            imageClear.performClick();
+            chipsEditText.setText("");
         }
     }
 
