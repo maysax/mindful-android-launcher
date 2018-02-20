@@ -12,7 +12,6 @@ import android.util.Log;
 import java.util.Date;
 
 import co.siempo.phone.app.Constants;
-import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.utils.PackageUtil;
@@ -124,7 +123,6 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
         switch (state) {
             case TelephonyManager.CALL_STATE_RINGING:
                 isIncoming = true;
-                CoreApplication.getInstance().setCallisRunning(true);
                 callStartTime = new Date();
                 savedNumber = number;
                 isAppDefaultOrFront = sharedPref.getBoolean("isAppDefaultOrFront", false);
@@ -142,12 +140,10 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
                 if (lastState != TelephonyManager.CALL_STATE_RINGING) {
                     isIncoming = false;
                     callStartTime = new Date();
-                    CoreApplication.getInstance().setCallisRunning(false);
                     onOutgoingCallStarted(context, number, callStartTime);
                 } else {
                     isIncoming = true;
                     callStartTime = new Date();
-                    CoreApplication.getInstance().setCallisRunning(true);
                     onIncomingCallAnswered(context, savedNumber, callStartTime);
                 }
                 break;
@@ -156,13 +152,10 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
                 //Went to idle-  this is the end of a call.  What type depends on previous state(s)
                 if (lastState == TelephonyManager.CALL_STATE_RINGING) {
                     //Ring but no pickup-  a miss
-                    CoreApplication.getInstance().setCallisRunning(false);
                     onMissedCall(context, savedNumber, callStartTime);
                 } else if (isIncoming) {
-                    CoreApplication.getInstance().setCallisRunning(false);
                     onIncomingCallEnded(context, savedNumber, callStartTime, new Date());
                 } else {
-                    CoreApplication.getInstance().setCallisRunning(false);
                     onOutgoingCallEnded(context, savedNumber, callStartTime, new Date());
                 }
                 sharedPref.edit().putBoolean(Constants.CALL_RUNNING, false).apply();

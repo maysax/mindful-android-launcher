@@ -13,8 +13,8 @@ import android.widget.ImageView;
 import com.eyeem.chips.BubbleStyle;
 import com.eyeem.chips.ChipsEditText;
 
-import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
+import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
@@ -121,7 +121,7 @@ public class SearchLayout extends CardView {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 handleAfterTextChanged(s.toString());
-                MainActivity.isTextLenghGreater = s.toString();
+                DashboardActivity.isTextLenghGreater = s.toString();
             }
 
             @Override
@@ -134,9 +134,9 @@ public class SearchLayout extends CardView {
 
     public void askFocus() {
 
-        if (MainActivity.isTextLenghGreater.length() > 0) {
-            MainActivity.isTextLenghGreater = MainActivity.isTextLenghGreater.trim();
-            handleAfterTextChanged(MainActivity.isTextLenghGreater);
+        if (DashboardActivity.isTextLenghGreater.length() > 0) {
+            DashboardActivity.isTextLenghGreater = DashboardActivity.isTextLenghGreater.trim();
+            handleAfterTextChanged(DashboardActivity.isTextLenghGreater);
         } else {
             if (launcherPrefs.getBoolean("isKeyBoardDisplay", false) && txtSearchBox != null)
                 txtSearchBox.requestFocus();

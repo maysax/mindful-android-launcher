@@ -28,7 +28,6 @@ import android.view.View;
 import co.siempo.phone.R;
 import co.siempo.phone.interfaces.ItemTouchHelperAdapter;
 import co.siempo.phone.interfaces.ItemTouchHelperViewHolder;
-import co.siempo.phone.old.OldMenuFragment;
 import co.siempo.phone.utils.UIUtils;
 
 /**
@@ -46,7 +45,6 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     private final ItemTouchHelperAdapter mAdapter;
     private int dragFrom = -1;
     private int dragTo = -1;
-    private OldMenuFragment oldMenuFragment = null;
     private Context mContext = null;
 
     public SimpleItemTouchHelperCallback(ItemTouchHelperAdapter adapter, Context context) {
@@ -54,10 +52,6 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
         mContext = context;
     }
 
-    public SimpleItemTouchHelperCallback(ItemTouchHelperAdapter adapter, OldMenuFragment oldMenuFragment) {
-        mAdapter = adapter;
-        this.oldMenuFragment = oldMenuFragment;
-    }
 
     @Override
     public boolean isLongPressDragEnabled() {

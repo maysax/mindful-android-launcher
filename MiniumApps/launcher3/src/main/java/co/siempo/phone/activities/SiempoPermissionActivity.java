@@ -27,7 +27,6 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 
-import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.utils.PermissionUtil;
@@ -133,7 +132,7 @@ public class SiempoPermissionActivity extends CoreActivity {
 
         Intent intent = getIntent();
         if (intent != null) {
-            isFromHome = intent.getBooleanExtra(MainActivity.IS_FROM_HOME, false);
+            isFromHome = intent.getBooleanExtra(DashboardActivity.IS_FROM_HOME, false);
         }
 
 

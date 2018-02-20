@@ -12,7 +12,6 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,7 +28,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.eyeem.chips.ChipsEditText;
 
@@ -215,6 +213,8 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             }
         });
         resetSearchList();
+
+
     }
 
     private void bindBottomDoc() {

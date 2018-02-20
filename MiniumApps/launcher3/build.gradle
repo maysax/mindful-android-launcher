@@ -135,9 +135,6 @@ dependencies {
         transitive = true
     }
     compile "com.orhanobut:logger:$loggerVersion"
-    debugCompile "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
-    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
-    testCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
     compile "de.greenrobot:eventbus:$eventbusVersion"
     compile "gun0912.ted:tedpermission:$tedPermissionVersion"
     compile 'com.blankj:utilcode:1.5.0'
