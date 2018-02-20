@@ -127,7 +127,9 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
                 CoreApplication.getInstance().setCallisRunning(true);
                 callStartTime = new Date();
                 savedNumber = number;
-                isAppDefaultOrFront = sharedPref.getBoolean("isAppDefaultOrFront", false);
+
+                isAppDefaultOrFront = PrefSiempo.getInstance(context).read(PrefSiempo
+                        .IS_APP_DEFAULT_OR_FRONT, false);
                 if (isAppDefaultOrFront) {
                     if (currentProfile == 0 && !isCallRunning) {
                         changeSoundProfile(true);

@@ -1,6 +1,5 @@
 package co.siempo.phone.fragments;
 
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
@@ -323,21 +322,20 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus && isVisible()) {
+                    imageClear.setVisibility(View.GONE);
                     hidePaneAndBottomView(context);
-                    searchListVisible(context);
+
 
                     blueLineDivider.setVisibility(View.GONE);
-                    imageClear.setVisibility(View.VISIBLE);
                 } else {
-
                     linPane.setVisibility(View.VISIBLE);
                     blueLineDivider.setVisibility(View.VISIBLE);
                     searchLayout.setVisibility(View.GONE);
                     cardViewEdtSearch.setVisibility(View.GONE);
                     relSearchTools.setVisibility(View.VISIBLE);
                     linBottomDoc.setVisibility(View.VISIBLE);
-                    ObjectAnimator fadeOut = ObjectAnimator.ofFloat(linSearchList, "alpha", 1f, .3f);
-                    fadeOut.setDuration(10000);
+//                    ObjectAnimator fadeOut = ObjectAnimator.ofFloat(linSearchList, "alpha", 1f, .3f);
+//                    fadeOut.setDuration(10000);
                     linSearchList.setVisibility(View.GONE);
                     imageClear.setVisibility(View.VISIBLE);
 
@@ -346,26 +344,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         });
     }
 
-
-    public void searchListVisible(Context context) {
-        Animation fadeOutAnim = AnimationUtils.loadAnimation(context, R.anim.fade_in);
-
-        fadeOutAnim.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                linSearchList.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
-        linSearchList.startAnimation(fadeOutAnim);
-    }
 
     @Subscribe
     public void searchLayoutEvent(SearchLayoutEvent event) {
@@ -589,18 +567,22 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         }
     }
 
-    public void hidePaneAndBottomView(Context context) {
+    public void hidePaneAndBottomView(final Context context) {
         Animation fadeOutAnim = AnimationUtils.loadAnimation(context, R.anim.fade_out);
 
         fadeOutAnim.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
+
+
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
                 linPane.setVisibility(View.GONE);
                 linBottomDoc.setVisibility(View.GONE);
+                searchListVisible(context);
+
             }
 
             @Override
@@ -609,5 +591,30 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         });
         linPane.startAnimation(fadeOutAnim);
         linBottomDoc.startAnimation(fadeOutAnim);
+    }
+
+    public void searchListVisible(Context context) {
+        Animation fadeOutAnim = AnimationUtils.loadAnimation(context, R.anim.fade_in);
+
+        fadeOutAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                linSearchList.setVisibility(View.VISIBLE);
+                linSearchList.setAlpha(0.5f);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                linSearchList.setVisibility(View.VISIBLE);
+                imageClear.setVisibility(View.VISIBLE);
+                linSearchList.setAlpha(1f);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+        linSearchList.startAnimation(fadeOutAnim);
+
     }
 }
