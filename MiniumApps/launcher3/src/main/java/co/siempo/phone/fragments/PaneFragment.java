@@ -75,6 +75,7 @@ import me.relex.circleindicator.CircleIndicator;
  */
 public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
+    static int currentIndex = -1;
     private LinearLayout linTopDoc;
     private ViewPager pagerPane;
     private LinearLayout linPane;
@@ -95,13 +96,11 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
     private TokenRouter router;
     private MainListAdapter adapter;
     private TokenParser parser;
-
     private RecyclerView recyclerViewBottomDoc;
     private List<MainListItem> items = new ArrayList<>();
     private ToolsMenuAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ItemOffsetDecoration itemDecoration;
-
     /**
      * Edit Text inside the SearchLayout
      */
@@ -196,7 +195,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         PanePagerAdapter mPagerAdapter = new PanePagerAdapter(getChildFragmentManager());
         pagerPane.setAdapter(mPagerAdapter);
         indicator.setViewPager(pagerPane);
-        pagerPane.setCurrentItem(2);
+
 
         bindBottomDoc();
         inputMethodManager = (InputMethodManager) getActivity()
@@ -213,6 +212,8 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             }
         });
         resetSearchList();
+
+
     }
 
     private void bindBottomDoc() {
@@ -264,6 +265,13 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
         //Code for Page change
         setViewPagerPageChanged();
+        if (currentIndex == -1) {
+            currentIndex = 2;
+        }
+        pagerPane.setCurrentItem(currentIndex);
+        if (currentIndex == 0) {
+            junkFoodAppPane();
+        }
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -417,35 +425,10 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
             @Override
             public void onPageSelected(int i) {
+                currentIndex = i;
                 //Make the junk food pane visible
                 if (i == 0) {
-                    linTopDoc.setBackgroundColor(getResources().getColor(R.color
-                            .bg_junk_apps_top_dock));
-                    txtTopDockDate.setVisibility(View.GONE);
-                    searchLayout.setVisibility(View.GONE);
-                    edtSearchToolsRounded.setVisibility(View.GONE);
-
-                    txtIntention.setVisibility(View.VISIBLE);
-                    txtIntentionLabelJunkPane.setVisibility(View.VISIBLE);
-
-                    String strIntention = PrefSiempo.getInstance(getActivity()).read
-                            (PrefSiempo.DEFAULT_INTENTION, "");
-                    if (TextUtils.isEmpty(strIntention)) {
-                        txtIntention.setText("You chose to hide these apps.");
-                        txtIntentionLabelJunkPane.setVisibility(View.INVISIBLE);
-
-                    } else {
-                        txtIntentionLabelJunkPane.setText(getString(R.string
-                                .you_ve_flag));
-                        txtIntention.setText(strIntention);
-                        txtIntention.setVisibility(View.VISIBLE);
-                        txtIntentionLabelJunkPane.setVisibility(View.VISIBLE);
-                    }
-
-
-                    // finally change the color
-                    mWindow.setStatusBarColor(getResources().getColor(R.color
-                            .appland_blue_bright));
+                    junkFoodAppPane();
 
 
                 }
@@ -473,6 +456,36 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
             }
         });
+    }
+
+    private void junkFoodAppPane() {
+        linTopDoc.setBackgroundColor(getResources().getColor(R.color
+                .bg_junk_apps_top_dock));
+        txtTopDockDate.setVisibility(View.GONE);
+        searchLayout.setVisibility(View.GONE);
+        edtSearchToolsRounded.setVisibility(View.GONE);
+
+        txtIntention.setVisibility(View.VISIBLE);
+        txtIntentionLabelJunkPane.setVisibility(View.VISIBLE);
+
+        String strIntention = PrefSiempo.getInstance(getActivity()).read
+                (PrefSiempo.DEFAULT_INTENTION, "");
+        if (TextUtils.isEmpty(strIntention)) {
+            txtIntention.setText("You chose to hide these apps.");
+            txtIntentionLabelJunkPane.setVisibility(View.INVISIBLE);
+
+        } else {
+            txtIntentionLabelJunkPane.setText(getString(R.string
+                    .you_ve_flag));
+            txtIntention.setText(strIntention);
+            txtIntention.setVisibility(View.VISIBLE);
+            txtIntentionLabelJunkPane.setVisibility(View.VISIBLE);
+        }
+
+
+        // finally change the color
+        mWindow.setStatusBarColor(getResources().getColor(R.color
+                .appland_blue_bright));
     }
 
 
