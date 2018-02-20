@@ -147,6 +147,8 @@ public class PrefSiempo {
     public static final String USER_EMAILID = "userEmailId";
     public static final String IS_CONTACT_UPDATE = "isContactUpdate";
     private static final PrefSiempo ourInstance = new PrefSiempo();
+
+
     public static String DISABLE_APPLIST = "DISABLE_APPLIST";
     public static String HELPFUL_ROBOTS = "HELPFUL_ROBOTS";
     public static String BLOCKED_APPLIST = "BLOCKED_APPLIST";

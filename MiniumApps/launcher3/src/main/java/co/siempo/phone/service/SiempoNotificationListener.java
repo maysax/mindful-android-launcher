@@ -24,7 +24,6 @@ import com.google.gson.reflect.TypeToken;
 
 import org.androidannotations.annotations.EService;
 import org.androidannotations.annotations.SystemService;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
@@ -35,7 +34,6 @@ import java.util.List;
 
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.db.DBClient;
 import co.siempo.phone.db.DBUtility;
@@ -62,8 +60,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
     public static final String TAG = SiempoNotificationListener.class.getName();
 
 
-    @Pref
-    DroidPrefs_ droidPrefs;
 
     @SystemService
     AudioManager audioManager;
@@ -182,9 +178,13 @@ public class SiempoNotificationListener extends NotificationListenerService {
             }
 
             if (null != blockedAppList && blockedAppList.size() > 0 && blockedAppList.contains(notification.getPackageName())) {
-                if (!notification.getPackageName().equalsIgnoreCase(getPackageName()) && droidPrefs.tempoType().get() != 0) {
+
+                if (!notification.getPackageName().equalsIgnoreCase(getPackageName()) && PrefSiempo.getInstance(context).read(PrefSiempo
+                        .TEMPO_TYPE, 0) != 0) {
                     SiempoNotificationListener.this.cancelNotification(notification.getKey());
-                    if (droidPrefs.tempoType().get() == 1 && droidPrefs.tempoType().get() == 2) {
+                    if (PrefSiempo.getInstance(context).read(PrefSiempo
+                            .TEMPO_TYPE, 0) == 1 && PrefSiempo.getInstance(context).read(PrefSiempo
+                            .TEMPO_TYPE, 0) == 2) {
                         int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
                         if (sound != 1) {
                             audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);

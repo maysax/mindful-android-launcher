@@ -31,7 +31,6 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +38,7 @@ import java.util.List;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
-import co.siempo.phone.app.DroidPrefs_;
+import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.SendMail;
 import co.siempo.phone.utils.UIUtils;
 
@@ -65,8 +64,6 @@ public class FeedbackFragment extends CoreFragment {
     @ViewById
     EditText edt_email;
 
-    @Pref
-    DroidPrefs_ droidPrefs_;
 
     @ViewById
     EditText txtMessage;
@@ -107,8 +104,11 @@ public class FeedbackFragment extends CoreFragment {
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.tick:
+
                         if (!TextUtils.isEmpty(edt_email.getText().toString().trim())) {
-                            droidPrefs_.userEmailId().put(edt_email.getText().toString().trim());
+                            PrefSiempo.getInstance(context).write(PrefSiempo
+                                    .USER_EMAILID, edt_email.getText().toString().trim());
+//                            droidPrefs_.userEmailId().put(edt_email.getText().toString().trim());
                         }
                         try {
                             String version = "";
@@ -120,8 +120,8 @@ public class FeedbackFragment extends CoreFragment {
                             if (ActivityCompat.checkSelfPermission(context,
                                     Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
 
-
-                                String body = "User Email :" + droidPrefs_.userEmailId().get() + "\nFeedBack Type : " + selectedItemText + "\n" +
+                                String body = "User Email :" + PrefSiempo.getInstance(context).read(PrefSiempo
+                                        .USER_EMAILID, "") + "\nFeedBack Type : " + selectedItemText + "\n" +
                                         "Message :" + txtMessage.getText().toString().trim() + "\n" +
                                         "Phone Data : Manufacturer - " + android.os.Build.MANUFACTURER +
                                         ", Model - " + android.os.Build.MODEL +
@@ -169,7 +169,8 @@ public class FeedbackFragment extends CoreFragment {
             }
         });
 
-        if (!TextUtils.isEmpty(droidPrefs_.userEmailId().get())) {
+        if (!TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo
+                .USER_EMAILID, ""))) {
             layout_email.setVisibility(View.GONE);
         } else {
             layout_email.setVisibility(View.VISIBLE);
@@ -209,8 +210,10 @@ public class FeedbackFragment extends CoreFragment {
                 // First item is disable and it is used for hint
                 String email;
                 // Check if email is store in database , If not get the latest value from email textbox
-                if (!TextUtils.isEmpty(droidPrefs_.userEmailId().get())) {
-                    email = droidPrefs_.userEmailId().get();
+                if (!TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo
+                        .USER_EMAILID, ""))) {
+                    email = PrefSiempo.getInstance(context).read(PrefSiempo
+                            .USER_EMAILID, "");
                 } else {
                     email = edt_email.getText().toString().trim();
                 }
@@ -263,8 +266,10 @@ public class FeedbackFragment extends CoreFragment {
         if (!TextUtils.isEmpty(txtMessage.getText().toString().trim())) {
             String email;
             // Check if email is store in database , If not get the latest value from email textbox
-            if (!TextUtils.isEmpty(droidPrefs_.userEmailId().get())) {
-                email = droidPrefs_.userEmailId().get();
+            if (!TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo
+                    .USER_EMAILID, ""))) {
+                email = PrefSiempo.getInstance(context).read(PrefSiempo
+                        .USER_EMAILID, "");
             } else {
                 email = edt_email.getText().toString().trim();
             }

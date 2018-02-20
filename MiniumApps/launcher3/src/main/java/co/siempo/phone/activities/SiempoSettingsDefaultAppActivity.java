@@ -5,14 +5,12 @@ import android.widget.ListView;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.DefaultAppUpdate;
@@ -25,8 +23,6 @@ import de.greenrobot.event.Subscribe;
 
 @EActivity(R.layout.activity_siempo_settings_default)
 public class SiempoSettingsDefaultAppActivity extends CoreActivity {
-    @Pref
-    public DroidPrefs_ prefs;
     @ViewById
     ListView listView;
     private OldMenuAdapter adapter;

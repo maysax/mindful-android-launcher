@@ -24,14 +24,12 @@ import com.joanzapata.iconify.IconDrawable;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.fragments.CoreFragment;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainListItemLoader;
@@ -49,8 +47,6 @@ import co.siempo.phone.utils.UIUtils;
 public class OldMenuFragment extends CoreFragment implements OnToolItemListChangedListener,
         OnStartDragListener {
 
-    @Pref
-    public DroidPrefs_ prefs;
     //    @Pref
 //    public Launcher3Prefs_ launcher3Prefs_;
     @ViewById
@@ -137,7 +133,7 @@ public class OldMenuFragment extends CoreFragment implements OnToolItemListChang
 
         Gson gson = new Gson();
         String jsonListOfSortedCustomerIds = gson.toJson(listOfSortedCustomerId);
-        prefs.sortedMenu().put(jsonListOfSortedCustomerIds);
+        PrefSiempo.getInstance(context).write(PrefSiempo.SORTED_MENU, jsonListOfSortedCustomerIds);
 
     }
 
@@ -155,7 +151,7 @@ public class OldMenuFragment extends CoreFragment implements OnToolItemListChang
         ArrayList<MainListItem> sortedCustomers = new ArrayList<>();
 
         //get the JSON array of the ordered of sorted customers
-        String jsonListOfSortedCustomerId = prefs.sortedMenu().get();
+        String jsonListOfSortedCustomerId = PrefSiempo.getInstance(context).read(PrefSiempo.SORTED_MENU, "");
 
 
         //check for null
@@ -207,7 +203,7 @@ public class OldMenuFragment extends CoreFragment implements OnToolItemListChang
         }
         itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_066);
         activity_grid_view.addItemDecoration(itemDecoration);
-        mAdapter = new MenuAdapter(getActivity(), activity_grid_view, prefs, items, false, this, this);
+        mAdapter = new MenuAdapter(getActivity(), activity_grid_view, items, false, this, this);
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mAdapter, OldMenuFragment.this);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(activity_grid_view);
@@ -232,7 +228,7 @@ public class OldMenuFragment extends CoreFragment implements OnToolItemListChang
         }
         itemDecoration = new ItemOffsetDecoration(context, R.dimen.menu_grid_margin);
         activity_grid_view.addItemDecoration(itemDecoration);
-        mAdapter = new MenuAdapter(getActivity(), activity_grid_view, prefs, items, true, this, this);
+        mAdapter = new MenuAdapter(getActivity(), activity_grid_view, items, true, this, this);
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mAdapter, OldMenuFragment.this);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(activity_grid_view);

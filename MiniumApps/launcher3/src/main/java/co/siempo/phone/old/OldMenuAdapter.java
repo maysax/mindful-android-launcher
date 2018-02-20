@@ -22,6 +22,7 @@ import co.siempo.phone.activities.SiempoSettingsDefaultAppActivity;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.utils.PrefSiempo;
 
 /**
  * Created by Shahab on 2/23/2017.
@@ -92,28 +93,42 @@ public class OldMenuAdapter extends ArrayAdapter<MainListItem> {
                 holder.textDefaultApp.setVisibility(View.VISIBLE);
                 SiempoSettingsDefaultAppActivity siempoSettingsDefaultAppActivity = (SiempoSettingsDefaultAppActivity) context;
                 String packageName = "";
+                PrefSiempo instance = PrefSiempo.getInstance(siempoSettingsDefaultAppActivity);
                 if (menuId == Constants.CALL_PACKAGE) {
-                    packageName = siempoSettingsDefaultAppActivity.prefs.callPackage().get();
+
+
+                    packageName = instance.read(PrefSiempo
+                            .CALL_PACKAGE, "");
                 } else if (menuId == Constants.MESSAGE_PACKAGE) {
-                    packageName = siempoSettingsDefaultAppActivity.prefs.messagePackage().get();
+                    packageName = instance.read(PrefSiempo
+                            .MESSAGE_PACKAGE, "");
                 } else if (menuId == Constants.CALENDER_PACKAGE) {
-                    packageName = siempoSettingsDefaultAppActivity.prefs.calenderPackage().get();
+                    packageName = instance.read(PrefSiempo
+                            .CALENDER_PACKAGE, "");
                 } else if (menuId == Constants.CONTACT_PACKAGE) {
-                    packageName = siempoSettingsDefaultAppActivity.prefs.contactPackage().get();
+                    packageName = instance.read(PrefSiempo
+                            .CONTACT_PACKAGE, "");
                 } else if (menuId == Constants.MAP_PACKAGE) {
-                    packageName = siempoSettingsDefaultAppActivity.prefs.mapPackage().get();
+                    packageName = instance.read(PrefSiempo
+                            .MAP_PACKAGE, "");
                 } else if (menuId == Constants.PHOTOS_PACKAGE) {
-                    packageName = siempoSettingsDefaultAppActivity.prefs.photosPackage().get();
+                    packageName = instance.read(PrefSiempo
+                            .PHOTOS_PACKAGE, "");
                 } else if (menuId == Constants.CAMERA_PACKAGE) {
-                    packageName = siempoSettingsDefaultAppActivity.prefs.cameraPackage().get();
+                    packageName = instance.read(PrefSiempo
+                            .CAMERA_PACKAGE, "");
                 } else if (menuId == Constants.BROWSER_PACKAGE) {
-                    packageName = siempoSettingsDefaultAppActivity.prefs.browserPackage().get();
+                    packageName = instance.read(PrefSiempo
+                            .BROWSER_PACKAGE, "");
                 } else if (menuId == Constants.CLOCK_PACKAGE) {
-                    packageName = siempoSettingsDefaultAppActivity.prefs.clockPackage().get();
+                    packageName = instance.read(PrefSiempo
+                            .CLOCK_PACKAGE, "");
                 } else if (menuId == Constants.EMAIL_PACKAGE) {
-                    packageName = siempoSettingsDefaultAppActivity.prefs.emailPackage().get();
+                    packageName = instance.read(PrefSiempo
+                            .EMAIL_PACKAGE, "");
                 } else if (menuId == Constants.NOTES_PACKAGE) {
-                    packageName = siempoSettingsDefaultAppActivity.prefs.notesPackage().get();
+                    packageName = instance.read(PrefSiempo
+                            .NOTES_PACKAGE, "");
                 }
                 if (!packageName.equalsIgnoreCase("Notes")) {
                     String strAppName = getApplicationNameFromPackageName(packageName);

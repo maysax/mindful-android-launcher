@@ -13,11 +13,9 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.TempoAppNotificationActivity;
-import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.utils.PrefSiempo;
 
 /**
@@ -35,8 +33,6 @@ public class TempoNotificationFragment extends CoreFragment {
 //    @Pref
 //    Launcher3Prefs_ launcherPrefs;
 
-    @Pref
-    DroidPrefs_ droidPrefs;
 
     @ViewById
     TextView txtAllowAppsText;

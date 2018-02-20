@@ -23,15 +23,14 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.HelpActivity;
 import co.siempo.phone.activities.IntentionEditActivity;
 import co.siempo.phone.activities.SettingsActivity_;
-import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.dialog.Dialog_Tempo;
 import co.siempo.phone.service.StatusBarService;
+import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 
 /**
@@ -62,8 +61,6 @@ public class IntentionFieldFragment extends CoreFragment {
     @ViewById
     RelativeLayout rootLayout;
 
-    @Pref
-    DroidPrefs_ prefs;
 
 //    @Pref
 //    Launcher3Prefs_ launcherPrefs;
@@ -95,21 +92,31 @@ public class IntentionFieldFragment extends CoreFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (prefs.isContactUpdate().get() || prefs.isAppUpdated().get()) {
-            if (prefs.isContactUpdate().get()) {
-                prefs.isContactUpdate().put(false);
+
+
+        if (PrefSiempo.getInstance(context).read(PrefSiempo.IS_CONTACT_UPDATE, true) ||
+                PrefSiempo.getInstance(context)
+                        .read(PrefSiempo.IS_APP_UPDATED, false)) {
+            if (PrefSiempo.getInstance(context).read(PrefSiempo.IS_CONTACT_UPDATE, true)) {
+                PrefSiempo.getInstance(context).write(PrefSiempo
+                        .IS_CONTACT_UPDATE, false);
             }
-            if (prefs.isAppUpdated().get()) {
-                prefs.isAppUpdated().put(false);
+            if (PrefSiempo.getInstance(context).read(PrefSiempo
+                    .IS_APP_UPDATED, false)) {
+                PrefSiempo.getInstance(context).write(PrefSiempo
+                        .IS_APP_UPDATED, false);
+
             }
         }
 
-        if (prefs.isIntentionEnable().get()) {
+
+        if (PrefSiempo.getInstance(context).read(PrefSiempo.IS_INTENTION_ENABLE, false)) {
             linIF.setVisibility(View.GONE);
         } else {
             linIF.setVisibility(View.VISIBLE);
         }
-        txtIntention.setText(prefs.defaultIntention().get());
+        txtIntention.setText(PrefSiempo.getInstance(context).read
+                (PrefSiempo.DEFAULT_INTENTION, ""));
         try {
             UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
         } catch (Exception e) {

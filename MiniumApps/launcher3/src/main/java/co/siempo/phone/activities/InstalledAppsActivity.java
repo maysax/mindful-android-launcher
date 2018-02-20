@@ -101,7 +101,8 @@ public class InstalledAppsActivity extends CoreActivity implements View.OnClickL
         super.onResume();
         startTime = System.currentTimeMillis();
         PackageUtil.checkPermission(this);
-        if (prefs.isAppUpdated().get()) {
+        if (PrefSiempo.getInstance(this).read(PrefSiempo
+                .IS_APP_UPDATED, false)) {
             progressDialog = ProgressDialog.show(this, "", getString(R.string.loading_msg));
             CoreApplication.getInstance().getAllApplicationPackageName();
         }
@@ -121,7 +122,8 @@ public class InstalledAppsActivity extends CoreActivity implements View.OnClickL
             if (progressDialog != null && progressDialog.isShowing())
                 progressDialog.dismiss();
             arrayList = CoreApplication.getInstance().getPackagesList();
-            prefs.isAppUpdated().put(false);
+            PrefSiempo.getInstance(this).write(PrefSiempo
+                    .IS_APP_UPDATED, false);
             if (PrefSiempo.getInstance(this).read(PrefSiempo.IS_GRID, true)) {
                 bindAsGrid();
             } else {

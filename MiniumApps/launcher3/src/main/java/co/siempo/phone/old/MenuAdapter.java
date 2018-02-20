@@ -18,7 +18,6 @@ import java.util.Collections;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.interfaces.ItemTouchHelperAdapter;
 import co.siempo.phone.interfaces.ItemTouchHelperViewHolder;
@@ -26,6 +25,7 @@ import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.main.OnStartDragListener;
 import co.siempo.phone.main.OnToolItemListChangedListener;
 import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.utils.PrefSiempo;
 
 
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> implements ItemTouchHelperAdapter {
@@ -34,16 +34,14 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder
     private boolean isGrid;
     private OnStartDragListener mDragStartListener;
     private OnToolItemListChangedListener mListChangedListener;
-    private DroidPrefs_ droidPrefs_;
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    MenuAdapter(Activity context, RecyclerView activity_grid_view, DroidPrefs_ droidPrefs_, ArrayList<MainListItem> arrayList, boolean isGrid, OnStartDragListener dragListener,
+    MenuAdapter(Activity context, RecyclerView activity_grid_view, ArrayList<MainListItem> arrayList, boolean isGrid, OnStartDragListener dragListener,
                 OnToolItemListChangedListener listChangedListener) {
         this.context = context;
         this.arrayList = arrayList;
         this.isGrid = isGrid;
-        this.droidPrefs_ = droidPrefs_;
         mDragStartListener = dragListener;
         mListChangedListener = listChangedListener;
     }
@@ -128,13 +126,17 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder
 
         if (isGrid) {
             if (item != null) {
-                if (item.getId() == 2 && !droidPrefs_.isCallClickedFirstTime().get()) {
+
+                if (item.getId() == 2 && !PrefSiempo.getInstance(context).read(PrefSiempo
+                        .IS_CALLCLICKED_FIRST_TIME, false)) {
                     holder.imgView.setTag("1");
                     holder.imgView.setBackground(context.getResources().getDrawable(R.drawable.circle_menu, null));
-                } else if (item.getId() == 1 && !droidPrefs_.isMessageClickedFirstTime().get()) {
+                } else if (item.getId() == 1 && !PrefSiempo.getInstance(context).read(PrefSiempo
+                        .IS_MESSAGE_CLICKED_FIRST_TIME, false)) {
                     holder.imgView.setTag("1");
                     holder.imgView.setBackground(context.getResources().getDrawable(R.drawable.circle_menu, null));
-                } else if (item.getId() == 16 && !droidPrefs_.isEmailClickedFirstTime().get()) {
+                } else if (item.getId() == 16 && !PrefSiempo.getInstance(context).read(PrefSiempo
+                        .IS_EMAILCLICKED_FIRST_TIME, false)) {
                     holder.imgView.setBackground(context.getResources().getDrawable(R.drawable.circle_menu, null));
                     holder.imgView.setTag("1");
                 } else {
@@ -144,13 +146,18 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder
             }
         } else {
             if (item != null) {
-                if (item.getId() == 2 && !droidPrefs_.isCallClickedFirstTime().get()) {
+                if (item.getId() == 2 && !PrefSiempo.getInstance(context).read(PrefSiempo
+                        .IS_CALLCLICKED_FIRST_TIME, false)) {
                     holder.imgView.setTag("1");
                     holder.relMenu.setBackground(context.getResources().getDrawable(R.drawable.rectagle_menu, null));
-                } else if (item.getId() == 1 && !droidPrefs_.isMessageClickedFirstTime().get()) {
+                } else if (item.getId() == 1 && !PrefSiempo.getInstance(context)
+                        .read(PrefSiempo
+                                .IS_MESSAGE_CLICKED_FIRST_TIME, false)) {
                     holder.imgView.setTag("1");
                     holder.relMenu.setBackground(context.getResources().getDrawable(R.drawable.rectagle_menu, null));
-                } else if (item.getId() == 16 && !droidPrefs_.isEmailClickedFirstTime().get()) {
+                } else if (item.getId() == 16 && !PrefSiempo.getInstance(context)
+                        .read(PrefSiempo
+                                .IS_EMAILCLICKED_FIRST_TIME, false)) {
                     holder.imgView.setTag("1");
                     holder.relMenu.setBackground(context.getResources().getDrawable(R.drawable.rectagle_menu, null));
                 } else {

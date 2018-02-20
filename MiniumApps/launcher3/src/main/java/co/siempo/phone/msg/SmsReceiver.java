@@ -12,14 +12,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.androidannotations.annotations.EReceiver;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 
 import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.DaoSession;
@@ -37,8 +35,6 @@ import de.greenrobot.event.EventBus;
 @EReceiver
 public class SmsReceiver extends BroadcastReceiver {
 
-    @Pref
-    DroidPrefs_ prefs;
     //    @Pref
 //    Launcher3Prefs_ launcherPrefs;
     ArrayList<String> disableNotificationApps = new ArrayList<>();
@@ -97,7 +93,8 @@ public class SmsReceiver extends BroadcastReceiver {
                         if (null != blockedApps && blockedApps.size() > 0 && !TextUtils.isEmpty(messagingAppPackage)) {
                             for (String blockedApp : blockedApps) {
                                 if (blockedApp.equalsIgnoreCase(messagingAppPackage)) {
-                                    if (prefs.tempoType().get() != 0) {
+                                    if (PrefSiempo.getInstance(context).read(PrefSiempo
+                                            .TEMPO_TYPE, 0) != 0) {
                                         saveMessage(mAddress, mBody, mDate, context);
                                     }
                                 }

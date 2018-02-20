@@ -31,7 +31,6 @@ import android.view.WindowManager;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.SystemService;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -39,13 +38,13 @@ import java.io.UnsupportedEncodingException;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Config;
 import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.app.HomeWatcher;
 import co.siempo.phone.event.DownloadApkEvent;
 import co.siempo.phone.event.HomePressEvent;
 import co.siempo.phone.helper.Validate;
 import co.siempo.phone.interfaces.NFCInterface;
 import co.siempo.phone.log.Tracer;
+import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
@@ -64,8 +63,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     public static File localPath, backupPath;
     public int currentIndex = 0;
     public HomeWatcher mHomeWatcher;
-    @Pref
-    public DroidPrefs_ prefs;
     public View mTestView = null;
     public WindowManager windowManager = null;
     @SystemService
@@ -110,8 +107,9 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         userPresentBroadcastReceiver = new UserPresentBroadcastReceiver();
         registerReceiver(userPresentBroadcastReceiver, intentFilter);
 
-        if (prefs != null && prefs.selectedThemeId().get() != 0) {
-            setTheme(prefs.selectedThemeId().get());
+
+        if (PrefSiempo.getInstance(this).read(PrefSiempo.SELECTED_THEME_ID, 0) != 0) {
+            setTheme(PrefSiempo.getInstance(this).read(PrefSiempo.SELECTED_THEME_ID, 0));
         }
         mHomeWatcher = new HomeWatcher(this);
         mHomeWatcher.setOnHomePressedListener(new HomeWatcher.OnHomePressedListener() {
@@ -402,7 +400,8 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                             mTestView.setVisibility(View.VISIBLE);
                     }
                 } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
-                    if (mTestView != null) mTestView.setVisibility(View.INVISIBLE);
+                    if (mTestView != null)
+                        mTestView.setVisibility(View.INVISIBLE);
                 }
             }
         }

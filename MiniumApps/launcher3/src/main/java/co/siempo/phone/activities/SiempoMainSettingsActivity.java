@@ -7,14 +7,12 @@ import android.widget.ListView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.SettingsAdapter;
 import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.helper.ActivityHelper;
@@ -27,8 +25,6 @@ import de.greenrobot.event.Subscribe;
 @EActivity(R.layout.activity_settings_main)
 public class SiempoMainSettingsActivity extends CoreActivity {
 
-    @Pref
-    DroidPrefs_ droidPrefs_;
     private ListView lst_settings;
     private ArrayList<SettingsData> arr_menuList;
     private SettingsAdapter adapter;

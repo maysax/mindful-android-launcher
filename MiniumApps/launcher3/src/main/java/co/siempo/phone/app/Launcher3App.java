@@ -25,7 +25,6 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.Trace;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.greenrobot.greendao.database.Database;
 
 import java.util.ArrayList;
@@ -54,8 +53,6 @@ public class Launcher3App extends CoreApplication {
     public static final String DND_START_STOP_ACTION = "siempo.intent.action.DND_START_STOP";
     private final String TRACE_TAG = LogConfig.TRACE_TAG + "Launcher3App";
     private final String TAG = "SiempoActivityLifeCycle";
-    @Pref
-    public DroidPrefs_ prefs;
     public Dialog dialog;
     //    @Pref
 //    Launcher3Prefs_ launcherPrefs;
@@ -109,48 +106,69 @@ public class Launcher3App extends CoreApplication {
      */
     public void setAllDefaultMenusApplication() {
         String callPackage = getCallPackageName();
-        if (!callPackage.equalsIgnoreCase("") && prefs.callPackage().get().equalsIgnoreCase(""))
-            prefs.callPackage().put(callPackage);
+
+        PrefSiempo prefInstance = PrefSiempo.getInstance(this);
+        if (!callPackage.equalsIgnoreCase("") && prefInstance.read(PrefSiempo.CALL_PACKAGE, "").equalsIgnoreCase(""))
+            prefInstance.write(PrefSiempo.CALL_PACKAGE, callPackage);
 
         String messagePackage = getMessagePackageName();
-        if (!messagePackage.equalsIgnoreCase("") && prefs.messagePackage().get().equalsIgnoreCase(""))
-            prefs.messagePackage().put(messagePackage);
+
+        if (!messagePackage.equalsIgnoreCase("") && prefInstance.read(PrefSiempo.MESSAGE_PACKAGE, "").equalsIgnoreCase(""))
+            prefInstance.write(PrefSiempo.MESSAGE_PACKAGE, messagePackage);
 
         String calenderPackage = getCalenderPackageName();
-        if (!calenderPackage.equalsIgnoreCase("") && prefs.calenderPackage().get().equalsIgnoreCase(""))
-            prefs.calenderPackage().put(calenderPackage);
+
+        if (!calenderPackage.equalsIgnoreCase("") && prefInstance.read(PrefSiempo.CALENDER_PACKAGE, "").equalsIgnoreCase(""))
+            prefInstance.write(PrefSiempo.CALENDER_PACKAGE, calenderPackage);
+//            prefs.calenderPackage().put(calenderPackage);
 
         String contactPackage = getContactPackageName();
-        if (!contactPackage.equalsIgnoreCase("") && prefs.contactPackage().get().equalsIgnoreCase(""))
-            prefs.contactPackage().put(contactPackage);
+
+        if (!contactPackage.equalsIgnoreCase("") && prefInstance.read(PrefSiempo.CONTACT_PACKAGE, "").equalsIgnoreCase(""))
+            prefInstance.write(PrefSiempo.CONTACT_PACKAGE, contactPackage);
+//            prefs.contactPackage().put(contactPackage);
 
         String mapPackage = getMapPackageName();
-        if (!mapPackage.equalsIgnoreCase("") && prefs.mapPackage().get().equalsIgnoreCase(""))
-            prefs.mapPackage().put(mapPackage);
+
+        if (!mapPackage.equalsIgnoreCase("") && prefInstance.read(PrefSiempo.MAP_PACKAGE, "").equalsIgnoreCase(""))
+            prefInstance.write(PrefSiempo.MAP_PACKAGE, mapPackage);
+//            prefs.mapPackage().put(mapPackage);
 
         String photosPackage = getPhotosPackageName();
-        if (!photosPackage.equalsIgnoreCase("") && prefs.photosPackage().get().equalsIgnoreCase(""))
-            prefs.photosPackage().put(photosPackage);
+
+        if (!photosPackage.equalsIgnoreCase("") && prefInstance.read(PrefSiempo.PHOTOS_PACKAGE, "").equalsIgnoreCase(""))
+            prefInstance.write(PrefSiempo.PHOTOS_PACKAGE, photosPackage);
+//            prefs.photosPackage().put(photosPackage);
 
         String cameraPackage = getCameraPackageName();
-        if (!cameraPackage.equalsIgnoreCase("") && prefs.cameraPackage().get().equalsIgnoreCase(""))
-            prefs.cameraPackage().put(cameraPackage);
+
+        if (!cameraPackage.equalsIgnoreCase("") && prefInstance.read(PrefSiempo.CAMERA_PACKAGE, "").equalsIgnoreCase(""))
+            prefInstance.write(PrefSiempo.CAMERA_PACKAGE, cameraPackage);
+//            prefs.cameraPackage().put(cameraPackage);
 
         String browserPackage = getBrowserPackageName();
-        if (!browserPackage.equalsIgnoreCase("") && prefs.browserPackage().get().equalsIgnoreCase(""))
-            prefs.browserPackage().put(browserPackage);
+
+        if (!browserPackage.equalsIgnoreCase("") && prefInstance.read(PrefSiempo.BROWSER_PACKAGE, "").equalsIgnoreCase(""))
+            prefInstance.write(PrefSiempo.BROWSER_PACKAGE, browserPackage);
+//            prefs.browserPackage().put(browserPackage);
 
         String clockPackage = getClockPackageName();
-        if (!clockPackage.equalsIgnoreCase("") && prefs.clockPackage().get().equalsIgnoreCase(""))
-            prefs.clockPackage().put(clockPackage);
+
+        if (!clockPackage.equalsIgnoreCase("") && prefInstance.read(PrefSiempo.CLOCK_PACKAGE, "").equalsIgnoreCase(""))
+            prefInstance.write(PrefSiempo.CLOCK_PACKAGE, clockPackage);
+//            prefs.clockPackage().put(clockPackage);
 
         String emailPackage = getMailPackageName();
-        if (!emailPackage.equalsIgnoreCase("") && prefs.emailPackage().get().equalsIgnoreCase(""))
-            prefs.emailPackage().put(emailPackage);
+
+        if (!emailPackage.equalsIgnoreCase("") && prefInstance.read(PrefSiempo.EMAIL_PACKAGE, "").equalsIgnoreCase(""))
+            prefInstance.write(PrefSiempo.EMAIL_PACKAGE, emailPackage);
+//            prefs.emailPackage().put(emailPackage);
 
         String notesPackage = getNotesPackageName();
-        if (!notesPackage.equalsIgnoreCase("") && prefs.notesPackage().get().equalsIgnoreCase(""))
-            prefs.notesPackage().put(notesPackage);
+
+        if (!notesPackage.equalsIgnoreCase("") && prefInstance.read(PrefSiempo.NOTES_PACKAGE, "").equalsIgnoreCase(""))
+            prefInstance.write(PrefSiempo.NOTES_PACKAGE, notesPackage);
+//            prefs.notesPackage().put(notesPackage);
 
     }
 
@@ -180,7 +198,9 @@ public class Launcher3App extends CoreApplication {
             appList = getCallPackageList();
             if (isOkayShow) {
                 for (int i = 0; i < appList.size(); i++) {
-                    if (appList.get(i).activityInfo.packageName.equalsIgnoreCase(prefs.callPackage().get())) {
+
+                    if (appList.get(i).activityInfo.packageName.equalsIgnoreCase(PrefSiempo.getInstance(context).read(PrefSiempo
+                            .CALL_PACKAGE, ""))) {
                         resolveInfo = appList.get(i);
                         pos = i;
                     }
@@ -190,7 +210,9 @@ public class Launcher3App extends CoreApplication {
             appList = getMessagePackageList();
             if (isOkayShow) {
                 for (int i = 0; i < appList.size(); i++) {
-                    if (appList.get(i).activityInfo.packageName.equalsIgnoreCase(prefs.messagePackage().get())) {
+                    if (appList.get(i).activityInfo.packageName.equalsIgnoreCase(PrefSiempo.getInstance(context).read(PrefSiempo
+                                    .MESSAGE_PACKAGE,
+                            ""))) {
                         resolveInfo = appList.get(i);
                         pos = i;
                     }
@@ -200,7 +222,10 @@ public class Launcher3App extends CoreApplication {
             appList = getCalenderPackageList();
             if (isOkayShow) {
                 for (int i = 0; i < appList.size(); i++) {
-                    if (appList.get(i).activityInfo.packageName.equalsIgnoreCase(prefs.calenderPackage().get())) {
+
+                    if (appList.get(i).activityInfo.packageName.equalsIgnoreCase(PrefSiempo.getInstance(context).read(PrefSiempo
+                                    .CALENDER_PACKAGE,
+                            ""))) {
                         resolveInfo = appList.get(i);
                         pos = i;
                     }
@@ -210,7 +235,9 @@ public class Launcher3App extends CoreApplication {
             appList = getContactPackageList();
             if (isOkayShow) {
                 for (int i = 0; i < appList.size(); i++) {
-                    if (appList.get(i).activityInfo.packageName.equalsIgnoreCase(prefs.contactPackage().get())) {
+                    if (appList.get(i).activityInfo.packageName.equalsIgnoreCase(PrefSiempo.getInstance(context).read(PrefSiempo
+                                    .CONTACT_PACKAGE,
+                            ""))) {
                         resolveInfo = appList.get(i);
                         pos = i;
                     }
@@ -220,7 +247,9 @@ public class Launcher3App extends CoreApplication {
             appList = getMapPackageList();
             if (isOkayShow) {
                 for (int i = 0; i < appList.size(); i++) {
-                    if (appList.get(i).activityInfo.packageName.equalsIgnoreCase(prefs.mapPackage().get())) {
+                    if (appList.get(i).activityInfo.packageName.equalsIgnoreCase(PrefSiempo.getInstance(context).read(PrefSiempo
+                                    .MAP_PACKAGE,
+                            ""))) {
                         resolveInfo = appList.get(i);
                         pos = i;
                     }
@@ -230,7 +259,9 @@ public class Launcher3App extends CoreApplication {
             appList = getPhotosPackageList();
             if (isOkayShow) {
                 for (int i = 0; i < appList.size(); i++) {
-                    if (appList.get(i).activityInfo.packageName.equalsIgnoreCase(prefs.photosPackage().get())) {
+                    if (appList.get(i).activityInfo.packageName.equalsIgnoreCase(PrefSiempo.getInstance(context).read(PrefSiempo
+                                    .PHOTOS_PACKAGE,
+                            ""))) {
                         resolveInfo = appList.get(i);
                         pos = i;
                     }
@@ -240,7 +271,9 @@ public class Launcher3App extends CoreApplication {
             appList = getCameraPackageList();
             if (isOkayShow) {
                 for (int i = 0; i < appList.size(); i++) {
-                    if (appList.get(i).activityInfo.packageName.equalsIgnoreCase(prefs.cameraPackage().get())) {
+                    if (appList.get(i).activityInfo.packageName.equalsIgnoreCase(PrefSiempo.getInstance(context).read(PrefSiempo
+                                    .CAMERA_PACKAGE,
+                            ""))) {
                         resolveInfo = appList.get(i);
                         pos = i;
                     }
@@ -250,7 +283,9 @@ public class Launcher3App extends CoreApplication {
             appList = getBrowserPackageList();
             if (isOkayShow) {
                 for (int i = 0; i < appList.size(); i++) {
-                    if (appList.get(i).activityInfo.packageName.equalsIgnoreCase(prefs.browserPackage().get())) {
+                    if (appList.get(i).activityInfo.packageName.equalsIgnoreCase(PrefSiempo.getInstance(context).read(PrefSiempo
+                                    .BROWSER_PACKAGE,
+                            ""))) {
                         resolveInfo = appList.get(i);
                         pos = i;
                     }
@@ -260,7 +295,9 @@ public class Launcher3App extends CoreApplication {
             appList = getClockPackageList();
             if (isOkayShow) {
                 for (int i = 0; i < appList.size(); i++) {
-                    if (appList.get(i).activityInfo.packageName.equalsIgnoreCase(prefs.clockPackage().get())) {
+                    if (appList.get(i).activityInfo.packageName.equalsIgnoreCase(PrefSiempo.getInstance(context).read(PrefSiempo
+                                    .CLOCK_PACKAGE,
+                            ""))) {
                         resolveInfo = appList.get(i);
                     }
                 }
@@ -269,7 +306,9 @@ public class Launcher3App extends CoreApplication {
             appList = getEmailPackageList();
             if (isOkayShow) {
                 for (int i = 0; i < appList.size(); i++) {
-                    if (appList.get(i).activityInfo.packageName.equalsIgnoreCase(prefs.emailPackage().get())) {
+                    if (appList.get(i).activityInfo.packageName.equalsIgnoreCase(PrefSiempo.getInstance(context).read(PrefSiempo
+                                    .EMAIL_PACKAGE,
+                            ""))) {
                         resolveInfo = appList.get(i);
                         pos = i;
                     }
@@ -279,7 +318,9 @@ public class Launcher3App extends CoreApplication {
             appList = getNotesPackageList();
             if (isOkayShow) {
                 for (int i = 0; i < appList.size(); i++) {
-                    if (appList.get(i) != null && appList.get(i).activityInfo.packageName.equalsIgnoreCase(prefs.emailPackage().get())) {
+                    if (appList.get(i) != null && appList.get(i).activityInfo.packageName.equalsIgnoreCase(PrefSiempo.getInstance(context).read(PrefSiempo
+                                    .NOTES_PACKAGE,
+                            ""))) {
                         resolveInfo = appList.get(i);
                         pos = i;
                     } else {
@@ -316,15 +357,25 @@ public class Launcher3App extends CoreApplication {
             @Override
             public void onClick(View view) {
                 if (resolveInfo != null) {
+                    PrefSiempo preferenceInstance = PrefSiempo.getInstance
+                            (context);
                     if (menuId == Constants.CALL_PACKAGE) {
-                        prefs.callPackage().put(resolveInfo.activityInfo.packageName);
-                        prefs.isCallClickedFirstTime().put(true);
+
+                        preferenceInstance.write(PrefSiempo
+                                .CALL_PACKAGE, resolveInfo.activityInfo.packageName);
+                        preferenceInstance.write(PrefSiempo.IS_CALL_CLICKED,
+                                true);
                     } else if (menuId == Constants.MESSAGE_PACKAGE) {
-                        prefs.messagePackage().put(resolveInfo.activityInfo.packageName);
-                        prefs.isMessageClickedFirstTime().put(true);
+                        preferenceInstance.write(PrefSiempo
+                                .MESSAGE_PACKAGE, resolveInfo.activityInfo.packageName);
+                        preferenceInstance.write(PrefSiempo.IS_MESSAGE_CLICKED,
+                                true);
+
                     } else if (menuId == Constants.EMAIL_PACKAGE) {
-                        prefs.emailPackage().put(resolveInfo.activityInfo.packageName);
-                        prefs.isEmailClickedFirstTime().put(true);
+                        preferenceInstance.write(PrefSiempo
+                                .EMAIL_PACKAGE, resolveInfo.activityInfo.packageName);
+                        preferenceInstance.write(PrefSiempo.IS_EMAIL_CLICKED,
+                                true);
                     }
                     dialog.dismiss();
                     new ActivityHelper(context).openAppWithPackageName(resolveInfo.activityInfo.packageName);
@@ -338,43 +389,87 @@ public class Launcher3App extends CoreApplication {
             @Override
             public void onClick(View view) {
                 if (resolveInfo != null) {
+                    PrefSiempo preferenceInstance = PrefSiempo.getInstance(context);
                     if (menuId == Constants.CALL_PACKAGE) {
-                        prefs.callPackage().put(resolveInfo.activityInfo.packageName);
-                        prefs.isCallClicked().put(true);
-                        prefs.isCallClickedFirstTime().put(true);
+
+                        preferenceInstance.write(PrefSiempo
+                                .CALL_PACKAGE, resolveInfo.activityInfo.packageName);
+//                        prefs.callPackage().put(resolveInfo.activityInfo.packageName);
+                        preferenceInstance.write(PrefSiempo
+                                .IS_CALL_CLICKED, true);
+//                        prefs.isCallClicked().put(true);
+                        preferenceInstance.write(PrefSiempo
+                                .IS_CALLCLICKED_FIRST_TIME, true);
+//                        prefs.isCallClickedFirstTime().put(true);
                     } else if (menuId == Constants.MESSAGE_PACKAGE) {
-                        prefs.messagePackage().put(resolveInfo.activityInfo.packageName);
-                        prefs.isMessageClicked().put(true);
-                        prefs.isMessageClickedFirstTime().put(true);
+                        preferenceInstance.write(PrefSiempo.MESSAGE_PACKAGE, resolveInfo.activityInfo.packageName);
+//                        prefs.messagePackage().put(resolveInfo.activityInfo.packageName);
+                        preferenceInstance.write(PrefSiempo
+                                .IS_MESSAGE_CLICKED, true);
+//                        prefs.isMessageClicked().put(true);
+                        preferenceInstance.write(PrefSiempo
+                                .IS_MESSAGE_CLICKED_FIRST_TIME, true);
+//                        prefs.isMessageClickedFirstTime().put(true);
                     } else if (menuId == Constants.CALENDER_PACKAGE) {
-                        prefs.calenderPackage().put(resolveInfo.activityInfo.packageName);
+                        preferenceInstance.write(PrefSiempo.CALENDER_PACKAGE, resolveInfo.activityInfo.packageName);
+//                        prefs.calenderPackage().put(resolveInfo.activityInfo.packageName);
                     } else if (menuId == Constants.CONTACT_PACKAGE) {
-                        prefs.contactPackage().put(resolveInfo.activityInfo.packageName);
+                        preferenceInstance.write(PrefSiempo.CONTACT_PACKAGE,
+                                resolveInfo.activityInfo.packageName);
+//                        prefs.contactPackage().put(resolveInfo.activityInfo.packageName);
                     } else if (menuId == Constants.MAP_PACKAGE) {
-                        prefs.mapPackage().put(resolveInfo.activityInfo.packageName);
+                        preferenceInstance.write(PrefSiempo.MAP_PACKAGE,
+                                resolveInfo.activityInfo.packageName);
+//                        prefs.mapPackage().put(resolveInfo.activityInfo.packageName);
                     } else if (menuId == Constants.PHOTOS_PACKAGE) {
-                        prefs.photosPackage().put(resolveInfo.activityInfo.packageName);
+
+                        preferenceInstance.write(PrefSiempo.PHOTOS_PACKAGE,
+                                resolveInfo.activityInfo.packageName);
+//                        prefs.photosPackage().put(resolveInfo.activityInfo.packageName);
                     } else if (menuId == Constants.CAMERA_PACKAGE) {
-                        prefs.cameraPackage().put(resolveInfo.activityInfo.packageName);
+
+                        preferenceInstance.write(PrefSiempo.CAMERA_PACKAGE,
+                                resolveInfo.activityInfo.packageName);
+//                        prefs.cameraPackage().put(resolveInfo.activityInfo.packageName);
                     } else if (menuId == Constants.BROWSER_PACKAGE) {
-                        prefs.browserPackage().put(resolveInfo.activityInfo.packageName);
+                        preferenceInstance.write(PrefSiempo.BROWSER_PACKAGE,
+                                resolveInfo.activityInfo.packageName);
+//                        prefs.browserPackage().put(resolveInfo.activityInfo.packageName);
                     } else if (menuId == Constants.CLOCK_PACKAGE) {
-                        prefs.clockPackage().put(resolveInfo.activityInfo.packageName);
+                        preferenceInstance.write(PrefSiempo
+                                        .CLOCK_PACKAGE,
+                                resolveInfo.activityInfo.packageName);
+//                        prefs.clockPackage().put(resolveInfo.activityInfo.packageName);
                     } else if (menuId == Constants.NOTES_PACKAGE) {
-                        prefs.notesPackage().put(resolveInfo.activityInfo.packageName);
+                        preferenceInstance.write(PrefSiempo.NOTES_PACKAGE,
+                                resolveInfo.activityInfo.packageName);
+//                        prefs.notesPackage().put(resolveInfo.activityInfo.packageName);
                     } else if (menuId == Constants.EMAIL_PACKAGE) {
-                        prefs.emailPackage().put(resolveInfo.activityInfo.packageName);
-                        prefs.isEmailClicked().put(true);
-                        prefs.isMessageClickedFirstTime().put(true);
+                        preferenceInstance.write(PrefSiempo.EMAIL_PACKAGE,
+                                resolveInfo.activityInfo.packageName);
+//                        prefs.emailPackage().put(resolveInfo.activityInfo.packageName);
+
+                        preferenceInstance.write(PrefSiempo.IS_EMAIL_CLICKED,
+                                true);
+//                        prefs.isEmailClicked().put(true);
+                        preferenceInstance.write(PrefSiempo.IS_EMAILCLICKED_FIRST_TIME,
+                                true);
+//                        prefs.isMessageClickedFirstTime().put(true);
                     }
                     dialog.dismiss();
                     EventBus.getDefault().post(new DefaultAppUpdate(true));
                 } else {
                     if (menuId == 6) {
                         if (resolveInfo == null) {
-                            prefs.notesPackage().put(context.getResources().getString(R.string.notes));
+                            PrefSiempo.getInstance(context)
+                                    .write(PrefSiempo
+                                            .NOTES_PACKAGE, context.getResources().getString(R.string.notes));
+//                            prefs.notesPackage().put(context.getResources().getString(R.string.notes));
                         } else {
-                            prefs.notesPackage().put(resolveInfo.activityInfo.packageName);
+                            PrefSiempo.getInstance(context)
+                                    .write(PrefSiempo
+                                            .NOTES_PACKAGE, resolveInfo.activityInfo.packageName);
+//                            prefs.notesPackage().put(resolveInfo.activityInfo.packageName);
                         }
 
                         dialog.dismiss();
@@ -390,39 +485,101 @@ public class Launcher3App extends CoreApplication {
             @Override
             public void onClick(View view) {
                 if (resolveInfo != null) {
+                    PrefSiempo preferenceInstance = PrefSiempo.getInstance(context);
                     if (menuId == Constants.CALL_PACKAGE) {
-                        prefs.callPackage().put(resolveInfo.activityInfo.packageName);
-                        prefs.isCallClicked().put(true);
-                        prefs.isCallClickedFirstTime().put(true);
+
+                        preferenceInstance.read(PrefSiempo
+                                .CALL_PACKAGE, resolveInfo.activityInfo
+                                .packageName);
+//                        prefs.callPackage().put(resolveInfo.activityInfo.packageName);
+                        preferenceInstance.write(PrefSiempo.IS_CALL_CLICKED,
+                                true);
+//                        prefs.isCallClicked().put(true);
+                        preferenceInstance.write(PrefSiempo.IS_CALLCLICKED_FIRST_TIME,
+                                true);
+//                        prefs.isCallClickedFirstTime().put(true);
                     } else if (menuId == Constants.MESSAGE_PACKAGE) {
-                        prefs.messagePackage().put(resolveInfo.activityInfo.packageName);
-                        prefs.isMessageClicked().put(true);
-                        prefs.isMessageClickedFirstTime().put(true);
+
+                        preferenceInstance.write(PrefSiempo.MESSAGE_PACKAGE,
+                                resolveInfo.activityInfo.packageName);
+                        preferenceInstance.write(PrefSiempo.IS_MESSAGE_CLICKED,
+                                true);
+                        preferenceInstance.write(PrefSiempo.IS_MESSAGE_CLICKED_FIRST_TIME,
+                                true);
+//                        prefs.messagePackage().put(resolveInfo.activityInfo.packageName);
+//                        prefs.isMessageClicked().put(true);
+//                        prefs.isMessageClickedFirstTime().put(true);
                     } else if (menuId == Constants.EMAIL_PACKAGE) {
-                        prefs.emailPackage().put(resolveInfo.activityInfo.packageName);
-                        prefs.isEmailClicked().put(true);
-                        prefs.isEmailClickedFirstTime().put(true);
+
+                        preferenceInstance.write(PrefSiempo.EMAIL_PACKAGE,
+                                resolveInfo.activityInfo.packageName);
+                        preferenceInstance.write(PrefSiempo.IS_EMAIL_CLICKED,
+                                true);
+                        preferenceInstance.write(PrefSiempo.IS_EMAILCLICKED_FIRST_TIME,
+                                true);
+//                        prefs.emailPackage().put(resolveInfo.activityInfo.packageName);
+//                        prefs.isEmailClicked().put(true);
+//                        prefs.isEmailClickedFirstTime().put(true);
                     } else if (menuId == Constants.CALENDER_PACKAGE) {
-                        prefs.calenderPackage().put(resolveInfo.activityInfo.packageName);
-                        prefs.isCalenderClicked().put(true);
+
+                        preferenceInstance.write(PrefSiempo.CALENDER_PACKAGE,
+                                resolveInfo.activityInfo.packageName);
+                        preferenceInstance.write(PrefSiempo.IS_CALENDER_CLICKED,
+                                true);
+//                        prefs.calenderPackage().put(resolveInfo.activityInfo.packageName);
+//                        prefs.isCalenderClicked().put(true);
                     } else if (menuId == Constants.CONTACT_PACKAGE) {
-                        prefs.contactPackage().put(resolveInfo.activityInfo.packageName);
-                        prefs.isContactClicked().put(true);
+
+
+                        preferenceInstance.write(PrefSiempo.CONTACT_PACKAGE,
+                                resolveInfo.activityInfo.packageName);
+                        preferenceInstance.write(PrefSiempo.IS_CONTACT_CLICKED,
+                                true);
+//                        prefs.contactPackage().put(resolveInfo.activityInfo.packageName);
+//                        prefs.isContactClicked().put(true);
                     } else if (menuId == Constants.MAP_PACKAGE) {
-                        prefs.mapPackage().put(resolveInfo.activityInfo.packageName);
-                        prefs.isMapClicked().put(true);
+
+
+                        preferenceInstance.write(PrefSiempo.MAP_PACKAGE,
+                                resolveInfo.activityInfo.packageName);
+                        preferenceInstance.write(PrefSiempo.IS_MAP_CLICKED,
+                                true);
+//                        prefs.mapPackage().put(resolveInfo.activityInfo.packageName);
+//                        prefs.isMapClicked().put(true);
                     } else if (menuId == Constants.PHOTOS_PACKAGE) {
-                        prefs.photosPackage().put(resolveInfo.activityInfo.packageName);
-                        prefs.isPhotosClicked().put(true);
+
+
+                        preferenceInstance.write(PrefSiempo.PHOTOS_PACKAGE,
+                                resolveInfo.activityInfo.packageName);
+                        preferenceInstance.write(PrefSiempo.IS_PHOTOS_CLICKED,
+                                true);
+//                        prefs.photosPackage().put(resolveInfo.activityInfo.packageName);
+//                        prefs.isPhotosClicked().put(true);
                     } else if (menuId == Constants.CAMERA_PACKAGE) {
-                        prefs.cameraPackage().put(resolveInfo.activityInfo.packageName);
-                        prefs.isCameraClicked().put(true);
+
+
+                        preferenceInstance.write(PrefSiempo.CAMERA_PACKAGE,
+                                resolveInfo.activityInfo.packageName);
+                        preferenceInstance.write(PrefSiempo.IS_CAMERA_CLICKED,
+                                true);
+//                        prefs.cameraPackage().put(resolveInfo.activityInfo.packageName);
+//                        prefs.isCameraClicked().put(true);
                     } else if (menuId == Constants.BROWSER_PACKAGE) {
-                        prefs.browserPackage().put(resolveInfo.activityInfo.packageName);
-                        prefs.isBrowserClicked().put(true);
+
+                        preferenceInstance.write(PrefSiempo.BROWSER_PACKAGE,
+                                resolveInfo.activityInfo.packageName);
+                        preferenceInstance.write(PrefSiempo.IS_BROWSER_CLICKED,
+                                true);
+//                        prefs.browserPackage().put(resolveInfo.activityInfo.packageName);
+//                        prefs.isBrowserClicked().put(true);
                     } else if (menuId == Constants.CLOCK_PACKAGE) {
-                        prefs.clockPackage().put(resolveInfo.activityInfo.packageName);
-                        prefs.isClockClicked().put(true);
+
+                        preferenceInstance.write(PrefSiempo.CLOCK_PACKAGE,
+                                resolveInfo.activityInfo.packageName);
+                        preferenceInstance.write(PrefSiempo.IS_CLOCK_CLICKED,
+                                true);
+//                        prefs.clockPackage().put(resolveInfo.activityInfo.packageName);
+//                        prefs.isClockClicked().put(true);
                     }
                     dialog.dismiss();
                     EventBus.getDefault().post(new DefaultAppUpdate(true));
@@ -444,16 +601,26 @@ public class Launcher3App extends CoreApplication {
         int flowSegmentCount = 4;
 
         if (Config.DEBUG) {
-            prefs.edit()
-                    .flowMaxTimeLimitMillis().put(flowSegmentCount * 5 * 1000f)
-                    .flowSegmentDurationMillis().put(5 * 1000f)
-                    .apply();
+
+            PrefSiempo.getInstance(this).write(PrefSiempo
+                    .FLOW_MAX_TIME_LIMIT_MILLIS, flowSegmentCount * 5 * 1000f);
+            PrefSiempo.getInstance(this).write(PrefSiempo
+                    .FLOW_SEGMENT_DURATION_MILLIS, 5 * 1000f);
+//            prefs.edit()
+//                    .flowMaxTimeLimitMillis().put(flowSegmentCount * 5 * 1000f)
+//                    .flowSegmentDurationMillis().put(5 * 1000f)
+//                    .apply();
 
         } else {
-            prefs.edit()
-                    .flowMaxTimeLimitMillis().put(flowSegmentCount * 15 * 60 * 1000f)
-                    .flowSegmentDurationMillis().put(15 * 60 * 1000f)
-                    .apply();
+            PrefSiempo.getInstance(this).write(PrefSiempo
+                    .FLOW_MAX_TIME_LIMIT_MILLIS, flowSegmentCount * 15 * 60 * 1000f);
+            PrefSiempo.getInstance(this).write(PrefSiempo
+                    .FLOW_SEGMENT_DURATION_MILLIS, 15 * 60 * 1000f);
+
+//            prefs.edit()
+//                    .flowMaxTimeLimitMillis().put(flowSegmentCount * 15 * 60 * 1000f)
+//                    .flowSegmentDurationMillis().put(15 * 60 * 1000f)
+//                    .apply();
         }
     }
 
