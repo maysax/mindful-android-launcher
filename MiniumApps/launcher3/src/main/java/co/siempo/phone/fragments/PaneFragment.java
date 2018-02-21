@@ -197,6 +197,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         PanePagerAdapter mPagerAdapter = new PanePagerAdapter(getChildFragmentManager());
         pagerPane.setAdapter(mPagerAdapter);
         indicator.setViewPager(pagerPane);
+        pagerPane.setOffscreenPageLimit(0);
         pagerPane.setCurrentItem(2);
 
         bindBottomDoc();
