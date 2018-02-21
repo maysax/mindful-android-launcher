@@ -3,7 +3,6 @@ package co.siempo.phone.receivers;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -11,10 +10,10 @@ import android.util.Log;
 
 import java.util.Date;
 
-import co.siempo.phone.app.Constants;
 import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.utils.PackageUtil;
+import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.EventBus;
 
 
@@ -30,7 +29,6 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
     private int tempoType;
     private Context mContext;
     private int currentProfile = -1;
-    private SharedPreferences sharedPref, droidPref;
     private boolean isAppDefaultOrFront = false;
     private AudioManager audioManager;
 
@@ -38,8 +36,6 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         //We listen to two intents.  The new outgoing call only tells us of an outgoing call.  We use it to get the number.
         mContext = context;
-        sharedPref = context.getSharedPreferences("Launcher3Prefs", 0);
-        droidPref = context.getSharedPreferences("DroidPrefs", 0);
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         int sound = 0;
@@ -53,7 +49,8 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
             if (intent.getAction().equals("android.intent.action.NEW_OUTGOING_CALL")) {
                 if (intent.getExtras() != null && intent.getExtras().containsKey("android.intent.extra.PHONE_NUMBER")) {
                     savedNumber = intent.getExtras().getString("android.intent.extra.PHONE_NUMBER");
-                    sharedPref.edit().putBoolean(Constants.CALL_RUNNING, true).apply();
+                    PrefSiempo.getInstance(context).write(PrefSiempo
+                            .CALL_RUNNING, true);
                     isCallRunning = true;
                     EventBus.getDefault().post(new NotificationTrayEvent(true));
                 }
@@ -125,11 +122,14 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
                 isIncoming = true;
                 callStartTime = new Date();
                 savedNumber = number;
-                isAppDefaultOrFront = sharedPref.getBoolean("isAppDefaultOrFront", false);
+
+                isAppDefaultOrFront = PrefSiempo.getInstance(context).read(PrefSiempo
+                        .IS_APP_DEFAULT_OR_FRONT, false);
                 if (isAppDefaultOrFront) {
                     if (currentProfile == 0 && !isCallRunning) {
                         changeSoundProfile(true);
-                        sharedPref.edit().putBoolean(Constants.CALL_RUNNING, true).apply();
+                        PrefSiempo.getInstance(context).write(PrefSiempo
+                                .CALL_RUNNING, true);
                         isCallRunning = true;
                     }
                 }
@@ -158,7 +158,8 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
                 } else {
                     onOutgoingCallEnded(context, savedNumber, callStartTime, new Date());
                 }
-                sharedPref.edit().putBoolean(Constants.CALL_RUNNING, false).apply();
+                PrefSiempo.getInstance(context).write(PrefSiempo
+                        .CALL_RUNNING, false);
                 changeSoundProfile(false);
                 isCallRunning = false;
                 break;
@@ -168,7 +169,7 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
 
     private void changeSoundProfile(boolean isIncreaseSound) {
         if (PackageUtil.isSiempoLauncher(mContext)) {
-            tempoType = droidPref.getInt("tempoType", 0);
+            tempoType = PrefSiempo.getInstance(mContext).read(PrefSiempo.TEMPO_TYPE, 0);
             if (isIncreaseSound) {
                 Tracer.d("VolumeCheck Call Coming When call comes");
                 if (tempoType == 1 || tempoType == 2) {

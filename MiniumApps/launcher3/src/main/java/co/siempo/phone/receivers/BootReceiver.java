@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import co.siempo.phone.app.Constants;
+import co.siempo.phone.utils.PrefSiempo;
 
 /**
  * Created by hardik on 18/1/18.
@@ -14,12 +14,11 @@ import co.siempo.phone.app.Constants;
 
 public class BootReceiver extends BroadcastReceiver {
     SharedPreferences sharedPref;
-    private String TAG="BootReceiver";
+    private String TAG = "BootReceiver";
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(TAG,"Boot complete");
-        sharedPref =
-                context.getSharedPreferences("Launcher3Prefs", 0);
-        sharedPref.edit().putBoolean(Constants.CALL_RUNNING,false).commit();
+        Log.d(TAG, "Boot complete");
+        PrefSiempo.getInstance(context).write(PrefSiempo.CALL_RUNNING, false);
     }
 }

@@ -6,9 +6,12 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.DashboardActivity;
@@ -49,13 +52,13 @@ public class MainFragmentMediator {
     public MainFragmentMediator(PaneFragment paneFragment) {
         this.fragment = paneFragment;
         context = this.fragment.getActivity();
-        launcher3Prefs =
-                context.getSharedPreferences("Launcher3Prefs", 0);
+//        launcher3Prefs =
+//                context.getSharedPreferences("Launcher3Prefs", 0);
     }
 
     public void loadData() {
 
-        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, ""))) {
+        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, ""))) {
             items = new ArrayList<>();
             contactItems = new ArrayList<>();
             loadActions();
@@ -71,7 +74,7 @@ public class MainFragmentMediator {
     public void resetData() {
         items = new ArrayList<>();
 
-        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, ""))) {
+        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, ""))) {
             items = new ArrayList<>();
 
             contactItems = new ArrayList<>();
@@ -169,6 +172,11 @@ public class MainFragmentMediator {
                     break;
                 case ACTION:
                     if (getAdapter() != null && TextUtils.isEmpty(getAdapter().getItem(position).getPackageName())) {
+
+                        SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance
+                                (DateFormat.FULL, Locale
+                                        .getDefault());
+
                         items.get(position).setDate(Calendar.getInstance().getTime());
                         items.set(position, items.get(position));
                         items = Sorting.sortList(items);
@@ -254,7 +262,7 @@ public class MainFragmentMediator {
     public void loadDefaultData() {
         items = new ArrayList<>();
 
-        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, ""))) {
+        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, ""))) {
             items = new ArrayList<>();
 
             contactItems = new ArrayList<>();
@@ -285,7 +293,7 @@ public class MainFragmentMediator {
     public void contactPicker() {
         items = new ArrayList<>();
 
-        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, ""))) {
+        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, ""))) {
             items = new ArrayList<>();
 
             contactItems = new ArrayList<>();
@@ -336,7 +344,7 @@ public class MainFragmentMediator {
     public void defaultData() {
         items = new ArrayList<>();
 
-        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, ""))) {
+        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, ""))) {
             items = new ArrayList<>();
 
             contactItems = new ArrayList<>();

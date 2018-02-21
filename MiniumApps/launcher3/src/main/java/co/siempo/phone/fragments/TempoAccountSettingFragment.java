@@ -13,19 +13,16 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.CoreActivity;
-import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.utils.PrefSiempo;
 
 @EFragment(R.layout.fragment_tempo_account_settings)
 public class TempoAccountSettingFragment extends CoreFragment {
 
 
-    @Pref
-    DroidPrefs_ droidPrefs_;
 
     @ViewById
     TextView txt_privacyPolicy;
@@ -70,7 +67,9 @@ public class TempoAccountSettingFragment extends CoreFragment {
             }
         });
 
-        if (droidPrefs_.isFireBaseAnalyticsEnable().get()) {
+
+        if (PrefSiempo.getInstance(context).read(PrefSiempo
+                .IS_FIREBASE_ANALYTICS_ENABLE, true)) {
             swtch_analytics.setChecked(true);
         } else {
             swtch_analytics.setChecked(false);
@@ -79,12 +78,16 @@ public class TempoAccountSettingFragment extends CoreFragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    droidPrefs_.isFireBaseAnalyticsEnable().put(true);
+                    PrefSiempo.getInstance(context).write(PrefSiempo
+                            .IS_FIREBASE_ANALYTICS_ENABLE, true);
+//                    droidPrefs_.isFireBaseAnalyticsEnable().put(true);
                     FirebaseHelper.getIntance().getFirebaseAnalytics().setAnalyticsCollectionEnabled(true);
                 } else {
 
                     FirebaseHelper.getIntance().getFirebaseAnalytics().setAnalyticsCollectionEnabled(false);
-                    droidPrefs_.isFireBaseAnalyticsEnable().put(false);
+                    PrefSiempo.getInstance(context).write(PrefSiempo
+                            .IS_FIREBASE_ANALYTICS_ENABLE, false);
+//                    droidPrefs_.isFireBaseAnalyticsEnable().put(false);
                 }
             }
         });

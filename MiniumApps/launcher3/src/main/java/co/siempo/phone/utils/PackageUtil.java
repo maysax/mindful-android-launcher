@@ -27,6 +27,7 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -133,7 +134,8 @@ public class PackageUtil {
                 NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 String applicationNameFromPackageName = CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName());
                 if (Build.VERSION.SDK_INT >= 26) {
-                    NotificationChannel notificationChannel = createChannel(context, applicationNameFromPackageName);
+                    NotificationChannel notificationChannel = createChannel(context,
+                            applicationNameFromPackageName);
                     if (notificationManager != null) {
                         notificationManager.createNotificationChannel(notificationChannel);
                     }
@@ -178,7 +180,7 @@ public class PackageUtil {
         String time = sdf.format(notification.get_date());
 
         String title = getNotificationTitle(notification.get_contact_title(), notification.getPackageName(), context);
-        int priority = PrefSiempo.getInstance(context).read(PrefSiempo.ALLOW_PEAKING, true) ? Notification.PRIORITY_LOW : Notification.PRIORITY_HIGH;
+
 
         RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.custom_notification_card);
         contentView.setImageViewBitmap(R.id.imgAppIcon, CoreApplication.getInstance().iconList.get(notification.getPackageName()));
@@ -191,7 +193,7 @@ public class PackageUtil {
                 .setGroup(applicationNameFromPackageName)
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.siempo_notification_icon)
-                .setPriority(priority)
+                .setPriority(Notification.PRIORITY_HIGH)
                 .setContentTitle(title)
                 .setContentText(notification.get_message())
                 .setContentIntent(contentIntent)
@@ -358,9 +360,40 @@ public class PackageUtil {
 
     public static void appSettings(Context context, String packageName) {
         try {
-            Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-            intent.setData(Uri.parse("package:" + packageName));
-            context.startActivity(intent);
+            String appName = "";
+            ApplicationInfo applicationInfo = context.getPackageManager().getApplicationInfo(packageName, 0);
+            if (applicationInfo != null && !TextUtils.isEmpty(applicationInfo.name)) {
+                appName = applicationInfo.loadLabel(context.getPackageManager()).toString();
+            }
+            boolean isPackageAvailable = false;
+            Type baseType = new TypeToken<List<MainListItem>>() {
+            }.getType();
+            List<MainListItem> searchItems = new ArrayList<MainListItem>();
+            String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, "");
+            if (!TextUtils.isEmpty(searchList)) {
+                Gson gson = new GsonBuilder()
+                        .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
+                searchItems = gson.fromJson(searchList, baseType);
+            }
+            int i = 0;
+            for (int j = 0; j < searchItems.size(); j++) {
+                MainListItem item = searchItems.get(j);
+                if (!TextUtils.isEmpty(item.getPackageName()) && item
+                        .getPackageName()
+                        .equalsIgnoreCase(packageName)) {
+                    isPackageAvailable = true;
+                }
+                if (item.getId() == -1 && item.getTitle().startsWith("" + appName.charAt(0))) {
+                    i = j;
+                }
+            }
+            if (!isPackageAvailable) {
+                String pckageName = applicationInfo != null ? applicationInfo.packageName : "";
+                searchItems.add(i - 1, new MainListItem(-1, appName, pckageName));
+            }
+            searchItems = Sorting.sortAppList(context, searchItems);
+            searchItems = Sorting.sortList(searchItems);
+            storeSearchList(searchItems, context);
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
             CoreApplication.getInstance().logException(e);
@@ -371,9 +404,10 @@ public class PackageUtil {
         Type baseType = new TypeToken<List<MainListItem>>() {
         }.getType();
         List<MainListItem> searchItems = new ArrayList<MainListItem>();
-        String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, "");
+        String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, "");
         if (!TextUtils.isEmpty(searchList)) {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder()
+                    .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
             searchItems = gson.fromJson(searchList, baseType);
             List<MainListItem> removeItems = new ArrayList<>();
             for (MainListItem item : searchItems) {
@@ -408,9 +442,10 @@ public class PackageUtil {
     public static void storeSearchList(List<MainListItem> items, Context context) {
         Type baseType = new TypeToken<List<MainListItem>>() {
         }.getType();
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+                .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
         String searchValues = gson.toJson(items, baseType);
-        PrefSiempo.getInstance(context).write(PrefSiempo.SERACH_LIST, searchValues);
+        PrefSiempo.getInstance(context).write(PrefSiempo.SEARCH_LIST, searchValues);
     }
 
     public static void addAppInSearchList(String packageName, Context context) {
@@ -424,9 +459,10 @@ public class PackageUtil {
             Type baseType = new TypeToken<List<MainListItem>>() {
             }.getType();
             List<MainListItem> searchItems = new ArrayList<MainListItem>();
-            String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, "");
+            String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, "");
             if (!TextUtils.isEmpty(searchList)) {
-                Gson gson = new Gson();
+                Gson gson = new GsonBuilder()
+                        .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
                 searchItems = gson.fromJson(searchList, baseType);
             }
             int i = 0;
@@ -455,9 +491,10 @@ public class PackageUtil {
         Type baseType = new TypeToken<List<MainListItem>>() {
         }.getType();
         List<MainListItem> searchItems = new ArrayList<MainListItem>();
-        String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, "");
+        String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, "");
         if (!TextUtils.isEmpty(searchList)) {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder()
+                    .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
             searchItems = gson.fromJson(searchList, baseType);
         }
 
@@ -478,9 +515,10 @@ public class PackageUtil {
         Type baseType = new TypeToken<List<MainListItem>>() {
         }.getType();
         List<MainListItem> searchItems = new ArrayList<MainListItem>();
-        String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, "");
+        String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, "");
         if (!TextUtils.isEmpty(searchList)) {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder()
+                    .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
             searchItems = gson.fromJson(searchList, baseType);
         }
         searchItems = Sorting.sortList(searchItems);
@@ -503,7 +541,8 @@ public class PackageUtil {
         if (!jsonListOfSortedToolsId.isEmpty()) {
 
             //convert onNoteListChangedJSON array into a List<Long>
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder()
+                    .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
             List<Long> listOfSortedCustomersId = gson.fromJson(jsonListOfSortedToolsId, new TypeToken<List<Long>>() {
             }.getType());
 

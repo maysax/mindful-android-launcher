@@ -54,7 +54,7 @@ public class FavoritesFlagAdapter extends ArrayAdapter<ResolveInfo> {
         if (convertView == null) {
             holder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(context);
-                convertView = inflater.inflate(R.layout.list_item_junkfoodflag, parent, false);
+            convertView = inflater.inflate(R.layout.list_item_junkfoodflag, parent, false);
             holder.txtAppName = convertView.findViewById(R.id.txtAppName);
             holder.imgAppIcon = convertView.findViewById(R.id.imgAppIcon);
             holder.imgChevron = convertView.findViewById(R.id.imgChevron);

@@ -26,13 +26,13 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import co.siempo.phone.R;
-import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBClient;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.FirebaseEvent;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.utils.PackageUtil;
+import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
@@ -70,7 +70,6 @@ public class StatusBarService extends Service {
         super.onCreate();
         context = this;
         sharedPreferences = getSharedPreferences("DroidPrefs", 0);
-        sharedPreferencesLauncher3 = getSharedPreferences("Launcher3Prefs", 0);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         registerObserverForContact();
         registerObserverForAppInstallUninstall();
@@ -150,7 +149,8 @@ public class StatusBarService extends Service {
      */
     public void removeAppFromBlockedList(String uninstallPackageName) {
         ArrayList<String> blockedApps = new ArrayList<>();
-        String block_AppList = sharedPreferencesLauncher3.getString(Constants.BLOCKED_APPLIST, "");
+        String block_AppList = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST,
+                "");
         if (!TextUtils.isEmpty(block_AppList)) {
             try {
                 Type type = new TypeToken<ArrayList<String>>() {
@@ -162,7 +162,9 @@ public class StatusBarService extends Service {
                     }
                 }
                 String blockedList = new Gson().toJson(blockedApps);
-                sharedPreferencesLauncher3.edit().putString(Constants.BLOCKED_APPLIST, blockedList).commit();
+                PrefSiempo.getInstance(context).write(PrefSiempo.BLOCKED_APPLIST,
+                        blockedList);
+//                sharedPreferencesLauncher3.edit().putString(Constants.BLOCKED_APPLIST, blockedList).commit();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -170,7 +172,8 @@ public class StatusBarService extends Service {
         }
 
         ArrayList<String> disableApps = new ArrayList<>();
-        String disable_AppList = sharedPreferencesLauncher3.getString(Constants.HELPFUL_ROBOTS, "");
+        String disable_AppList = PrefSiempo.getInstance(context).read
+                (PrefSiempo.HELPFUL_ROBOTS, "");
         if (!TextUtils.isEmpty(disable_AppList)) {
             Type type = new TypeToken<ArrayList<String>>() {
             }.getType();
@@ -181,7 +184,8 @@ public class StatusBarService extends Service {
                 }
             }
             String disableList = new Gson().toJson(disableApps);
-            sharedPreferencesLauncher3.edit().putString(Constants.HELPFUL_ROBOTS, disableList).commit();
+            PrefSiempo.getInstance(context).write(PrefSiempo.HELPFUL_ROBOTS, disableList);
+//            sharedPreferencesLauncher3.edit().putString(Constants.HELPFUL_ROBOTS, disableList).commit();
         }
 
     }
@@ -193,7 +197,7 @@ public class StatusBarService extends Service {
      */
     public void addAppFromBlockedList(String installPackageName) {
         ArrayList<String> blockedApps = new ArrayList<>();
-        String block_AppList = sharedPreferencesLauncher3.getString(Constants.BLOCKED_APPLIST, "");
+        String block_AppList = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST, "");
         if (!TextUtils.isEmpty(block_AppList)) {
             try {
                 Type type = new TypeToken<ArrayList<String>>() {
@@ -209,7 +213,8 @@ public class StatusBarService extends Service {
                     blockedApps.add(installPackageName.trim());
                 }
                 String blockedList = new Gson().toJson(blockedApps);
-                sharedPreferencesLauncher3.edit().putString(Constants.BLOCKED_APPLIST, blockedList).commit();
+                PrefSiempo.getInstance(context).write(PrefSiempo.BLOCKED_APPLIST,
+                        blockedList);
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -44,7 +44,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
                         android:layout_marginTop="3dp"
-                        android:src="@drawable/ic_tempo_dailog" />
+                        android:src="@drawable/ic_tempo_dailog"/>
 
 
                     <TextView
@@ -57,7 +57,7 @@
                         android:layout_toRightOf="@+id/img_tempo"
                         android:text="@string/notification_interrupt_title"
                         android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"/>
 
                     <TextView
                         android:id="@+id/txtAllowAppsText"
@@ -69,7 +69,7 @@
                         android:layout_marginTop="5dp"
                         android:layout_toRightOf="@+id/img_tempo"
                         android:text="@string/notification_interrupt_description"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"/>
 
                 </RelativeLayout>
 
@@ -89,7 +89,7 @@
                         android:padding="8dp"
                         android:text="@string/allow_peaking"
                         android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"/>
 
                     <LinearLayout
                         android:id="@+id/lin"
@@ -105,7 +105,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginRight="8dp"
-                            android:clickable="false" />
+                            android:clickable="false"/>
                     </LinearLayout>
 
                     <TextView
@@ -121,7 +121,7 @@
                         android:paddingRight="8dp"
                         android:paddingTop="0dp"
                         android:text="@string/msg_allowpeaking"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"/>
 
                 </RelativeLayout>
             </LinearLayout>

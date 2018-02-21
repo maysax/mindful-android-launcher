@@ -2,7 +2,6 @@ package co.siempo.phone.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -26,11 +25,11 @@ import java.util.List;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.TempoNotificationSectionAdapter;
-import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.models.AppListInfo;
+import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.Subscribe;
 
 /**
@@ -59,7 +58,6 @@ public class TempoAppNotificationActivity extends CoreActivity {
     private List<String> systemAppList = new ArrayList<>();
 
     private PackageManager packageManager;
-    private SharedPreferences launcherPrefs;
 
     @Override
     protected void onResume() {
@@ -105,7 +103,6 @@ public class TempoAppNotificationActivity extends CoreActivity {
 
         lst_appList = findViewById(R.id.lst_appList);
         packageManager = getPackageManager();
-        launcherPrefs = getSharedPreferences("Launcher3Prefs", 0);
         systemAppList = Arrays.asList(getResources().getStringArray(R.array.systemAppList));
 
         /**
@@ -120,15 +117,13 @@ public class TempoAppNotificationActivity extends CoreActivity {
         for (ResolveInfo resolveInfo : messagingResolveList) {
             pref_messengerList.add(resolveInfo.activityInfo.packageName);
         }
-
-        String str_helpfulRobots = launcherPrefs.getString(Constants.HELPFUL_ROBOTS, "");
+        String str_helpfulRobots = PrefSiempo.getInstance(this).read(PrefSiempo.HELPFUL_ROBOTS, "");
         if (!TextUtils.isEmpty(str_helpfulRobots)) {
             Type type = new TypeToken<ArrayList<String>>() {
             }.getType();
             pref_helpfulRobots = new Gson().fromJson(str_helpfulRobots, type);
         }
-
-        String str_blockedList = launcherPrefs.getString(Constants.BLOCKED_APPLIST, "");
+        String str_blockedList = PrefSiempo.getInstance(this).read(PrefSiempo.BLOCKED_APPLIST, "");
         if (!TextUtils.isEmpty(str_blockedList)) {
             Type type = new TypeToken<ArrayList<String>>() {
             }.getType();
@@ -144,9 +139,10 @@ public class TempoAppNotificationActivity extends CoreActivity {
         }
 
         String disableList = new Gson().toJson(pref_helpfulRobots);
-        launcherPrefs.edit().putString(Constants.HELPFUL_ROBOTS, disableList).commit();
+        PrefSiempo.getInstance(this).write(PrefSiempo.HELPFUL_ROBOTS, disableList);
+//        launcherPrefs.edit().putString(Constants.HELPFUL_ROBOTS, disableList).commit();
 
-        String str_Header_AppList = launcherPrefs.getString(Constants.HEADER_APPLIST, "");
+        String str_Header_AppList = PrefSiempo.getInstance(this).read(PrefSiempo.HEADER_APPLIST, "");
         if (!TextUtils.isEmpty(str_Header_AppList)) {
             Type type = new TypeToken<ArrayList<String>>() {
             }.getType();
@@ -212,7 +208,7 @@ public class TempoAppNotificationActivity extends CoreActivity {
             headerSectionList.add(d3);
         }
 
-        checkAppListEmpty(this, helpfulRobot_List,messengerList, blockedList);
+        checkAppListEmpty(this, helpfulRobot_List, messengerList, blockedList);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         lst_appList.setLayoutManager(linearLayoutManager);
@@ -222,44 +218,44 @@ public class TempoAppNotificationActivity extends CoreActivity {
         lst_appList.setAdapter(adapter);
     }
 
-    public void checkAppListEmpty(Context context, List<AppListInfo> appList, List<AppListInfo> messengerList, List<AppListInfo> blockedAppList){
-        if(messengerList.size()>1) {
-            for (int i=0;i<messengerList.size();i++)
-                if(!TextUtils.isEmpty(messengerList.get(i).errorMessage)) {
+    public void checkAppListEmpty(Context context, List<AppListInfo> appList, List<AppListInfo> messengerList, List<AppListInfo> blockedAppList) {
+        if (messengerList.size() > 1) {
+            for (int i = 0; i < messengerList.size(); i++)
+                if (!TextUtils.isEmpty(messengerList.get(i).errorMessage)) {
                     messengerList.remove(messengerList.get(i));
                 }
         }
 
-        if(appList.size()>1) {
-            for (int i=0;i<appList.size();i++)
-                if(!TextUtils.isEmpty(appList.get(i).errorMessage)) {
+        if (appList.size() > 1) {
+            for (int i = 0; i < appList.size(); i++)
+                if (!TextUtils.isEmpty(appList.get(i).errorMessage)) {
                     appList.remove(appList.get(i));
                 }
         }
 
-        if(blockedAppList.size()>1) {
-            for (int i=0;i<blockedAppList.size();i++)
-                if(!TextUtils.isEmpty(blockedAppList.get(i).errorMessage)) {
+        if (blockedAppList.size() > 1) {
+            for (int i = 0; i < blockedAppList.size(); i++)
+                if (!TextUtils.isEmpty(blockedAppList.get(i).errorMessage)) {
                     blockedAppList.remove(blockedAppList.get(i));
                 }
         }
 
-        if(messengerList.size() == 0){
-            AppListInfo d= new AppListInfo();
-            d.errorMessage=context.getResources().getString(R.string.msg_no_apps);
+        if (messengerList.size() == 0) {
+            AppListInfo d = new AppListInfo();
+            d.errorMessage = context.getResources().getString(R.string.msg_no_apps);
             messengerList.add(d);
         }
 
-        if(appList.size() == 0){
-            AppListInfo d= new AppListInfo();
-            d.errorMessage=context.getResources().getString(R.string.msg_no_apps);
+        if (appList.size() == 0) {
+            AppListInfo d = new AppListInfo();
+            d.errorMessage = context.getResources().getString(R.string.msg_no_apps);
             appList.add(d);
         }
 
 
-        if(blockedAppList.size() == 0){
-            AppListInfo d= new AppListInfo();
-            d.errorMessage=context.getResources().getString(R.string.msg_no_apps);
+        if (blockedAppList.size() == 0) {
+            AppListInfo d = new AppListInfo();
+            d.errorMessage = context.getResources().getString(R.string.msg_no_apps);
             blockedAppList.add(d);
         }
 
