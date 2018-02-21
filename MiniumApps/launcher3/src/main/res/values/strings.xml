@@ -423,6 +423,8 @@
     <string name="assign_app">ASSIGN APP</string>
     <string name="msg_allowpeaking">Off.The status bar will show you when you have new notifications in your tray, but your tray won\'t pop up automatically.</string>
     <string name="allow_peaking">Allow peaking</string>
+    <string name="you_have_t_selected_any_junkfood_app_nselect_junkfood">You have\'t selected any Junkfood app.</string>
+    <string name="select_junkfood">Select Junkfood</string>
 
 
 </resources>

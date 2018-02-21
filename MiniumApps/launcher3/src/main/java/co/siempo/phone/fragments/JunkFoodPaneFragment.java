@@ -1,11 +1,14 @@
 package co.siempo.phone.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,6 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import co.siempo.phone.R;
+import co.siempo.phone.activities.JunkfoodFlaggingActivity;
 import co.siempo.phone.adapters.JunkFoodPaneAdapter;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
 import co.siempo.phone.utils.PrefSiempo;
@@ -28,6 +32,8 @@ public class JunkFoodPaneFragment extends CoreFragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private ItemOffsetDecoration itemDecoration;
     private Set<String> junkFoodList = new HashSet<>();
+    private LinearLayout linSelectJunkFood;
+    private Button btnSelect;
 
     public JunkFoodPaneFragment() {
         // Required empty public constructor
@@ -66,6 +72,8 @@ public class JunkFoodPaneFragment extends CoreFragment {
 
     private void initView() {
         junkFoodList = PrefSiempo.getInstance(getActivity()).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
+        linSelectJunkFood = view.findViewById(R.id.linSelectJunkFood);
+        btnSelect = view.findViewById(R.id.btnSelect);
         if (junkFoodList.size() > 0) {
             items = new ArrayList<>(junkFoodList);
             if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, true)) {
@@ -84,6 +92,16 @@ public class JunkFoodPaneFragment extends CoreFragment {
             boolean isHideIconBranding = PrefSiempo.getInstance(context).read(PrefSiempo.IS_ICON_BRANDING, true);
             mAdapter = new JunkFoodPaneAdapter(getActivity(), items, isHideIconBranding);
             recyclerView.setAdapter(mAdapter);
+            linSelectJunkFood.setVisibility(View.GONE);
+        } else {
+            linSelectJunkFood.setVisibility(View.VISIBLE);
+            btnSelect.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), JunkfoodFlaggingActivity.class);
+                    startActivity(intent);
+                }
+            });
         }
     }
 
