@@ -72,36 +72,39 @@ public class JunkFoodPaneFragment extends CoreFragment {
 
     private void initView() {
         junkFoodList = PrefSiempo.getInstance(getActivity()).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
-        linSelectJunkFood = view.findViewById(R.id.linSelectJunkFood);
-        btnSelect = view.findViewById(R.id.btnSelect);
-        if (junkFoodList.size() > 0) {
-            items = new ArrayList<>(junkFoodList);
-            if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, true)) {
-                Collections.shuffle(items);
-            } else {
-                items = Sorting.sortJunkAppAssignment(items);
-            }
-            recyclerView = view.findViewById(R.id.recyclerView);
-            mLayoutManager = new GridLayoutManager(getActivity(), 4);
-            recyclerView.setLayoutManager(mLayoutManager);
-            if (itemDecoration != null) {
-                recyclerView.removeItemDecoration(itemDecoration);
-            }
-            itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_10);
-            recyclerView.addItemDecoration(itemDecoration);
-            boolean isHideIconBranding = PrefSiempo.getInstance(context).read(PrefSiempo.IS_ICON_BRANDING, true);
-            mAdapter = new JunkFoodPaneAdapter(getActivity(), items, isHideIconBranding);
-            recyclerView.setAdapter(mAdapter);
-            linSelectJunkFood.setVisibility(View.GONE);
-        } else {
-            linSelectJunkFood.setVisibility(View.VISIBLE);
-            btnSelect.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), JunkfoodFlaggingActivity.class);
-                    startActivity(intent);
+        if (getActivity() != null && view != null) {
+            linSelectJunkFood = view.findViewById(R.id.linSelectJunkFood);
+            btnSelect = view.findViewById(R.id.btnSelect);
+            if (junkFoodList.size() > 0) {
+                items = new ArrayList<>(junkFoodList);
+                if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, true)) {
+                    Collections.shuffle(items);
+                } else {
+                    items = Sorting.sortJunkAppAssignment(items);
                 }
-            });
+                recyclerView = view.findViewById(R.id.recyclerView);
+                mLayoutManager = new GridLayoutManager(getActivity(), 4);
+                recyclerView.setLayoutManager(mLayoutManager);
+                if (itemDecoration != null) {
+                    recyclerView.removeItemDecoration(itemDecoration);
+                }
+                itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_10);
+                recyclerView.addItemDecoration(itemDecoration);
+                boolean isHideIconBranding = PrefSiempo.getInstance(context).read(PrefSiempo.IS_ICON_BRANDING, true);
+                mAdapter = new JunkFoodPaneAdapter(getActivity(), items, isHideIconBranding);
+                recyclerView.setAdapter(mAdapter);
+                linSelectJunkFood.setVisibility(View.GONE);
+            } else {
+                linSelectJunkFood.setVisibility(View.VISIBLE);
+                btnSelect.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), JunkfoodFlaggingActivity.class);
+                        startActivity(intent);
+                        getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    }
+                });
+            }
         }
     }
 
