@@ -3,7 +3,6 @@ package co.siempo.phone.receivers;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -11,7 +10,6 @@ import android.util.Log;
 
 import java.util.Date;
 
-import co.siempo.phone.app.Constants;
 import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.utils.PackageUtil;
@@ -171,7 +169,7 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
 
     private void changeSoundProfile(boolean isIncreaseSound) {
         if (PackageUtil.isSiempoLauncher(mContext)) {
-            tempoType = droidPref.getInt("tempoType", 0);
+            tempoType = PrefSiempo.getInstance(mContext).read(PrefSiempo.TEMPO_TYPE, 0);
             if (isIncreaseSound) {
                 Tracer.d("VolumeCheck Call Coming When call comes");
                 if (tempoType == 1 || tempoType == 2) {

@@ -117,7 +117,8 @@ public class InstalledAppsActivity extends CoreActivity implements View.OnClickL
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
         if (event != null && event.isRunning()) {
-            if (progressDialog != null && progressDialog.isShowing()) progressDialog.dismiss();
+            if (progressDialog != null && progressDialog.isShowing())
+                progressDialog.dismiss();
             arrayList = CoreApplication.getInstance().getPackagesList();
             PrefSiempo.getInstance(this).write(PrefSiempo
                     .IS_APP_UPDATED, false);
