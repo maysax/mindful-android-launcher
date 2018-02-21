@@ -1,16 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/linearList"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="?attr/selectableItemBackground"
-              android:gravity="center"
-              android:orientation="vertical"
-              android:showDividers="none"
-              tools:ignore="UseCompoundDrawables">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearList"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:showDividers="none"
+    tools:ignore="UseCompoundDrawables">
+
+    <TextView
+        android:id="@+id/txtTitleRed"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:foreground="#26E81313"
+        android:gravity="center_vertical"
+        android:paddingLeft="55dp"
+        android:paddingRight="55dp"
+        android:text="@string/tap_apps_below_to_move_them_into_this_section"
+        android:textColor="#57000000"
+        android:textSize="16sp"
+        android:visibility="visible" />
 
     <LinearLayout
+        android:id="@+id/linTop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -23,7 +37,7 @@
             android:id="@+id/imgAppIcon"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            tools:ignore="ContentDescription,PrivateResource"/>
+            tools:ignore="ContentDescription,PrivateResource" />
 
         <TextView
             android:id="@+id/txtAppName"
@@ -44,7 +58,7 @@
             android:text="Sound"
             android:textColor="#000000"
             android:textSize="16sp"
-            tools:ignore="HardcodedText"/>
+            tools:ignore="HardcodedText" />
 
 
         <ImageView
@@ -55,7 +69,7 @@
             android:checked="true"
             android:gravity="center_vertical"
             android:padding="@dimen/dp_10"
-            android:src="@drawable/ic_down_arrow"/>
+            android:src="@drawable/ic_down_arrow" />
     </LinearLayout>
 
     <!--<View-->

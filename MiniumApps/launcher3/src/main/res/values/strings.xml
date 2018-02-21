@@ -404,6 +404,7 @@
     <string name="title_flagging_screen">Flag apps</string>
     <string name="all_other_installed_apps">All other installed apps</string>
     <string name="tap_apps_below_to_move_them_into_this_section">Tap apps below to move them into this section.</string>
+    <string name="tap_apps_above_to_move_them_into_this_section">Tap apps above to move them into this section.</string>
     <string name="str_frequently_used_apps">Frequently used apps</string>
     <string name="msg_congratulations">Congratulations!</string>
     <string name="flag_app">Flag this app to use it less</string>

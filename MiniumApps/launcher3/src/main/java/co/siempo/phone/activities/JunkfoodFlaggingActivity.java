@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +19,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -40,9 +38,7 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
     Set<String> list = new HashSet<>();
     Set<String> favoriteList = new HashSet<>();
     private Toolbar toolbar;
-    private TextView txtFlaggedMessage1;
     private ListView listFlaggedApps;
-    private TextView txtFlaggedMessage2;
     private ListView listAllApps;
     private ArrayList<ResolveInfo> flagAppList = new ArrayList<>();
     private ArrayList<ResolveInfo> allAppList = new ArrayList<>();
@@ -79,9 +75,7 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
                 .colorAccent));
-        txtFlaggedMessage1 = findViewById(R.id.txtFlaggedMessage1);
         listFlaggedApps = findViewById(R.id.listFlaggedApps);
-        txtFlaggedMessage2 = findViewById(R.id.txtFlaggedMessage2);
         listAllApps = findViewById(R.id.listAllApps);
         scrollView = findViewById(R.id.scrollView);
     }
@@ -136,6 +130,8 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 favoriteList.removeAll(list);
+                favoriteList.remove(null);
+                list.remove(null);
                 PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
                 PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.JUNKFOOD_APPS, list);
                 finish();
@@ -185,7 +181,6 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
         try {
             if (allAppList.size() > 0) {
                 allAppList = Sorting.sortAppAssignment(this, allAppList);
-                txtFlaggedMessage2.setVisibility(View.GONE);
                 listAllApps.setVisibility(View.VISIBLE);
                 junkFoodAllAppsAdapter = new JunkFoodFlagAdapter(this, allAppList, false);
                 listAllApps.setAdapter(junkFoodAllAppsAdapter);
@@ -198,12 +193,14 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
                 });
 
             } else {
-                listAllApps.setVisibility(View.GONE);
-                txtFlaggedMessage2.setVisibility(View.VISIBLE);
+                allAppList.add(null);
+                junkFoodAllAppsAdapter = new JunkFoodFlagAdapter(this, allAppList, false);
+                listAllApps.setAdapter(junkFoodAllAppsAdapter);
+                junkFoodAllAppsAdapter.notifyDataSetChanged();
+                UIUtils.setDynamicHeight(listAllApps);
             }
             if (flagAppList.size() > 0) {
                 flagAppList = Sorting.sortAppAssignment(this, flagAppList);
-                txtFlaggedMessage1.setVisibility(View.GONE);
                 listFlaggedApps.setVisibility(View.VISIBLE);
                 junkFoodFlagAdapter = new JunkFoodFlagAdapter(this, flagAppList, true);
                 listFlaggedApps.setAdapter(junkFoodFlagAdapter);
@@ -217,18 +214,11 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
                 });
 
             } else {
-                txtFlaggedMessage1.setVisibility(View.VISIBLE);
-                listFlaggedApps.setVisibility(View.GONE);
-            }
-
-            if (isLoadFirstTime || flagAppList.size() == 0) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        scrollView.fullScroll(ScrollView.FOCUS_UP);
-                    }
-                }, 100);
-
+                flagAppList.add(null);
+                junkFoodFlagAdapter = new JunkFoodFlagAdapter(this, flagAppList, true);
+                listFlaggedApps.setAdapter(junkFoodFlagAdapter);
+                junkFoodFlagAdapter.notifyDataSetChanged();
+                UIUtils.setDynamicHeight(listFlaggedApps);
             }
         } catch (Exception e) {
             e.printStackTrace();
