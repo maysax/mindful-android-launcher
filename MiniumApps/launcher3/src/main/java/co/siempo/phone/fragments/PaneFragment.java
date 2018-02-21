@@ -63,6 +63,7 @@ import co.siempo.phone.token.TokenRouter;
 import co.siempo.phone.token.TokenUpdateEvent;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.Subscribe;
 import me.relex.circleindicator.CircleIndicator;
 
@@ -231,6 +232,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         });
         resetSearchList();
 
+        pagerPane.setPageTransformer(true, new UIUtils.FadePageTransformer());
 
     }
 
@@ -689,4 +691,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         linSearchList.startAnimation(fadeOutAnim);
 
     }
+
+
 }

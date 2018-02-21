@@ -12,11 +12,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
@@ -157,7 +155,7 @@ public class DashboardActivity extends CoreActivity {
         mPagerAdapter = new DashboardPagerAdapter(getFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(index == -1 ? 1 : index);
-        mPager.setPageTransformer(true, new FadePageTransformer());
+        mPager.setPageTransformer(true, new UIUtils.FadePageTransformer());
         inputMethodManager = (InputMethodManager) this
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(mPager.getWindowToken(), 0);
@@ -455,29 +453,6 @@ public class DashboardActivity extends CoreActivity {
 
     }
 
-    //Move to utils
-    private static class FadePageTransformer implements ViewPager.PageTransformer {
-        public void transformPage(@NonNull View view, float position) {
 
-            // Page is not an immediate sibling, just make transparent
-            if (position < -1 || position > 1) {
-                view.setAlpha(0);
-            }
-            // Page is sibling to left or right
-            else if (position <= 0 || position <= 1) {
-
-                // Calculate alpha.  Position is decimal in [-1,0] or [0,1]
-                float alpha = (position <= 0) ? position + 1 : 1 - position;
-                view.setAlpha(alpha);
-
-            }
-            // Page is active, make fully visible
-            else if (position == 0) {
-                view.setAlpha(1);
-            }
-
-        }
-
-    }
 
 }

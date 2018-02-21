@@ -1,9 +1,11 @@
 package co.siempo.phone.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 
 import co.siempo.phone.R;
+import co.siempo.phone.activities.FavoritesSelectionActivity;
 import co.siempo.phone.adapters.FavoritesPaneAdapter;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
 import co.siempo.phone.models.MainListItem;
@@ -64,6 +67,15 @@ public class FavoritePaneFragment extends CoreFragment {
         items = PackageUtil.getFavoriteList(getActivity());
         recyclerView = view.findViewById(R.id.recyclerView);
         btnSelect = view.findViewById(R.id.btnSelect);
+        btnSelect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, FavoritesSelectionActivity
+                        .class);
+                startActivity(intent);
+
+            }
+        });
         linSelectFavouriteFood = view.findViewById(R.id.linSelectFavouriteFood);
         mLayoutManager = new GridLayoutManager(getActivity(), 4);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -79,24 +91,37 @@ public class FavoritePaneFragment extends CoreFragment {
 
 
         if (items.size() > 0) {
-            linSelectFavouriteFood.setVisibility(View.GONE);
+            boolean containsFavourites = false;
+            for (MainListItem item : items) {
+                if (!TextUtils.isEmpty(item.getTitle())) {
+                    containsFavourites = true;
+                    break;
+                }
+            }
+            if (containsFavourites) {
+                linSelectFavouriteFood.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+
+            } else {
+                linSelectFavouriteFood.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            }
+
+
         } else if (items.size() == 0) {
             linSelectFavouriteFood.setVisibility(View.VISIBLE);
         }
 
-        btnSelect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-            }
-        });
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            initView();
+            if (getActivity() != null) {
+                initView();
+            }
         }
     }
 

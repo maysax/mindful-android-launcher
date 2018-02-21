@@ -17,6 +17,7 @@ import android.os.IBinder;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
@@ -388,6 +389,31 @@ public class UIUtils {
         layoutParams.height = height + (listView.getDividerHeight() * (adapter.getCount() - 1));
         listView.setLayoutParams(layoutParams);
         listView.requestLayout();
+    }
+
+    public static class FadePageTransformer implements ViewPager
+            .PageTransformer {
+        public void transformPage(@NonNull View view, float position) {
+
+            // Page is not an immediate sibling, just make transparent
+            if (position < -1 || position > 1) {
+                view.setAlpha(0);
+            }
+            // Page is sibling to left or right
+            else if (position <= 0 || position <= 1) {
+
+                // Calculate alpha.  Position is decimal in [-1,0] or [0,1]
+                float alpha = (position <= 0) ? position + 1 : 1 - position;
+                view.setAlpha(alpha);
+
+            }
+            // Page is active, make fully visible
+            else if (position == 0) {
+                view.setAlpha(1);
+            }
+
+        }
+
     }
 
 }
