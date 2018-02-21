@@ -9,14 +9,12 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.activities.CoreActivity;
-import co.siempo.phone.app.DroidPrefs_;
-import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.helper.ActivityHelper;
+import co.siempo.phone.utils.PrefSiempo;
 
 @EFragment(R.layout.fragment_tempo_settings)
 public class TempoSettingsFragment extends CoreFragment {
@@ -35,10 +33,8 @@ public class TempoSettingsFragment extends CoreFragment {
     TextView txtAlphaSettings;
     @ViewById
     TextView titleActionBar;
-    @Pref
-    Launcher3Prefs_ launcherPrefs;
-    @Pref
-    DroidPrefs_ droidPrefs_;
+    //    @Pref
+//    Launcher3Prefs_ launcherPrefs;
 
     public TempoSettingsFragment() {
         // Required empty public constructor
@@ -61,7 +57,8 @@ public class TempoSettingsFragment extends CoreFragment {
         if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.alpha))) {
             txtAlphaSettings.setVisibility(View.VISIBLE);
         } else {
-            if (droidPrefs_.isAlphaSettingEnable().get()) {
+            if (PrefSiempo.getInstance(context).read(PrefSiempo
+                    .IS_ALPHA_SETTING_ENABLE, false)) {
                 txtAlphaSettings.setVisibility(View.VISIBLE);
             } else {
                 txtAlphaSettings.setVisibility(View.GONE);

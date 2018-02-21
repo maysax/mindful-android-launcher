@@ -23,12 +23,10 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 
 import co.siempo.phone.R;
-import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.UIUtils;
 
@@ -69,8 +67,8 @@ public class SiempoPermissionActivity extends CoreActivity {
     TableRow tblDrawOverlay;
     @ViewById
     TableRow tblStorage;
-    @Pref
-    Launcher3Prefs_ launcher3Prefs;
+    //    @Pref
+//    Launcher3Prefs_ launcher3Prefs;
     CompoundButton.OnClickListener onClickListener = new CompoundButton.OnClickListener()
 
     {

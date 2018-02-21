@@ -10,11 +10,9 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.CoreActivity;
-import co.siempo.phone.app.Launcher3Prefs_;
 
 @EFragment(R.layout.fragment_tempo_notifications)
 public class TempoNotificationAppsFragment extends CoreFragment {
@@ -23,8 +21,8 @@ public class TempoNotificationAppsFragment extends CoreFragment {
     @ViewById
     Toolbar toolbar;
 
-    @Pref
-    Launcher3Prefs_ launcherPrefs;
+//    @Pref
+//    Launcher3Prefs_ launcherPrefs;
 
     @ViewById
     TextView txtAllowAppsText;

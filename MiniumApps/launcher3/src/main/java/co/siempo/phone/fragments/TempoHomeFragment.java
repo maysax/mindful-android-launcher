@@ -10,19 +10,15 @@ import android.widget.Switch;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.R;
-import co.siempo.phone.app.DroidPrefs_;
+import co.siempo.phone.utils.PrefSiempo;
 
 @EFragment(R.layout.fragment_tempo_home)
 public class TempoHomeFragment extends CoreFragment {
 
     @ViewById
     Toolbar toolbar;
-
-    @Pref
-    DroidPrefs_ droidPrefs;
 
     @ViewById
     Switch switchDisableIntentionsControls;
@@ -45,11 +41,13 @@ public class TempoHomeFragment extends CoreFragment {
                 fm.popBackStack();
             }
         });
-        switchDisableIntentionsControls.setChecked(droidPrefs.isIntentionEnable().get());
+        switchDisableIntentionsControls.setChecked(PrefSiempo.getInstance(context).read(PrefSiempo.IS_INTENTION_ENABLE, false));
         switchDisableIntentionsControls.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                droidPrefs.isIntentionEnable().put(isChecked);
+                PrefSiempo.getInstance(context).write(PrefSiempo
+                        .IS_INTENTION_ENABLE, isChecked);
+//                droidPrefs.isIntentionEnable().put(isChecked);
             }
         });
     }

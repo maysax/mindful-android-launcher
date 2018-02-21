@@ -20,10 +20,9 @@ import org.androidannotations.annotations.AfterTextChange;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.R;
-import co.siempo.phone.app.DroidPrefs_;
+import co.siempo.phone.utils.PrefSiempo;
 
 @EFragment(R.layout.fragment_tempo_update_email)
 public class TempoUpdateEmailFragment extends CoreFragment {
@@ -44,8 +43,6 @@ public class TempoUpdateEmailFragment extends CoreFragment {
     @ViewById
     TextInputLayout text_input_layout;
 
-    @Pref
-    DroidPrefs_ droidPrefs_;
 
     public TempoUpdateEmailFragment() {
         // Required empty public constructor
@@ -70,10 +67,13 @@ public class TempoUpdateEmailFragment extends CoreFragment {
                 switch (menuItem.getItemId()) {
                     case R.id.tick:
                         String val_email = edt_email.getText().toString().trim();
-                        if (!droidPrefs_.userEmailId().get().equals(val_email)) {
+                        if (!PrefSiempo.getInstance(context).read(PrefSiempo
+                                .USER_EMAILID, "").equals(val_email)) {
                             Toast.makeText(getActivity(), getResources().getString(R.string.success_email), Toast.LENGTH_LONG).show();
                         }
-                        droidPrefs_.userEmailId().put(val_email);
+                        PrefSiempo.getInstance(context).write(PrefSiempo
+                                .USER_EMAILID, val_email);
+//                        droidPrefs_.userEmailId().put(val_email);
                         hideSoftKeyboard();
                         FragmentManager fm = getFragmentManager();
                         fm.popBackStack();
@@ -96,8 +96,9 @@ public class TempoUpdateEmailFragment extends CoreFragment {
                 fm.popBackStack();
             }
         });
-        if (!TextUtils.isEmpty(droidPrefs_.userEmailId().get())) {
-            edt_email.setText(droidPrefs_.userEmailId().get());
+
+        if (!TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.USER_EMAILID, ""))) {
+            edt_email.setText(PrefSiempo.getInstance(context).read(PrefSiempo.USER_EMAILID, ""));
             edt_email.setSelection(edt_email.getText().length());
         }
 

@@ -16,7 +16,6 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.Trace;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.greenrobot.greendao.database.Database;
 
 import java.util.ArrayList;
@@ -29,6 +28,7 @@ import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.LogConfig;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.utils.PackageUtil;
+import co.siempo.phone.utils.PrefSiempo;
 
 /**
  * Created by Shahab on 2/16/2017.
@@ -39,11 +39,9 @@ public class Launcher3App extends CoreApplication {
     public static final String DND_START_STOP_ACTION = "siempo.intent.action.DND_START_STOP";
     private final String TRACE_TAG = LogConfig.TRACE_TAG + "Launcher3App";
     private final String TAG = "SiempoActivityLifeCycle";
-    @Pref
-    public DroidPrefs_ prefs;
     public Dialog dialog;
-    @Pref
-    Launcher3Prefs_ launcherPrefs;
+    //    @Pref
+//    Launcher3Prefs_ launcherPrefs;
     @SystemService
     AudioManager audioManager;
     @SystemService
@@ -97,16 +95,18 @@ public class Launcher3App extends CoreApplication {
         int flowSegmentCount = 4;
 
         if (Config.DEBUG) {
-            prefs.edit()
-                    .flowMaxTimeLimitMillis().put(flowSegmentCount * 5 * 1000f)
-                    .flowSegmentDurationMillis().put(5 * 1000f)
-                    .apply();
+
+            PrefSiempo.getInstance(this).write(PrefSiempo
+                    .FLOW_MAX_TIME_LIMIT_MILLIS, flowSegmentCount * 5 * 1000f);
+            PrefSiempo.getInstance(this).write(PrefSiempo
+                    .FLOW_SEGMENT_DURATION_MILLIS, 5 * 1000f);
 
         } else {
-            prefs.edit()
-                    .flowMaxTimeLimitMillis().put(flowSegmentCount * 15 * 60 * 1000f)
-                    .flowSegmentDurationMillis().put(15 * 60 * 1000f)
-                    .apply();
+            PrefSiempo.getInstance(this).write(PrefSiempo
+                    .FLOW_MAX_TIME_LIMIT_MILLIS, flowSegmentCount * 15 * 60 * 1000f);
+            PrefSiempo.getInstance(this).write(PrefSiempo
+                    .FLOW_SEGMENT_DURATION_MILLIS, 15 * 60 * 1000f);
+
         }
     }
 
@@ -138,7 +138,8 @@ public class Launcher3App extends CoreApplication {
             if (numStarted == 0) {
                 // app went to foreground
                 Log.d(TAG, "Siempo is on foreground");
-                launcherPrefs.isAppDefaultOrFront().put(true);
+                PrefSiempo.getInstance(activity).write(PrefSiempo
+                        .IS_APP_DEFAULT_OR_FRONT, true);
 
             }
             numStarted++;
@@ -179,10 +180,12 @@ public class Launcher3App extends CoreApplication {
 
                 if (PackageUtil.isSiempoLauncher(getApplicationContext())) {
                     isSiempoLauncher = true;
-                    launcherPrefs.isAppDefaultOrFront().put(true);
+                    PrefSiempo.getInstance(activity).write(PrefSiempo
+                            .IS_APP_DEFAULT_OR_FRONT, true);
 
                 } else {
-                    launcherPrefs.isAppDefaultOrFront().put(false);
+                    PrefSiempo.getInstance(activity).write(PrefSiempo
+                            .IS_APP_DEFAULT_OR_FRONT, false);
                 }
             }
         }

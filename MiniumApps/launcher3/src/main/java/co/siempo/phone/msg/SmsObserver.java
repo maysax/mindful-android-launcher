@@ -58,13 +58,10 @@ public class SmsObserver extends ContentObserver {
                             cursor.getColumnIndex(Telephony.Sms.ADDRESS));
                     final String body = cursor.getString(
                             cursor.getColumnIndex(Telephony.Sms.BODY));
-                    final int threadId = cursor.getInt(
-                            cursor.getColumnIndex(Telephony.Sms.THREAD_ID));
 
                     if (PhoneNumberUtils.compare(address, this.address) &&
                             body.equals(this.body)) {
 
-                        ((OnSmsSentListener) context).onSmsSent(threadId);
                         resolver.unregisterContentObserver(this);
                     }
                 }

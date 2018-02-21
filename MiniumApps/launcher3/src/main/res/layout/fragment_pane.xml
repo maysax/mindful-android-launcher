@@ -69,10 +69,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:clipToPadding="false"/>
-            android:layout_marginBottom="@dimen/dp_15"
-            android:layout_marginLeft="@dimen/dp_5"
-            android:layout_marginRight="@dimen/dp_5"
-            android:clipToPadding="false" />
         </LinearLayout>
 
         <LinearLayout

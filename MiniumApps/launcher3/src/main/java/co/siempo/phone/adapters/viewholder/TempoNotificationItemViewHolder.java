@@ -1,7 +1,6 @@
 package co.siempo.phone.adapters.viewholder;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -19,8 +18,8 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import co.siempo.phone.R;
-import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.utils.PrefSiempo;
 
 
 public class TempoNotificationItemViewHolder extends RecyclerView.ViewHolder {
@@ -56,24 +55,24 @@ public class TempoNotificationItemViewHolder extends RecyclerView.ViewHolder {
         return img_block_unblock;
     }
 
-    public LinearLayout getLinearList(){
-        return  linearList;
+    public LinearLayout getLinearList() {
+        return linearList;
     }
 
 
-    public void displayImage(ApplicationInfo applicationInfo, PackageManager packageManager,String errormessage) {
-        if(TextUtils.isEmpty(errormessage)) {
+    public void displayImage(ApplicationInfo applicationInfo, PackageManager packageManager, String errormessage) {
+        if (TextUtils.isEmpty(errormessage)) {
             if (CoreApplication.getInstance().iconList.get(applicationInfo.packageName) == null) {
                 imv_appicon.setImageDrawable(applicationInfo.loadIcon(packageManager));
             } else {
                 imv_appicon.setImageBitmap(CoreApplication.getInstance().iconList.get(applicationInfo.packageName));
             }
-        }else{
+        } else {
             imv_appicon.setImageBitmap(null);
         }
     }
 
-    public void disableViews(){
+    public void disableViews() {
         imv_appicon.setVisibility(View.INVISIBLE);
         img_block_unblock.setVisibility(View.INVISIBLE);
         txt_app_name.setTextColor(Color.parseColor("#777777"));
@@ -81,7 +80,7 @@ public class TempoNotificationItemViewHolder extends RecyclerView.ViewHolder {
 
     }
 
-    public void enableViews(){
+    public void enableViews() {
         txt_app_name.setTextSize(16);
         txt_app_name.setTextColor(Color.parseColor("#000000"));
         img_block_unblock.setVisibility(View.VISIBLE);
@@ -89,7 +88,6 @@ public class TempoNotificationItemViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void changeNotification(ApplicationInfo applicationInfo, boolean ischecked, ArrayList<String> disableNotificationApps, Context context) {
-        SharedPreferences launcherPrefs = context.getSharedPreferences("Launcher3Prefs", 0);
         if (ischecked && disableNotificationApps.contains(applicationInfo.packageName)) {
             disableNotificationApps.remove(applicationInfo.packageName);
         }
@@ -97,13 +95,14 @@ public class TempoNotificationItemViewHolder extends RecyclerView.ViewHolder {
             disableNotificationApps.add(applicationInfo.packageName);
         }
         String disableList = new Gson().toJson(disableNotificationApps);
-        launcherPrefs.edit().putString(Constants.HELPFUL_ROBOTS, disableList).commit();
+        PrefSiempo.getInstance(context).write(PrefSiempo.HELPFUL_ROBOTS,
+                disableList);
+//        launcherPrefs.edit().putString(Constants.HELPFUL_ROBOTS, disableList).commit();
     }
 
 
     public void addToBlockList(ApplicationInfo applicationInfo, boolean ischecked, ArrayList<String> blockedApps, Context context) {
 
-        SharedPreferences launcherPrefs = context.getSharedPreferences("Launcher3Prefs", 0);
         if (ischecked && blockedApps.contains(applicationInfo.packageName)) {
             blockedApps.remove(applicationInfo.packageName);
         }
@@ -111,7 +110,8 @@ public class TempoNotificationItemViewHolder extends RecyclerView.ViewHolder {
             blockedApps.add(applicationInfo.packageName);
         }
         String blockedList = new Gson().toJson(blockedApps);
-        launcherPrefs.edit().putString(Constants.BLOCKED_APPLIST, blockedList).commit();
+        PrefSiempo.getInstance(context).write(PrefSiempo.BLOCKED_APPLIST, blockedList);
+//        launcherPrefs.edit().putString(Constants.BLOCKED_APPLIST, blockedList).commit();
 
 
     }

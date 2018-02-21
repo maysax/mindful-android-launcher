@@ -43,7 +43,7 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
     private Context context;
     private long startTime = 0;
     private LinearLayout ln_suppressedNotifications;
-    private ImageView icon_AppNotifications, icon_SuppressedNotifications;
+    private ImageView icon_SuppressedNotifications;
     private LinearLayout ln_permissions;
     private ImageView icon_permissions;
 
@@ -61,7 +61,6 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
         ln_permissions = findViewById(R.id.ln_permissions);
         icon_SuppressedNotifications = findViewById(R.id.icon_SuppressedNotifications);
         icon_permissions = findViewById(R.id.icon_permissions);
-        icon_AppNotifications.setImageDrawable(new IconDrawable(context, "fa-bell").colorRes(R.color.text_primary).sizeDp(18));
         icon_permissions.setImageDrawable(new IconDrawable(context, "fa-bell").colorRes(R.color.text_primary).sizeDp(18));
         try {
             icon_SuppressedNotifications.setImageDrawable(new IconDrawable(context, "fa-exclamation").colorRes(R.color.text_primary).sizeDp(18));

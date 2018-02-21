@@ -3,7 +3,6 @@ package co.siempo.phone.msg;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.Telephony;
 import android.telephony.SmsMessage;
@@ -13,17 +12,13 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.androidannotations.annotations.EReceiver;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 
-import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.app.Launcher3App;
-import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.DaoSession;
 import co.siempo.phone.db.TableNotificationSms;
@@ -31,6 +26,7 @@ import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.NewNotificationEvent;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.utils.NotificationUtility;
+import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -39,10 +35,8 @@ import de.greenrobot.event.EventBus;
 @EReceiver
 public class SmsReceiver extends BroadcastReceiver {
 
-    @Pref
-    DroidPrefs_ prefs;
-    @Pref
-    Launcher3Prefs_ launcherPrefs;
+    //    @Pref
+//    Launcher3Prefs_ launcherPrefs;
     ArrayList<String> disableNotificationApps = new ArrayList<>();
     ArrayList<String> blockedApps = new ArrayList<>();
     private String mAddress;
@@ -77,17 +71,19 @@ public class SmsReceiver extends BroadcastReceiver {
                 mAddress = sms.getDisplayOriginatingAddress(); // sms..getOriginatingAddress();
                 mDate = new Date(sms.getTimestampMillis());
 
-                if (launcherPrefs.isAppDefaultOrFront().get()) {
-                    SharedPreferences prefs1 = context.getSharedPreferences("Launcher3Prefs", 0);
-                    String disable_AppList = prefs1.getString(Constants.HELPFUL_ROBOTS, "");
+
+                if (PrefSiempo.getInstance(context).read(PrefSiempo
+                        .IS_APP_DEFAULT_OR_FRONT, false)) {
+                    String disable_AppList = PrefSiempo.getInstance
+                            (context).read(PrefSiempo.HELPFUL_ROBOTS, "");
                     if (!TextUtils.isEmpty(disable_AppList)) {
                         Type type = new TypeToken<ArrayList<String>>() {
                         }.getType();
                         disableNotificationApps = new ArrayList<>();
                         disableNotificationApps = new Gson().fromJson(disable_AppList, type);
-                        SharedPreferences sharedPreferences = context.getSharedPreferences("Launcher3Prefs", 0);
 
-                        String block_AppList = sharedPreferences.getString(Constants.BLOCKED_APPLIST, "");
+                        String block_AppList = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST,
+                                "");
                         if (!TextUtils.isEmpty(block_AppList)) {
                             Type blockType = new TypeToken<ArrayList<String>>() {
                             }.getType();
@@ -97,7 +93,8 @@ public class SmsReceiver extends BroadcastReceiver {
                         if (null != blockedApps && blockedApps.size() > 0 && !TextUtils.isEmpty(messagingAppPackage)) {
                             for (String blockedApp : blockedApps) {
                                 if (blockedApp.equalsIgnoreCase(messagingAppPackage)) {
-                                    if (prefs.tempoType().get() != 0) {
+                                    if (PrefSiempo.getInstance(context).read(PrefSiempo
+                                            .TEMPO_TYPE, 0) != 0) {
                                         saveMessage(mAddress, mBody, mDate, context);
                                     }
                                 }
