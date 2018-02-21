@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relMenu"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:tag="Grid">
+
+    <ImageView
+        android:id="@+id/imgView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:tag="0"
+        tools:ignore="ContentDescription" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/linearList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:padding="@dimen/dp_10"
+        android:tag="1"
+        tools:ignore="UseCompoundDrawables,UselessParent">
+
+        <ImageView
+            android:id="@+id/temp"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/txtAppTextImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text=""
+            android:textColor="@android:color/black"
+            android:textSize="30dp"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/imgAppIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@null"
+            android:padding="6dp" />
+
+
+        <ImageView
+            android:id="@+id/imgUnderLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/letterbottomborder" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            tools:ignore="InefficientWeight">
+
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:maxLines="1"
+                android:textColor="@color/black_80"
+                android:textSize="13sp"
+                tools:text="Send as a message" />
+
+            <TextView
+                android:id="@+id/textDefaultApp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:visibility="gone"
+                tools:text="Default App" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

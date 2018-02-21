@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -42,6 +44,8 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
     private RecyclerView recyclerView;
     private Toolbar toolbar;
     private TextView txtSelectTools;
+    private RelativeLayout relTop;
+    private LinearLayout linearTop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +113,28 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
                 startActivity(intent);
             }
         });
+        linearTop = findViewById(R.id.linearTop);
+        linearTop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        relTop = findViewById(R.id.relTop);
+        relTop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
 
     }
 
