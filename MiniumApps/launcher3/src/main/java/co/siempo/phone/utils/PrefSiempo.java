@@ -44,6 +44,8 @@ public class PrefSiempo {
     // used for sorting of tools menu.
     public static final String SORTED_MENU = "sortedMenu";
 
+    public static final String FAVORITE_SORTED_MENU = "favoriteSortedMenu";
+
     // used for Allow peaking.
     public static final String ALLOW_PEAKING = "Allowpeaking";
 

@@ -1,16 +1,36 @@
 package co.siempo.phone.fragments;
 
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import co.siempo.phone.R;
+import co.siempo.phone.adapters.FavoritesPaneAdapter;
+import co.siempo.phone.adapters.ToolsMenuAdapter;
+import co.siempo.phone.customviews.ItemOffsetDecoration;
+import co.siempo.phone.main.MainListItemLoader;
+import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.utils.PackageUtil;
+import co.siempo.phone.utils.PrefSiempo;
 
 
 public class FavoritePaneFragment extends CoreFragment {
 
     private View view;
+    private RecyclerView recyclerView;
+    private ArrayList<MainListItem> items = new ArrayList<>();
+    private FavoritesPaneAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private Parcelable mListState;
+    private ItemOffsetDecoration itemDecoration;
 
     public FavoritePaneFragment() {
         // Required empty public constructor
@@ -28,8 +48,33 @@ public class FavoritePaneFragment extends CoreFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_favorite_pane, container, false);
+        view = inflater.inflate(R.layout.fragment_tools_pane, container, false);
         return view;
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initView();
+    }
+
+    private void initView() {
+        items = new ArrayList<>();
+        items = PackageUtil.getFavoriteList(getActivity());
+        recyclerView = view.findViewById(R.id.recyclerView);
+        mLayoutManager = new GridLayoutManager(getActivity(), 4);
+        recyclerView.setLayoutManager(mLayoutManager);
+        if (itemDecoration != null) {
+            recyclerView.removeItemDecoration(itemDecoration);
+        }
+        itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_10);
+        recyclerView.addItemDecoration(itemDecoration);
+        boolean isHideIconBranding = PrefSiempo.getInstance(context).read(PrefSiempo.IS_ICON_BRANDING, true);
+
+        mAdapter = new FavoritesPaneAdapter(getActivity(), isHideIconBranding,false, items);
+        recyclerView.setAdapter(mAdapter);
+    }
+
+
 }

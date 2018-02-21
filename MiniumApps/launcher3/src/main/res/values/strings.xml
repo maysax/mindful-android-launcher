@@ -404,6 +404,7 @@
     <string name="title_flagging_screen">Flag apps</string>
     <string name="all_other_installed_apps">All other installed apps</string>
     <string name="tap_apps_below_to_move_them_into_this_section">Tap apps below to move them into this section.</string>
+    <string name="tap_apps_above_to_move_them_into_this_section">Tap apps above to move them into this section.</string>
     <string name="str_frequently_used_apps">Frequently used apps</string>
     <string name="msg_congratulations">Congratulations!</string>
     <string name="flag_app">Flag this app to use it less</string>
@@ -419,10 +420,14 @@
     <string name="yes_unhide">YES, UNHIDE</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="editing_tools">Editing tools</string>
+    <string name="editing_frequently_apps">Editing frequently used apps</string>
     <string name="select_tools">Select Tools</string>
+    <string name="select_apps">Select Apps</string>
     <string name="assign_app">ASSIGN APP</string>
     <string name="msg_allowpeaking">Off.The status bar will show you when you have new notifications in your tray, but your tray won\'t pop up automatically.</string>
     <string name="allow_peaking">Allow peaking</string>
+    <string name="you_have_t_selected_any_junkfood_app_nselect_junkfood">You have\'t selected any Junkfood app.</string>
+    <string name="select_junkfood">Select Junkfood</string>
 
 
 </resources>

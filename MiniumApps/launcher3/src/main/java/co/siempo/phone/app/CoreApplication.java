@@ -424,6 +424,7 @@ public abstract class CoreApplication extends MultiDexApplication {
                 UserHandle user = new UserHandle(userManager.getSerialNumberForUser(profile), profile);
                 for (LauncherActivityInfo activityInfo : launcherApps.getActivityList(null, profile)) {
                     ApplicationInfo appInfo = activityInfo.getApplicationInfo();
+
                     appInfo.name = activityInfo.getLabel().toString();
                     if (!appInfo.packageName.equalsIgnoreCase("co.siempo.phone")) {
                         Drawable drawable;

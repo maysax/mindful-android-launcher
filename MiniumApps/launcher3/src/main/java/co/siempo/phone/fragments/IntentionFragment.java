@@ -113,6 +113,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                 animY.setInterpolator(new BounceInterpolator());
                 animY.setRepeatCount(0);
                 animY.start();
+
                 break;
             case R.id.imgOverFlow:
                 showOverflowDialog();
