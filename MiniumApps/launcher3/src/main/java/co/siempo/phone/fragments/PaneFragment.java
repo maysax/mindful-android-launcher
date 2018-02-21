@@ -299,12 +299,14 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             @Override
             public void onClick(View v) {
 
+
                 chipsEditText.clearFocus();
                 chipsEditText.setText("");
 
                 if (inputMethodManager != null) {
                     inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
                 }
+                listView.setAdapter(adapter);
 
             }
         });
@@ -347,21 +349,14 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                 if (hasFocus && isVisible()) {
                     imageClear.setVisibility(View.GONE);
                     hidePaneAndBottomView(context);
-
-
                     blueLineDivider.setVisibility(View.GONE);
                 } else {
-                    linPane.setAlpha(1);
-                    linPane.setVisibility(View.VISIBLE);
+
                     blueLineDivider.setVisibility(View.VISIBLE);
                     searchLayout.setVisibility(View.GONE);
                     cardViewEdtSearch.setVisibility(View.GONE);
                     relSearchTools.setVisibility(View.VISIBLE);
-                    linBottomDoc.setVisibility(View.VISIBLE);
                     showPaneAndBottomView(context);
-//                    ObjectAnimator fadeOut = ObjectAnimator.ofFloat(linSearchList, "alpha", 1f, .3f);
-//                    fadeOut.setDuration(10000);
-                    linSearchList.setVisibility(View.GONE);
                     imageClear.setVisibility(View.VISIBLE);
 
                 }
@@ -612,9 +607,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-//                linPane.setVisibility(View.GONE);
-//                linBottomDoc.setVisibility(View.GONE);
-//                searchListVisible(context);
 
             }
 
@@ -634,14 +626,18 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             @Override
             public void onAnimationStart(Animation animation) {
 
-
                 linSearchList.setAlpha(0.5f);
+                linSearchList.setVisibility(View.GONE);
+                linPane.setVisibility(View.VISIBLE);
+                linBottomDoc.setVisibility(View.VISIBLE);
 
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
                 linSearchList.setVisibility(View.GONE);
+                linPane.setAlpha(1);
+
 
             }
 

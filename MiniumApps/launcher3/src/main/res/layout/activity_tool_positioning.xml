@@ -1,10 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/transparent"
-    android:weightSum="3"
-    tools:context="co.siempo.phone.fragments.IntentionFragment">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:weightSum="3"
+                tools:context="co.siempo.phone.fragments.IntentionFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +26,7 @@
                 android:background="@color/toolbar_bg"
                 android:elevation="@dimen/dp_5"
                 android:minHeight="?android:attr/actionBarSize"
-                android:visibility="visible" />
+                android:visibility="visible"/>
 
             <RelativeLayout
                 android:id="@+id/relTop"
@@ -46,7 +46,7 @@
                     android:padding="@dimen/dp_10"
                     android:text="@string/select_tools"
                     android:textAllCaps="true"
-                    android:textColor="@color/dialog_blue" />
+                    android:textColor="@color/dialog_blue"/>
             </RelativeLayout>
 
         </LinearLayout>
@@ -78,7 +78,7 @@
 
                     <include
                         layout="@layout/list_item_grid"
-                        android:visibility="invisible" />
+                        android:visibility="invisible"/>
                 </LinearLayout>
             </RelativeLayout>
 
@@ -88,14 +88,14 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@drawable/tranparent"
-                android:clipToPadding="false" />
+                android:clipToPadding="false"/>
 
             <LinearLayout
-                android:orientation="vertical"
                 android:id="@+id/linearTop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/recyclerView"></LinearLayout>
+                android:layout_below="@+id/recyclerView"
+                android:orientation="vertical"></LinearLayout>
         </RelativeLayout>
 
 
