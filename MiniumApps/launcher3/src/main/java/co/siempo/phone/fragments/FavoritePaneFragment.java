@@ -48,7 +48,7 @@ public class FavoritePaneFragment extends CoreFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_tools_pane, container, false);
+        view = inflater.inflate(R.layout.fragment_favorite_pane, container, false);
         return view;
 
     }
