@@ -3,14 +3,10 @@ package co.siempo.phone.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 
-
-import com.squareup.leakcanary.RefWatcher;
-
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.Trace;
 
 import co.siempo.phone.activities.CoreActivity;
-import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.log.LogConfig;
 import co.siempo.phone.log.Tracer;
 import de.greenrobot.event.EventBus;
@@ -59,7 +55,5 @@ public abstract class CoreFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        RefWatcher refWatcher = CoreApplication.getRefWatcher(getActivity());
-        refWatcher.watch(this);
     }
 }

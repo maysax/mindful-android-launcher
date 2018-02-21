@@ -2,7 +2,6 @@ package co.siempo.phone.activities;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -32,7 +31,6 @@ import java.util.List;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.SuppressNotificationAdapter;
-import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.MultipleItemDelete;
@@ -43,6 +41,7 @@ import co.siempo.phone.models.DeleteItem;
 import co.siempo.phone.models.Notification;
 import co.siempo.phone.models.NotificationContactModel;
 import co.siempo.phone.utils.NotificationUtility;
+import co.siempo.phone.utils.PrefSiempo;
 
 public class SiempoSupressNotificationActivity extends AppCompatActivity {
 
@@ -51,7 +50,6 @@ public class SiempoSupressNotificationActivity extends AppCompatActivity {
     Context context;
     List<Notification> notificationList = new ArrayList<>();
     List<Notification> suggetionList = new ArrayList<>();
-    SharedPreferences launcherPrefs;
     ArrayList<String> disableNotificationApps = new ArrayList<>();
     long startTime = 0;
     private RecyclerView recyclerView;
@@ -81,7 +79,6 @@ public class SiempoSupressNotificationActivity extends AppCompatActivity {
 
     public void initView() {
         context = SiempoSupressNotificationActivity.this;
-        launcherPrefs = getSharedPreferences("Launcher3Prefs", 0);
         txtClearAll = findViewById(R.id.txtClearAll);
         emptyView = findViewById(R.id.emptyView);
         recyclerView = findViewById(R.id.recyclerView);
@@ -151,7 +148,8 @@ public class SiempoSupressNotificationActivity extends AppCompatActivity {
 
     private void loadData() {
 
-        String disable_AppList = launcherPrefs.getString(Constants.HELPFUL_ROBOTS, "");
+        String disable_AppList = PrefSiempo.getInstance(context).read
+                (PrefSiempo.HELPFUL_ROBOTS, "");
         if (!TextUtils.isEmpty(disable_AppList)) {
             Type type = new TypeToken<ArrayList<String>>() {
             }.getType();

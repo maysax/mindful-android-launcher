@@ -14,19 +14,18 @@ import android.telephony.SmsManager;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.EBean;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.msg.SmsObserver;
 import co.siempo.phone.utils.DataUtils;
+import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 
@@ -34,8 +33,6 @@ import de.greenrobot.event.EventBus;
 @EBean
 public class TokenRouter {
 
-    @Pref
-    DroidPrefs_ droidPrefs_;
 
     void route() {
         EventBus.getDefault().post(new TokenUpdateEvent());
@@ -63,7 +60,8 @@ public class TokenRouter {
     public void createContact(Context context) {
         String inputStr = TokenManager.getInstance().getCurrent().getTitle();
         if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.beta)) && inputStr.equalsIgnoreCase(Constants.ALPHA_SETTING)) {
-            if (droidPrefs_.isAlphaSettingEnable().get()) {
+            if (PrefSiempo.getInstance(context).read(PrefSiempo
+                    .IS_ALPHA_SETTING_ENABLE, false)) {
                 if (PhoneNumberUtils.isGlobalPhoneNumber(inputStr)) {
                     context.startActivity(new Intent(Intent.ACTION_INSERT).setType(ContactsContract.Contacts.CONTENT_TYPE).putExtra(ContactsContract.Intents.Insert.PHONE, inputStr));
                 } else {
@@ -71,7 +69,8 @@ public class TokenRouter {
                 }
                 TokenManager.getInstance().clear();
             } else {
-                droidPrefs_.isAlphaSettingEnable().put(true);
+                PrefSiempo.getInstance(context).write(PrefSiempo
+                        .IS_ALPHA_SETTING_ENABLE, true);
                 new ActivityHelper(context).openSiempoAlphaSettingsApp();
                 TokenManager.getInstance().clear();
             }

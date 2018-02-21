@@ -15,10 +15,6 @@ import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.activities.InstalledAppsActivity;
 import co.siempo.phone.activities.NoteListActivity;
 import co.siempo.phone.activities.SiempoAlphaSettingsActivity_;
-import co.siempo.phone.activities.SiempoMainSettingsActivity_;
-import co.siempo.phone.activities.SiempoPhoneSettingsActivity;
-import co.siempo.phone.activities.SiempoSettingsActivity_;
-import co.siempo.phone.activities.SiempoSettingsDefaultAppActivity_;
 import co.siempo.phone.activities.SiempoSupressNotificationActivity;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.launcher.FakeLauncherActivity;
@@ -49,14 +45,6 @@ public class ActivityHelper {
         }
     }
 
-    public void openSettingsApp() {
-        try {
-            SiempoMainSettingsActivity_.intent(getContext()).start();
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            Tracer.e(e, e.getMessage());
-        }
-    }
 
     public void handleDefaultLauncher(CoreActivity activity) {
         if (activity != null) {
@@ -163,34 +151,11 @@ public class ActivityHelper {
         }
     }
 
-    public void openPhoneSettingsApp() {
-        try {
-            Intent i = new Intent(getContext(), SiempoPhoneSettingsActivity.class);
-            getContext().startActivity(i);
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            Tracer.e(e, e.getMessage());
-        }
-    }
 
     public void openInstallledApp() {
         try {
             Intent i = new Intent(getContext(), InstalledAppsActivity.class);
             getContext().startActivity(i);
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            Tracer.e(e, e.getMessage());
-        }
-    }
-
-    /**
-     * Open default Setting page for default application for menu.
-     *
-     * @return
-     */
-    public void openSiempoDefaultAppSettings() {
-        try {
-            SiempoSettingsDefaultAppActivity_.intent(getContext()).start();
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
@@ -208,15 +173,6 @@ public class ActivityHelper {
         }
     }
 
-
-    public void openSiempoSettingsApp() {
-        try {
-            SiempoSettingsActivity_.intent(getContext()).start();
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            Tracer.e(e, e.getMessage());
-        }
-    }
 
     public void openSiempoAlphaSettingsApp() {
         try {

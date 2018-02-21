@@ -1,7 +1,6 @@
 package co.siempo.phone.adapters.viewholder;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,8 +16,8 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import co.siempo.phone.R;
-import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.utils.PrefSiempo;
 
 
 public class NotificationItemViewHolder extends RecyclerView.ViewHolder {
@@ -64,7 +63,6 @@ public class NotificationItemViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void changeNotification(ApplicationInfo applicationInfo, boolean ischecked, ArrayList<String> disableNotificationApps, Context context) {
-        SharedPreferences launcherPrefs = context.getSharedPreferences("Launcher3Prefs", 0);
         if (ischecked && disableNotificationApps.contains(applicationInfo.packageName)) {
             disableNotificationApps.remove(applicationInfo.packageName);
         }
@@ -72,7 +70,8 @@ public class NotificationItemViewHolder extends RecyclerView.ViewHolder {
             disableNotificationApps.add(applicationInfo.packageName);
         }
         String disableList = new Gson().toJson(disableNotificationApps);
-        launcherPrefs.edit().putString(Constants.HELPFUL_ROBOTS, disableList).commit();
+        PrefSiempo.getInstance(context).write(PrefSiempo.HELPFUL_ROBOTS, disableList);
+//        launcherPrefs.edit().putString(Constants.HELPFUL_ROBOTS, disableList).commit();
         switch_appNotification.setChecked(ischecked);
     }
 

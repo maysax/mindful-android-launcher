@@ -6,12 +6,15 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
-import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
+import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.adapters.MainListAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.CreateNoteEvent;
@@ -40,8 +43,8 @@ import de.greenrobot.event.EventBus;
 
 public class MainFragmentMediator {
 
-    SharedPreferences launcher3Prefs;
-    Context context;
+    private SharedPreferences launcher3Prefs;
+    private Context context;
     private PaneFragment fragment;
     private List<MainListItem> items;
     private List<MainListItem> contactItems;
@@ -49,13 +52,13 @@ public class MainFragmentMediator {
     public MainFragmentMediator(PaneFragment paneFragment) {
         this.fragment = paneFragment;
         context = this.fragment.getActivity();
-        launcher3Prefs =
-                context.getSharedPreferences("Launcher3Prefs", 0);
+//        launcher3Prefs =
+//                context.getSharedPreferences("Launcher3Prefs", 0);
     }
 
     public void loadData() {
 
-        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, ""))) {
+        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, ""))) {
             items = new ArrayList<>();
             contactItems = new ArrayList<>();
             loadActions();
@@ -71,7 +74,7 @@ public class MainFragmentMediator {
     public void resetData() {
         items = new ArrayList<>();
 
-        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, ""))) {
+        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, ""))) {
             items = new ArrayList<>();
 
             contactItems = new ArrayList<>();
@@ -99,17 +102,19 @@ public class MainFragmentMediator {
 
     private void loadContacts() {
         try {
-            List<MainListItem> abc = null;
+            List<MainListItem> localList = null;
             if (fragment != null && fragment.getManager() != null && fragment.getManager().hasCompleted(TokenItemType.CONTACT)) {
                 return;
             }
             if (fragment != null && contactItems.size() == 0) {
 
-                abc = new ContactsLoader().loadContacts(fragment.getActivity());
-                contactItems = abc;
+                localList = new ContactsLoader().loadContacts(fragment.getActivity());
+                contactItems = localList;
 
             }
-            items.addAll(abc);
+            if (localList != null) {
+                items.addAll(localList);
+            }
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
@@ -167,6 +172,11 @@ public class MainFragmentMediator {
                     break;
                 case ACTION:
                     if (getAdapter() != null && TextUtils.isEmpty(getAdapter().getItem(position).getPackageName())) {
+
+                        SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance
+                                (DateFormat.FULL, Locale
+                                        .getDefault());
+
                         items.get(position).setDate(Calendar.getInstance().getTime());
                         items.set(position, items.get(position));
                         items = Sorting.sortList(items);
@@ -175,7 +185,7 @@ public class MainFragmentMediator {
                         new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
                     } else {
                         if (fragment != null) {
-                            MainActivity.isTextLenghGreater = "";
+                            DashboardActivity.isTextLenghGreater = "";
                             UIUtils.hideSoftKeyboard(fragment.getActivity(), fragment.getActivity().getWindow().getDecorView().getWindowToken());
                             boolean status = new ActivityHelper(fragment.getActivity()).openAppWithPackageName(getAdapter().getItem(position).getPackageName());
                             FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_APPLICATION_PICK, getAdapter().getItem(position).getPackageName(), "");
@@ -215,7 +225,7 @@ public class MainFragmentMediator {
                         case 4:
                             if (router != null && fragment != null) {
                                 router.call(fragment.getActivity());
-                                MainActivity.isTextLenghGreater = "";
+                                DashboardActivity.isTextLenghGreater = "";
                                 FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_CALL, "", data);
                                 EventBus.getDefault().post(new SendSmsEvent(true, "", ""));
                             }
@@ -229,7 +239,7 @@ public class MainFragmentMediator {
                     if (getAdapter().getItem(position).getTitle().trim().equalsIgnoreCase("call") && getAdapter().getItem(position).getId() == 4) {
                         try {
                             fragment.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + TokenManager.getInstance().getCurrent().getExtra2())));
-                            MainActivity.isTextLenghGreater = "";
+                            DashboardActivity.isTextLenghGreater = "";
                             FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_CALL, "", data);
                             EventBus.getDefault().post(new SendSmsEvent(true, "", ""));
                         } catch (Exception e) {
@@ -252,7 +262,7 @@ public class MainFragmentMediator {
     public void loadDefaultData() {
         items = new ArrayList<>();
 
-        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, ""))) {
+        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, ""))) {
             items = new ArrayList<>();
 
             contactItems = new ArrayList<>();
@@ -283,7 +293,7 @@ public class MainFragmentMediator {
     public void contactPicker() {
         items = new ArrayList<>();
 
-        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, ""))) {
+        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, ""))) {
             items = new ArrayList<>();
 
             contactItems = new ArrayList<>();
@@ -334,7 +344,7 @@ public class MainFragmentMediator {
     public void defaultData() {
         items = new ArrayList<>();
 
-        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, ""))) {
+        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, ""))) {
             items = new ArrayList<>();
 
             contactItems = new ArrayList<>();

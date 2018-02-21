@@ -6,13 +6,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -35,9 +35,6 @@ import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.DashboardPagerAdapter;
 import co.siempo.phone.app.Constants;
-import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.app.Launcher3App;
-import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.CheckVersionEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.log.Tracer;
@@ -62,7 +59,6 @@ public class DashboardActivity extends CoreActivity {
      * and next wizard steps.
      */
     private ViewPager mPager;
-    private SharedPreferences launcher3Prefs;
     private String TAG = "DashboardActivity";
     /**
      * The pager adapter, which provides the pages to the view pager widget.
@@ -128,12 +124,6 @@ public class DashboardActivity extends CoreActivity {
         initView();
     }
 
-    @Subscribe
-    public void appInstalledEvent(AppInstalledEvent event) {
-        if (event.isRunning()) {
-            ((Launcher3App) CoreApplication.getInstance()).setAllDefaultMenusApplication();
-        }
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -159,8 +149,6 @@ public class DashboardActivity extends CoreActivity {
 
         isApplicationLaunch = true;
 
-        launcher3Prefs =
-                getSharedPreferences("Launcher3Prefs", 0);
         checknavigatePermissions();
     }
 
@@ -197,7 +185,9 @@ public class DashboardActivity extends CoreActivity {
 
     public void checknavigatePermissions() {
 
-        if (!launcher3Prefs.getBoolean("isAppInstalledFirstTime", true)) {
+
+        if (!PrefSiempo.getInstance(this).read(PrefSiempo
+                .IS_APP_INSTALLED_FIRSTTIME, true)) {
             Log.d(TAG, "Display upgrade dialog.");
             if (isApplicationLaunch) {
                 checkUpgradeVersion();
@@ -223,8 +213,10 @@ public class DashboardActivity extends CoreActivity {
     }
 
     private void checkAppLoadFirstTime() {
-        if (launcher3Prefs.getBoolean("isAppInstalledFirstTime", true)) {
-            launcher3Prefs.edit().putBoolean("isAppInstalledFirstTime", false).apply();
+        if (PrefSiempo.getInstance(this).read(PrefSiempo
+                .IS_APP_INSTALLED_FIRSTTIME, true)) {
+            PrefSiempo.getInstance(this).write(PrefSiempo
+                    .IS_APP_INSTALLED_FIRSTTIME, false);
             final ActivityHelper activityHelper = new ActivityHelper(DashboardActivity.this);
             if (!UIUtils.isMyLauncherDefault(DashboardActivity.this)) {
 
@@ -238,20 +230,27 @@ public class DashboardActivity extends CoreActivity {
                 }, 1000);
             }
         } else {
-            if (launcher3Prefs.getInt("getCurrentVersion", 0) != 0) {
+
+            if (PrefSiempo.getInstance(this).read(PrefSiempo
+                    .GET_CURRENT_VERSION, 0) != 0) {
                 if (!UIUtils.isMyLauncherDefault(this)
-                        && BuildConfig.VERSION_CODE > launcher3Prefs.getInt("getCurrentVersion", 0)) {
+                        && BuildConfig.VERSION_CODE > PrefSiempo.getInstance(this).read(PrefSiempo
+                        .GET_CURRENT_VERSION, 0)) {
                     new ActivityHelper(this).handleDefaultLauncher(this);
                     loadDialog();
-                    launcher3Prefs.edit().putInt("getCurrentVersion", UIUtils
-                            .getCurrentVersionCode(this)).apply();
+                    PrefSiempo.getInstance(this).write(PrefSiempo
+                            .GET_CURRENT_VERSION, UIUtils
+                            .getCurrentVersionCode(this));
+
                 } else {
-                    launcher3Prefs.edit().putInt("getCurrentVersion", UIUtils
-                            .getCurrentVersionCode(this)).apply();
+                    PrefSiempo.getInstance(this).write(PrefSiempo
+                            .GET_CURRENT_VERSION, UIUtils
+                            .getCurrentVersionCode(this));
                 }
             } else {
-                launcher3Prefs.edit().putInt("getCurrentVersion", UIUtils
-                        .getCurrentVersionCode(this)).apply();
+                PrefSiempo.getInstance(this).write(PrefSiempo
+                        .GET_CURRENT_VERSION, UIUtils
+                        .getCurrentVersionCode(this));
             }
         }
     }
@@ -364,8 +363,11 @@ public class DashboardActivity extends CoreActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if (which == DialogInterface.BUTTON_POSITIVE) {
-                        launcher3Prefs.edit().putBoolean("updatePrompt", false)
-                                .apply();
+                        PrefSiempo.getInstance(DashboardActivity.this).write
+                                (PrefSiempo
+                                        .UPDATE_PROMPT, false);
+//                        launcher3Prefs.edit().putBoolean("updatePrompt", false)
+//                                .apply();
                         new ActivityHelper(DashboardActivity.this).openBecomeATester();
                     }
                 }
@@ -455,7 +457,7 @@ public class DashboardActivity extends CoreActivity {
 
     //Move to utils
     private static class FadePageTransformer implements ViewPager.PageTransformer {
-        public void transformPage(View view, float position) {
+        public void transformPage(@NonNull View view, float position) {
 
             // Page is not an immediate sibling, just make transparent
             if (position < -1 || position > 1) {

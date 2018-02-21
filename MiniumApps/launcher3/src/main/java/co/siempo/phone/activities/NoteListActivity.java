@@ -377,7 +377,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
      * Implementation of AlertDialogs such as
      * - backupCheckDialog, backupOKDialog, restoreCheckDialog, restoreFailedDialog -
      *
-     * @param context The Activity context of the dialogs; in this case MainActivity context
+     * @param context The Activity context of the dialogs; in this case DashboardActivity context
      */
     protected void initDialogs(Context context) {
         /*

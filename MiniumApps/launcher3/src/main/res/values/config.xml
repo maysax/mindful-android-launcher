@@ -3,8 +3,6 @@
 
     <!-- Notosans fonts -->
     <string name="fonts.noto.sans.regular" translatable="false">fonts/notosans-unhinted/NotoSans-Regular.ttf</string>
-    <string name="fonts.noto.sans.bold" translatable="false">fonts/notosans-unhinted/NotoSans-Bold.ttf</string>
-    <string name="fonts.noto.sans.italic" translatable="false">fonts/notosans-unhinted/NotoSans-Italic.ttf</string>
 
     <item name="mainView" type="id" />
 </resources>

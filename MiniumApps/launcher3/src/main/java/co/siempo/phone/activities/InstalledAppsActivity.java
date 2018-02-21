@@ -20,10 +20,10 @@ import java.util.List;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.InstalledAppListAdapter;
 import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.utils.PackageUtil;
+import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.Subscribe;
 
 public class InstalledAppsActivity extends CoreActivity implements View.OnClickListener {
@@ -51,7 +51,7 @@ public class InstalledAppsActivity extends CoreActivity implements View.OnClickL
 
         arrayList = CoreApplication.getInstance().getPackagesList();
 
-        if (prefs.isGrid().get()) {
+        if (PrefSiempo.getInstance(this).read(PrefSiempo.IS_GRID, true)) {
             bindAsGrid();
         } else {
             bindAsList();
@@ -74,7 +74,7 @@ public class InstalledAppsActivity extends CoreActivity implements View.OnClickL
         mAdapter = new InstalledAppListAdapter(InstalledAppsActivity.this, arrayList, false);
         recyclerViewApps.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
-        prefs.isGrid().put(false);
+        PrefSiempo.getInstance(this).write(PrefSiempo.IS_GRID, false);
 
     }
 
@@ -91,7 +91,7 @@ public class InstalledAppsActivity extends CoreActivity implements View.OnClickL
         recyclerViewApps.setLayoutManager(mLayoutManager);
         mAdapter = new InstalledAppListAdapter(InstalledAppsActivity.this, arrayList, true);
         recyclerViewApps.setAdapter(mAdapter);
-        prefs.isGrid().put(true);
+        PrefSiempo.getInstance(this).write(PrefSiempo.IS_GRID, true);
     }
 
 
@@ -100,7 +100,8 @@ public class InstalledAppsActivity extends CoreActivity implements View.OnClickL
         super.onResume();
         startTime = System.currentTimeMillis();
         PackageUtil.checkPermission(this);
-        if (prefs.isAppUpdated().get()) {
+        if (PrefSiempo.getInstance(this).read(PrefSiempo
+                .IS_APP_UPDATED, false)) {
             progressDialog = ProgressDialog.show(this, "", getString(R.string.loading_msg));
             CoreApplication.getInstance().getAllApplicationPackageName();
         }
@@ -116,11 +117,12 @@ public class InstalledAppsActivity extends CoreActivity implements View.OnClickL
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
         if (event != null && event.isRunning()) {
-            ((Launcher3App) CoreApplication.getInstance()).setAllDefaultMenusApplication();
-            if (progressDialog != null && progressDialog.isShowing()) progressDialog.dismiss();
+            if (progressDialog != null && progressDialog.isShowing())
+                progressDialog.dismiss();
             arrayList = CoreApplication.getInstance().getPackagesList();
-            prefs.isAppUpdated().put(false);
-            if (prefs.isGrid().get()) {
+            PrefSiempo.getInstance(this).write(PrefSiempo
+                    .IS_APP_UPDATED, false);
+            if (PrefSiempo.getInstance(this).read(PrefSiempo.IS_GRID, true)) {
                 bindAsGrid();
             } else {
                 bindAsList();

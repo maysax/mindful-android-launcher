@@ -76,25 +76,7 @@
             android:name="io.fabric.ApiKey"
             android:value="6a700e064d3ba9dbf81d871dd3c0b3081ab158f7"/>
 
-        <activity
-            android:name=".MainActivity_"
-            android:clearTaskOnLaunch="true"
-            android:excludeFromRecents="true"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:stateNotNeeded="true"
-            android:windowSoftInputMode="stateHidden">
 
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.HOME" /> -->
-            <!-- <category android:name="android.intent.category.DEFAULT" /> -->
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- <category android:name="RUN_AT_BOOT" /> -->
-            <!-- </intent-filter> -->
-        </activity>
         <activity
             android:name=".launcher.FakeLauncherActivity"
             android:enabled="false">
@@ -139,10 +121,6 @@
             android:label="@string/title_activity_installed_app_list"
             android:screenOrientation="portrait"/>
         <activity android:name=".ui.UpdateActivity_"/>
-        <activity android:name=".activities.SiempoPhoneSettingsActivity"/>
-        <activity android:name=".activities.SiempoSettingsActivity_"/>
-        <activity android:name=".activities.SiempoSettingsDefaultAppActivity_"/>
-        <activity android:name=".activities.SiempoMainSettingsActivity_"/>
         <activity android:name=".activities.SiempoAlphaSettingsActivity_"/>
 
         <service

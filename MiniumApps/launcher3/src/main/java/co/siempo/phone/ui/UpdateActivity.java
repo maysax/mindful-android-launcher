@@ -12,11 +12,7 @@ import org.androidannotations.annotations.ViewById;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.CoreActivity;
-import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.app.Launcher3App;
-import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.utils.PackageUtil;
-import de.greenrobot.event.Subscribe;
 
 import static android.view.View.GONE;
 
@@ -31,12 +27,6 @@ public class UpdateActivity extends CoreActivity {
     @ViewById
     ProgressBar pBar;
 
-    @Subscribe
-    public void appInstalledEvent(AppInstalledEvent event) {
-        if (event.isRunning()) {
-            ((Launcher3App) CoreApplication.getInstance()).setAllDefaultMenusApplication();
-        }
-    }
 
     @SuppressLint("SetJavaScriptEnabled")
     @AfterViews

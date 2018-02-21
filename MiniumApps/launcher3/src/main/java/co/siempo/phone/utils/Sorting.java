@@ -42,6 +42,27 @@ public class Sorting {
         return list;
     }
 
+    /**
+     * Sort the application alphabetically.
+     *
+     * @param list
+     * @return
+     */
+    public static ArrayList<String> sortJunkAppAssignment(ArrayList<String> list) {
+        sort(list, new Comparator<String>() {
+            @Override
+            public int compare(final String object1, final String object2) {
+                if (object1 != null && object2 != null) {
+                    return object1.compareTo(object2);
+                } else {
+                    return 1;
+                }
+            }
+        });
+        return list;
+    }
+
+
     public static ArrayList<MainListItem> sortToolAppAssignment(final Context context, ArrayList<MainListItem> list) {
         Collections.sort(list, new Comparator<MainListItem>() {
             @Override
