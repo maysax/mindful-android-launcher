@@ -113,9 +113,11 @@ public class Sorting {
                 if (o1Date != null && o2Date != null) {
                     if (o1Date.after(o2Date)) {
                         return -1;
-                    } else if (o1Date.equals(o2Date)) {
+                    }
+                    else if (o1Date.equals(o2Date)) {
                         return 0;
-                    } else {
+                    }
+                    else {
                         return 1;
                     }
                 } else {

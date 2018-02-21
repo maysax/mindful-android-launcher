@@ -38,8 +38,15 @@ public class DrawableProvider {
         mContext = context;
     }
 
-    public TextDrawable getRect(String text) {
+    public TextDrawable getRect(String text, int color) {
+        String fontPath = "fonts/robotocondensedregular.ttf";
         return TextDrawable.builder()
+                .beginConfig()
+                .useFont(Typeface.createFromAsset(mContext.getAssets(), fontPath))
+                .fontSize(toPx(60))
+                .textColor(color)
+                .bold()
+                .endConfig()
                 .buildRect(text, mGenerator.getColor(text));
     }
 

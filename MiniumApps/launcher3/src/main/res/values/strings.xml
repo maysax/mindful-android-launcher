@@ -420,7 +420,9 @@
     <string name="yes_unhide">YES, UNHIDE</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="editing_tools">Editing tools</string>
+    <string name="editing_frequently_apps">Editing frequently used apps</string>
     <string name="select_tools">Select Tools</string>
+    <string name="select_apps">Select Apps</string>
     <string name="assign_app">ASSIGN APP</string>
     <string name="msg_allowpeaking">Off.The status bar will show you when you have new notifications in your tray, but your tray won\'t pop up automatically.</string>
     <string name="allow_peaking">Allow peaking</string>
