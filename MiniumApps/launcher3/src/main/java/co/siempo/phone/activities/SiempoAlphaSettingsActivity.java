@@ -20,15 +20,11 @@ import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.ViewById;
 
 import co.siempo.phone.R;
-import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.app.Launcher3App;
-import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.utils.PackageUtil;
-import de.greenrobot.event.Subscribe;
 
-import static co.siempo.phone.MainActivity.IS_FROM_HOME;
+import static co.siempo.phone.activities.DashboardActivity.IS_FROM_HOME;
 
 /**
  * Created by hardik on 17/8/17.
@@ -50,13 +46,6 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
     private ImageView icon_SuppressedNotifications;
     private LinearLayout ln_permissions;
     private ImageView icon_permissions;
-
-    @Subscribe
-    public void appInstalledEvent(AppInstalledEvent event) {
-        if (event.isRunning()) {
-            ((Launcher3App) CoreApplication.getInstance()).setAllDefaultMenusApplication();
-        }
-    }
 
 
     @AfterViews

@@ -134,7 +134,7 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
             }
         });
 
-        // Get data bundle from MainActivity
+        // Get data bundle from DashboardActivity
         bundle = getIntent().getExtras();
 
         if (bundle != null) {
@@ -346,7 +346,7 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
 
     /**
      * Create an Intent with title, body, colour, font size and hideBody extras
-     * Set RESULT_OK and go back to MainActivity
+     * Set RESULT_OK and go back to DashboardActivity
      */
     protected void saveChanges() {
         Intent intent = new Intent();

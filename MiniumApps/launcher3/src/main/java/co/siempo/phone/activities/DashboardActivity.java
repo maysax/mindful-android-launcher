@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -34,9 +35,6 @@ import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.DashboardPagerAdapter;
 import co.siempo.phone.app.Constants;
-import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.app.Launcher3App;
-import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.CheckVersionEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.log.Tracer;
@@ -126,12 +124,6 @@ public class DashboardActivity extends CoreActivity {
         initView();
     }
 
-    @Subscribe
-    public void appInstalledEvent(AppInstalledEvent event) {
-        if (event.isRunning()) {
-            ((Launcher3App) CoreApplication.getInstance()).setAllDefaultMenusApplication();
-        }
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -465,7 +457,7 @@ public class DashboardActivity extends CoreActivity {
 
     //Move to utils
     private static class FadePageTransformer implements ViewPager.PageTransformer {
-        public void transformPage(View view, float position) {
+        public void transformPage(@NonNull View view, float position) {
 
             // Page is not an immediate sibling, just make transparent
             if (position < -1 || position > 1) {

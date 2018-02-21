@@ -20,7 +20,6 @@ import java.util.List;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.InstalledAppListAdapter;
 import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.utils.PackageUtil;
@@ -118,9 +117,7 @@ public class InstalledAppsActivity extends CoreActivity implements View.OnClickL
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
         if (event != null && event.isRunning()) {
-            ((Launcher3App) CoreApplication.getInstance()).setAllDefaultMenusApplication();
-            if (progressDialog != null && progressDialog.isShowing())
-                progressDialog.dismiss();
+            if (progressDialog != null && progressDialog.isShowing()) progressDialog.dismiss();
             arrayList = CoreApplication.getInstance().getPackagesList();
             PrefSiempo.getInstance(this).write(PrefSiempo
                     .IS_APP_UPDATED, false);

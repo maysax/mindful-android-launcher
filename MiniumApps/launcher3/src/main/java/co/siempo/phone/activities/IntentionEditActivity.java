@@ -28,13 +28,9 @@ import android.widget.Toolbar;
 import android.widget.ViewFlipper;
 
 import co.siempo.phone.R;
-import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.customviews.LockEditText;
-import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
-import de.greenrobot.event.Subscribe;
 
 public class IntentionEditActivity extends BaseActivity implements View.OnClickListener {
 
@@ -52,12 +48,6 @@ public class IntentionEditActivity extends BaseActivity implements View.OnClickL
     private RelativeLayout pauseContainer;
     private String strIntentField;
 
-    @Subscribe
-    public void appInstalledEvent(AppInstalledEvent event) {
-        if (event.isRunning()) {
-            ((Launcher3App) CoreApplication.getInstance()).setAllDefaultMenusApplication();
-        }
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
