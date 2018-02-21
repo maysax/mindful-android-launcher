@@ -35,7 +35,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.squareup.haha.perflib.Main;
 
 import org.w3c.dom.Text;
 
