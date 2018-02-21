@@ -44,6 +44,8 @@ public class PrefSiempo {
     //
     public static final String SORTED_MENU = "sortedMenu";
 
+    public static final String FAVORITE_SORTED_MENU = "favoriteSortedMenu";
+
     private static final PrefSiempo ourInstance = new PrefSiempo();
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;

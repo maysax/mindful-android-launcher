@@ -984,6 +984,7 @@ public abstract class CoreApplication extends MultiDexApplication {
                 UserHandle user = new UserHandle(userManager.getSerialNumberForUser(profile), profile);
                 for (LauncherActivityInfo activityInfo : launcherApps.getActivityList(null, profile)) {
                     ApplicationInfo appInfo = activityInfo.getApplicationInfo();
+
                     appInfo.name = activityInfo.getLabel().toString();
                     String defSMSApp = Settings.Secure.getString(getContentResolver(), "sms_default_application");
                     String defDialerApp = Settings.Secure.getString(getContentResolver(), "dialer_default_application");

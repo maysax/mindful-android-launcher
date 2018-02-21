@@ -1,9 +1,14 @@
 package co.siempo.phone.adapters;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,6 +26,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.interfaces.ItemTouchHelperAdapter;
 import co.siempo.phone.interfaces.ItemTouchHelperViewHolder;
+import co.siempo.phone.interfaces.OnFavoriteItemListChangedListener;
 import co.siempo.phone.main.OnStartDragListener;
 import co.siempo.phone.interfaces.OnToolItemListChangedListener;
 import co.siempo.phone.models.AppMenu;
@@ -30,22 +36,22 @@ import co.siempo.phone.models.MainListItem;
  * Created by rajeshjadi on 14/2/18.
  */
 
-public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioningAdapter.ItemViewHolder> implements ItemTouchHelperAdapter {
+public class FavoritePositioningAdapter extends RecyclerView.Adapter<FavoritePositioningAdapter.ItemViewHolder> implements ItemTouchHelperAdapter {
     private final Activity context;
     private final HashMap<Integer, AppMenu> map;
-    private boolean isHideIconBranding = true;
     private ArrayList<MainListItem> arrayList;
     private OnStartDragListener mDragStartListener;
-    private OnToolItemListChangedListener mListChangedListener;
+    private boolean isHideIconBranding;
+    private OnFavoriteItemListChangedListener mListChangedListener;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public ToolPositioningAdapter(Activity context, ArrayList<MainListItem> arrayList, OnStartDragListener dragListener,
-                                  OnToolItemListChangedListener listChangedListener, boolean isHideIconBranding) {
+    public FavoritePositioningAdapter(Activity context,boolean isHideIconBranding, ArrayList<MainListItem> arrayList, OnStartDragListener dragListener,
+                                      OnFavoriteItemListChangedListener listChangedListener) {
         this.context = context;
         this.arrayList = arrayList;
+        this.isHideIconBranding=isHideIconBranding;
         mDragStartListener = dragListener;
         mListChangedListener = listChangedListener;
-        this.isHideIconBranding = isHideIconBranding;
         map = CoreApplication.getInstance().getToolsSettings();
     }
 
@@ -62,7 +68,7 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
                         Collections.swap(arrayList, i, i - 1);
                     }
                 }
-                mListChangedListener.onToolItemListChanged(arrayList);
+                mListChangedListener.onFavoriteItemListChanged(arrayList);
                 notifyItemMoved(fromPosition, toPosition);
             }
         } catch (Exception e) {
@@ -87,7 +93,7 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
         LayoutInflater inflater = LayoutInflater.from(
                 parent.getContext());
         View v;
-        v = inflater.inflate(R.layout.list_item_grid, parent, false);
+        v = inflater.inflate(R.layout.list_application_item_grid, parent, false);
 //             set the view's size, margins, paddings and layout parameters
         return new ItemViewHolder(v);
     }
@@ -96,28 +102,41 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
     @Override
     public void onBindViewHolder(final ItemViewHolder holder, int position) {
         final MainListItem item = arrayList.get(position);
-        final AppMenu appMenu = map.get(item.getId());
+        holder.linearLayout.setVisibility(View.VISIBLE);
+        if (!TextUtils.isEmpty(item.getTitle())) {
+            holder.text.setText(item.getTitle());
+        }
+        if (!TextUtils.isEmpty(item.getPackageName())) {
+            if(isHideIconBranding){
+                holder.imgAppIcon.setVisibility(View.GONE);
+                holder.txtAppTextImage.setVisibility(View.VISIBLE);
+                holder.imgUnderLine.setVisibility(View.VISIBLE);
+                if(!TextUtils.isEmpty(item.getTitle())){
+                    String fontPath = "fonts/robotocondensedregular.ttf";
+                    holder.txtAppTextImage.setText("" + item
+                            .getTitle().charAt(0));
 
-        if (appMenu.isVisible()) {
-            holder.linearLayout.setVisibility(View.VISIBLE);
-            if (!TextUtils.isEmpty(item.getTitle())) {
-                holder.text.setText(item.getTitle());
+                    // Loading Font Face
+                    Typeface tf = Typeface.createFromAsset(context.getAssets(), fontPath);
+                    // Applying font
+                    holder.txtAppTextImage.setTypeface(tf);
+                }
+
             }
-            if (isHideIconBranding) {
-                holder.icon.setImageResource(item.getDrawable());
-            } else {
-                if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
-                    Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(appMenu.getApplicationName());
-                    if (drawable != null) {
-                        holder.icon.setImageDrawable(drawable);
-                        holder.text.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(appMenu.getApplicationName()));
-                    } else {
-                        holder.icon.setImageResource(item.getDrawable());
-                    }
+            else{
+                holder.imgAppIcon.setVisibility(View.VISIBLE);
+                holder.txtAppTextImage.setVisibility(View.GONE);
+                holder.imgUnderLine.setVisibility(View.GONE);
+                Drawable drawable=getAppIconByPackageName(item.getPackageName(),context);
+                if (drawable!=null) {
+                    holder.imgAppIcon.setImageDrawable(drawable);
                 } else {
                     holder.linearLayout.setVisibility(View.INVISIBLE);
                 }
             }
+
+
+
         } else {
             holder.linearLayout.setVisibility(View.INVISIBLE);
         }
@@ -126,20 +145,15 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
         holder.linearLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                    mDragStartListener.onStartDrag(holder);
+                if(!TextUtils.isEmpty(item.getPackageName())) {
+                    if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                        mDragStartListener.onStartDrag(holder);
+                    }
                 }
                 return false;
             }
         });
 
-//            holder.linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
-//                @Override
-//                public boolean onLongClick(View view) {
-//                    mDragStartListener.onStartDrag(holder);
-//                    return true;
-//                }
-//            });
 
     }
 
@@ -152,8 +166,9 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
             ItemTouchHelperViewHolder {
         public View layout;
         // each data item is just a string in this case
-        ImageView icon, imgView, temp;
-        TextView text, textDefaultApp;
+        ImageView  imgView,imgAppIcon,imgUnderLine;
+        TextView text,txtAppTextImage;
+        TextView textDefaultApp;
         RelativeLayout relMenu;
         private LinearLayout linearLayout;
 
@@ -161,12 +176,13 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
             super(v);
             layout = v;
             linearLayout = v.findViewById(R.id.linearList);
+            imgUnderLine=v.findViewById(R.id.imgUnderLine);
             relMenu = v.findViewById(R.id.relMenu);
             text = v.findViewById(R.id.text);
             textDefaultApp = v.findViewById(R.id.textDefaultApp);
-            icon = v.findViewById(R.id.icon);
+            txtAppTextImage = v.findViewById(R.id.txtAppTextImage);
+            imgAppIcon=v.findViewById(R.id.imgAppIcon);
             imgView = v.findViewById(R.id.imgView);
-            temp = v.findViewById(R.id.temp);
         }
 
         @Override
@@ -183,6 +199,23 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
             }
 
         }
+    }
+
+    public Drawable getAppIconByPackageName(String ApkTempPackageName, Context context){
+
+        Drawable drawable;
+
+        try{
+            drawable = context.getPackageManager().getApplicationIcon(ApkTempPackageName);
+
+        }
+        catch (PackageManager.NameNotFoundException e){
+
+            e.printStackTrace();
+
+            drawable = ContextCompat.getDrawable(context, R.mipmap.ic_launcher);
+        }
+        return drawable;
     }
 
 }

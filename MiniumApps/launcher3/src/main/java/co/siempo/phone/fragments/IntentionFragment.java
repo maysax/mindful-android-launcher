@@ -109,11 +109,14 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                 dialogTempo.show();
                 break;
             case R.id.imgPullTab:
-                ObjectAnimator animY = ObjectAnimator.ofFloat(relRootLayout, "translationX", 100f, 0f);
-                animY.setDuration(700);//1sec
-                animY.setInterpolator(new BounceInterpolator());
-                animY.setRepeatCount(0);
-                animY.start();
+//                ObjectAnimator animY = ObjectAnimator.ofFloat(relRootLayout, "translationX", 100f, 0f);
+//                animY.setDuration(700);//1sec
+//                animY.setInterpolator(new BounceInterpolator());
+//                animY.setRepeatCount(0);
+//                animY.start();
+
+                Intent i = new Intent(getActivity(), FavoritesSelectionActivity.class);
+                startActivity(i);
                 break;
             case R.id.imgOverFlow:
                 showOverflowDialog();

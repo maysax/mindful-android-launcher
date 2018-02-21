@@ -25,7 +25,7 @@ import co.siempo.phone.interfaces.ItemTouchHelperAdapter;
 import co.siempo.phone.interfaces.ItemTouchHelperViewHolder;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.main.OnStartDragListener;
-import co.siempo.phone.main.OnToolItemListChangedListener;
+import co.siempo.phone.interfaces.OnToolItemListChangedListener;
 import co.siempo.phone.models.MainListItem;
 
 

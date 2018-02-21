@@ -26,6 +26,7 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.R;
+import co.siempo.phone.activities.FavoritesSelectionActivity;
 import co.siempo.phone.activities.HelpActivity;
 import co.siempo.phone.activities.IntentionEditActivity;
 import co.siempo.phone.activities.SettingsActivity_;
@@ -128,11 +129,14 @@ public class IntentionFieldFragment extends CoreFragment {
 
     @Click
     void pullTab() {
-        ObjectAnimator animY = ObjectAnimator.ofFloat(rootLayout, "translationX", 100f, 0f);
-        animY.setDuration(700);//1sec
-        animY.setInterpolator(new BounceInterpolator());
-        animY.setRepeatCount(0);
-        animY.start();
+//        ObjectAnimator animY = ObjectAnimator.ofFloat(rootLayout, "translationX", 100f, 0f);
+//        animY.setDuration(700);//1sec
+//        animY.setInterpolator(new BounceInterpolator());
+//        animY.setRepeatCount(0);
+//        animY.start();
+
+        Intent i = new Intent(getActivity(), FavoritesSelectionActivity.class);
+        startActivity(i);
     }
 
     @Click

@@ -37,7 +37,7 @@ import co.siempo.phone.fragments.CoreFragment;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.main.OnStartDragListener;
-import co.siempo.phone.main.OnToolItemListChangedListener;
+import co.siempo.phone.interfaces.OnToolItemListChangedListener;
 import co.siempo.phone.main.SimpleItemTouchHelperCallback;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.utils.UIUtils;

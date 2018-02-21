@@ -23,6 +23,10 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -65,6 +69,7 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorite_selection);
         list = PrefSiempo.getInstance(this).read(PrefSiempo.FAVORITE_APPS, new HashSet<String>());
+
         junkFoodList = PrefSiempo.getInstance(this).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
 
         list.removeAll(junkFoodList);
@@ -129,6 +134,7 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+                Log.d("abcde","Final Favorite List is :: "+list.size());
                 PrefSiempo.getInstance(FavoritesSelectionActivity.this).write(PrefSiempo.FAVORITE_APPS, list);
                 finish();
                 return false;
@@ -230,6 +236,28 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
                         if (isFlagApp) {
                             if (list.contains(favoriteAppList.get(position).activityInfo.packageName)) {
                                 list.remove(favoriteAppList.get(position).activityInfo.packageName);
+
+                                //get the JSON array of the ordered of sorted customers
+                                String jsonListOfSortedFavorites = PrefSiempo.getInstance(FavoritesSelectionActivity.this).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
+                                //convert onNoteListChangedJSON array into a List<Long>
+                                Gson gson1 = new Gson();
+                                List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
+                                }.getType());
+
+                                for (Iterator<String> it = listOfSortFavoritesApps.iterator(); it.hasNext(); ) {
+                                     String packageName=it.next();
+                                     if(favoriteAppList.get(position).activityInfo.packageName.equalsIgnoreCase(packageName)){
+                                         it.remove();
+                                     }
+                                }
+
+
+                                Gson gson2 = new Gson();
+                                String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
+                                PrefSiempo.getInstance(FavoritesSelectionActivity.this).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
+
+
+
                                 isLoadFirstTime = false;
                                 allOtherAppList.add(favoriteAppList.get(position));
                                 favoriteAppList.remove(favoriteAppList.get(position));
@@ -247,6 +275,7 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
                             else{
                                 Toast.makeText(getApplicationContext(),"Please unselect any of the apps from Frequenty used apps section",Toast.LENGTH_LONG).show();
                             }
+                            Log.d("abcde","List size after change"+list.size());
                             setToolBarText(favoriteAppList.size());
                         }
                     } catch (Exception e) {
