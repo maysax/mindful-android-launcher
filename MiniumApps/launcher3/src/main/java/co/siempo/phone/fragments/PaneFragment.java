@@ -2,10 +2,8 @@ package co.siempo.phone.fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
@@ -111,6 +109,21 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
     private ImageView imageClear;
     private View rootView;
     private InputMethodManager inputMethodManager;
+    View.OnFocusChangeListener onFocusChangeSearchListener = new View
+            .OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (hasFocus) {
+                searchLayout.setVisibility(View.VISIBLE);
+                cardViewEdtSearch.setVisibility(View.VISIBLE);
+                relSearchTools.setVisibility(View.GONE);
+                inputMethodManager.toggleSoftInputFromWindow(
+                        searchLayout.getApplicationWindowToken(),
+                        InputMethodManager.SHOW_FORCED, 0);
+
+            }
+        }
+    };
 
     public PaneFragment() {
         // Required empty public constructor
@@ -306,23 +319,25 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
     private void searchEditTextFocusChanged() {
 
-        //Circular Edit Text
-        edtSearchToolsRounded.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    searchLayout.setVisibility(View.VISIBLE);
-                    cardViewEdtSearch.setVisibility(View.VISIBLE);
-                    relSearchTools.setVisibility(View.GONE);
-                    inputMethodManager.toggleSoftInputFromWindow(
-                            searchLayout.getApplicationWindowToken(),
-                            InputMethodManager.SHOW_FORCED, 0);
 
-                }
-
-            }
-        });
+        edtSearchToolsRounded.setOnFocusChangeListener(onFocusChangeSearchListener);
+//        //Circular Edit Text
+//        edtSearchToolsRounded.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @RequiresApi(api = Build.VERSION_CODES.M)
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (hasFocus) {
+//                    searchLayout.setVisibility(View.VISIBLE);
+//                    cardViewEdtSearch.setVisibility(View.VISIBLE);
+//                    relSearchTools.setVisibility(View.GONE);
+//                    inputMethodManager.toggleSoftInputFromWindow(
+//                            searchLayout.getApplicationWindowToken(),
+//                            InputMethodManager.SHOW_FORCED, 0);
+//
+//                }
+//
+//            }
+//        });
 
 
         //Listview edit Text
