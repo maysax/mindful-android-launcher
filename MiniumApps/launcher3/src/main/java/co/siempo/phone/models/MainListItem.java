@@ -1,6 +1,7 @@
 package co.siempo.phone.models;
 
 import android.content.pm.ApplicationInfo;
+import android.graphics.drawable.Drawable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -42,6 +43,13 @@ public class MainListItem implements Serializable {
         this.id = id;
         this.title = title;
         this.packageName = packageName;
+    }
+
+    public MainListItem(int id, String title, String packageName,int drawable) {
+        this.id = id;
+        this.title = title;
+        this.packageName = packageName;
+        this.drawable=drawable;
     }
 
     public MainListItem(int id, String title, String icon, MainListItemType itemType) {

@@ -1,0 +1,205 @@
+package co.siempo.phone.adapters;
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+
+import co.siempo.phone.R;
+import co.siempo.phone.activities.AppAssignmentActivity;
+import co.siempo.phone.activities.CoreActivity;
+import co.siempo.phone.activities.FavoriteAppsPositionActivity;
+import co.siempo.phone.activities.ToolPositioningActivity;
+import co.siempo.phone.app.Constants;
+import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.helper.ActivityHelper;
+import co.siempo.phone.models.AppMenu;
+import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.utils.DrawableProvider;
+import co.siempo.phone.utils.PackageUtil;
+import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.UIUtils;
+
+/**
+ * Created by Shahab on 2/23/2017.
+ */
+
+public class FavoritesPaneAdapter extends RecyclerView.Adapter<FavoritesPaneAdapter.ViewHolder> {
+
+    private final Context context;
+    private List<MainListItem> mainListItemList;
+    private boolean  isBottomDoc = false,isHideIconBranding;
+    private HashMap<Integer, AppMenu> map;
+    private DrawableProvider mProvider;
+
+    public FavoritesPaneAdapter(Context context,boolean isHideIconBranding,boolean isBottomDoc, List<MainListItem> mainListItemList) {
+        this.context = context;
+        this.mainListItemList = mainListItemList;
+        this.isHideIconBranding=isHideIconBranding;
+        this.isBottomDoc = isBottomDoc;
+        mProvider = new DrawableProvider(context);
+        map = CoreApplication.getInstance().getToolsSettings();
+    }
+
+    @Override
+    public FavoritesPaneAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+                                                              int viewType) {
+        // create a new view
+        LayoutInflater inflater = LayoutInflater.from(
+                parent.getContext());
+        View v =
+                inflater.inflate(R.layout.list_application_item_grid, parent, false);
+        // set the view's size, margins, paddings and layout parameters
+        return new ViewHolder(v);
+    }
+
+    // Replace the contents of a view (invoked by the layout manager)
+    @Override
+    public void onBindViewHolder(final ViewHolder holder, int position) {
+        final MainListItem item = mainListItemList.get(position);
+       holder.linearLayout.setVisibility(View.VISIBLE);
+            if (!TextUtils.isEmpty(item.getTitle())) {
+                holder.text.setText(item.getTitle());
+            }
+            if (!TextUtils.isEmpty(item.getPackageName())) {
+                if(isHideIconBranding){
+                    holder.imgAppIcon.setVisibility(View.GONE);
+                    holder.txtAppTextImage.setVisibility(View.VISIBLE);
+                    holder.imgUnderLine.setVisibility(View.VISIBLE);
+                    if(!TextUtils.isEmpty(item.getTitle())){
+                        String fontPath = "fonts/robotocondensedregular.ttf";
+                        holder.txtAppTextImage.setText("" + item
+                                .getTitle().charAt(0));
+
+                        // Loading Font Face
+                        Typeface tf = Typeface.createFromAsset(context.getAssets(), fontPath);
+                        // Applying font
+                        holder.txtAppTextImage.setTypeface(tf);
+                    }
+
+                }
+                else{
+                    holder.imgAppIcon.setVisibility(View.VISIBLE);
+                    holder.txtAppTextImage.setVisibility(View.GONE);
+                    holder.imgUnderLine.setVisibility(View.GONE);
+                    Drawable drawable=getAppIconByPackageName(item.getPackageName(),context);
+                    if (drawable!=null) {
+                            holder.imgAppIcon.setImageDrawable(drawable);
+                    } else {
+                        holder.linearLayout.setVisibility(View.INVISIBLE);
+                    }
+                }
+
+
+
+            } else {
+
+                holder.linearLayout.setVisibility(View.INVISIBLE);
+            }
+
+        holder.linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Intent intent = new Intent(context, FavoriteAppsPositionActivity.class);
+                context.startActivity(intent);
+                ((CoreActivity) context).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                return true;
+            }
+        });
+
+        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int id = item.getId();
+                if (holder.linearLayout.getVisibility() == View.VISIBLE) {
+                    if (!TextUtils.isEmpty(item.getPackageName())) {
+
+                        new ActivityHelper(context).openAppWithPackageName(item.getPackageName().trim());
+
+                    } else {
+
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * if the user has multiple apps that are installed and relevant to this tool (e.g. tool is browser, and Chrome and Firefox are installed)
+     * navigate to the tool-app assignment screen
+     * if the user has one one app that is installed and relevant to this tool (e.g. tool is browser, and only Chrome is installed)
+     * if that 3rd party app IS currently flagged by this user as junkfood
+     * navigate to the tool-app assignment screen
+     *
+     * @param item
+     */
+    private void openAppAssignmentScreen(MainListItem item) {
+        Intent intent = new Intent(context, AppAssignmentActivity.class);
+        intent.putExtra(Constants.INTENT_MAINLISTITEM, item);
+        context.startActivity(intent);
+    }
+
+    @Override
+    public int getItemCount() {
+        return mainListItemList.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        // each data item is just a string in this case
+        public View layout;
+        // each data item is just a string in this case
+        ImageView  imgView,imgAppIcon,imgUnderLine;
+        TextView text,txtAppTextImage;
+        TextView textDefaultApp;
+        RelativeLayout relMenu;
+        private LinearLayout linearLayout;
+
+        public ViewHolder(View v) {
+            super(v);
+            layout = v;
+            linearLayout = v.findViewById(R.id.linearList);
+            imgUnderLine=v.findViewById(R.id.imgUnderLine);
+            relMenu = v.findViewById(R.id.relMenu);
+            text = v.findViewById(R.id.text);
+            textDefaultApp = v.findViewById(R.id.textDefaultApp);
+            txtAppTextImage = v.findViewById(R.id.txtAppTextImage);
+            imgAppIcon=v.findViewById(R.id.imgAppIcon);
+            imgView = v.findViewById(R.id.imgView);
+        }
+    }
+
+    public  Drawable getAppIconByPackageName(String ApkTempPackageName, Context context){
+
+        Drawable drawable;
+
+        try{
+            drawable = context.getPackageManager().getApplicationIcon(ApkTempPackageName);
+
+        }
+        catch (PackageManager.NameNotFoundException e){
+
+            e.printStackTrace();
+
+            drawable = ContextCompat.getDrawable(context, R.mipmap.ic_launcher);
+        }
+        return drawable;
+    }
+}

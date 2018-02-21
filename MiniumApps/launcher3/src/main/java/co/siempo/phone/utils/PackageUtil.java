@@ -9,20 +9,26 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.LauncherActivityInfo;
+import android.content.pm.LauncherApps;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.UserManager;
 import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.provider.Telephony;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -30,14 +36,21 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import org.w3c.dom.Text;
+
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import co.siempo.phone.R;
+import co.siempo.phone.activities.FavoritesSelectionActivity;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
@@ -528,7 +541,6 @@ public class PackageUtil {
 
     public static ArrayList<MainListItem> getToolsMenuData(Context context, ArrayList<MainListItem> items) {
 
-        //Get the sample data
 
         //create an empty array to hold the list of sorted Customers
         ArrayList<MainListItem> sortedTools = new ArrayList<>();
@@ -571,4 +583,223 @@ public class PackageUtil {
             return items;
         }
     }
+
+
+
+
+    public static ArrayList<MainListItem> getFavoriteList(Context context) {
+
+
+        ArrayList<MainListItem> appList=getAppList(context);
+
+        ArrayList<MainListItem> sortedFavoriteList = new ArrayList<>();
+
+        if (appList.size()>0) {
+
+            String jsonListOfSortedFavorites = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
+
+            List<String> listOfSortFavoritesApps = new ArrayList<>();
+            if(!TextUtils.isEmpty(jsonListOfSortedFavorites)){
+
+                listOfSortFavoritesApps=syncFavoriteList(jsonListOfSortedFavorites,context);
+
+                sortedFavoriteList = sortFavoriteAppsByPosition(listOfSortFavoritesApps,appList,context);
+
+            }
+            else{
+                sortedFavoriteList=addDefaultFavoriteApps(context,appList);
+            }
+        }
+        else{
+            sortedFavoriteList=addDefaultFavoriteApps(context,appList);
+        }
+
+        return sortedFavoriteList;
+        }
+
+
+
+        public static ArrayList<MainListItem>  getAppList(Context context){
+
+            ArrayList<MainListItem> appList= new ArrayList<>();
+            Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+            mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+            List<ResolveInfo> installedPackageList = context.getPackageManager().queryIntentActivities(mainIntent, 0);
+
+            for (ResolveInfo resolveInfo : installedPackageList) {
+                if(!TextUtils.isEmpty(resolveInfo.activityInfo.packageName) && !TextUtils.isEmpty(resolveInfo.loadLabel(context.getPackageManager()))){
+
+                    appList.add(new MainListItem(-1,""+resolveInfo.loadLabel(context.getPackageManager()), resolveInfo.activityInfo.packageName));
+                }
+            }
+            return appList;
+        }
+
+
+        public static List<String> syncFavoriteList(String jsonListOfSortedFavorites,Context context) {
+            Set<String> favorite_List_App = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_APPS, new HashSet<String>());
+            List<String> listOfSortFavoritesApps= new ArrayList<>();
+            //Below logic is use to sync FAVORITE_SORTED_MENU Preference AND FAVORITE_APPS LIST
+            if (!jsonListOfSortedFavorites.isEmpty()) {
+
+                //convert onNoteListChangedJSON array into a List<Long>
+                Gson gson1 = new Gson();
+                listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
+                }.getType());
+
+
+                for (Iterator<String> it = favorite_List_App.iterator(); it.hasNext(); ) {
+                    String packageName = it.next();
+                    if (!listOfSortFavoritesApps.contains(packageName)) {
+                        for (int j = 0; j < listOfSortFavoritesApps.size(); j++) {
+                            if (TextUtils.isEmpty(listOfSortFavoritesApps.get(j).toString().trim())) {
+                                listOfSortFavoritesApps.set(j, packageName);
+                                break;
+                            }
+                        }
+                    }
+                }
+                Gson gson2 = new Gson();
+                String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
+                PrefSiempo.getInstance(context).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
+            }
+            return listOfSortFavoritesApps;
+
+        }
+
+
+        public static ArrayList<MainListItem> sortFavoriteAppsByPosition(List<String> listOfSortFavoritesApps,List<MainListItem> appList,Context context) {
+
+            ArrayList<MainListItem> sortedFavoriteList= new ArrayList<>();
+            //build sorted list
+            if (listOfSortFavoritesApps != null && listOfSortFavoritesApps.size() > 0) {
+                for (String packageName : listOfSortFavoritesApps) {
+                    if(TextUtils.isEmpty(packageName)){
+                        MainListItem m = new MainListItem(-10,"","");
+                        sortedFavoriteList.add(m);
+                    }
+                    else{
+                        for (MainListItem items : appList) {
+                            if (!TextUtils.isEmpty(items.getPackageName()) && items.getPackageName().toLowerCase().trim().equalsIgnoreCase(packageName.toLowerCase().trim())) {
+                                sortedFavoriteList.add(items);
+                                break;
+                            }
+                        }
+                    }
+                }
+                int remainingFavoriteList=12-sortedFavoriteList.size();
+                for(int i=0;i<remainingFavoriteList;i++){
+                    MainListItem m = new MainListItem(-10,"","");
+                    sortedFavoriteList.add(m);
+                }
+            }
+            return sortedFavoriteList;
+        }
+
+        public static ArrayList<MainListItem> getListOfBlankAndFavoriteApps(Context context,List<MainListItem> appList){
+            ArrayList<MainListItem> sortedFavoriteList= new ArrayList<>();
+
+            Set<String> favorite_List_App = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_APPS, new HashSet<String>());
+
+            for (Iterator<String> it = favorite_List_App.iterator(); it.hasNext(); ) {
+                String  packageName = it.next();
+
+                for (MainListItem items : appList) {
+                    if (!TextUtils.isEmpty(items.getPackageName()) && items.getPackageName().toLowerCase().trim().equalsIgnoreCase(packageName.toString().trim())) {
+                        sortedFavoriteList.add(items);
+                    }
+                }
+            }
+
+            int remainingFavoriteList=12-sortedFavoriteList.size();
+            for(int i=0;i<remainingFavoriteList;i++){
+                MainListItem m = new MainListItem(-10,"","");
+                sortedFavoriteList.add(m);
+            }
+            return sortedFavoriteList;
+        }
+
+        public static ArrayList<MainListItem> addDefaultFavoriteApps(Context context,List<MainListItem> appList){
+
+            LauncherApps launcherApps = (LauncherApps) context.getSystemService(Context.LAUNCHER_APPS_SERVICE);
+            Set<String> list = new HashSet<>();
+            list = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_APPS, new HashSet<String>());
+
+            ArrayList<MainListItem> items= new ArrayList<>();
+            String CHROME_PACKAGE="com.android.chrome",SYSTEM_SETTING="com.android.settings";
+
+            for(int i=0;i<appList.size();i++){
+                if(!TextUtils.isEmpty(appList.get(i).getPackageName())){
+                    if(appList.get(i).getPackageName().equalsIgnoreCase(CHROME_PACKAGE) || appList.get(i).getPackageName().equalsIgnoreCase(SYSTEM_SETTING)){
+                        items.add(appList.get(i));
+                    }
+                }
+            }
+
+
+            int remainingFavoriteList=12-items.size();
+            for(int i=0;i<remainingFavoriteList;i++){
+                MainListItem m = new MainListItem(-10,"","");
+                items.add(m);
+            }
+
+
+            //get the JSON array of the ordered of sorted customers
+            String jsonListOfSortedFavorites = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
+            //convert onNoteListChangedJSON array into a List<Long>
+            Gson gson1 = new Gson();
+            List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
+            }.getType());
+
+            if(listOfSortFavoritesApps!=null){
+                if(!listOfSortFavoritesApps.contains(CHROME_PACKAGE)){
+                    for(int i=0;i<listOfSortFavoritesApps.size();i++){
+                        if(TextUtils.isEmpty(listOfSortFavoritesApps.get(i).trim())){
+                            listOfSortFavoritesApps.set(i,CHROME_PACKAGE);
+                            if(list!=null && !list.contains(CHROME_PACKAGE)) {
+                                list.add(CHROME_PACKAGE);
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                if(!listOfSortFavoritesApps.contains(SYSTEM_SETTING)){
+                    for(int i=0;i<listOfSortFavoritesApps.size();i++){
+                        if(TextUtils.isEmpty(listOfSortFavoritesApps.get(i).trim())){
+                            listOfSortFavoritesApps.set(i,SYSTEM_SETTING);
+                            if(list!=null && !list.contains(SYSTEM_SETTING)) {
+                                list.add(SYSTEM_SETTING);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            else{
+                listOfSortFavoritesApps=new ArrayList<>();
+                listOfSortFavoritesApps.add(CHROME_PACKAGE);
+                listOfSortFavoritesApps.add(SYSTEM_SETTING);
+                int remainingCount=12-listOfSortFavoritesApps.size();
+                for(int j=0;j<remainingCount;j++){
+                    listOfSortFavoritesApps.add("");
+                }
+
+                if(list!=null){
+                    list.add(CHROME_PACKAGE);
+                    list.add(SYSTEM_SETTING);
+                }
+            }
+
+
+            Gson gson2 = new Gson();
+            String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
+            PrefSiempo.getInstance(context).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
+            PrefSiempo.getInstance(context).write(PrefSiempo.FAVORITE_APPS, list);
+
+            return items;
+        }
+
+
+
 }
