@@ -33,6 +33,7 @@
     <string name="label_multiple_numbers">Multiple numbers</string>
     <string name="string_notification_title">Notifications</string>
     <string name="string_account_title">Account</string>
+    <string name="string_account_service_title">"Account &amp; services"</string>
     <string name="string_update_email_title">Update Email</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -252,7 +253,9 @@
     <!--Account Setting Section-->
 
     <string name="lbl_updateEmail">Update email address</string>
+    <string name="lbl_exitSiempo">Exit Siempo services</string>
     <string name="lbl_updateEmailDescription">Siempo will never email you unless you request support or opt-in.</string>
+    <string name="lbl_switchSiempo">Switch to another home app</string>
     <string name="lbl_analytics">Share analytics &amp; diagnostics</string>
     <string name="lbl_analytics_description">Help improve your Siempo experience by automatically sending analytics, diagnostics, and usage data to Siempo. </string>
     <string name="lbl_analytics_description2">\nThe data you share is anonymous and aggregated with data from other users.  We use that data, for example, to recommend a healthy amount of phone use. \n\nTo learn more, please view our </string>
@@ -426,8 +429,10 @@
     <string name="assign_app">ASSIGN APP</string>
     <string name="msg_allowpeaking">Off.The status bar will show you when you have new notifications in your tray, but your tray won\'t pop up automatically.</string>
     <string name="allow_peaking">Allow peaking</string>
-    <string name="you_have_t_selected_any_junkfood_app_nselect_junkfood">You have\'t selected any Junkfood app.</string>
+    <string name="you_have_t_selected_any_junkfood_app_nselect_junkfood">"You have\'t selected any Junkfood app."</string>
     <string name="select_junkfood">Select Junkfood</string>
+    <string name="you_have_t_selected_any_favourite_app">"You have\'t selected any Favorite app."</string>
+    <string name="select_favourite">Select Favorite</string>
 
 
 </resources>

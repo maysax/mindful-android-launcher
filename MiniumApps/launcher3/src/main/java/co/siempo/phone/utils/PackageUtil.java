@@ -9,26 +9,21 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.LauncherActivityInfo;
 import android.content.pm.LauncherApps;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
-import android.os.UserManager;
 import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.provider.Telephony;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -36,9 +31,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -50,7 +42,6 @@ import java.util.Locale;
 import java.util.Set;
 
 import co.siempo.phone.R;
-import co.siempo.phone.activities.FavoritesSelectionActivity;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
@@ -592,13 +583,13 @@ public class PackageUtil {
 
         ArrayList<MainListItem> appList=getAppList(context);
 
-        ArrayList<MainListItem> sortedFavoriteList = new ArrayList<>();
+        ArrayList<MainListItem> sortedFavoriteList;
 
         if (appList.size()>0) {
 
             String jsonListOfSortedFavorites = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
 
-            List<String> listOfSortFavoritesApps = new ArrayList<>();
+            List<String> listOfSortFavoritesApps;
             if(!TextUtils.isEmpty(jsonListOfSortedFavorites)){
 
                 listOfSortFavoritesApps=syncFavoriteList(jsonListOfSortedFavorites,context);

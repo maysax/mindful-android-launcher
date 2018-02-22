@@ -1,8 +1,5 @@
 package co.siempo.phone.token;
 
-import org.androidannotations.annotations.Bean;
-import org.androidannotations.annotations.EBean;
-
 /**
  * Created by shahab on 2/16/17.
  */

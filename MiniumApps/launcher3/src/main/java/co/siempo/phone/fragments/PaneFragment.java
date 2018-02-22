@@ -2,8 +2,10 @@ package co.siempo.phone.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
@@ -61,6 +63,7 @@ import co.siempo.phone.token.TokenRouter;
 import co.siempo.phone.token.TokenUpdateEvent;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.Subscribe;
 import me.relex.circleindicator.CircleIndicator;
 
@@ -205,6 +208,9 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         chipsEditText = searchLayout.getTxtSearchBox();
         imageClear = searchLayout.getBtnClear();
 
+        edtSearchToolsRounded.clearFocus();
+        chipsEditText.clearFocus();
+
         PanePagerAdapter mPagerAdapter = new PanePagerAdapter(getChildFragmentManager());
         pagerPane.setAdapter(mPagerAdapter);
         indicator.setViewPager(pagerPane);
@@ -226,6 +232,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         });
         resetSearchList();
 
+        pagerPane.setPageTransformer(true, new UIUtils.FadePageTransformer());
 
     }
 
@@ -270,8 +277,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         defaultStatusBarColor = mWindow.getStatusBarColor();
 
-        //Focus Change Listener for Search in List
-        searchEditTextFocusChanged();
 
         //Code for Date setting
         setToolsPaneDate();
@@ -299,15 +304,18 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             @Override
             public void onClick(View v) {
 
+
                 chipsEditText.clearFocus();
                 chipsEditText.setText("");
 
                 if (inputMethodManager != null) {
                     inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
                 }
+                listView.setAdapter(adapter);
 
             }
         });
+        searchEditTextFocusChanged();
 
 
     }
@@ -318,26 +326,27 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
     }
 
     private void searchEditTextFocusChanged() {
-
-
-        edtSearchToolsRounded.setOnFocusChangeListener(onFocusChangeSearchListener);
 //        //Circular Edit Text
-//        edtSearchToolsRounded.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @RequiresApi(api = Build.VERSION_CODES.M)
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (hasFocus) {
-//                    searchLayout.setVisibility(View.VISIBLE);
-//                    cardViewEdtSearch.setVisibility(View.VISIBLE);
-//                    relSearchTools.setVisibility(View.GONE);
-//                    inputMethodManager.toggleSoftInputFromWindow(
-//                            searchLayout.getApplicationWindowToken(),
-//                            InputMethodManager.SHOW_FORCED, 0);
-//
-//                }
-//
-//            }
-//        });
+        edtSearchToolsRounded.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    searchLayout.setVisibility(View.VISIBLE);
+                    cardViewEdtSearch.setVisibility(View.VISIBLE);
+                    relSearchTools.setVisibility(View.GONE);
+                    inputMethodManager.toggleSoftInputFromWindow(
+                            searchLayout.getApplicationWindowToken(),
+                            InputMethodManager.SHOW_FORCED, 0);
+
+                } else {
+                    if (inputMethodManager != null) {
+                        inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
+                    }
+                }
+
+            }
+        });
 
 
         //Listview edit Text
@@ -347,22 +356,18 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                 if (hasFocus && isVisible()) {
                     imageClear.setVisibility(View.GONE);
                     hidePaneAndBottomView(context);
-
-
                     blueLineDivider.setVisibility(View.GONE);
                 } else {
-                    linPane.setAlpha(1);
-                    linPane.setVisibility(View.VISIBLE);
+
                     blueLineDivider.setVisibility(View.VISIBLE);
                     searchLayout.setVisibility(View.GONE);
                     cardViewEdtSearch.setVisibility(View.GONE);
                     relSearchTools.setVisibility(View.VISIBLE);
-                    linBottomDoc.setVisibility(View.VISIBLE);
                     showPaneAndBottomView(context);
-//                    ObjectAnimator fadeOut = ObjectAnimator.ofFloat(linSearchList, "alpha", 1f, .3f);
-//                    fadeOut.setDuration(10000);
-                    linSearchList.setVisibility(View.GONE);
                     imageClear.setVisibility(View.VISIBLE);
+                    if (inputMethodManager != null) {
+                        inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
+                    }
 
                 }
             }
@@ -437,6 +442,8 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         pagerPane.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
+                edtSearchToolsRounded.clearFocus();
+                chipsEditText.clearFocus();
 
             }
 
@@ -445,8 +452,11 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                 currentIndex = i;
                 //Make the junk food pane visible
                 if (i == 0) {
+                    edtSearchToolsRounded.clearFocus();
+                    chipsEditText.clearFocus();
+                    edtSearchToolsRounded.setOnFocusChangeListener(null);
+                    chipsEditText.setOnFocusChangeListener(null);
                     junkFoodAppPane();
-
 
                 }
 
@@ -462,6 +472,10 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
                     // finally change the color
                     mWindow.setStatusBarColor(defaultStatusBarColor);
+                    edtSearchToolsRounded.clearFocus();
+                    chipsEditText.clearFocus();
+                    //Focus Change Listener for Search in List
+                    searchEditTextFocusChanged();
 
 
                 }
@@ -612,9 +626,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-//                linPane.setVisibility(View.GONE);
-//                linBottomDoc.setVisibility(View.GONE);
-//                searchListVisible(context);
 
             }
 
@@ -634,14 +645,18 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             @Override
             public void onAnimationStart(Animation animation) {
 
-
                 linSearchList.setAlpha(0.5f);
+                linSearchList.setVisibility(View.GONE);
+                linPane.setVisibility(View.VISIBLE);
+                linBottomDoc.setVisibility(View.VISIBLE);
 
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
                 linSearchList.setVisibility(View.GONE);
+                linPane.setAlpha(1);
+
 
             }
 
@@ -676,4 +691,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         linSearchList.startAnimation(fadeOutAnim);
 
     }
+
+
 }
