@@ -26,7 +26,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import co.siempo.phone.R;
@@ -56,7 +55,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
     private DrawableProvider mProvider;
     private TextDrawable.IBuilder mDrawableBuilder;
     private PopupMenu popup;
-    private HashMap<String, Bitmap> iconList;
+//    private HashMap<String, Bitmap> iconList;
 
     public MainListAdapter(Context context, List<MainListItem> items) {
         super(context, 0);
@@ -64,7 +63,6 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         mDrawableBuilder = TextDrawable.builder()
                 .round();
         mProvider = new DrawableProvider(context);
-        iconList = CoreApplication.getInstance().iconList;
         loadData(items);
     }
 
@@ -200,6 +198,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             holder = (ActionViewHolder) view.getTag();
         }
 
+        view.setTag(holder);
 
         ImageView imgChevron = view.findViewById(R.id.imgChevron);
 
@@ -212,9 +211,8 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             if (item.getId() == -1) {
                 final String packageName = item.getPackageName();
                 if (!TextUtils.isEmpty(packageName)) {
-
-
-                    holder.icon.setImageBitmap(iconList.get(packageName));
+                    Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(packageName);
+                    holder.icon.setImageDrawable(drawable);
                 }
                 holder.text.setText(item.getTitle());
                 holder.imgChevron.setVisibility(View.VISIBLE);
@@ -300,6 +298,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         TextView text;
         ImageView imgChevron;
     }
+
 
     private static class ContactViewHolder {
         ImageView icon;

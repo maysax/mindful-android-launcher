@@ -1,20 +1,13 @@
 package co.siempo.phone.app;
 
 import android.app.Application;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.LauncherActivityInfo;
 import android.content.pm.LauncherApps;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -22,7 +15,6 @@ import android.os.UserManager;
 import android.provider.AlarmClock;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 
 import com.androidnetworking.AndroidNetworking;
 import com.crashlytics.android.Crashlytics;
@@ -48,7 +40,6 @@ import co.siempo.phone.utils.FontUtils;
 import co.siempo.phone.utils.LifecycleHandler;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
-import co.siempo.phone.utils.UserHandle;
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.BuildConfig;
 import io.fabric.sdk.android.Fabric;
@@ -65,16 +56,9 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 public abstract class CoreApplication extends MultiDexApplication {
 
     private static CoreApplication sInstance;
-    public String DISABLE_APPLIST = "DISABLE_APPLIST";
-    public String BLOCKED_APPLIST = "BLOCKED_APPLIST";
-    public HashMap<String, Bitmap> iconList = new HashMap<>();
     UserManager userManager;
     LauncherApps launcherApps;
-    SharedPreferences sharedPref;
-    NotificationManager notificationManager;
-    private Crashlytics crashlytics;
     private List<ApplicationInfo> packagesList = new ArrayList<>();
-    private boolean isEditNotOpen = false;
     private ArrayList<String> disableNotificationApps = new ArrayList<>();
     private ArrayList<String> blockedApps = new ArrayList<>();
 
@@ -82,28 +66,9 @@ public abstract class CoreApplication extends MultiDexApplication {
         return sInstance;
     }
 
-
-    public Crashlytics getCrashlytics() {
-        return crashlytics;
-    }
-
-    public boolean isEditNotOpen() {
-        return isEditNotOpen;
-    }
-
-    public void setEditNotOpen(boolean editNotOpen) {
-        isEditNotOpen = editNotOpen;
-    }
-
-    public SharedPreferences getSharedPref() {
-        return sharedPref;
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
-        sharedPref = getSharedPreferences("DroidPrefs", 0);
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         userManager = (UserManager) getSystemService(Context.USER_SERVICE);
         launcherApps = (LauncherApps) getSystemService(Context.LAUNCHER_APPS_SERVICE);
         sInstance = this;
@@ -115,7 +80,6 @@ public abstract class CoreApplication extends MultiDexApplication {
      * This method is used for fetch all installed application package list.
      */
     public void getAllApplicationPackageName() {
-        iconList.clear();
         packagesList.clear();
         new LoadApplications().execute();
     }
@@ -199,9 +163,10 @@ public abstract class CoreApplication extends MultiDexApplication {
                         .build());
     }
 
+
     private void configFabric() {
         if (!BuildConfig.DEBUG) {
-            crashlytics = new Crashlytics();
+            Crashlytics crashlytics = new Crashlytics();
             final Fabric fabric = new Fabric.Builder(this)
                     .kits(crashlytics)
                     .debuggable(Config.DEBUG)
@@ -223,10 +188,11 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     public void setPackagesList(List<ApplicationInfo> packagesList) {
+
         Collections.sort(packagesList, new Comparator<ApplicationInfo>() {
             public int compare(ApplicationInfo v1, ApplicationInfo v2) {
 
-                return (v1.name.toLowerCase()).compareTo(v2.name.toLowerCase());
+                return (v1.loadLabel(getPackageManager()).toString().toLowerCase()).compareTo(v2.loadLabel(getPackageManager()).toString().toLowerCase());
             }
         });
         this.packagesList = packagesList;
@@ -251,11 +217,9 @@ public abstract class CoreApplication extends MultiDexApplication {
         if (isAppInstallFirstTime) {
             blockedApps.clear();
         }
-        for (ApplicationInfo applicationInfo : CoreApplication.getInstance().getPackagesList()) {
-
+        for (ApplicationInfo applicationInfo : packagesList) {
 
             if (isAppInstallFirstTime) {
-
                 blockedApps.add(applicationInfo.packageName);
             } else {
                 if (blockedApps.size() > 0) {
@@ -273,17 +237,13 @@ public abstract class CoreApplication extends MultiDexApplication {
             }
         }
 
-
         String blockedList = new Gson().toJson(blockedApps);
         PrefSiempo.getInstance(this).write(PrefSiempo
                 .BLOCKED_APPLIST, blockedList);
-//        sharedPreferences.edit().putString(BLOCKED_APPLIST, blockedList).apply();
 
         String disableList = new Gson().toJson(disableNotificationApps);
         PrefSiempo.getInstance(this).write(PrefSiempo
                 .DISABLE_APPLIST, disableList);
-//        sharedPreferences.edit().putString(DISABLE_APPLIST, disableList).apply();
-
 
     }
 
@@ -320,7 +280,12 @@ public abstract class CoreApplication extends MultiDexApplication {
         return icon;
     }
 
-
+    /**
+     * Get List of installed application related to specific category.
+     *
+     * @param id
+     * @return
+     */
     public ArrayList<ResolveInfo> getApplicationByCategory(int id) {
         ArrayList<ResolveInfo> list = new ArrayList<>();
         switch (id) {
@@ -414,6 +379,20 @@ public abstract class CoreApplication extends MultiDexApplication {
         return list;
     }
 
+    public void addOrRemoveApplicationInfo(boolean addingOrDelete, String packageName) {
+        try {
+            if (addingOrDelete) {
+                ApplicationInfo appInfo = getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA);
+                getPackagesList().add(appInfo);
+            } else {
+                getPackagesList().remove(getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA));
+            }
+            setPackagesList(getPackagesList());
+            EventBus.getDefault().post(new AppInstalledEvent(true));
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     private class LoadApplications extends AsyncTask<Object, Object, List<ApplicationInfo>> {
 
@@ -421,36 +400,10 @@ public abstract class CoreApplication extends MultiDexApplication {
         protected List<ApplicationInfo> doInBackground(Object... params) {
             List<ApplicationInfo> applist = new ArrayList<>();
             for (android.os.UserHandle profile : userManager.getUserProfiles()) {
-                UserHandle user = new UserHandle(userManager.getSerialNumberForUser(profile), profile);
                 for (LauncherActivityInfo activityInfo : launcherApps.getActivityList(null, profile)) {
                     ApplicationInfo appInfo = activityInfo.getApplicationInfo();
-
                     appInfo.name = activityInfo.getLabel().toString();
                     if (!appInfo.packageName.equalsIgnoreCase("co.siempo.phone")) {
-                        Drawable drawable;
-                        try {
-                            Resources resourcesForApplication = getPackageManager().getResourcesForApplication(appInfo);
-                            Configuration config = resourcesForApplication.getConfiguration();
-                            Configuration originalConfig = new Configuration(config);
-
-                            DisplayMetrics displayMetrics = resourcesForApplication.getDisplayMetrics();
-                            DisplayMetrics originalDisplayMetrics = resourcesForApplication.getDisplayMetrics();
-                            displayMetrics.densityDpi = DisplayMetrics.DENSITY_HIGH;
-                            resourcesForApplication.updateConfiguration(config, displayMetrics);
-                            if (appInfo.icon != 0) {
-                                drawable = resourcesForApplication.getDrawable(appInfo.icon, null);
-                            } else {
-                                drawable = appInfo.loadIcon(getPackageManager());
-                            }
-                            resourcesForApplication.updateConfiguration(originalConfig, originalDisplayMetrics);
-                        } catch (Exception e) {
-                            CoreApplication.getInstance().logException(e);
-                            drawable = appInfo.loadIcon(getPackageManager());
-                        }
-                        Bitmap bitmap = drawableToBitmap(drawable);
-                        if (!TextUtils.isEmpty(activityInfo.getApplicationInfo().packageName)) {
-                            iconList.put(activityInfo.getApplicationInfo().packageName, bitmap);
-                        }
                         applist.add(appInfo);
                     }
                 }
@@ -466,30 +419,5 @@ public abstract class CoreApplication extends MultiDexApplication {
             setPackagesList(applicationInfos);
             EventBus.getDefault().post(new AppInstalledEvent(true));
         }
-
-
-        Bitmap drawableToBitmap(Drawable drawable) {
-            Bitmap bitmap;
-
-            if (drawable instanceof BitmapDrawable) {
-                BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-                if (bitmapDrawable.getBitmap() != null) {
-                    return bitmapDrawable.getBitmap();
-                }
-            }
-
-            if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
-                bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
-            } else {
-                bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-            }
-
-            Canvas canvas = new Canvas(bitmap);
-            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-            drawable.draw(canvas);
-            return bitmap;
-        }
-
     }
-
 }

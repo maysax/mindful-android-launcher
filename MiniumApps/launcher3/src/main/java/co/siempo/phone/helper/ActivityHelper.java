@@ -12,7 +12,6 @@ import java.util.List;
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.activities.CoreActivity;
-import co.siempo.phone.activities.InstalledAppsActivity;
 import co.siempo.phone.activities.NoteListActivity;
 import co.siempo.phone.activities.SiempoAlphaSettingsActivity_;
 import co.siempo.phone.activities.SiempoSupressNotificationActivity;
@@ -152,15 +151,6 @@ public class ActivityHelper {
     }
 
 
-    public void openInstallledApp() {
-        try {
-            Intent i = new Intent(getContext(), InstalledAppsActivity.class);
-            getContext().startActivity(i);
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            Tracer.e(e, e.getMessage());
-        }
-    }
 
 
     public void openSiempoSuppressNotificationsSettings() {

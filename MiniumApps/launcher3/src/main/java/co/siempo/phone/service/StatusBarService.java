@@ -244,7 +244,6 @@ public class StatusBarService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             try {
-                CoreApplication.getInstance().getAllApplicationPackageName();
                 if (intent != null && intent.getAction() != null) {
                     if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) {
                         String installPackageName;
@@ -252,6 +251,7 @@ public class StatusBarService extends Service {
                             installPackageName = intent.getData().getEncodedSchemeSpecificPart();
                             addAppFromBlockedList(installPackageName);
                             Log.d("Testing with device.", "Added" + installPackageName);
+                            CoreApplication.getInstance().addOrRemoveApplicationInfo(true, installPackageName);
                             PackageUtil.addAppInSearchList(installPackageName, context);
                         }
 
@@ -264,6 +264,7 @@ public class StatusBarService extends Service {
                                 new DBClient().deleteMsgByPackageName(uninstallPackageName);
                                 removeAppFromBlockedList(uninstallPackageName);
                                 EventBus.getDefault().post(new AppInstalledEvent(0));
+                                CoreApplication.getInstance().addOrRemoveApplicationInfo(true, uninstallPackageName);
                                 PackageUtil.removeAppFromSearchList(uninstallPackageName, context);
                             }
                         }

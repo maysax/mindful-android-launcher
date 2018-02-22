@@ -324,7 +324,13 @@ public class UIUtils {
     }
 
     public static Bitmap convertBytetoBitmap(byte[] byteArray) {
-        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        if (bitmap != null) {
+            bitmap.setWidth(bitmap.getWidth() / 2);
+            bitmap.setHeight(bitmap.getHeight() / 2);
+            return bitmap;
+        }
+        return null;
     }
 
     public static boolean isDeviceHasSimCard(Context context) {

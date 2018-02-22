@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
@@ -18,7 +19,6 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import co.siempo.phone.R;
-import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.utils.PrefSiempo;
 
 
@@ -62,10 +62,11 @@ public class TempoNotificationItemViewHolder extends RecyclerView.ViewHolder {
 
     public void displayImage(ApplicationInfo applicationInfo, PackageManager packageManager, String errormessage) {
         if (TextUtils.isEmpty(errormessage)) {
-            if (CoreApplication.getInstance().iconList.get(applicationInfo.packageName) == null) {
-                imv_appicon.setImageDrawable(applicationInfo.loadIcon(packageManager));
+            Drawable drawable = applicationInfo.loadIcon(packageManager);
+            if (drawable != null) {
+                imv_appicon.setImageDrawable(drawable);
             } else {
-                imv_appicon.setImageBitmap(CoreApplication.getInstance().iconList.get(applicationInfo.packageName));
+                imv_appicon.setImageBitmap(null);
             }
         } else {
             imv_appicon.setImageBitmap(null);

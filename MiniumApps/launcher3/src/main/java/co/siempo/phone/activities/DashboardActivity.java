@@ -121,7 +121,7 @@ public class DashboardActivity extends CoreActivity {
             loadViews();
         }
         //Need to change as it is heavy call for onResume
-        initView();
+//        initView();
     }
 
 
@@ -137,18 +137,12 @@ public class DashboardActivity extends CoreActivity {
     }
 
     private void initView() {
-
         connectivityManager = (ConnectivityManager) getSystemService(Context
                 .CONNECTIVITY_SERVICE);
-
-
         notificationManager =
 
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-
         isApplicationLaunch = true;
-
         checknavigatePermissions();
     }
 

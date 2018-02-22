@@ -264,10 +264,6 @@ public class MainListItemLoader {
             case 18:
                 new ActivityHelper(context).openFeedback();
                 break;
-            case 19:
-                new ActivityHelper(context).openInstallledApp();
-                break;
-
             default:
                 UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
                 break;

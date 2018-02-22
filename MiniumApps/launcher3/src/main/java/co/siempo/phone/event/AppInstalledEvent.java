@@ -17,7 +17,7 @@ public class AppInstalledEvent {
         this.isAppInstalled = isAppInstalled;
     }
 
-    public boolean isRunning() {
+    public boolean isAppInstalledSuccessfully() {
         return isAppInstalled;
     }
 

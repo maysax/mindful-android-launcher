@@ -154,7 +154,7 @@ public class TempoAppNotificationActivity extends CoreActivity {
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
-        if (event.isRunning()) {
+        if (event.isAppInstalledSuccessfully()) {
             initView();
         }
     }

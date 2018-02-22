@@ -89,7 +89,6 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        CoreApplication.getInstance().setEditNotOpen(true);
 
         // Initialize colours and font sizes arrays
         colourArr = getResources().getStringArray(R.array.colours);
@@ -281,7 +280,6 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
 
                             dialog.dismiss();
                             finish();
-                            CoreApplication.getInstance().setEditNotOpen(false);
                             overridePendingTransition(0, 0);
                         }
                     }
@@ -363,7 +361,6 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
         imm.hideSoftInputFromWindow(titleEdit.getWindowToken(), 0);
 
         finish();
-        CoreApplication.getInstance().setEditNotOpen(false);
         overridePendingTransition(0, 0);
     }
 
@@ -396,7 +393,6 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
                     imm.hideSoftInputFromWindow(titleEdit.getWindowToken(), 0);
 
                     finish();
-                    CoreApplication.getInstance().setEditNotOpen(false);
                     overridePendingTransition(0, 0);
                 }
             }
@@ -410,7 +406,6 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        CoreApplication.getInstance().setEditNotOpen(false);
     }
 
     /**
@@ -481,7 +476,6 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
                     setResult(RESULT_CANCELED, intent);
                     imm.hideSoftInputFromWindow(titleEdit.getWindowToken(), 0);
                     finish();
-                    CoreApplication.getInstance().setEditNotOpen(false);
                     overridePendingTransition(0, 0);
                 } else {
                     toastEditTextCannotBeEmpty();
@@ -494,7 +488,6 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
                     setResult(RESULT_CANCELED, intent);
                     imm.hideSoftInputFromWindow(titleEdit.getWindowToken(), 0);
                     finish();
-                    CoreApplication.getInstance().setEditNotOpen(false);
                     overridePendingTransition(0, 0);
                 }
             }
