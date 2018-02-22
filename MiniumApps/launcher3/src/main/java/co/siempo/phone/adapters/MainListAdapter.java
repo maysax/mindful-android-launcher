@@ -66,6 +66,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         mProvider = new DrawableProvider(context);
         iconList = CoreApplication.getInstance().iconList;
         loadData(items);
+
     }
 
     public void loadData(List<MainListItem> items) {
@@ -319,6 +320,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
             FilterResults ret = new FilterResults();
 
+
             int count = originalData.size();
             List<MainListItem> buildData = new ArrayList<>();
             boolean isValidNumber = false;
@@ -386,13 +388,28 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                             case ACTION:
                                 filterableString = originalData.get(i).getTitle();
                                 if (!TextUtils.isEmpty(filterableString)) {
-                                    if (!TextUtils.isEmpty(originalData.get(i).getPackageName())) {
+
+
+                                    if (!TextUtils.isEmpty(originalData.get
+                                            (i).getPackageName())) {
                                         if (filterableString.toLowerCase().contains(searchString.toLowerCase().trim())) {
+//                                            boolean isJunkFoodApp = false;
+
+//                                            for (String appName : junkFoodAppList) {
+//                                                if (appName.equalsIgnoreCase(originalData.get
+//                                                        (i).getPackageName())) {
+//                                                    isJunkFoodApp = true;
+//                                                }
+//                                            }
+//                                            if (!isJunkFoodApp) {
                                             buildData.add(originalData.get(i));
+//                                            }
                                             break;
                                         }
                                     } else {
                                         if (originalData.get(i).getTitle().toLowerCase().contains(searchString.toLowerCase())) {
+
+
                                             if (checkDuplicate(buildData, searchString.toLowerCase().toLowerCase())) {
                                                 buildData.add(originalData.get(i));
                                             }

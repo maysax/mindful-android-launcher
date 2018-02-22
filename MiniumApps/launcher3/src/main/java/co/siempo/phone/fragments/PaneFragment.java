@@ -355,9 +355,14 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus && isVisible()) {
+                    //Making empty text for mediator to work properly for
+                    // Junk food flagging app as this will fire token event
+                    // and data will be reset for the list
+                    chipsEditText.setText("");
                     imageClear.setVisibility(View.GONE);
                     hidePaneAndBottomView(context);
                     blueLineDivider.setVisibility(View.GONE);
+
                 } else {
 
                     blueLineDivider.setVisibility(View.VISIBLE);
