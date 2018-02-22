@@ -73,6 +73,7 @@ public class FavoritePaneFragment extends CoreFragment {
                 Intent intent = new Intent(context, FavoritesSelectionActivity
                         .class);
                 startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
             }
         });
