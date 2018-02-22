@@ -127,6 +127,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             }
         }
     };
+    private CircleIndicator indicator;
 
     public PaneFragment() {
         // Required empty public constructor
@@ -203,7 +204,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         linSearchList = view.findViewById(R.id.linSearchList);
         listView = view.findViewById(R.id.listView);
         linBottomDoc.setOnClickListener(this);
-        CircleIndicator indicator = view.findViewById(R.id.indicator);
+        indicator = view.findViewById(R.id.indicator);
         pagerPane = view.findViewById(R.id.pagerPane);
         chipsEditText = searchLayout.getTxtSearchBox();
         imageClear = searchLayout.getBtnClear();
@@ -213,7 +214,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
         PanePagerAdapter mPagerAdapter = new PanePagerAdapter(getChildFragmentManager());
         pagerPane.setAdapter(mPagerAdapter);
-        indicator.setViewPager(pagerPane);
+
         pagerPane.setCurrentItem(2);
 
         bindBottomDoc();
@@ -449,6 +450,9 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
             @Override
             public void onPageSelected(int i) {
+                //Indicator to be set here so that when coming from another
+                // application, the sliding dots retain the shape as previous
+                indicator.setViewPager(pagerPane);
                 currentIndex = i;
                 //Make the junk food pane visible
                 if (i == 0) {
