@@ -36,7 +36,10 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:layout_marginTop="8dp"
-                    android:padding="8dp"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="4dp"
                     android:text="@string/lbl_updateEmail"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -51,9 +54,46 @@
                     android:paddingBottom="4dp"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
-                    android:paddingTop="4dp"
+                    android:paddingTop="2dp"
                     android:text="@string/lbl_updateEmailDescription"
                     android:textSize="16sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relChangeHome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/relUpdateEmail">
+
+
+                <TextView
+                    android:id="@+id/txtExitSiempoService"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="8dp"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="4dp"
+                    android:text="@string/lbl_exitSiempo"
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/txtExitSiempoServiceDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/txtExitSiempoService"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="60dp"
+                    android:paddingBottom="4dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="2dp"
+                    android:text="@string/lbl_switchSiempo"
+                    android:textSize="16sp"/>
             </RelativeLayout>
 
 
@@ -61,11 +101,14 @@
                 android:id="@+id/txtShareAnalytics"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/relUpdateEmail"
+                android:layout_below="@+id/relChangeHome"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
-                android:padding="8dp"
+                android:paddingBottom="2dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="4dp"
                 android:text="@string/lbl_analytics"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -88,7 +131,7 @@
                     android:paddingBottom="4dp"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
-                    android:paddingTop="4dp"
+                    android:paddingTop="2dp"
                     android:text="@string/lbl_analytics_description"
                     android:textSize="16sp" />
 
@@ -136,8 +179,8 @@
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:paddingTop="2dp"
-                    android:textSize="15sp"
                     android:text="@string/privacypolicy_link"
+                    android:textSize="15sp"
                     />
                 </LinearLayout>
                 <Switch
