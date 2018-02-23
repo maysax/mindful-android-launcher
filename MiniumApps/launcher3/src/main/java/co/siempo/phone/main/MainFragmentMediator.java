@@ -214,6 +214,9 @@ public class MainFragmentMediator {
                             if (status) {
                                 items.get(position).setDate(Calendar.getInstance().getTime());
                                 items.set(position, items.get(position));
+                                //Following line should be added in order to
+                                // sort
+//                                items = Sorting.sortList(items);
                                 PackageUtil.storeSearchList(items, context);
                             }
                         }
