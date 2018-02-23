@@ -107,6 +107,7 @@ public class MainFragmentMediator {
 
         }
 
+
         items.removeAll(junkListItems);
 
         if (getAdapter() != null) {

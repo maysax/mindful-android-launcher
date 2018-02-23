@@ -482,7 +482,8 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             } else {
                 filteredData = new ArrayList<>(originalData);
             }
-            EventBus.getDefault().post(new MainListAdapterEvent(filteredData.size()));
+
+            EventBus.getDefault().post(new MainListAdapterEvent(filteredData));
             notifyDataSetChanged();
         }
     }
