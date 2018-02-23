@@ -413,7 +413,7 @@
     <string name="flag_app">Flag this app to use it less</string>
     <string name="unflagapp">Un-flag this app</string>
     <string name="favorite_menu_unselect">Unselect as frequently used</string>
-    <string name="favorite_menu_select">select as frequently used app</string>
+    <string name="favorite_menu_select">Select as frequently used app</string>
     <string name="get_info_or_uninstall_app">Get info or uninstall app</string>
     <string name="msg_flage_save_dialog">You\'ve taken an important step towards reducing the use of apps that can make you feel bad when you overuse them.</string>
     <string name="flag_first_time_install">When you flag an app, Siempo will gently discourage you from over-using it. We\'ve flagged some apps that most users say they want to use less.  You can change these flags now or later.</string>
