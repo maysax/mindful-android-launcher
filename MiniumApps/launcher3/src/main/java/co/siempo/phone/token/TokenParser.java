@@ -1,7 +1,5 @@
 package co.siempo.phone.token;
 
-import android.util.Log;
-
 /**
  * Created by shahab on 2/16/17.
  */

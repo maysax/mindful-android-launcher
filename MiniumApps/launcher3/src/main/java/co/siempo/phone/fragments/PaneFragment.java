@@ -2,6 +2,7 @@ package co.siempo.phone.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -43,6 +44,8 @@ import java.util.Set;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.CoreActivity;
+import co.siempo.phone.activities.DashboardActivity;
+import co.siempo.phone.activities.JunkfoodFlaggingActivity;
 import co.siempo.phone.adapters.MainListAdapter;
 import co.siempo.phone.adapters.PanePagerAdapter;
 import co.siempo.phone.adapters.ToolsMenuAdapter;

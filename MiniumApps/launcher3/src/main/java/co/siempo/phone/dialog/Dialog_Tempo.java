@@ -74,7 +74,7 @@ public class Dialog_Tempo extends Dialog implements View.OnClickListener {
         everyTwoHourList.addAll(Arrays.asList(0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22));
         everyFourHoursList.addAll(Arrays.asList(0, 4, 8, 12, 16, 20));
 
-        enableRadioOnPosition( PrefSiempo.getInstance(context).read(PrefSiempo
+        enableRadioOnPosition(PrefSiempo.getInstance(context).read(PrefSiempo
                 .TEMPO_TYPE, 0));
         bindOnlyAt();
 
@@ -142,7 +142,7 @@ public class Dialog_Tempo extends Dialog implements View.OnClickListener {
 
     private void radioBatched() {
         enableRadioOnPosition(1);
-        FirebaseHelper.getIntance().logTempoIntervalTime(1,  PrefSiempo.getInstance(context).read(PrefSiempo
+        FirebaseHelper.getIntance().logTempoIntervalTime(1, PrefSiempo.getInstance(context).read(PrefSiempo
                 .BATCH_TIME, 15), "");
     }
 
@@ -171,14 +171,14 @@ public class Dialog_Tempo extends Dialog implements View.OnClickListener {
 
     private void txtAdd() {
         enableRadioOnPosition(2);
-        FirebaseHelper.getIntance().logTempoIntervalTime(2, 0,PrefSiempo.getInstance(context).read(PrefSiempo
+        FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, PrefSiempo.getInstance(context).read(PrefSiempo
                 .ONLY_AT, "12:01"));
         Calendar now = Calendar.getInstance();
         showTimePicker(now, -1, true);
     }
 
     private void showTimePicker(final Calendar now, final int i, final boolean isNewAdded) {
-        String onlyAtValue=PrefSiempo.getInstance(context).read(PrefSiempo
+        String onlyAtValue = PrefSiempo.getInstance(context).read(PrefSiempo
                 .ONLY_AT, "12:01");
         String strTime[] = onlyAtValue.split(",");
         final ArrayList listdata = new ArrayList(Arrays.asList(strTime));
@@ -268,8 +268,8 @@ public class Dialog_Tempo extends Dialog implements View.OnClickListener {
 
     private void imgMinus() {
         if (radioBatched.isChecked()) {
-           int batchTime =  PrefSiempo.getInstance(context).read(PrefSiempo
-                   .BATCH_TIME, 15);
+            int batchTime = PrefSiempo.getInstance(context).read(PrefSiempo
+                    .BATCH_TIME, 15);
 
             if (batchTime == 15) {
                 txtBatch.setText(context.getString(R.string.batched_every_4_hour));
@@ -300,7 +300,7 @@ public class Dialog_Tempo extends Dialog implements View.OnClickListener {
 
     private void imgPlus() {
         if (radioBatched.isChecked()) {
-            int batchTime =  PrefSiempo.getInstance(context).read(PrefSiempo
+            int batchTime = PrefSiempo.getInstance(context).read(PrefSiempo
                     .BATCH_TIME, 15);
 
             if (batchTime == 15) {
@@ -319,7 +319,7 @@ public class Dialog_Tempo extends Dialog implements View.OnClickListener {
                 txtBatch.setText(context.getString(R.string.batched_every_4_hour));
                 PrefSiempo.getInstance(context).write(PrefSiempo
                         .BATCH_TIME, 4);
-            } else if (batchTime== 4) {
+            } else if (batchTime == 4) {
                 txtBatch.setText(context.getString(R.string.batched_every_15_minutes));
                 PrefSiempo.getInstance(context).write(PrefSiempo
                         .BATCH_TIME, 15);
@@ -446,7 +446,7 @@ public class Dialog_Tempo extends Dialog implements View.OnClickListener {
             PrefSiempo.getInstance(context).write(PrefSiempo
                     .TEMPO_TYPE, 1);
             strMessage = context.getString(R.string.msg_do_not_disturb);
-            int batchTime =  PrefSiempo.getInstance(context).read(PrefSiempo
+            int batchTime = PrefSiempo.getInstance(context).read(PrefSiempo
                     .BATCH_TIME, 15);
             if (batchTime == 15) {
                 txtBatch.setText(context.getString(R.string.batched_every_15_minutes));
