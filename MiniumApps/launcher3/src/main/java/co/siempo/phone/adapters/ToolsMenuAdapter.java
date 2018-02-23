@@ -73,7 +73,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
             if (isHideIconBranding) {
                 holder.icon.setImageResource(item.getDrawable());
             } else {
-                if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
+                // if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
                     Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(appMenu.getApplicationName());
                     if (drawable != null) {
                         holder.icon.setImageDrawable(drawable);
@@ -81,9 +81,9 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                     } else {
                         holder.icon.setImageResource(item.getDrawable());
                     }
-                } else {
-                    holder.linearLayout.setVisibility(View.INVISIBLE);
-                }
+//                } else {
+//                    holder.linearLayout.setVisibility(View.INVISIBLE);
+//                }
             }
         } else {
             holder.linearLayout.setVisibility(View.INVISIBLE);

@@ -11,7 +11,6 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,15 +82,9 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
 
                     if (holder.checkbox.isChecked()) {
                         if (getCountOfCheckTools() > 1) {
-                            if (getCountOfAssignTools() == 1 && mainListItem.getId() == getAssignToolsId()) {
-                                Toast.makeText(context, "Tools can't be empty.", Toast.LENGTH_SHORT).show();
-                            } else {
-                                mainListItem.setVisable(false);
-                                map.get(mainListItem.getId()).setVisible(false);
-                                bindView(mainListItem, holder, false);
-                            }
-                        } else {
-                            Toast.makeText(context, "Tools can't be empty.", Toast.LENGTH_SHORT).show();
+                            mainListItem.setVisable(false);
+                            map.get(mainListItem.getId()).setVisible(false);
+                            bindView(mainListItem, holder, false);
                         }
                     } else {
                         mainListItem.setVisable(true);
