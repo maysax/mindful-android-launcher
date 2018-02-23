@@ -90,6 +90,12 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                         mainListItem.setVisable(true);
                         map.get(mainListItem.getId()).setVisible(true);
                         bindView(mainListItem, holder, true);
+
+                        if(map.get(mainListItem.getId()).getApplicationName().equalsIgnoreCase("")){
+                            Intent intent = new Intent(context, AppAssignmentActivity.class);
+                            intent.putExtra(Constants.INTENT_MAINLISTITEM, mainListItem);
+                            ((ToolSelectionActivity) context).startActivityForResult(intent, ToolSelectionActivity.TOOL_SLECTION);
+                        }
                     }
 
                 }
