@@ -1,6 +1,5 @@
 package co.siempo.phone.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +15,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import co.siempo.phone.R;
-import co.siempo.phone.activities.JunkfoodFlaggingActivity;
 import co.siempo.phone.adapters.JunkFoodPaneAdapter;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
 import co.siempo.phone.utils.PrefSiempo;
@@ -94,16 +92,7 @@ public class JunkFoodPaneFragment extends CoreFragment {
                 mAdapter = new JunkFoodPaneAdapter(getActivity(), items, isHideIconBranding);
                 recyclerView.setAdapter(mAdapter);
                 linSelectJunkFood.setVisibility(View.GONE);
-            } else {
-                linSelectJunkFood.setVisibility(View.VISIBLE);
-                btnSelect.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), JunkfoodFlaggingActivity.class);
-                        startActivity(intent);
-                        getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                    }
-                });
+
             }
         }
     }

@@ -1,7 +1,5 @@
 package co.siempo.phone.activities;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
@@ -32,6 +30,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.FavoritesFlagAdapter;
 import co.siempo.phone.event.AppInstalledEvent;
@@ -273,9 +272,8 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
                                 bindListView();
                             }
                             else{
-                                Toast.makeText(getApplicationContext(),"Please unselect any of the apps from Frequenty used apps section",Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "Please unselect any of the apps from Frequently used apps section", Toast.LENGTH_LONG).show();
                             }
-                            Log.d("abcde","List size after change"+list.size());
                             setToolBarText(favoriteAppList.size());
                         }
                     } catch (Exception e) {

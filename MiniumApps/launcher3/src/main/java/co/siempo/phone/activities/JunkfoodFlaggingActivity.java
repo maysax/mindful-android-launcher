@@ -134,6 +134,9 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
                 list.remove(null);
                 PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
                 PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.JUNKFOOD_APPS, list);
+                if (list.size() == 0 && !DashboardActivity.isJunkFoodOpen) {
+                    DashboardActivity.isJunkFoodOpen = true;
+                }
                 finish();
             }
         });
@@ -160,6 +163,14 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.dialog_blue));
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (list.size() == 0 && !DashboardActivity.isJunkFoodOpen) {
+            DashboardActivity.isJunkFoodOpen = true;
+        }
     }
 
     /**

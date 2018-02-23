@@ -2,6 +2,7 @@ package co.siempo.phone.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -42,6 +43,8 @@ import java.util.Set;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.CoreActivity;
+import co.siempo.phone.activities.DashboardActivity;
+import co.siempo.phone.activities.JunkfoodFlaggingActivity;
 import co.siempo.phone.adapters.MainListAdapter;
 import co.siempo.phone.adapters.PanePagerAdapter;
 import co.siempo.phone.adapters.ToolsMenuAdapter;
@@ -76,7 +79,7 @@ import me.relex.circleindicator.CircleIndicator;
  */
 public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
-    static int currentIndex = -1;
+    public static int currentIndex = -1;
     private LinearLayout linTopDoc;
     private ViewPager pagerPane;
     private LinearLayout linPane;
@@ -214,8 +217,15 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         PanePagerAdapter mPagerAdapter = new PanePagerAdapter(getChildFragmentManager());
         pagerPane.setAdapter(mPagerAdapter);
         indicator.setViewPager(pagerPane);
-        pagerPane.setCurrentItem(2);
+        if (DashboardActivity.isJunkFoodOpen) {
+            currentIndex = 1;
+            DashboardActivity.isJunkFoodOpen = false;
+        }
+        if (currentIndex == -1) {
+            currentIndex = 2;
 
+        }
+        pagerPane.setCurrentItem(currentIndex);
         bindBottomDoc();
         inputMethodManager = (InputMethodManager) getActivity()
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -290,6 +300,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         if (currentIndex == 0) {
             junkFoodAppPane();
         }
+
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -444,11 +455,12 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             public void onPageScrolled(int i, float v, int i1) {
                 edtSearchToolsRounded.clearFocus();
                 chipsEditText.clearFocus();
-
             }
 
             @Override
             public void onPageSelected(int i) {
+
+
                 currentIndex = i;
                 //Make the junk food pane visible
                 if (i == 0) {
@@ -457,7 +469,11 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                     edtSearchToolsRounded.setOnFocusChangeListener(null);
                     chipsEditText.setOnFocusChangeListener(null);
                     junkFoodAppPane();
-
+                    if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>()).size() == 0) {
+                        Intent intent = new Intent(getActivity(), JunkfoodFlaggingActivity.class);
+                        startActivity(intent);
+                        getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    }
                 }
 
                 //Tools and Favourite Pane
@@ -479,6 +495,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
 
                 }
+
 
             }
 

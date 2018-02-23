@@ -11,10 +11,12 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.AppAssignmentActivity;
@@ -30,7 +32,7 @@ import co.siempo.phone.models.MainListItem;
 
 public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
         .ToolsViewHolder> {
-    ArrayList<MainListItem> listItems;
+    private ArrayList<MainListItem> listItems;
     private HashMap<Integer, AppMenu> map;
     private Context context;
 
@@ -56,8 +58,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
     public ToolsListAdapter.ToolsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout
                 .tools_app_list_row, parent, false);
-        ToolsViewHolder viewHolder = new ToolsViewHolder(v);
-        return viewHolder;
+        return new ToolsViewHolder(v);
     }
 
     @Override
@@ -82,9 +83,15 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
 
                     if (holder.checkbox.isChecked()) {
                         if (getCountOfCheckTools() > 1) {
-                            mainListItem.setVisable(false);
-                            map.get(mainListItem.getId()).setVisible(false);
-                            bindView(mainListItem, holder, false);
+                            if (getCountOfAssignTools() == 1 && mainListItem.getId() == getAssignToolsId()) {
+                                Toast.makeText(context, "Tools can't be empty.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                mainListItem.setVisable(false);
+                                map.get(mainListItem.getId()).setVisible(false);
+                                bindView(mainListItem, holder, false);
+                            }
+                        } else {
+                            Toast.makeText(context, "Tools can't be empty.", Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         mainListItem.setVisable(true);
@@ -345,6 +352,24 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
         for (MainListItem mainListItem : listItems) {
             if (mainListItem.isVisable())
                 count++;
+        }
+        return count;
+    }
+
+    private int getCountOfAssignTools() {
+        int count = 0;
+        for (Map.Entry<Integer, AppMenu> entry : map.entrySet()) {
+            if (entry.getValue().isVisible() && !entry.getValue().getApplicationName().equalsIgnoreCase(""))
+                count++;
+        }
+        return count;
+    }
+
+    private int getAssignToolsId() {
+        int count = -1;
+        for (Map.Entry<Integer, AppMenu> entry : map.entrySet()) {
+            if (entry.getValue().isVisible() && !entry.getValue().getApplicationName().equalsIgnoreCase(""))
+                return entry.getKey();
         }
         return count;
     }
