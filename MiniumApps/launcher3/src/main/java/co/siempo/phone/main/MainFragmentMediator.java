@@ -318,6 +318,7 @@ public class MainFragmentMediator {
         }
         if (getAdapter() != null) {
             getAdapter().loadData(items);
+            getAdapter().getFilter().filter("@");
             getAdapter().notifyDataSetChanged();
         }
 

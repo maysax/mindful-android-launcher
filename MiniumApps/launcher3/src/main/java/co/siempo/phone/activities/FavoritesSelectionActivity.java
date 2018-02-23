@@ -133,7 +133,6 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Log.d("abcde","Final Favorite List is :: "+list.size());
                 PrefSiempo.getInstance(FavoritesSelectionActivity.this).write(PrefSiempo.FAVORITE_APPS, list);
                 finish();
                 return false;
