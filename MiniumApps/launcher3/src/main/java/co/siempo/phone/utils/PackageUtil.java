@@ -185,7 +185,7 @@ public class PackageUtil {
 
         String title = getNotificationTitle(notification.get_contact_title(), notification.getPackageName(), context);
 
-
+        int priority = PrefSiempo.getInstance(context).read(PrefSiempo.ALLOW_PEAKING, true) ? Notification.PRIORITY_DEFAULT : Notification.PRIORITY_HIGH;
         RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.custom_notification_card);
         contentView.setImageViewBitmap(R.id.imgAppIcon, CoreApplication.getInstance().iconList.get(notification.getPackageName()));
         contentView.setImageViewBitmap(R.id.imgUserImage, bitmap);
@@ -197,7 +197,7 @@ public class PackageUtil {
                 .setGroup(applicationNameFromPackageName)
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.siempo_notification_icon)
-                .setPriority(Notification.PRIORITY_HIGH)
+                .setPriority(priority)
                 .setContentTitle(title)
                 .setContentText(notification.get_message())
                 .setContentIntent(contentIntent)
@@ -364,40 +364,9 @@ public class PackageUtil {
 
     public static void appSettings(Context context, String packageName) {
         try {
-            String appName = "";
-            ApplicationInfo applicationInfo = context.getPackageManager().getApplicationInfo(packageName, 0);
-            if (applicationInfo != null && !TextUtils.isEmpty(applicationInfo.name)) {
-                appName = applicationInfo.loadLabel(context.getPackageManager()).toString();
-            }
-            boolean isPackageAvailable = false;
-            Type baseType = new TypeToken<List<MainListItem>>() {
-            }.getType();
-            List<MainListItem> searchItems = new ArrayList<MainListItem>();
-            String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, "");
-            if (!TextUtils.isEmpty(searchList)) {
-                Gson gson = new GsonBuilder()
-                        .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
-                searchItems = gson.fromJson(searchList, baseType);
-            }
-            int i = 0;
-            for (int j = 0; j < searchItems.size(); j++) {
-                MainListItem item = searchItems.get(j);
-                if (!TextUtils.isEmpty(item.getPackageName()) && item
-                        .getPackageName()
-                        .equalsIgnoreCase(packageName)) {
-                    isPackageAvailable = true;
-                }
-                if (item.getId() == -1 && item.getTitle().startsWith("" + appName.charAt(0))) {
-                    i = j;
-                }
-            }
-            if (!isPackageAvailable) {
-                String pckageName = applicationInfo != null ? applicationInfo.packageName : "";
-                searchItems.add(i - 1, new MainListItem(-1, appName, pckageName));
-            }
-            searchItems = Sorting.sortAppList(context, searchItems);
-            searchItems = Sorting.sortList(searchItems);
-            storeSearchList(searchItems, context);
+            Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            intent.setData(Uri.parse("package:" + packageName));
+            context.startActivity(intent);
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
             CoreApplication.getInstance().logException(e);
