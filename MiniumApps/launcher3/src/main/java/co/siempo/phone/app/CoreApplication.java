@@ -16,7 +16,6 @@ import android.os.UserManager;
 import android.provider.AlarmClock;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.LruCache;
 
 import com.androidnetworking.AndroidNetworking;
@@ -423,6 +422,15 @@ public abstract class CoreApplication extends MultiDexApplication {
         asyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
     }
 
+    public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
+        if (getBitmapFromMemCache(key) == null) {
+            mMemoryCache.put(key, bitmap);
+        }
+    }
+
+    public Bitmap getBitmapFromMemCache(String key) {
+        return mMemoryCache.get(key);
+    }
 
     private class LoadApplications extends AsyncTask<Object, Object, List<ApplicationInfo>> {
 
@@ -454,15 +462,5 @@ public abstract class CoreApplication extends MultiDexApplication {
             setPackagesList(applicationInfos);
             EventBus.getDefault().post(new AppInstalledEvent(true));
         }
-    }
-
-    public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
-        if (getBitmapFromMemCache(key) == null) {
-            mMemoryCache.put(key, bitmap);
-        }
-    }
-
-    public Bitmap getBitmapFromMemCache(String key) {
-        return mMemoryCache.get(key);
     }
 }
