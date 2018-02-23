@@ -26,8 +26,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 
 import co.siempo.phone.R;
@@ -53,7 +53,7 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
     private PopupMenu popup;
     private ScrollView scrollView;
     private boolean isLoadFirstTime = true;
-    private int count=0;
+    private int count = 0;
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
@@ -91,13 +91,13 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
         listFavoriteApps = findViewById(R.id.lst_favoritesApps);
         listAllOtherApps = findViewById(R.id.lst_OtherApps);
         scrollView = findViewById(R.id.scrollView);
-        count=list.size();
+        count = list.size();
         setToolBarText(count);
     }
 
-    public void setToolBarText(int count){
-        int remainapps=12-count;
-        toolbar.setTitle("Select up to "+remainapps+ " more apps");
+    public void setToolBarText(int count) {
+        int remainapps = 12 - count;
+        toolbar.setTitle("Select up to " + remainapps + " more apps");
     }
 
     /**
@@ -111,12 +111,12 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
         allOtherAppList = new ArrayList<>();
         for (ResolveInfo resolveInfo : installedPackageList) {
             if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
-                if(!junkFoodList.contains(resolveInfo.activityInfo.packageName)){
-                if (list.contains(resolveInfo.activityInfo.packageName)) {
-                    favoriteAppList.add(resolveInfo);
-                } else {
-                    allOtherAppList.add(resolveInfo);
-                }
+                if (!junkFoodList.contains(resolveInfo.activityInfo.packageName)) {
+                    if (list.contains(resolveInfo.activityInfo.packageName)) {
+                        favoriteAppList.add(resolveInfo);
+                    } else {
+                        allOtherAppList.add(resolveInfo);
+                    }
                 }
             }
         }
@@ -139,9 +139,6 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
         });
         return super.onCreateOptionsMenu(menu);
     }
-
-
-
 
 
     /**
@@ -241,18 +238,22 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
                                 List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
                                 }.getType());
 
-                                for (Iterator<String> it = listOfSortFavoritesApps.iterator(); it.hasNext(); ) {
-                                     String packageName=it.next();
-                                     if(favoriteAppList.get(position).activityInfo.packageName.equalsIgnoreCase(packageName)){
-                                         it.remove();
-                                     }
+                                for (ListIterator<String> it =
+                                     listOfSortFavoritesApps.listIterator(); it.hasNext
+                                        (); ) {
+                                    String packageName = it.next();
+                                    if (favoriteAppList.get(position).activityInfo.packageName.equalsIgnoreCase(packageName)) {
+                                        //Used List Iterator to set empty
+                                        // value for package name retaining
+                                        // the positions of elements
+                                        it.set("");
+                                    }
                                 }
 
 
                                 Gson gson2 = new Gson();
                                 String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
                                 PrefSiempo.getInstance(FavoritesSelectionActivity.this).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
-
 
 
                                 isLoadFirstTime = false;
@@ -262,14 +263,13 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
                                 setToolBarText(favoriteAppList.size());
                             }
                         } else {
-                            if(favoriteAppList!=null && favoriteAppList.size()<12){
+                            if (favoriteAppList != null && favoriteAppList.size() < 12) {
                                 list.add(allOtherAppList.get(position).activityInfo.packageName);
                                 isLoadFirstTime = false;
                                 favoriteAppList.add(allOtherAppList.get(position));
                                 allOtherAppList.remove(allOtherAppList.get(position));
                                 bindListView();
-                            }
-                            else{
+                            } else {
                                 Toast.makeText(getApplicationContext(), "Please unselect any of the apps from Frequently used apps section", Toast.LENGTH_LONG).show();
                             }
                             setToolBarText(favoriteAppList.size());

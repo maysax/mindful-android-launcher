@@ -394,17 +394,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                                     if (!TextUtils.isEmpty(originalData.get
                                             (i).getPackageName())) {
                                         if (filterableString.toLowerCase().contains(searchString.toLowerCase().trim())) {
-//                                            boolean isJunkFoodApp = false;
-
-//                                            for (String appName : junkFoodAppList) {
-//                                                if (appName.equalsIgnoreCase(originalData.get
-//                                                        (i).getPackageName())) {
-//                                                    isJunkFoodApp = true;
-//                                                }
-//                                            }
-//                                            if (!isJunkFoodApp) {
                                             buildData.add(originalData.get(i));
-//                                            }
                                             break;
                                         }
                                     } else {
