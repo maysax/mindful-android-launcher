@@ -1,5 +1,7 @@
 package co.siempo.phone.activities;
 
+import android.content.Intent;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 
@@ -31,7 +33,10 @@ public class SettingsActivity extends CoreActivity {
     public void homePressEvent(HomePressEvent event) {
         try {
             if(event.isVisible() && UIUtils.isMyLauncherDefault(this)){
-                finish();
+                Intent startMain = new Intent(Intent.ACTION_MAIN);
+                startMain.addCategory(Intent.CATEGORY_HOME);
+                startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(startMain);
             }
 
         } catch (Exception e) {

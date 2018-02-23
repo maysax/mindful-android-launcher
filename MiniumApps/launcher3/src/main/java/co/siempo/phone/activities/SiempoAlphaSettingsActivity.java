@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,9 +21,14 @@ import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.ViewById;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.event.HomePressEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.utils.PackageUtil;
+import co.siempo.phone.utils.UIUtils;
+import de.greenrobot.event.Subscribe;
 
 import static co.siempo.phone.activities.DashboardActivity.IS_FROM_HOME;
 
@@ -117,6 +123,22 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
         super.onResume();
         startTime = System.currentTimeMillis();
         PackageUtil.checkPermission(this);
+    }
+
+    @Subscribe
+    public void homePressEvent(HomePressEvent event) {
+        try {
+            if(event.isVisible() && UIUtils.isMyLauncherDefault(this)){
+                Intent startMain = new Intent(Intent.ACTION_MAIN);
+                startMain.addCategory(Intent.CATEGORY_HOME);
+                startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(startMain);
+            }
+
+        } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
+            Tracer.e(e, e.getMessage());
+        }
     }
 
 

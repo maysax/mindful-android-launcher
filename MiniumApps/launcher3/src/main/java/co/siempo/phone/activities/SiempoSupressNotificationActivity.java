@@ -2,6 +2,7 @@ package co.siempo.phone.activities;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -36,14 +37,18 @@ import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.MultipleItemDelete;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
+import co.siempo.phone.event.HomePressEvent;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.DeleteItem;
 import co.siempo.phone.models.Notification;
 import co.siempo.phone.models.NotificationContactModel;
 import co.siempo.phone.utils.NotificationUtility;
 import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.UIUtils;
+import de.greenrobot.event.Subscribe;
 
-public class SiempoSupressNotificationActivity extends AppCompatActivity {
+public class SiempoSupressNotificationActivity extends CoreActivity {
 
 
     public static final String TAG = SiempoSupressNotificationActivity.class.getName();
@@ -254,6 +259,24 @@ public class SiempoSupressNotificationActivity extends AppCompatActivity {
             return notificationContactModel;
         }
         return null;
+    }
+
+
+
+    @Subscribe
+    public void homePressEvent(HomePressEvent event) {
+        try {
+            if(event.isVisible() && UIUtils.isMyLauncherDefault(this)){
+                Intent startMain = new Intent(Intent.ACTION_MAIN);
+                startMain.addCategory(Intent.CATEGORY_HOME);
+                startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(startMain);
+            }
+
+        } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
+            Tracer.e(e, e.getMessage());
+        }
     }
 
 
