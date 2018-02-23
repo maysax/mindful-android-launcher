@@ -8,8 +8,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -38,6 +38,15 @@ public class FavoriteAppsPositionActivity extends CoreActivity implements OnFavo
     private RecyclerView recyclerView;
     private Toolbar toolbar;
     private TextView txtSelectTools;
+    private RelativeLayout relTop;
+    private RelativeLayout relPane;
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            finish();
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +74,8 @@ public class FavoriteAppsPositionActivity extends CoreActivity implements OnFavo
     private void initView() {
 
         toolbar = findViewById(R.id.toolbar);
+        relTop = findViewById(R.id.relTop);
+        relPane = findViewById(R.id.relPane);
         toolbar.setTitle(R.string.editing_frequently_apps);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
@@ -85,7 +96,7 @@ public class FavoriteAppsPositionActivity extends CoreActivity implements OnFavo
         boolean isHideIconBranding = PrefSiempo.getInstance(FavoriteAppsPositionActivity.this).read(PrefSiempo.IS_ICON_BRANDING, true);
 
 
-        mAdapter = new FavoritePositioningAdapter(this,isHideIconBranding, items, this, this);
+        mAdapter = new FavoritePositioningAdapter(this, isHideIconBranding, items, this, this);
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mAdapter, this);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
@@ -97,6 +108,13 @@ public class FavoriteAppsPositionActivity extends CoreActivity implements OnFavo
                 startActivity(intent);
             }
         });
+
+
+        relTop.setOnClickListener(onClickListener);
+
+        toolbar.setOnClickListener(onClickListener);
+
+        relPane.setOnClickListener(onClickListener);
 
     }
 
@@ -111,7 +129,7 @@ public class FavoriteAppsPositionActivity extends CoreActivity implements OnFavo
         ArrayList<String> listOfSortedCustomerId = new ArrayList<>();
 
         for (MainListItem customer : customers) {
-            listOfSortedCustomerId.add((String) customer.getPackageName());
+            listOfSortedCustomerId.add(customer.getPackageName());
         }
         sortedList = customers;
         Gson gson = new Gson();
