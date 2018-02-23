@@ -78,7 +78,7 @@ import me.relex.circleindicator.CircleIndicator;
  */
 public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
-    static int currentIndex = -1;
+    public static int currentIndex = -1;
     private LinearLayout linTopDoc;
     private ViewPager pagerPane;
     private LinearLayout linPane;
@@ -217,8 +217,15 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         PanePagerAdapter mPagerAdapter = new PanePagerAdapter(getChildFragmentManager());
         pagerPane.setAdapter(mPagerAdapter);
         indicator.setViewPager(pagerPane);
-        pagerPane.setCurrentItem(2);
+        if (DashboardActivity.isJunkFoodOpen) {
+            currentIndex = 1;
+            DashboardActivity.isJunkFoodOpen = false;
+        }
+        if (currentIndex == -1) {
+            currentIndex = 2;
 
+        }
+        pagerPane.setCurrentItem(currentIndex);
         bindBottomDoc();
         inputMethodManager = (InputMethodManager) getActivity()
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -364,7 +371,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                     imageClear.setVisibility(View.GONE);
                     hidePaneAndBottomView(context);
                     blueLineDivider.setVisibility(View.GONE);
-
                 } else {
 
                     blueLineDivider.setVisibility(View.VISIBLE);
@@ -452,7 +458,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             public void onPageScrolled(int i, float v, int i1) {
                 edtSearchToolsRounded.clearFocus();
                 chipsEditText.clearFocus();
-
             }
 
             @Override
@@ -468,7 +473,11 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                     edtSearchToolsRounded.setOnFocusChangeListener(null);
                     chipsEditText.setOnFocusChangeListener(null);
                     junkFoodAppPane();
-
+                    if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>()).size() == 0) {
+                        Intent intent = new Intent(getActivity(), JunkfoodFlaggingActivity.class);
+                        startActivity(intent);
+                        getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    }
                 }
 
                 //Tools and Favourite Pane

@@ -21,8 +21,8 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.interfaces.ItemTouchHelperAdapter;
 import co.siempo.phone.interfaces.ItemTouchHelperViewHolder;
-import co.siempo.phone.main.OnStartDragListener;
 import co.siempo.phone.interfaces.OnToolItemListChangedListener;
+import co.siempo.phone.main.OnStartDragListener;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
 
@@ -106,7 +106,7 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
             if (isHideIconBranding) {
                 holder.icon.setImageResource(item.getDrawable());
             } else {
-                if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
+                //if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
                     Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(appMenu.getApplicationName());
                     if (drawable != null) {
                         holder.icon.setImageDrawable(drawable);
@@ -114,9 +114,9 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
                     } else {
                         holder.icon.setImageResource(item.getDrawable());
                     }
-                } else {
-                    holder.linearLayout.setVisibility(View.INVISIBLE);
-                }
+//                } else {
+//                    holder.linearLayout.setVisibility(View.INVISIBLE);
+//                }
             }
         } else {
             holder.linearLayout.setVisibility(View.INVISIBLE);

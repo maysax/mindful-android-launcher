@@ -15,6 +15,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.AppAssignmentActivity;
@@ -30,7 +31,7 @@ import co.siempo.phone.models.MainListItem;
 
 public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
         .ToolsViewHolder> {
-    ArrayList<MainListItem> listItems;
+    private ArrayList<MainListItem> listItems;
     private HashMap<Integer, AppMenu> map;
     private Context context;
 
@@ -56,8 +57,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
     public ToolsListAdapter.ToolsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout
                 .tools_app_list_row, parent, false);
-        ToolsViewHolder viewHolder = new ToolsViewHolder(v);
-        return viewHolder;
+        return new ToolsViewHolder(v);
     }
 
     @Override
@@ -90,6 +90,12 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                         mainListItem.setVisable(true);
                         map.get(mainListItem.getId()).setVisible(true);
                         bindView(mainListItem, holder, true);
+
+                        if(map.get(mainListItem.getId()).getApplicationName().equalsIgnoreCase("")){
+                            Intent intent = new Intent(context, AppAssignmentActivity.class);
+                            intent.putExtra(Constants.INTENT_MAINLISTITEM, mainListItem);
+                            ((ToolSelectionActivity) context).startActivityForResult(intent, ToolSelectionActivity.TOOL_SLECTION);
+                        }
                     }
 
                 }
@@ -345,6 +351,24 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
         for (MainListItem mainListItem : listItems) {
             if (mainListItem.isVisable())
                 count++;
+        }
+        return count;
+    }
+
+    private int getCountOfAssignTools() {
+        int count = 0;
+        for (Map.Entry<Integer, AppMenu> entry : map.entrySet()) {
+            if (entry.getValue().isVisible() && !entry.getValue().getApplicationName().equalsIgnoreCase(""))
+                count++;
+        }
+        return count;
+    }
+
+    private int getAssignToolsId() {
+        int count = -1;
+        for (Map.Entry<Integer, AppMenu> entry : map.entrySet()) {
+            if (entry.getValue().isVisible() && !entry.getValue().getApplicationName().equalsIgnoreCase(""))
+                return entry.getKey();
         }
         return count;
     }

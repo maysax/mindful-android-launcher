@@ -50,6 +50,7 @@ public class DashboardActivity extends CoreActivity {
 
     public static final String IS_FROM_HOME = "isFromHome";
     public static String isTextLenghGreater = "";
+    public static boolean isJunkFoodOpen = false;
     PermissionUtil permissionUtil;
     ConnectivityManager connectivityManager;
     AppUpdaterUtils appUpdaterUtils;
