@@ -12,7 +12,6 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.PopupMenu;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -67,6 +66,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         mProvider = new DrawableProvider(context);
         iconList = CoreApplication.getInstance().iconList;
         loadData(items);
+
     }
 
     public void loadData(List<MainListItem> items) {
@@ -321,6 +321,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
             FilterResults ret = new FilterResults();
 
+
             int count = originalData.size();
             List<MainListItem> buildData = new ArrayList<>();
             boolean isValidNumber = false;
@@ -388,13 +389,28 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                             case ACTION:
                                 filterableString = originalData.get(i).getTitle();
                                 if (!TextUtils.isEmpty(filterableString)) {
-                                    if (!TextUtils.isEmpty(originalData.get(i).getPackageName())) {
+
+
+                                    if (!TextUtils.isEmpty(originalData.get
+                                            (i).getPackageName())) {
                                         if (filterableString.toLowerCase().contains(searchString.toLowerCase().trim())) {
+//                                            boolean isJunkFoodApp = false;
+
+//                                            for (String appName : junkFoodAppList) {
+//                                                if (appName.equalsIgnoreCase(originalData.get
+//                                                        (i).getPackageName())) {
+//                                                    isJunkFoodApp = true;
+//                                                }
+//                                            }
+//                                            if (!isJunkFoodApp) {
                                             buildData.add(originalData.get(i));
+//                                            }
                                             break;
                                         }
                                     } else {
                                         if (originalData.get(i).getTitle().toLowerCase().contains(searchString.toLowerCase())) {
+
+
                                             if (checkDuplicate(buildData, searchString.toLowerCase().toLowerCase())) {
                                                 buildData.add(originalData.get(i));
                                             }
@@ -436,11 +452,9 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                                                                 (R.string
                                                                         .title_saveNote)) && TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT)) {
 
-                                        }
-                                        else if(searchString.equalsIgnoreCase("@") || (searchString.startsWith("@") && isValidNumber)){
+                                        } else if (searchString.equalsIgnoreCase("@") || (searchString.startsWith("@") && isValidNumber)) {
 
-                                        }
-                                        else {
+                                        } else {
                                             buildData.add(originalData.get(i));
                                         }
                                     }
@@ -471,7 +485,8 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             } else {
                 filteredData = new ArrayList<>(originalData);
             }
-            EventBus.getDefault().post(new MainListAdapterEvent(filteredData.size()));
+
+            EventBus.getDefault().post(new MainListAdapterEvent(filteredData));
             notifyDataSetChanged();
         }
     }

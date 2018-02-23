@@ -12,6 +12,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -54,6 +55,7 @@ import co.siempo.phone.customviews.SearchLayout;
 import co.siempo.phone.event.SearchLayoutEvent;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainFragmentMediator;
+import co.siempo.phone.main.MainListAdapterEvent;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
@@ -130,6 +132,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             }
         }
     };
+    private CircleIndicator indicator;
 
     public PaneFragment() {
         // Required empty public constructor
@@ -206,7 +209,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         linSearchList = view.findViewById(R.id.linSearchList);
         listView = view.findViewById(R.id.listView);
         linBottomDoc.setOnClickListener(this);
-        CircleIndicator indicator = view.findViewById(R.id.indicator);
+        indicator = view.findViewById(R.id.indicator);
         pagerPane = view.findViewById(R.id.pagerPane);
         chipsEditText = searchLayout.getTxtSearchBox();
         imageClear = searchLayout.getBtnClear();
@@ -301,7 +304,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             junkFoodAppPane();
         }
 
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -365,6 +367,10 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus && isVisible()) {
+                    //Making empty text for mediator to work properly for
+                    // Junk food flagging app as this will fire token event
+                    // and data will be reset for the list
+                    chipsEditText.setText("");
                     imageClear.setVisibility(View.GONE);
                     hidePaneAndBottomView(context);
                     blueLineDivider.setVisibility(View.GONE);
@@ -459,8 +465,9 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
             @Override
             public void onPageSelected(int i) {
-
-
+                //Indicator to be set here so that when coming from another
+                // application, the sliding dots retain the shape as previous
+                indicator.setViewPager(pagerPane);
                 currentIndex = i;
                 //Make the junk food pane visible
                 if (i == 0) {
@@ -495,7 +502,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
 
                 }
-
 
             }
 
@@ -707,6 +713,94 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         });
         linSearchList.startAnimation(fadeOutAnim);
 
+    }
+
+    @Subscribe
+    public void filterDataMainAdapter(MainListAdapterEvent event) {
+        try {
+
+            List<MainListItem> mainListItems = event.getData();
+            if (null != mainListItems && mainListItems.size() > 0 && mainListItems
+                    .size() <= 3) {
+                listView.setOnTouchListener(new OnSwipeTouchListener(context,
+                        listView));
+            } else {
+                listView.setOnTouchListener(null);
+            }
+
+
+        } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
+            Tracer.e(e, e.getMessage());
+        }
+    }
+
+    private class OnSwipeTouchListener implements View.OnTouchListener {
+
+        ListView list;
+        private GestureDetector gestureDetector;
+        private Context context;
+
+        public OnSwipeTouchListener(Context ctx, ListView list) {
+            gestureDetector = new GestureDetector(ctx, new GestureListener());
+            context = ctx;
+            this.list = list;
+        }
+
+        public OnSwipeTouchListener() {
+            super();
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            return gestureDetector.onTouchEvent(event);
+        }
+
+        public void onSwipeRight(int pos) {
+            //Do what you want after swiping left to right
+            if (pagerPane != null) {
+                pagerPane.setCurrentItem(0);
+            }
+
+        }
+
+        public void onSwipeLeft(int pos) {
+
+            //Do what you want after swiping right to left
+        }
+
+        private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
+
+            private static final int SWIPE_THRESHOLD = 100;
+            private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+
+            @Override
+            public boolean onDown(MotionEvent e) {
+                return true;
+            }
+
+            private int getPostion(MotionEvent e1) {
+                return list.pointToPosition((int) e1.getX(), (int) e1.getY());
+            }
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2,
+                                   float velocityX, float velocityY) {
+                float distanceX = e2.getX() - e1.getX();
+                float distanceY = e2.getY() - e1.getY();
+                if (Math.abs(distanceX) > Math.abs(distanceY)
+                        && Math.abs(distanceX) > SWIPE_THRESHOLD
+                        && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                    if (distanceX > 0)
+                        onSwipeRight(getPostion(e1));
+                    else
+                        onSwipeLeft(getPostion(e1));
+                    return true;
+                }
+                return false;
+            }
+
+        }
     }
 
 

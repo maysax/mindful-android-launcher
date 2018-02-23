@@ -10,8 +10,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.DashboardActivity;
@@ -78,7 +80,6 @@ public class MainFragmentMediator {
             items = new ArrayList<>();
 
             contactItems = new ArrayList<>();
-
             loadActions();
             loadContacts();
             loadDefaults();
@@ -88,6 +89,27 @@ public class MainFragmentMediator {
             items = PackageUtil.getSearchList(context);
             items = Sorting.sortList(items);
         }
+        ArrayList<String> junkFoodAppList = new ArrayList<>();
+        Set<String> junkFoodList = PrefSiempo
+                .getInstance(context).read
+                        (PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
+        junkFoodAppList = new ArrayList<>(junkFoodList);
+        List<MainListItem> junkListItems = new ArrayList<>();
+        for (MainListItem item : items) {
+            if (!TextUtils.isEmpty(item.getPackageName())) {
+                for (String junkApp : junkFoodAppList) {
+                    if (item.getPackageName().equalsIgnoreCase(junkApp)) {
+                        junkListItems.add(item);
+                    }
+                }
+
+            }
+
+        }
+
+
+        items.removeAll(junkListItems);
+
         if (getAdapter() != null) {
             getAdapter().loadData(items);
             getAdapter().notifyDataSetChanged();
@@ -192,6 +214,9 @@ public class MainFragmentMediator {
                             if (status) {
                                 items.get(position).setDate(Calendar.getInstance().getTime());
                                 items.set(position, items.get(position));
+                                //Following line should be added in order to
+                                // sort
+//                                items = Sorting.sortList(items);
                                 PackageUtil.storeSearchList(items, context);
                             }
                         }

@@ -11,7 +11,6 @@ import android.provider.Telephony;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.SmsManager;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.EBean;
