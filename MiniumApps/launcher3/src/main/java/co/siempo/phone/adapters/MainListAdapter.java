@@ -12,6 +12,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.PopupMenu;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.BitmapWorkerTask;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.main.MainListAdapterEvent;
 import co.siempo.phone.models.MainListItem;
@@ -211,8 +213,15 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             if (item.getId() == -1) {
                 final String packageName = item.getPackageName();
                 if (!TextUtils.isEmpty(packageName)) {
-                    Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(packageName);
-                    holder.icon.setImageDrawable(drawable);
+                    Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(packageName);
+                    if (bitmap != null) {
+                        holder.icon.setImageBitmap(bitmap);
+                    } else {
+                        BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, packageName);
+                        CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask);
+                        Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(packageName);
+                        holder.icon.setImageDrawable(drawable);
+                    }
                 }
                 holder.text.setText(item.getTitle());
                 holder.imgChevron.setVisibility(View.VISIBLE);

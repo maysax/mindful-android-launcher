@@ -17,6 +17,7 @@ import android.os.IBinder;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
@@ -377,23 +378,53 @@ public class UIUtils {
         overlay.clear();
     }
 
-    public static void setDynamicHeight(ListView listView) {
-        ListAdapter adapter = listView.getAdapter();
-        //check adapter if null
-        if (adapter == null) {
-            return;
+    public static void setDynamicHeight(Activity activity, final ListView listView) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ListAdapter adapter = listView.getAdapter();
+                //check adapter if null
+                if (adapter == null) {
+                    return;
+                }
+                int height = 0;
+                int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+                for (int i = 0; i < adapter.getCount(); i++) {
+                    View listItem = adapter.getView(i, null, listView);
+                    listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+                    height += listItem.getMeasuredHeight();
+                }
+                ViewGroup.LayoutParams layoutParams = listView.getLayoutParams();
+                layoutParams.height = height + (listView.getDividerHeight() * (adapter.getCount() - 1));
+                listView.setLayoutParams(layoutParams);
+                listView.requestLayout();
+            }
+        });
+    }
+
+    public static class FadePageTransformer implements ViewPager
+            .PageTransformer {
+        public void transformPage(@NonNull View view, float position) {
+
+            // Page is not an immediate sibling, just make transparent
+            if (position < -1 || position > 1) {
+                view.setAlpha(0);
+            }
+            // Page is sibling to left or right
+            else if (position <= 0 || position <= 1) {
+
+                // Calculate alpha.  Position is decimal in [-1,0] or [0,1]
+                float alpha = (position <= 0) ? position + 1 : 1 - position;
+                view.setAlpha(alpha);
+
+            }
+            // Page is active, make fully visible
+            else if (position == 0) {
+                view.setAlpha(1);
+            }
+
         }
-        int height = 0;
-        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
-        for (int i = 0; i < adapter.getCount(); i++) {
-            View listItem = adapter.getView(i, null, listView);
-            listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-            height += listItem.getMeasuredHeight();
-        }
-        ViewGroup.LayoutParams layoutParams = listView.getLayoutParams();
-        layoutParams.height = height + (listView.getDividerHeight() * (adapter.getCount() - 1));
-        listView.setLayoutParams(layoutParams);
-        listView.requestLayout();
+
     }
 
 }

@@ -1,6 +1,8 @@
 package co.siempo.phone.fragments;
 
 import android.app.FragmentManager;
+import android.content.Intent;
+import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -23,7 +25,6 @@ import co.siempo.phone.utils.PrefSiempo;
 public class TempoAccountSettingFragment extends CoreFragment {
 
 
-
     @ViewById
     TextView txt_privacyPolicy;
 
@@ -39,6 +40,8 @@ public class TempoAccountSettingFragment extends CoreFragment {
 
     @ViewById
     RelativeLayout relUpdateEmail;
+    @ViewById
+    RelativeLayout relChangeHome;
 
 
     public TempoAccountSettingFragment() {
@@ -49,7 +52,7 @@ public class TempoAccountSettingFragment extends CoreFragment {
     @AfterViews
     void afterViews() {
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
-        toolbar.setTitle(R.string.string_account_title);
+        toolbar.setTitle(R.string.string_account_service_title);
         toolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color
                 .colorAccent));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -97,6 +100,12 @@ public class TempoAccountSettingFragment extends CoreFragment {
     @Click
     void relUpdateEmail() {
         ((CoreActivity) getActivity()).loadChildFragment(TempoUpdateEmailFragment_.builder().build(), R.id.tempoView);
+    }
+
+    @Click
+    void relChangeHome() {
+        Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
+        startActivity(intent);
     }
 
 }

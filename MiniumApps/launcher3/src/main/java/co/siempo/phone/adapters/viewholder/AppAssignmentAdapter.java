@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +25,7 @@ import java.util.List;
 import co.siempo.phone.R;
 import co.siempo.phone.activities.AppAssignmentActivity;
 import co.siempo.phone.activities.JunkfoodFlaggingActivity;
+import co.siempo.phone.app.BitmapWorkerTask;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.utils.DrawableProvider;
@@ -81,7 +83,15 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
                     }
                 });
             } else {
-                holder.imgIcon.setImageDrawable(CoreApplication.getInstance().getApplicationIconFromPackageName(item.activityInfo.packageName));
+                Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(item.activityInfo.packageName);
+                if (bitmap != null) {
+                    holder.imgIcon.setImageBitmap(bitmap);
+                } else {
+                    BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, item.activityInfo.packageName);
+                    CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask);
+                    Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(item.activityInfo.packageName);
+                    holder.imgIcon.setImageDrawable(drawable);
+                }
                 holder.btnHideApps.setVisibility(View.GONE);
                 holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.app_assignment_normal));
 

@@ -19,6 +19,7 @@ package co.siempo.phone.adapters;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -38,6 +39,7 @@ import java.util.Collections;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.BitmapWorkerTask;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.SingleItemDelete;
@@ -79,14 +81,25 @@ public class SuppressNotificationAdapter extends RecyclerView.Adapter<SuppressNo
     public void onBindViewHolder(final ItemViewHolder holder, int position) {
         Notification notification = notificationList.get(position);
         if (notification.getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_EVENT) {
-            Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(notification.getPackageName());
+//            Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(notification.getPackageName());
             holder.imgAppIcon.setBackground(null);
             holder.imgAppIcon.setImageBitmap(null);
-            if (drawable != null) {
-                holder.imgAppIcon.setImageDrawable(drawable);
+
+            Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(notification.getPackageName());
+            if (bitmap != null) {
+                holder.imgAppIcon.setImageBitmap(bitmap);
             } else {
-                holder.imgAppIcon.setBackground(mContext.getDrawable(R.mipmap.ic_launcher));
+                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(mContext, notification.getPackageName());
+                CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask);
+                Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(notification.getPackageName());
+                holder.imgAppIcon.setImageDrawable(drawable);
             }
+
+//            if (drawable != null) {
+//                holder.imgAppIcon.setImageDrawable(drawable);
+//            } else {
+//                holder.imgAppIcon.setBackground(mContext.getDrawable(R.mipmap.ic_launcher));
+//            }
             holder.txtAppName.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName()));
             if (notification.getStrTitle() == null || notification.getStrTitle().equalsIgnoreCase("")) {
                 holder.txtUserName.setText("");

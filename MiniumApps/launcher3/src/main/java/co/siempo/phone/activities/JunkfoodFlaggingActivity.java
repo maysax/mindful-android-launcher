@@ -134,6 +134,9 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
                 allAppList.remove(null);
                 PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
                 PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.JUNKFOOD_APPS, list);
+                if (list.size() == 0 && !DashboardActivity.isJunkFoodOpen) {
+                    DashboardActivity.isJunkFoodOpen = true;
+                }
                 finish();
             }
         });
@@ -162,6 +165,14 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.dialog_blue));
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (list.size() == 0 && !DashboardActivity.isJunkFoodOpen) {
+            DashboardActivity.isJunkFoodOpen = true;
+        }
+    }
+
     /**
      * change text color of menuitem
      *
@@ -184,7 +195,7 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
                 listAllApps.setVisibility(View.VISIBLE);
                 junkFoodAllAppsAdapter = new JunkFoodFlagAdapter(this, allAppList, false);
                 listAllApps.setAdapter(junkFoodAllAppsAdapter);
-                UIUtils.setDynamicHeight(listAllApps);
+                UIUtils.setDynamicHeight(this,listAllApps);
                 listAllApps.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -197,7 +208,7 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
                 junkFoodAllAppsAdapter = new JunkFoodFlagAdapter(this, allAppList, false);
                 listAllApps.setAdapter(junkFoodAllAppsAdapter);
                 junkFoodAllAppsAdapter.notifyDataSetChanged();
-                UIUtils.setDynamicHeight(listAllApps);
+                UIUtils.setDynamicHeight(this,listAllApps);
             }
             if (flagAppList.size() > 0) {
                 flagAppList = Sorting.sortAppAssignment(this, flagAppList);
@@ -205,7 +216,7 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
                 junkFoodFlagAdapter = new JunkFoodFlagAdapter(this, flagAppList, true);
                 listFlaggedApps.setAdapter(junkFoodFlagAdapter);
                 junkFoodFlagAdapter.notifyDataSetChanged();
-                UIUtils.setDynamicHeight(listFlaggedApps);
+                UIUtils.setDynamicHeight(this,listFlaggedApps);
                 listFlaggedApps.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -218,7 +229,7 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
                 junkFoodFlagAdapter = new JunkFoodFlagAdapter(this, flagAppList, true);
                 listFlaggedApps.setAdapter(junkFoodFlagAdapter);
                 junkFoodFlagAdapter.notifyDataSetChanged();
-                UIUtils.setDynamicHeight(listFlaggedApps);
+                UIUtils.setDynamicHeight(this,listFlaggedApps);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -8,6 +8,7 @@ import android.content.pm.LauncherActivityInfo;
 import android.content.pm.LauncherApps;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -15,6 +16,8 @@ import android.os.UserManager;
 import android.provider.AlarmClock;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
+import android.util.Log;
+import android.util.LruCache;
 
 import com.androidnetworking.AndroidNetworking;
 import com.crashlytics.android.Crashlytics;
@@ -38,6 +41,7 @@ import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.utils.FontUtils;
 import co.siempo.phone.utils.LifecycleHandler;
+import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
@@ -61,6 +65,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     private List<ApplicationInfo> packagesList = new ArrayList<>();
     private ArrayList<String> disableNotificationApps = new ArrayList<>();
     private ArrayList<String> blockedApps = new ArrayList<>();
+    private LruCache<String, Bitmap> mMemoryCache;
 
     public static synchronized CoreApplication getInstance() {
         return sInstance;
@@ -73,6 +78,7 @@ public abstract class CoreApplication extends MultiDexApplication {
         launcherApps = (LauncherApps) getSystemService(Context.LAUNCHER_APPS_SERVICE);
         sInstance = this;
         init();
+        initMemoryCatch();
         getAllApplicationPackageName();
     }
 
@@ -394,16 +400,45 @@ public abstract class CoreApplication extends MultiDexApplication {
         }
     }
 
+    private void initMemoryCatch() {
+        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+
+        // Use 1/8th of the available memory for this memory cache.
+        final int cacheSize = maxMemory / 4;
+
+        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
+            @Override
+            protected int sizeOf(String key, Bitmap bitmap) {
+                // The cache size will be measured in kilobytes rather than
+                // number of items.
+                return bitmap.getByteCount() / 1024;
+            }
+        };
+    }
+
+
+
+
+    public void includeTaskPool(AsyncTask asyncTask) {
+        asyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+    }
+
+
     private class LoadApplications extends AsyncTask<Object, Object, List<ApplicationInfo>> {
 
         @Override
         protected List<ApplicationInfo> doInBackground(Object... params) {
             List<ApplicationInfo> applist = new ArrayList<>();
+
             for (android.os.UserHandle profile : userManager.getUserProfiles()) {
                 for (LauncherActivityInfo activityInfo : launcherApps.getActivityList(null, profile)) {
                     ApplicationInfo appInfo = activityInfo.getApplicationInfo();
                     appInfo.name = activityInfo.getLabel().toString();
                     if (!appInfo.packageName.equalsIgnoreCase("co.siempo.phone")) {
+                        Drawable drawable = null;
+                        drawable = getPackageManager().getApplicationIcon(appInfo);
+                        Bitmap bitmap = PackageUtil.drawableToBitmap(drawable);
+                        addBitmapToMemoryCache(appInfo.packageName, bitmap);
                         applist.add(appInfo);
                     }
                 }
@@ -419,5 +454,15 @@ public abstract class CoreApplication extends MultiDexApplication {
             setPackagesList(applicationInfos);
             EventBus.getDefault().post(new AppInstalledEvent(true));
         }
+    }
+
+    public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
+        if (getBitmapFromMemCache(key) == null) {
+            mMemoryCache.put(key, bitmap);
+        }
+    }
+
+    public Bitmap getBitmapFromMemCache(String key) {
+        return mMemoryCache.get(key);
     }
 }
