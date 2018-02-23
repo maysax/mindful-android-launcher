@@ -44,7 +44,6 @@ import static co.siempo.phone.utils.NotificationUtils.ANDROID_CHANNEL_ID;
 
 public class StatusBarService extends Service {
 
-    SharedPreferences sharedPreferences, sharedPreferencesLauncher3;
     Context context;
     private MyObserver myObserver;
     private AppInstallUninstall appInstallUninstall;
@@ -69,7 +68,6 @@ public class StatusBarService extends Service {
     public void onCreate() {
         super.onCreate();
         context = this;
-        sharedPreferences = getSharedPreferences("DroidPrefs", 0);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         registerObserverForContact();
         registerObserverForAppInstallUninstall();
@@ -234,7 +232,7 @@ public class StatusBarService extends Service {
 
         @Override
         public void onChange(boolean selfChange, Uri uri) {
-            sharedPreferences.edit().putBoolean("isContactUpdate", true).apply();
+            PrefSiempo.getInstance(context).write(PrefSiempo.IS_CONTACT_UPDATE,true);
             PackageUtil.contactsUpdateInSearchList(context);
         }
     }
@@ -268,7 +266,8 @@ public class StatusBarService extends Service {
                             }
                         }
                     }
-                    sharedPreferences.edit().putBoolean("isAppUpdated", true).apply();
+                    PrefSiempo.getInstance(context).write
+                            (PrefSiempo.IS_APP_UPDATED, true);
                     EventBus.getDefault().post(new AppInstalledEvent(true));
                 }
             } catch (Exception e) {

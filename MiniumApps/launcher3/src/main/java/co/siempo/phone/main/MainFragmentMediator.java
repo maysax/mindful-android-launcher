@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -25,6 +28,7 @@ import co.siempo.phone.fragments.PaneFragment;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
+import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.models.MainListItemType;
 import co.siempo.phone.token.TokenItem;
@@ -54,8 +58,6 @@ public class MainFragmentMediator {
     public MainFragmentMediator(PaneFragment paneFragment) {
         this.fragment = paneFragment;
         context = this.fragment.getActivity();
-//        launcher3Prefs =
-//                context.getSharedPreferences("Launcher3Prefs", 0);
     }
 
     public void loadData() {
@@ -71,6 +73,28 @@ public class MainFragmentMediator {
         } else {
             items = PackageUtil.getSearchList(context);
         }
+        ArrayList<String> junkFoodAppList = new ArrayList<>();
+        Set<String> junkFoodList = PrefSiempo
+                .getInstance(context).read
+                        (PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
+
+        for (Iterator<String> it = junkFoodList.iterator(); it.hasNext(); ) {
+            String packageName = it.next();
+        }
+        junkFoodAppList = new ArrayList<>(junkFoodList);
+        List<MainListItem> junkListItems = new ArrayList<>();
+        for (MainListItem item : items) {
+            if (!TextUtils.isEmpty(item.getPackageName())) {
+                for (String junkApp : junkFoodAppList) {
+                    if (item.getPackageName().equalsIgnoreCase(junkApp)) {
+                        junkListItems.add(item);
+                    }
+                }
+            }
+        }
+
+        items.removeAll(junkListItems);
+
     }
 
     public void resetData() {
@@ -93,6 +117,8 @@ public class MainFragmentMediator {
         Set<String> junkFoodList = PrefSiempo
                 .getInstance(context).read
                         (PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
+
+        HashMap<Integer, AppMenu> toolSetting = CoreApplication.getInstance().getToolsSettings();
         junkFoodAppList = new ArrayList<>(junkFoodList);
         List<MainListItem> junkListItems = new ArrayList<>();
         for (MainListItem item : items) {
@@ -102,15 +128,12 @@ public class MainFragmentMediator {
                         junkListItems.add(item);
                     }
                 }
-
             }
-
         }
-
 
         items.removeAll(junkListItems);
 
-        if (getAdapter() != null) {
+   if (getAdapter() != null) {
             getAdapter().loadData(items);
             getAdapter().notifyDataSetChanged();
         }
