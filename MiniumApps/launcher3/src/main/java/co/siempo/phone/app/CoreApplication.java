@@ -232,13 +232,6 @@ public abstract class CoreApplication extends MultiDexApplication {
         this.packagesList = packagesList;
 
 
-        String disable_AppList = PrefSiempo.getInstance(this).read
-                (PrefSiempo.DISABLE_APPLIST, "");
-        if (!TextUtils.isEmpty(disable_AppList)) {
-            Type type = new TypeToken<ArrayList<String>>() {
-            }.getType();
-            disableNotificationApps = new Gson().fromJson(disable_AppList, type);
-        }
         String block_AppList = PrefSiempo.getInstance(this).read(PrefSiempo
                 .BLOCKED_APPLIST, "");
         if (!TextUtils.isEmpty(block_AppList)) {
@@ -253,23 +246,9 @@ public abstract class CoreApplication extends MultiDexApplication {
         }
         for (ApplicationInfo applicationInfo : CoreApplication.getInstance().getPackagesList()) {
 
-
             if (isAppInstallFirstTime) {
 
                 blockedApps.add(applicationInfo.packageName);
-            } else {
-                if (blockedApps.size() > 0) {
-                    for (String blockedApp : blockedApps) {
-                        if (!applicationInfo.packageName.equalsIgnoreCase(blockedApp)) {
-                            disableNotificationApps.add(applicationInfo.packageName);
-                        }
-                    }
-
-                } else {
-
-                    disableNotificationApps.add(applicationInfo.packageName);
-                }
-
             }
         }
 
@@ -277,14 +256,6 @@ public abstract class CoreApplication extends MultiDexApplication {
         String blockedList = new Gson().toJson(blockedApps);
         PrefSiempo.getInstance(this).write(PrefSiempo
                 .BLOCKED_APPLIST, blockedList);
-//        sharedPreferences.edit().putString(BLOCKED_APPLIST, blockedList).apply();
-
-        String disableList = new Gson().toJson(disableNotificationApps);
-        PrefSiempo.getInstance(this).write(PrefSiempo
-                .DISABLE_APPLIST, disableList);
-//        sharedPreferences.edit().putString(DISABLE_APPLIST, disableList).apply();
-
-
     }
 
     /**
