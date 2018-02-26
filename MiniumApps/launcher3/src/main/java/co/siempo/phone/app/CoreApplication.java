@@ -225,9 +225,6 @@ public abstract class CoreApplication extends MultiDexApplication {
         String blockedList = new Gson().toJson(blockedApps);
         PrefSiempo.getInstance(this).write(PrefSiempo
                 .BLOCKED_APPLIST, blockedList);
-
-
-
     }
 
     /**

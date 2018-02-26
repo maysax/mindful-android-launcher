@@ -431,7 +431,8 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                         if (adapter != null)
                             adapter.getFilter().filter(current.getTitle());
                     } else {
-                        mediator.resetData();
+
+                            mediator.resetData();
                         if (current.getTitle().trim().isEmpty()) {
                             if (adapter != null) {
                                 mediator.loadDefaultData();

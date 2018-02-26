@@ -66,8 +66,8 @@ public class MainFragmentMediator {
             items = new ArrayList<>();
             contactItems = new ArrayList<>();
             loadActions();
-//            loadContacts();
-//            loadDefaults();
+            loadContacts();
+            loadDefaults();
             items = Sorting.sortList(items);
             PackageUtil.storeSearchList(items, context);
         } else {
