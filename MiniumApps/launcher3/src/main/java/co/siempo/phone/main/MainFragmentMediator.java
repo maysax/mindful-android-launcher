@@ -7,18 +7,14 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.google.gson.Gson;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 import co.siempo.phone.R;
@@ -31,7 +27,6 @@ import co.siempo.phone.fragments.PaneFragment;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
-import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.models.MainListItemType;
 import co.siempo.phone.token.TokenItem;
@@ -76,13 +71,13 @@ public class MainFragmentMediator {
         } else {
             items = PackageUtil.getSearchList(context);
         }
-        List<MainListItem> junkListItems = getMainListItems();
+        List<MainListItem> junkListItems = getJunkListItems();
         items.removeAll(junkListItems);
 
     }
 
     @NonNull
-    private List<MainListItem> getMainListItems() {
+    private List<MainListItem> getJunkListItems() {
         ArrayList<String> junkFoodAppList = new ArrayList<>();
         Set<String> junkFoodList = PrefSiempo
                 .getInstance(context).read
@@ -121,45 +116,6 @@ public class MainFragmentMediator {
             items = PackageUtil.getSearchList(context);
             items = Sorting.sortList(items);
         }
-        ArrayList<String> junkFoodAppList = new ArrayList<>();
-        Set<String> junkFoodList = PrefSiempo
-                .getInstance(context).read
-                        (PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
-        junkFoodAppList = new ArrayList<>(junkFoodList);
-        HashMap<Integer, AppMenu> toolSetting = CoreApplication.getInstance()
-                .getToolsSettings();
-
-        Iterator it = toolSetting.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry) it.next();
-            for (String junkApp : junkFoodAppList) {
-                if (((AppMenu) (pair.getValue())).getApplicationName()
-                        .equalsIgnoreCase(junkApp)) {
-                    ((AppMenu) (pair.getValue())).setApplicationName("");
-                }
-
-            }
-
-
-        }
-        String hashMapToolSettings = new Gson().toJson(toolSetting);
-        PrefSiempo.getInstance(context).write(PrefSiempo.TOOLS_SETTING,
-                hashMapToolSettings);
-
-
-        List<MainListItem> junkListItems = new ArrayList<>();
-        for (MainListItem item : items) {
-            if (!TextUtils.isEmpty(item.getPackageName())) {
-                for (String junkApp : junkFoodAppList) {
-                    if (item.getPackageName().equalsIgnoreCase(junkApp)) {
-                        junkListItems.add(item);
-                    }
-                }
-            }
-
-        }
-
-        items.removeAll(junkListItems);
 
         if (getAdapter() != null) {
             getAdapter().loadData(items);
