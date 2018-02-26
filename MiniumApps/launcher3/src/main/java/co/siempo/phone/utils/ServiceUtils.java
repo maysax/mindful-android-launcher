@@ -60,9 +60,11 @@ public class ServiceUtils {
 
     private static boolean contains(String service, String... ids) {
         try {
-            for (String id : ids) {
-                if (service.substring(service.lastIndexOf(".")).equals(id.substring(id.lastIndexOf("."))))
-                    return true;
+            if (ids != null) {
+                for (String id : ids) {
+                    if (service != null && !service.equalsIgnoreCase("") && service.substring(service.lastIndexOf(".")).equals(id.substring(id.lastIndexOf("."))))
+                        return true;
+                }
             }
         } catch (Exception e) {
             // CoreApplication.getInstance().logException(e);

@@ -2,7 +2,6 @@ package co.siempo.phone.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
@@ -27,9 +26,12 @@ import co.siempo.phone.R;
 import co.siempo.phone.adapters.TempoNotificationSectionAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.AppInstalledEvent;
+import co.siempo.phone.event.HomePressEvent;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.AppListInfo;
 import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.Subscribe;
 
 /**
@@ -105,10 +107,10 @@ public class TempoAppNotificationActivity extends CoreActivity {
         packageManager = getPackageManager();
         systemAppList = Arrays.asList(getResources().getStringArray(R.array.systemAppList));
 
-        /**
-         * Load all preference list based on share preference
-         * Constants.HELPFUL_ROBOTS
-         * Constants.BLOCKED_APPLIST
+        /*
+          Load all preference list based on share preference
+          Constants.HELPFUL_ROBOTS
+          Constants.BLOCKED_APPLIST
          */
 
         Intent intent = new Intent(android.content.Intent.ACTION_SEND);
@@ -130,10 +132,10 @@ public class TempoAppNotificationActivity extends CoreActivity {
             pref_blockedList = new Gson().fromJson(str_blockedList, type);
         }
 
-        for (ApplicationInfo applicationInfo : CoreApplication.getInstance().getPackagesList()) {
+        for (String packageName : CoreApplication.getInstance().getPackagesList()) {
             for (String blockedApp : pref_blockedList) {
-                if (!applicationInfo.packageName.equalsIgnoreCase(blockedApp)) {
-                    pref_helpfulRobots.add(applicationInfo.packageName);
+                if (!packageName.equalsIgnoreCase(blockedApp)) {
+                    pref_helpfulRobots.add(packageName);
                 }
             }
         }
@@ -154,7 +156,7 @@ public class TempoAppNotificationActivity extends CoreActivity {
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
-        if (event.isRunning()) {
+        if (event.isAppInstalledSuccessfully()) {
             initView();
         }
     }
@@ -164,21 +166,21 @@ public class TempoAppNotificationActivity extends CoreActivity {
      */
     public void loadAndDisplayAppList() {
         for (int i = 0; i < CoreApplication.getInstance().getPackagesList().size(); i++) {
-            if (pref_blockedList.contains(CoreApplication.getInstance().getPackagesList().get(i).packageName)) {
+            if (pref_blockedList.contains(CoreApplication.getInstance().getPackagesList().get(i))) {
                 AppListInfo d = new AppListInfo();
-                d.applicationInfo = CoreApplication.getInstance().getPackagesList().get(i);
-                d.ischecked = !pref_blockedList.contains(d.applicationInfo.packageName);
+                d.packageName = CoreApplication.getInstance().getPackagesList().get(i);
+                d.ischecked = !pref_blockedList.contains(d.packageName);
                 blockedList.add(d);
-            } else if (pref_messengerList.contains(CoreApplication.getInstance().getPackagesList().get(i).packageName)) {
+            } else if (pref_messengerList.contains(CoreApplication.getInstance().getPackagesList().get(i))) {
                 AppListInfo d = new AppListInfo();
-                d.applicationInfo = CoreApplication.getInstance().getPackagesList().get(i);
-                d.ischecked = !pref_helpfulRobots.contains(d.applicationInfo.packageName);
+                d.packageName = CoreApplication.getInstance().getPackagesList().get(i);
+                d.ischecked = !pref_helpfulRobots.contains(d.packageName);
                 messengerList.add(d);
             } else {
                 AppListInfo d = new AppListInfo();
-                d.applicationInfo = CoreApplication.getInstance().getPackagesList().get(i);
-                if (!TextUtils.isEmpty(d.applicationInfo.packageName) && !systemAppList.contains(d.applicationInfo.packageName)) {
-                    d.ischecked = !pref_helpfulRobots.contains(d.applicationInfo.packageName);
+                d.packageName = CoreApplication.getInstance().getPackagesList().get(i);
+                if (!TextUtils.isEmpty(d.packageName) && !systemAppList.contains(d.packageName)) {
+                    d.ischecked = !pref_helpfulRobots.contains(d.packageName);
                     helpfulRobot_List.add(d);
                 }
             }
@@ -260,4 +262,22 @@ public class TempoAppNotificationActivity extends CoreActivity {
         }
 
     }
+
+
+    @Subscribe
+    public void homePressEvent(HomePressEvent event) {
+        try {
+            if(event.isVisible() && UIUtils.isMyLauncherDefault(this)){
+                Intent startMain = new Intent(Intent.ACTION_MAIN);
+                startMain.addCategory(Intent.CATEGORY_HOME);
+                startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(startMain);
+            }
+
+        } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
+            Tracer.e(e, e.getMessage());
+        }
+    }
+
 }

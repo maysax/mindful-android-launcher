@@ -12,9 +12,14 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.LauncherApps;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.ContactsContract;
@@ -24,6 +29,8 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -79,6 +86,30 @@ public class PackageUtil {
         }
         return false;
 
+    }
+
+    public static Bitmap drawableToBitmap(Drawable drawable) {
+        Bitmap bitmap;
+        if (Build.VERSION.SDK_INT >= 26) {
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth() / 2, drawable.getIntrinsicHeight() / 2, Bitmap.Config.ARGB_8888);
+            final Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            drawable.draw(canvas);
+        } else {
+            if (drawable instanceof BitmapDrawable) {
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+                if (bitmapDrawable.getBitmap() != null) {
+                    return bitmapDrawable.getBitmap();
+                }
+            }
+
+            if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+                bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+            } else {
+                bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth() / 2, drawable.getIntrinsicHeight() / 2, Bitmap.Config.ARGB_8888);
+            }
+        }
+        return bitmap;
     }
 
 
@@ -177,7 +208,7 @@ public class PackageUtil {
      */
     private static NotificationCompat.Builder getNotification(Context context, TableNotificationSms notification) {
         String applicationNameFromPackageName = CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName());
-
+        int priority = PrefSiempo.getInstance(context).read(PrefSiempo.ALLOW_PEAKING, true) ? Notification.PRIORITY_DEFAULT : Notification.PRIORITY_HIGH;
         NotificationCompat.Builder b
                 = new NotificationCompat.Builder(context, applicationNameFromPackageName);
         PendingIntent contentIntent = getPendingIntent(context, notification);
@@ -188,9 +219,14 @@ public class PackageUtil {
 
         String title = getNotificationTitle(notification.get_contact_title(), notification.getPackageName(), context);
 
-        int priority = PrefSiempo.getInstance(context).read(PrefSiempo.ALLOW_PEAKING, true) ? Notification.PRIORITY_DEFAULT : Notification.PRIORITY_HIGH;
         RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.custom_notification_card);
-        contentView.setImageViewBitmap(R.id.imgAppIcon, CoreApplication.getInstance().iconList.get(notification.getPackageName()));
+        try {
+            Drawable drawable = context.getPackageManager().getApplicationIcon(notification.getPackageName());
+            contentView.setImageViewBitmap(R.id.imgAppIcon, drawableToBitmap(drawable));
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
         contentView.setImageViewBitmap(R.id.imgUserImage, bitmap);
         contentView.setTextViewText(R.id.txtUserName, title);
         contentView.setTextViewText(R.id.txtMessage, notification.get_message());
@@ -379,7 +415,7 @@ public class PackageUtil {
     public static void contactsUpdateInSearchList(Context context) {
         Type baseType = new TypeToken<List<MainListItem>>() {
         }.getType();
-        List<MainListItem> searchItems = new ArrayList<MainListItem>();
+        List<MainListItem> searchItems;
         String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, "");
         if (!TextUtils.isEmpty(searchList)) {
             Gson gson = new GsonBuilder()
@@ -434,7 +470,7 @@ public class PackageUtil {
             boolean isPackageAvailable = false;
             Type baseType = new TypeToken<List<MainListItem>>() {
             }.getType();
-            List<MainListItem> searchItems = new ArrayList<MainListItem>();
+            List<MainListItem> searchItems = new ArrayList<>();
             String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, "");
             if (!TextUtils.isEmpty(searchList)) {
                 Gson gson = new GsonBuilder()
@@ -452,8 +488,10 @@ public class PackageUtil {
                 }
             }
             if (!isPackageAvailable) {
-                searchItems.add(i - 1, new MainListItem(-1, appName,
-                        applicationInfo.packageName));
+                if (applicationInfo != null) {
+                    searchItems.add(i - 1, new MainListItem(-1, appName,
+                            applicationInfo.packageName));
+                }
             }
             searchItems = Sorting.sortAppList(context, searchItems);
             searchItems = Sorting.sortList(searchItems);
@@ -466,7 +504,7 @@ public class PackageUtil {
     public static void removeAppFromSearchList(String packageName, Context context) {
         Type baseType = new TypeToken<List<MainListItem>>() {
         }.getType();
-        List<MainListItem> searchItems = new ArrayList<MainListItem>();
+        List<MainListItem> searchItems = new ArrayList<>();
         String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, "");
         if (!TextUtils.isEmpty(searchList)) {
             Gson gson = new GsonBuilder()
@@ -618,7 +656,7 @@ public class PackageUtil {
     }
 
 
-    public static ArrayList<MainListItem> getAppList(Context context) {
+    private static ArrayList<MainListItem> getAppList(Context context) {
 
         ArrayList<MainListItem> appList = new ArrayList<>();
         Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
@@ -635,7 +673,7 @@ public class PackageUtil {
     }
 
 
-    public static List<String> syncFavoriteList(String jsonListOfSortedFavorites, Context context) {
+    private static List<String> syncFavoriteList(String jsonListOfSortedFavorites, Context context) {
         Set<String> favorite_List_App = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_APPS, new HashSet<String>());
         List<String> listOfSortFavoritesApps = new ArrayList<>();
         //Below logic is use to sync FAVORITE_SORTED_MENU Preference AND FAVORITE_APPS LIST
@@ -647,11 +685,10 @@ public class PackageUtil {
             }.getType());
 
 
-            for (Iterator<String> it = favorite_List_App.iterator(); it.hasNext(); ) {
-                String packageName = it.next();
+            for (String packageName : favorite_List_App) {
                 if (!listOfSortFavoritesApps.contains(packageName)) {
                     for (int j = 0; j < listOfSortFavoritesApps.size(); j++) {
-                        if (TextUtils.isEmpty(listOfSortFavoritesApps.get(j).toString().trim())) {
+                        if (TextUtils.isEmpty(listOfSortFavoritesApps.get(j).trim())) {
                             listOfSortFavoritesApps.set(j, packageName);
                             break;
                         }
@@ -667,7 +704,7 @@ public class PackageUtil {
     }
 
 
-    public static ArrayList<MainListItem> sortFavoriteAppsByPosition(List<String> listOfSortFavoritesApps, List<MainListItem> appList, Context context) {
+    private static ArrayList<MainListItem> sortFavoriteAppsByPosition(List<String> listOfSortFavoritesApps, List<MainListItem> appList, Context context) {
 
         ArrayList<MainListItem> sortedFavoriteList = new ArrayList<>();
         //build sorted list
@@ -699,11 +736,9 @@ public class PackageUtil {
 
         Set<String> favorite_List_App = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_APPS, new HashSet<String>());
 
-        for (Iterator<String> it = favorite_List_App.iterator(); it.hasNext(); ) {
-            String packageName = it.next();
-
+        for (String packageName : favorite_List_App) {
             for (MainListItem items : appList) {
-                if (!TextUtils.isEmpty(items.getPackageName()) && items.getPackageName().toLowerCase().trim().equalsIgnoreCase(packageName.toString().trim())) {
+                if (!TextUtils.isEmpty(items.getPackageName()) && items.getPackageName().toLowerCase().trim().equalsIgnoreCase(packageName.trim())) {
                     sortedFavoriteList.add(items);
                 }
             }
@@ -717,10 +752,10 @@ public class PackageUtil {
         return sortedFavoriteList;
     }
 
-    public static ArrayList<MainListItem> addDefaultFavoriteApps(Context context, List<MainListItem> appList) {
+    private static ArrayList<MainListItem> addDefaultFavoriteApps(Context context, List<MainListItem> appList) {
 
         LauncherApps launcherApps = (LauncherApps) context.getSystemService(Context.LAUNCHER_APPS_SERVICE);
-        Set<String> list = new HashSet<>();
+        Set<String> list;
         list = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_APPS, new HashSet<String>());
 
         ArrayList<MainListItem> items = new ArrayList<>();
@@ -797,5 +832,29 @@ public class PackageUtil {
         return items;
     }
 
+    public static Drawable getDrawableImage(Context context, ApplicationInfo appInfo) {
+        Drawable drawable;
+        try {
+            Resources resourcesForApplication = context.getPackageManager().getResourcesForApplication(appInfo);
+            Configuration config = resourcesForApplication.getConfiguration();
+            Configuration originalConfig = new Configuration(config);
 
+            DisplayMetrics displayMetrics = resourcesForApplication.getDisplayMetrics();
+            DisplayMetrics originalDisplayMetrics = resourcesForApplication.getDisplayMetrics();
+            displayMetrics.densityDpi = DisplayMetrics.DENSITY_HIGH;
+
+
+            resourcesForApplication.updateConfiguration(config, displayMetrics);
+            if (appInfo.icon != 0) {
+                drawable = resourcesForApplication.getDrawable(appInfo.icon, null);
+            } else {
+                drawable = appInfo.loadIcon(context.getPackageManager());
+            }
+            resourcesForApplication.updateConfiguration(originalConfig, originalDisplayMetrics);
+        } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
+            drawable = appInfo.loadIcon(context.getPackageManager());
+        }
+        return drawable;
+    }
 }

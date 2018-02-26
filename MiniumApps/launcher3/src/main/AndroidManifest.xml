@@ -116,10 +116,6 @@
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name=".activities.InstalledAppsActivity"
-            android:label="@string/title_activity_installed_app_list"
-            android:screenOrientation="portrait"/>
         <activity android:name=".ui.UpdateActivity_"/>
         <activity android:name=".activities.SiempoAlphaSettingsActivity_"/>
 

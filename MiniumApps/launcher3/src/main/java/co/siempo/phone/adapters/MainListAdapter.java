@@ -12,6 +12,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.PopupMenu;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -26,10 +27,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.BitmapWorkerTask;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.main.MainListAdapterEvent;
 import co.siempo.phone.models.MainListItem;
@@ -56,7 +57,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
     private DrawableProvider mProvider;
     private TextDrawable.IBuilder mDrawableBuilder;
     private PopupMenu popup;
-    private HashMap<String, Bitmap> iconList;
+//    private HashMap<String, Bitmap> iconList;
 
     public MainListAdapter(Context context, List<MainListItem> items) {
         super(context, 0);
@@ -64,7 +65,6 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         mDrawableBuilder = TextDrawable.builder()
                 .round();
         mProvider = new DrawableProvider(context);
-        iconList = CoreApplication.getInstance().iconList;
         loadData(items);
 
     }
@@ -201,6 +201,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             holder = (ActionViewHolder) view.getTag();
         }
 
+        view.setTag(holder);
 
         ImageView imgChevron = view.findViewById(R.id.imgChevron);
 
@@ -213,9 +214,15 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             if (item.getId() == -1) {
                 final String packageName = item.getPackageName();
                 if (!TextUtils.isEmpty(packageName)) {
-
-
-                    holder.icon.setImageBitmap(iconList.get(packageName));
+                    Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(packageName);
+                    if (bitmap != null) {
+                        holder.icon.setImageBitmap(bitmap);
+                    } else {
+                        BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, packageName);
+                        CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                        Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(packageName);
+                        holder.icon.setImageDrawable(drawable);
+                    }
                 }
                 holder.text.setText(item.getTitle());
                 holder.imgChevron.setVisibility(View.VISIBLE);
@@ -302,6 +309,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         ImageView imgChevron;
     }
 
+
     private static class ContactViewHolder {
         ImageView icon;
         TextView text;
@@ -323,6 +331,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
 
             int count = originalData.size();
+
             List<MainListItem> buildData = new ArrayList<>();
             boolean isValidNumber = false;
             if (!searchString.isEmpty()) {

@@ -325,7 +325,13 @@ public class UIUtils {
     }
 
     public static Bitmap convertBytetoBitmap(byte[] byteArray) {
-        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        if (bitmap != null) {
+            bitmap.setWidth(bitmap.getWidth() / 2);
+            bitmap.setHeight(bitmap.getHeight() / 2);
+            return bitmap;
+        }
+        return null;
     }
 
     public static boolean isDeviceHasSimCard(Context context) {
@@ -372,23 +378,28 @@ public class UIUtils {
         overlay.clear();
     }
 
-    public static void setDynamicHeight(ListView listView) {
-        ListAdapter adapter = listView.getAdapter();
-        //check adapter if null
-        if (adapter == null) {
-            return;
-        }
-        int height = 0;
-        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
-        for (int i = 0; i < adapter.getCount(); i++) {
-            View listItem = adapter.getView(i, null, listView);
-            listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-            height += listItem.getMeasuredHeight();
-        }
-        ViewGroup.LayoutParams layoutParams = listView.getLayoutParams();
-        layoutParams.height = height + (listView.getDividerHeight() * (adapter.getCount() - 1));
-        listView.setLayoutParams(layoutParams);
-        listView.requestLayout();
+    public static void setDynamicHeight(Activity activity, final ListView listView) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ListAdapter adapter = listView.getAdapter();
+                //check adapter if null
+                if (adapter == null) {
+                    return;
+                }
+                int height = 0;
+                int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+                for (int i = 0; i < adapter.getCount(); i++) {
+                    View listItem = adapter.getView(i, null, listView);
+                    listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+                    height += listItem.getMeasuredHeight();
+                }
+                ViewGroup.LayoutParams layoutParams = listView.getLayoutParams();
+                layoutParams.height = height + (listView.getDividerHeight() * (adapter.getCount() - 1));
+                listView.setLayoutParams(layoutParams);
+                listView.requestLayout();
+            }
+        });
     }
 
     public static class FadePageTransformer implements ViewPager

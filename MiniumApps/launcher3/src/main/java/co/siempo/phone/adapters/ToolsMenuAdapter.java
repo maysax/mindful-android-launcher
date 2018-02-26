@@ -2,7 +2,7 @@ package co.siempo.phone.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -21,6 +21,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.activities.AppAssignmentActivity;
 import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.activities.ToolPositioningActivity;
+import co.siempo.phone.app.BitmapWorkerTask;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.helper.ActivityHelper;
@@ -73,17 +74,15 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
             if (isHideIconBranding) {
                 holder.icon.setImageResource(item.getDrawable());
             } else {
-                // if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
-                    Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(appMenu.getApplicationName());
-                    if (drawable != null) {
-                        holder.icon.setImageDrawable(drawable);
-                        holder.text.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(appMenu.getApplicationName()));
-                    } else {
-                        holder.icon.setImageResource(item.getDrawable());
-                    }
-//                } else {
-//                    holder.linearLayout.setVisibility(View.INVISIBLE);
-//                }
+                holder.text.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(appMenu.getApplicationName()));
+                Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(appMenu.getApplicationName());
+                if (bitmap != null) {
+                    holder.icon.setImageBitmap(bitmap);
+                } else {
+                    BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, appMenu.getApplicationName());
+                    CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                    holder.icon.setImageResource(item.getDrawable());
+                }
             }
         } else {
             holder.linearLayout.setVisibility(View.INVISIBLE);

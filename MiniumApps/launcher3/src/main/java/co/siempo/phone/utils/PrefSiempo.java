@@ -151,7 +151,6 @@ public class PrefSiempo {
     private static final PrefSiempo ourInstance = new PrefSiempo();
 
 
-    public static String DISABLE_APPLIST = "DISABLE_APPLIST";
     public static String HELPFUL_ROBOTS = "HELPFUL_ROBOTS";
     public static String BLOCKED_APPLIST = "BLOCKED_APPLIST";
     public static String SOCIAL_DISABLE_COUNT = "SOCIAL_DISABLE_COUNT";
@@ -300,7 +299,7 @@ public class PrefSiempo {
      */
     public void write(String key, Set<String> value) {
         editor.putStringSet(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     /**
