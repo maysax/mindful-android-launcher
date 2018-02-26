@@ -257,8 +257,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         Set<Integer> list = new HashSet<>();
 
         for (Map.Entry<Integer, AppMenu> entry : CoreApplication.getInstance().getToolsSettings().entrySet()) {
-            if (entry.getValue().isBottomDoc() && !entry.getValue()
-                    .getApplicationName().equalsIgnoreCase("")) {
+            if (entry.getValue().isBottomDoc()) {
                 list.add(entry.getKey());
             }
         }

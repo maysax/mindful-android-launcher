@@ -433,6 +433,8 @@
     <string name="select_junkfood">Select Junkfood</string>
     <string name="you_have_t_selected_any_favourite_app">"You have\'t selected any Favorite app."</string>
     <string name="select_favourite">Select Favorite</string>
+    <string name="atleast_one_fav_app">"Atleast one app will stay as favorite"</string>
+    <string name="not_more_than_twelve_fav_app">Please unselect any of the apps from Frequently used apps section</string>
 
 
 </resources>

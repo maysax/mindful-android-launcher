@@ -231,8 +231,8 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
                             if (favoriteAppList != null && favoriteAppList
                                     .size() == 1) {
                                 Toast.makeText(getApplicationContext(),
-                                        "Atleast one app will stay as " +
-                                                "favorite", Toast
+                                        getString(R.string.atleast_one_fav_app)
+                                        , Toast
                                                 .LENGTH_LONG).show();
                             } else {
 
@@ -279,7 +279,7 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
                                 allOtherAppList.remove(allOtherAppList.get(position));
                                 bindListView();
                             } else {
-                                Toast.makeText(getApplicationContext(), "Please unselect any of the apps from Frequently used apps section", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), R.string.not_more_than_twelve_fav_app, Toast.LENGTH_LONG).show();
                             }
                             setToolBarText(favoriteAppList.size());
                         }
