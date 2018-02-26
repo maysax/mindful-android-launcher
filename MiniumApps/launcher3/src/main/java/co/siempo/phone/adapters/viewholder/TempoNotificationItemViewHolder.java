@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
@@ -60,12 +61,13 @@ public class TempoNotificationItemViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-    public void displayImage(ApplicationInfo applicationInfo, PackageManager packageManager, String errormessage) {
+    public void displayImage(String applicationInfo, PackageManager packageManager, String errormessage) {
         if (TextUtils.isEmpty(errormessage)) {
-            if (CoreApplication.getInstance().iconList.get(applicationInfo.packageName) == null) {
-                imv_appicon.setImageDrawable(applicationInfo.loadIcon(packageManager));
+            Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(applicationInfo);
+            if (drawable != null) {
+                imv_appicon.setImageDrawable(drawable);
             } else {
-                imv_appicon.setImageBitmap(CoreApplication.getInstance().iconList.get(applicationInfo.packageName));
+                imv_appicon.setImageBitmap(null);
             }
         } else {
             imv_appicon.setImageBitmap(null);
@@ -101,13 +103,13 @@ public class TempoNotificationItemViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-    public void addToBlockList(ApplicationInfo applicationInfo, boolean ischecked, ArrayList<String> blockedApps, Context context) {
+    public void addToBlockList(String applicationInfo, boolean ischecked, ArrayList<String> blockedApps, Context context) {
 
-        if (ischecked && blockedApps.contains(applicationInfo.packageName)) {
-            blockedApps.remove(applicationInfo.packageName);
+        if (ischecked && blockedApps.contains(applicationInfo)) {
+            blockedApps.remove(applicationInfo);
         }
-        if (!ischecked && !blockedApps.contains(applicationInfo.packageName)) {
-            blockedApps.add(applicationInfo.packageName);
+        if (!ischecked && !blockedApps.contains(applicationInfo)) {
+            blockedApps.add(applicationInfo);
         }
         String blockedList = new Gson().toJson(blockedApps);
         PrefSiempo.getInstance(context).write(PrefSiempo.BLOCKED_APPLIST, blockedList);

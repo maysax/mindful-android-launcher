@@ -53,6 +53,7 @@ import co.siempo.phone.adapters.ToolsMenuAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
 import co.siempo.phone.customviews.SearchLayout;
+import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainFragmentMediator;
@@ -543,6 +544,13 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                 .appland_blue_bright));
     }
 
+
+    @Subscribe
+    public void appInstalledEvent(AppInstalledEvent appInstalledEvent) {
+        if (appInstalledEvent.isAppInstalledSuccessfully()) {
+            loadData();
+        }
+    }
 
     /**
      * Set Date for Tools Pane

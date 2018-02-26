@@ -17,8 +17,11 @@
 package co.siempo.phone.adapters;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.Telephony;
 import android.support.v7.widget.RecyclerView;
@@ -36,6 +39,7 @@ import java.util.Collections;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.BitmapWorkerTask;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.SingleItemDelete;
@@ -56,16 +60,12 @@ public class SuppressNotificationAdapter extends RecyclerView.Adapter<SuppressNo
 
     private String defSMSApp;
 
-
-
-
     public SuppressNotificationAdapter(Context context, List<Notification> notificationList) {
         mContext = context;
         this.notificationList = notificationList;
         Log.d("Test", "notificationList" + notificationList.size());
         defSMSApp = Telephony.Sms.getDefaultSmsPackage(mContext);
     }
-
 
 
     @Override
@@ -81,14 +81,25 @@ public class SuppressNotificationAdapter extends RecyclerView.Adapter<SuppressNo
     public void onBindViewHolder(final ItemViewHolder holder, int position) {
         Notification notification = notificationList.get(position);
         if (notification.getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_EVENT) {
-            Bitmap bitmap = CoreApplication.getInstance().iconList.get(notification.getPackageName());
+//            Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(notification.getPackageName());
             holder.imgAppIcon.setBackground(null);
             holder.imgAppIcon.setImageBitmap(null);
+
+            Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(notification.getPackageName());
             if (bitmap != null) {
                 holder.imgAppIcon.setImageBitmap(bitmap);
-            }else{
-                holder.imgAppIcon.setBackground(mContext.getDrawable(R.mipmap.ic_launcher));
+            } else {
+                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(mContext, notification.getPackageName());
+                CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask);
+                Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(notification.getPackageName());
+                holder.imgAppIcon.setImageDrawable(drawable);
             }
+
+//            if (drawable != null) {
+//                holder.imgAppIcon.setImageDrawable(drawable);
+//            } else {
+//                holder.imgAppIcon.setBackground(mContext.getDrawable(R.mipmap.ic_launcher));
+//            }
             holder.txtAppName.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName()));
             if (notification.getStrTitle() == null || notification.getStrTitle().equalsIgnoreCase("")) {
                 holder.txtUserName.setText("");
@@ -127,7 +138,15 @@ public class SuppressNotificationAdapter extends RecyclerView.Adapter<SuppressNo
             } else {
                 holder.imgAppIcon.setBackground(null);
                 holder.txtAppName.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(defSMSApp));
-                holder.imgAppIcon.setImageBitmap(CoreApplication.getInstance().iconList.get(defSMSApp));
+                ApplicationInfo applicationInfo = null;
+                try {
+                    applicationInfo = mContext.getPackageManager().getApplicationInfo(defSMSApp, PackageManager.GET_META_DATA);
+                    Drawable drawable = applicationInfo.loadIcon(mContext.getPackageManager());
+                    holder.imgAppIcon.setImageDrawable(drawable);
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+
             }
             holder.txtMessage.setText(notification.get_text());
             holder.txtTime.setText(notification.get_time());
@@ -137,7 +156,7 @@ public class SuppressNotificationAdapter extends RecyclerView.Adapter<SuppressNo
                             .load(Uri.parse(notification.getNotificationContactModel().getImage()))
                             .placeholder(R.drawable.ic_person_black_24dp)
                             .into(holder.imgUserImage);
-                }else{
+                } else {
                     holder.imgUserImage.setBackground(null);
                     holder.imgUserImage.setImageBitmap(null);
                     holder.imgUserImage.setImageResource(R.drawable.ic_person_black_24dp);

@@ -79,7 +79,6 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
             holder.linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     if (holder.checkbox.isChecked()) {
                         if (getCountOfCheckTools() > 1) {
                             mainListItem.setVisable(false);

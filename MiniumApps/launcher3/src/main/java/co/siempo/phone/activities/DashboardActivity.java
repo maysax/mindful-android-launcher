@@ -25,10 +25,6 @@ import com.github.javiersantos.appupdater.enums.AppUpdaterError;
 import com.github.javiersantos.appupdater.enums.Display;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.github.javiersantos.appupdater.objects.Update;
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
-
-import java.util.ArrayList;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
@@ -69,23 +65,6 @@ public class DashboardActivity extends CoreActivity {
     private AlertDialog notificationDialog;
     private int index = -1;
     private InputMethodManager inputMethodManager;
-    PermissionListener permissionlistener = new PermissionListener() {
-        @Override
-        public void onPermissionGranted() {
-            Log.d(TAG, "Permission granted");
-            loadViews();
-        }
-
-        @Override
-        public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-            UIUtils.toast(DashboardActivity.this, "Permission denied");
-            new TedPermission(DashboardActivity.this)
-                    .setPermissionListener(permissionlistener)
-                    .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
-                    .setPermissions(Constants.PERMISSIONS)
-                    .check();
-        }
-    };
 
     /**
      * @return True if {@link android.service.notification.NotificationListenerService} is enabled.
@@ -123,7 +102,7 @@ public class DashboardActivity extends CoreActivity {
             loadViews();
         }
         //Need to change as it is heavy call for onResume
-        initView();
+//        initView();
     }
 
 
