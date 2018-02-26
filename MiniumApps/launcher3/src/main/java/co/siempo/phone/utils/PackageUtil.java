@@ -30,7 +30,6 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -42,9 +41,12 @@ import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import co.siempo.phone.R;
@@ -53,6 +55,7 @@ import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.log.Tracer;
+import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.models.MainListItemType;
 import co.siempo.phone.service.AlarmBroadcast;
@@ -524,14 +527,55 @@ public class PackageUtil {
     public static List<MainListItem> getSearchList(Context context) {
         Type baseType = new TypeToken<List<MainListItem>>() {
         }.getType();
-        List<MainListItem> searchItems = new ArrayList<>();
+        List<MainListItem> searchItems = new ArrayList<MainListItem>();
         String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, "");
         if (!TextUtils.isEmpty(searchList)) {
             Gson gson = new GsonBuilder()
                     .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
             searchItems = gson.fromJson(searchList, baseType);
         }
+
+
         searchItems = Sorting.sortList(searchItems);
+        HashMap<Integer, AppMenu> toolSetting = CoreApplication.getInstance()
+                .getToolsSettings();
+
+
+        ArrayList<String> junkFoodAppList = new ArrayList<>();
+        Set<String> junkFoodList = PrefSiempo
+                .getInstance(context).read
+                        (PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
+        junkFoodAppList = new ArrayList<>(junkFoodList);
+        Iterator it = toolSetting.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+            for (String junkApp : junkFoodAppList) {
+                if (((AppMenu) (pair.getValue())).getApplicationName()
+                        .equalsIgnoreCase(junkApp) || ((AppMenu) (pair.getValue())).getApplicationName()
+                        .equalsIgnoreCase("")) {
+                    ((AppMenu) (pair.getValue())).setApplicationName("");
+                }
+
+            }
+        }
+
+
+        List<MainListItem> junkListItems = new ArrayList<>();
+        for (MainListItem item : searchItems) {
+
+            AppMenu appMenu = toolSetting
+                    .get(item.getId());
+            if (junkFoodList.contains(item.getPackageName()) ||
+                    (null != appMenu && TextUtils
+                            .isEmpty(appMenu.getApplicationName()))) {
+                junkListItems.add(item);
+
+            }
+
+
+        }
+
+        searchItems.removeAll(junkListItems);
         return searchItems;
     }
 

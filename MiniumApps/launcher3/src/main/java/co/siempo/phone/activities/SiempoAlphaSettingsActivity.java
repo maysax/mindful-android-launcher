@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -128,7 +127,7 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
     @Subscribe
     public void homePressEvent(HomePressEvent event) {
         try {
-            if(event.isVisible() && UIUtils.isMyLauncherDefault(this)){
+            if (event.isVisible() && UIUtils.isMyLauncherDefault(this)) {
                 Intent startMain = new Intent(Intent.ACTION_MAIN);
                 startMain.addCategory(Intent.CATEGORY_HOME);
                 startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

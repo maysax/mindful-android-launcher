@@ -267,7 +267,7 @@ public class TempoAppNotificationActivity extends CoreActivity {
     @Subscribe
     public void homePressEvent(HomePressEvent event) {
         try {
-            if(event.isVisible() && UIUtils.isMyLauncherDefault(this)){
+            if (event.isVisible() && UIUtils.isMyLauncherDefault(this)) {
                 Intent startMain = new Intent(Intent.ACTION_MAIN);
                 startMain.addCategory(Intent.CATEGORY_HOME);
                 startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
