@@ -2,7 +2,6 @@ package co.siempo.phone.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
@@ -105,10 +104,10 @@ public class TempoAppNotificationActivity extends CoreActivity {
         packageManager = getPackageManager();
         systemAppList = Arrays.asList(getResources().getStringArray(R.array.systemAppList));
 
-        /**
-         * Load all preference list based on share preference
-         * Constants.HELPFUL_ROBOTS
-         * Constants.BLOCKED_APPLIST
+        /*
+          Load all preference list based on share preference
+          Constants.HELPFUL_ROBOTS
+          Constants.BLOCKED_APPLIST
          */
 
         Intent intent = new Intent(android.content.Intent.ACTION_SEND);
@@ -130,10 +129,10 @@ public class TempoAppNotificationActivity extends CoreActivity {
             pref_blockedList = new Gson().fromJson(str_blockedList, type);
         }
 
-        for (ApplicationInfo applicationInfo : CoreApplication.getInstance().getPackagesList()) {
+        for (String packageName : CoreApplication.getInstance().getPackagesList()) {
             for (String blockedApp : pref_blockedList) {
-                if (!applicationInfo.packageName.equalsIgnoreCase(blockedApp)) {
-                    pref_helpfulRobots.add(applicationInfo.packageName);
+                if (!packageName.equalsIgnoreCase(blockedApp)) {
+                    pref_helpfulRobots.add(packageName);
                 }
             }
         }
@@ -164,21 +163,21 @@ public class TempoAppNotificationActivity extends CoreActivity {
      */
     public void loadAndDisplayAppList() {
         for (int i = 0; i < CoreApplication.getInstance().getPackagesList().size(); i++) {
-            if (pref_blockedList.contains(CoreApplication.getInstance().getPackagesList().get(i).packageName)) {
+            if (pref_blockedList.contains(CoreApplication.getInstance().getPackagesList().get(i))) {
                 AppListInfo d = new AppListInfo();
-                d.applicationInfo = CoreApplication.getInstance().getPackagesList().get(i);
-                d.ischecked = !pref_blockedList.contains(d.applicationInfo.packageName);
+                d.packageName = CoreApplication.getInstance().getPackagesList().get(i);
+                d.ischecked = !pref_blockedList.contains(d.packageName);
                 blockedList.add(d);
-            } else if (pref_messengerList.contains(CoreApplication.getInstance().getPackagesList().get(i).packageName)) {
+            } else if (pref_messengerList.contains(CoreApplication.getInstance().getPackagesList().get(i))) {
                 AppListInfo d = new AppListInfo();
-                d.applicationInfo = CoreApplication.getInstance().getPackagesList().get(i);
-                d.ischecked = !pref_helpfulRobots.contains(d.applicationInfo.packageName);
+                d.packageName = CoreApplication.getInstance().getPackagesList().get(i);
+                d.ischecked = !pref_helpfulRobots.contains(d.packageName);
                 messengerList.add(d);
             } else {
                 AppListInfo d = new AppListInfo();
-                d.applicationInfo = CoreApplication.getInstance().getPackagesList().get(i);
-                if (!TextUtils.isEmpty(d.applicationInfo.packageName) && !systemAppList.contains(d.applicationInfo.packageName)) {
-                    d.ischecked = !pref_helpfulRobots.contains(d.applicationInfo.packageName);
+                d.packageName = CoreApplication.getInstance().getPackagesList().get(i);
+                if (!TextUtils.isEmpty(d.packageName) && !systemAppList.contains(d.packageName)) {
+                    d.ischecked = !pref_helpfulRobots.contains(d.packageName);
                     helpfulRobot_List.add(d);
                 }
             }

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import co.siempo.phone.R;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.utils.PrefSiempo;
 
 
@@ -60,9 +61,9 @@ public class TempoNotificationItemViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-    public void displayImage(ApplicationInfo applicationInfo, PackageManager packageManager, String errormessage) {
+    public void displayImage(String applicationInfo, PackageManager packageManager, String errormessage) {
         if (TextUtils.isEmpty(errormessage)) {
-            Drawable drawable = applicationInfo.loadIcon(packageManager);
+            Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(applicationInfo);
             if (drawable != null) {
                 imv_appicon.setImageDrawable(drawable);
             } else {
@@ -102,13 +103,13 @@ public class TempoNotificationItemViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-    public void addToBlockList(ApplicationInfo applicationInfo, boolean ischecked, ArrayList<String> blockedApps, Context context) {
+    public void addToBlockList(String applicationInfo, boolean ischecked, ArrayList<String> blockedApps, Context context) {
 
-        if (ischecked && blockedApps.contains(applicationInfo.packageName)) {
-            blockedApps.remove(applicationInfo.packageName);
+        if (ischecked && blockedApps.contains(applicationInfo)) {
+            blockedApps.remove(applicationInfo);
         }
-        if (!ischecked && !blockedApps.contains(applicationInfo.packageName)) {
-            blockedApps.add(applicationInfo.packageName);
+        if (!ischecked && !blockedApps.contains(applicationInfo)) {
+            blockedApps.add(applicationInfo);
         }
         String blockedList = new Gson().toJson(blockedApps);
         PrefSiempo.getInstance(context).write(PrefSiempo.BLOCKED_APPLIST, blockedList);

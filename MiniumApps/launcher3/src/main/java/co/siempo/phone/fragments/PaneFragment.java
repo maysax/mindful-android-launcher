@@ -460,8 +460,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
             @Override
             public void onPageSelected(int i) {
-
-
                 currentIndex = i;
                 //Make the junk food pane visible
                 if (i == 0) {

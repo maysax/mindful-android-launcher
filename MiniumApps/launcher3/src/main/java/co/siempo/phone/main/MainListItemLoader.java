@@ -2,7 +2,6 @@ package co.siempo.phone.main;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
 
@@ -26,21 +25,21 @@ import co.siempo.phone.utils.UIUtils;
  */
 public class MainListItemLoader {
 
-    public static final int TOOLS_MAP = 1;
-    public static final int TOOLS_TRANSPORT = 2;
-    public static final int TOOLS_CALENDAR = 3;
-    public static final int TOOLS_WEATHER = 4;
-    public static final int TOOLS_NOTES = 5;
-    public static final int TOOLS_RECORDER = 6;
-    public static final int TOOLS_CAMERA = 7;
-    public static final int TOOLS_PHOTOS = 8;
-    public static final int TOOLS_PAYMENT = 9;
-    public static final int TOOLS_WELLNESS = 10;
-    public static final int TOOLS_BROWSER = 11;
-    public static final int TOOLS_CALL = 13;
-    public static final int TOOLS_CLOCK = 14;
-    public static final int TOOLS_MESSAGE = 15;
-    public static final int TOOLS_EMAIL = 16;
+    private static final int TOOLS_MAP = 1;
+    private static final int TOOLS_TRANSPORT = 2;
+    private static final int TOOLS_CALENDAR = 3;
+    private static final int TOOLS_WEATHER = 4;
+    private static final int TOOLS_NOTES = 5;
+    private static final int TOOLS_RECORDER = 6;
+    private static final int TOOLS_CAMERA = 7;
+    private static final int TOOLS_PHOTOS = 8;
+    private static final int TOOLS_PAYMENT = 9;
+    private static final int TOOLS_WELLNESS = 10;
+    private static final int TOOLS_BROWSER = 11;
+    private static final int TOOLS_CALL = 13;
+    private static final int TOOLS_CLOCK = 14;
+    private static final int TOOLS_MESSAGE = 15;
+    private static final int TOOLS_EMAIL = 16;
     private Context context;
 
     public MainListItemLoader(Context context) {
@@ -170,10 +169,9 @@ public class MainListItemLoader {
         if (fragment instanceof PaneFragment || fragment instanceof ToolsPaneFragment) {
             try {
                 if (Launcher3App.getInstance().getPackagesList() != null && Launcher3App.getInstance().getPackagesList().size() > 0) {
-                    for (ApplicationInfo applicationInfo : Launcher3App.getInstance().getPackagesList()) {
-                        String packageName = applicationInfo.packageName;
-                        String appName = applicationInfo.name;
-                        items.add(new MainListItem(-1, appName, packageName));
+                    for (String applicationInfo : Launcher3App.getInstance().getPackagesList()) {
+                        String appName = CoreApplication.getInstance().getApplicationNameFromPackageName(applicationInfo);
+                        items.add(new MainListItem(-1, appName, applicationInfo));
                     }
                 }
             } catch (Exception e) {

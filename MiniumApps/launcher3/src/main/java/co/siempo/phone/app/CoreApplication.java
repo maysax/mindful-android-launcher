@@ -61,7 +61,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     private static CoreApplication sInstance;
     UserManager userManager;
     LauncherApps launcherApps;
-    private List<ApplicationInfo> packagesList = new ArrayList<>();
+    private List<String> packagesList = new ArrayList<>();
     private ArrayList<String> disableNotificationApps = new ArrayList<>();
     private ArrayList<String> blockedApps = new ArrayList<>();
     private LruCache<String, Bitmap> mMemoryCache;
@@ -188,16 +188,16 @@ public abstract class CoreApplication extends MultiDexApplication {
         Iconify.with(new FontAwesomeModule());
     }
 
-    public List<ApplicationInfo> getPackagesList() {
+    public List<String> getPackagesList() {
         return packagesList;
     }
 
-    public void setPackagesList(List<ApplicationInfo> packagesList) {
+    public void setPackagesList(List<String> packagesList) {
 
-        Collections.sort(packagesList, new Comparator<ApplicationInfo>() {
-            public int compare(ApplicationInfo v1, ApplicationInfo v2) {
+        Collections.sort(packagesList, new Comparator<String>() {
+            public int compare(String v1, String v2) {
 
-                return (v1.loadLabel(getPackageManager()).toString().toLowerCase()).compareTo(v2.loadLabel(getPackageManager()).toString().toLowerCase());
+                return v1.toLowerCase().compareTo(v2.toLowerCase());
             }
         });
         this.packagesList = packagesList;
@@ -222,21 +222,21 @@ public abstract class CoreApplication extends MultiDexApplication {
         if (isAppInstallFirstTime) {
             blockedApps.clear();
         }
-        for (ApplicationInfo applicationInfo : packagesList) {
+        for (String applicationInfo : packagesList) {
 
             if (isAppInstallFirstTime) {
-                blockedApps.add(applicationInfo.packageName);
+                blockedApps.add(applicationInfo);
             } else {
                 if (blockedApps.size() > 0) {
                     for (String blockedApp : blockedApps) {
-                        if (!applicationInfo.packageName.equalsIgnoreCase(blockedApp)) {
-                            disableNotificationApps.add(applicationInfo.packageName);
+                        if (!applicationInfo.equalsIgnoreCase(blockedApp)) {
+                            disableNotificationApps.add(applicationInfo);
                         }
                     }
 
                 } else {
 
-                    disableNotificationApps.add(applicationInfo.packageName);
+                    disableNotificationApps.add(applicationInfo);
                 }
 
             }
@@ -388,9 +388,9 @@ public abstract class CoreApplication extends MultiDexApplication {
         try {
             if (addingOrDelete) {
                 ApplicationInfo appInfo = getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA);
-                getPackagesList().add(appInfo);
+                getPackagesList().add(appInfo.packageName);
             } else {
-                getPackagesList().remove(getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA));
+                getPackagesList().remove(getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA).packageName);
             }
             setPackagesList(getPackagesList());
             EventBus.getDefault().post(new AppInstalledEvent(true));
@@ -416,8 +416,6 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
 
-
-
     public void includeTaskPool(AsyncTask asyncTask) {
         asyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
     }
@@ -432,22 +430,21 @@ public abstract class CoreApplication extends MultiDexApplication {
         return mMemoryCache.get(key);
     }
 
-    private class LoadApplications extends AsyncTask<Object, Object, List<ApplicationInfo>> {
+    private class LoadApplications extends AsyncTask<Object, Object, List<String>> {
 
         @Override
-        protected List<ApplicationInfo> doInBackground(Object... params) {
-            List<ApplicationInfo> applist = new ArrayList<>();
+        protected List<String> doInBackground(Object... params) {
+            List<String> applist = new ArrayList<>();
 
             for (android.os.UserHandle profile : userManager.getUserProfiles()) {
                 for (LauncherActivityInfo activityInfo : launcherApps.getActivityList(null, profile)) {
                     ApplicationInfo appInfo = activityInfo.getApplicationInfo();
                     appInfo.name = activityInfo.getLabel().toString();
                     if (!appInfo.packageName.equalsIgnoreCase("co.siempo.phone")) {
-                        Drawable drawable = null;
-                        drawable = getPackageManager().getApplicationIcon(appInfo);
+                        Drawable drawable = getPackageManager().getApplicationIcon(appInfo);
                         Bitmap bitmap = PackageUtil.drawableToBitmap(drawable);
                         addBitmapToMemoryCache(appInfo.packageName, bitmap);
-                        applist.add(appInfo);
+                        applist.add(appInfo.packageName);
                     }
                 }
             }
@@ -456,9 +453,9 @@ public abstract class CoreApplication extends MultiDexApplication {
 
 
         @Override
-        protected void onPostExecute(List<ApplicationInfo> applicationInfos) {
+        protected void onPostExecute(List<String> applicationInfos) {
             super.onPostExecute(applicationInfos);
-            packagesList.clear();
+//            packagesList.clear();
             setPackagesList(applicationInfos);
             EventBus.getDefault().post(new AppInstalledEvent(true));
         }

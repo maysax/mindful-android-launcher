@@ -1,7 +1,5 @@
 package co.siempo.phone.models;
 
-import android.content.pm.ApplicationInfo;
-
 /**
  * Created by hardik on 23/11/17.
  * Model Class for the app packages
@@ -11,7 +9,7 @@ public class AppListInfo {
     /**
      * It will hold information about the installed application information
      */
-    public ApplicationInfo applicationInfo;
+    public String packageName;
     /**
      * to Check if notification is allowed or not
      * -True: app notifications are allowed
