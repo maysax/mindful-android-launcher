@@ -214,7 +214,6 @@ public class PackageUtil {
 
         String title = getNotificationTitle(notification.get_contact_title(), notification.getPackageName(), context);
 
-        int priority = PrefSiempo.getInstance(context).read(PrefSiempo.ALLOW_PEAKING, true) ? Notification.PRIORITY_DEFAULT : Notification.PRIORITY_HIGH;
         RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.custom_notification_card);
         try {
             Drawable drawable = context.getPackageManager().getApplicationIcon(notification.getPackageName());

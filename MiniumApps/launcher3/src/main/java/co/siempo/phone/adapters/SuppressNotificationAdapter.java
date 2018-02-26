@@ -90,7 +90,7 @@ public class SuppressNotificationAdapter extends RecyclerView.Adapter<SuppressNo
                 holder.imgAppIcon.setImageBitmap(bitmap);
             } else {
                 BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(mContext, notification.getPackageName());
-                CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask);
+                CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
                 Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(notification.getPackageName());
                 holder.imgAppIcon.setImageDrawable(drawable);
             }

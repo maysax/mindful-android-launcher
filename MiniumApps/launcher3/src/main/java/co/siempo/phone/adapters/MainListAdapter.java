@@ -218,7 +218,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                         holder.icon.setImageBitmap(bitmap);
                     } else {
                         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, packageName);
-                        CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask);
+                        CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
                         Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(packageName);
                         holder.icon.setImageDrawable(drawable);
                     }

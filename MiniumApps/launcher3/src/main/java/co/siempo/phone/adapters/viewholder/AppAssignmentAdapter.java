@@ -88,7 +88,7 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
                     holder.imgIcon.setImageBitmap(bitmap);
                 } else {
                     BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, item.activityInfo.packageName);
-                    CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask);
+                    CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
                     Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(item.activityInfo.packageName);
                     holder.imgIcon.setImageDrawable(drawable);
                 }

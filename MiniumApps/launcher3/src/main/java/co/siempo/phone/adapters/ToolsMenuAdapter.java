@@ -80,7 +80,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                     holder.icon.setImageBitmap(bitmap);
                 } else {
                     BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, appMenu.getApplicationName());
-                    CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask);
+                    CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
                     holder.icon.setImageResource(item.getDrawable());
                 }
             }
