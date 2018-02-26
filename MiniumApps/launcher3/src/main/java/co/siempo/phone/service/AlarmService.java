@@ -25,6 +25,7 @@ import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.utils.PackageUtil;
+import co.siempo.phone.utils.PrefSiempo;
 
 /**
  * Created by rajeshjadi on 8/1/18.
@@ -34,8 +35,6 @@ public class AlarmService extends IntentService {
 
 
     Context context;
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences sharedPreferencesLauncher3;
     private AudioManager audioManager;
     private Vibrator vibrator;
     private ArrayList<Integer> everyHourList = new ArrayList<>();
@@ -61,7 +60,6 @@ public class AlarmService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         context = this;
         Tracer.d("-1");
-        sharedPreferences = getSharedPreferences("DroidPrefs", 0);
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         everyHourList.addAll(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24));
@@ -125,11 +123,13 @@ public class AlarmService extends IntentService {
             Calendar calendar = Calendar.getInstance();
             int systemHours = calendar.get(Calendar.HOUR_OF_DAY);
             int systemMinutes = calendar.get(Calendar.MINUTE);
-            int tempoType = sharedPreferences.getInt("tempoType", 0);
+            int tempoType=PrefSiempo.getInstance(context).read(PrefSiempo
+                    .TEMPO_TYPE, 0);
             Tracer.d("3");
               if (tempoType == 1) {
                 Tracer.d("4");
-                int batchTime = sharedPreferences.getInt("batchTime", 15);
+                  int batchTime = PrefSiempo.getInstance(context).read(PrefSiempo
+                          .BATCH_TIME, 15);
                 if (batchTime == 15) {
                     if (systemMinutes == 0 || systemMinutes == 15 || systemMinutes == 30 || systemMinutes == 45) {
                         Tracer.d("Batch::" + "15 minute interval");
@@ -164,7 +164,8 @@ public class AlarmService extends IntentService {
 
             } else if (tempoType == 2) {
                 Tracer.d("5");
-                String strTimeData = sharedPreferences.getString("onlyAt", "");
+                  String strTimeData = PrefSiempo.getInstance(context).read(PrefSiempo
+                          .ONLY_AT, "12:01");
                 if (!strTimeData.equalsIgnoreCase("")) {
                     Tracer.d("6");
                     String strTime[] = strTimeData.split(",");

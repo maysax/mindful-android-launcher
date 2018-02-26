@@ -7,7 +7,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,6 +39,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
+import co.siempo.phone.utils.PrefSiempo;
 
 public class Dialog_Tempo extends Dialog implements View.OnClickListener {
     private RadioButton radioIndividual, radioBatched, radioOnlyAt;
@@ -48,7 +48,6 @@ public class Dialog_Tempo extends Dialog implements View.OnClickListener {
     private LinearLayout linear;
     private RelativeLayout relIndividual, top, relBatched, relOnlyAt;
     private FloatingActionButton fabPlay;
-    private SharedPreferences droidPrefs;
     private String strMessage;
     private boolean isCancelButton = false;
     private long startTime = 0;
@@ -74,7 +73,9 @@ public class Dialog_Tempo extends Dialog implements View.OnClickListener {
         startTime = System.currentTimeMillis();
         everyTwoHourList.addAll(Arrays.asList(0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22));
         everyFourHoursList.addAll(Arrays.asList(0, 4, 8, 12, 16, 20));
-        enableRadioOnPosition(droidPrefs.getInt("tempoType", 0));
+
+        enableRadioOnPosition(PrefSiempo.getInstance(context).read(PrefSiempo
+                .TEMPO_TYPE, 0));
         bindOnlyAt();
 
         new Handler().postDelayed(new Runnable() {
@@ -89,7 +90,6 @@ public class Dialog_Tempo extends Dialog implements View.OnClickListener {
 
     private void initView() {
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        droidPrefs = context.getSharedPreferences("DroidPrefs", 0);
         radioIndividual = findViewById(R.id.radioIndividual);
         top = findViewById(R.id.top);
         radioBatched = findViewById(R.id.radioBatched);
@@ -142,12 +142,14 @@ public class Dialog_Tempo extends Dialog implements View.OnClickListener {
 
     private void radioBatched() {
         enableRadioOnPosition(1);
-        FirebaseHelper.getIntance().logTempoIntervalTime(1, droidPrefs.getInt("batchTime", 15), "");
+        FirebaseHelper.getIntance().logTempoIntervalTime(1, PrefSiempo.getInstance(context).read(PrefSiempo
+                .BATCH_TIME, 15), "");
     }
 
     private void radioOnlyAt() {
         enableRadioOnPosition(2);
-        FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, droidPrefs.getString("onlyAt", "12:01"));
+        FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, PrefSiempo.getInstance(context).read(PrefSiempo
+                .ONLY_AT, "12:01"));
     }
 
     private void relIndividual() {
@@ -157,23 +159,28 @@ public class Dialog_Tempo extends Dialog implements View.OnClickListener {
 
     private void relBatched() {
         enableRadioOnPosition(1);
-        FirebaseHelper.getIntance().logTempoIntervalTime(1, droidPrefs.getInt("batchTime", 15), "");
+        FirebaseHelper.getIntance().logTempoIntervalTime(1, PrefSiempo.getInstance(context).read(PrefSiempo
+                .BATCH_TIME, 15), "");
     }
 
     private void relOnlyAt() {
         enableRadioOnPosition(2);
-        FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, droidPrefs.getString("onlyAt", "12:01"));
+        FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, PrefSiempo.getInstance(context).read(PrefSiempo
+                .ONLY_AT, "12:01"));
     }
 
     private void txtAdd() {
         enableRadioOnPosition(2);
-        FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, droidPrefs.getString("onlyAt", "12:01"));
+        FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, PrefSiempo.getInstance(context).read(PrefSiempo
+                .ONLY_AT, "12:01"));
         Calendar now = Calendar.getInstance();
         showTimePicker(now, -1, true);
     }
 
     private void showTimePicker(final Calendar now, final int i, final boolean isNewAdded) {
-        String strTime[] = droidPrefs.getString("onlyAt", "12:01").split(",");
+        String onlyAtValue = PrefSiempo.getInstance(context).read(PrefSiempo
+                .ONLY_AT, "12:01");
+        String strTime[] = onlyAtValue.split(",");
         final ArrayList listdata = new ArrayList(Arrays.asList(strTime));
         listdata.remove("");
         String strPositiveText;
@@ -214,18 +221,22 @@ public class Dialog_Tempo extends Dialog implements View.OnClickListener {
                             if (!listdata.contains(strSelectedTime)) {
                                 listdata.add(strSelectedTime);
                                 Collections.sort(listdata);
-                                droidPrefs.edit().putString("onlyAt", TextUtils.join(",", listdata)).apply();
+                                PrefSiempo.getInstance(context).write(PrefSiempo
+                                        .ONLY_AT, TextUtils.join(",", listdata));
                                 enableRadioOnPosition(2);
-                                FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, droidPrefs.getString("onlyAt", "12:01"));
+                                FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, PrefSiempo.getInstance(context).read(PrefSiempo
+                                        .ONLY_AT, "12:01"));
                             } else {
                                 Toast.makeText(context, R.string.msg_sametime, Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             listdata.set(i, strSelectedTime);
                             Collections.sort(listdata);
-                            droidPrefs.edit().putString("onlyAt", TextUtils.join(",", listdata)).apply();
+                            PrefSiempo.getInstance(context).write(PrefSiempo
+                                    .ONLY_AT, TextUtils.join(",", listdata));
                             enableRadioOnPosition(2);
-                            FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, droidPrefs.getString("onlyAt", "12:01"));
+                            FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, PrefSiempo.getInstance(context).read(PrefSiempo
+                                    .ONLY_AT, "12:01"));
                         }
 
 
@@ -240,12 +251,15 @@ public class Dialog_Tempo extends Dialog implements View.OnClickListener {
                                     if (listdata.size() != 0) {
                                         listdata.remove(i);
                                         if (listdata.size() >= 1) {
-                                            droidPrefs.edit().putString("onlyAt", TextUtils.join(",", listdata)).apply();
+                                            PrefSiempo.getInstance(context).write(PrefSiempo
+                                                    .ONLY_AT, TextUtils.join(",", listdata));
                                         } else {
-                                            droidPrefs.edit().putString("onlyAt", "").apply();
+                                            PrefSiempo.getInstance(context).write(PrefSiempo
+                                                    .ONLY_AT, "");
                                         }
                                         enableRadioOnPosition(2);
-                                        FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, droidPrefs.getString("onlyAt", "12:01"));
+                                        FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, PrefSiempo.getInstance(context).read(PrefSiempo
+                                                .ONLY_AT, "12:01"));
                                     }
                                 }
                             }
@@ -254,48 +268,66 @@ public class Dialog_Tempo extends Dialog implements View.OnClickListener {
 
     private void imgMinus() {
         if (radioBatched.isChecked()) {
-            if (droidPrefs.getInt("batchTime", 15) == 15) {
+            int batchTime = PrefSiempo.getInstance(context).read(PrefSiempo
+                    .BATCH_TIME, 15);
+
+            if (batchTime == 15) {
                 txtBatch.setText(context.getString(R.string.batched_every_4_hour));
-                droidPrefs.edit().putInt("batchTime", 4).apply();
-            } else if (droidPrefs.getInt("batchTime", 15) == 4) {
+                PrefSiempo.getInstance(context).write(PrefSiempo
+                        .BATCH_TIME, 4);
+            } else if (batchTime == 4) {
                 txtBatch.setText(context.getString(R.string.batched_every_2_hour));
-                droidPrefs.edit().putInt("batchTime", 2).apply();
-            } else if (droidPrefs.getInt("batchTime", 15) == 2) {
+                PrefSiempo.getInstance(context).write(PrefSiempo
+                        .BATCH_TIME, 2);
+            } else if (batchTime == 2) {
                 txtBatch.setText(context.getString(R.string.batched_every_1_hour));
-                droidPrefs.edit().putInt("batchTime", 1).apply();
-            } else if (droidPrefs.getInt("batchTime", 15) == 1) {
+                PrefSiempo.getInstance(context).write(PrefSiempo
+                        .BATCH_TIME, 1);
+            } else if (batchTime == 1) {
                 txtBatch.setText(context.getString(R.string.batched_every_30_minutes));
-                droidPrefs.edit().putInt("batchTime", 30).apply();
-            } else if (droidPrefs.getInt("batchTime", 15) == 30) {
+                PrefSiempo.getInstance(context).write(PrefSiempo
+                        .BATCH_TIME, 30);
+            } else if (batchTime == 30) {
                 txtBatch.setText(context.getString(R.string.batched_every_15_minutes));
-                droidPrefs.edit().putInt("batchTime", 15).apply();
+                PrefSiempo.getInstance(context).write(PrefSiempo
+                        .BATCH_TIME, 14);
             }
         }
         enableRadioOnPosition(1);
-        FirebaseHelper.getIntance().logTempoIntervalTime(1, droidPrefs.getInt("batchTime", 15), "");
+        FirebaseHelper.getIntance().logTempoIntervalTime(1, PrefSiempo.getInstance(context).read(PrefSiempo
+                .BATCH_TIME, 15), "");
     }
 
     private void imgPlus() {
         if (radioBatched.isChecked()) {
-            if (droidPrefs.getInt("batchTime", 15) == 15) {
+            int batchTime = PrefSiempo.getInstance(context).read(PrefSiempo
+                    .BATCH_TIME, 15);
+
+            if (batchTime == 15) {
                 txtBatch.setText(context.getString(R.string.batched_every_30_minutes));
-                droidPrefs.edit().putInt("batchTime", 30).apply();
-            } else if (droidPrefs.getInt("batchTime", 15) == 30) {
+                PrefSiempo.getInstance(context).write(PrefSiempo
+                        .BATCH_TIME, 30);
+            } else if (batchTime == 30) {
                 txtBatch.setText(context.getString(R.string.batched_every_1_hour));
-                droidPrefs.edit().putInt("batchTime", 1).apply();
-            } else if (droidPrefs.getInt("batchTime", 15) == 1) {
+                PrefSiempo.getInstance(context).write(PrefSiempo
+                        .BATCH_TIME, 1);
+            } else if (batchTime == 1) {
                 txtBatch.setText(context.getString(R.string.batched_every_2_hour));
-                droidPrefs.edit().putInt("batchTime", 2).apply();
-            } else if (droidPrefs.getInt("batchTime", 15) == 2) {
+                PrefSiempo.getInstance(context).write(PrefSiempo
+                        .BATCH_TIME, 2);
+            } else if (batchTime == 2) {
                 txtBatch.setText(context.getString(R.string.batched_every_4_hour));
-                droidPrefs.edit().putInt("batchTime", 4).apply();
-            } else if (droidPrefs.getInt("batchTime", 15) == 4) {
+                PrefSiempo.getInstance(context).write(PrefSiempo
+                        .BATCH_TIME, 4);
+            } else if (batchTime == 4) {
                 txtBatch.setText(context.getString(R.string.batched_every_15_minutes));
-                droidPrefs.edit().putInt("batchTime", 15).apply();
+                PrefSiempo.getInstance(context).write(PrefSiempo
+                        .BATCH_TIME, 15);
             }
         }
         enableRadioOnPosition(1);
-        FirebaseHelper.getIntance().logTempoIntervalTime(1, droidPrefs.getInt("batchTime", 15), "");
+        FirebaseHelper.getIntance().logTempoIntervalTime(1, PrefSiempo.getInstance(context).read(PrefSiempo
+                .BATCH_TIME, 15), "");
     }
 
     private void fabPlay() {
@@ -342,7 +374,8 @@ public class Dialog_Tempo extends Dialog implements View.OnClickListener {
         enableRadioOnPosition(2);
         if (radioOnlyAt.isChecked()) {
             Calendar calendar1 = Calendar.getInstance();
-            String str1 = droidPrefs.getString("onlyAt", "12:01").split(",")[0];
+            String str1 = PrefSiempo.getInstance(context).read(PrefSiempo
+                    .ONLY_AT, "12:01").split(",")[0];
             calendar1.set(Calendar.HOUR_OF_DAY, Integer.parseInt(str1.split(":")[0]));
             calendar1.set(Calendar.MINUTE, Integer.parseInt(str1.split(":")[1]));
             showTimePicker(calendar1, 0, false);
@@ -354,7 +387,8 @@ public class Dialog_Tempo extends Dialog implements View.OnClickListener {
         enableRadioOnPosition(2);
         if (radioOnlyAt.isChecked()) {
             Calendar calendar1 = Calendar.getInstance();
-            String str1 = droidPrefs.getString("onlyAt", "12:01").split(",")[1];
+            String str1 = PrefSiempo.getInstance(context).read(PrefSiempo
+                    .ONLY_AT, "12:01").split(",")[1];
             calendar1.set(Calendar.HOUR_OF_DAY, Integer.parseInt(str1.split(":")[0]));
             calendar1.set(Calendar.MINUTE, Integer.parseInt(str1.split(":")[1]));
             showTimePicker(calendar1, 1, false);
@@ -366,7 +400,8 @@ public class Dialog_Tempo extends Dialog implements View.OnClickListener {
         enableRadioOnPosition(2);
         if (radioOnlyAt.isChecked()) {
             Calendar calendar1 = Calendar.getInstance();
-            String str1 = droidPrefs.getString("onlyAt", "12:01").split(",")[2];
+            String str1 = PrefSiempo.getInstance(context).read(PrefSiempo
+                    .ONLY_AT, "12:01").split(",")[2];
             calendar1.set(Calendar.HOUR_OF_DAY, Integer.parseInt(str1.split(":")[0]));
             calendar1.set(Calendar.MINUTE, Integer.parseInt(str1.split(":")[1]));
             showTimePicker(calendar1, 2, false);
@@ -400,16 +435,20 @@ public class Dialog_Tempo extends Dialog implements View.OnClickListener {
             radioIndividual.setChecked(true);
             radioBatched.setChecked(false);
             radioOnlyAt.setChecked(false);
-            droidPrefs.edit().putInt("tempoType", 0).apply();
+            PrefSiempo.getInstance(context).write(PrefSiempo
+                    .TEMPO_TYPE, 0);
             strMessage = context.getString(R.string.msg_individual);
             txtMessage.setText(strMessage);
         } else if (pos == 1) {
             radioIndividual.setChecked(false);
             radioBatched.setChecked(true);
             radioOnlyAt.setChecked(false);
-            droidPrefs.edit().putInt("tempoType", 1).apply();
+            PrefSiempo.getInstance(context).write(PrefSiempo
+                    .TEMPO_TYPE, 1);
             strMessage = context.getString(R.string.msg_do_not_disturb);
-            if (droidPrefs.getInt("batchTime", 15) == 15) {
+            int batchTime = PrefSiempo.getInstance(context).read(PrefSiempo
+                    .BATCH_TIME, 15);
+            if (batchTime == 15) {
                 txtBatch.setText(context.getString(R.string.batched_every_15_minutes));
                 strMessage = strMessage + "\n" + context.getString(R.string.msg_quarter) + "\n";
                 if (minute >= 0 && minute < 15) {
@@ -421,7 +460,7 @@ public class Dialog_Tempo extends Dialog implements View.OnClickListener {
                 } else if (minute >= 45 && minute < 60) {
                     calendar.set(Calendar.MINUTE, 60);
                 }
-            } else if (droidPrefs.getInt("batchTime", 15) == 30) {
+            } else if (batchTime == 30) {
                 txtBatch.setText(context.getString(R.string.batched_every_30_minutes));
                 strMessage = strMessage + "\n" + context.getString(R.string.msg_half) + "\n";
                 if (minute >= 0 && minute < 30) {
@@ -430,12 +469,12 @@ public class Dialog_Tempo extends Dialog implements View.OnClickListener {
                     calendar.add(Calendar.HOUR_OF_DAY, 1);
                     calendar.set(Calendar.MINUTE, 0);
                 }
-            } else if (droidPrefs.getInt("batchTime", 15) == 1) {
+            } else if (batchTime == 1) {
                 txtBatch.setText(context.getString(R.string.batched_every_1_hour));
                 strMessage = strMessage + "\n" + context.getString(R.string.msg_1hour) + "\n";
                 calendar.add(Calendar.HOUR_OF_DAY, 1);
                 calendar.set(Calendar.MINUTE, 0);
-            } else if (droidPrefs.getInt("batchTime", 15) == 2) {
+            } else if (batchTime == 2) {
                 txtBatch.setText(context.getString(R.string.batched_every_2_hour));
                 strMessage = strMessage + "\n" + context.getString(R.string.msg_2hour) + "\n";
                 calendar = Calendar.getInstance();
@@ -443,7 +482,7 @@ public class Dialog_Tempo extends Dialog implements View.OnClickListener {
                 int intHour = forTwoHours(hour);
                 calendar.set(Calendar.HOUR_OF_DAY, intHour);
                 calendar.set(Calendar.MINUTE, 0);
-            } else if (droidPrefs.getInt("batchTime", 15) == 4) {
+            } else if (batchTime == 4) {
                 txtBatch.setText(context.getString(R.string.batched_every_4_hour));
                 strMessage = strMessage + "\n" + context.getString(R.string.msg_4hour) + "\n";
                 calendar = Calendar.getInstance();
@@ -458,7 +497,8 @@ public class Dialog_Tempo extends Dialog implements View.OnClickListener {
             radioIndividual.setChecked(false);
             radioBatched.setChecked(false);
             radioOnlyAt.setChecked(true);
-            droidPrefs.edit().putInt("tempoType", 2).apply();
+            PrefSiempo.getInstance(context).write(PrefSiempo
+                    .TEMPO_TYPE, 2);
             bindOnlyAt();
         }
     }
@@ -499,7 +539,8 @@ public class Dialog_Tempo extends Dialog implements View.OnClickListener {
             timeString = "hh:mm a";
         }
         SimpleDateFormat df = new SimpleDateFormat(timeString, Locale.getDefault());
-        String strTimeData = droidPrefs.getString("onlyAt", "12:01");
+        String strTimeData = PrefSiempo.getInstance(context).read(PrefSiempo
+                .ONLY_AT, "12:01");
         String strTime[] = strTimeData.split(",");
 
 

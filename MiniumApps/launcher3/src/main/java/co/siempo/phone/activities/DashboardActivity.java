@@ -11,6 +11,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -28,7 +29,10 @@ import com.github.javiersantos.appupdater.objects.Update;
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.DashboardPagerAdapter;
+import co.siempo.phone.app.Constants;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.CheckVersionEvent;
+import co.siempo.phone.event.HomePressEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.service.ApiClient_;
@@ -114,12 +118,18 @@ public class DashboardActivity extends CoreActivity {
     }
 
     private void initView() {
+
         connectivityManager = (ConnectivityManager) getSystemService(Context
                 .CONNECTIVITY_SERVICE);
+
+
         notificationManager =
 
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+
         isApplicationLaunch = true;
+
         checknavigatePermissions();
     }
 
@@ -424,6 +434,40 @@ public class DashboardActivity extends CoreActivity {
         DashboardActivity.isTextLenghGreater = "";
 
 
+    }
+
+
+    @Subscribe
+    public void homePressEvent(HomePressEvent event) {
+        try {
+            if (UIUtils.isMyLauncherDefault(this)) {
+                // onBackPressed();
+                if (null != mPager && mPager.getCurrentItem() == 0) {
+                    mPager.setCurrentItem(1);
+                }
+
+            } else {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                            if (!isOnStopCalled && !UIUtils
+                                    .isMyLauncherDefault(DashboardActivity.this))
+                                loadDialog();
+                        } else {
+                            if (!isOnStopCalled && !UIUtils
+                                    .isMyLauncherDefault(DashboardActivity.this))
+                                if (Settings.canDrawOverlays(DashboardActivity.this)) {
+                                    loadDialog();
+                                }
+                        }
+                    }
+                }, 1000);
+            }
+        } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
+            Tracer.e(e, e.getMessage());
+        }
     }
 
 

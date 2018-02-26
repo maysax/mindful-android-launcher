@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.provider.Telephony;
 import android.telephony.SmsMessage;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -75,8 +76,9 @@ public class SmsReceiver extends BroadcastReceiver {
                 if (PrefSiempo.getInstance(context).read(PrefSiempo
                         .IS_APP_DEFAULT_OR_FRONT, false)) {
                     String disable_AppList = PrefSiempo.getInstance
-                            (context).read(PrefSiempo.HELPFUL_ROBOTS, "");
+                            (context).read(PrefSiempo.BLOCKED_APPLIST, "");
                     if (!TextUtils.isEmpty(disable_AppList)) {
+
                         Type type = new TypeToken<ArrayList<String>>() {
                         }.getType();
                         disableNotificationApps = new ArrayList<>();
@@ -100,6 +102,8 @@ public class SmsReceiver extends BroadcastReceiver {
                                 }
                             }
                         }
+                    }else{
+                        Tracer.d("Blocked List Empty");
                     }
                 }
             }

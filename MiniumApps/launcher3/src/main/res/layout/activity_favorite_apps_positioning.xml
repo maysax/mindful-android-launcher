@@ -29,6 +29,7 @@
                 android:visibility="visible"/>
 
             <RelativeLayout
+                android:id="@+id/relTop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="visible">
@@ -51,7 +52,7 @@
         </LinearLayout>
 
         <RelativeLayout
-            android:id="@+id/linPane"
+            android:id="@+id/relPane"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginLeft="@dimen/dp_5"

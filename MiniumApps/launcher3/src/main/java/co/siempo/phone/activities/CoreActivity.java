@@ -65,12 +65,12 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     public HomeWatcher mHomeWatcher;
     public View mTestView = null;
     public WindowManager windowManager = null;
+    public boolean isOnStopCalled = false;
     @SystemService
     protected ActivityManager activityManager;
     int onStartCount = 0;
     SharedPreferences launcherPrefs;
     UserPresentBroadcastReceiver userPresentBroadcastReceiver;
-    private boolean isOnStopCalled = false;
 
     // Static method to return File at localPath
     public static File getLocalPath() {
@@ -131,7 +131,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                         }
                     }
                 }, 1000);
-//                }
             }
 
             @Override

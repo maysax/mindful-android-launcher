@@ -179,6 +179,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
 
             if (null != blockedAppList && blockedAppList.size() > 0 && blockedAppList.contains(notification.getPackageName())) {
 
+
                 if (!notification.getPackageName().equalsIgnoreCase(getPackageName()) && PrefSiempo.getInstance(context).read(PrefSiempo
                         .TEMPO_TYPE, 0) != 0) {
                     SiempoNotificationListener.this.cancelNotification(notification.getKey());

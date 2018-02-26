@@ -121,7 +121,7 @@ public class FavoritePaneFragment extends CoreFragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            if (getActivity() != null) {
+            if (getActivity() != null && isAdded()) {
                 initView();
             }
         }

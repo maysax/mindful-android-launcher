@@ -22,12 +22,13 @@ public class TokenParser {
                     str = str.substring(item.getTitle().length() + 1);
                 }
             }
-            if (str.endsWith("@")) {
-                return;
-            }
+//            if (str.endsWith("@")) {
+//                return;
+//            }
 
             if (str.endsWith("@") && !TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT)) {
                 router.add(new TokenItem(TokenItemType.CONTACT));
+                TokenManager.getInstance().getCurrent().setTitle(str);
             } else {
                 TokenManager.getInstance().getCurrent().setTitle(str);
             }

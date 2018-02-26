@@ -65,6 +65,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                 .round();
         mProvider = new DrawableProvider(context);
         loadData(items);
+
     }
 
     public void loadData(List<MainListItem> items) {
@@ -324,7 +325,9 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
             String searchString = constraint.toString().toLowerCase().trim();
 
+
             FilterResults ret = new FilterResults();
+
 
             int count = originalData.size();
             List<MainListItem> buildData = new ArrayList<>();
@@ -393,13 +396,18 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                             case ACTION:
                                 filterableString = originalData.get(i).getTitle();
                                 if (!TextUtils.isEmpty(filterableString)) {
-                                    if (!TextUtils.isEmpty(originalData.get(i).getPackageName())) {
+
+
+                                    if (!TextUtils.isEmpty(originalData.get
+                                            (i).getPackageName())) {
                                         if (filterableString.toLowerCase().contains(searchString.toLowerCase().trim())) {
                                             buildData.add(originalData.get(i));
                                             break;
                                         }
                                     } else {
                                         if (originalData.get(i).getTitle().toLowerCase().contains(searchString.toLowerCase())) {
+
+
                                             if (checkDuplicate(buildData, searchString.toLowerCase().toLowerCase())) {
                                                 buildData.add(originalData.get(i));
                                             }
@@ -441,6 +449,8 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                                                                 (R.string
                                                                         .title_saveNote)) && TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT)) {
 
+                                        } else if (searchString.equalsIgnoreCase("@") || (searchString.startsWith("@") && isValidNumber)) {
+
                                         } else {
                                             buildData.add(originalData.get(i));
                                         }
@@ -472,7 +482,8 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             } else {
                 filteredData = new ArrayList<>(originalData);
             }
-            EventBus.getDefault().post(new MainListAdapterEvent(filteredData.size()));
+
+            EventBus.getDefault().post(new MainListAdapterEvent(filteredData));
             notifyDataSetChanged();
         }
     }
