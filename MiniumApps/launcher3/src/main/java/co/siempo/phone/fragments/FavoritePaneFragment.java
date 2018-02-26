@@ -63,57 +63,58 @@ public class FavoritePaneFragment extends CoreFragment {
     }
 
     private void initView() {
-        items = new ArrayList<>();
-        items = PackageUtil.getFavoriteList(getActivity());
-        recyclerView = view.findViewById(R.id.recyclerView);
-        btnSelect = view.findViewById(R.id.btnSelect);
-        btnSelect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, FavoritesSelectionActivity
-                        .class);
-                startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        if (getActivity() != null && view != null) {
+            items = new ArrayList<>();
+            items = PackageUtil.getFavoriteList(getActivity());
+            recyclerView = view.findViewById(R.id.recyclerView);
+            btnSelect = view.findViewById(R.id.btnSelect);
+            btnSelect.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, FavoritesSelectionActivity
+                            .class);
+                    startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
-            }
-        });
-        linSelectFavouriteFood = view.findViewById(R.id.linSelectFavouriteFood);
-        mLayoutManager = new GridLayoutManager(getActivity(), 4);
-        recyclerView.setLayoutManager(mLayoutManager);
-        if (itemDecoration != null) {
-            recyclerView.removeItemDecoration(itemDecoration);
-        }
-        itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_10);
-        recyclerView.addItemDecoration(itemDecoration);
-        boolean isHideIconBranding = PrefSiempo.getInstance(context).read(PrefSiempo.IS_ICON_BRANDING, true);
-
-        mAdapter = new FavoritesPaneAdapter(getActivity(), isHideIconBranding, false, items);
-        recyclerView.setAdapter(mAdapter);
-
-
-        if (items.size() > 0) {
-            boolean containsFavourites = false;
-            for (MainListItem item : items) {
-                if (!TextUtils.isEmpty(item.getTitle())) {
-                    containsFavourites = true;
-                    break;
                 }
+            });
+            linSelectFavouriteFood = view.findViewById(R.id.linSelectFavouriteFood);
+            mLayoutManager = new GridLayoutManager(getActivity(), 4);
+            recyclerView.setLayoutManager(mLayoutManager);
+            if (itemDecoration != null) {
+                recyclerView.removeItemDecoration(itemDecoration);
             }
-            if (containsFavourites) {
-                linSelectFavouriteFood.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
+            itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_10);
+            recyclerView.addItemDecoration(itemDecoration);
+            boolean isHideIconBranding = PrefSiempo.getInstance(context).read(PrefSiempo.IS_ICON_BRANDING, true);
 
-            } else {
+            mAdapter = new FavoritesPaneAdapter(getActivity(), isHideIconBranding, false, items);
+            recyclerView.setAdapter(mAdapter);
+
+
+            if (items.size() > 0) {
+                boolean containsFavourites = false;
+                for (MainListItem item : items) {
+                    if (!TextUtils.isEmpty(item.getTitle())) {
+                        containsFavourites = true;
+                        break;
+                    }
+                }
+                if (containsFavourites) {
+                    linSelectFavouriteFood.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+
+                } else {
+                    linSelectFavouriteFood.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                }
+
+
+            } else if (items.size() == 0) {
                 linSelectFavouriteFood.setVisibility(View.VISIBLE);
-                recyclerView.setVisibility(View.GONE);
             }
 
-
-        } else if (items.size() == 0) {
-            linSelectFavouriteFood.setVisibility(View.VISIBLE);
         }
-
-
     }
 
     @Override

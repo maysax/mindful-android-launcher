@@ -130,8 +130,8 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 favoriteList.removeAll(list);
-                favoriteList.remove(null);
-                list.remove(null);
+                flagAppList.remove(null);
+                allAppList.remove(null);
                 PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
                 PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.JUNKFOOD_APPS, list);
                 if (list.size() == 0 && !DashboardActivity.isJunkFoodOpen) {
@@ -195,7 +195,7 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
                 listAllApps.setVisibility(View.VISIBLE);
                 junkFoodAllAppsAdapter = new JunkFoodFlagAdapter(this, allAppList, false);
                 listAllApps.setAdapter(junkFoodAllAppsAdapter);
-                UIUtils.setDynamicHeight(listAllApps);
+                UIUtils.setDynamicHeight(this,listAllApps);
                 listAllApps.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -208,7 +208,7 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
                 junkFoodAllAppsAdapter = new JunkFoodFlagAdapter(this, allAppList, false);
                 listAllApps.setAdapter(junkFoodAllAppsAdapter);
                 junkFoodAllAppsAdapter.notifyDataSetChanged();
-                UIUtils.setDynamicHeight(listAllApps);
+                UIUtils.setDynamicHeight(this,listAllApps);
             }
             if (flagAppList.size() > 0) {
                 flagAppList = Sorting.sortAppAssignment(this, flagAppList);
@@ -216,7 +216,7 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
                 junkFoodFlagAdapter = new JunkFoodFlagAdapter(this, flagAppList, true);
                 listFlaggedApps.setAdapter(junkFoodFlagAdapter);
                 junkFoodFlagAdapter.notifyDataSetChanged();
-                UIUtils.setDynamicHeight(listFlaggedApps);
+                UIUtils.setDynamicHeight(this,listFlaggedApps);
                 listFlaggedApps.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -229,7 +229,7 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
                 junkFoodFlagAdapter = new JunkFoodFlagAdapter(this, flagAppList, true);
                 listFlaggedApps.setAdapter(junkFoodFlagAdapter);
                 junkFoodFlagAdapter.notifyDataSetChanged();
-                UIUtils.setDynamicHeight(listFlaggedApps);
+                UIUtils.setDynamicHeight(this,listFlaggedApps);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -255,21 +255,34 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
                     try {
                         if (isFlagApp) {
                             if (list.contains(flagAppList.get(position).activityInfo.packageName)) {
-                                list.remove(flagAppList.get(position).activityInfo.packageName);
-                                isLoadFirstTime = false;
-                                allAppList.add(flagAppList.get(position));
-                                flagAppList.remove(flagAppList.get(position));
-                                bindListView();
+                                popup.dismiss();
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        list.remove(flagAppList.get(position).activityInfo.packageName);
+                                        isLoadFirstTime = false;
+                                        allAppList.add(flagAppList.get(position));
+                                        flagAppList.remove(flagAppList.get(position));
+                                        bindListView();
+                                    }
+                                });
+
                             }
                         } else {
                             if (isLoadFirstTime) {
                                 showAlertForFirstTime(position);
                             } else {
-                                list.add(allAppList.get(position).activityInfo.packageName);
-                                isLoadFirstTime = false;
-                                flagAppList.add(allAppList.get(position));
-                                allAppList.remove(allAppList.get(position));
-                                bindListView();
+                                popup.dismiss();
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        list.add(allAppList.get(position).activityInfo.packageName);
+                                        isLoadFirstTime = false;
+                                        flagAppList.add(allAppList.get(position));
+                                        allAppList.remove(allAppList.get(position));
+                                        bindListView();
+                                    }
+                                });
                             }
                         }
                     } catch (Exception e) {
@@ -315,12 +328,18 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
         builder.setPositiveButton(getString(R.string.yes_unhide), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                list.add(allAppList.get(position).activityInfo.packageName);
-                isLoadFirstTime = false;
-                flagAppList.add(allAppList.get(position));
-                allAppList.remove(allAppList.get(position));
-                bindListView();
                 dialog.dismiss();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        list.add(allAppList.get(position).activityInfo.packageName);
+                        isLoadFirstTime = false;
+                        flagAppList.add(allAppList.get(position));
+                        allAppList.remove(allAppList.get(position));
+                        bindListView();
+                    }
+                });
+
             }
         });
         builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {

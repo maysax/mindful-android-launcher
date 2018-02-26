@@ -2,7 +2,6 @@ package co.siempo.phone.adapters.viewholder;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,7 +15,6 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import co.siempo.phone.R;
-import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.utils.PrefSiempo;
 
 
@@ -53,14 +51,6 @@ public class NotificationItemViewHolder extends RecyclerView.ViewHolder {
         return switch_appNotification;
     }
 
-
-    public void displayImage(ApplicationInfo applicationInfo, PackageManager packageManager) {
-        if (CoreApplication.getInstance().iconList.get(applicationInfo.packageName) == null) {
-            imv_appicon.setImageDrawable(applicationInfo.loadIcon(packageManager));
-        } else {
-            imv_appicon.setImageBitmap(CoreApplication.getInstance().iconList.get(applicationInfo.packageName));
-        }
-    }
 
     public void changeNotification(ApplicationInfo applicationInfo, boolean ischecked, ArrayList<String> disableNotificationApps, Context context) {
         if (ischecked && disableNotificationApps.contains(applicationInfo.packageName)) {

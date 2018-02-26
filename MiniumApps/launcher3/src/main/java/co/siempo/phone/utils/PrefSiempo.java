@@ -299,7 +299,7 @@ public class PrefSiempo {
      */
     public void write(String key, Set<String> value) {
         editor.putStringSet(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     /**

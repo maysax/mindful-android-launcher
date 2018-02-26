@@ -2,7 +2,9 @@ package co.siempo.phone.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import java.util.List;
 import co.siempo.phone.R;
 import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.activities.JunkfoodFlaggingActivity;
+import co.siempo.phone.app.BitmapWorkerTask;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.utils.DrawableProvider;
@@ -74,7 +77,18 @@ public class JunkFoodPaneAdapter extends RecyclerView.Adapter<JunkFoodPaneAdapte
             holder.txtAppTextImage.setVisibility(View.GONE);
             holder.imgUnderLine.setVisibility(View.GONE);
             holder.imgAppIcon.setVisibility(View.VISIBLE);
-            holder.imgAppIcon.setImageDrawable(CoreApplication.getInstance().getApplicationIconFromPackageName(item));
+            Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(item);
+            if (bitmap != null) {
+                holder.imgAppIcon.setImageBitmap(bitmap);
+            } else {
+                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, item);
+                CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(item);
+                holder.imgAppIcon.setImageDrawable(drawable);
+            }
+
+
+//            holder.imgAppIcon.setImageDrawable(CoreApplication.getInstance().getApplicationIconFromPackageName(item));
         }
 
         holder.linearLayout.setOnLongClickListener(new View.OnLongClickListener() {

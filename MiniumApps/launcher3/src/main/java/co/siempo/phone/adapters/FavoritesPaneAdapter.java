@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,26 +16,19 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.AppAssignmentActivity;
 import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.activities.FavoriteAppsPositionActivity;
-import co.siempo.phone.activities.ToolPositioningActivity;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.utils.DrawableProvider;
-import co.siempo.phone.utils.PackageUtil;
-import co.siempo.phone.utils.PrefSiempo;
-import co.siempo.phone.utils.UIUtils;
 
 /**
  * Created by Shahab on 2/23/2017.
@@ -84,7 +76,8 @@ public class FavoritesPaneAdapter extends RecyclerView.Adapter<FavoritesPaneAdap
                     holder.imgAppIcon.setVisibility(View.GONE);
                     holder.txtAppTextImage.setVisibility(View.VISIBLE);
                     holder.imgUnderLine.setVisibility(View.VISIBLE);
-                    if(!TextUtils.isEmpty(item.getTitle())){
+                    if (TextUtils.isEmpty(item.getTitle())) {
+                    } else {
                         String fontPath = "fonts/robotocondensedregular.ttf";
                         holder.txtAppTextImage.setText("" + item
                                 .getTitle().charAt(0));
@@ -162,6 +155,22 @@ public class FavoritesPaneAdapter extends RecyclerView.Adapter<FavoritesPaneAdap
         return mainListItemList.size();
     }
 
+    public Drawable getAppIconByPackageName(String ApkTempPackageName, Context context) {
+
+        Drawable drawable;
+
+        try {
+            drawable = context.getPackageManager().getApplicationIcon(ApkTempPackageName);
+
+        } catch (PackageManager.NameNotFoundException e) {
+
+            e.printStackTrace();
+
+            drawable = ContextCompat.getDrawable(context, R.mipmap.ic_launcher);
+        }
+        return drawable;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public View layout;
@@ -184,22 +193,5 @@ public class FavoritesPaneAdapter extends RecyclerView.Adapter<FavoritesPaneAdap
             imgAppIcon=v.findViewById(R.id.imgAppIcon);
             imgView = v.findViewById(R.id.imgView);
         }
-    }
-
-    public  Drawable getAppIconByPackageName(String ApkTempPackageName, Context context){
-
-        Drawable drawable;
-
-        try{
-            drawable = context.getPackageManager().getApplicationIcon(ApkTempPackageName);
-
-        }
-        catch (PackageManager.NameNotFoundException e){
-
-            e.printStackTrace();
-
-            drawable = ContextCompat.getDrawable(context, R.mipmap.ic_launcher);
-        }
-        return drawable;
     }
 }
