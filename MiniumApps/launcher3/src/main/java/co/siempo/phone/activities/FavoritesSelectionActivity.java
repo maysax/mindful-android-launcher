@@ -228,39 +228,48 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
                 if (item.getItemId() == R.id.item_Unflag) {
                     try {
                         if (isFlagApp) {
-                            if (list.contains(favoriteAppList.get(position).activityInfo.packageName)) {
-                                list.remove(favoriteAppList.get(position).activityInfo.packageName);
+                            if (favoriteAppList != null && favoriteAppList
+                                    .size() == 1) {
+                                Toast.makeText(getApplicationContext(),
+                                        "Atleast one app will stay as " +
+                                                "favorite", Toast
+                                                .LENGTH_LONG).show();
+                            } else {
 
-                                //get the JSON array of the ordered of sorted customers
-                                String jsonListOfSortedFavorites = PrefSiempo.getInstance(FavoritesSelectionActivity.this).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
-                                //convert onNoteListChangedJSON array into a List<Long>
-                                Gson gson1 = new Gson();
-                                List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
-                                }.getType());
+                                if (list.contains(favoriteAppList.get(position).activityInfo.packageName)) {
+                                    list.remove(favoriteAppList.get(position).activityInfo.packageName);
 
-                                for (ListIterator<String> it =
-                                     listOfSortFavoritesApps.listIterator(); it.hasNext
-                                        (); ) {
-                                    String packageName = it.next();
-                                    if (favoriteAppList.get(position).activityInfo.packageName.equalsIgnoreCase(packageName)) {
-                                        //Used List Iterator to set empty
-                                        // value for package name retaining
-                                        // the positions of elements
-                                        it.set("");
+                                    //get the JSON array of the ordered of sorted customers
+                                    String jsonListOfSortedFavorites = PrefSiempo.getInstance(FavoritesSelectionActivity.this).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
+                                    //convert onNoteListChangedJSON array into a List<Long>
+                                    Gson gson1 = new Gson();
+                                    List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
+                                    }.getType());
+
+                                    for (ListIterator<String> it =
+                                         listOfSortFavoritesApps.listIterator(); it.hasNext
+                                            (); ) {
+                                        String packageName = it.next();
+                                        if (favoriteAppList.get(position).activityInfo.packageName.equalsIgnoreCase(packageName)) {
+                                            //Used List Iterator to set empty
+                                            // value for package name retaining
+                                            // the positions of elements
+                                            it.set("");
+                                        }
                                     }
+
+
+                                    Gson gson2 = new Gson();
+                                    String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
+                                    PrefSiempo.getInstance(FavoritesSelectionActivity.this).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
+
+
+                                    isLoadFirstTime = false;
+                                    allOtherAppList.add(favoriteAppList.get(position));
+                                    favoriteAppList.remove(favoriteAppList.get(position));
+                                    bindListView();
+                                    setToolBarText(favoriteAppList.size());
                                 }
-
-
-                                Gson gson2 = new Gson();
-                                String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
-                                PrefSiempo.getInstance(FavoritesSelectionActivity.this).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
-
-
-                                isLoadFirstTime = false;
-                                allOtherAppList.add(favoriteAppList.get(position));
-                                favoriteAppList.remove(favoriteAppList.get(position));
-                                bindListView();
-                                setToolBarText(favoriteAppList.size());
                             }
                         } else {
                             if (favoriteAppList != null && favoriteAppList.size() < 12) {
