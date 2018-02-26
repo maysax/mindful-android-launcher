@@ -164,7 +164,7 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
                 listAllOtherApps.setVisibility(View.VISIBLE);
                 favoritesAllAppsAdapter = new FavoritesFlagAdapter(this, allOtherAppList);
                 listAllOtherApps.setAdapter(favoritesAllAppsAdapter);
-                UIUtils.setDynamicHeight(this,listAllOtherApps);
+                UIUtils.setDynamicHeight(this, listAllOtherApps);
                 listAllOtherApps.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -183,7 +183,7 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
                 favoritesFlagAdapter = new FavoritesFlagAdapter(this, favoriteAppList);
                 listFavoriteApps.setAdapter(favoritesFlagAdapter);
                 favoritesFlagAdapter.notifyDataSetChanged();
-                UIUtils.setDynamicHeight(this,listFavoriteApps);
+                UIUtils.setDynamicHeight(this, listFavoriteApps);
                 listFavoriteApps.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

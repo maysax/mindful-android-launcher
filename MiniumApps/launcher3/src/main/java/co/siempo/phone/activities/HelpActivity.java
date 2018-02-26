@@ -3,7 +3,6 @@ package co.siempo.phone.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.IntentCompat;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
@@ -31,7 +30,7 @@ public class HelpActivity extends CoreActivity {
     @Subscribe
     public void homePressEvent(HomePressEvent event) {
         try {
-            if(event.isVisible() && UIUtils.isMyLauncherDefault(this)){
+            if (event.isVisible() && UIUtils.isMyLauncherDefault(this)) {
                 Intent startMain = new Intent(Intent.ACTION_MAIN);
                 startMain.addCategory(Intent.CATEGORY_HOME);
                 startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
