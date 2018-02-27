@@ -567,7 +567,9 @@ public class PackageUtil {
                     .get(item.getId());
             if (junkFoodList.contains(item.getPackageName()) ||
                     (null != appMenu && TextUtils
-                            .isEmpty(appMenu.getApplicationName()))) {
+                            .isEmpty(appMenu.getApplicationName()) && item
+                            .getItemType() != MainListItemType.DEFAULT)
+                    ) {
                 junkListItems.add(item);
 
             }
