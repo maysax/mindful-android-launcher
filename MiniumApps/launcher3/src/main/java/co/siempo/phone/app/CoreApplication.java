@@ -303,7 +303,7 @@ public abstract class CoreApplication extends MultiDexApplication {
                 list.add(null);
                 list.addAll(getPackageManager().queryIntentActivities(intentNotes, 0));
 
-                if (UIUtils.isAppInstalled(this, "com.google.android.keep")) {
+                if (UIUtils.isAppInstalledAndEnabled(this, "com.google.android.keep")) {
                     Intent keepIntent = new Intent();
                     keepIntent.setPackage("com.google.android.keep");
                     List<ResolveInfo> resolveInfo = getPackageManager().queryIntentActivities(keepIntent, 0);

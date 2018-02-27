@@ -108,13 +108,17 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                         if (appMenu.getApplicationName().equalsIgnoreCase("Notes")) {
                             new ActivityHelper(context).openNotesApp(false);
                         } else {
-                            if (UIUtils.isAppInstalled(context, appMenu.getApplicationName().trim())) {
-                                if (PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS,
-                                        new HashSet<String>()).contains(appMenu.getApplicationName().trim())) {
-                                    openAppAssignmentScreen(item);
-                                } else {
+                            if (UIUtils.isInstalled(context, appMenu.getApplicationName().trim())) {
+                                if (UIUtils.isAppEnabled(context, appMenu.getApplicationName().trim())) {
+                                    if (PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS,
+                                            new HashSet<String>()).contains(appMenu.getApplicationName().trim())) {
+                                        openAppAssignmentScreen(item);
+                                    } else {
 //                                if a 3rd party app is already assigned to this tool
-                                    new ActivityHelper(context).openAppWithPackageName(appMenu.getApplicationName().trim());
+                                        new ActivityHelper(context).openAppWithPackageName(appMenu.getApplicationName().trim());
+                                    }
+                                } else {
+                                    openAppAssignmentScreen(item);
                                 }
                             }
                         }
@@ -126,7 +130,12 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                                 new HashSet<String>()).contains(appMenu.getApplicationName().trim())) {
 //                                if a 3rd party app is already assigned to this tool
                             String strPackageName = CoreApplication.getInstance().getApplicationByCategory(id).get(0).activityInfo.packageName;
-                            new ActivityHelper(context).openAppWithPackageName(strPackageName);
+                            if (UIUtils.isAppEnabled(context, strPackageName)) {
+                                new ActivityHelper(context).openAppWithPackageName(strPackageName);
+                            } else {
+                                openAppAssignmentScreen(item);
+                            }
+
                         } else {
                             openAppAssignmentScreen(item);
                         }
