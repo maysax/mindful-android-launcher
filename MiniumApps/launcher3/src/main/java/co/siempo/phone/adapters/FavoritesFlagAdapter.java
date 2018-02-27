@@ -71,7 +71,9 @@ public class FavoritesFlagAdapter extends ArrayAdapter<ResolveInfo> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        holder.txtTitleRed.setVisibility(View.GONE);
+        if (null != holder.txtTitleRed) {
+            holder.txtTitleRed.setVisibility(View.GONE);
+        }
         return convertView;
     }
 
