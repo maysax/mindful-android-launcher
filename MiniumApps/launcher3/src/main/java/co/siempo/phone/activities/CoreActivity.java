@@ -266,6 +266,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     @Override
     protected void onPause() {
         super.onPause();
+
         if (mHomeWatcher != null) mHomeWatcher.stopWatch();
     }
 
