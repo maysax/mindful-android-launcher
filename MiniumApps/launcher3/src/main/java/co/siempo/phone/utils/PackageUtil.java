@@ -439,7 +439,6 @@ public class PackageUtil {
             List<MainListItem> contactItems = new ContactsLoader().loadContacts(context);
             searchItems.addAll(contactItems);
 
-            searchItems.add(new MainListItem(4, context.getString(R.string.title_call), R.drawable.icon_call, MainListItemType.NUMBERS));
             searchItems.add(new MainListItem(1, context.getString(R.string.title_sendAsSMS), R.drawable.ic_messages_tool, MainListItemType.DEFAULT));
             searchItems.add(new MainListItem(2, context.getString(R.string.title_saveNote), R.drawable.ic_notes_tool, MainListItemType.DEFAULT));
             searchItems.add(new MainListItem(3, context.getString(R.string.title_swipe), R.drawable.ic_default_swipe, MainListItemType.DEFAULT));

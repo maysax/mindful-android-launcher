@@ -27,7 +27,7 @@ Build:
     expire_in: "4 week"
     name: "siempo_commit_${CI_BUILD_REF}"
     paths:
-     - /home/gitlab-runner/builds/5a61db0a/0/siempo/siem-android-app/MiniumApps/launcher3/build/outputs/apk/launcher3-alpha-debug.apk
+     - /home/gitlab-runner/builds/5a61db0a/0/siempo/siem-android-app/MiniumApps/launcher3/build/outputs/apk/alphaBeta/debug/launcher3-alpha-beta-debug.apk
     #- /home/gitlab-runner/builds/6ec47538/0/siempo/siem-android-app/MiniumApps/launcher3/build/outputs/apk/launcher3-debug.apk
     
 
