@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -201,15 +202,12 @@ public class MainFragmentMediator {
                     break;
                 case ACTION:
                     if (getAdapter() != null && TextUtils.isEmpty(getAdapter().getItem(position).getPackageName())) {
-
                         SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance
                                 (DateFormat.FULL, Locale
                                         .getDefault());
 
-                        items.get(position).setDate(Calendar.getInstance().getTime());
-                        items.set(position, items.get(position));
-                        items = Sorting.sortList(items);
-                        PackageUtil.storeSearchList(items, context);
+                        updateStoreList(items,0,getAdapter().getItem(position).getTitle());
+
                         position = getAdapter().getItem(position).getId();
                         new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
                     } else {
@@ -219,12 +217,8 @@ public class MainFragmentMediator {
                             boolean status = new ActivityHelper(fragment.getActivity()).openAppWithPackageName(getAdapter().getItem(position).getPackageName());
                             FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_APPLICATION_PICK, getAdapter().getItem(position).getPackageName(), "");
                             if (status) {
-                                items.get(position).setDate(Calendar.getInstance().getTime());
-                                items.set(position, items.get(position));
-                                //Following line should be added in order to
-                                // sort
-//                                items = Sorting.sortList(items);
-                                PackageUtil.storeSearchList(items, context);
+                                updateStoreList(items,1,getAdapter().getItem(position).getPackageName());
+
                             }
                         }
                     }
@@ -402,6 +396,30 @@ public class MainFragmentMediator {
         if (getAdapter() != null) {
             getAdapter().loadData(items);
             getAdapter().notifyDataSetChanged();
+        }
+    }
+
+
+    public void updateStoreList(List<MainListItem> items,int appType,String title){
+        // appType=0 indicates Tools
+        if(appType==0){
+           for(int i=0;i<items.size();i++){
+               if(TextUtils.isEmpty(items.get(i).getPackageName()) && items.get(i).getTitle().equalsIgnoreCase(title)){
+                   items.get(i).setDate(Calendar.getInstance().getTime());
+                   items.set(i, items.get(i));
+                   PackageUtil.storeSearchList(items, context);
+               }
+           }
+        }
+        // appType=0 indicates Apps
+        if(appType==1){
+            for(int j=0;j<items.size();j++){
+                if(!TextUtils.isEmpty(items.get(j).getPackageName()) && items.get(j).getPackageName().equalsIgnoreCase(title)){
+                    items.get(j).setDate(Calendar.getInstance().getTime());
+                    items.set(j, items.get(j));
+                    PackageUtil.storeSearchList(items, context);
+                }
+            }
         }
     }
 
