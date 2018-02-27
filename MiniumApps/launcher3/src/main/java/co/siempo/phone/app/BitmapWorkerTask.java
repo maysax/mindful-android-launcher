@@ -14,7 +14,7 @@ import co.siempo.phone.utils.PackageUtil;
  * Created by rajeshjadi on 23/2/18.
  */
 
-public class BitmapWorkerTask extends AsyncTask<Void, Void, Void> {
+public class BitmapWorkerTask extends AsyncTask<Object, Void, Void> {
     // Decode image in background.
     String name;
     Context context;
@@ -25,8 +25,8 @@ public class BitmapWorkerTask extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(Void... params) {
-        ApplicationInfo appInfo = null;
+    protected Void doInBackground(Object... params) {
+        ApplicationInfo appInfo;
         try {
             appInfo = context.getPackageManager().getApplicationInfo(name, PackageManager.GET_META_DATA);
             Drawable drawable = appInfo.loadIcon(context.getPackageManager());
