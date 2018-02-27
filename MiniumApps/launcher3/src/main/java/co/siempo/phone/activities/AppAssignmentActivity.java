@@ -21,9 +21,11 @@ import co.siempo.phone.R;
 import co.siempo.phone.adapters.viewholder.AppAssignmentAdapter;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.utils.Sorting;
+import de.greenrobot.event.Subscribe;
 
 public class AppAssignmentActivity extends CoreActivity {
 
@@ -47,6 +49,14 @@ public class AppAssignmentActivity extends CoreActivity {
             item_tools.setTitle(mainListItem.getTitle());
         }
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Subscribe
+    public void appInstalledEvent(AppInstalledEvent event) {
+        if (event.isAppInstalledSuccessfully()) {
+            filterList();
+            initView();
+        }
     }
 
     @Override
@@ -89,7 +99,7 @@ public class AppAssignmentActivity extends CoreActivity {
             }
             for (ResolveInfo resolveInfo : installedPackageList) {
                 if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
-                    if (resolveInfo != null && !connectedAppsList.contains(resolveInfo.activityInfo.packageName)) {
+                    if (!connectedAppsList.contains(resolveInfo.activityInfo.packageName)) {
                         appList.add(resolveInfo);
                     }
                 }
