@@ -207,7 +207,7 @@ public class PackageUtil {
      */
     private static NotificationCompat.Builder getNotification(Context context, TableNotificationSms notification) {
         String applicationNameFromPackageName = CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName());
-        int priority = PrefSiempo.getInstance(context).read(PrefSiempo.ALLOW_PEAKING, true) ? Notification.PRIORITY_DEFAULT : Notification.PRIORITY_HIGH;
+        int priority = !PrefSiempo.getInstance(context).read(PrefSiempo.ALLOW_PEAKING, true) ? Notification.PRIORITY_DEFAULT : Notification.PRIORITY_HIGH;
         NotificationCompat.Builder b
                 = new NotificationCompat.Builder(context, applicationNameFromPackageName);
         PendingIntent contentIntent = getPendingIntent(context, notification);
@@ -354,7 +354,7 @@ public class PackageUtil {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private static NotificationChannel createChannel(Context context, String channelName) {
-        int priority = PrefSiempo.getInstance(context).read(PrefSiempo.ALLOW_PEAKING, true) ? NotificationManager.IMPORTANCE_DEFAULT : NotificationManager.IMPORTANCE_HIGH;
+        int priority = !PrefSiempo.getInstance(context).read(PrefSiempo.ALLOW_PEAKING, true) ? NotificationManager.IMPORTANCE_DEFAULT : NotificationManager.IMPORTANCE_HIGH;
         NotificationChannel chan = new NotificationChannel(channelName,
                 channelName, priority);
         chan.setLightColor(Color.BLUE);

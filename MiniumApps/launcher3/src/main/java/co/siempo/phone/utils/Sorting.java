@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.MainListItem;
 
 import static java.util.Collections.sort;
@@ -52,11 +53,7 @@ public class Sorting {
         sort(list, new Comparator<String>() {
             @Override
             public int compare(final String object1, final String object2) {
-                if (object1 != null && object2 != null) {
-                    return object1.compareTo(object2);
-                } else {
-                    return 1;
-                }
+                return CoreApplication.getInstance().getApplicationNameFromPackageName(object1).compareTo(CoreApplication.getInstance().getApplicationNameFromPackageName(object2));
             }
         });
         return list;

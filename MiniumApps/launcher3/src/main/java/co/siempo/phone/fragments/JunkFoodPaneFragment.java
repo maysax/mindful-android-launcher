@@ -91,6 +91,7 @@ public class JunkFoodPaneFragment extends CoreFragment {
                 boolean isHideIconBranding = PrefSiempo.getInstance(context).read(PrefSiempo.IS_ICON_BRANDING, true);
                 mAdapter = new JunkFoodPaneAdapter(getActivity(), items, isHideIconBranding);
                 recyclerView.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
                 linSelectJunkFood.setVisibility(View.GONE);
 
             }

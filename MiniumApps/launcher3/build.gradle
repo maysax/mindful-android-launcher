@@ -45,17 +45,15 @@ android {
 
 
     }
-    flavorDimensions "alpha", "beta"
+    flavorDimensions "Siempo"
     productFlavors {
         alpha {
-//            versionCode 1
-//            versionName "1"
-            dimension "alpha"
+            dimension "Siempo"
             versionCode 11301
             versionName "${0}.${0}.${11}.${3}-${buildTime}"
         }
         beta {
-            dimension "beta"
+            dimension "Siempo"
             versionCode 11111
             versionName "${0}.${0}.${11}.${1}-${buildTime}"
         }
