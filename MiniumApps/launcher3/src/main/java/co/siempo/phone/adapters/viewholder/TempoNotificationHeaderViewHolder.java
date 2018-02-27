@@ -33,7 +33,7 @@ public class TempoNotificationHeaderViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void render(String text) {
-        txt_headerName.setText(text);
+        txt_headerName.setText("" + text);
     }
 
 
