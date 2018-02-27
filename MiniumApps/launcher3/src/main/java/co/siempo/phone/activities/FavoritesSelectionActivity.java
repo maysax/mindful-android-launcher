@@ -19,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -219,54 +218,66 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
             popup.dismiss();
         }
         popup = new PopupMenu(FavoritesSelectionActivity.this, view, Gravity.END);
+
+        popup.getMenuInflater().inflate(R.menu.junkfood_popup, popup.getMenu());
+        MenuItem menuItem = popup.getMenu().findItem(R.id.item_Unflag);
+
+        if (isFlagApp) {
+            if (favoriteAppList
+                    .size() == 1) {
+                menuItem.setVisible(false);
+            } else {
+                menuItem.setVisible(true);
+            }
+        } else {
+            if (favoriteAppList != null && (favoriteAppList.size() < 12)) {
+                menuItem.setVisible(true);
+            } else {
+                menuItem.setVisible(false);
+            }
+        }
+        menuItem.setTitle(isFlagApp ? getString(R.string.favorite_menu_unselect) : getString(R.string.favorite_menu_select));
+
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.item_Unflag) {
+                    popup.dismiss();
                     try {
                         if (isFlagApp) {
-                            if (favoriteAppList != null && favoriteAppList
-                                    .size() == 1) {
-                                Toast.makeText(getApplicationContext(),
-                                        getString(R.string.atleast_one_fav_app)
-                                        , Toast
-                                                .LENGTH_LONG).show();
-                            } else {
+                            if (list.contains(favoriteAppList.get(position).activityInfo.packageName)) {
+                                list.remove(favoriteAppList.get(position).activityInfo.packageName);
 
-                                if (list.contains(favoriteAppList.get(position).activityInfo.packageName)) {
-                                    list.remove(favoriteAppList.get(position).activityInfo.packageName);
+                                //get the JSON array of the ordered of sorted customers
+                                String jsonListOfSortedFavorites = PrefSiempo.getInstance(FavoritesSelectionActivity.this).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
+                                //convert onNoteListChangedJSON array into a List<Long>
+                                Gson gson1 = new Gson();
+                                List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
+                                }.getType());
 
-                                    //get the JSON array of the ordered of sorted customers
-                                    String jsonListOfSortedFavorites = PrefSiempo.getInstance(FavoritesSelectionActivity.this).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
-                                    //convert onNoteListChangedJSON array into a List<Long>
-                                    Gson gson1 = new Gson();
-                                    List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
-                                    }.getType());
-
-                                    for (ListIterator<String> it =
-                                         listOfSortFavoritesApps.listIterator(); it.hasNext
-                                            (); ) {
-                                        String packageName = it.next();
-                                        if (favoriteAppList.get(position).activityInfo.packageName.equalsIgnoreCase(packageName)) {
-                                            //Used List Iterator to set empty
-                                            // value for package name retaining
-                                            // the positions of elements
-                                            it.set("");
-                                        }
+                                for (ListIterator<String> it =
+                                     listOfSortFavoritesApps.listIterator(); it.hasNext
+                                        (); ) {
+                                    String packageName = it.next();
+                                    if (favoriteAppList.get(position).activityInfo.packageName.equalsIgnoreCase(packageName)) {
+                                        //Used List Iterator to set empty
+                                        // value for package name retaining
+                                        // the positions of elements
+                                        it.set("");
                                     }
-
-
-                                    Gson gson2 = new Gson();
-                                    String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
-                                    PrefSiempo.getInstance(FavoritesSelectionActivity.this).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
-
-
-                                    isLoadFirstTime = false;
-                                    allOtherAppList.add(favoriteAppList.get(position));
-                                    favoriteAppList.remove(favoriteAppList.get(position));
-                                    bindListView();
-                                    setToolBarText(favoriteAppList.size());
                                 }
+
+
+                                Gson gson2 = new Gson();
+                                String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
+                                PrefSiempo.getInstance(FavoritesSelectionActivity.this).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
+
+
+                                isLoadFirstTime = false;
+                                allOtherAppList.add(favoriteAppList.get(position));
+                                favoriteAppList.remove(favoriteAppList.get(position));
+                                bindListView();
+                                setToolBarText(favoriteAppList.size());
                             }
                         } else {
                             if (favoriteAppList != null && favoriteAppList.size() < 12) {
@@ -275,8 +286,6 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
                                 favoriteAppList.add(allOtherAppList.get(position));
                                 allOtherAppList.remove(allOtherAppList.get(position));
                                 bindListView();
-                            } else {
-                                Toast.makeText(getApplicationContext(), R.string.not_more_than_twelve_fav_app, Toast.LENGTH_LONG).show();
                             }
                             setToolBarText(favoriteAppList.size());
                         }
@@ -285,6 +294,7 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
                     }
                 } else if (item.getItemId() == R.id.item_Info) {
                     try {
+                        popup.dismiss();
                         if (isFlagApp) {
                             ResolveInfo resolveInfo = favoriteAppList.get(position);
                             PackageUtil.appSettings(FavoritesSelectionActivity.this, resolveInfo.activityInfo.packageName);
@@ -299,10 +309,10 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
                 return false;
             }
         });
-        popup.getMenuInflater().inflate(R.menu.junkfood_popup, popup.getMenu());
-        MenuItem menuItem = popup.getMenu().findItem(R.id.item_Unflag);
-        menuItem.setTitle(isFlagApp ? getString(R.string.favorite_menu_unselect) : getString(R.string.favorite_menu_select));
+
         popup.show();
+
+
         popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
             @Override
             public void onDismiss(PopupMenu menu) {
