@@ -305,7 +305,7 @@ public class UIUtils {
     }
 
 
-    public static boolean isAppInstalled(Context context, String packageName) {
+    public static boolean isAppInstalledAndEnabled(Context context, String packageName) {
         PackageManager packageManager = context.getPackageManager();
         ApplicationInfo applicationInfo = null;
         try {
@@ -317,6 +317,33 @@ public class UIUtils {
         return applicationInfo != null && applicationInfo.enabled;
 // Installed
     }
+
+    public static boolean isInstalled(Context context, String packageName) {
+        PackageManager packageManager = context.getPackageManager();
+        ApplicationInfo applicationInfo = null;
+        try {
+            applicationInfo = packageManager.getApplicationInfo(packageName, 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            CoreApplication.getInstance().logException(e);
+            e.printStackTrace();
+        }
+        return applicationInfo != null;
+// Installed
+    }
+
+    public static boolean isAppEnabled(Context context, String packageName) {
+        PackageManager packageManager = context.getPackageManager();
+        ApplicationInfo applicationInfo = null;
+        try {
+            applicationInfo = packageManager.getApplicationInfo(packageName, 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            CoreApplication.getInstance().logException(e);
+            e.printStackTrace();
+        }
+        return applicationInfo.enabled;
+// Installed
+    }
+
 
     public static byte[] convertBitmapToByte(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
