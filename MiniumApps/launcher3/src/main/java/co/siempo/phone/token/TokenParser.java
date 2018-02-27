@@ -36,7 +36,6 @@ public class TokenParser {
 
 //            if (TokenManager.getInstance().get(0).getItemType() == TokenItemType.CONTACT && TokenManager.getInstance().getCurrent().getItemType() == TokenItemType.DATA) {
 //                if (!TokenManager.getInstance().getCurrent().getTitle().trim().isEmpty()) {
-//                    Log.d("hardikkamothi","Parser 5");
 //                    router.route();
 //                }
 //            }

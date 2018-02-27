@@ -58,7 +58,7 @@ public class FavoritesFlagAdapter extends ArrayAdapter<ResolveInfo> {
             holder.txtAppName = convertView.findViewById(R.id.txtAppName);
             holder.imgAppIcon = convertView.findViewById(R.id.imgAppIcon);
             holder.imgChevron = convertView.findViewById(R.id.imgChevron);
-            holder.txtTitleRed = convertView.findViewById(R.id.txtTitleRed);
+            holder.txtNoAppsMessage = convertView.findViewById(R.id.txtNoAppsMessage);
 
             convertView.setTag(holder);
         } else {
@@ -71,7 +71,7 @@ public class FavoritesFlagAdapter extends ArrayAdapter<ResolveInfo> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        holder.txtTitleRed.setVisibility(View.GONE);
+        holder.txtNoAppsMessage.setVisibility(View.GONE);
         return convertView;
     }
 
@@ -79,7 +79,7 @@ public class FavoritesFlagAdapter extends ArrayAdapter<ResolveInfo> {
     private static class ViewHolder {
         ImageView imgChevron, imgAppIcon;
         TextView txtAppName;
-        TextView txtTitleRed;
+        TextView txtNoAppsMessage;
     }
 
 }

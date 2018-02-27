@@ -12,6 +12,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.PopupMenu;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -298,6 +299,17 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         return true;
     }
 
+    private boolean checkToolsDuplicate(List<MainListItem> buildData, String str) {
+        if (buildData != null) {
+            for (MainListItem mainListItem : buildData) {
+                if (mainListItem.getTitle().equalsIgnoreCase(str) && TextUtils.isEmpty(mainListItem.getPackageName().toLowerCase().trim())) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     private String phoneNumberString(String str) {
         return str.replaceAll("\\+", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll(context.getString(R.string.phone_replace_regex), "");
     }
@@ -330,7 +342,6 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
 
             int count = originalData.size();
-
             List<MainListItem> buildData = new ArrayList<>();
             boolean isValidNumber = false;
             if (!searchString.isEmpty()) {
@@ -407,9 +418,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                                         }
                                     } else {
                                         if (originalData.get(i).getTitle().toLowerCase().contains(searchString.toLowerCase())) {
-
-
-                                            if (checkDuplicate(buildData, searchString.toLowerCase().toLowerCase())) {
+                                            if (checkToolsDuplicate(buildData, searchString.toLowerCase().toLowerCase())) {
                                                 buildData.add(originalData.get(i));
                                             }
                                         }
@@ -483,7 +492,6 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             } else {
                 filteredData = new ArrayList<>(originalData);
             }
-
             EventBus.getDefault().post(new MainListAdapterEvent(filteredData));
             notifyDataSetChanged();
         }
