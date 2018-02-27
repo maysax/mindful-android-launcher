@@ -105,6 +105,7 @@ public class TempoAccountSettingFragment extends CoreFragment {
     @Click
     void relChangeHome() {
         Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 

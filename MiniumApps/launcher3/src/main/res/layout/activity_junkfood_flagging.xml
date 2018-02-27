@@ -16,56 +16,12 @@
         android:elevation="@dimen/dp_5"
         android:minHeight="?android:attr/actionBarSize" />
 
-    <ScrollView
-        android:id="@+id/scrollView"
+    <ListView
+        android:id="@+id/listAllApps"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:background="#E81313"
-                android:gravity="center_vertical"
-                android:paddingLeft="55dp"
-                android:paddingRight="55dp"
-                android:text="@string/flag_app"
-                android:textColor="@color/white"
-                android:textSize="20sp" />
+        android:layout_height="wrap_content"
+        android:listSelector="@color/transparent"
+        tools:listitem="@layout/list_item_junkfoodflag" />
 
 
-            <ListView
-                android:id="@+id/listFlaggedApps"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:foreground="#26E81313"
-                android:listSelector="@color/transparent"
-                tools:listitem="@layout/list_item_junkfoodflag" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:background="#666666"
-                android:gravity="center_vertical"
-                android:paddingLeft="55dp"
-                android:paddingRight="55dp"
-                android:text="@string/all_other_installed_apps"
-                android:textColor="@color/white"
-                android:textSize="20sp" />
-
-
-            <ListView
-                android:id="@+id/listAllApps"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:listSelector="@color/transparent"
-                tools:listitem="@layout/list_item_junkfoodflag" />
-
-        </LinearLayout>
-    </ScrollView>
 </LinearLayout>

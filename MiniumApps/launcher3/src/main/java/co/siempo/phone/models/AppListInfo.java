@@ -20,4 +20,18 @@ public class AppListInfo {
     public String errorMessage="";
 
     public String headerName = "";
+
+    public boolean isShowHeader = false;
+    public boolean isShowTitle = false;
+    public boolean isFlagApp = false;
+
+    public AppListInfo(String packageName, boolean isShowHeader, boolean isShowTitle, boolean isFlagApp) {
+        this.packageName = packageName;
+        this.isShowHeader = isShowHeader;
+        this.isShowTitle = isShowTitle;
+        this.isFlagApp = isFlagApp;
+    }
+
+    public AppListInfo() {
+    }
 }
