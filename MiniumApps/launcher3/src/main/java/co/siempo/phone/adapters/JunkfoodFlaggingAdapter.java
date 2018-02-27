@@ -63,8 +63,8 @@ public class JunkfoodFlaggingAdapter extends BaseAdapter {
             holder.imgAppIcon = convertView.findViewById(R.id.imgAppIcon);
             holder.imgChevron = convertView.findViewById(R.id.imgChevron);
             holder.linTop = convertView.findViewById(R.id.linTop);
-            holder.txtNoAppsMessage = convertView.findViewById(R.id.txtHeader);
-            holder.txtHeader = convertView.findViewById(R.id.title);
+            holder.txtNoAppsMessage = convertView.findViewById(R.id.txtNoAppsMessage);
+            holder.txtHeader = convertView.findViewById(R.id.txtHeader);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
