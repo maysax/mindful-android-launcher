@@ -106,6 +106,10 @@ public class FavoriteAppsPositionActivity extends CoreActivity implements OnFavo
             public void onClick(View v) {
                 Intent intent = new Intent(FavoriteAppsPositionActivity.this, FavoritesSelectionActivity.class);
                 startActivity(intent);
+                FavoriteAppsPositionActivity.this
+                        .overridePendingTransition(R.anim
+                                        .fade_in,
+                                R.anim.fade_out);
             }
         });
 
