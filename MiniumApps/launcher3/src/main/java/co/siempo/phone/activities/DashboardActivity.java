@@ -46,6 +46,7 @@ public class DashboardActivity extends CoreActivity {
     public static final String IS_FROM_HOME = "isFromHome";
     public static String isTextLenghGreater = "";
     public static boolean isJunkFoodOpen = false;
+    public static int index = -1;
     PermissionUtil permissionUtil;
     ConnectivityManager connectivityManager;
     AppUpdaterUtils appUpdaterUtils;
@@ -62,7 +63,6 @@ public class DashboardActivity extends CoreActivity {
      */
     private DashboardPagerAdapter mPagerAdapter;
     private AlertDialog notificationDialog;
-    private int index = -1;
     private InputMethodManager inputMethodManager;
 
     /**
@@ -456,8 +456,9 @@ public class DashboardActivity extends CoreActivity {
     public void homePressEvent(HomePressEvent event) {
         try {
             if (UIUtils.isMyLauncherDefault(this)) {
+                index = -1;
                 // onBackPressed();
-                if (null != mPager && mPager.getCurrentItem() == 0) {
+                if (null != mPager) {
                     mPager.setCurrentItem(1);
                 }
 

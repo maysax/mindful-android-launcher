@@ -635,7 +635,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         if (null != imageClear && imageClear.getVisibility() == View
                 .VISIBLE) {
             imageClear.performClick();
-            chipsEditText.setText("");
         }
     }
 
@@ -822,6 +821,5 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
         }
     }
-
 
 }

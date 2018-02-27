@@ -116,6 +116,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             @Override
             public void onHomePressed() {
                 UIUtils.hideSoftKeyboard(CoreActivity.this, getWindow().getDecorView().getWindowToken());
+                DashboardActivity.index = -1;
                 EventBus.getDefault().post(new HomePressEvent(true));
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -266,7 +267,11 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     @Override
     protected void onPause() {
         super.onPause();
-        if (mHomeWatcher != null) mHomeWatcher.stopWatch();
+
+        if (!UIUtils.isMyLauncherDefault(this)) {
+            if (mHomeWatcher != null) mHomeWatcher.stopWatch();
+
+        }
     }
 
     @Override
