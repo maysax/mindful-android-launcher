@@ -203,13 +203,6 @@ public abstract class CoreApplication extends MultiDexApplication {
         this.packagesList = packagesList;
 
 
-        String disable_AppList = PrefSiempo.getInstance(this).read
-                (PrefSiempo.DISABLE_APPLIST, "");
-        if (!TextUtils.isEmpty(disable_AppList)) {
-            Type type = new TypeToken<ArrayList<String>>() {
-            }.getType();
-            disableNotificationApps = new Gson().fromJson(disable_AppList, type);
-        }
         String block_AppList = PrefSiempo.getInstance(this).read(PrefSiempo
                 .BLOCKED_APPLIST, "");
         if (!TextUtils.isEmpty(block_AppList)) {
@@ -226,30 +219,12 @@ public abstract class CoreApplication extends MultiDexApplication {
 
             if (isAppInstallFirstTime) {
                 blockedApps.add(applicationInfo);
-            } else {
-                if (blockedApps.size() > 0) {
-                    for (String blockedApp : blockedApps) {
-                        if (!applicationInfo.equalsIgnoreCase(blockedApp)) {
-                            disableNotificationApps.add(applicationInfo);
-                        }
-                    }
-
-                } else {
-
-                    disableNotificationApps.add(applicationInfo);
-                }
-
             }
         }
 
         String blockedList = new Gson().toJson(blockedApps);
         PrefSiempo.getInstance(this).write(PrefSiempo
                 .BLOCKED_APPLIST, blockedList);
-
-        String disableList = new Gson().toJson(disableNotificationApps);
-        PrefSiempo.getInstance(this).write(PrefSiempo
-                .DISABLE_APPLIST, disableList);
-
     }
 
     /**

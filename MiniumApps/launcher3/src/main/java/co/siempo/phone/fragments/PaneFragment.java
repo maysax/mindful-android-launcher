@@ -12,7 +12,6 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -397,6 +396,8 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
     @Subscribe
     public void searchLayoutEvent(SearchLayoutEvent event) {
         try {
+            TokenItem current = TokenManager.getInstance().getCurrent();
+
             if (event.getString().equalsIgnoreCase("") || event.getString().equalsIgnoreCase("/")
                     || (event.getString().startsWith("/") && event.getString().length() == 2)) {
                 listView.setAdapter(adapter);
@@ -431,6 +432,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                         if (adapter != null)
                             adapter.getFilter().filter(current.getTitle());
                     } else {
+
                         mediator.resetData();
                         if (current.getTitle().trim().isEmpty()) {
                             if (adapter != null) {

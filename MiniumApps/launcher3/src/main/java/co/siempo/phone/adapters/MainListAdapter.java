@@ -330,6 +330,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
 
             int count = originalData.size();
+
             List<MainListItem> buildData = new ArrayList<>();
             boolean isValidNumber = false;
             if (!searchString.isEmpty()) {

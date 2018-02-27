@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.provider.Telephony;
 import android.telephony.SmsMessage;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -102,7 +101,7 @@ public class SmsReceiver extends BroadcastReceiver {
                                 }
                             }
                         }
-                    }else{
+                    } else {
                         Tracer.d("Blocked List Empty");
                     }
                 }

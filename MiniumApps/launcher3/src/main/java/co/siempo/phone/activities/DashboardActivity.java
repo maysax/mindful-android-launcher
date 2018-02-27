@@ -29,7 +29,6 @@ import com.github.javiersantos.appupdater.objects.Update;
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.DashboardPagerAdapter;
-import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.CheckVersionEvent;
 import co.siempo.phone.event.HomePressEvent;

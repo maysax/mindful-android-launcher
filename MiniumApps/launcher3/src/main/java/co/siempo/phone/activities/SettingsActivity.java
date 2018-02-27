@@ -1,8 +1,5 @@
 package co.siempo.phone.activities;
 
-import android.content.Intent;
-import android.util.Log;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 
@@ -30,11 +27,12 @@ public class SettingsActivity extends CoreActivity {
         super.onResume();
 
     }
+
     @Subscribe
     public void homePressEvent(HomePressEvent event) {
         try {
-            if(event.isVisible() && UIUtils.isMyLauncherDefault(this)){
-               finish();
+            if (event.isVisible() && UIUtils.isMyLauncherDefault(this)) {
+                finish();
             }
 
         } catch (Exception e) {
