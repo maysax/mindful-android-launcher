@@ -70,7 +70,11 @@ public class TempoNotificationFragment extends CoreFragment {
             }
         });
         switchAllowPicking.setChecked(PrefSiempo.getInstance(context).read(PrefSiempo.ALLOW_PEAKING, true));
-
+        if (switchAllowPicking.isChecked()) {
+            txtAllowPickingtxt.setText(getString(R.string.msg_allowpeakingon));
+        } else {
+            txtAllowPickingtxt.setText(getString(R.string.msg_allowpeaking));
+        }
     }
 
     @Click
@@ -82,14 +86,15 @@ public class TempoNotificationFragment extends CoreFragment {
     @Click
     void relAllowPicking() {
         boolean allowPeaking = PrefSiempo.getInstance(context).read(PrefSiempo.ALLOW_PEAKING, true);
+
         allowPeaking = !allowPeaking;
         switchAllowPicking.setChecked(allowPeaking);
+        PrefSiempo.getInstance(context).write(PrefSiempo.ALLOW_PEAKING, allowPeaking);
         if (switchAllowPicking.isChecked()) {
             txtAllowPickingtxt.setText(getString(R.string.msg_allowpeakingon));
         } else {
             txtAllowPickingtxt.setText(getString(R.string.msg_allowpeaking));
         }
-        PrefSiempo.getInstance(context).write(PrefSiempo.ALLOW_PEAKING, allowPeaking);
     }
 
 
