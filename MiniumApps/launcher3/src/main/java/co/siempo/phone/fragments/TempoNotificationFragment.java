@@ -48,7 +48,8 @@ public class TempoNotificationFragment extends CoreFragment {
 
     @ViewById
     RelativeLayout relAllowPicking;
-
+    @ViewById
+    TextView txtAllowPickingtxt;
 
     public TempoNotificationFragment() {
         // Required empty public constructor
@@ -83,6 +84,11 @@ public class TempoNotificationFragment extends CoreFragment {
         boolean allowPeaking = PrefSiempo.getInstance(context).read(PrefSiempo.ALLOW_PEAKING, true);
         allowPeaking = !allowPeaking;
         switchAllowPicking.setChecked(allowPeaking);
+        if (switchAllowPicking.isChecked()) {
+            txtAllowPickingtxt.setText(getString(R.string.msg_allowpeakingon));
+        } else {
+            txtAllowPickingtxt.setText(getString(R.string.msg_allowpeaking));
+        }
         PrefSiempo.getInstance(context).write(PrefSiempo.ALLOW_PEAKING, allowPeaking);
     }
 
