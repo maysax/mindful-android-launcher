@@ -190,6 +190,15 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         if (adapter != null) {
             adapter.getFilter().filter("");
         }
+        //Resetting the status bar color on Resume , in order to retain the
+        // status bar color when screen is locked and unlocked and the active
+        // viewpager page is Junk Food Pane
+        if (pagerPane != null && pagerPane.getCurrentItem() == 0) {
+            mWindow.setStatusBarColor(getResources().getColor(R.color
+                    .appland_blue_bright));
+        } else {
+            mWindow.setStatusBarColor(defaultStatusBarColor);
+        }
     }
 
 
