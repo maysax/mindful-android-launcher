@@ -56,7 +56,7 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
-        if (event.getInstalledOrRemoved() == 0) {
+        if (event.isAppInstalledSuccessfully()) {
             loadApps();
         }
     }
