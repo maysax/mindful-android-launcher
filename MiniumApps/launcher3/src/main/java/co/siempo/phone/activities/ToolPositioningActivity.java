@@ -112,6 +112,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
         recyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
         txtSelectTools.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -289,7 +289,7 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
             } else if (batchTime == 30) {
                 txtBatch.setText(context.getString(R.string.batched_every_15_minutes));
                 PrefSiempo.getInstance(context).write(PrefSiempo
-                        .BATCH_TIME, 14);
+                        .BATCH_TIME, 15);
             }
         }
         enableRadioOnPosition(1);

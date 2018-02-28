@@ -29,7 +29,7 @@ import co.siempo.phone.utils.Sorting;
 
 public class ToolSelectionActivity extends CoreActivity {
 
-    public static final int TOOL_SLECTION = 100;
+    public static final int TOOL_SELECTION = 100;
     private HashMap<Integer, AppMenu> map;
     private Toolbar toolbar;
     private ArrayList<MainListItem> items = new ArrayList<>();
@@ -58,7 +58,7 @@ public class ToolSelectionActivity extends CoreActivity {
 
 
     /**
-     * change text color of menuitem
+     * change text color of Menuitem
      *
      * @param menuItem
      * @param color
@@ -88,6 +88,7 @@ public class ToolSelectionActivity extends CoreActivity {
         super.onPause();
         FirebaseHelper.getIntance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
     }
+
     private void initView() {
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.select_tools);
@@ -116,7 +117,7 @@ public class ToolSelectionActivity extends CoreActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == TOOL_SLECTION) {
+        if (requestCode == TOOL_SELECTION) {
             if (resultCode == RESULT_OK) {
                 mAdapter.refreshEvents(items);
             }
