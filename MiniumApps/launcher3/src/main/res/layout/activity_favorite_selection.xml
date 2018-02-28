@@ -16,58 +16,58 @@
         android:elevation="@dimen/dp_5"
         android:minHeight="?android:attr/actionBarSize"/>
 
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <!--<ScrollView-->
+    <!--android:id="@+id/scrollView"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent">-->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="vertical">-->
 
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:background="@color/section_title_bg"
-                android:gravity="center_vertical"
-                android:paddingLeft="55dp"
-                android:paddingRight="55dp"
-                android:text="@string/str_frequently_used_apps"
-                android:textColor="@color/white"
-                android:textSize="20sp"/>
+    <!--<TextView-->
+    <!--android:id="@+id/title"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="56dp"-->
+    <!--android:background="@color/section_title_bg"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:paddingLeft="55dp"-->
+    <!--android:paddingRight="55dp"-->
+    <!--android:text="@string/str_frequently_used_apps"-->
+    <!--android:textColor="@color/white"-->
+    <!--android:textSize="20sp"/>-->
 
-            <TextView
-                android:id="@+id/txtValidateFavoritesApps"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:foreground="#26E81313"
-                android:gravity="center_vertical"
-                android:paddingLeft="55dp"
-                android:paddingRight="55dp"
-                android:text="@string/str_blank_validation_below"
-                android:textColor="#57000000"
-                android:textSize="16sp"
-                android:visibility="gone"/>
+    <!--<TextView-->
+    <!--android:id="@+id/txtValidateFavoritesApps"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="56dp"-->
+    <!--android:foreground="#26E81313"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:paddingLeft="55dp"-->
+    <!--android:paddingRight="55dp"-->
+    <!--android:text="@string/str_blank_validation_below"-->
+    <!--android:textColor="#57000000"-->
+    <!--android:textSize="16sp"-->
+    <!--android:visibility="gone"/>-->
 
-            <ListView
-                android:id="@+id/lst_favoritesApps"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:listSelector="@color/transparent"
-                tools:listitem="@layout/list_item_junkfoodflag"/>
+    <!--<ListView-->
+    <!--android:id="@+id/lst_favoritesApps"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:listSelector="@color/transparent"-->
+    <!--tools:listitem="@layout/list_item_junkfoodflag"/>-->
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:background="@color/section_title_bg"
-                android:gravity="center_vertical"
-                android:paddingLeft="55dp"
-                android:paddingRight="55dp"
-                android:text="@string/all_other_installed_apps"
-                android:textColor="@color/white"
-                android:textSize="20sp"/>
+    <!--<TextView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="56dp"-->
+    <!--android:background="@color/section_title_bg"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:paddingLeft="55dp"-->
+    <!--android:paddingRight="55dp"-->
+    <!--android:text="@string/all_other_installed_apps"-->
+    <!--android:textColor="@color/white"-->
+    <!--android:textSize="20sp"/>-->
 
             <TextView
                 android:id="@+id/txtValidateAllOtherApps"
@@ -88,6 +88,6 @@
                 android:listSelector="@color/transparent"
                 tools:listitem="@layout/list_item_junkfoodflag"/>
 
-        </LinearLayout>
-    </ScrollView>
+    <!--</LinearLayout>-->
+    <!--</ScrollView>-->
 </LinearLayout>
