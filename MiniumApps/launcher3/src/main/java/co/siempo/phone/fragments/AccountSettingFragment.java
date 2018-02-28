@@ -22,7 +22,7 @@ import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.utils.PrefSiempo;
 
 @EFragment(R.layout.fragment_tempo_account_settings)
-public class TempoAccountSettingFragment extends CoreFragment {
+public class AccountSettingFragment extends CoreFragment {
 
 
     @ViewById
@@ -42,12 +42,12 @@ public class TempoAccountSettingFragment extends CoreFragment {
     RelativeLayout relUpdateEmail;
     @ViewById
     RelativeLayout relChangeHome;
+    private long startTime = 0;
 
 
-    public TempoAccountSettingFragment() {
+    public AccountSettingFragment() {
         // Required empty public constructor
     }
-
 
     @AfterViews
     void afterViews() {
@@ -96,7 +96,6 @@ public class TempoAccountSettingFragment extends CoreFragment {
         });
     }
 
-
     @Click
     void relUpdateEmail() {
         ((CoreActivity) getActivity()).loadChildFragment(TempoUpdateEmailFragment_.builder().build(), R.id.tempoView);
@@ -107,6 +106,18 @@ public class TempoAccountSettingFragment extends CoreFragment {
         Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        startTime = System.currentTimeMillis();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        FirebaseHelper.getIntance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
     }
 
 }

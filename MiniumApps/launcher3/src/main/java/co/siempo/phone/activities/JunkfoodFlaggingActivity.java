@@ -29,6 +29,7 @@ import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.HomePressEvent;
 import co.siempo.phone.log.Tracer;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.models.AppListInfo;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
@@ -48,6 +49,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
     private ArrayList<AppListInfo> flagAppList = new ArrayList<>();
     private ArrayList<AppListInfo> unflageAppList = new ArrayList<>();
     private ArrayList<AppListInfo> bindingList = new ArrayList<>();
+    private long startTime = 0;
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
@@ -140,7 +142,6 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
         dialog.show();
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.dialog_blue));
     }
-
 
     /**
      * Show save dialog for saving the user filter data.
@@ -291,7 +292,6 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
         });
     }
 
-
     /**
      * This dialog shows when user comes in this screen and user flag first application
      *
@@ -333,18 +333,15 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.dialog_red));
     }
 
-    @Subscribe
-    public void homePressEvent(HomePressEvent event) {
-        try {
-            if (event.isVisible() && UIUtils.isMyLauncherDefault(this)) {
-                finish();
-
-            }
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            Tracer.e(e, e.getMessage());
-        }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startTime = System.currentTimeMillis();
     }
 
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        FirebaseHelper.getIntance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
+    }
 }

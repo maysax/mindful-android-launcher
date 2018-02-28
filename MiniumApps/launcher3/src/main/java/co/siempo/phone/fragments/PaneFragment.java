@@ -12,6 +12,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -54,6 +55,7 @@ import co.siempo.phone.customviews.ItemOffsetDecoration;
 import co.siempo.phone.customviews.SearchLayout;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainFragmentMediator;
 import co.siempo.phone.main.MainListAdapterEvent;
@@ -83,6 +85,7 @@ import me.relex.circleindicator.CircleIndicator;
 public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
     public static int currentIndex = -1;
+    PanePagerAdapter mPagerAdapter;
     private LinearLayout linTopDoc;
     private ViewPager pagerPane;
     private LinearLayout linPane;
@@ -118,21 +121,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
     private ImageView imageClear;
     private View rootView;
     private InputMethodManager inputMethodManager;
-    View.OnFocusChangeListener onFocusChangeSearchListener = new View
-            .OnFocusChangeListener() {
-        @Override
-        public void onFocusChange(View v, boolean hasFocus) {
-            if (hasFocus) {
-                searchLayout.setVisibility(View.VISIBLE);
-                cardViewEdtSearch.setVisibility(View.VISIBLE);
-                relSearchTools.setVisibility(View.GONE);
-                inputMethodManager.toggleSoftInputFromWindow(
-                        searchLayout.getApplicationWindowToken(),
-                        InputMethodManager.SHOW_FORCED, 0);
-
-            }
-        }
-    };
+    private long startTime = 0;
     private CircleIndicator indicator;
 
     public PaneFragment() {
@@ -232,7 +221,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         edtSearchToolsRounded.clearFocus();
         chipsEditText.clearFocus();
 
-        PanePagerAdapter mPagerAdapter = new PanePagerAdapter(getChildFragmentManager());
+        mPagerAdapter = new PanePagerAdapter(getChildFragmentManager());
         pagerPane.setAdapter(mPagerAdapter);
         indicator.setViewPager(pagerPane);
         if (DashboardActivity.isJunkFoodOpen) {
@@ -241,7 +230,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         }
         if (currentIndex == -1) {
             currentIndex = 2;
-
+            startTime = System.currentTimeMillis();
         }
         pagerPane.setCurrentItem(currentIndex);
         bindBottomDoc();
@@ -475,6 +464,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
      */
     private void setViewPagerPageChanged() {
         pagerPane.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
             @Override
             public void onPageScrolled(int i, float v, int i1) {
                 edtSearchToolsRounded.clearFocus();
@@ -486,6 +476,10 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                 //Indicator to be set here so that when coming from another
                 // application, the sliding dots retain the shape as previous
                 indicator.setViewPager(pagerPane);
+                if (currentIndex != -1) {
+//                    bindFirebase(i);
+                }
+
                 currentIndex = i;
                 //Make the junk food pane visible
                 if (i == 0) {
@@ -517,17 +511,34 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                     chipsEditText.clearFocus();
                     //Focus Change Listener for Search in List
                     searchEditTextFocusChanged();
-
-
                 }
 
             }
 
             @Override
             public void onPageScrollStateChanged(int i) {
-
             }
         });
+    }
+
+    private void bindFirebase(int i) {
+        if (currentIndex == 0 && i == 1) {
+            Log.d("Firebase ", "JunkFoodEnd");
+            FirebaseHelper.getIntance().logScreenUsageTime(JunkFoodPaneFragment.class.getSimpleName(), startTime);
+            startTime = System.currentTimeMillis();
+        } else if (currentIndex == 1 && i == 2) {
+            Log.d("Firebase ", "Favorite End");
+            FirebaseHelper.getIntance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), startTime);
+            startTime = System.currentTimeMillis();
+        } else if (currentIndex == 2 && i == 1) {
+            Log.d("Firebase ", "Tools End");
+            FirebaseHelper.getIntance().logScreenUsageTime(ToolsPaneFragment.class.getSimpleName(), startTime);
+            startTime = System.currentTimeMillis();
+        } else if (currentIndex == 1 && i == 0) {
+            Log.d("Firebase ", "Favorite End");
+            FirebaseHelper.getIntance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), startTime);
+            startTime = System.currentTimeMillis();
+        }
     }
 
     private void junkFoodAppPane() {
@@ -777,7 +788,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             return gestureDetector.onTouchEvent(event);
         }
 
-        public void onSwipeRight(int pos) {
+        void onSwipeRight(int pos) {
             //Do what you want after swiping left to right
             if (pagerPane != null) {
                 pagerPane.setCurrentItem(0);
@@ -785,7 +796,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
         }
 
-        public void onSwipeLeft(int pos) {
+        void onSwipeLeft(int pos) {
 
             //Do what you want after swiping right to left
         }

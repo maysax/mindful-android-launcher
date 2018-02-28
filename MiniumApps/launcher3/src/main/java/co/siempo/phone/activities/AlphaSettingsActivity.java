@@ -37,7 +37,7 @@ import static co.siempo.phone.activities.DashboardActivity.IS_FROM_HOME;
 
 
 @EActivity(R.layout.activity_siempo_alpha_settings)
-public class SiempoAlphaSettingsActivity extends CoreActivity {
+public class AlphaSettingsActivity extends CoreActivity {
 
     @ViewById
     ImageView icon_UserId;
@@ -61,7 +61,7 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
 
 
     public void initView() {
-        context = SiempoAlphaSettingsActivity.this;
+        context = AlphaSettingsActivity.this;
         ln_suppressedNotifications = findViewById(R.id.ln_suppressedNotifications);
         ln_permissions = findViewById(R.id.ln_permissions);
         icon_SuppressedNotifications = findViewById(R.id.icon_SuppressedNotifications);
@@ -100,7 +100,7 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
         ln_permissions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SiempoAlphaSettingsActivity.this, SiempoPermissionActivity_.class);
+                Intent intent = new Intent(AlphaSettingsActivity.this, SiempoPermissionActivity_.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra(IS_FROM_HOME, false);
@@ -114,7 +114,7 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        FirebaseHelper.getIntance().logScreenUsageTime(SiempoAlphaSettingsActivity.this.getClass().getSimpleName(), startTime);
+        FirebaseHelper.getIntance().logScreenUsageTime(AlphaSettingsActivity.this.getClass().getSimpleName(), startTime);
     }
 
     @Override

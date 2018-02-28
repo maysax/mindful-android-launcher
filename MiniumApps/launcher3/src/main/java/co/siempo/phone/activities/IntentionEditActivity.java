@@ -29,10 +29,11 @@ import android.widget.ViewFlipper;
 
 import co.siempo.phone.R;
 import co.siempo.phone.customviews.LockEditText;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 
-public class IntentionEditActivity extends BaseActivity implements View.OnClickListener {
+public class IntentionEditActivity extends CoreActivity implements View.OnClickListener {
 
     private TextView txtSave;
     private Toolbar toolbar;
@@ -47,6 +48,7 @@ public class IntentionEditActivity extends BaseActivity implements View.OnClickL
     private LinearLayout linHelpWindow;
     private RelativeLayout pauseContainer;
     private String strIntentField;
+    private long startTime = 0;
 
 
     @Override
@@ -266,10 +268,6 @@ public class IntentionEditActivity extends BaseActivity implements View.OnClickL
         linHelpWindow.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
 
     private void initView() {
         txtSave = findViewById(R.id.txtSave);
@@ -312,5 +310,17 @@ public class IntentionEditActivity extends BaseActivity implements View.OnClickL
                 txtTwo();
                 break;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startTime = System.currentTimeMillis();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        FirebaseHelper.getIntance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
     }
 }
