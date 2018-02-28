@@ -199,6 +199,11 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         } else {
             mWindow.setStatusBarColor(defaultStatusBarColor);
         }
+
+        if (null != imageClear && imageClear.getVisibility() == View
+                .VISIBLE) {
+            imageClear.performClick();
+        }
     }
 
 
@@ -632,10 +637,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         if (inputMethodManager != null) {
             inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
         }
-        if (null != imageClear && imageClear.getVisibility() == View
-                .VISIBLE) {
-            imageClear.performClick();
-        }
+
     }
 
     public void resetSearchList() {

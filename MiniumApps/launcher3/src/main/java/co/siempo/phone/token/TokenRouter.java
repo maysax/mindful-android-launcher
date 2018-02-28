@@ -50,10 +50,7 @@ public class TokenRouter {
     }
 
     public void createNote(Context context) {
-//        context.sendBroadcast(new Intent().setAction("minium.co.notes.CREATE_NOTES")
-//                .putExtra(DataUtils.NOTE_TITLE, TokenManager.getInstance().getCurrent().getTitle()));
         DataUtils.saveNotes(context, TokenManager.getInstance().getCurrent().getTitle());
-        TokenManager.getInstance().clear();
     }
 
 
