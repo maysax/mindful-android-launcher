@@ -30,6 +30,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -469,14 +470,12 @@ public class PackageUtil {
         if (appList.size() > 0) {
 
             String jsonListOfSortedFavorites = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
-
             List<String> listOfSortFavoritesApps;
             if (!TextUtils.isEmpty(jsonListOfSortedFavorites)) {
 
+
                 listOfSortFavoritesApps = syncFavoriteList(jsonListOfSortedFavorites, context);
-
                 sortedFavoriteList = sortFavoriteAppsByPosition(listOfSortFavoritesApps, appList, context);
-
             } else {
                 sortedFavoriteList = addDefaultFavoriteApps(context, appList);
             }
@@ -519,10 +518,13 @@ public class PackageUtil {
 
             for (String packageName : favorite_List_App) {
                 if (!listOfSortFavoritesApps.contains(packageName)) {
-                    for (int j = 0; j < listOfSortFavoritesApps.size(); j++) {
-                        if (TextUtils.isEmpty(listOfSortFavoritesApps.get(j).trim())) {
-                            listOfSortFavoritesApps.set(j, packageName);
-                            break;
+                    boolean isEnable = UIUtils.isAppInstalledAndEnabled(context,packageName);
+                    if(isEnable){
+                        for (int j = 0; j < listOfSortFavoritesApps.size(); j++) {
+                            if (TextUtils.isEmpty(listOfSortFavoritesApps.get(j).trim())) {
+                                listOfSortFavoritesApps.set(j, packageName);
+                                break;
+                            }
                         }
                     }
                 }
@@ -593,10 +595,14 @@ public class PackageUtil {
         ArrayList<MainListItem> items = new ArrayList<>();
         String CHROME_PACKAGE = "com.android.chrome", SYSTEM_SETTING = "com.android.settings";
 
+
         for (int i = 0; i < appList.size(); i++) {
             if (!TextUtils.isEmpty(appList.get(i).getPackageName())) {
                 if (appList.get(i).getPackageName().equalsIgnoreCase(CHROME_PACKAGE) || appList.get(i).getPackageName().equalsIgnoreCase(SYSTEM_SETTING)) {
-                    items.add(appList.get(i));
+                    boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, appList.get(i).getPackageName());
+                    if(isEnable){
+                        items.add(appList.get(i));
+                    }
                 }
             }
         }
@@ -620,9 +626,12 @@ public class PackageUtil {
             if (!listOfSortFavoritesApps.contains(CHROME_PACKAGE)) {
                 for (int i = 0; i < listOfSortFavoritesApps.size(); i++) {
                     if (TextUtils.isEmpty(listOfSortFavoritesApps.get(i).trim())) {
-                        listOfSortFavoritesApps.set(i, CHROME_PACKAGE);
-                        if (list != null && !list.contains(CHROME_PACKAGE)) {
-                            list.add(CHROME_PACKAGE);
+                        boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, CHROME_PACKAGE);
+                        if(isEnable){
+                            listOfSortFavoritesApps.set(i, CHROME_PACKAGE);
+                            if (list != null && !list.contains(CHROME_PACKAGE)) {
+                                list.add(CHROME_PACKAGE);
+                            }
                         }
                         break;
                     }
@@ -632,9 +641,12 @@ public class PackageUtil {
             if (!listOfSortFavoritesApps.contains(SYSTEM_SETTING)) {
                 for (int i = 0; i < listOfSortFavoritesApps.size(); i++) {
                     if (TextUtils.isEmpty(listOfSortFavoritesApps.get(i).trim())) {
-                        listOfSortFavoritesApps.set(i, SYSTEM_SETTING);
-                        if (list != null && !list.contains(SYSTEM_SETTING)) {
-                            list.add(SYSTEM_SETTING);
+                        boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, SYSTEM_SETTING);
+                        if(isEnable){
+                            listOfSortFavoritesApps.set(i, SYSTEM_SETTING);
+                            if (list != null && !list.contains(SYSTEM_SETTING)) {
+                                list.add(SYSTEM_SETTING);
+                            }
                         }
                         break;
                     }
@@ -642,16 +654,26 @@ public class PackageUtil {
             }
         } else {
             listOfSortFavoritesApps = new ArrayList<>();
-            listOfSortFavoritesApps.add(CHROME_PACKAGE);
-            listOfSortFavoritesApps.add(SYSTEM_SETTING);
+            boolean isChromeEnable = UIUtils.isAppInstalledAndEnabled(context, CHROME_PACKAGE);
+            if(isChromeEnable){
+                listOfSortFavoritesApps.add(CHROME_PACKAGE);
+            }
+            boolean isSystemSettingEnable = UIUtils.isAppInstalledAndEnabled(context, SYSTEM_SETTING);
+            if(isSystemSettingEnable){
+                listOfSortFavoritesApps.add(SYSTEM_SETTING);
+            }
             int remainingCount = 12 - listOfSortFavoritesApps.size();
             for (int j = 0; j < remainingCount; j++) {
                 listOfSortFavoritesApps.add("");
             }
 
             if (list != null) {
-                list.add(CHROME_PACKAGE);
-                list.add(SYSTEM_SETTING);
+                if(isChromeEnable) {
+                    list.add(CHROME_PACKAGE);
+                }
+                if(isSystemSettingEnable) {
+                    list.add(SYSTEM_SETTING);
+                }
             }
         }
 

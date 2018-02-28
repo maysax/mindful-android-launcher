@@ -10,6 +10,7 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +34,7 @@ import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.models.AppListInfo;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.Subscribe;
 
 public class FavoritesSelectionActivity extends AppCompatActivity {
@@ -133,10 +135,13 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
             bindingList = new ArrayList<>();
             for (ResolveInfo resolveInfo : installedPackageList) {
                 if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
-                    if (list.contains(resolveInfo.activityInfo.packageName)) {
-                        favoriteList.add(new AppListInfo(resolveInfo.activityInfo.packageName, false, false, true));
-                    } else {
-                        unfavoriteList.add(new AppListInfo(resolveInfo.activityInfo.packageName, false, false, false));
+                    boolean isEnable = UIUtils.isAppInstalledAndEnabled(this, resolveInfo.activityInfo.packageName);
+                    if(isEnable){
+                        if (list.contains(resolveInfo.activityInfo.packageName)) {
+                            favoriteList.add(new AppListInfo(resolveInfo.activityInfo.packageName, false, false, true));
+                        } else {
+                            unfavoriteList.add(new AppListInfo(resolveInfo.activityInfo.packageName, false, false, false));
+                        }
                     }
                 }
             }
