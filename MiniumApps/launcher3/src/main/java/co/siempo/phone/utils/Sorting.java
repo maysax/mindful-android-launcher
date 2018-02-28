@@ -2,20 +2,13 @@ package co.siempo.phone.utils;
 
 import android.content.Context;
 import android.content.pm.ResolveInfo;
-import android.text.TextUtils;
-import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
 
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.MainListItem;
-import co.siempo.phone.util.Comparators;
 
 import static java.util.Collections.sort;
 
@@ -67,7 +60,7 @@ public class Sorting {
         sort(appList, new Comparator<MainListItem>() {
             @Override
             public int compare(final MainListItem object1, final MainListItem object2) {
-                    return object1.getTitle().toLowerCase().compareTo(object2.getTitle().toLowerCase());
+                return object1.getTitle().toLowerCase().compareTo(object2.getTitle().toLowerCase());
             }
         });
         return appList;

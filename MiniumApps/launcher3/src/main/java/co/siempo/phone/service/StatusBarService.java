@@ -32,8 +32,8 @@ import co.siempo.phone.db.DBClient;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.FirebaseEvent;
 import co.siempo.phone.helper.FirebaseHelper;
-import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
@@ -161,7 +161,7 @@ public class StatusBarService extends Service {
                         removeApps.add(blockedAppName);
                     }
                 }
-                if(removeApps.size()>0){
+                if (removeApps.size() > 0) {
                     blockedApps.removeAll(removeApps);
                 }
                 String blockedList = new Gson().toJson(blockedApps);
@@ -264,7 +264,7 @@ public class StatusBarService extends Service {
 
         @Override
         public void onChange(boolean selfChange, Uri uri) {
-            PrefSiempo.getInstance(context).write(PrefSiempo.IS_CONTACT_UPDATE,true);
+            PrefSiempo.getInstance(context).write(PrefSiempo.IS_CONTACT_UPDATE, true);
 //            PackageUtil.contactsUpdateInSearchList(context);
         }
     }
@@ -297,16 +297,15 @@ public class StatusBarService extends Service {
                                 //                                PackageUtil.removeAppFromSearchList(uninstallPackageName, context);
                             }
                         }
-                    }
-                    else if(intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED)){
+                    } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED)) {
                         String packageName;
                         if (intent.getData().getEncodedSchemeSpecificPart() != null) {
-                            packageName= intent.getData().getSchemeSpecificPart();
-                            boolean isEnable=UIUtils.isAppInstalledAndEnabled(context, packageName);
-                            if(isEnable){
+                            packageName = intent.getData().getSchemeSpecificPart();
+                            boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, packageName);
+                            if (isEnable) {
                                 addAppFromBlockedList(packageName);
 //                                PackageUtil.addAppInSearchList(packageName, context);
-                            }else{
+                            } else {
                                 removeAppFromBlockedList(packageName);
 //                                PackageUtil.removeAppFromSearchList(packageName, context);
                             }
@@ -318,10 +317,8 @@ public class StatusBarService extends Service {
                             boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, packageName);
                             if (isEnable) {
                                 addAppFromBlockedList(packageName);
-                                PackageUtil.addAppInSearchList(packageName, context);
                             } else {
                                 removeAppFromBlockedList(packageName);
-                                PackageUtil.removeAppFromSearchList(packageName, context);
                                 removeAppFromPreference(context, packageName);
                             }
                         }
