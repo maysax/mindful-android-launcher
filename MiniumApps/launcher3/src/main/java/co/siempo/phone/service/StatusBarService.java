@@ -294,6 +294,7 @@ public class StatusBarService extends Service {
                                 EventBus.getDefault().post(new AppInstalledEvent(0));
                                 CoreApplication.getInstance().addOrRemoveApplicationInfo(true, uninstallPackageName);
                                 PackageUtil.removeAppFromSearchList(uninstallPackageName, context);
+                                removeAppFromPreference(context, uninstallPackageName);
                             }
                         }
                     } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED)) {
