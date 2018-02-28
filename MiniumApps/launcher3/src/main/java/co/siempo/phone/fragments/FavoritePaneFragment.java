@@ -127,5 +127,4 @@ public class FavoritePaneFragment extends CoreFragment {
         }
     }
 
-
 }

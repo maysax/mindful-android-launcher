@@ -49,7 +49,7 @@ import static co.siempo.phone.utils.DataUtils.retrieveData;
 import static co.siempo.phone.utils.DataUtils.saveData;
 
 
-public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClickListener {
+public class NotesEditActivity extends CoreActivity implements Toolbar.OnMenuItemClickListener {
 
     // Layout components
     private EditText titleEdit, bodyEdit;
@@ -204,7 +204,7 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
      * Implementation of AlertDialogs such as
      * - colorPickerDialog, fontDialog and saveChangesDialog -
      *
-     * @param context The Activity context of the dialogs; in this case EditActivity context
+     * @param context The Activity context of the dialogs; in this case NotesEditActivity context
      */
     protected void initDialogs(Context context) {
         // Colour picker dialog
@@ -579,7 +579,7 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
     @Override
     protected void onPause() {
         super.onPause();
-        EventBus.getDefault().post(new FirebaseEvent(EditActivity.this.getClass().getSimpleName(), startTime));
+        EventBus.getDefault().post(new FirebaseEvent(NotesEditActivity.this.getClass().getSimpleName(), startTime));
     }
 
     @Override

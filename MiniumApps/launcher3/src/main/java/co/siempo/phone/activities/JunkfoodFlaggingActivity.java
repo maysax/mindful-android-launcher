@@ -27,6 +27,7 @@ import java.util.Set;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.JunkfoodFlaggingAdapter;
 import co.siempo.phone.event.AppInstalledEvent;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.models.AppListInfo;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
@@ -45,6 +46,7 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
     private ArrayList<AppListInfo> flagAppList = new ArrayList<>();
     private ArrayList<AppListInfo> unflageAppList = new ArrayList<>();
     private ArrayList<AppListInfo> bindingList = new ArrayList<>();
+    private long startTime = 0;
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
@@ -131,7 +133,6 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
         dialog.show();
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.dialog_blue));
     }
-
 
     /**
      * Show save dialog for saving the user filter data.
@@ -282,7 +283,6 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
         });
     }
 
-
     /**
      * This dialog shows when user comes in this screen and user flag first application
      *
@@ -322,5 +322,17 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
         dialog.show();
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(this, R.color.dialog_blue));
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.dialog_red));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startTime = System.currentTimeMillis();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        FirebaseHelper.getIntance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
     }
 }

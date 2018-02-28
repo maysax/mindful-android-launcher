@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 
 import co.siempo.phone.R;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.utils.PrefSiempo;
 
 
@@ -24,6 +25,7 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
     private RelativeLayout relHideIconBranding;
     private Switch switchJunkFoodmize, switchHideIcon;
     private Context context;
+    private long startTime = 0;
 
     public AppMenuFragment() {
         // Required empty public constructor
@@ -102,5 +104,17 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        startTime = System.currentTimeMillis();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        FirebaseHelper.getIntance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
     }
 }

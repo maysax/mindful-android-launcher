@@ -22,6 +22,7 @@ import co.siempo.phone.adapters.viewholder.AppAssignmentAdapter;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.AppInstalledEvent;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.utils.Sorting;
@@ -39,6 +40,7 @@ public class AppAssignmentActivity extends CoreActivity {
     private TextView txtErrorMessage;
     private ArrayList<ResolveInfo> appList = new ArrayList<>();
     private AppAssignmentAdapter appAssignmentAdapter;
+    private long startTime = 0;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -69,8 +71,15 @@ public class AppAssignmentActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        startTime = System.currentTimeMillis();
         filterList();
         initView();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        FirebaseHelper.getIntance().logScreenUsageTime(AppAssignmentActivity.this.getClass().getSimpleName(), startTime);
     }
 
     @Override

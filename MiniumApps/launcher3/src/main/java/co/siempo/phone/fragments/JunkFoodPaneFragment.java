@@ -98,4 +98,5 @@ public class JunkFoodPaneFragment extends CoreFragment {
         }
     }
 
+
 }

@@ -11,10 +11,10 @@ import java.util.List;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
+import co.siempo.phone.activities.AlphaSettingsActivity_;
 import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.activities.NoteListActivity;
-import co.siempo.phone.activities.SiempoAlphaSettingsActivity_;
-import co.siempo.phone.activities.SiempoSupressNotificationActivity;
+import co.siempo.phone.activities.SuppressNotificationActivity;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.launcher.FakeLauncherActivity;
 import co.siempo.phone.log.Tracer;
@@ -155,7 +155,7 @@ public class ActivityHelper {
 
     public void openSiempoSuppressNotificationsSettings() {
         try {
-            Intent i = new Intent(context, SiempoSupressNotificationActivity.class);
+            Intent i = new Intent(context, SuppressNotificationActivity.class);
             context.startActivity(i);
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
@@ -166,7 +166,7 @@ public class ActivityHelper {
 
     public void openSiempoAlphaSettingsApp() {
         try {
-            SiempoAlphaSettingsActivity_.intent(getContext()).start();
+            AlphaSettingsActivity_.intent(getContext()).start();
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());

@@ -47,10 +47,10 @@ import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.Subscribe;
 
-public class SiempoSupressNotificationActivity extends CoreActivity {
+public class SuppressNotificationActivity extends CoreActivity {
 
 
-    public static final String TAG = SiempoSupressNotificationActivity.class.getName();
+    public static final String TAG = SuppressNotificationActivity.class.getName();
     Context context;
     List<Notification> notificationList = new ArrayList<>();
     List<Notification> suggetionList = new ArrayList<>();
@@ -71,7 +71,7 @@ public class SiempoSupressNotificationActivity extends CoreActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        FirebaseHelper.getIntance().logScreenUsageTime(SiempoSupressNotificationActivity.class.getSimpleName(), startTime);
+        FirebaseHelper.getIntance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class SiempoSupressNotificationActivity extends CoreActivity {
     }
 
     public void initView() {
-        context = SiempoSupressNotificationActivity.this;
+        context = SuppressNotificationActivity.this;
         txtClearAll = findViewById(R.id.txtClearAll);
         emptyView = findViewById(R.id.emptyView);
         recyclerView = findViewById(R.id.recyclerView);

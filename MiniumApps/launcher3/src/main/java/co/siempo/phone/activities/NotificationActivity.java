@@ -38,7 +38,7 @@ import de.greenrobot.event.Subscribe;
  * Created by hardik on 22/11/17.
  */
 
-public class TempoAppNotificationActivity extends CoreActivity {
+public class NotificationActivity extends CoreActivity {
 
     long startTime = 0;
     Toolbar toolbar;
@@ -70,7 +70,7 @@ public class TempoAppNotificationActivity extends CoreActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        FirebaseHelper.getIntance().logScreenUsageTime(TempoAppNotificationActivity.class.getSimpleName(), startTime);
+        FirebaseHelper.getIntance().logScreenUsageTime(NotificationActivity.class.getSimpleName(), startTime);
     }
 
     @Override

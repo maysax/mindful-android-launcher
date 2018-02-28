@@ -80,7 +80,6 @@ public class DashboardActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         permissionUtil = new PermissionUtil(this);
         if (!permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)
                 || !permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) || !permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)
@@ -158,7 +157,6 @@ public class DashboardActivity extends CoreActivity {
             }
         });
     }
-
 
     @Override
     protected void onPause() {
@@ -328,7 +326,6 @@ public class DashboardActivity extends CoreActivity {
                 .show();
     }
 
-
     @Subscribe
     public void checkVersionEvent(CheckVersionEvent event) {
         Log.d(TAG, "Check Version event...");
@@ -350,7 +347,6 @@ public class DashboardActivity extends CoreActivity {
             }
         }
     }
-
 
     private void showUpdateDialog(String str) {
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
@@ -377,7 +373,6 @@ public class DashboardActivity extends CoreActivity {
             Log.d(TAG, getString(R.string.nointernetconnection));
         }
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -442,7 +437,6 @@ public class DashboardActivity extends CoreActivity {
         }
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -450,7 +444,6 @@ public class DashboardActivity extends CoreActivity {
 
 
     }
-
 
     @Subscribe
     public void homePressEvent(HomePressEvent event) {

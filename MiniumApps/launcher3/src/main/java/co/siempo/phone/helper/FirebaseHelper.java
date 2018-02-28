@@ -23,8 +23,8 @@ public class FirebaseHelper {
     public static String ACTION_CREATE_CONTACT = "create_contact";
     public static String ACTION_CONTACT_PICK = "contact_picked";
     public static String ACTION_APPLICATION_PICK = "application_picked";
-    public static String IF_SCREEN = "if_screen";
-    public static String SIEMPO_MENU = "siempo_menu";
+    private static String IF_SCREEN = "if_screen";
+    private static String SIEMPO_MENU = "siempo_menu";
     private static FirebaseHelper firebaseHelper;
     // Screen Name
     private static String MENU_SCREEN = "menu_screen";
@@ -79,7 +79,7 @@ public class FirebaseHelper {
             bundle.putString(SCREEN_NAME, screenName);
             bundle.putLong(TIME_SPENT, longDifference);
             Tracer.d("Firebase:" + SCREEN_USAGE + ": " + bundle.toString());
-            getFirebaseAnalytics().logEvent(SCREEN_USAGE, bundle);
+//            getFirebaseAnalytics().logEvent(SCREEN_USAGE, bundle);
         }
 
     }

@@ -20,6 +20,7 @@ import java.util.HashMap;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.ToolsListAdapter;
 import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
@@ -28,13 +29,14 @@ import co.siempo.phone.utils.Sorting;
 
 public class ToolSelectionActivity extends CoreActivity {
 
-    public static final int TOOL_SLECTION = 100;
+    public static final int TOOL_SELECTION = 100;
     private HashMap<Integer, AppMenu> map;
     private Toolbar toolbar;
     private ArrayList<MainListItem> items = new ArrayList<>();
     private LinearLayoutManager mLayoutManager;
     private RecyclerView recyclerView;
     private ToolsListAdapter mAdapter;
+    private long startTime = 0;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -56,7 +58,7 @@ public class ToolSelectionActivity extends CoreActivity {
 
 
     /**
-     * change text color of menuitem
+     * change text color of Menuitem
      *
      * @param menuItem
      * @param color
@@ -78,6 +80,13 @@ public class ToolSelectionActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        startTime = System.currentTimeMillis();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        FirebaseHelper.getIntance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
     }
 
     private void initView() {
@@ -108,7 +117,7 @@ public class ToolSelectionActivity extends CoreActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == TOOL_SLECTION) {
+        if (requestCode == TOOL_SELECTION) {
             if (resultCode == RESULT_OK) {
                 mAdapter.refreshEvents(items);
             }
