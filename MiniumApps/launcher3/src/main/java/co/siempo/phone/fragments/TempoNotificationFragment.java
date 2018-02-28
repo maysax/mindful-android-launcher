@@ -15,7 +15,7 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
 import co.siempo.phone.R;
-import co.siempo.phone.activities.TempoAppNotificationActivity;
+import co.siempo.phone.activities.NotificationActivity;
 import co.siempo.phone.utils.PrefSiempo;
 
 /**
@@ -79,7 +79,7 @@ public class TempoNotificationFragment extends CoreFragment {
 
     @Click
     void relAllowSpecificApps() {
-        Intent i = new Intent(getActivity(), TempoAppNotificationActivity.class);
+        Intent i = new Intent(getActivity(), NotificationActivity.class);
         startActivity(i);
     }
 

@@ -272,11 +272,11 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
         });
 
 
-        // If newNote button clicked -> Start EditActivity intent with NEW_NOTE_REQUEST as request
+        // If newNote button clicked -> Start NotesEditActivity intent with NEW_NOTE_REQUEST as request
         newNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(NoteListActivity.this, EditActivity.class);
+                Intent intent = new Intent(NoteListActivity.this, NotesEditActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 intent.putExtra(NOTE_REQUEST_CODE, NEW_NOTE_REQUEST);
                 startActivityForResult(intent, NEW_NOTE_REQUEST);
@@ -526,7 +526,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
     }
 
     /**
-     * If item clicked in list view -> Start EditActivity intent with position as requestCode
+     * If item clicked in list view -> Start NotesEditActivity intent with position as requestCode
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -534,15 +534,15 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
     }
 
     private void openEditActivity(int position) {
-        Intent intent = new Intent(this, EditActivity.class);
+        Intent intent = new Intent(this, NotesEditActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
-        // If search is active -> use position from realIndexesOfSearchResults for EditActivity
+        // If search is active -> use position from realIndexesOfSearchResults for NotesEditActivity
         if (searchActive) {
             int newPosition = realIndexesOfSearchResults.get(position);
 
             try {
-                // Package selected note content and send to EditActivity
+                // Package selected note content and send to NotesEditActivity
                 intent.putExtra(NOTE_TITLE, notes.getJSONObject(newPosition).getString(NOTE_TITLE));
                 intent.putExtra(NOTE_BODY, notes.getJSONObject(newPosition).getString(NOTE_BODY));
                 intent.putExtra(NOTE_COLOUR, notes.getJSONObject(newPosition).getString(NOTE_COLOUR));
@@ -563,10 +563,10 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
             startActivityForResult(intent, newPosition);
         }
 
-        // If search is not active -> use normal position for EditActivity
+        // If search is not active -> use normal position for NotesEditActivity
         else {
             try {
-                // Package selected note content and send to EditActivity
+                // Package selected note content and send to NotesEditActivity
                 intent.putExtra(NOTE_TITLE, notes.getJSONObject(position).getString(NOTE_TITLE));
                 intent.putExtra(NOTE_BODY, notes.getJSONObject(position).getString(NOTE_BODY));
                 intent.putExtra(NOTE_COLOUR, notes.getJSONObject(position).getString(NOTE_COLOUR));
@@ -881,11 +881,11 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
     }
 
     /**
-     * Callback method when EditActivity finished adding new note or editing existing note
+     * Callback method when NotesEditActivity finished adding new note or editing existing note
      *
      * @param requestCode requestCode for intent sent, in our case either NEW_NOTE_REQUEST or position
      * @param resultCode  resultCode from activity, either RESULT_OK or RESULT_CANCELED
-     * @param data        Data bundle passed back from EditActivity
+     * @param data        Data bundle passed back from NotesEditActivity
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

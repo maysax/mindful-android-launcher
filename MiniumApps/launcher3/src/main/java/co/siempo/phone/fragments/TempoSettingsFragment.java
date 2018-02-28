@@ -88,7 +88,7 @@ public class TempoSettingsFragment extends CoreFragment {
 
     @Click
     void txtAccount() {
-        ((CoreActivity) getActivity()).loadChildFragment(TempoAccountSettingFragment_.builder().build(), R.id.tempoView);
+        ((CoreActivity) getActivity()).loadChildFragment(AccountSettingFragment_.builder().build(), R.id.tempoView);
     }
 
     @Click

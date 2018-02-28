@@ -46,6 +46,7 @@ public class DashboardActivity extends CoreActivity {
     public static final String IS_FROM_HOME = "isFromHome";
     public static String isTextLenghGreater = "";
     public static boolean isJunkFoodOpen = false;
+    public static int index = -1;
     PermissionUtil permissionUtil;
     ConnectivityManager connectivityManager;
     AppUpdaterUtils appUpdaterUtils;
@@ -62,7 +63,6 @@ public class DashboardActivity extends CoreActivity {
      */
     private DashboardPagerAdapter mPagerAdapter;
     private AlertDialog notificationDialog;
-    private int index = -1;
     private InputMethodManager inputMethodManager;
 
     /**
@@ -80,7 +80,6 @@ public class DashboardActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         permissionUtil = new PermissionUtil(this);
         if (!permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)
                 || !permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) || !permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)
@@ -151,13 +150,13 @@ public class DashboardActivity extends CoreActivity {
             @Override
             public void onPageScrollStateChanged(int i) {
                 if (i == 0 && PrefSiempo.getInstance(DashboardActivity.this).read(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, true)) {
+                    PrefSiempo.getInstance(DashboardActivity.this).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, false);
                     Intent intent = new Intent(DashboardActivity.this, JunkfoodFlaggingActivity.class);
                     startActivity(intent);
                 }
             }
         });
     }
-
 
     @Override
     protected void onPause() {
@@ -327,7 +326,6 @@ public class DashboardActivity extends CoreActivity {
                 .show();
     }
 
-
     @Subscribe
     public void checkVersionEvent(CheckVersionEvent event) {
         Log.d(TAG, "Check Version event...");
@@ -349,7 +347,6 @@ public class DashboardActivity extends CoreActivity {
             }
         }
     }
-
 
     private void showUpdateDialog(String str) {
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
@@ -376,7 +373,6 @@ public class DashboardActivity extends CoreActivity {
             Log.d(TAG, getString(R.string.nointernetconnection));
         }
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -441,7 +437,6 @@ public class DashboardActivity extends CoreActivity {
         }
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -450,13 +445,13 @@ public class DashboardActivity extends CoreActivity {
 
     }
 
-
     @Subscribe
     public void homePressEvent(HomePressEvent event) {
         try {
             if (UIUtils.isMyLauncherDefault(this)) {
+                index = -1;
                 // onBackPressed();
-                if (null != mPager && mPager.getCurrentItem() == 0) {
+                if (null != mPager) {
                     mPager.setCurrentItem(1);
                 }
 

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.FavoritePositioningAdapter;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.interfaces.OnFavoriteItemListChangedListener;
 import co.siempo.phone.main.OnStartDragListener;
 import co.siempo.phone.main.SimpleItemTouchHelperCallback;
@@ -40,12 +41,15 @@ public class FavoriteAppsPositionActivity extends CoreActivity implements OnFavo
     private TextView txtSelectTools;
     private RelativeLayout relTop;
     private RelativeLayout relPane;
+    private long startTime = 0;
+
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             finish();
         }
     };
+
 
 
     @Override
@@ -57,13 +61,14 @@ public class FavoriteAppsPositionActivity extends CoreActivity implements OnFavo
     @Override
     protected void onResume() {
         super.onResume();
+        startTime = System.currentTimeMillis();
         initView();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
+        FirebaseHelper.getIntance().logScreenUsageTime(FavoriteAppsPositionActivity.this.getClass().getSimpleName(), startTime);
     }
 
     @Override

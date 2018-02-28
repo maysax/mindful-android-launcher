@@ -1,6 +1,5 @@
 package co.siempo.phone.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
@@ -8,12 +7,15 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.HomePressEvent;
 import co.siempo.phone.fragments.HelpFragment;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.Subscribe;
 
 
 public class HelpActivity extends CoreActivity {
+
+    private long startTime;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -25,16 +27,21 @@ public class HelpActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        startTime = System.currentTimeMillis();
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        FirebaseHelper.getIntance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
+    }
+
 
     @Subscribe
     public void homePressEvent(HomePressEvent event) {
         try {
             if (event.isVisible() && UIUtils.isMyLauncherDefault(this)) {
-                Intent startMain = new Intent(Intent.ACTION_MAIN);
-                startMain.addCategory(Intent.CATEGORY_HOME);
-                startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(startMain);
+                finish();
             }
 
         } catch (Exception e) {
