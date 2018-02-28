@@ -281,6 +281,7 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         startTime = System.currentTimeMillis();
+        loadApps();
     }
 
     @Override

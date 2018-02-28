@@ -30,7 +30,6 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -692,31 +691,31 @@ public class PackageUtil {
     }
 
 
-    public static void addRecentItemList(MainListItem item,Context context){
+    public static void addRecentItemList(MainListItem item, Context context) {
 
-        if(item!=null){
+        if (item != null) {
             // Load RecentItem List from Storage
-            Type baseType = new TypeToken<List<MainListItem>>() {}.getType();
-            List<MainListItem> recentItemList= new ArrayList<>();
-            recentItemList=loadRecentItemsFromStore(context);
+            Type baseType = new TypeToken<List<MainListItem>>() {
+            }.getType();
+            List<MainListItem> recentItemList = new ArrayList<>();
+            recentItemList = loadRecentItemsFromStore(context);
 
             // Validate if stored RecentItem List having this item or not.
-            boolean isItemAvailable=false;
+            boolean isItemAvailable = false;
             MainListItem removeItem = null;
-            for(int j=0;j<recentItemList.size();j++) {
+            for (int j = 0; j < recentItemList.size(); j++) {
                 String title = recentItemList.get(j).getTitle();
                 String packageName = recentItemList.get(j).getPackageName();
 
-                if (TextUtils.isEmpty(item.getPackageName())){
+                if (TextUtils.isEmpty(item.getPackageName())) {
                     if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(item.getTitle()) && title.toString().toLowerCase().trim().equalsIgnoreCase(item.getTitle().toLowerCase().trim())) {
                         isItemAvailable = true;
-                        removeItem= recentItemList.get(j);
+                        removeItem = recentItemList.get(j);
                     }
-                }
-                else{
-                    if(!TextUtils.isEmpty(packageName) && packageName.trim().equalsIgnoreCase(item.getPackageName().trim())){
+                } else {
+                    if (!TextUtils.isEmpty(packageName) && packageName.trim().equalsIgnoreCase(item.getPackageName().trim())) {
                         isItemAvailable = true;
-                        removeItem= recentItemList.get(j);
+                        removeItem = recentItemList.get(j);
                     }
                 }
             }
@@ -725,14 +724,13 @@ public class PackageUtil {
              *  1.) If RecentItem List do not contain this item, then add and store into the list.
              *  2.) If RecentItem lsit contain this item, then update it to first position
              */
-            if(!isItemAvailable){
-                recentItemList.add(0,item);
-            }
-            else{
-                if(removeItem!=null) {
+            if (!isItemAvailable) {
+                recentItemList.add(0, item);
+            } else {
+                if (removeItem != null) {
                     recentItemList.remove(removeItem);
                 }
-                recentItemList.add(0,item);
+                recentItemList.add(0, item);
             }
 
             Gson gson = new Gson();
@@ -741,29 +739,27 @@ public class PackageUtil {
         }
     }
 
-    public static List<MainListItem> getListWithMostRecentData(List<MainListItem> allItems,Context context){
+    public static List<MainListItem> getListWithMostRecentData(List<MainListItem> allItems, Context context) {
 
-        List<MainListItem> recentItemList= new ArrayList<>();
-        recentItemList=loadRecentItemsFromStore(context);
+        List<MainListItem> recentItemList = new ArrayList<>();
+        recentItemList = loadRecentItemsFromStore(context);
 
-        List<MainListItem> removeList= new ArrayList<>();
-        List<MainListItem> listWithMostRecentdata=new ArrayList<>();
+        List<MainListItem> removeList = new ArrayList<>();
+        List<MainListItem> listWithMostRecentdata = new ArrayList<>();
 
 
+        for (int j = 0; j < recentItemList.size(); j++) {
+            String recentItemTitle = recentItemList.get(j).getTitle();
+            String recentItemPackageName = recentItemList.get(j).getPackageName();
 
-            for(int j=0;j<recentItemList.size();j++){
-                String recentItemTitle=recentItemList.get(j).getTitle();
-                String recentItemPackageName=recentItemList.get(j).getPackageName();
+            for (int i = 0; i < allItems.size(); i++) {
+                MainListItem item = allItems.get(i);
+                String title = allItems.get(i).getTitle();
+                String packageName = allItems.get(i).getPackageName();
 
-                for(int i=0;i<allItems.size();i++){
-                    MainListItem item=allItems.get(i);
-                    String title = allItems.get(i).getTitle();
-                    String packageName = allItems.get(i).getPackageName();
-
-                if(TextUtils.isEmpty(packageName) && TextUtils.isEmpty(recentItemPackageName) && !TextUtils.isEmpty(title) && !TextUtils.isEmpty(recentItemTitle) && title.toLowerCase().trim().equalsIgnoreCase(recentItemTitle.toLowerCase().trim())){
+                if (TextUtils.isEmpty(packageName) && TextUtils.isEmpty(recentItemPackageName) && !TextUtils.isEmpty(title) && !TextUtils.isEmpty(recentItemTitle) && title.toLowerCase().trim().equalsIgnoreCase(recentItemTitle.toLowerCase().trim())) {
                     removeList.add(item);
-                }
-                else if(!TextUtils.isEmpty(packageName) && !TextUtils.isEmpty(recentItemPackageName) && packageName.trim().equalsIgnoreCase(recentItemPackageName.trim())){
+                } else if (!TextUtils.isEmpty(packageName) && !TextUtils.isEmpty(recentItemPackageName) && packageName.trim().equalsIgnoreCase(recentItemPackageName.trim())) {
                     removeList.add(item);
                 }
             }
@@ -775,15 +771,16 @@ public class PackageUtil {
         listWithMostRecentdata.addAll(removeList);
         listWithMostRecentdata.addAll(allItems);
 
-        List<MainListItem> junkListItems = getJunkListItems(listWithMostRecentdata,context);
+        List<MainListItem> junkListItems = getJunkListItems(listWithMostRecentdata, context);
         listWithMostRecentdata.removeAll(junkListItems);
 
-        return  listWithMostRecentdata;
+        return listWithMostRecentdata;
     }
 
-    public static List<MainListItem> loadRecentItemsFromStore(Context context){
-        Type baseType = new TypeToken<List<MainListItem>>() {}.getType();
-        List<MainListItem> recentItemList= new ArrayList<>();
+    public static List<MainListItem> loadRecentItemsFromStore(Context context) {
+        Type baseType = new TypeToken<List<MainListItem>>() {
+        }.getType();
+        List<MainListItem> recentItemList = new ArrayList<>();
         String val_recentItems = PrefSiempo.getInstance(context).read(PrefSiempo.RECENT_ITEM_LIST, "");
         if (!TextUtils.isEmpty(val_recentItems)) {
             Gson gson = new GsonBuilder()
@@ -794,7 +791,7 @@ public class PackageUtil {
     }
 
 
-    private static List<MainListItem> getJunkListItems(List<MainListItem> allItems,Context context) {
+    private static List<MainListItem> getJunkListItems(List<MainListItem> allItems, Context context) {
         HashMap<Integer, AppMenu> toolSetting = CoreApplication.getInstance()
                 .getToolsSettings();
         ArrayList<String> junkFoodAppList = new ArrayList<>();
@@ -826,13 +823,12 @@ public class PackageUtil {
                         junkListItems.add(item);
                     }
                 }
-            }
-            else{
+            } else {
                 AppMenu appMenu = toolSetting
                         .get(item.getId());
-                if(null != appMenu && TextUtils
+                if (null != appMenu && TextUtils
                         .isEmpty(appMenu.getApplicationName()) && item
-                        .getItemType() != MainListItemType.DEFAULT){
+                        .getItemType() != MainListItemType.DEFAULT) {
                     junkListItems.add(item);
                 }
             }

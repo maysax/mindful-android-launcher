@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +14,6 @@ import java.util.List;
 import co.siempo.phone.R;
 import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.fragments.PaneFragment;
 import co.siempo.phone.fragments.ToolsPaneFragment;
 import co.siempo.phone.helper.ActivityHelper;
@@ -73,8 +71,8 @@ public class MainListItemLoader {
 
     public void loadItems(List<MainListItem> items, Fragment fragment) {
 
-        List<MainListItem> allAppsData= new ArrayList<>();
-        ArrayList<MainListItem> toolsItems=new ArrayList<>();
+        List<MainListItem> allAppsData = new ArrayList<>();
+        ArrayList<MainListItem> toolsItems = new ArrayList<>();
         HashMap<Integer, AppMenu> toolsSettings = CoreApplication.getInstance().getToolsSettings
                 ();
         if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_MAP)
@@ -172,10 +170,10 @@ public class MainListItemLoader {
             toolsItems.add(new MainListItem(TOOLS_EMAIL, getString(R.string.title_email), R.drawable.ic_menu_mail));
         }
 
-        toolsItems=Sorting.sortToolAppAssignment(context,toolsItems);
+        toolsItems = Sorting.sortToolAppAssignment(context, toolsItems);
 
 
-        ArrayList<MainListItem> appItems=new ArrayList<>();
+        ArrayList<MainListItem> appItems = new ArrayList<>();
 
         if (fragment instanceof PaneFragment || fragment instanceof ToolsPaneFragment) {
             try {
@@ -184,9 +182,9 @@ public class MainListItemLoader {
                 List<ResolveInfo> installedPackageList = context.getPackageManager().queryIntentActivities(mainIntent, 0);
                 for (ResolveInfo resolveInfo : installedPackageList) {
                     if (!TextUtils.isEmpty(resolveInfo.activityInfo.packageName) && !TextUtils.isEmpty(resolveInfo.loadLabel(context.getPackageManager()))) {
-                        String packageName=resolveInfo.activityInfo.packageName;
-                        boolean isEnable=UIUtils.isAppInstalledAndEnabled(context, packageName);
-                        if(isEnable) {
+                        String packageName = resolveInfo.activityInfo.packageName;
+                        boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, packageName);
+                        if (isEnable) {
                             appItems.add(new MainListItem(-1, "" + resolveInfo.loadLabel(context.getPackageManager()), resolveInfo.activityInfo.packageName));
                         }
                     }
@@ -198,8 +196,7 @@ public class MainListItemLoader {
         }
 
 
-        appItems= Sorting.SortApplications(appItems);
-
+        appItems = Sorting.SortApplications(appItems);
 
 
         items.addAll(toolsItems);

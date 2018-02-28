@@ -4,18 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.DashboardActivity;
@@ -29,14 +24,11 @@ import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.models.MainListItemType;
-import co.siempo.phone.token.TokenItem;
 import co.siempo.phone.token.TokenItemType;
 import co.siempo.phone.token.TokenManager;
 import co.siempo.phone.token.TokenRouter;
 import co.siempo.phone.utils.ContactsLoader;
 import co.siempo.phone.utils.PackageUtil;
-import co.siempo.phone.utils.PrefSiempo;
-import co.siempo.phone.utils.Sorting;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 
@@ -164,7 +156,7 @@ public class MainFragmentMediator {
                         SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance
                                 (DateFormat.FULL, Locale
                                         .getDefault());
-                        PackageUtil.addRecentItemList(getAdapter().getItem(position),context);
+                        PackageUtil.addRecentItemList(getAdapter().getItem(position), context);
                         position = getAdapter().getItem(position).getId();
                         new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
                     } else {
@@ -174,7 +166,7 @@ public class MainFragmentMediator {
                             boolean status = new ActivityHelper(fragment.getActivity()).openAppWithPackageName(getAdapter().getItem(position).getPackageName());
                             FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_APPLICATION_PICK, getAdapter().getItem(position).getPackageName(), "");
                             if (status) {
-                                PackageUtil.addRecentItemList(getAdapter().getItem(position),context);
+                                PackageUtil.addRecentItemList(getAdapter().getItem(position), context);
                             }
                         }
                     }
