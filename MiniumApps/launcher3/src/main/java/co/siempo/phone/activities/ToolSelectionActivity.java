@@ -20,6 +20,7 @@ import java.util.HashMap;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.ToolsListAdapter;
 import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
@@ -35,6 +36,7 @@ public class ToolSelectionActivity extends CoreActivity {
     private LinearLayoutManager mLayoutManager;
     private RecyclerView recyclerView;
     private ToolsListAdapter mAdapter;
+    private long startTime = 0;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -78,8 +80,14 @@ public class ToolSelectionActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        startTime = System.currentTimeMillis();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        FirebaseHelper.getIntance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
+    }
     private void initView() {
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.select_tools);

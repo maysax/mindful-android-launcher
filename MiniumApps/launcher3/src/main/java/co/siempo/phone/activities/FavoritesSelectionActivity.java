@@ -32,6 +32,7 @@ import java.util.Set;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.FavoritesFlagAdapter;
 import co.siempo.phone.event.AppInstalledEvent;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.Sorting;
@@ -53,6 +54,7 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
     private ScrollView scrollView;
     private boolean isLoadFirstTime = true;
     private int count = 0;
+    private long startTime = 0;
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
@@ -321,5 +323,15 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startTime = System.currentTimeMillis();
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        FirebaseHelper.getIntance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
+    }
 }

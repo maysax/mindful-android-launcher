@@ -23,7 +23,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.activities.HelpActivity;
 import co.siempo.phone.activities.IntentionEditActivity;
 import co.siempo.phone.activities.SettingsActivity_;
-import co.siempo.phone.dialog.Dialog_Tempo;
+import co.siempo.phone.dialog.DialogTempoSetting;
 import co.siempo.phone.service.StatusBarService;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
@@ -102,7 +102,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.imgTempo:
-                Dialog_Tempo dialogTempo = new Dialog_Tempo(getActivity());
+                DialogTempoSetting dialogTempo = new DialogTempoSetting(getActivity());
                 if (dialogTempo.getWindow() != null)
                     dialogTempo.getWindow().setGravity(Gravity.TOP);
                 dialogTempo.show();
@@ -161,7 +161,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                         if (getActivity() != null) {
                             UIUtils.clearDim(root);
                             mPopupWindow.dismiss();
-                            Dialog_Tempo dialogTempo = new Dialog_Tempo(getActivity());
+                            DialogTempoSetting dialogTempo = new DialogTempoSetting(getActivity());
                             if (dialogTempo.getWindow() != null)
                                 dialogTempo.getWindow().setGravity(Gravity.TOP);
                             dialogTempo.show();

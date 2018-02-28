@@ -23,9 +23,10 @@ import co.siempo.phone.R;
 import co.siempo.phone.adapters.ToolPositioningAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
+import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.interfaces.OnToolItemListChangedListener;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.main.OnStartDragListener;
-import co.siempo.phone.interfaces.OnToolItemListChangedListener;
 import co.siempo.phone.main.SimpleItemTouchHelperCallback;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
@@ -47,6 +48,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
     private TextView txtSelectTools;
     private RelativeLayout relTop;
     private LinearLayout linearTop;
+    private long startTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +59,11 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
     @Override
     protected void onResume() {
         super.onResume();
+        startTime = System.currentTimeMillis();
         map = CoreApplication.getInstance().getToolsSettings();
         initView();
     }
+
 
     @Override
     protected void onPause() {
@@ -73,6 +77,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         }
         String hashMapToolSettings = new Gson().toJson(map);
         PrefSiempo.getInstance(this).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
+        FirebaseHelper.getIntance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
     }
 
     @Override
@@ -141,7 +146,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
 
     @Override
     public void onToolItemListChanged(ArrayList<MainListItem> customers) {
-        Log.d("kamothi","onToolItemListChange");
+        Log.d("kamothi", "onToolItemListChange");
         ArrayList<Long> listOfSortedCustomerId = new ArrayList<>();
 
         for (MainListItem customer : customers) {

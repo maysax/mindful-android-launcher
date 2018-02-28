@@ -11,6 +11,7 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
 import co.siempo.phone.R;
+import co.siempo.phone.helper.FirebaseHelper;
 
 /**
  * This screen is use to display FAQ link.
@@ -23,6 +24,7 @@ public class FaqFragment extends CoreFragment {
 
     @ViewById
     Toolbar toolbar;
+    private long startTime = 0;
 
     @AfterViews
     void afterViews() {
@@ -47,4 +49,15 @@ public class FaqFragment extends CoreFragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        startTime = System.currentTimeMillis();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        FirebaseHelper.getIntance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
+    }
 }

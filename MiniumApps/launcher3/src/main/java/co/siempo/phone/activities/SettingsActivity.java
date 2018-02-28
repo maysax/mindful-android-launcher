@@ -14,18 +14,14 @@ import de.greenrobot.event.Subscribe;
 @EActivity(R.layout.activity_tempo_settings)
 public class SettingsActivity extends CoreActivity {
 
-
     @AfterViews
     void afterViews() {
         loadFragment(TempoSettingsFragment_.builder().build(), R.id.tempoView, "main");
-
     }
-
 
     @Override
     protected void onResume() {
         super.onResume();
-
     }
 
     @Subscribe

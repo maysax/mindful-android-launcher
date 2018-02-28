@@ -41,7 +41,7 @@ import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.utils.PrefSiempo;
 
-public class Dialog_Tempo extends Dialog implements View.OnClickListener {
+public class DialogTempoSetting extends Dialog implements View.OnClickListener {
     private RadioButton radioIndividual, radioBatched, radioOnlyAt;
     private TextView txtBatch, txtOnlyAtTime1, txtOnlyAtTime2, txtOnlyAtTime3, txtSign1, txtSign2, txtAdd, txtMessage;
     private ImageView imgMinus, imgPlus;
@@ -56,7 +56,7 @@ public class Dialog_Tempo extends Dialog implements View.OnClickListener {
     private ArrayList<Integer> everyFourHoursList = new ArrayList<>();
     private Context context;
 
-    public Dialog_Tempo(@NonNull Context context) {
+    public DialogTempoSetting(@NonNull Context context) {
         super(context, R.style.FullScreenDialogStyle);
         this.context = context;
     }
@@ -126,11 +126,10 @@ public class Dialog_Tempo extends Dialog implements View.OnClickListener {
 
     }
 
-
     @Override
     protected void onStop() {
         super.onStop();
-        FirebaseHelper.getIntance().logScreenUsageTime(Dialog_Tempo.class.getSimpleName(), startTime);
+        FirebaseHelper.getIntance().logScreenUsageTime(DialogTempoSetting.class.getSimpleName(), startTime);
         fabPlay.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fab_scale_down));
         fabPlay.setVisibility(View.INVISIBLE);
     }
