@@ -3,7 +3,6 @@ package co.siempo.phone.activities;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -17,8 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -30,30 +27,28 @@ import java.util.ListIterator;
 import java.util.Set;
 
 import co.siempo.phone.R;
-import co.siempo.phone.adapters.FavoritesFlagAdapter;
+import co.siempo.phone.adapters.FavoriteFlaggingAdapter;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.models.AppListInfo;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
-import co.siempo.phone.utils.Sorting;
-import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.Subscribe;
 
 public class FavoritesSelectionActivity extends AppCompatActivity {
+
     Set<String> list = new HashSet<>();
     Set<String> junkFoodList = new HashSet<>();
+    FavoriteFlaggingAdapter junkfoodFlaggingAdapter;
+    int firstPosition;
+    List<ResolveInfo> installedPackageList;
     private Toolbar toolbar;
-    private TextView txtValidateFavoritesApps;
-    private ListView listFavoriteApps;
-    private TextView txtValidateAllOtherApps;
-    private ListView listAllOtherApps;
-    private ArrayList<ResolveInfo> favoriteAppList = new ArrayList<>();
-    private ArrayList<ResolveInfo> allOtherAppList = new ArrayList<>();
-    private FavoritesFlagAdapter favoritesFlagAdapter, favoritesAllAppsAdapter;
+    private ListView listAllApps;
     private PopupMenu popup;
-    private ScrollView scrollView;
     private boolean isLoadFirstTime = true;
-    private int count = 0;
+    private ArrayList<AppListInfo> favoriteList = new ArrayList<>();
+    private ArrayList<AppListInfo> unfavoriteList = new ArrayList<>();
+    private ArrayList<AppListInfo> bindingList = new ArrayList<>();
     private long startTime = 0;
 
     @Subscribe
@@ -67,16 +62,10 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorite_selection);
+        initView();
         list = PrefSiempo.getInstance(this).read(PrefSiempo.FAVORITE_APPS, new HashSet<String>());
         junkFoodList = PrefSiempo.getInstance(this).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
         list.removeAll(junkFoodList);
-        initView();
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         loadApps();
     }
 
@@ -85,24 +74,13 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
      */
     private void initView() {
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("");
+        toolbar.setTitle(R.string.title_flagging_screen);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
                 .colorAccent));
-
-        txtValidateFavoritesApps = findViewById(R.id.txtValidateFavoritesApps);
-        txtValidateAllOtherApps = findViewById(R.id.txtValidateAllOtherApps);
-        listFavoriteApps = findViewById(R.id.lst_favoritesApps);
-        listAllOtherApps = findViewById(R.id.lst_OtherApps);
-        scrollView = findViewById(R.id.scrollView);
-        count = list.size();
-        setToolBarText(count);
+        listAllApps = findViewById(R.id.lst_OtherApps);
     }
 
-    public void setToolBarText(int count) {
-        int remainapps = 12 - count;
-        toolbar.setTitle("Select up to " + remainapps + " more apps");
-    }
 
     /**
      * load system apps and filter the application for junkfood and normal.
@@ -110,22 +88,8 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
     private void loadApps() {
         Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-        List<ResolveInfo> installedPackageList = getPackageManager().queryIntentActivities(mainIntent, 0);
-        favoriteAppList = new ArrayList<>();
-        allOtherAppList = new ArrayList<>();
-        for (ResolveInfo resolveInfo : installedPackageList) {
-            if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
-                if (!junkFoodList.contains(resolveInfo.activityInfo.packageName)) {
-                    if (list.contains(resolveInfo.activityInfo.packageName)) {
-                        favoriteAppList.add(resolveInfo);
-                    } else {
-                        allOtherAppList.add(resolveInfo);
-                    }
-                }
-            }
-        }
-        bindListView();
-        setToolBarText(favoriteAppList.size());
+        installedPackageList = getPackageManager().queryIntentActivities(mainIntent, 0);
+        bindData(false);
     }
 
     @Override
@@ -136,7 +100,9 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+                junkFoodList.removeAll(list);
                 PrefSiempo.getInstance(FavoritesSelectionActivity.this).write(PrefSiempo.FAVORITE_APPS, list);
+                PrefSiempo.getInstance(FavoritesSelectionActivity.this).write(PrefSiempo.JUNKFOOD_APPS, junkFoodList);
                 finish();
                 return false;
             }
@@ -160,146 +126,139 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
     /**
      * bind the list view of flag app and all apps.
      */
-    private void bindListView() {
+    private void bindData(boolean isNotify) {
         try {
-            if (allOtherAppList.size() > 0) {
-                allOtherAppList = Sorting.sortAppAssignment(this, allOtherAppList);
-                txtValidateAllOtherApps.setVisibility(View.GONE);
-                listAllOtherApps.setVisibility(View.VISIBLE);
-                favoritesAllAppsAdapter = new FavoritesFlagAdapter(this, allOtherAppList);
-                listAllOtherApps.setAdapter(favoritesAllAppsAdapter);
-                UIUtils.setDynamicHeight(this, listAllOtherApps);
-                listAllOtherApps.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        showPopUp(view, false, position);
+            favoriteList = new ArrayList<>();
+            unfavoriteList = new ArrayList<>();
+            bindingList = new ArrayList<>();
+            for (ResolveInfo resolveInfo : installedPackageList) {
+                if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
+                    if (list.contains(resolveInfo.activityInfo.packageName)) {
+                        favoriteList.add(new AppListInfo(resolveInfo.activityInfo.packageName, false, false, true));
+                    } else {
+                        unfavoriteList.add(new AppListInfo(resolveInfo.activityInfo.packageName, false, false, false));
                     }
-                });
-
+                }
+            }
+            setToolBarText(favoriteList.size());
+            if (favoriteList.size() == 0) {
+                favoriteList.add(new AppListInfo("", true, true, true));
             } else {
-                listAllOtherApps.setVisibility(View.GONE);
-                txtValidateAllOtherApps.setVisibility(View.VISIBLE);
+                favoriteList.add(0, new AppListInfo("", true, false, true));
             }
-            if (favoriteAppList.size() > 0) {
-                favoriteAppList = Sorting.sortAppAssignment(this, favoriteAppList);
-                txtValidateFavoritesApps.setVisibility(View.GONE);
-                listFavoriteApps.setVisibility(View.VISIBLE);
-                favoritesFlagAdapter = new FavoritesFlagAdapter(this, favoriteAppList);
-                listFavoriteApps.setAdapter(favoritesFlagAdapter);
-                favoritesFlagAdapter.notifyDataSetChanged();
-                UIUtils.setDynamicHeight(this, listFavoriteApps);
-                listFavoriteApps.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        showPopUp(view, true, position);
-                    }
-                });
 
+            bindingList.addAll(favoriteList);
+
+            if (unfavoriteList.size() == 0) {
+                unfavoriteList.add(new AppListInfo("", true, true, false));
             } else {
-                txtValidateFavoritesApps.setVisibility(View.VISIBLE);
-                listFavoriteApps.setVisibility(View.GONE);
+                unfavoriteList.add(0, new AppListInfo("", true, false, false));
             }
 
-            if (isLoadFirstTime || favoriteAppList.size() == 0) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        scrollView.fullScroll(ScrollView.FOCUS_UP);
+            bindingList.addAll(unfavoriteList);
+            junkfoodFlaggingAdapter = new FavoriteFlaggingAdapter(this, bindingList, list);
+            listAllApps.setAdapter(junkfoodFlaggingAdapter);
+            if (isNotify) {
+                junkfoodFlaggingAdapter.notifyDataSetChanged();
+                listAllApps.setSelection(firstPosition);
+            }
+
+            listAllApps.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    if (!bindingList.get(position).packageName.equalsIgnoreCase("")) {
+                        showPopUp(view, bindingList.get(position).isFlagApp, position);
                     }
-                }, 100);
-
-            }
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * show pop dialog on List item click for flag/un-flag and appinfo.
+     * show pop dialog on List item click for flag/un-flag and application information.
      *
      * @param view
-     * @param isFlagApp
      * @param position
      */
     private void showPopUp(View view, final boolean isFlagApp, final int position) {
+
         if (popup != null) {
             popup.dismiss();
         }
         popup = new PopupMenu(FavoritesSelectionActivity.this, view, Gravity.END);
-
-
+        popup.getMenuInflater().inflate(R.menu.junkfood_popup, popup.getMenu());
+        MenuItem menuItem = popup.getMenu().findItem(R.id.item_Unflag);
+        if (isFlagApp) {
+            if (favoriteList
+                    .size() == 2) {
+                menuItem.setVisible(false);
+            } else {
+                menuItem.setVisible(true);
+            }
+        } else {
+            if (favoriteList != null && (favoriteList.size() < 13)) {
+                menuItem.setVisible(true);
+            } else {
+                menuItem.setVisible(false);
+            }
+        }
+        menuItem.setTitle(isFlagApp ? getString(R.string.favorite_menu_unselect) : getString(R.string.favorite_menu_select));
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.item_Unflag) {
+                    try {
+                        popup.dismiss();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (list.contains(bindingList.get(position).packageName)) {
+                                    list.remove(bindingList.get(position).packageName);
+                                    //get the JSON array of the ordered of sorted customers
+                                    String jsonListOfSortedFavorites = PrefSiempo.getInstance(FavoritesSelectionActivity.this).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
+                                    //convert onNoteListChangedJSON array into a List<Long>
+                                    Gson gson1 = new Gson();
+                                    List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
+                                    }.getType());
 
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                if (isFlagApp) {
-                                    popup.dismiss();
-                                    if (list.contains(favoriteAppList.get(position).activityInfo.packageName)) {
-                                        list.remove(favoriteAppList.get(position).activityInfo.packageName);
-
-
-                                        //get the JSON array of the ordered of sorted customers
-                                        String jsonListOfSortedFavorites = PrefSiempo.getInstance(FavoritesSelectionActivity.this).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
-                                        //convert onNoteListChangedJSON array into a List<Long>
-                                        Gson gson1 = new Gson();
-                                        List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
-                                        }.getType());
-
-                                        for (ListIterator<String> it =
-                                             listOfSortFavoritesApps.listIterator(); it.hasNext
-                                                (); ) {
-                                            String packageName = it.next();
-                                            if (favoriteAppList.get(position).activityInfo.packageName.equalsIgnoreCase(packageName)) {
-                                                //Used List Iterator to set empty
-                                                // value for package name retaining
-                                                // the positions of elements
-                                                it.set("");
-                                            }
+                                    for (ListIterator<String> it =
+                                         listOfSortFavoritesApps.listIterator(); it.hasNext
+                                            (); ) {
+                                        String packageName = it.next();
+                                        if (bindingList.get(position).packageName.equalsIgnoreCase(packageName)) {
+                                            //Used List Iterator to set empty
+                                            // value for package name retaining
+                                            // the positions of elements
+                                            it.set("");
                                         }
-
-
-                                        Gson gson2 = new Gson();
-                                        String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
-                                        PrefSiempo.getInstance(FavoritesSelectionActivity.this).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
-                                        allOtherAppList.add(favoriteAppList.get(position));
-                                        favoriteAppList.remove(favoriteAppList.get(position));
-                                        bindListView();
-                                        setToolBarText(favoriteAppList.size());
-
-                                        isLoadFirstTime = false;
-
                                     }
+
+                                    Gson gson2 = new Gson();
+                                    String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
+                                    PrefSiempo.getInstance(FavoritesSelectionActivity.this).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
+                                    isLoadFirstTime = false;
+                                    setToolBarText(favoriteList.size());
                                 } else {
-                                    if (favoriteAppList != null && favoriteAppList.size() < 12) {
-                                        list.add(allOtherAppList.get(position).activityInfo.packageName);
+
+                                    if (favoriteList != null && favoriteList.size() < 13) {
+                                        list.add(bindingList.get(position).packageName);
                                         isLoadFirstTime = false;
-                                        favoriteAppList.add(allOtherAppList.get(position));
-                                        allOtherAppList.remove(allOtherAppList.get(position));
-                                        bindListView();
                                     }
-                                    setToolBarText(favoriteAppList.size());
+                                    setToolBarText(favoriteList.size());
                                 }
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                                firstPosition = listAllApps.getFirstVisiblePosition();
+                                bindData(true);
                             }
-                        }
-                    });
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
                 } else if (item.getItemId() == R.id.item_Info) {
                     try {
-                        popup.dismiss();
-                        if (isFlagApp) {
-                            ResolveInfo resolveInfo = favoriteAppList.get(position);
-                            PackageUtil.appSettings(FavoritesSelectionActivity.this, resolveInfo.activityInfo.packageName);
-                        } else {
-                            ResolveInfo resolveInfo = allOtherAppList.get(position);
-                            PackageUtil.appSettings(FavoritesSelectionActivity.this, resolveInfo.activityInfo.packageName);
-                        }
+                        PackageUtil.appSettings(FavoritesSelectionActivity.this, bindingList.get(position).packageName);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -308,24 +267,6 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
             }
         });
 
-        popup.getMenuInflater().inflate(R.menu.junkfood_popup, popup.getMenu());
-        MenuItem menuItem = popup.getMenu().findItem(R.id.item_Unflag);
-
-        if (isFlagApp) {
-            if (favoriteAppList
-                    .size() == 1) {
-                menuItem.setVisible(false);
-            } else {
-                menuItem.setVisible(true);
-            }
-        } else {
-            if (favoriteAppList != null && (favoriteAppList.size() < 12)) {
-                menuItem.setVisible(true);
-            } else {
-                menuItem.setVisible(false);
-            }
-        }
-        menuItem.setTitle(isFlagApp ? getString(R.string.favorite_menu_unselect) : getString(R.string.favorite_menu_select));
         popup.show();
         popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
             @Override
@@ -335,10 +276,12 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
         });
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
         startTime = System.currentTimeMillis();
+        loadApps();
     }
 
     @Override
@@ -346,4 +289,10 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
         super.onPause();
         FirebaseHelper.getIntance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
     }
+
+    public void setToolBarText(int count) {
+        int remainapps = 12 - count;
+        toolbar.setTitle("Select up to " + remainapps + " more apps");
+    }
 }
+
