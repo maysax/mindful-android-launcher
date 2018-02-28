@@ -12,7 +12,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import co.siempo.phone.R;
 import co.siempo.phone.utils.PrefSiempo;
@@ -20,13 +20,13 @@ import co.siempo.phone.utils.PrefSiempo;
 
 public class NotificationItemViewHolder extends RecyclerView.ViewHolder {
 
-    @Bind({R.id.txt_app_name})
+    @BindView(R.id.txt_app_name)
     TextView txt_app_name;
-    @Bind({R.id.switch_appNotification})
+    @BindView(R.id.switch_appNotification)
     Switch switch_appNotification;
 
 
-    @Bind({R.id.imv_appicon})
+    @BindView(R.id.imv_appicon)
     ImageView imv_appicon;
 
 
