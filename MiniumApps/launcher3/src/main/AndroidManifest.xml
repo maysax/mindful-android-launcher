@@ -117,17 +117,17 @@
         </receiver>
 
         <activity android:name=".ui.UpdateActivity_"/>
-        <activity android:name=".activities.AlphaSettingsActivity_" />
+        <activity android:name=".activities.AlphaSettingsActivity_"/>
 
         <service
             android:name=".service.StatusBarService"
             android:enabled="true"
             android:exported="false"/>
 
-        <activity android:name=".activities.SuppressNotificationActivity" />
+        <activity android:name=".activities.SuppressNotificationActivity"/>
         <activity android:name=".activities.SiempoPermissionActivity_"/>
         <activity android:name=".activities.SettingsActivity_"/>
-        <activity android:name=".activities.NotificationActivity" />
+        <activity android:name=".activities.NotificationActivity"/>
         <activity android:name=".activities.HelpActivity"/>
         <activity
             android:name=".activities.IntentionEditActivity"
@@ -174,7 +174,7 @@
             android:theme="@style/CoreTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.NotesEditActivity" />
+                android:value=".activities.NotesEditActivity"/>
         </activity>
 
         <receiver
