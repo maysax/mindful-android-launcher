@@ -16,7 +16,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
@@ -25,21 +25,26 @@ import co.siempo.phone.utils.PrefSiempo;
 
 public class TempoNotificationItemViewHolder extends RecyclerView.ViewHolder {
 
-    @Bind({R.id.txt_app_name})
+    @BindView(R.id.txt_app_name)
     TextView txt_app_name;
-    @Bind({R.id.img_block_unblock})
+    @BindView(R.id.img_block_unblock)
     ImageView img_block_unblock;
 
 
-    @Bind({R.id.imv_appicon})
+    @BindView(R.id.imv_appicon)
     ImageView imv_appicon;
 
-    @Bind({R.id.linearList})
+    @BindView(R.id.linearList)
     LinearLayout linearList;
 
 
     public TempoNotificationItemViewHolder(View itemView) {
         super(itemView);
+
+        img_block_unblock = itemView.findViewById(R.id.img_block_unblock);
+        txt_app_name = itemView.findViewById(R.id.txt_app_name);
+        imv_appicon = itemView.findViewById(R.id.imv_appicon);
+        linearList = itemView.findViewById(R.id.linearList);
         ButterKnife.bind(this, itemView);
     }
 

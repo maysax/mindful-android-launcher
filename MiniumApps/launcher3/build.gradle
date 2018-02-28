@@ -105,7 +105,7 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.github.javiersantos:AppUpdater:2.6.4'
     implementation 'com.github.clans:fab:1.6.4'
-    implementation 'com.jakewharton:butterknife:7.0.1'
+    implementation 'com.jakewharton:butterknife:8.8.1'
     implementation 'com.wdullaer:materialdatetimepicker:3.4.1'
     implementation files('libs/activation.jar')
     implementation files('libs/additionnal.jar')
