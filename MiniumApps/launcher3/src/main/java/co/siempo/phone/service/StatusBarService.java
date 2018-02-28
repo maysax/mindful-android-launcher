@@ -34,7 +34,6 @@ import co.siempo.phone.event.FirebaseEvent;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
-import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
@@ -149,6 +148,7 @@ public class StatusBarService extends Service {
      */
     public void removeAppFromBlockedList(String uninstallPackageName) {
         ArrayList<String> blockedApps = new ArrayList<>();
+        ArrayList<String> removeApps = new ArrayList<>();
         String block_AppList = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST,
                 "");
         if (!TextUtils.isEmpty(block_AppList)) {
@@ -158,13 +158,15 @@ public class StatusBarService extends Service {
                 blockedApps = new Gson().fromJson(block_AppList, type);
                 for (String blockedAppName : blockedApps) {
                     if (blockedAppName.equalsIgnoreCase(uninstallPackageName.trim())) {
-                        blockedApps.remove(blockedAppName);
+                        removeApps.add(blockedAppName);
                     }
+                }
+                if(removeApps.size()>0){
+                    blockedApps.removeAll(removeApps);
                 }
                 String blockedList = new Gson().toJson(blockedApps);
                 PrefSiempo.getInstance(context).write(PrefSiempo.BLOCKED_APPLIST,
                         blockedList);
-//                sharedPreferencesLauncher3.edit().putString(Constants.BLOCKED_APPLIST, blockedList).commit();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -262,8 +264,8 @@ public class StatusBarService extends Service {
 
         @Override
         public void onChange(boolean selfChange, Uri uri) {
-            PrefSiempo.getInstance(context).write(PrefSiempo.IS_CONTACT_UPDATE, true);
-            PackageUtil.contactsUpdateInSearchList(context);
+            PrefSiempo.getInstance(context).write(PrefSiempo.IS_CONTACT_UPDATE,true);
+//            PackageUtil.contactsUpdateInSearchList(context);
         }
     }
 
@@ -279,8 +281,7 @@ public class StatusBarService extends Service {
                             installPackageName = intent.getData().getEncodedSchemeSpecificPart();
                             addAppFromBlockedList(installPackageName);
                             Log.d("Testing with device.", "Added" + installPackageName);
-                            CoreApplication.getInstance().addOrRemoveApplicationInfo(true, installPackageName);
-                            PackageUtil.addAppInSearchList(installPackageName, context);
+//                            PackageUtil.addAppInSearchList(installPackageName, context);
                         }
 
                     } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
@@ -291,10 +292,23 @@ public class StatusBarService extends Service {
                             if (!TextUtils.isEmpty(uninstallPackageName)) {
                                 new DBClient().deleteMsgByPackageName(uninstallPackageName);
                                 removeAppFromBlockedList(uninstallPackageName);
-                                EventBus.getDefault().post(new AppInstalledEvent(0));
-                                CoreApplication.getInstance().addOrRemoveApplicationInfo(true, uninstallPackageName);
-                                PackageUtil.removeAppFromSearchList(uninstallPackageName, context);
                                 removeAppFromPreference(context, uninstallPackageName);
+
+                                //                                PackageUtil.removeAppFromSearchList(uninstallPackageName, context);
+                            }
+                        }
+                    }
+                    else if(intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED)){
+                        String packageName;
+                        if (intent.getData().getEncodedSchemeSpecificPart() != null) {
+                            packageName= intent.getData().getSchemeSpecificPart();
+                            boolean isEnable=UIUtils.isAppInstalledAndEnabled(context, packageName);
+                            if(isEnable){
+                                addAppFromBlockedList(packageName);
+//                                PackageUtil.addAppInSearchList(packageName, context);
+                            }else{
+                                removeAppFromBlockedList(packageName);
+//                                PackageUtil.removeAppFromSearchList(packageName, context);
                             }
                         }
                     } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED)) {
@@ -312,8 +326,6 @@ public class StatusBarService extends Service {
                             }
                         }
                     }
-
-
                     PrefSiempo.getInstance(context).write
                             (PrefSiempo.IS_APP_UPDATED, true);
                     EventBus.getDefault().post(new AppInstalledEvent(true));

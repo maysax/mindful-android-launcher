@@ -39,9 +39,9 @@ public class PrefSiempo {
 
     // This field is used for to store favorites application package name.
     public static final String FAVORITE_APPS = "favorite_apps";
-    //
-    //This field is used for to store search List.
-    public static final String SEARCH_LIST = "searchList";
+
+    // This field is used for to store search List.
+    public static final String RECENT_ITEM_LIST = "recentItemList";
 
     // used for sorting of tools menu.
     public static final String SORTED_MENU = "sortedMenu";
