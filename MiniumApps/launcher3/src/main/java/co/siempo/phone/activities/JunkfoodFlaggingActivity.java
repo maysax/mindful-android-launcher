@@ -87,7 +87,8 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
         installedPackageList = getPackageManager().queryIntentActivities(mainIntent, 0);
 
         bindData(false);
-        if (PrefSiempo.getInstance(this).read(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, true)) {
+        if (PrefSiempo.getInstance(this).read(PrefSiempo.IS_JUNKFOOD_FIRSTTIME, true)) {
+            PrefSiempo.getInstance(this).write(PrefSiempo.IS_JUNKFOOD_FIRSTTIME, false);
             showFirstTimeDialog();
         }
     }
@@ -142,7 +143,6 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
         builder.setPositiveButton(R.string.gotit, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, false);
                 dialog.dismiss();
             }
         });
