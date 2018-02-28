@@ -22,6 +22,8 @@ public class PrefSiempo {
 
     // This field is used to store check application installed first time or not.
     public static final String IS_APP_INSTALLED_FIRSTTIME = "is_app_installed_firsttime";
+    // This field is used to store check application installed first time or not.
+    public static final String IS_JUNKFOOD_FIRSTTIME = "is_junkfood_firsttime";
 
     // This field is used for icon branding : True to show siempo icon and False for default application icon
     public static final String IS_ICON_BRANDING = "is_icon_branding";

@@ -151,6 +151,7 @@ public class DashboardActivity extends CoreActivity {
             @Override
             public void onPageScrollStateChanged(int i) {
                 if (i == 0 && PrefSiempo.getInstance(DashboardActivity.this).read(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, true)) {
+                    PrefSiempo.getInstance(DashboardActivity.this).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, false);
                     Intent intent = new Intent(DashboardActivity.this, JunkfoodFlaggingActivity.class);
                     startActivity(intent);
                 }
