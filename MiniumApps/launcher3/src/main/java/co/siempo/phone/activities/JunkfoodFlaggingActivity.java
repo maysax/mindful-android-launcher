@@ -62,6 +62,12 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
         favoriteList = PrefSiempo.getInstance(this).read(PrefSiempo.FAVORITE_APPS, new HashSet<String>());
         favoriteList.removeAll(list);
         PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         loadApps();
     }
 

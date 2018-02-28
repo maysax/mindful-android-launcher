@@ -69,6 +69,12 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
         junkFoodList = PrefSiempo.getInstance(this).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
         list.removeAll(junkFoodList);
         initView();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         loadApps();
     }
 
@@ -219,79 +225,69 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
         }
         popup = new PopupMenu(FavoritesSelectionActivity.this, view, Gravity.END);
 
-        popup.getMenuInflater().inflate(R.menu.junkfood_popup, popup.getMenu());
-        MenuItem menuItem = popup.getMenu().findItem(R.id.item_Unflag);
-
-        if (isFlagApp) {
-            if (favoriteAppList
-                    .size() == 1) {
-                menuItem.setVisible(false);
-            } else {
-                menuItem.setVisible(true);
-            }
-        } else {
-            if (favoriteAppList != null && (favoriteAppList.size() < 12)) {
-                menuItem.setVisible(true);
-            } else {
-                menuItem.setVisible(false);
-            }
-        }
-        menuItem.setTitle(isFlagApp ? getString(R.string.favorite_menu_unselect) : getString(R.string.favorite_menu_select));
 
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.item_Unflag) {
-                    popup.dismiss();
-                    try {
-                        if (isFlagApp) {
-                            if (list.contains(favoriteAppList.get(position).activityInfo.packageName)) {
-                                list.remove(favoriteAppList.get(position).activityInfo.packageName);
 
-                                //get the JSON array of the ordered of sorted customers
-                                String jsonListOfSortedFavorites = PrefSiempo.getInstance(FavoritesSelectionActivity.this).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
-                                //convert onNoteListChangedJSON array into a List<Long>
-                                Gson gson1 = new Gson();
-                                List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
-                                }.getType());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                if (isFlagApp) {
+                                    popup.dismiss();
+                                    if (list.contains(favoriteAppList.get(position).activityInfo.packageName)) {
+                                        list.remove(favoriteAppList.get(position).activityInfo.packageName);
 
-                                for (ListIterator<String> it =
-                                     listOfSortFavoritesApps.listIterator(); it.hasNext
-                                        (); ) {
-                                    String packageName = it.next();
-                                    if (favoriteAppList.get(position).activityInfo.packageName.equalsIgnoreCase(packageName)) {
-                                        //Used List Iterator to set empty
-                                        // value for package name retaining
-                                        // the positions of elements
-                                        it.set("");
+
+                                        //get the JSON array of the ordered of sorted customers
+                                        String jsonListOfSortedFavorites = PrefSiempo.getInstance(FavoritesSelectionActivity.this).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
+                                        //convert onNoteListChangedJSON array into a List<Long>
+                                        Gson gson1 = new Gson();
+                                        List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
+                                        }.getType());
+
+                                        for (ListIterator<String> it =
+                                             listOfSortFavoritesApps.listIterator(); it.hasNext
+                                                (); ) {
+                                            String packageName = it.next();
+                                            if (favoriteAppList.get(position).activityInfo.packageName.equalsIgnoreCase(packageName)) {
+                                                //Used List Iterator to set empty
+                                                // value for package name retaining
+                                                // the positions of elements
+                                                it.set("");
+                                            }
+                                        }
+
+
+                                        Gson gson2 = new Gson();
+                                        String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
+                                        PrefSiempo.getInstance(FavoritesSelectionActivity.this).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
+                                        allOtherAppList.add(favoriteAppList.get(position));
+                                        favoriteAppList.remove(favoriteAppList.get(position));
+                                        bindListView();
+                                        setToolBarText(favoriteAppList.size());
+
+                                        isLoadFirstTime = false;
+
                                     }
+                                } else {
+                                    if (favoriteAppList != null && favoriteAppList.size() < 12) {
+                                        list.add(allOtherAppList.get(position).activityInfo.packageName);
+                                        isLoadFirstTime = false;
+                                        favoriteAppList.add(allOtherAppList.get(position));
+                                        allOtherAppList.remove(allOtherAppList.get(position));
+                                        bindListView();
+                                    }
+                                    setToolBarText(favoriteAppList.size());
                                 }
-
-
-                                Gson gson2 = new Gson();
-                                String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
-                                PrefSiempo.getInstance(FavoritesSelectionActivity.this).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
-
-
-                                isLoadFirstTime = false;
-                                allOtherAppList.add(favoriteAppList.get(position));
-                                favoriteAppList.remove(favoriteAppList.get(position));
-                                bindListView();
-                                setToolBarText(favoriteAppList.size());
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                        } else {
-                            if (favoriteAppList != null && favoriteAppList.size() < 12) {
-                                list.add(allOtherAppList.get(position).activityInfo.packageName);
-                                isLoadFirstTime = false;
-                                favoriteAppList.add(allOtherAppList.get(position));
-                                allOtherAppList.remove(allOtherAppList.get(position));
-                                bindListView();
-                            }
-                            setToolBarText(favoriteAppList.size());
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    });
+
                 } else if (item.getItemId() == R.id.item_Info) {
                     try {
                         popup.dismiss();
@@ -310,9 +306,25 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
             }
         });
 
+        popup.getMenuInflater().inflate(R.menu.junkfood_popup, popup.getMenu());
+        MenuItem menuItem = popup.getMenu().findItem(R.id.item_Unflag);
+
+        if (isFlagApp) {
+            if (favoriteAppList
+                    .size() == 1) {
+                menuItem.setVisible(false);
+            } else {
+                menuItem.setVisible(true);
+            }
+        } else {
+            if (favoriteAppList != null && (favoriteAppList.size() < 12)) {
+                menuItem.setVisible(true);
+            } else {
+                menuItem.setVisible(false);
+            }
+        }
+        menuItem.setTitle(isFlagApp ? getString(R.string.favorite_menu_unselect) : getString(R.string.favorite_menu_select));
         popup.show();
-
-
         popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
             @Override
             public void onDismiss(PopupMenu menu) {
