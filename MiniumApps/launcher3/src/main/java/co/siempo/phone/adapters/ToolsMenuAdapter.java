@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -82,7 +84,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                 } else {
                     BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, appMenu.getApplicationName());
                     CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
-                    holder.icon.setImageResource(item.getDrawable());
+                        holder.icon.setImageResource(item.getDrawable());
                     holder.text.setText(item.getTitle());
                 }
             }
@@ -132,7 +134,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                                 new HashSet<String>()).contains(appMenu.getApplicationName().trim())) {
 //                                if a 3rd party app is already assigned to this tool
                             String strPackageName = CoreApplication.getInstance().getApplicationByCategory(id).get(0).activityInfo.packageName;
-                            if (UIUtils.isAppEnabled(context, strPackageName)) {
+                            if (UIUtils.isAppEnabled(context, strPackageName) && strPackageName.equalsIgnoreCase(appMenu.getApplicationName())) {
                                 new ActivityHelper(context).openAppWithPackageName(strPackageName);
                             } else {
                                 openAppAssignmentScreen(item);
