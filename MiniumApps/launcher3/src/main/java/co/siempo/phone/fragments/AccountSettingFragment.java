@@ -1,6 +1,8 @@
 package co.siempo.phone.fragments;
 
+import android.app.AlertDialog;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
@@ -103,9 +105,7 @@ public class AccountSettingFragment extends CoreFragment {
 
     @Click
     void relChangeHome() {
-        Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        showAlertForFirstTime();
     }
 
     @Override
@@ -118,6 +118,36 @@ public class AccountSettingFragment extends CoreFragment {
     public void onPause() {
         super.onPause();
         FirebaseHelper.getIntance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
+    }
+
+    /**
+     * This dialog used when user press exit siempo service.
+     */
+    private void showAlertForFirstTime() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogThemeChangeLauncher);
+        builder.setTitle(getString(R.string.exiting_siempo));
+        builder.setMessage(R.string.exiting_siempo_msg);
+        builder.setPositiveButton(getString(R.string.exit), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+
+            }
+        });
+        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(getActivity(), R.color.dialog_blue));
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(getActivity(), R.color.dialog_blue));
     }
 
 }

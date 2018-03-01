@@ -301,7 +301,7 @@
     <string name="next">NEXT</string>
 
     <string name="faqlink">http://www.getsiempo.com/apps/android/beta/faq.htm</string>
-    <string name="privacypolicy_link"><a href="">Privacy Policy</a></string>
+    <string name="privacypolicy_link"><a href="">Privacy Policy.</a></string>
     <string name="disable_intentions">Disable intentions</string>
     <string name="when_intentions_are_disabled_your_home_screen_will_be_blank">When intentions are disabled, your home screen will be blank.</string>
     <string name="homescreen">Home Screen</string>
@@ -422,6 +422,9 @@
     <string name="str_blank_validation_above">Taps apps above to move them into this section</string>
     <string name="yes_unhide">YES, UNHIDE</string>
     <string name="are_you_sure">Are you sure?</string>
+    <string name="exiting_siempo">Exiting Siempo</string>
+    <string name="exit">EXIT</string>
+    <string name="exiting_siempo_msg">To re-enable Siempo protections after exiting, launch the Siempo app at any time.  Using Siempo can help decrease unintended app use.</string>
     <string name="editing_tools">Editing tools</string>
     <string name="editing_frequently_apps">Editing frequently used apps</string>
     <string name="select_tools">Select Tools</string>

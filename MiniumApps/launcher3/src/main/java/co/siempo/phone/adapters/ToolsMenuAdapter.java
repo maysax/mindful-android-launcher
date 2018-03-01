@@ -73,6 +73,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
             }
             if (isHideIconBranding) {
                 holder.icon.setImageResource(item.getDrawable());
+                holder.text.setText(item.getTitle());
             } else {
                 holder.text.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(appMenu.getApplicationName()));
                 Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(appMenu.getApplicationName());
@@ -82,6 +83,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                     BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, appMenu.getApplicationName());
                     CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
                     holder.icon.setImageResource(item.getDrawable());
+                    holder.text.setText(item.getTitle());
                 }
             }
         } else {
