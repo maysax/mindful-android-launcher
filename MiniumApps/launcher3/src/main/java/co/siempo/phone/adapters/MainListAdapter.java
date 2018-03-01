@@ -12,6 +12,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.PopupMenu;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -451,6 +452,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                                                                 ().getString
                                                                 (R.string.title_saveNote)
                                                         ) && searchString.equalsIgnoreCase("^") && current.getItemType() == TokenItemType.DATA) {
+
                                         } else if (originalData.get(i).getTitle()
                                                 .toLowerCase().equalsIgnoreCase
                                                         (context.getResources
@@ -458,9 +460,11 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                                                                 (R.string
                                                                         .title_saveNote)) && TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT)) {
 
+
                                         } else if (searchString.equalsIgnoreCase("@") || (searchString.startsWith("@") && isValidNumber)) {
 
                                         } else {
+
                                             buildData.add(originalData.get(i));
                                         }
                                     }
