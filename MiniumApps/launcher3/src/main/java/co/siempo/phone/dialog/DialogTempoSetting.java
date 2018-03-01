@@ -129,48 +129,48 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
     @Override
     protected void onStop() {
         super.onStop();
-        FirebaseHelper.getIntance().logScreenUsageTime(DialogTempoSetting.class.getSimpleName(), startTime);
+        FirebaseHelper.getInstance().logScreenUsageTime(DialogTempoSetting.class.getSimpleName(), startTime);
         fabPlay.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fab_scale_down));
         fabPlay.setVisibility(View.INVISIBLE);
     }
 
     private void radioIndividual() {
         enableRadioOnPosition(0);
-        FirebaseHelper.getIntance().logTempoIntervalTime(0, 0, "");
+        FirebaseHelper.getInstance().logTempoIntervalTime(0, 0, "");
     }
 
     private void radioBatched() {
         enableRadioOnPosition(1);
-        FirebaseHelper.getIntance().logTempoIntervalTime(1, PrefSiempo.getInstance(context).read(PrefSiempo
+        FirebaseHelper.getInstance().logTempoIntervalTime(1, PrefSiempo.getInstance(context).read(PrefSiempo
                 .BATCH_TIME, 15), "");
     }
 
     private void radioOnlyAt() {
         enableRadioOnPosition(2);
-        FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, PrefSiempo.getInstance(context).read(PrefSiempo
+        FirebaseHelper.getInstance().logTempoIntervalTime(2, 0, PrefSiempo.getInstance(context).read(PrefSiempo
                 .ONLY_AT, "12:01"));
     }
 
     private void relIndividual() {
         enableRadioOnPosition(0);
-        FirebaseHelper.getIntance().logTempoIntervalTime(0, 0, "");
+        FirebaseHelper.getInstance().logTempoIntervalTime(0, 0, "");
     }
 
     private void relBatched() {
         enableRadioOnPosition(1);
-        FirebaseHelper.getIntance().logTempoIntervalTime(1, PrefSiempo.getInstance(context).read(PrefSiempo
+        FirebaseHelper.getInstance().logTempoIntervalTime(1, PrefSiempo.getInstance(context).read(PrefSiempo
                 .BATCH_TIME, 15), "");
     }
 
     private void relOnlyAt() {
         enableRadioOnPosition(2);
-        FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, PrefSiempo.getInstance(context).read(PrefSiempo
+        FirebaseHelper.getInstance().logTempoIntervalTime(2, 0, PrefSiempo.getInstance(context).read(PrefSiempo
                 .ONLY_AT, "12:01"));
     }
 
     private void txtAdd() {
         enableRadioOnPosition(2);
-        FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, PrefSiempo.getInstance(context).read(PrefSiempo
+        FirebaseHelper.getInstance().logTempoIntervalTime(2, 0, PrefSiempo.getInstance(context).read(PrefSiempo
                 .ONLY_AT, "12:01"));
         Calendar now = Calendar.getInstance();
         showTimePicker(now, -1, true);
@@ -223,7 +223,7 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
                                 PrefSiempo.getInstance(context).write(PrefSiempo
                                         .ONLY_AT, TextUtils.join(",", listdata));
                                 enableRadioOnPosition(2);
-                                FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, PrefSiempo.getInstance(context).read(PrefSiempo
+                                FirebaseHelper.getInstance().logTempoIntervalTime(2, 0, PrefSiempo.getInstance(context).read(PrefSiempo
                                         .ONLY_AT, "12:01"));
                             } else {
                                 Toast.makeText(context, R.string.msg_sametime, Toast.LENGTH_SHORT).show();
@@ -234,7 +234,7 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
                             PrefSiempo.getInstance(context).write(PrefSiempo
                                     .ONLY_AT, TextUtils.join(",", listdata));
                             enableRadioOnPosition(2);
-                            FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, PrefSiempo.getInstance(context).read(PrefSiempo
+                            FirebaseHelper.getInstance().logTempoIntervalTime(2, 0, PrefSiempo.getInstance(context).read(PrefSiempo
                                     .ONLY_AT, "12:01"));
                         }
 
@@ -257,7 +257,7 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
                                                     .ONLY_AT, "");
                                         }
                                         enableRadioOnPosition(2);
-                                        FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, PrefSiempo.getInstance(context).read(PrefSiempo
+                                        FirebaseHelper.getInstance().logTempoIntervalTime(2, 0, PrefSiempo.getInstance(context).read(PrefSiempo
                                                 .ONLY_AT, "12:01"));
                                     }
                                 }
@@ -293,7 +293,7 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
             }
         }
         enableRadioOnPosition(1);
-        FirebaseHelper.getIntance().logTempoIntervalTime(1, PrefSiempo.getInstance(context).read(PrefSiempo
+        FirebaseHelper.getInstance().logTempoIntervalTime(1, PrefSiempo.getInstance(context).read(PrefSiempo
                 .BATCH_TIME, 15), "");
     }
 
@@ -325,7 +325,7 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
             }
         }
         enableRadioOnPosition(1);
-        FirebaseHelper.getIntance().logTempoIntervalTime(1, PrefSiempo.getInstance(context).read(PrefSiempo
+        FirebaseHelper.getInstance().logTempoIntervalTime(1, PrefSiempo.getInstance(context).read(PrefSiempo
                 .BATCH_TIME, 15), "");
     }
 

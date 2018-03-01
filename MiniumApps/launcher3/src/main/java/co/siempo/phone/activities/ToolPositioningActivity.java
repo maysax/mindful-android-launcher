@@ -77,7 +77,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         }
         String hashMapToolSettings = new Gson().toJson(map);
         PrefSiempo.getInstance(this).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
-        FirebaseHelper.getIntance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
+        FirebaseHelper.getInstance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
     }
 
     @Override

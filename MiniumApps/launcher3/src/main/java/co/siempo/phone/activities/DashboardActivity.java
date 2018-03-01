@@ -32,7 +32,12 @@ import co.siempo.phone.adapters.DashboardPagerAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.CheckVersionEvent;
 import co.siempo.phone.event.HomePressEvent;
+import co.siempo.phone.fragments.FavoritePaneFragment;
+import co.siempo.phone.fragments.IntentionFieldFragment;
+import co.siempo.phone.fragments.JunkFoodPaneFragment;
+import co.siempo.phone.fragments.ToolsPaneFragment;
 import co.siempo.phone.helper.ActivityHelper;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.service.SiempoNotificationListener_;
@@ -46,14 +51,14 @@ public class DashboardActivity extends CoreActivity {
     public static final String IS_FROM_HOME = "isFromHome";
     public static String isTextLenghGreater = "";
     public static boolean isJunkFoodOpen = false;
-    public static int currentIndexDashboard = -1;
+    public static int currentIndexDashboard = 1;
     public static int currentIndexPaneFragment = -1;
+    public static long startTime = 0;
     PermissionUtil permissionUtil;
     ConnectivityManager connectivityManager;
     AppUpdaterUtils appUpdaterUtils;
     boolean isApplicationLaunch = false;
     NotificationManager notificationManager;
-    long startTime = 0;
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
      * and next wizard steps.
@@ -84,7 +89,9 @@ public class DashboardActivity extends CoreActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-
+        if (startTime == 0) {
+            startTime = System.currentTimeMillis();
+        }
     }
 
 
@@ -104,11 +111,12 @@ public class DashboardActivity extends CoreActivity {
         checknavigatePermissions();
     }
 
+
     public void loadViews() {
         mPager = findViewById(R.id.pager);
         mPagerAdapter = new DashboardPagerAdapter(getFragmentManager());
         mPager.setAdapter(mPagerAdapter);
-        mPager.setCurrentItem(currentIndexDashboard == -1 ? 1 : currentIndexDashboard);
+        mPager.setCurrentItem(currentIndexDashboard);
         mPager.setPageTransformer(true, new UIUtils.FadePageTransformer());
         inputMethodManager = (InputMethodManager) this
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -120,25 +128,32 @@ public class DashboardActivity extends CoreActivity {
 
             @Override
             public void onPageSelected(int i) {
-                if (currentIndexDashboard != -1 && currentIndexDashboard == 1 && i == 0) {
-                    Log.d("Rajesh", "Intention End");
+                if (currentIndexDashboard == 1 && i == 0) {
+                    Log.d("Firebase", "Intention End");
+                    FirebaseHelper.getInstance().logScreenUsageTime(IntentionFieldFragment.class.getSimpleName(), startTime);
                     if (DashboardActivity.currentIndexPaneFragment == 0) {
-                        Log.d("Rajesh", "Junkfood Start");
+                        Log.d("Firebase", "Junkfood Start");
+                        startTime = System.currentTimeMillis();
                     } else if (DashboardActivity.currentIndexPaneFragment == 1) {
-                        Log.d("Rajesh", "Favorite Start");
+                        Log.d("Firebase", "Favorite Start");
+                        startTime = System.currentTimeMillis();
                     } else if (DashboardActivity.currentIndexPaneFragment == 2) {
-                        Log.d("Rajesh", "Tools Start");
+                        Log.d("Firebase", "Tools Start");
+                        startTime = System.currentTimeMillis();
                     }
-                } else if (currentIndexDashboard != -1 && currentIndexDashboard == 0 && i == 1) {
-//                    Log.d("Rajesh", "PaneFragmentEnded");
+                } else if (currentIndexDashboard == 0 && i == 1) {
                     if (DashboardActivity.currentIndexPaneFragment == 0) {
-                        Log.d("Rajesh", "Junkfood End");
+                        Log.d("Firebase", "Junkfood End");
+                        FirebaseHelper.getInstance().logScreenUsageTime(JunkFoodPaneFragment.class.getSimpleName(), startTime);
                     } else if (DashboardActivity.currentIndexPaneFragment == 1) {
-                        Log.d("Rajesh", "Favorite End");
+                        Log.d("Firebase", "Favorite End");
+                        FirebaseHelper.getInstance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), startTime);
                     } else if (DashboardActivity.currentIndexPaneFragment == 2) {
-                        Log.d("Rajesh", "Tools End");
+                        Log.d("Firebase", "Tools End");
+                        FirebaseHelper.getInstance().logScreenUsageTime(ToolsPaneFragment.class.getSimpleName(), startTime);
                     }
-                    Log.d("Rajesh", "Intention Start");
+                    Log.d("Firebase", "Intention Start");
+                    startTime = System.currentTimeMillis();
                 }
                 currentIndexDashboard = i;
             }
@@ -158,14 +173,18 @@ public class DashboardActivity extends CoreActivity {
     protected void onPause() {
         super.onPause();
         if (currentIndexDashboard == 1) {
-            Log.d("Rajesh", "Intention End");
+            Log.d("Firebase", "Intention End");
+            FirebaseHelper.getInstance().logScreenUsageTime(IntentionFieldFragment.class.getSimpleName(), startTime);
         } else if (currentIndexDashboard == 0) {
             if (DashboardActivity.currentIndexPaneFragment == 0) {
-                Log.d("Rajesh", "Junkfood End");
+                Log.d("Firebase", "Junkfood End");
+                FirebaseHelper.getInstance().logScreenUsageTime(JunkFoodPaneFragment.class.getSimpleName(), startTime);
             } else if (DashboardActivity.currentIndexPaneFragment == 1) {
-                Log.d("Rajesh", "Favorite End");
+                Log.d("Firebase", "Favorite End");
+                FirebaseHelper.getInstance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), startTime);
             } else if (DashboardActivity.currentIndexPaneFragment == 2) {
-                Log.d("Rajesh", "Tools End");
+                Log.d("Firebase", "Tools End");
+                FirebaseHelper.getInstance().logScreenUsageTime(ToolsPaneFragment.class.getSimpleName(), startTime);
             }
         }
     }
@@ -189,19 +208,7 @@ public class DashboardActivity extends CoreActivity {
 
         } else {
             Log.d(TAG, "onResume.. ");
-//            if (currentIndexDashboard != -1 && currentIndexDashboard == 1) {
-//                Log.d("Rajesh", "Intention Start");
-//            } else if (currentIndexDashboard != -1 && currentIndexDashboard == 0) {
-//                if (DashboardActivity.currentIndexPaneFragment == 0) {
-//                    Log.d("Rajesh", "Junkfood Start");
-//                } else if (DashboardActivity.currentIndexPaneFragment == 1) {
-//                    Log.d("Rajesh", "Favorite Start");
-//                } else if (DashboardActivity.currentIndexPaneFragment == 2) {
-//                    Log.d("Rajesh", "Tools Start");
-//                }
-//            }
             loadViews();
-
         }
         //Need to change as it is heavy call for onResume
 //        initView();
@@ -482,6 +489,8 @@ public class DashboardActivity extends CoreActivity {
     protected void onDestroy() {
         super.onDestroy();
         DashboardActivity.isTextLenghGreater = "";
+        currentIndexDashboard = 1;
+        currentIndexPaneFragment = 1;
 
 
     }
@@ -490,7 +499,7 @@ public class DashboardActivity extends CoreActivity {
     public void homePressEvent(HomePressEvent event) {
         try {
             if (UIUtils.isMyLauncherDefault(this)) {
-                currentIndexDashboard = -1;
+                currentIndexDashboard = 1;
                 // onBackPressed();
                 if (null != mPager) {
                     mPager.setCurrentItem(1);

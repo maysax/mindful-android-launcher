@@ -55,6 +55,7 @@ import co.siempo.phone.customviews.ItemOffsetDecoration;
 import co.siempo.phone.customviews.SearchLayout;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainFragmentMediator;
 import co.siempo.phone.main.MainListAdapterEvent;
@@ -192,14 +193,18 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                 .VISIBLE) {
             imageClear.performClick();
         }
-        if (DashboardActivity.currentIndexPaneFragment == 0) {
-            Log.d("Rajesh", "Junkfood Start");
-        } else if (DashboardActivity.currentIndexPaneFragment == 1) {
-            Log.d("Rajesh", "Favorite Start");
-        } else if (DashboardActivity.currentIndexPaneFragment == 2) {
-            Log.d("Rajesh", "Tools Start");
+        if (DashboardActivity.currentIndexDashboard == 1) {
+            if (DashboardActivity.currentIndexPaneFragment == 0) {
+                Log.d("Firebase", "Junkfood Start");
+                DashboardActivity.startTime = System.currentTimeMillis();
+            } else if (DashboardActivity.currentIndexPaneFragment == 1) {
+                Log.d("Firebase", "Favorite Start");
+                DashboardActivity.startTime = System.currentTimeMillis();
+            } else if (DashboardActivity.currentIndexPaneFragment == 2) {
+                Log.d("Firebase", "Tools Start");
+                DashboardActivity.startTime = System.currentTimeMillis();
+            }
         }
-
     }
 
 
@@ -485,17 +490,25 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                 indicator.setViewPager(pagerPane);
 
                 if (DashboardActivity.currentIndexPaneFragment == 0 && i == 1) {
-                    Log.d("Rajesh ", "JunkFood End");
-                    Log.d("Rajesh ", "Favorite Start");
+                    Log.d("Firebase ", "JunkFood End");
+                    Log.d("Firebase ", "Favorite Start");
+                    FirebaseHelper.getInstance().logScreenUsageTime(JunkFoodPaneFragment.class.getSimpleName(), startTime);
+                    DashboardActivity.startTime = System.currentTimeMillis();
                 } else if (DashboardActivity.currentIndexPaneFragment == 1 && i == 2) {
-                    Log.d("Rajesh ", "Favorite End");
-                    Log.d("Rajesh ", "Tools Start");
+                    Log.d("Firebase ", "Favorite End");
+                    Log.d("Firebase ", "Tools Start");
+                    FirebaseHelper.getInstance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), startTime);
+                    DashboardActivity.startTime = System.currentTimeMillis();
                 } else if (DashboardActivity.currentIndexPaneFragment == 2 && i == 1) {
-                    Log.d("Rajesh ", "Tools End");
-                    Log.d("Rajesh ", "Favorite Start");
+                    Log.d("Firebase ", "Tools End");
+                    Log.d("Firebase ", "Favorite Start");
+                    FirebaseHelper.getInstance().logScreenUsageTime(ToolsPaneFragment.class.getSimpleName(), startTime);
+                    DashboardActivity.startTime = System.currentTimeMillis();
                 } else if (DashboardActivity.currentIndexPaneFragment == 1 && i == 0) {
-                    Log.d("Rajesh ", "Favorite End");
-                    Log.d("Rajesh ", "JunkFood Start");
+                    Log.d("Firebase ", "Favorite End");
+                    Log.d("Firebase ", "JunkFood Start");
+                    FirebaseHelper.getInstance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), startTime);
+                    DashboardActivity.startTime = System.currentTimeMillis();
                 }
 
                 DashboardActivity.currentIndexPaneFragment = i;
@@ -645,13 +658,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         }
         if (inputMethodManager != null) {
             inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
-        }
-        if (DashboardActivity.currentIndexPaneFragment == 0) {
-            Log.d("Rajesh", "Junkfood End");
-        } else if (DashboardActivity.currentIndexPaneFragment == 1) {
-            Log.d("Rajesh", "Favorite End");
-        } else if (DashboardActivity.currentIndexPaneFragment == 2) {
-            Log.d("Rajesh", "Tools End");
         }
     }
 

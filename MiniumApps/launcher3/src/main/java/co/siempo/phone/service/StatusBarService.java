@@ -29,7 +29,6 @@ import java.util.ListIterator;
 import java.util.Set;
 
 import co.siempo.phone.R;
-import co.siempo.phone.activities.FavoritesSelectionActivity;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBClient;
 import co.siempo.phone.event.AppInstalledEvent;
@@ -126,7 +125,7 @@ public class StatusBarService extends Service {
 
     @Subscribe
     public void firebaseEvent(FirebaseEvent firebaseEvent) {
-        FirebaseHelper.getIntance().logScreenUsageTime(firebaseEvent.getScreenName(), firebaseEvent.getStrStartTime());
+        FirebaseHelper.getInstance().logScreenUsageTime(firebaseEvent.getScreenName(), firebaseEvent.getStrStartTime());
     }
 
     @Override
@@ -258,6 +257,27 @@ public class StatusBarService extends Service {
 
     }
 
+    public void updateFavoriteSort(Context context, String packageName) {
+        //get the JSON array of the ordered of sorted customers
+        String jsonListOfSortedFavorites = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
+        //convert onNoteListChangedJSON array into a List<Long>
+        Gson gson1 = new Gson();
+        List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
+        }.getType());
+        for (ListIterator<String> it =
+             listOfSortFavoritesApps.listIterator(); it.hasNext
+                (); ) {
+            String removePackageName = it.next();
+            if (!TextUtils.isEmpty(removePackageName) && removePackageName.trim().equalsIgnoreCase(packageName)) {
+                it.set("");
+            }
+
+        }
+        Gson gson2 = new Gson();
+        String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
+        PrefSiempo.getInstance(context).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
+    }
+
     private class MyObserver extends ContentObserver {
         MyObserver(Handler handler) {
             super(handler);
@@ -326,26 +346,5 @@ public class StatusBarService extends Service {
             }
 
         }
-    }
-
-    public void updateFavoriteSort(Context context,String packageName){
-        //get the JSON array of the ordered of sorted customers
-        String jsonListOfSortedFavorites = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
-        //convert onNoteListChangedJSON array into a List<Long>
-        Gson gson1 = new Gson();
-        List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
-        }.getType());
-        for (ListIterator<String> it =
-             listOfSortFavoritesApps.listIterator(); it.hasNext
-                (); ) {
-            String removePackageName = it.next();
-            if(!TextUtils.isEmpty(removePackageName) && removePackageName.trim().equalsIgnoreCase(packageName)){
-                it.set("");
-            }
-
-        }
-        Gson gson2 = new Gson();
-        String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
-        PrefSiempo.getInstance(context).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
     }
 }

@@ -54,7 +54,7 @@ public class FirebaseHelper {
 
     }
 
-    public static FirebaseHelper getIntance() {
+    public static FirebaseHelper getInstance() {
         if (firebaseHelper == null) {
             firebaseHelper = new FirebaseHelper();
         }

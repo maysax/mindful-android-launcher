@@ -160,19 +160,19 @@ public abstract class CoreApplication extends MultiDexApplication {
         } else {
 //            if (DashboardActivity.currentIndexPaneFragment == 0 && i == 1) {
 //                Log.d("Firebase ", "JunkFoodEnd");
-//                FirebaseHelper.getIntance().logScreenUsageTime(JunkFoodPaneFragment.class.getSimpleName(), startTime);
+//                FirebaseHelper.getInstance().logScreenUsageTime(JunkFoodPaneFragment.class.getSimpleName(), startTime);
 ////                startTime = System.currentTimeMillis();
 //            } else if (DashboardActivity.currentIndexPaneFragment == 1 && i == 2) {
 //                Log.d("Firebase ", "Favorite End");
-//                FirebaseHelper.getIntance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), startTime);
+//                FirebaseHelper.getInstance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), startTime);
 ////                startTime = System.currentTimeMillis();
 //            } else if (DashboardActivity.currentIndexPaneFragment == 2 && i == 1) {
 //                Log.d("Firebase ", "Tools End");
-//                FirebaseHelper.getIntance().logScreenUsageTime(ToolsPaneFragment.class.getSimpleName(), startTime);
+//                FirebaseHelper.getInstance().logScreenUsageTime(ToolsPaneFragment.class.getSimpleName(), startTime);
 ////                startTime = System.currentTimeMillis();
 //            } else if (DashboardActivity.currentIndexPaneFragment == 1 && i == 0) {
 //                Log.d("Firebase ", "Favorite End");
-//                FirebaseHelper.getIntance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), startTime);
+//                FirebaseHelper.getInstance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), startTime);
 ////                startTime = System.currentTimeMillis();
 //            }
         }

@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import co.siempo.phone.utils.PackageUtil;
 
@@ -31,7 +30,6 @@ public class BitmapWorkerTask extends AsyncTask<Object, Void, Void> {
             appInfo = context.getPackageManager().getApplicationInfo(name, PackageManager.GET_META_DATA);
             Drawable drawable = appInfo.loadIcon(context.getPackageManager());
             Bitmap bitmap = PackageUtil.drawableToBitmap(drawable);
-            Log.d("Rajesh ", appInfo.packageName + "---" + bitmap);
             CoreApplication.getInstance().addBitmapToMemoryCache(appInfo.packageName, bitmap);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();

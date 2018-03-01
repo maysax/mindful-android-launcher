@@ -148,7 +148,7 @@ public class MainFragmentMediator {
                 case CONTACT:
                     if (router != null) {
                         router.contactPicked(getAdapter().getItem(position));
-                        FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_CONTACT_PICK, "", data);
+                        FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_CONTACT_PICK, "", data);
                     }
                     break;
                 case ACTION:
@@ -164,7 +164,7 @@ public class MainFragmentMediator {
                             DashboardActivity.isTextLenghGreater = "";
                             UIUtils.hideSoftKeyboard(fragment.getActivity(), fragment.getActivity().getWindow().getDecorView().getWindowToken());
                             boolean status = new ActivityHelper(fragment.getActivity()).openAppWithPackageName(getAdapter().getItem(position).getPackageName());
-                            FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_APPLICATION_PICK, getAdapter().getItem(position).getPackageName(), "");
+                            FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_APPLICATION_PICK, getAdapter().getItem(position).getPackageName(), "");
                             if (status) {
                                 PackageUtil.addRecentItemList(getAdapter().getItem(position), context);
                             }
@@ -177,14 +177,14 @@ public class MainFragmentMediator {
                         case 1:
                             if (router != null && fragment != null) {
                                 router.sendText(fragment.getActivity());
-                                FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_SMS, "", data);
+                                FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_SMS, "", data);
                             }
                             break;
                         //Notes
                         case 2:
                             if (router != null && fragment != null) {
                                 router.createNote(fragment.getActivity());
-                                FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_SAVE_NOTE, "", data);
+                                FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_SAVE_NOTE, "", data);
                                 EventBus.getDefault().post(new CreateNoteEvent());
                                 new ActivityHelper(context).openNotesApp(true);
                             }
@@ -200,7 +200,7 @@ public class MainFragmentMediator {
                             if (router != null && fragment != null) {
                                 router.call(fragment.getActivity());
                                 DashboardActivity.isTextLenghGreater = "";
-                                FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_CALL, "", data);
+                                FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_CALL, "", data);
                                 EventBus.getDefault().post(new SendSmsEvent(true, "", ""));
                             }
                             break;
@@ -214,7 +214,7 @@ public class MainFragmentMediator {
                         try {
                             fragment.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + TokenManager.getInstance().getCurrent().getExtra2())));
                             DashboardActivity.isTextLenghGreater = "";
-                            FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_CALL, "", data);
+                            FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_CALL, "", data);
                             EventBus.getDefault().post(new SendSmsEvent(true, "", ""));
                         } catch (Exception e) {
                             CoreApplication.getInstance().logException(e);
@@ -223,7 +223,7 @@ public class MainFragmentMediator {
                     } else {
                         if (router != null) {
                             router.contactNumberPicked(getAdapter().getItem(position));
-                            FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_CONTACT_PICK, "", data);
+                            FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_CONTACT_PICK, "", data);
                         }
                     }
                     break;

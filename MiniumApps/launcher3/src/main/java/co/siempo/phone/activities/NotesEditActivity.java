@@ -29,12 +29,11 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.colorpicker.ColorPickerDialog;
 import co.siempo.phone.colorpicker.ColorPickerSwatch;
-import co.siempo.phone.event.FirebaseEvent;
 import co.siempo.phone.event.HomePressEvent;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.managers.EvernoteManager;
 import co.siempo.phone.utils.UIUtils;
-import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
 import static co.siempo.phone.utils.DataUtils.NEW_NOTE_REQUEST;
@@ -579,7 +578,7 @@ public class NotesEditActivity extends CoreActivity implements Toolbar.OnMenuIte
     @Override
     protected void onPause() {
         super.onPause();
-        EventBus.getDefault().post(new FirebaseEvent(NotesEditActivity.this.getClass().getSimpleName(), startTime));
+        FirebaseHelper.getInstance().logScreenUsageTime(NotesEditActivity.this.getClass().getSimpleName(), startTime);
     }
 
     @Override

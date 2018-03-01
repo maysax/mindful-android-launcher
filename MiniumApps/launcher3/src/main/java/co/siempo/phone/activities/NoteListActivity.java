@@ -37,10 +37,9 @@ import java.util.ArrayList;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.NoteAdapter;
 import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.event.FirebaseEvent;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.managers.EvernoteManager;
-import de.greenrobot.event.EventBus;
 
 import static co.siempo.phone.utils.DataUtils.BACKUP_FILE_NAME;
 import static co.siempo.phone.utils.DataUtils.BACKUP_FOLDER_PATH;
@@ -1072,7 +1071,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
     @Override
     protected void onPause() {
         super.onPause();
-        EventBus.getDefault().post(new FirebaseEvent("Notes:" + NoteListActivity.this.getClass().getSimpleName(), startTime));
+        FirebaseHelper.getInstance().logScreenUsageTime(NoteListActivity.this.getClass().getSimpleName(), startTime);
     }
 
 
