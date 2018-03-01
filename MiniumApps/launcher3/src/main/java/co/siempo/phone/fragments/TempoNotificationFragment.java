@@ -44,7 +44,7 @@ public class TempoNotificationFragment extends CoreFragment {
 
 
     @ViewById
-    RelativeLayout relAllowSpecificApps;
+    RelativeLayout relContainerAllowSpecificApps;
 
     @ViewById
     RelativeLayout relAllowPicking;
@@ -78,7 +78,7 @@ public class TempoNotificationFragment extends CoreFragment {
     }
 
     @Click
-    void relAllowSpecificApps() {
+    void relContainerAllowSpecificApps() {
         Intent i = new Intent(getActivity(), NotificationActivity.class);
         startActivity(i);
     }

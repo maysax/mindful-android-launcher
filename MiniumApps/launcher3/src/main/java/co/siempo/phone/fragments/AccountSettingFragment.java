@@ -42,6 +42,12 @@ public class AccountSettingFragment extends CoreFragment {
 
     @ViewById
     RelativeLayout relUpdateEmail;
+
+
+    @ViewById
+    RelativeLayout relAnalytics;
+
+
     @ViewById
     RelativeLayout relChangeHome;
     private long startTime = 0;
@@ -101,6 +107,12 @@ public class AccountSettingFragment extends CoreFragment {
     @Click
     void relUpdateEmail() {
         ((CoreActivity) getActivity()).loadChildFragment(TempoUpdateEmailFragment_.builder().build(), R.id.tempoView);
+    }
+
+
+    @Click
+    void relAnalytics() {
+        swtch_analytics.performClick();
     }
 
     @Click

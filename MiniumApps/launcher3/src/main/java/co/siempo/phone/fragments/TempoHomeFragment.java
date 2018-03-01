@@ -5,9 +5,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
@@ -22,6 +24,9 @@ public class TempoHomeFragment extends CoreFragment {
 
     @ViewById
     Switch switchDisableIntentionsControls;
+
+    @ViewById
+    RelativeLayout relAllowSpecificApps;
 
     public TempoHomeFragment() {
         // Required empty public constructor
@@ -50,6 +55,12 @@ public class TempoHomeFragment extends CoreFragment {
 //                droidPrefs.isIntentionEnable().put(isChecked);
             }
         });
+    }
+
+    @Click
+    void relAllowSpecificApps() {
+
+        switchDisableIntentionsControls.performClick();
     }
 
 
