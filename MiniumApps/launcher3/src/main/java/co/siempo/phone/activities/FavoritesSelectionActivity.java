@@ -10,7 +10,6 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +39,8 @@ import de.greenrobot.event.Subscribe;
 public class FavoritesSelectionActivity extends AppCompatActivity {
 
     Set<String> list = new HashSet<>();
+    //Junk list removal will be needed here as we need to remove the
+    //junk-flagged app from other app list which cn be marked as favorite
     Set<String> junkFoodList = new HashSet<>();
     FavoriteFlaggingAdapter junkfoodFlaggingAdapter;
     int firstPosition;
@@ -133,14 +134,18 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
             favoriteList = new ArrayList<>();
             unfavoriteList = new ArrayList<>();
             bindingList = new ArrayList<>();
+
             for (ResolveInfo resolveInfo : installedPackageList) {
                 if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
                     boolean isEnable = UIUtils.isAppInstalledAndEnabled(this, resolveInfo.activityInfo.packageName);
-                    if(isEnable){
+                    if (isEnable) {
                         if (list.contains(resolveInfo.activityInfo.packageName)) {
                             favoriteList.add(new AppListInfo(resolveInfo.activityInfo.packageName, false, false, true));
                         } else {
-                            unfavoriteList.add(new AppListInfo(resolveInfo.activityInfo.packageName, false, false, false));
+                            if (null != junkFoodList && !junkFoodList
+                                    .contains(resolveInfo.activityInfo.packageName)) {
+                                unfavoriteList.add(new AppListInfo(resolveInfo.activityInfo.packageName, false, false, false));
+                            }
                         }
                     }
                 }
