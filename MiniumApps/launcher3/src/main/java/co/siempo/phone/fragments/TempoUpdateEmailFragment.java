@@ -104,14 +104,21 @@ public class TempoUpdateEmailFragment extends CoreFragment {
 
         if (edt_email.getText().toString().trim().length() > 0) {
             if (isValidEmail(edt_email.getText().toString().trim())) {
-                toolbar.getMenu().findItem(R.id.tick).setVisible(true);
+                if (edt_email.getText().toString().trim().equalsIgnoreCase(PrefSiempo.getInstance(context).read(PrefSiempo.USER_EMAILID, ""))) {
+                    toolbar.getMenu().findItem(R.id.tick).setVisible(false);
+                } else {
+                    toolbar.getMenu().findItem(R.id.tick).setVisible(true);
+                }
                 edt_email.setTextColor(getResources().getColor(R.color.black));
                 text_input_layout.setErrorEnabled(false);
+
             } else {
                 text_input_layout.setError(getResources().getString(R.string.feedback_email));
                 text_input_layout.setErrorEnabled(true);
             }
         }
+
+
     }
 
     @AfterTextChange
@@ -123,11 +130,25 @@ public class TempoUpdateEmailFragment extends CoreFragment {
             if (isValidEmail) {
                 toolbar.getMenu().findItem(R.id.tick).setVisible(true);
                 text_input_layout.setErrorEnabled(false);
+                if (edt_email.getText().toString().trim().equalsIgnoreCase(PrefSiempo
+                        .getInstance
+                                (context)
+                        .read(PrefSiempo
+                                .USER_EMAILID, ""))) {
+                    toolbar.getMenu().findItem(R.id.tick).setVisible(false);
+                } else {
+                    toolbar.getMenu().findItem(R.id.tick).setVisible(true);
+                }
+
+
             } else {
                 text_input_layout.setError(getResources().getString(R.string.error_email));
                 text_input_layout.setErrorEnabled(true);
             }
+
+
         } else {
+
             text_input_layout.setErrorEnabled(false);
         }
     }
