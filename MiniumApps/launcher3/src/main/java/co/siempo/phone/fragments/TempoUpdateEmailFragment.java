@@ -69,7 +69,7 @@ public class TempoUpdateEmailFragment extends CoreFragment {
                         String val_email = edt_email.getText().toString().trim();
                         if (!PrefSiempo.getInstance(context).read(PrefSiempo
                                 .USER_EMAILID, "").equals(val_email)) {
-                            Toast.makeText(getActivity(), getResources().getString(R.string.success_email), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getResources().getString(R.string.success_email), Toast.LENGTH_SHORT).show();
                         }
                         PrefSiempo.getInstance(context).write(PrefSiempo
                                 .USER_EMAILID, val_email);
@@ -135,7 +135,9 @@ public class TempoUpdateEmailFragment extends CoreFragment {
     private void hideSoftKeyboard() {
         try {
             InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+            if (inputMethodManager != null) {
+                inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
