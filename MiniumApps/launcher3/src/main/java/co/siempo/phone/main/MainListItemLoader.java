@@ -184,7 +184,7 @@ public class MainListItemLoader {
                     if (!TextUtils.isEmpty(resolveInfo.activityInfo.packageName) && !TextUtils.isEmpty(resolveInfo.loadLabel(context.getPackageManager()))) {
                         String packageName = resolveInfo.activityInfo.packageName;
                         boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, packageName);
-                        if (isEnable) {
+                        if (isEnable && !packageName.equalsIgnoreCase(context.getPackageName())) {
                             appItems.add(new MainListItem(-1, "" + resolveInfo.loadLabel(context.getPackageManager()), resolveInfo.activityInfo.packageName));
                         }
                     }
