@@ -552,16 +552,22 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
         String strIntention = PrefSiempo.getInstance(getActivity()).read
                 (PrefSiempo.DEFAULT_INTENTION, "");
-        if (TextUtils.isEmpty(strIntention)) {
-            txtIntention.setText("You chose to hide these apps.");
-            txtIntentionLabelJunkPane.setVisibility(View.INVISIBLE);
 
-        } else {
+        //If Intentions are enabled and intention field is not empty then show
+        //it in Junk food Top dock else not
+        if (!TextUtils.isEmpty(strIntention) && !PrefSiempo.getInstance
+                (context).read(PrefSiempo
+                .IS_INTENTION_ENABLE, false)) {
             txtIntentionLabelJunkPane.setText(getString(R.string
                     .you_ve_flag));
             txtIntention.setText(strIntention);
             txtIntention.setVisibility(View.VISIBLE);
             txtIntentionLabelJunkPane.setVisibility(View.VISIBLE);
+
+        } else {
+
+            txtIntention.setText("You chose to hide these apps.");
+            txtIntentionLabelJunkPane.setVisibility(View.INVISIBLE);
         }
 
 
