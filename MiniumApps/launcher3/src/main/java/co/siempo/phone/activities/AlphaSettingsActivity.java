@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.ImageView;
@@ -51,6 +53,7 @@ public class AlphaSettingsActivity extends CoreActivity {
     private ImageView icon_SuppressedNotifications;
     private LinearLayout ln_permissions;
     private ImageView icon_permissions;
+    private Toolbar toolbar;
 
 
     @AfterViews
@@ -61,6 +64,18 @@ public class AlphaSettingsActivity extends CoreActivity {
 
 
     public void initView() {
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
+        toolbar.setTitle(R.string.alpha_settings);
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
+                .colorAccent));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
         context = AlphaSettingsActivity.this;
         ln_suppressedNotifications = findViewById(R.id.ln_suppressedNotifications);
         ln_permissions = findViewById(R.id.ln_permissions);
