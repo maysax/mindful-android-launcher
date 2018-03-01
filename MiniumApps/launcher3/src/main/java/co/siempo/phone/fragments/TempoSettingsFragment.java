@@ -3,6 +3,7 @@ package co.siempo.phone.fragments;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -22,15 +23,15 @@ public class TempoSettingsFragment extends CoreFragment {
     @ViewById
     Toolbar toolbar;
     @ViewById
-    TextView txtHome;
+    RelativeLayout relHome;
     @ViewById
-    TextView txtAppMenus;
+    RelativeLayout relAppMenu;
     @ViewById
-    TextView txtNotification;
+    RelativeLayout relNotification;
     @ViewById
-    TextView txtAccount;
+    RelativeLayout relAccount;
     @ViewById
-    TextView txtAlphaSettings;
+    RelativeLayout relAlphaSettings;
     @ViewById
     TextView titleActionBar;
     //    @Pref
@@ -55,13 +56,13 @@ public class TempoSettingsFragment extends CoreFragment {
 
 
         if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.alpha))) {
-            txtAlphaSettings.setVisibility(View.VISIBLE);
+            relAlphaSettings.setVisibility(View.VISIBLE);
         } else {
             if (PrefSiempo.getInstance(context).read(PrefSiempo
                     .IS_ALPHA_SETTING_ENABLE, false)) {
-                txtAlphaSettings.setVisibility(View.VISIBLE);
+                relAlphaSettings.setVisibility(View.VISIBLE);
             } else {
-                txtAlphaSettings.setVisibility(View.GONE);
+                relAlphaSettings.setVisibility(View.GONE);
             }
         }
 
@@ -70,29 +71,29 @@ public class TempoSettingsFragment extends CoreFragment {
 
 
     @Click
-    void txtHome() {
+    void relHome() {
 
         ((CoreActivity) getActivity()).loadChildFragment(TempoHomeFragment_.builder()
                 .build(), R.id.tempoView);
     }
 
     @Click
-    void txtAppMenus() {
+    void relAppMenu() {
         ((CoreActivity) getActivity()).loadChildFragment(AppMenuFragment.newInstance(), R.id.tempoView);
     }
 
     @Click
-    void txtNotification() {
+    void relNotification() {
         ((CoreActivity) getActivity()).loadChildFragment(TempoNotificationFragment_.builder().build(), R.id.tempoView);
     }
 
     @Click
-    void txtAccount() {
+    void relAccount() {
         ((CoreActivity) getActivity()).loadChildFragment(AccountSettingFragment_.builder().build(), R.id.tempoView);
     }
 
     @Click
-    void txtAlphaSettings() {
+    void relAlphaSettings() {
 
         new ActivityHelper(context).openSiempoAlphaSettingsApp();
     }
