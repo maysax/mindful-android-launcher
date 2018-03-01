@@ -10,7 +10,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import co.siempo.phone.R;
 import co.siempo.phone.models.AppListInfo;
@@ -18,17 +18,20 @@ import co.siempo.phone.utils.PrefSiempo;
 
 public class TempoNotificationHeaderViewHolder extends RecyclerView.ViewHolder {
 
-    @Bind({R.id.txt_headerName})
+
+    @BindView(R.id.txt_headerName)
     TextView txt_headerName;
 
-    @Bind({R.id.txtHeaderlabel})
+    @BindView(R.id.txtHeaderlabel)
     TextView switch_headerNotification;
 
-    @Bind({R.id.headerList})
+    @BindView(R.id.headerList)
     LinearLayout headerList;
 
     public TempoNotificationHeaderViewHolder(View itemView) {
         super(itemView);
+        txt_headerName = itemView.findViewById(R.id.txt_headerName);
+        switch_headerNotification = itemView.findViewById(R.id.txtHeaderlabel);
         ButterKnife.bind(this, itemView);
     }
 

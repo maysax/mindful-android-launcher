@@ -23,15 +23,20 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Set;
 
 import co.siempo.phone.R;
+import co.siempo.phone.activities.FavoritesSelectionActivity;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBClient;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.FirebaseEvent;
 import co.siempo.phone.helper.FirebaseHelper;
-import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
@@ -146,6 +151,7 @@ public class StatusBarService extends Service {
      */
     public void removeAppFromBlockedList(String uninstallPackageName) {
         ArrayList<String> blockedApps = new ArrayList<>();
+        ArrayList<String> removeApps = new ArrayList<>();
         String block_AppList = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST,
                 "");
         if (!TextUtils.isEmpty(block_AppList)) {
@@ -155,13 +161,15 @@ public class StatusBarService extends Service {
                 blockedApps = new Gson().fromJson(block_AppList, type);
                 for (String blockedAppName : blockedApps) {
                     if (blockedAppName.equalsIgnoreCase(uninstallPackageName.trim())) {
-                        blockedApps.remove(blockedAppName);
+                        removeApps.add(blockedAppName);
                     }
+                }
+                if (removeApps.size() > 0) {
+                    blockedApps.removeAll(removeApps);
                 }
                 String blockedList = new Gson().toJson(blockedApps);
                 PrefSiempo.getInstance(context).write(PrefSiempo.BLOCKED_APPLIST,
                         blockedList);
-//                sharedPreferencesLauncher3.edit().putString(Constants.BLOCKED_APPLIST, blockedList).commit();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -219,6 +227,37 @@ public class StatusBarService extends Service {
         }
     }
 
+    /**
+     * Remove application from Shared Preference when user disable application.
+     *
+     * @param context
+     * @param packageName
+     */
+    private void removeAppFromPreference(Context context, String packageName) {
+        Set<String> favoriteList = PrefSiempo.getInstance(context)
+                .read
+                        (PrefSiempo.FAVORITE_APPS, new HashSet<String>());
+        Set<String> junkFoodList = PrefSiempo
+                .getInstance(context).read
+                        (PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
+
+        if (favoriteList.contains(packageName)) {
+            favoriteList.remove(packageName);
+            PrefSiempo.getInstance(context)
+                    .write
+                            (PrefSiempo.FAVORITE_APPS, favoriteList);
+        }
+        if (junkFoodList.contains(packageName)) {
+            junkFoodList.remove(packageName);
+            PrefSiempo
+                    .getInstance(context).write
+                    (PrefSiempo.JUNKFOOD_APPS, junkFoodList);
+        }
+
+       updateFavoriteSort(context,packageName);
+
+    }
+
     private class MyObserver extends ContentObserver {
         MyObserver(Handler handler) {
             super(handler);
@@ -231,8 +270,8 @@ public class StatusBarService extends Service {
 
         @Override
         public void onChange(boolean selfChange, Uri uri) {
-            PrefSiempo.getInstance(context).write(PrefSiempo.IS_CONTACT_UPDATE,true);
-            PackageUtil.contactsUpdateInSearchList(context);
+            PrefSiempo.getInstance(context).write(PrefSiempo.IS_CONTACT_UPDATE, true);
+//            PackageUtil.contactsUpdateInSearchList(context);
         }
     }
 
@@ -248,8 +287,7 @@ public class StatusBarService extends Service {
                             installPackageName = intent.getData().getEncodedSchemeSpecificPart();
                             addAppFromBlockedList(installPackageName);
                             Log.d("Testing with device.", "Added" + installPackageName);
-                            CoreApplication.getInstance().addOrRemoveApplicationInfo(true, installPackageName);
-                            PackageUtil.addAppInSearchList(installPackageName, context);
+//                            PackageUtil.addAppInSearchList(installPackageName, context);
                         }
 
                     } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
@@ -260,9 +298,21 @@ public class StatusBarService extends Service {
                             if (!TextUtils.isEmpty(uninstallPackageName)) {
                                 new DBClient().deleteMsgByPackageName(uninstallPackageName);
                                 removeAppFromBlockedList(uninstallPackageName);
-                                EventBus.getDefault().post(new AppInstalledEvent(0));
-                                CoreApplication.getInstance().addOrRemoveApplicationInfo(true, uninstallPackageName);
-                                PackageUtil.removeAppFromSearchList(uninstallPackageName, context);
+                                removeAppFromPreference(context, uninstallPackageName);
+
+                                //                                PackageUtil.removeAppFromSearchList(uninstallPackageName, context);
+                            }
+                        }
+                    }  else if (intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED)) {
+                        String packageName;
+                        if (intent.getData().getEncodedSchemeSpecificPart() != null) {
+                            packageName = intent.getData().getSchemeSpecificPart();
+                            boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, packageName);
+                            if (isEnable) {
+                                addAppFromBlockedList(packageName);
+                            } else {
+                                removeAppFromBlockedList(packageName);
+                                removeAppFromPreference(context, packageName);
                             }
                         }
                     }
@@ -276,5 +326,26 @@ public class StatusBarService extends Service {
             }
 
         }
+    }
+
+    public void updateFavoriteSort(Context context,String packageName){
+        //get the JSON array of the ordered of sorted customers
+        String jsonListOfSortedFavorites = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
+        //convert onNoteListChangedJSON array into a List<Long>
+        Gson gson1 = new Gson();
+        List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
+        }.getType());
+        for (ListIterator<String> it =
+             listOfSortFavoritesApps.listIterator(); it.hasNext
+                (); ) {
+            String removePackageName = it.next();
+            if(!TextUtils.isEmpty(removePackageName) && removePackageName.trim().equalsIgnoreCase(packageName)){
+                it.set("");
+            }
+
+        }
+        Gson gson2 = new Gson();
+        String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
+        PrefSiempo.getInstance(context).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
     }
 }

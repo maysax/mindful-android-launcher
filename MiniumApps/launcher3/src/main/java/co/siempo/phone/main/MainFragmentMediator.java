@@ -4,18 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.DashboardActivity;
@@ -29,14 +24,11 @@ import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.models.MainListItemType;
-import co.siempo.phone.token.TokenItem;
 import co.siempo.phone.token.TokenItemType;
 import co.siempo.phone.token.TokenManager;
 import co.siempo.phone.token.TokenRouter;
 import co.siempo.phone.utils.ContactsLoader;
 import co.siempo.phone.utils.PackageUtil;
-import co.siempo.phone.utils.PrefSiempo;
-import co.siempo.phone.utils.Sorting;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 
@@ -60,62 +52,22 @@ public class MainFragmentMediator {
 
     public void loadData() {
 
-        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, ""))) {
-            items = new ArrayList<>();
-            contactItems = new ArrayList<>();
-            loadActions();
-            loadContacts();
-            loadDefaults();
-            items = Sorting.sortList(items);
-            PackageUtil.storeSearchList(items, context);
-        } else {
-            items = PackageUtil.getSearchList(context);
-        }
-        List<MainListItem> junkListItems = getJunkListItems();
-        items.removeAll(junkListItems);
+        items = new ArrayList<>();
+        contactItems = new ArrayList<>();
+        loadActions();
+        loadContacts();
+        loadDefaults();
+        items = PackageUtil.getListWithMostRecentData(items, context);
 
-    }
-
-    @NonNull
-    private List<MainListItem> getJunkListItems() {
-        ArrayList<String> junkFoodAppList = new ArrayList<>();
-        Set<String> junkFoodList = PrefSiempo
-                .getInstance(context).read
-                        (PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
-
-        for (Iterator<String> it = junkFoodList.iterator(); it.hasNext(); ) {
-            String packageName = it.next();
-        }
-        junkFoodAppList = new ArrayList<>(junkFoodList);
-        List<MainListItem> junkListItems = new ArrayList<>();
-        for (MainListItem item : items) {
-            if (!TextUtils.isEmpty(item.getPackageName())) {
-                for (String junkApp : junkFoodAppList) {
-                    if (item.getPackageName().equalsIgnoreCase(junkApp)) {
-                        junkListItems.add(item);
-                    }
-                }
-            }
-        }
-        return junkListItems;
     }
 
     public void resetData() {
         items = new ArrayList<>();
-
-        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, ""))) {
-            items = new ArrayList<>();
-
-            contactItems = new ArrayList<>();
-            loadActions();
-            loadContacts();
-            loadDefaults();
-            items = Sorting.sortList(items);
-            PackageUtil.storeSearchList(items, context);
-        } else {
-            items = PackageUtil.getSearchList(context);
-            items = Sorting.sortList(items);
-        }
+        contactItems = new ArrayList<>();
+        loadActions();
+        loadContacts();
+        loadDefaults();
+        items = PackageUtil.getListWithMostRecentData(items, context);
 
         if (getAdapter() != null) {
             getAdapter().loadData(items);
@@ -204,9 +156,7 @@ public class MainFragmentMediator {
                         SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance
                                 (DateFormat.FULL, Locale
                                         .getDefault());
-
-                        updateStoreList(items, 0, getAdapter().getItem(position).getTitle());
-
+                        PackageUtil.addRecentItemList(getAdapter().getItem(position), context);
                         position = getAdapter().getItem(position).getId();
                         new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
                     } else {
@@ -216,8 +166,7 @@ public class MainFragmentMediator {
                             boolean status = new ActivityHelper(fragment.getActivity()).openAppWithPackageName(getAdapter().getItem(position).getPackageName());
                             FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_APPLICATION_PICK, getAdapter().getItem(position).getPackageName(), "");
                             if (status) {
-                                updateStoreList(items, 1, getAdapter().getItem(position).getPackageName());
-
+                                PackageUtil.addRecentItemList(getAdapter().getItem(position), context);
                             }
                         }
                     }
@@ -285,68 +234,44 @@ public class MainFragmentMediator {
 
 
     public void loadDefaultData() {
+        List<MainListItem> defaultItems = new ArrayList<>();
         items = new ArrayList<>();
-
-        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, ""))) {
-            items = new ArrayList<>();
-
-            contactItems = new ArrayList<>();
-
-            loadActions();
-            loadContacts();
-            loadDefaults();
-            items = Sorting.sortList(items);
-            PackageUtil.storeSearchList(items, context);
-        } else {
-            TokenItem current = TokenManager.getInstance().getCurrent();
-            List<MainListItem> defaultItems = new ArrayList<>();
-            items = PackageUtil.getSearchList(context);
-            for (MainListItem cItems : items) {
-                if (cItems.getItemType() == MainListItemType.DEFAULT) {
-                    defaultItems.add(cItems);
-                }
+        contactItems = new ArrayList<>();
+        loadActions();
+        loadContacts();
+        loadDefaults();
+        items = PackageUtil.getListWithMostRecentData(items, context);
+        for (MainListItem cItems : items) {
+            if (cItems.getItemType() == MainListItemType.DEFAULT) {
+                defaultItems.add(cItems);
             }
-            items = Sorting.sortList(defaultItems);
         }
         if (getAdapter() != null) {
-            getAdapter().loadData(items);
+            getAdapter().loadData(defaultItems);
             getAdapter().notifyDataSetChanged();
         }
-
     }
 
     public void contactPicker() {
         items = new ArrayList<>();
+        List<MainListItem> newList = new ArrayList<>();
+        contactItems = new ArrayList<>();
 
-        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, ""))) {
-            items = new ArrayList<>();
-
-            contactItems = new ArrayList<>();
-
-            loadActions();
-            loadContacts();
-            loadDefaults();
-            items = Sorting.sortList(items);
-            PackageUtil.storeSearchList(items, context);
-        } else {
-            TokenItem current = TokenManager.getInstance().getCurrent();
-            contactItems = new ArrayList<>();
-            List<MainListItem> abc = new ArrayList<>();
-            items = PackageUtil.getSearchList(context);
-            for (MainListItem cItems : items) {
-                if (cItems.getItemType() == MainListItemType.CONTACT || cItems.getItemType() == MainListItemType.DEFAULT) {
-                    abc.add(cItems);
-                }
+        loadActions();
+        loadContacts();
+        loadDefaults();
+        items = PackageUtil.getListWithMostRecentData(items, context);
+        for (MainListItem cItems : items) {
+            if (cItems.getItemType() == MainListItemType.CONTACT || cItems.getItemType() == MainListItemType.DEFAULT) {
+                newList.add(cItems);
             }
-            contactItems = abc;
-            items = Sorting.sortList(abc);
         }
+        contactItems = newList;
         if (getAdapter() != null) {
-            getAdapter().loadData(items);
+            getAdapter().loadData(newList);
             getAdapter().getFilter().filter("@");
             getAdapter().notifyDataSetChanged();
         }
-
     }
 
     public void contactNumberPicker(int selectedContactId) {
@@ -368,57 +293,23 @@ public class MainFragmentMediator {
     }
 
     public void defaultData() {
+        List<MainListItem> defaultItems = new ArrayList<>();
         items = new ArrayList<>();
-
-        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, ""))) {
-            items = new ArrayList<>();
-
-            contactItems = new ArrayList<>();
-
-            loadActions();
-            loadContacts();
-            loadDefaults();
-            items = Sorting.sortList(items);
-            PackageUtil.storeSearchList(items, context);
-        } else {
-            List<MainListItem> defaultItems = new ArrayList<>();
-            items = PackageUtil.getSearchList(context);
-            for (MainListItem cItems : items) {
-                if (cItems.getItemType() == MainListItemType.DEFAULT && !cItems.getTitle().equalsIgnoreCase(context.getResources
-                        ().getString
-                        (R.string.title_saveNote))) {
-                    defaultItems.add(cItems);
-                }
+        contactItems = new ArrayList<>();
+        loadActions();
+        loadContacts();
+        loadDefaults();
+        items = PackageUtil.getListWithMostRecentData(items, context);
+        for (MainListItem cItems : items) {
+            if (cItems.getItemType() == MainListItemType.DEFAULT && !cItems.getTitle().equalsIgnoreCase(context.getResources
+                    ().getString
+                    (R.string.title_saveNote))) {
+                defaultItems.add(cItems);
             }
-            items = Sorting.sortList(defaultItems);
         }
         if (getAdapter() != null) {
-            getAdapter().loadData(items);
+            getAdapter().loadData(defaultItems);
             getAdapter().notifyDataSetChanged();
-        }
-    }
-
-
-    public void updateStoreList(List<MainListItem> items, int appType, String title) {
-        // appType=0 indicates Tools
-        if (appType == 0) {
-            for (int i = 0; i < items.size(); i++) {
-                if (TextUtils.isEmpty(items.get(i).getPackageName()) && items.get(i).getTitle().equalsIgnoreCase(title)) {
-                    items.get(i).setDate(Calendar.getInstance().getTime());
-                    items.set(i, items.get(i));
-                    PackageUtil.storeSearchList(items, context);
-                }
-            }
-        }
-        // appType=0 indicates Apps
-        if (appType == 1) {
-            for (int j = 0; j < items.size(); j++) {
-                if (!TextUtils.isEmpty(items.get(j).getPackageName()) && items.get(j).getPackageName().equalsIgnoreCase(title)) {
-                    items.get(j).setDate(Calendar.getInstance().getTime());
-                    items.set(j, items.get(j));
-                    PackageUtil.storeSearchList(items, context);
-                }
-            }
         }
     }
 

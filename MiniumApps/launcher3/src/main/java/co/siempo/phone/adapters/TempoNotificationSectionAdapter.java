@@ -176,7 +176,8 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
                 holder.disableViews();
             } else {
                 holder.enableViews();
-                holder.render(otherAppsItems.packageName);
+                String appName = getAppNameFromPackage(otherAppsItems.packageName);
+                holder.render(appName);
                 holder.displayImage(otherAppsItems.packageName, packageManager, otherAppsItems.errorMessage);
 
                 holder.getLinearList().setOnClickListener(new View.OnClickListener() {
@@ -316,7 +317,10 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
                 holder.render(messengerAppsItem.errorMessage);
                 holder.disableViews();
             } else {
-                holder.render(messengerAppsItem.packageName);
+
+                String appName = getAppNameFromPackage(messengerAppsItem
+                        .packageName);
+                holder.render(appName);
                 holder.enableViews();
                 holder.displayImage(messengerAppsItem.packageName, packageManager, messengerAppsItem.errorMessage);
                 holder.getLinearList().setOnClickListener(new View.OnClickListener() {
@@ -366,7 +370,8 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
                 holder.disableViews();
             } else {
                 holder.enableViews();
-                holder.render(appListItem.packageName);
+                String appName = getAppNameFromPackage(appListItem.packageName);
+                holder.render(appName);
 
                 holder.displayImage(appListItem.packageName, packageManager, appListItem.errorMessage);
 
@@ -516,5 +521,18 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
 
     public void validationMessage() {
 
+    }
+
+
+    private String getAppNameFromPackage(String packageName) {
+        final PackageManager pm = context.getPackageManager();
+        ApplicationInfo ai;
+        try {
+            ai = pm.getApplicationInfo(packageName, 0);
+        } catch (final PackageManager.NameNotFoundException e) {
+            ai = null;
+        }
+        final String applicationName = (String) (ai != null ? pm.getApplicationLabel(ai) : packageName);
+        return applicationName;
     }
 }

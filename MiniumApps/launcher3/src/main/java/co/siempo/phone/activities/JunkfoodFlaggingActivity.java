@@ -7,7 +7,6 @@ import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
@@ -33,7 +32,7 @@ import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.Subscribe;
 
-public class JunkfoodFlaggingActivity extends AppCompatActivity {
+public class JunkfoodFlaggingActivity extends CoreActivity {
     Set<String> list = new HashSet<>();
     Set<String> favoriteList = new HashSet<>();
     JunkfoodFlaggingAdapter junkfoodFlaggingAdapter;
@@ -50,7 +49,7 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
-        if (event.getInstalledOrRemoved() == 0) {
+        if (event.isAppInstalledSuccessfully()) {
             loadApps();
         }
     }
@@ -64,8 +63,10 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
         favoriteList = PrefSiempo.getInstance(this).read(PrefSiempo.FAVORITE_APPS, new HashSet<String>());
         favoriteList.removeAll(list);
         PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
-        loadApps();
+
     }
+
+
 
     /**
      * Initialize the view.
@@ -328,6 +329,9 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         startTime = System.currentTimeMillis();
+        //Loading apps here to refresh data in case user goes to app info and
+        // disables app
+        loadApps();
     }
 
     @Override

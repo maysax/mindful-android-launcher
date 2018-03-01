@@ -1,12 +1,9 @@
 package co.siempo.phone.models;
 
 import android.content.pm.ApplicationInfo;
-import android.graphics.drawable.Drawable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import co.siempo.phone.R;
@@ -18,7 +15,7 @@ import co.siempo.phone.R;
 public class MainListItem implements Serializable {
 
     private int id;
-    private String title;
+    private String title = "";
     private int drawable;
     private String subTitle;
     private String packageName = "";
@@ -29,7 +26,7 @@ public class MainListItem implements Serializable {
     private ApplicationInfo applicationInfo = null;
     private boolean isVisable = false;
 
-    private Date currentDateTime;
+//    private Date currentDateTime;
     /**
      * Contact Information
      */
@@ -99,17 +96,17 @@ public class MainListItem implements Serializable {
         this.id = id;
         this.title = title;
         this.drawable = drawable;
-        this.currentDateTime = GregorianCalendar.getInstance().getTime();
+//        this.currentDateTime = GregorianCalendar.getInstance().getTime();
 
     }
 
     public String getPackageName() {
         return packageName;
     }
-
-    public Date getCurrentDateTime() {
-        return currentDateTime;
-    }
+//
+//    public Date getCurrentDateTime() {
+//        return currentDateTime;
+////    }
 
     public int getId() {
         return id;
@@ -167,14 +164,14 @@ public class MainListItem implements Serializable {
     public void setDrawable(int drawable) {
         this.drawable = drawable;
     }
-
-    public Date getDate() {
-        return currentDateTime;
-    }
-
-    public void setDate(Date date) {
-        this.currentDateTime = date;
-    }
+//
+//    public Date getDate() {
+//        return currentDateTime;
+//    }
+//
+//    public void setDate(Date date) {
+//        this.currentDateTime = date;
+//    }
 
     public boolean isVisable() {
         return isVisable;

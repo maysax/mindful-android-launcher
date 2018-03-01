@@ -30,6 +30,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -411,174 +412,6 @@ public class PackageUtil {
         }
     }
 
-    public static void contactsUpdateInSearchList(Context context) {
-        Type baseType = new TypeToken<List<MainListItem>>() {
-        }.getType();
-        List<MainListItem> searchItems;
-        String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, "");
-        if (!TextUtils.isEmpty(searchList)) {
-            Gson gson = new GsonBuilder()
-                    .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
-            searchItems = gson.fromJson(searchList, baseType);
-            List<MainListItem> removeItems = new ArrayList<>();
-            for (MainListItem item : searchItems) {
-                if (!TextUtils.isEmpty(item.getContactName())) {
-                    removeItems.add(item);
-                }
-            }
-            searchItems.removeAll(removeItems);
-
-
-            for (MainListItem item : searchItems) {
-                if (item.getItemType() == MainListItemType.DEFAULT) {
-                    removeItems.add(item);
-                }
-            }
-            searchItems.removeAll(removeItems);
-
-            List<MainListItem> contactItems = new ContactsLoader().loadContacts(context);
-            searchItems.addAll(contactItems);
-
-            searchItems.add(new MainListItem(1, context.getString(R.string.title_sendAsSMS), R.drawable.ic_messages_tool, MainListItemType.DEFAULT));
-            searchItems.add(new MainListItem(2, context.getString(R.string.title_saveNote), R.drawable.ic_notes_tool, MainListItemType.DEFAULT));
-            searchItems.add(new MainListItem(3, context.getString(R.string.title_swipe), R.drawable.ic_default_swipe, MainListItemType.DEFAULT));
-
-            Sorting.sortList(searchItems);
-            storeSearchList(searchItems, context);
-        }
-
-    }
-
-    public static void storeSearchList(List<MainListItem> items, Context context) {
-        Type baseType = new TypeToken<List<MainListItem>>() {
-        }.getType();
-        Gson gson = new GsonBuilder()
-                .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
-        String searchValues = gson.toJson(items, baseType);
-        PrefSiempo.getInstance(context).write(PrefSiempo.SEARCH_LIST, searchValues);
-    }
-
-    public static void addAppInSearchList(String packageName, Context context) {
-        try {
-            String appName = "";
-            ApplicationInfo applicationInfo = context.getPackageManager().getApplicationInfo(packageName, 0);
-            if (applicationInfo != null && !TextUtils.isEmpty(applicationInfo.name)) {
-                appName = applicationInfo.loadLabel(context.getPackageManager()).toString();
-            }
-            boolean isPackageAvailable = false;
-            Type baseType = new TypeToken<List<MainListItem>>() {
-            }.getType();
-            List<MainListItem> searchItems = new ArrayList<>();
-            String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, "");
-            if (!TextUtils.isEmpty(searchList)) {
-                Gson gson = new GsonBuilder()
-                        .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
-                searchItems = gson.fromJson(searchList, baseType);
-            }
-            int i = 0;
-            for (int j = 0; j < searchItems.size(); j++) {
-                MainListItem item = searchItems.get(j);
-                if (!TextUtils.isEmpty(item.getPackageName()) && item.getPackageName().equalsIgnoreCase(packageName)) {
-                    isPackageAvailable = true;
-                }
-                if (item.getId() == -1 && item.getTitle().startsWith("" + appName.charAt(0))) {
-                    i = j;
-                }
-            }
-            if (!isPackageAvailable) {
-                if (applicationInfo != null) {
-                    searchItems.add(i - 1, new MainListItem(-1, appName,
-                            applicationInfo.packageName));
-                }
-            }
-            searchItems = Sorting.sortAppList(context, searchItems);
-            searchItems = Sorting.sortList(searchItems);
-            storeSearchList(searchItems, context);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void removeAppFromSearchList(String packageName, Context context) {
-        Type baseType = new TypeToken<List<MainListItem>>() {
-        }.getType();
-        List<MainListItem> searchItems = new ArrayList<>();
-        String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, "");
-        if (!TextUtils.isEmpty(searchList)) {
-            Gson gson = new GsonBuilder()
-                    .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
-            searchItems = gson.fromJson(searchList, baseType);
-        }
-
-        List<MainListItem> removeApps = new ArrayList<>();
-
-
-        for (MainListItem item : searchItems) {
-            if (!TextUtils.isEmpty(item.getPackageName()) && item.getPackageName().equalsIgnoreCase(packageName)) {
-                removeApps.add(item);
-            }
-        }
-        searchItems.removeAll(removeApps);
-        searchItems = Sorting.sortList(searchItems);
-        storeSearchList(searchItems, context);
-    }
-
-    public static List<MainListItem> getSearchList(Context context) {
-        Type baseType = new TypeToken<List<MainListItem>>() {
-        }.getType();
-        List<MainListItem> searchItems = new ArrayList<MainListItem>();
-        String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SEARCH_LIST, "");
-        if (!TextUtils.isEmpty(searchList)) {
-            Gson gson = new GsonBuilder()
-                    .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
-            searchItems = gson.fromJson(searchList, baseType);
-        }
-
-
-        searchItems = Sorting.sortList(searchItems);
-        HashMap<Integer, AppMenu> toolSetting = CoreApplication.getInstance()
-                .getToolsSettings();
-
-
-        ArrayList<String> junkFoodAppList = new ArrayList<>();
-        Set<String> junkFoodList = PrefSiempo
-                .getInstance(context).read
-                        (PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
-        junkFoodAppList = new ArrayList<>(junkFoodList);
-        Iterator it = toolSetting.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry) it.next();
-            for (String junkApp : junkFoodAppList) {
-                if (((AppMenu) (pair.getValue())).getApplicationName()
-                        .equalsIgnoreCase(junkApp) || ((AppMenu) (pair.getValue())).getApplicationName()
-                        .equalsIgnoreCase("")) {
-                    ((AppMenu) (pair.getValue())).setApplicationName("");
-                }
-
-            }
-        }
-
-
-        List<MainListItem> junkListItems = new ArrayList<>();
-        for (MainListItem item : searchItems) {
-
-            AppMenu appMenu = toolSetting
-                    .get(item.getId());
-            if (junkFoodList.contains(item.getPackageName()) ||
-                    (null != appMenu && TextUtils
-                            .isEmpty(appMenu.getApplicationName()) && item
-                            .getItemType() != MainListItemType.DEFAULT)
-                    ) {
-                junkListItems.add(item);
-
-            }
-
-
-        }
-
-        searchItems.removeAll(junkListItems);
-        return searchItems;
-    }
 
 
     public static ArrayList<MainListItem> getToolsMenuData(Context context, ArrayList<MainListItem> items) {
@@ -637,14 +470,12 @@ public class PackageUtil {
         if (appList.size() > 0) {
 
             String jsonListOfSortedFavorites = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
-
             List<String> listOfSortFavoritesApps;
             if (!TextUtils.isEmpty(jsonListOfSortedFavorites)) {
 
+
                 listOfSortFavoritesApps = syncFavoriteList(jsonListOfSortedFavorites, context);
-
                 sortedFavoriteList = sortFavoriteAppsByPosition(listOfSortFavoritesApps, appList, context);
-
             } else {
                 sortedFavoriteList = addDefaultFavoriteApps(context, appList);
             }
@@ -687,10 +518,13 @@ public class PackageUtil {
 
             for (String packageName : favorite_List_App) {
                 if (!listOfSortFavoritesApps.contains(packageName)) {
-                    for (int j = 0; j < listOfSortFavoritesApps.size(); j++) {
-                        if (TextUtils.isEmpty(listOfSortFavoritesApps.get(j).trim())) {
-                            listOfSortFavoritesApps.set(j, packageName);
-                            break;
+                    boolean isEnable = UIUtils.isAppInstalledAndEnabled(context,packageName);
+                    if(isEnable){
+                        for (int j = 0; j < listOfSortFavoritesApps.size(); j++) {
+                            if (TextUtils.isEmpty(listOfSortFavoritesApps.get(j).trim())) {
+                                listOfSortFavoritesApps.set(j, packageName);
+                                break;
+                            }
                         }
                     }
                 }
@@ -761,10 +595,14 @@ public class PackageUtil {
         ArrayList<MainListItem> items = new ArrayList<>();
         String CHROME_PACKAGE = "com.android.chrome", SYSTEM_SETTING = "com.android.settings";
 
+
         for (int i = 0; i < appList.size(); i++) {
             if (!TextUtils.isEmpty(appList.get(i).getPackageName())) {
                 if (appList.get(i).getPackageName().equalsIgnoreCase(CHROME_PACKAGE) || appList.get(i).getPackageName().equalsIgnoreCase(SYSTEM_SETTING)) {
-                    items.add(appList.get(i));
+                    boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, appList.get(i).getPackageName());
+                    if(isEnable){
+                        items.add(appList.get(i));
+                    }
                 }
             }
         }
@@ -788,9 +626,12 @@ public class PackageUtil {
             if (!listOfSortFavoritesApps.contains(CHROME_PACKAGE)) {
                 for (int i = 0; i < listOfSortFavoritesApps.size(); i++) {
                     if (TextUtils.isEmpty(listOfSortFavoritesApps.get(i).trim())) {
-                        listOfSortFavoritesApps.set(i, CHROME_PACKAGE);
-                        if (list != null && !list.contains(CHROME_PACKAGE)) {
-                            list.add(CHROME_PACKAGE);
+                        boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, CHROME_PACKAGE);
+                        if(isEnable){
+                            listOfSortFavoritesApps.set(i, CHROME_PACKAGE);
+                            if (list != null && !list.contains(CHROME_PACKAGE)) {
+                                list.add(CHROME_PACKAGE);
+                            }
                         }
                         break;
                     }
@@ -800,9 +641,12 @@ public class PackageUtil {
             if (!listOfSortFavoritesApps.contains(SYSTEM_SETTING)) {
                 for (int i = 0; i < listOfSortFavoritesApps.size(); i++) {
                     if (TextUtils.isEmpty(listOfSortFavoritesApps.get(i).trim())) {
-                        listOfSortFavoritesApps.set(i, SYSTEM_SETTING);
-                        if (list != null && !list.contains(SYSTEM_SETTING)) {
-                            list.add(SYSTEM_SETTING);
+                        boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, SYSTEM_SETTING);
+                        if(isEnable){
+                            listOfSortFavoritesApps.set(i, SYSTEM_SETTING);
+                            if (list != null && !list.contains(SYSTEM_SETTING)) {
+                                list.add(SYSTEM_SETTING);
+                            }
                         }
                         break;
                     }
@@ -810,16 +654,26 @@ public class PackageUtil {
             }
         } else {
             listOfSortFavoritesApps = new ArrayList<>();
-            listOfSortFavoritesApps.add(CHROME_PACKAGE);
-            listOfSortFavoritesApps.add(SYSTEM_SETTING);
+            boolean isChromeEnable = UIUtils.isAppInstalledAndEnabled(context, CHROME_PACKAGE);
+            if(isChromeEnable){
+                listOfSortFavoritesApps.add(CHROME_PACKAGE);
+            }
+            boolean isSystemSettingEnable = UIUtils.isAppInstalledAndEnabled(context, SYSTEM_SETTING);
+            if(isSystemSettingEnable){
+                listOfSortFavoritesApps.add(SYSTEM_SETTING);
+            }
             int remainingCount = 12 - listOfSortFavoritesApps.size();
             for (int j = 0; j < remainingCount; j++) {
                 listOfSortFavoritesApps.add("");
             }
 
             if (list != null) {
-                list.add(CHROME_PACKAGE);
-                list.add(SYSTEM_SETTING);
+                if(isChromeEnable) {
+                    list.add(CHROME_PACKAGE);
+                }
+                if(isSystemSettingEnable) {
+                    list.add(SYSTEM_SETTING);
+                }
             }
         }
 
@@ -856,5 +710,152 @@ public class PackageUtil {
             drawable = appInfo.loadIcon(context.getPackageManager());
         }
         return drawable;
+    }
+
+
+    public static void addRecentItemList(MainListItem item, Context context) {
+
+        if (item != null) {
+            // Load RecentItem List from Storage
+            Type baseType = new TypeToken<List<MainListItem>>() {
+            }.getType();
+            List<MainListItem> recentItemList = new ArrayList<>();
+            recentItemList = loadRecentItemsFromStore(context);
+
+            // Validate if stored RecentItem List having this item or not.
+            boolean isItemAvailable = false;
+            MainListItem removeItem = null;
+            for (int j = 0; j < recentItemList.size(); j++) {
+                String title = recentItemList.get(j).getTitle();
+                String packageName = recentItemList.get(j).getPackageName();
+
+                if (TextUtils.isEmpty(item.getPackageName())) {
+                    if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(item.getTitle()) && title.toString().toLowerCase().trim().equalsIgnoreCase(item.getTitle().toLowerCase().trim())) {
+                        isItemAvailable = true;
+                        removeItem = recentItemList.get(j);
+                    }
+                } else {
+                    if (!TextUtils.isEmpty(packageName) && packageName.trim().equalsIgnoreCase(item.getPackageName().trim())) {
+                        isItemAvailable = true;
+                        removeItem = recentItemList.get(j);
+                    }
+                }
+            }
+
+            /**
+             *  1.) If RecentItem List do not contain this item, then add and store into the list.
+             *  2.) If RecentItem lsit contain this item, then update it to first position
+             */
+            if (!isItemAvailable) {
+                recentItemList.add(0, item);
+            } else {
+                if (removeItem != null) {
+                    recentItemList.remove(removeItem);
+                }
+                recentItemList.add(0, item);
+            }
+
+            Gson gson = new Gson();
+            String val_recentItemList = gson.toJson(recentItemList);
+            PrefSiempo.getInstance(context).write(PrefSiempo.RECENT_ITEM_LIST, val_recentItemList);
+        }
+    }
+
+    public static List<MainListItem> getListWithMostRecentData(List<MainListItem> allItems, Context context) {
+
+        List<MainListItem> recentItemList = new ArrayList<>();
+        recentItemList = loadRecentItemsFromStore(context);
+
+        List<MainListItem> removeList = new ArrayList<>();
+        List<MainListItem> listWithMostRecentdata = new ArrayList<>();
+
+
+        for (int j = 0; j < recentItemList.size(); j++) {
+            String recentItemTitle = recentItemList.get(j).getTitle();
+            String recentItemPackageName = recentItemList.get(j).getPackageName();
+
+            for (int i = 0; i < allItems.size(); i++) {
+                MainListItem item = allItems.get(i);
+                String title = allItems.get(i).getTitle();
+                String packageName = allItems.get(i).getPackageName();
+
+                if (TextUtils.isEmpty(packageName) && TextUtils.isEmpty(recentItemPackageName) && !TextUtils.isEmpty(title) && !TextUtils.isEmpty(recentItemTitle) && title.toLowerCase().trim().equalsIgnoreCase(recentItemTitle.toLowerCase().trim())) {
+                    removeList.add(item);
+                } else if (!TextUtils.isEmpty(packageName) && !TextUtils.isEmpty(recentItemPackageName) && packageName.trim().equalsIgnoreCase(recentItemPackageName.trim())) {
+                    removeList.add(item);
+                }
+            }
+
+        }
+
+        allItems.removeAll(removeList);
+
+        listWithMostRecentdata.addAll(removeList);
+        listWithMostRecentdata.addAll(allItems);
+
+        List<MainListItem> junkListItems = getJunkListItems(listWithMostRecentdata, context);
+        listWithMostRecentdata.removeAll(junkListItems);
+
+        return listWithMostRecentdata;
+    }
+
+    public static List<MainListItem> loadRecentItemsFromStore(Context context) {
+        Type baseType = new TypeToken<List<MainListItem>>() {
+        }.getType();
+        List<MainListItem> recentItemList = new ArrayList<>();
+        String val_recentItems = PrefSiempo.getInstance(context).read(PrefSiempo.RECENT_ITEM_LIST, "");
+        if (!TextUtils.isEmpty(val_recentItems)) {
+            Gson gson = new GsonBuilder()
+                    .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
+            recentItemList = gson.fromJson(val_recentItems, baseType);
+        }
+        return recentItemList;
+    }
+
+
+    private static List<MainListItem> getJunkListItems(List<MainListItem> allItems, Context context) {
+        HashMap<Integer, AppMenu> toolSetting = CoreApplication.getInstance()
+                .getToolsSettings();
+        ArrayList<String> junkFoodAppList = new ArrayList<>();
+        Set<String> junkFoodList = PrefSiempo
+                .getInstance(context).read
+                        (PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
+        junkFoodAppList = new ArrayList<>(junkFoodList);
+        List<MainListItem> junkListItems = new ArrayList<>();
+
+        // Check if tools contain junkfood apps then remove assign from corresponding tool
+        Iterator it = toolSetting.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+            for (String junkApp : junkFoodAppList) {
+                if (((AppMenu) (pair.getValue())).getApplicationName()
+                        .equalsIgnoreCase(junkApp) || ((AppMenu) (pair.getValue())).getApplicationName()
+                        .equalsIgnoreCase("")) {
+                    ((AppMenu) (pair.getValue())).setApplicationName("");
+                }
+
+            }
+        }
+
+        // Create junkListItems array which contain junkfood apps & tools
+        for (MainListItem item : allItems) {
+            if (!TextUtils.isEmpty(item.getPackageName())) {
+                for (String junkApp : junkFoodAppList) {
+                    if (item.getPackageName().equalsIgnoreCase(junkApp)) {
+                        junkListItems.add(item);
+                    }
+                }
+            } else {
+                AppMenu appMenu = toolSetting
+                        .get(item.getId());
+                if (null != appMenu && TextUtils
+                        .isEmpty(appMenu.getApplicationName()) && item
+                        .getItemType() != MainListItemType.DEFAULT) {
+                    junkListItems.add(item);
+                }
+            }
+        }
+
+        return junkListItems;
     }
 }
