@@ -23,9 +23,11 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Set;
 
 import co.siempo.phone.R;
@@ -35,6 +37,7 @@ import co.siempo.phone.db.DBClient;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.FirebaseEvent;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
@@ -254,7 +257,17 @@ public class StatusBarService extends Service {
                     (PrefSiempo.JUNKFOOD_APPS, junkFoodList);
         }
 
-       updateFavoriteSort(context,packageName);
+        HashMap<Integer, AppMenu> hashMap = CoreApplication.getInstance().getToolsSettings();
+        for (Map.Entry<Integer, AppMenu> has : hashMap.entrySet()) {
+            if (has.getValue().getApplicationName().equalsIgnoreCase(packageName)) {
+                has.getValue().setApplicationName("");
+            }
+        }
+        PrefSiempo
+                .getInstance(context).write
+                (PrefSiempo.TOOLS_SETTING, new Gson().toJson(hashMap));
+
+        updateFavoriteSort(context, packageName);
 
     }
 
@@ -303,7 +316,7 @@ public class StatusBarService extends Service {
                                 //                                PackageUtil.removeAppFromSearchList(uninstallPackageName, context);
                             }
                         }
-                    }  else if (intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED)) {
+                    } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED)) {
                         String packageName;
                         if (intent.getData().getEncodedSchemeSpecificPart() != null) {
                             packageName = intent.getData().getSchemeSpecificPart();
@@ -328,7 +341,7 @@ public class StatusBarService extends Service {
         }
     }
 
-    public void updateFavoriteSort(Context context,String packageName){
+    public void updateFavoriteSort(Context context, String packageName) {
         //get the JSON array of the ordered of sorted customers
         String jsonListOfSortedFavorites = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
         //convert onNoteListChangedJSON array into a List<Long>
@@ -339,7 +352,7 @@ public class StatusBarService extends Service {
              listOfSortFavoritesApps.listIterator(); it.hasNext
                 (); ) {
             String removePackageName = it.next();
-            if(!TextUtils.isEmpty(removePackageName) && removePackageName.trim().equalsIgnoreCase(packageName)){
+            if (!TextUtils.isEmpty(removePackageName) && removePackageName.trim().equalsIgnoreCase(packageName)) {
                 it.set("");
             }
 

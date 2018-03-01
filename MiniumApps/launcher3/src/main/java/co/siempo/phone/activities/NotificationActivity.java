@@ -117,7 +117,9 @@ public class NotificationActivity extends CoreActivity {
         intent.setType("text/plain");
         List<ResolveInfo> messagingResolveList = getPackageManager().queryIntentActivities(intent, 0);
         for (ResolveInfo resolveInfo : messagingResolveList) {
-            pref_messengerList.add(resolveInfo.activityInfo.packageName);
+            if(!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
+                pref_messengerList.add(resolveInfo.activityInfo.packageName);
+            }
         }
         String str_helpfulRobots = PrefSiempo.getInstance(this).read(PrefSiempo.HELPFUL_ROBOTS, "");
         if (!TextUtils.isEmpty(str_helpfulRobots)) {

@@ -106,6 +106,7 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
             }
             if (isHideIconBranding) {
                 holder.icon.setImageResource(item.getDrawable());
+                holder.text.setText(item.getTitle());
             } else {
                 holder.text.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(appMenu.getApplicationName()));
                 Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(appMenu.getApplicationName());
@@ -115,6 +116,7 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
                     BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, appMenu.getApplicationName());
                     CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
                     holder.icon.setImageResource(item.getDrawable());
+                    holder.text.setText(item.getTitle());
                 }
             }
         } else {

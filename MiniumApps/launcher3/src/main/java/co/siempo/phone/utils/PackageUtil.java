@@ -495,10 +495,13 @@ public class PackageUtil {
         List<ResolveInfo> installedPackageList = context.getPackageManager().queryIntentActivities(mainIntent, 0);
 
         for (ResolveInfo resolveInfo : installedPackageList) {
-            if (!TextUtils.isEmpty(resolveInfo.activityInfo.packageName) && !TextUtils.isEmpty(resolveInfo.loadLabel(context.getPackageManager()))) {
+            if(!resolveInfo.activityInfo.packageName.equalsIgnoreCase(context.getPackageName())){
+                if (!TextUtils.isEmpty(resolveInfo.activityInfo.packageName) && !TextUtils.isEmpty(resolveInfo.loadLabel(context.getPackageManager()))) {
 
-                appList.add(new MainListItem(-1, "" + resolveInfo.loadLabel(context.getPackageManager()), resolveInfo.activityInfo.packageName));
+                    appList.add(new MainListItem(-1, "" + resolveInfo.loadLabel(context.getPackageManager()), resolveInfo.activityInfo.packageName));
+                }
             }
+
         }
         return appList;
     }
