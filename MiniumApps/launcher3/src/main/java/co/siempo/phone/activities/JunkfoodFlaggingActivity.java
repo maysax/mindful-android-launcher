@@ -33,6 +33,7 @@ import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.models.AppListInfo;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.Sorting;
 import de.greenrobot.event.Subscribe;
 
 public class JunkfoodFlaggingActivity extends CoreActivity {
@@ -204,7 +205,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
             } else {
                 flagAppList.add(0, new AppListInfo("", true, false, true));
             }
-
+            flagAppList = Sorting.sortApplication(flagAppList);
             bindingList.addAll(flagAppList);
 
             if (unflageAppList.size() == 0) {
@@ -212,7 +213,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
             } else {
                 unflageAppList.add(0, new AppListInfo("", true, false, false));
             }
-
+            unflageAppList = Sorting.sortApplication(unflageAppList);
             bindingList.addAll(unflageAppList);
             junkfoodFlaggingAdapter = new JunkfoodFlaggingAdapter(this, bindingList, list);
             listAllApps.setAdapter(junkfoodFlaggingAdapter);
