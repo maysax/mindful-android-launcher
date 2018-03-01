@@ -1,0 +1,18 @@
+[
+  {
+    "outputType": {
+      "type": "APK"
+    },
+    "apkInfo": {
+      "type": "MAIN",
+      "splits": [],
+      "versionCode": 11301
+    },
+    "path": "launcher3-alpha-release.apk",
+    "properties": {
+      "packageId": "co.siempo.phone",
+      "split": "",
+      "minSdkVersion": "21"
+    }
+  }
+]

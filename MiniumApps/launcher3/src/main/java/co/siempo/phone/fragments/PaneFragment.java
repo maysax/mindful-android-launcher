@@ -55,7 +55,6 @@ import co.siempo.phone.customviews.ItemOffsetDecoration;
 import co.siempo.phone.customviews.SearchLayout;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
-import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainFragmentMediator;
 import co.siempo.phone.main.MainListAdapterEvent;
@@ -84,7 +83,7 @@ import me.relex.circleindicator.CircleIndicator;
  */
 public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
-    public static int currentIndex = -1;
+
     PanePagerAdapter mPagerAdapter;
     private LinearLayout linTopDoc;
     private ViewPager pagerPane;
@@ -193,6 +192,14 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                 .VISIBLE) {
             imageClear.performClick();
         }
+        if (DashboardActivity.currentIndexPaneFragment == 0) {
+            Log.d("Rajesh", "Junkfood Start");
+        } else if (DashboardActivity.currentIndexPaneFragment == 1) {
+            Log.d("Rajesh", "Favorite Start");
+        } else if (DashboardActivity.currentIndexPaneFragment == 2) {
+            Log.d("Rajesh", "Tools Start");
+        }
+
     }
 
 
@@ -225,14 +232,14 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         pagerPane.setAdapter(mPagerAdapter);
         indicator.setViewPager(pagerPane);
         if (DashboardActivity.isJunkFoodOpen) {
-            currentIndex = 1;
+            DashboardActivity.currentIndexPaneFragment = 1;
             DashboardActivity.isJunkFoodOpen = false;
         }
-        if (currentIndex == -1) {
-            currentIndex = 2;
+        if (DashboardActivity.currentIndexPaneFragment == -1) {
+            DashboardActivity.currentIndexPaneFragment = 2;
             startTime = System.currentTimeMillis();
         }
-        pagerPane.setCurrentItem(currentIndex);
+        pagerPane.setCurrentItem(DashboardActivity.currentIndexPaneFragment);
         bindBottomDoc();
         inputMethodManager = (InputMethodManager) getActivity()
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -300,11 +307,11 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
         //Code for Page change
         setViewPagerPageChanged();
-        if (currentIndex == -1) {
-            currentIndex = 2;
+        if (DashboardActivity.currentIndexPaneFragment == -1) {
+            DashboardActivity.currentIndexPaneFragment = 2;
         }
-        pagerPane.setCurrentItem(currentIndex);
-        if (currentIndex == 0) {
+        pagerPane.setCurrentItem(DashboardActivity.currentIndexPaneFragment);
+        if (DashboardActivity.currentIndexPaneFragment == 0) {
             junkFoodAppPane();
         }
 
@@ -476,11 +483,22 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                 //Indicator to be set here so that when coming from another
                 // application, the sliding dots retain the shape as previous
                 indicator.setViewPager(pagerPane);
-                if (currentIndex != -1) {
-//                    bindFirebase(i);
+
+                if (DashboardActivity.currentIndexPaneFragment == 0 && i == 1) {
+                    Log.d("Rajesh ", "JunkFood End");
+                    Log.d("Rajesh ", "Favorite Start");
+                } else if (DashboardActivity.currentIndexPaneFragment == 1 && i == 2) {
+                    Log.d("Rajesh ", "Favorite End");
+                    Log.d("Rajesh ", "Tools Start");
+                } else if (DashboardActivity.currentIndexPaneFragment == 2 && i == 1) {
+                    Log.d("Rajesh ", "Tools End");
+                    Log.d("Rajesh ", "Favorite Start");
+                } else if (DashboardActivity.currentIndexPaneFragment == 1 && i == 0) {
+                    Log.d("Rajesh ", "Favorite End");
+                    Log.d("Rajesh ", "JunkFood Start");
                 }
 
-                currentIndex = i;
+                DashboardActivity.currentIndexPaneFragment = i;
                 //Make the junk food pane visible
                 if (i == 0) {
                     edtSearchToolsRounded.clearFocus();
@@ -521,25 +539,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         });
     }
 
-    private void bindFirebase(int i) {
-        if (currentIndex == 0 && i == 1) {
-            Log.d("Firebase ", "JunkFoodEnd");
-            FirebaseHelper.getIntance().logScreenUsageTime(JunkFoodPaneFragment.class.getSimpleName(), startTime);
-            startTime = System.currentTimeMillis();
-        } else if (currentIndex == 1 && i == 2) {
-            Log.d("Firebase ", "Favorite End");
-            FirebaseHelper.getIntance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), startTime);
-            startTime = System.currentTimeMillis();
-        } else if (currentIndex == 2 && i == 1) {
-            Log.d("Firebase ", "Tools End");
-            FirebaseHelper.getIntance().logScreenUsageTime(ToolsPaneFragment.class.getSimpleName(), startTime);
-            startTime = System.currentTimeMillis();
-        } else if (currentIndex == 1 && i == 0) {
-            Log.d("Firebase ", "Favorite End");
-            FirebaseHelper.getIntance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), startTime);
-            startTime = System.currentTimeMillis();
-        }
-    }
 
     private void junkFoodAppPane() {
         linTopDoc.setBackgroundColor(getResources().getColor(R.color
@@ -570,7 +569,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         mWindow.setStatusBarColor(getResources().getColor(R.color
                 .appland_blue_bright));
     }
-
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent appInstalledEvent) {
@@ -648,7 +646,13 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         if (inputMethodManager != null) {
             inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
         }
-
+        if (DashboardActivity.currentIndexPaneFragment == 0) {
+            Log.d("Rajesh", "Junkfood End");
+        } else if (DashboardActivity.currentIndexPaneFragment == 1) {
+            Log.d("Rajesh", "Favorite End");
+        } else if (DashboardActivity.currentIndexPaneFragment == 2) {
+            Log.d("Rajesh", "Tools End");
+        }
     }
 
     public void resetSearchList() {

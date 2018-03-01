@@ -675,7 +675,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
         else {
             int index = -1;
 
-            // Loop through array and find index of item unchecked
+            // Loop through array and find currentIndexDashboard of item unchecked
             for (int i = 0; i < checkedArray.size(); i++) {
                 if (position == checkedArray.get(i)) {
                     index = i;
@@ -683,7 +683,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
                 }
             }
 
-            // If index was found -> remove the item
+            // If currentIndexDashboard was found -> remove the item
             if (index != -1)
                 checkedArray.remove(index);
         }

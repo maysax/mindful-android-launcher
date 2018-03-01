@@ -46,12 +46,14 @@ public class DashboardActivity extends CoreActivity {
     public static final String IS_FROM_HOME = "isFromHome";
     public static String isTextLenghGreater = "";
     public static boolean isJunkFoodOpen = false;
-    public static int index = -1;
+    public static int currentIndexDashboard = -1;
+    public static int currentIndexPaneFragment = -1;
     PermissionUtil permissionUtil;
     ConnectivityManager connectivityManager;
     AppUpdaterUtils appUpdaterUtils;
     boolean isApplicationLaunch = false;
     NotificationManager notificationManager;
+    long startTime = 0;
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
      * and next wizard steps.
@@ -77,40 +79,14 @@ public class DashboardActivity extends CoreActivity {
         //return ServiceUtils.isNotificationListenerServiceRunning(mContext, SiempoNotificationListener_.class);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        permissionUtil = new PermissionUtil(this);
-        if (!permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)
-                || !permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) || !permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)
-                || !permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)
-                || !permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) || !permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)
-                ) {
-
-            Intent intent = new Intent(DashboardActivity.this, SiempoPermissionActivity_
-                    .class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            intent.putExtra(IS_FROM_HOME, true);
-            startActivity(intent);
-
-        } else {
-            Log.d(TAG, "onResume.. ");
-
-            loadViews();
-        }
-        //Need to change as it is heavy call for onResume
-//        initView();
-    }
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-
     }
+
 
     private void initView() {
 
@@ -132,7 +108,7 @@ public class DashboardActivity extends CoreActivity {
         mPager = findViewById(R.id.pager);
         mPagerAdapter = new DashboardPagerAdapter(getFragmentManager());
         mPager.setAdapter(mPagerAdapter);
-        mPager.setCurrentItem(index == -1 ? 1 : index);
+        mPager.setCurrentItem(currentIndexDashboard == -1 ? 1 : currentIndexDashboard);
         mPager.setPageTransformer(true, new UIUtils.FadePageTransformer());
         inputMethodManager = (InputMethodManager) this
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -144,7 +120,27 @@ public class DashboardActivity extends CoreActivity {
 
             @Override
             public void onPageSelected(int i) {
-
+                if (currentIndexDashboard != -1 && currentIndexDashboard == 1 && i == 0) {
+                    Log.d("Rajesh", "Intention End");
+                    if (DashboardActivity.currentIndexPaneFragment == 0) {
+                        Log.d("Rajesh", "Junkfood Start");
+                    } else if (DashboardActivity.currentIndexPaneFragment == 1) {
+                        Log.d("Rajesh", "Favorite Start");
+                    } else if (DashboardActivity.currentIndexPaneFragment == 2) {
+                        Log.d("Rajesh", "Tools Start");
+                    }
+                } else if (currentIndexDashboard != -1 && currentIndexDashboard == 0 && i == 1) {
+//                    Log.d("Rajesh", "PaneFragmentEnded");
+                    if (DashboardActivity.currentIndexPaneFragment == 0) {
+                        Log.d("Rajesh", "Junkfood End");
+                    } else if (DashboardActivity.currentIndexPaneFragment == 1) {
+                        Log.d("Rajesh", "Favorite End");
+                    } else if (DashboardActivity.currentIndexPaneFragment == 2) {
+                        Log.d("Rajesh", "Tools End");
+                    }
+                    Log.d("Rajesh", "Intention Start");
+                }
+                currentIndexDashboard = i;
             }
 
             @Override
@@ -161,9 +157,54 @@ public class DashboardActivity extends CoreActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (null != mPager) {
-            index = mPager.getCurrentItem();
+        if (currentIndexDashboard == 1) {
+            Log.d("Rajesh", "Intention End");
+        } else if (currentIndexDashboard == 0) {
+            if (DashboardActivity.currentIndexPaneFragment == 0) {
+                Log.d("Rajesh", "Junkfood End");
+            } else if (DashboardActivity.currentIndexPaneFragment == 1) {
+                Log.d("Rajesh", "Favorite End");
+            } else if (DashboardActivity.currentIndexPaneFragment == 2) {
+                Log.d("Rajesh", "Tools End");
+            }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        permissionUtil = new PermissionUtil(this);
+        if (!permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)
+                || !permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) || !permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)
+                || !permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)
+                || !permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) || !permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)
+                ) {
+
+            Intent intent = new Intent(DashboardActivity.this, SiempoPermissionActivity_
+                    .class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            intent.putExtra(IS_FROM_HOME, true);
+            startActivity(intent);
+
+        } else {
+            Log.d(TAG, "onResume.. ");
+//            if (currentIndexDashboard != -1 && currentIndexDashboard == 1) {
+//                Log.d("Rajesh", "Intention Start");
+//            } else if (currentIndexDashboard != -1 && currentIndexDashboard == 0) {
+//                if (DashboardActivity.currentIndexPaneFragment == 0) {
+//                    Log.d("Rajesh", "Junkfood Start");
+//                } else if (DashboardActivity.currentIndexPaneFragment == 1) {
+//                    Log.d("Rajesh", "Favorite Start");
+//                } else if (DashboardActivity.currentIndexPaneFragment == 2) {
+//                    Log.d("Rajesh", "Tools Start");
+//                }
+//            }
+            loadViews();
+
+        }
+        //Need to change as it is heavy call for onResume
+//        initView();
     }
 
     @Override
@@ -449,7 +490,7 @@ public class DashboardActivity extends CoreActivity {
     public void homePressEvent(HomePressEvent event) {
         try {
             if (UIUtils.isMyLauncherDefault(this)) {
-                index = -1;
+                currentIndexDashboard = -1;
                 // onBackPressed();
                 if (null != mPager) {
                     mPager.setCurrentItem(1);
