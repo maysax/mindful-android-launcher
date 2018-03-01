@@ -18,6 +18,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -65,7 +68,6 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
         PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
 
     }
-
 
 
     /**
@@ -190,6 +192,13 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
                     }
                 }
             }
+
+
+            //Code for removing the junk app from Favorite Sorted Menu and
+            //Favorite List
+            removeJunkAppsFromFavorites();
+
+
             if (flagAppList.size() == 0) {
                 flagAppList.add(new AppListInfo("", true, true, true));
             } else {
@@ -223,6 +232,38 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Remove the junk apps from Favorite Sorted menu and Favorite list
+     */
+    private void removeJunkAppsFromFavorites() {
+        String jsonListOfSortedFavorites = PrefSiempo.getInstance(JunkfoodFlaggingActivity.this)
+                .read(PrefSiempo.FAVORITE_SORTED_MENU, "");
+        Set<String> favlist = PrefSiempo.getInstance(this).read(PrefSiempo
+                .FAVORITE_APPS, new HashSet<String>());
+        //convert onNoteListChangedJSON array into a List<Long>
+        Gson gson1 = new Gson();
+        List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
+        }.getType());
+
+        for (String junkString : list) {
+            if (listOfSortFavoritesApps != null && listOfSortFavoritesApps.contains
+                    (junkString)) {
+                listOfSortFavoritesApps.remove(junkString);
+            }
+
+            if (favlist != null && favlist.contains(junkString)) {
+                favlist.remove(junkString);
+            }
+        }
+
+        Gson gson2 = new Gson();
+        String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
+        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo
+                .FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
+        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS,
+                favlist);
     }
 
     /**
