@@ -104,7 +104,6 @@ public class DashboardActivity extends CoreActivity {
     }
 
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
