@@ -24,6 +24,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 
 import co.siempo.phone.R;
@@ -249,13 +250,20 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
         }.getType());
 
         for (String junkString : list) {
-            if (listOfSortFavoritesApps != null && listOfSortFavoritesApps.contains
-                    (junkString)) {
-                listOfSortFavoritesApps.remove(junkString);
-            }
-
             if (favlist != null && favlist.contains(junkString)) {
-                favlist.remove(junkString);
+
+                for (ListIterator<String> it =
+                     listOfSortFavoritesApps.listIterator(); it.hasNext
+                        (); ) {
+                    String packageName = it.next();
+                    if (junkString.equalsIgnoreCase(packageName)) {
+                        //Used List Iterator to set empty
+                        // value for package name retaining
+                        // the positions of elements
+                        it.set("");
+                    }
+                }
+
             }
         }
 
