@@ -1,13 +1,11 @@
 package co.siempo.phone.fragments;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
@@ -38,6 +36,7 @@ import java.util.List;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.SendMail;
 import co.siempo.phone.utils.UIUtils;
@@ -85,7 +84,10 @@ public class FeedbackFragment extends CoreFragment {
 
     private static String getScreenResolution(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
+        Display display = null;
+        if (wm != null) {
+            display = wm.getDefaultDisplay();
+        }
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
         int width = metrics.widthPixels;
@@ -117,33 +119,34 @@ public class FeedbackFragment extends CoreFragment {
                             } else if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.beta))) {
                                 version = "BETA-" + BuildConfig.VERSION_NAME;
                             }
-                            if (ActivityCompat.checkSelfPermission(context,
-                                    Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-
-                                String body = "User Email :" + PrefSiempo.getInstance(context).read(PrefSiempo
-                                        .USER_EMAILID, "") + "\nFeedBack Type : " + selectedItemText + "\n" +
-                                        "Message :" + txtMessage.getText().toString().trim() + "\n" +
-                                        "Phone Data : Manufacturer - " + android.os.Build.MANUFACTURER +
-                                        ", Model - " + android.os.Build.MODEL +
-                                        ", OS Version - " + android.os.Build.VERSION.SDK_INT +
-                                        ", Display - " + getScreenResolution(getActivity()) + "\n" +
-                                        "App Data : UserID - " + telephonyManager.getDeviceId() +
-                                        ", Version - " + version;
 
 
-                                long currentTimeMills = System.currentTimeMillis();
+                            String body = "User Email :" + PrefSiempo.getInstance(context).read(PrefSiempo
+                                    .USER_EMAILID, "") + "\nFeedBack Type : " + selectedItemText + "\n" +
+                                    "Message :" + txtMessage.getText().toString().trim() + "\n" +
+                                    "Phone Data : Manufacturer - " + android.os.Build.MANUFACTURER +
+                                    ", Model - " + android.os.Build.MODEL +
+                                    ", OS Version - " + android.os.Build.VERSION.SDK_INT +
+                                    ", Display - " + getScreenResolution(getActivity()) + "\n" +
+                                    "App Data : UserID - " + CoreApplication.getInstance().getDeviceId() +
+                                    ", Version - " + version;
 
 
-                                //Creating SendMail object
-                                SendMail sm = new SendMail(getActivity(), getActivity().getResources().getString(R.string.feedback_email), "Thanks for your feedback!  Siempo support ID: " + telephonyManager.getDeviceId(), body);
+                            long currentTimeMills = System.currentTimeMillis();
 
-                                //Executing sendmail to send email
-                                sm.execute();
 
-                                InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                            //Creating SendMail object
+                            SendMail sm = new SendMail(getActivity(), getActivity().getResources().getString(R.string.feedback_email), "Thanks for your feedback!  Siempo support ID: " + CoreApplication.getInstance().getDeviceId(), body);
+
+                            //Executing sendmail to send email
+                            sm.execute();
+
+                            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                            if (inputMethodManager != null) {
                                 inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-
                             }
+
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -175,7 +178,9 @@ public class FeedbackFragment extends CoreFragment {
         } else {
             layout_email.setVisibility(View.VISIBLE);
             InputMethodManager im = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            im.showSoftInput(edt_email, 0);
+            if (im != null) {
+                im.showSoftInput(edt_email, 0);
+            }
         }
 
         // Load Feedback Type
@@ -192,7 +197,7 @@ public class FeedbackFragment extends CoreFragment {
 
             @Override
             public View getDropDownView(int position, View convertView,
-                                        ViewGroup parent) {
+                                        @NonNull ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView tv = (TextView) view;
                 tv.setTextColor(Color.BLACK);

@@ -32,8 +32,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBClient;
 import co.siempo.phone.event.AppInstalledEvent;
-import co.siempo.phone.event.FirebaseEvent;
-import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
@@ -124,8 +123,8 @@ public class StatusBarService extends Service {
     }
 
     @Subscribe
-    public void firebaseEvent(FirebaseEvent firebaseEvent) {
-        FirebaseHelper.getInstance().logScreenUsageTime(firebaseEvent.getScreenName(), firebaseEvent.getStrStartTime());
+    public void firebaseEvent(OnBackPressedEvent onBackPressed) {
+//        FirebaseHelper.getInstance().logScreenUsageTime(onBackPressed.getScreenName(), onBackPressed.getStrStartTime());
     }
 
     @Override

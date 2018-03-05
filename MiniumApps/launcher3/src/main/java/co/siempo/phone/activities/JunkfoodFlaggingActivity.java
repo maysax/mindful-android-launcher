@@ -67,7 +67,6 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
     }
 
 
-
     /**
      * Initialize the view.
      */
@@ -140,7 +139,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
      */
     private void showFirstTimeDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(JunkfoodFlaggingActivity.this, R.style.AlertDialogTheme);
-        builder.setTitle(getString(R.string.flag_app));
+        builder.setTitle(getString(R.string.flag_app_first_time));
         builder.setMessage(R.string.flag_first_time_install);
         builder.setPositiveButton(R.string.gotit, new DialogInterface.OnClickListener() {
             @Override

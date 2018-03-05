@@ -75,6 +75,7 @@ public class Launcher3App extends CoreApplication {
         loadConfigurationValues();
         configureEverNote();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        mFirebaseAnalytics.setUserId(getDeviceId());
         GreenDaoOpenHelper helper2 = new GreenDaoOpenHelper(this, "noti-db", null);
         Database db = helper2.getWritableDb();
         DaoMaster daoMaster = new DaoMaster(db);

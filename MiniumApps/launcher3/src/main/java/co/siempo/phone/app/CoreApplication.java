@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.UserManager;
 import android.provider.AlarmClock;
+import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import android.util.Log;
@@ -90,6 +91,10 @@ public abstract class CoreApplication extends MultiDexApplication {
         new LoadApplications().execute();
     }
 
+    public String getDeviceId() {
+        return Settings.Secure.getString(getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+    }
 
     protected void init() {
         // set initial configurations here

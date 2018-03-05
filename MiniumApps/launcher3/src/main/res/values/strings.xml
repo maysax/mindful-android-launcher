@@ -411,6 +411,7 @@
     <string name="str_frequently_used_apps">Frequently used apps</string>
     <string name="msg_congratulations">Congratulations!</string>
     <string name="flag_app">Flag this app to use it less</string>
+    <string name="flag_app_first_time">Flag apps to use them less</string>
     <string name="unflagapp">Un-flag this app</string>
     <string name="favorite_menu_unselect">Unselect as frequently used</string>
     <string name="favorite_menu_select">Select as frequently used app</string>
@@ -439,6 +440,7 @@
     <string name="select_favourite">Select Favorite</string>
     <string name="atleast_one_fav_app">"Atleast one app will stay as favorite"</string>
     <string name="not_more_than_twelve_fav_app">Please unselect any of the apps from Frequently used apps section</string>
+    <string name="find_app_send_message_or_save_note">Find app, send message, or save note</string>
 
 
 </resources>

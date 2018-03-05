@@ -20,7 +20,6 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.app.Launcher3Prefs_;
-import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.interfaces.ItemTouchHelperAdapter;
 import co.siempo.phone.interfaces.ItemTouchHelperViewHolder;
 import co.siempo.phone.interfaces.OnToolItemListChangedListener;
@@ -112,7 +111,6 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder
                 int id;
                 if (item != null) {
                     id = item.getId();
-                    FirebaseHelper.getInstance().logSiempoMenuUsage(item.getTitle(), 0);
                     new MainListItemLoader(context).listItemClicked(id);
                 }
 

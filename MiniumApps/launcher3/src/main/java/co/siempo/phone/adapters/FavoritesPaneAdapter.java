@@ -20,12 +20,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import co.siempo.phone.R;
-import co.siempo.phone.activities.AppAssignmentActivity;
 import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.activities.FavoriteAppsPositionActivity;
-import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.helper.ActivityHelper;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.utils.DrawableProvider;
@@ -38,14 +37,14 @@ public class FavoritesPaneAdapter extends RecyclerView.Adapter<FavoritesPaneAdap
 
     private final Context context;
     private List<MainListItem> mainListItemList;
-    private boolean  isBottomDoc = false,isHideIconBranding;
+    private boolean isBottomDoc = false, isHideIconBranding;
     private HashMap<Integer, AppMenu> map;
     private DrawableProvider mProvider;
 
-    public FavoritesPaneAdapter(Context context,boolean isHideIconBranding,boolean isBottomDoc, List<MainListItem> mainListItemList) {
+    public FavoritesPaneAdapter(Context context, boolean isHideIconBranding, boolean isBottomDoc, List<MainListItem> mainListItemList) {
         this.context = context;
         this.mainListItemList = mainListItemList;
-        this.isHideIconBranding=isHideIconBranding;
+        this.isHideIconBranding = isHideIconBranding;
         this.isBottomDoc = isBottomDoc;
         mProvider = new DrawableProvider(context);
         map = CoreApplication.getInstance().getToolsSettings();
@@ -67,46 +66,44 @@ public class FavoritesPaneAdapter extends RecyclerView.Adapter<FavoritesPaneAdap
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final MainListItem item = mainListItemList.get(position);
-       holder.linearLayout.setVisibility(View.VISIBLE);
-            if (!TextUtils.isEmpty(item.getTitle())) {
-                holder.text.setText(item.getTitle());
-            }
-            if (!TextUtils.isEmpty(item.getPackageName())) {
-                if(isHideIconBranding){
-                    holder.imgAppIcon.setVisibility(View.GONE);
-                    holder.txtAppTextImage.setVisibility(View.VISIBLE);
-                    holder.imgUnderLine.setVisibility(View.VISIBLE);
-                    if (TextUtils.isEmpty(item.getTitle())) {
-                    } else {
-                        String fontPath = "fonts/robotocondensedregular.ttf";
-                        holder.txtAppTextImage.setText("" + item
-                                .getTitle().charAt(0));
+        holder.linearLayout.setVisibility(View.VISIBLE);
+        if (!TextUtils.isEmpty(item.getTitle())) {
+            holder.text.setText(item.getTitle());
+        }
+        if (!TextUtils.isEmpty(item.getPackageName())) {
+            if (isHideIconBranding) {
+                holder.imgAppIcon.setVisibility(View.GONE);
+                holder.txtAppTextImage.setVisibility(View.VISIBLE);
+                holder.imgUnderLine.setVisibility(View.VISIBLE);
+                if (TextUtils.isEmpty(item.getTitle())) {
+                } else {
+                    String fontPath = "fonts/robotocondensedregular.ttf";
+                    holder.txtAppTextImage.setText("" + item
+                            .getTitle().charAt(0));
 
-                        // Loading Font Face
-                        Typeface tf = Typeface.createFromAsset(context.getAssets(), fontPath);
-                        // Applying font
-                        holder.txtAppTextImage.setTypeface(tf);
-                    }
-
+                    // Loading Font Face
+                    Typeface tf = Typeface.createFromAsset(context.getAssets(), fontPath);
+                    // Applying font
+                    holder.txtAppTextImage.setTypeface(tf);
                 }
-                else{
-                    holder.imgAppIcon.setVisibility(View.VISIBLE);
-                    holder.txtAppTextImage.setVisibility(View.GONE);
-                    holder.imgUnderLine.setVisibility(View.GONE);
-                    Drawable drawable=getAppIconByPackageName(item.getPackageName(),context);
-                    if (drawable!=null) {
-                            holder.imgAppIcon.setImageDrawable(drawable);
-                    } else {
-                        holder.linearLayout.setVisibility(View.INVISIBLE);
-                    }
-                }
-
-
 
             } else {
-
-                holder.linearLayout.setVisibility(View.INVISIBLE);
+                holder.imgAppIcon.setVisibility(View.VISIBLE);
+                holder.txtAppTextImage.setVisibility(View.GONE);
+                holder.imgUnderLine.setVisibility(View.GONE);
+                Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(item.getPackageName());
+                if (drawable != null) {
+                    holder.imgAppIcon.setImageDrawable(drawable);
+                } else {
+                    holder.linearLayout.setVisibility(View.INVISIBLE);
+                }
             }
+
+
+        } else {
+
+            holder.linearLayout.setVisibility(View.INVISIBLE);
+        }
 
         holder.linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -124,31 +121,14 @@ public class FavoritesPaneAdapter extends RecyclerView.Adapter<FavoritesPaneAdap
                 int id = item.getId();
                 if (holder.linearLayout.getVisibility() == View.VISIBLE) {
                     if (!TextUtils.isEmpty(item.getPackageName())) {
-
+                        FirebaseHelper.getInstance().logSiempoMenuUsage(1, "", CoreApplication.getInstance().getApplicationNameFromPackageName(item.getPackageName().trim()));
                         new ActivityHelper(context).openAppWithPackageName(item.getPackageName().trim());
-
-                    } else {
-
                     }
                 }
             }
         });
     }
 
-    /**
-     * if the user has multiple apps that are installed and relevant to this tool (e.g. tool is browser, and Chrome and Firefox are installed)
-     * navigate to the tool-app assignment screen
-     * if the user has one one app that is installed and relevant to this tool (e.g. tool is browser, and only Chrome is installed)
-     * if that 3rd party app IS currently flagged by this user as junkfood
-     * navigate to the tool-app assignment screen
-     *
-     * @param item
-     */
-    private void openAppAssignmentScreen(MainListItem item) {
-        Intent intent = new Intent(context, AppAssignmentActivity.class);
-        intent.putExtra(Constants.INTENT_MAINLISTITEM, item);
-        context.startActivity(intent);
-    }
 
     @Override
     public int getItemCount() {
@@ -175,8 +155,8 @@ public class FavoritesPaneAdapter extends RecyclerView.Adapter<FavoritesPaneAdap
         // each data item is just a string in this case
         public View layout;
         // each data item is just a string in this case
-        ImageView  imgView,imgAppIcon,imgUnderLine;
-        TextView text,txtAppTextImage;
+        ImageView imgView, imgAppIcon, imgUnderLine;
+        TextView text, txtAppTextImage;
         TextView textDefaultApp;
         RelativeLayout relMenu;
         private LinearLayout linearLayout;
@@ -185,12 +165,12 @@ public class FavoritesPaneAdapter extends RecyclerView.Adapter<FavoritesPaneAdap
             super(v);
             layout = v;
             linearLayout = v.findViewById(R.id.linearList);
-            imgUnderLine=v.findViewById(R.id.imgUnderLine);
+            imgUnderLine = v.findViewById(R.id.imgUnderLine);
             relMenu = v.findViewById(R.id.relMenu);
             text = v.findViewById(R.id.text);
             textDefaultApp = v.findViewById(R.id.textDefaultApp);
             txtAppTextImage = v.findViewById(R.id.txtAppTextImage);
-            imgAppIcon=v.findViewById(R.id.imgAppIcon);
+            imgAppIcon = v.findViewById(R.id.imgAppIcon);
             imgView = v.findViewById(R.id.imgView);
         }
     }
