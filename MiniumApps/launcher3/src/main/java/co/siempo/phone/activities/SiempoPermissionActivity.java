@@ -221,7 +221,10 @@ public class SiempoPermissionActivity extends CoreActivity {
 
         if (isFromHome && permissionUtil.hasGiven(PermissionUtil
                 .CONTACT_PERMISSION) &&
-                permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION) &&
+                permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
+                &&
+                permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION) && permissionUtil
+                .hasGiven(PermissionUtil.SEND_SMS_PERMISSION) &&
                 permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) && permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
             finish();
         }
@@ -257,7 +260,9 @@ public class SiempoPermissionActivity extends CoreActivity {
 
     @Click(R.id.btnContinue)
     void myButtonWasClicked() {
-        if (permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION) &&
+        if (permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION) &&
+                permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION) &&
+                permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION) &&
                 permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) && permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
 //            launcher3Prefs.isPermissionGivenAndContinued().put(true);
             finish();
