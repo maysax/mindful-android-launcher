@@ -626,6 +626,8 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                 .getVisibility() == View.VISIBLE) {
             imageClear.performClick();
             chipsEditText.setText("");
+            linSearchList.setVisibility(View.GONE);
+            linPane.setAlpha(1);
         }
 
         super.setUserVisibleHint(isVisibleToUser);
