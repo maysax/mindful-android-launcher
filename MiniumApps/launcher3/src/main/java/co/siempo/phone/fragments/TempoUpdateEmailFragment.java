@@ -61,6 +61,7 @@ public class TempoUpdateEmailFragment extends CoreFragment {
 
         toolbar.inflateMenu(R.menu.update_email_menu);
         toolbar.getMenu().findItem(R.id.tick).setVisible(false);
+
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -102,32 +103,56 @@ public class TempoUpdateEmailFragment extends CoreFragment {
             edt_email.setSelection(edt_email.getText().length());
         }
 
-        if (edt_email.getText().toString().trim().length() > 0) {
-            if (isValidEmail(edt_email.getText().toString().trim())) {
-                toolbar.getMenu().findItem(R.id.tick).setVisible(true);
+        final String strEmailAddress = edt_email.getText().toString().trim();
+
+        if (strEmailAddress.length() > 0) {
+            if (isValidEmail(strEmailAddress)) {
+                if (strEmailAddress.equalsIgnoreCase(PrefSiempo.getInstance(context).read(PrefSiempo.USER_EMAILID, ""))) {
+                    toolbar.getMenu().findItem(R.id.tick).setVisible(false);
+                } else {
+                    toolbar.getMenu().findItem(R.id.tick).setVisible(true);
+                }
                 edt_email.setTextColor(getResources().getColor(R.color.black));
                 text_input_layout.setErrorEnabled(false);
+
             } else {
                 text_input_layout.setError(getResources().getString(R.string.feedback_email));
                 text_input_layout.setErrorEnabled(true);
             }
         }
+
+
     }
 
     @AfterTextChange
     void edt_email() {
-        if (!TextUtils.isEmpty(edt_email.getText().toString().trim())) {
-            String val_email = edt_email.getText().toString().trim();
+        String strEmailAddressEntered = edt_email.getText().toString().trim();
+        if (!TextUtils.isEmpty(strEmailAddressEntered)) {
+            String val_email = strEmailAddressEntered;
             boolean isValidEmail = isValidEmail(val_email);
             toolbar.getMenu().findItem(R.id.tick).setVisible(false);
             if (isValidEmail) {
                 toolbar.getMenu().findItem(R.id.tick).setVisible(true);
                 text_input_layout.setErrorEnabled(false);
+                if (strEmailAddressEntered.equalsIgnoreCase(PrefSiempo
+                        .getInstance
+                                (context)
+                        .read(PrefSiempo
+                                .USER_EMAILID, ""))) {
+                    toolbar.getMenu().findItem(R.id.tick).setVisible(false);
+                } else {
+                    toolbar.getMenu().findItem(R.id.tick).setVisible(true);
+                }
+
+
             } else {
                 text_input_layout.setError(getResources().getString(R.string.error_email));
                 text_input_layout.setErrorEnabled(true);
             }
+
+
         } else {
+
             text_input_layout.setErrorEnabled(false);
         }
     }

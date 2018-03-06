@@ -5,7 +5,6 @@ import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
@@ -28,17 +27,23 @@ import java.util.Set;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.FavoriteFlaggingAdapter;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.AppInstalledEvent;
+import co.siempo.phone.event.HomePressEvent;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.AppListInfo;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.Sorting;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.Subscribe;
 
-public class FavoritesSelectionActivity extends AppCompatActivity {
+public class FavoritesSelectionActivity extends CoreActivity {
 
     Set<String> list = new HashSet<>();
+    //Junk list removal will be needed here as we need to remove the
+    //junk-flagged app from other app list which cn be marked as favorite
     Set<String> junkFoodList = new HashSet<>();
     FavoriteFlaggingAdapter junkfoodFlaggingAdapter;
     int firstPosition;
@@ -132,14 +137,18 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
             favoriteList = new ArrayList<>();
             unfavoriteList = new ArrayList<>();
             bindingList = new ArrayList<>();
+
             for (ResolveInfo resolveInfo : installedPackageList) {
                 if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
                     boolean isEnable = UIUtils.isAppInstalledAndEnabled(this, resolveInfo.activityInfo.packageName);
-                    if(isEnable){
+                    if (isEnable) {
                         if (list.contains(resolveInfo.activityInfo.packageName)) {
                             favoriteList.add(new AppListInfo(resolveInfo.activityInfo.packageName, false, false, true));
                         } else {
-                            unfavoriteList.add(new AppListInfo(resolveInfo.activityInfo.packageName, false, false, false));
+                            if (null != junkFoodList && !junkFoodList
+                                    .contains(resolveInfo.activityInfo.packageName)) {
+                                unfavoriteList.add(new AppListInfo(resolveInfo.activityInfo.packageName, false, false, false));
+                            }
                         }
                     }
                 }
@@ -150,7 +159,7 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
             } else {
                 favoriteList.add(0, new AppListInfo("", true, false, true));
             }
-
+            favoriteList = Sorting.sortApplication(favoriteList);
             bindingList.addAll(favoriteList);
 
             if (unfavoriteList.size() == 0) {
@@ -158,7 +167,7 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
             } else {
                 unfavoriteList.add(0, new AppListInfo("", true, false, false));
             }
-
+            unfavoriteList = Sorting.sortApplication(unfavoriteList);
             bindingList.addAll(unfavoriteList);
             junkfoodFlaggingAdapter = new FavoriteFlaggingAdapter(this, bindingList, list);
             listAllApps.setAdapter(junkfoodFlaggingAdapter);
@@ -297,6 +306,21 @@ public class FavoritesSelectionActivity extends AppCompatActivity {
     public void setToolBarText(int count) {
         int remainapps = 12 - count;
         toolbar.setTitle("Select up to " + remainapps + " more apps");
+    }
+
+    @Subscribe
+    public void homePressEvent(HomePressEvent event) {
+        try {
+            if (event.isVisible() && UIUtils.isMyLauncherDefault(this)) {
+                Intent startMain = new Intent(Intent.ACTION_MAIN);
+                startMain.addCategory(Intent.CATEGORY_HOME);
+                startActivity(startMain);
+            }
+
+        } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
+            Tracer.e(e, e.getMessage());
+        }
     }
 }
 

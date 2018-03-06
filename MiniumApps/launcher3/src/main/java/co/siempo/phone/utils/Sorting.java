@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.models.AppListInfo;
 import co.siempo.phone.models.MainListItem;
 
 import static java.util.Collections.sort;
@@ -77,6 +78,14 @@ public class Sorting {
         return list;
     }
 
-
+    public static ArrayList<AppListInfo> sortApplication(ArrayList<AppListInfo> list) {
+        Collections.sort(list, new Comparator<AppListInfo>() {
+            @Override
+            public int compare(final AppListInfo object1, final AppListInfo object2) {
+                return CoreApplication.getInstance().getApplicationNameFromPackageName(object1.packageName).toLowerCase().compareTo(CoreApplication.getInstance().getApplicationNameFromPackageName(object2.packageName).toLowerCase());
+            }
+        });
+        return list;
+    }
 
 }

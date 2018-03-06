@@ -193,6 +193,12 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                 .VISIBLE) {
             imageClear.performClick();
         }
+
+        //Must be done in order to restore the visibility and alpha state of
+        // page pane
+        if (linPane.getVisibility() == View.VISIBLE) {
+            pagerPane.setAlpha(1);
+        }
         if (DashboardActivity.currentIndexDashboard == 1) {
             if (DashboardActivity.currentIndexPaneFragment == 0) {
                 Log.d("Firebase", "Junkfood Start");
@@ -447,7 +453,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                         if (adapter != null)
                             adapter.getFilter().filter(current.getTitle());
                     } else {
-
                         mediator.resetData();
                         if (current.getTitle().trim().isEmpty()) {
                             if (adapter != null) {
@@ -482,6 +487,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                 edtSearchToolsRounded.clearFocus();
                 chipsEditText.clearFocus();
             }
+
 
             @Override
             public void onPageSelected(int i) {
@@ -519,12 +525,14 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                     edtSearchToolsRounded.setOnFocusChangeListener(null);
                     chipsEditText.setOnFocusChangeListener(null);
                     junkFoodAppPane();
+
                     if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>()).size() == 0) {
+                        //Applied for smooth transition
+                        pagerPane.setAlpha(0);
                         Intent intent = new Intent(getActivity(), JunkfoodFlaggingActivity.class);
                         startActivity(intent);
-                        getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                    } else {
-
+                        getActivity().overridePendingTransition(R
+                                .anim.fade_in_junk, R.anim.fade_out_junk);
                     }
                 }
 
@@ -552,6 +560,8 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             public void onPageScrollStateChanged(int i) {
             }
         });
+
+
     }
 
 
@@ -567,16 +577,22 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
         String strIntention = PrefSiempo.getInstance(getActivity()).read
                 (PrefSiempo.DEFAULT_INTENTION, "");
-        if (TextUtils.isEmpty(strIntention)) {
-            txtIntention.setText("You chose to hide these apps.");
-            txtIntentionLabelJunkPane.setVisibility(View.INVISIBLE);
 
-        } else {
+        //If Intentions are enabled and intention field is not empty then show
+        //it in Junk food Top dock else not
+        if (!TextUtils.isEmpty(strIntention) && !PrefSiempo.getInstance
+                (context).read(PrefSiempo
+                .IS_INTENTION_ENABLE, false)) {
             txtIntentionLabelJunkPane.setText(getString(R.string
                     .you_ve_flag));
             txtIntention.setText(strIntention);
             txtIntention.setVisibility(View.VISIBLE);
             txtIntentionLabelJunkPane.setVisibility(View.VISIBLE);
+
+        } else {
+
+            txtIntention.setText("You chose to hide these apps.");
+            txtIntentionLabelJunkPane.setVisibility(View.INVISIBLE);
         }
 
 
@@ -634,6 +650,8 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                 .getVisibility() == View.VISIBLE) {
             imageClear.performClick();
             chipsEditText.setText("");
+            linSearchList.setVisibility(View.GONE);
+            linPane.setAlpha(1);
         }
 
         super.setUserVisibleHint(isVisibleToUser);

@@ -275,26 +275,6 @@ public class StatusBarService extends Service {
         }
     }
 
-    public void updateFavoriteSort(Context context, String packageName) {
-        //get the JSON array of the ordered of sorted customers
-        String jsonListOfSortedFavorites = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
-        //convert onNoteListChangedJSON array into a List<Long>
-        Gson gson1 = new Gson();
-        List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
-        }.getType());
-        for (ListIterator<String> it =
-             listOfSortFavoritesApps.listIterator(); it.hasNext
-                (); ) {
-            String removePackageName = it.next();
-            if (!TextUtils.isEmpty(removePackageName) && removePackageName.trim().equalsIgnoreCase(packageName)) {
-                it.set("");
-            }
-
-        }
-        Gson gson2 = new Gson();
-        String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
-        PrefSiempo.getInstance(context).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
-    }
 
     private class MyObserver extends ContentObserver {
         MyObserver(Handler handler) {
@@ -340,7 +320,7 @@ public class StatusBarService extends Service {
                                 CoreApplication.getInstance().addOrRemoveApplicationInfo(false, uninstallPackageName);
                             }
                         }
-                    } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED)) {
+                    } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED) && !intent.getAction().equals(Intent.ACTION_PACKAGE_REPLACED)) {
                         String packageName;
                         if (intent.getData().getEncodedSchemeSpecificPart() != null) {
                             packageName = intent.getData().getSchemeSpecificPart();
@@ -363,5 +343,26 @@ public class StatusBarService extends Service {
             }
 
         }
+    }
+
+    public void updateFavoriteSort(Context context, String packageName) {
+        //get the JSON array of the ordered of sorted customers
+        String jsonListOfSortedFavorites = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
+        //convert onNoteListChangedJSON array into a List<Long>
+        Gson gson1 = new Gson();
+        List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
+        }.getType());
+        for (ListIterator<String> it =
+             listOfSortFavoritesApps.listIterator(); it.hasNext
+                (); ) {
+            String removePackageName = it.next();
+            if (!TextUtils.isEmpty(removePackageName) && removePackageName.trim().equalsIgnoreCase(packageName)) {
+                it.set("");
+            }
+
+        }
+        Gson gson2 = new Gson();
+        String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
+        PrefSiempo.getInstance(context).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
     }
 }

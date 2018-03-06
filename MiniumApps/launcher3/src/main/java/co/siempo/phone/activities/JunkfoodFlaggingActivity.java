@@ -15,21 +15,31 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.JunkfoodFlaggingAdapter;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.AppInstalledEvent;
+import co.siempo.phone.event.HomePressEvent;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.AppListInfo;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.Sorting;
+import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.Subscribe;
 
 public class JunkfoodFlaggingActivity extends CoreActivity {
@@ -46,6 +56,8 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
     private ArrayList<AppListInfo> unflageAppList = new ArrayList<>();
     private ArrayList<AppListInfo> bindingList = new ArrayList<>();
     private long startTime = 0;
+    private Window mWindow;
+    private int defaultStatusBarColor;
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
@@ -189,12 +201,19 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
                     }
                 }
             }
+
+
+            //Code for removing the junk app from Favorite Sorted Menu and
+            //Favorite List
+            removeJunkAppsFromFavorites();
+
+
             if (flagAppList.size() == 0) {
                 flagAppList.add(new AppListInfo("", true, true, true));
             } else {
                 flagAppList.add(0, new AppListInfo("", true, false, true));
             }
-
+            flagAppList = Sorting.sortApplication(flagAppList);
             bindingList.addAll(flagAppList);
 
             if (unflageAppList.size() == 0) {
@@ -202,7 +221,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
             } else {
                 unflageAppList.add(0, new AppListInfo("", true, false, false));
             }
-
+            unflageAppList = Sorting.sortApplication(unflageAppList);
             bindingList.addAll(unflageAppList);
             junkfoodFlaggingAdapter = new JunkfoodFlaggingAdapter(this, bindingList, list);
             listAllApps.setAdapter(junkfoodFlaggingAdapter);
@@ -222,6 +241,45 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Remove the junk apps from Favorite Sorted menu and Favorite list
+     */
+    private void removeJunkAppsFromFavorites() {
+        String jsonListOfSortedFavorites = PrefSiempo.getInstance(JunkfoodFlaggingActivity.this)
+                .read(PrefSiempo.FAVORITE_SORTED_MENU, "");
+        Set<String> favlist = PrefSiempo.getInstance(this).read(PrefSiempo
+                .FAVORITE_APPS, new HashSet<String>());
+        //convert onNoteListChangedJSON array into a List<Long>
+        Gson gson1 = new Gson();
+        List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
+        }.getType());
+
+        for (String junkString : list) {
+            if (favlist != null && favlist.contains(junkString)) {
+
+                for (ListIterator<String> it =
+                     listOfSortFavoritesApps.listIterator(); it.hasNext
+                        (); ) {
+                    String packageName = it.next();
+                    if (junkString.equalsIgnoreCase(packageName)) {
+                        //Used List Iterator to set empty
+                        // value for package name retaining
+                        // the positions of elements
+                        it.set("");
+                    }
+                }
+
+            }
+        }
+
+        Gson gson2 = new Gson();
+        String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
+        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo
+                .FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
+        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS,
+                favlist);
     }
 
     /**
@@ -338,4 +396,23 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
         super.onPause();
         FirebaseHelper.getInstance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
     }
+
+    @Subscribe
+    public void homePressEvent(HomePressEvent event) {
+        try {
+            if (event.isVisible() && UIUtils.isMyLauncherDefault(this)) {
+                onBackPressed();
+                Intent startMain = new Intent(Intent.ACTION_MAIN);
+                startMain.addCategory(Intent.CATEGORY_HOME);
+                startActivity(startMain);
+
+            }
+
+        } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
+            Tracer.e(e, e.getMessage());
+        }
+    }
+
+
 }

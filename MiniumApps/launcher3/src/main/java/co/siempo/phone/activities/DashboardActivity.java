@@ -177,6 +177,8 @@ public class DashboardActivity extends CoreActivity {
                     PrefSiempo.getInstance(DashboardActivity.this).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, false);
                     Intent intent = new Intent(DashboardActivity.this, JunkfoodFlaggingActivity.class);
                     startActivity(intent);
+                    overridePendingTransition(R
+                            .anim.fade_in_junk, R.anim.fade_out_junk);
                 }
             }
         });
