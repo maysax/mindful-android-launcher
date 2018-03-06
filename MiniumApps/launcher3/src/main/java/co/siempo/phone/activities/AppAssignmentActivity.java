@@ -15,7 +15,10 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.viewholder.AppAssignmentAdapter;
@@ -27,6 +30,7 @@ import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.Sorting;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.Subscribe;
@@ -38,6 +42,7 @@ public class AppAssignmentActivity extends CoreActivity {
     //8 Photos
     List<Integer> idList = Arrays.asList(2, 4, 6, 9, 10);
     ArrayList<String> connectedAppsList = new ArrayList<>();
+    Set<String> set = new HashSet<>();
     private Toolbar toolbar;
     private RecyclerView recyclerView;
     private TextView txtErrorMessage;
@@ -75,6 +80,8 @@ public class AppAssignmentActivity extends CoreActivity {
     protected void onResume() {
         super.onResume();
         startTime = System.currentTimeMillis();
+        set = PrefSiempo.getInstance(this).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
+
         filterList();
         initView();
     }
@@ -104,9 +111,12 @@ public class AppAssignmentActivity extends CoreActivity {
             Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
             mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
             List<ResolveInfo> installedPackageList = getPackageManager().queryIntentActivities(mainIntent, 0);
-            for (AppMenu appMenu : CoreApplication.getInstance().getToolsSettings().values()) {
-                if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
-                    connectedAppsList.add(appMenu.getApplicationName());
+            for (Map.Entry<Integer, AppMenu> app : CoreApplication.getInstance().getToolsSettings().entrySet()) {
+                if (app.getKey() != mainListItem.getId()) {
+                    AppMenu appMenu = app.getValue();
+                    if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
+                        connectedAppsList.add(appMenu.getApplicationName());
+                    }
                 }
             }
             for (ResolveInfo resolveInfo : installedPackageList) {
