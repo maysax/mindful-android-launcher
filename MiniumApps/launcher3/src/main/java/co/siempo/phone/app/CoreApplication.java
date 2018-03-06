@@ -17,7 +17,6 @@ import android.provider.AlarmClock;
 import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.LruCache;
 
 import com.androidnetworking.AndroidNetworking;
@@ -151,37 +150,6 @@ public abstract class CoreApplication extends MultiDexApplication {
         java.lang.reflect.Type type = new TypeToken<HashMap<Integer, AppMenu>>() {
         }.getType();
         return new Gson().fromJson(storedHashMapString, type);
-    }
-
-
-    public void bindFirebase(boolean dashboardSwipe, int dashBoardPagerIndex, int panePagerIndex,
-                             int dashboardCurrentIndex, int paneCurrentIndex) {
-        if (dashboardSwipe) {
-            if (dashboardCurrentIndex == 0 && dashBoardPagerIndex == 1) {
-                Log.d("Firebase ", "PaneFragmentEnded");
-            } else if (dashboardCurrentIndex == 1 && dashBoardPagerIndex == 0) {
-                Log.d("Firebase ", "IntentionFragmentEnded");
-            }
-        } else {
-//            if (DashboardActivity.currentIndexPaneFragment == 0 && i == 1) {
-//                Log.d("Firebase ", "JunkFoodEnd");
-//                FirebaseHelper.getInstance().logScreenUsageTime(JunkFoodPaneFragment.class.getSimpleName(), startTime);
-////                startTime = System.currentTimeMillis();
-//            } else if (DashboardActivity.currentIndexPaneFragment == 1 && i == 2) {
-//                Log.d("Firebase ", "Favorite End");
-//                FirebaseHelper.getInstance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), startTime);
-////                startTime = System.currentTimeMillis();
-//            } else if (DashboardActivity.currentIndexPaneFragment == 2 && i == 1) {
-//                Log.d("Firebase ", "Tools End");
-//                FirebaseHelper.getInstance().logScreenUsageTime(ToolsPaneFragment.class.getSimpleName(), startTime);
-////                startTime = System.currentTimeMillis();
-//            } else if (DashboardActivity.currentIndexPaneFragment == 1 && i == 0) {
-//                Log.d("Firebase ", "Favorite End");
-//                FirebaseHelper.getInstance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), startTime);
-////                startTime = System.currentTimeMillis();
-//            }
-        }
-
     }
 
 
@@ -404,7 +372,6 @@ public abstract class CoreApplication extends MultiDexApplication {
             } else {
                 getPackagesList().remove(getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA).packageName);
             }
-            setPackagesList(getPackagesList());
             EventBus.getDefault().post(new AppInstalledEvent(true));
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();

@@ -523,6 +523,8 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                         Intent intent = new Intent(getActivity(), JunkfoodFlaggingActivity.class);
                         startActivity(intent);
                         getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    } else {
+
                     }
                 }
 
