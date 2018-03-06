@@ -8,7 +8,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,14 +18,19 @@ import java.util.ArrayList;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.FavoritePositioningAdapter;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
+import co.siempo.phone.event.HomePressEvent;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.interfaces.OnFavoriteItemListChangedListener;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.OnStartDragListener;
 import co.siempo.phone.main.SimpleItemTouchHelperCallback;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.UIUtils;
+import de.greenrobot.event.Subscribe;
 
 public class FavoriteAppsPositionActivity extends CoreActivity implements OnFavoriteItemListChangedListener,
         OnStartDragListener {
@@ -69,7 +73,7 @@ public class FavoriteAppsPositionActivity extends CoreActivity implements OnFavo
     @Override
     protected void onPause() {
         super.onPause();
-        FirebaseHelper.getIntance().logScreenUsageTime(FavoriteAppsPositionActivity.this.getClass().getSimpleName(), startTime);
+        FirebaseHelper.getInstance().logScreenUsageTime(FavoriteAppsPositionActivity.this.getClass().getSimpleName(), startTime);
     }
 
     @Override
@@ -145,6 +149,19 @@ public class FavoriteAppsPositionActivity extends CoreActivity implements OnFavo
         Gson gson = new Gson();
         String jsonListOfSortedCustomerIds = gson.toJson(listOfSortedCustomerId);
         PrefSiempo.getInstance(this).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfSortedCustomerIds);
+    }
+
+    @Subscribe
+    public void homePressEvent(HomePressEvent event) {
+        try {
+            if (event.isVisible() && UIUtils.isMyLauncherDefault(this)) {
+                finish();
+            }
+
+        } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
+            Tracer.e(e, e.getMessage());
+        }
     }
 
 }

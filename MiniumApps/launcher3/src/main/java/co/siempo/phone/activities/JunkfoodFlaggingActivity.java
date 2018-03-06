@@ -15,6 +15,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -29,12 +30,16 @@ import java.util.Set;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.JunkfoodFlaggingAdapter;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.AppInstalledEvent;
+import co.siempo.phone.event.HomePressEvent;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.AppListInfo;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.Sorting;
+import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.Subscribe;
 
 public class JunkfoodFlaggingActivity extends CoreActivity {
@@ -47,10 +52,12 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
     private ListView listAllApps;
     private PopupMenu popup;
     private boolean isLoadFirstTime = true;
-    private ArrayList<AppListInfo> flagAppList = new ArrayList<>();
-    private ArrayList<AppListInfo> unflageAppList = new ArrayList<>();
+    private List<AppListInfo> flagAppList = new ArrayList<>();
+    private List<AppListInfo> unflageAppList = new ArrayList<>();
     private ArrayList<AppListInfo> bindingList = new ArrayList<>();
     private long startTime = 0;
+    private Window mWindow;
+    private int defaultStatusBarColor;
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
@@ -144,7 +151,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
      */
     private void showFirstTimeDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(JunkfoodFlaggingActivity.this, R.style.AlertDialogTheme);
-        builder.setTitle(getString(R.string.flag_app));
+        builder.setTitle(getString(R.string.flag_app_first_time));
         builder.setMessage(R.string.flag_first_time_install);
         builder.setPositiveButton(R.string.gotit, new DialogInterface.OnClickListener() {
             @Override
@@ -387,6 +394,25 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        FirebaseHelper.getIntance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
+        FirebaseHelper.getInstance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
     }
+
+    @Subscribe
+    public void homePressEvent(HomePressEvent event) {
+        try {
+            if (event.isVisible() && UIUtils.isMyLauncherDefault(this)) {
+                onBackPressed();
+                Intent startMain = new Intent(Intent.ACTION_MAIN);
+                startMain.addCategory(Intent.CATEGORY_HOME);
+                startActivity(startMain);
+
+            }
+
+        } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
+            Tracer.e(e, e.getMessage());
+        }
+    }
+
+
 }

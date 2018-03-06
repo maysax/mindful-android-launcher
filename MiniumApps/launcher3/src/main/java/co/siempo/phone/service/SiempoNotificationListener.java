@@ -861,7 +861,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
     private void logFirebaseCount(String strPackageName, int count) {
         try {
             Log.d("Count Suppressed", "PackageName:" + strPackageName + " " + count);
-            FirebaseHelper.getIntance().logSuppressedNotification(getAppName(strPackageName), count);
+            FirebaseHelper.getInstance().logSuppressedNotification(getAppName(strPackageName), count);
         } catch (Exception e) {
             e.printStackTrace();
             CoreApplication.getInstance().logException(e);

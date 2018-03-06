@@ -27,8 +27,12 @@ import org.androidannotations.annotations.ViewById;
 import java.util.ArrayList;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.event.HomePressEvent;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.UIUtils;
+import de.greenrobot.event.Subscribe;
 
 @EActivity(R.layout.activity_permission)
 public class SiempoPermissionActivity extends CoreActivity {
@@ -217,7 +221,10 @@ public class SiempoPermissionActivity extends CoreActivity {
 
         if (isFromHome && permissionUtil.hasGiven(PermissionUtil
                 .CONTACT_PERMISSION) &&
-                permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION) &&
+                permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
+                &&
+                permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION) && permissionUtil
+                .hasGiven(PermissionUtil.SEND_SMS_PERMISSION) &&
                 permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) && permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
             finish();
         }
@@ -253,7 +260,9 @@ public class SiempoPermissionActivity extends CoreActivity {
 
     @Click(R.id.btnContinue)
     void myButtonWasClicked() {
-        if (permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION) &&
+        if (permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION) &&
+                permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION) &&
+                permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION) &&
                 permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) && permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
 //            launcher3Prefs.isPermissionGivenAndContinued().put(true);
             finish();
@@ -289,6 +298,21 @@ public class SiempoPermissionActivity extends CoreActivity {
             super.onBackPressed();
         }
 
+    }
+
+    @Subscribe
+    public void homePressEvent(HomePressEvent event) {
+        try {
+            if (event.isVisible() && UIUtils.isMyLauncherDefault(this)) {
+                Intent startMain = new Intent(Intent.ACTION_MAIN);
+                startMain.addCategory(Intent.CATEGORY_HOME);
+                startActivity(startMain);
+            }
+
+        } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
+            Tracer.e(e, e.getMessage());
+        }
     }
 
 

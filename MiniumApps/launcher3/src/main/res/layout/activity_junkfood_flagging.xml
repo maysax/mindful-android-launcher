@@ -20,6 +20,8 @@
         android:id="@+id/listAllApps"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:divider="@color/darker_gray"
+        android:dividerHeight="@dimen/dp_1"
         android:listSelector="@color/transparent"
         tools:listitem="@layout/list_item_junkfoodflag" />
 

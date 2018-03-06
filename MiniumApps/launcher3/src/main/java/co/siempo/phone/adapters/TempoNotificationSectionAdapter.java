@@ -35,6 +35,7 @@ import co.siempo.phone.adapters.viewholder.TempoNotificationItemViewHolder;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.AppListInfo;
 import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.Sorting;
 
 /**
  * Below adapter is use to Display the section wise below apps
@@ -93,7 +94,7 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
         List<ResolveInfo> messagingResolveList = context.getPackageManager()
                 .queryIntentActivities(intent, 0);
         for (ResolveInfo resolveInfo : messagingResolveList) {
-            if(!resolveInfo.activityInfo.packageName.equalsIgnoreCase(context.getPackageName())) {
+            if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(context.getPackageName())) {
                 pref_messengerList.add(resolveInfo.activityInfo.packageName);
             }
         }
@@ -513,8 +514,15 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
             d.errorMessage = context.getResources().getString(R.string.msg_no_apps);
             blockedList.add(d);
         }
-
-
+        if(helpfulRobot_List.size()>0) {
+            helpfulRobot_List = Sorting.sortApplication(helpfulRobot_List);
+        }
+        if(messengerList.size()>0) {
+            messengerList = Sorting.sortApplication(messengerList);
+        }
+        if(blockedList.size()>0) {
+            blockedList = Sorting.sortApplication(blockedList);
+        }
         notifyDataSetChanged();
     }
 

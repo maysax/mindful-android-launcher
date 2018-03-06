@@ -1,8 +1,5 @@
 package co.siempo.phone.token;
 
-import android.text.TextUtils;
-import android.util.Log;
-
 /**
  * Created by shahab on 2/16/17.
  */
@@ -15,7 +12,7 @@ public class TokenParser {
 
 
     public void parse(String str) {
-        String searchValue=str;
+        String searchValue = str;
         if (str.isEmpty()) {
             TokenManager.getInstance().clear();
         } else if (str.equals("@") && !TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT)) {

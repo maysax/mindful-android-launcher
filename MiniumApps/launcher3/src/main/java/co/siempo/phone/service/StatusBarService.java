@@ -31,12 +31,10 @@ import java.util.Map;
 import java.util.Set;
 
 import co.siempo.phone.R;
-import co.siempo.phone.activities.FavoritesSelectionActivity;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBClient;
 import co.siempo.phone.event.AppInstalledEvent;
-import co.siempo.phone.event.FirebaseEvent;
-import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
@@ -128,8 +126,8 @@ public class StatusBarService extends Service {
     }
 
     @Subscribe
-    public void firebaseEvent(FirebaseEvent firebaseEvent) {
-        FirebaseHelper.getIntance().logScreenUsageTime(firebaseEvent.getScreenName(), firebaseEvent.getStrStartTime());
+    public void firebaseEvent(OnBackPressedEvent onBackPressed) {
+//        FirebaseHelper.getInstance().logScreenUsageTime(onBackPressed.getScreenName(), onBackPressed.getStrStartTime());
     }
 
     @Override
@@ -187,6 +185,7 @@ public class StatusBarService extends Service {
             }
             String disableList = new Gson().toJson(disableApps);
             PrefSiempo.getInstance(context).write(PrefSiempo.HELPFUL_ROBOTS, disableList);
+//            sharedPreferencesLauncher3.edit().putString(Constants.HELPFUL_ROBOTS, disableList).commit();
         }
 
     }
@@ -224,6 +223,8 @@ public class StatusBarService extends Service {
      * @param packageName
      */
     private void removeAppFromPreference(Context context, String packageName) {
+
+
         Set<String> favoriteList = PrefSiempo.getInstance(context)
                 .read
                         (PrefSiempo.FAVORITE_APPS, new HashSet<String>());
@@ -256,6 +257,28 @@ public class StatusBarService extends Service {
 
         updateFavoriteSort(context, packageName);
 
+
+    }
+
+    public void updateFavoriteSort(Context context, String packageName) {
+        //get the JSON array of the ordered of sorted customers
+        String jsonListOfSortedFavorites = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
+        //convert onNoteListChangedJSON array into a List<Long>
+        Gson gson1 = new Gson();
+        List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
+        }.getType());
+        for (ListIterator<String> it =
+             listOfSortFavoritesApps.listIterator(); it.hasNext
+                (); ) {
+            String removePackageName = it.next();
+            if (!TextUtils.isEmpty(removePackageName) && removePackageName.trim().equalsIgnoreCase(packageName)) {
+                it.set("");
+            }
+
+        }
+        Gson gson2 = new Gson();
+        String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
+        PrefSiempo.getInstance(context).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
     }
 
     private class MyObserver extends ContentObserver {
@@ -287,7 +310,7 @@ public class StatusBarService extends Service {
                             installPackageName = intent.getData().getEncodedSchemeSpecificPart();
                             addAppFromBlockedList(installPackageName);
                             Log.d("Testing with device.", "Added" + installPackageName);
-//                            PackageUtil.addAppInSearchList(installPackageName, context);
+                            CoreApplication.getInstance().addOrRemoveApplicationInfo(true, installPackageName);
                         }
 
                     } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
@@ -299,8 +322,7 @@ public class StatusBarService extends Service {
                                 new DBClient().deleteMsgByPackageName(uninstallPackageName);
                                 removeAppFromBlockedList(uninstallPackageName);
                                 removeAppFromPreference(context, uninstallPackageName);
-
-                                //                                PackageUtil.removeAppFromSearchList(uninstallPackageName, context);
+                                CoreApplication.getInstance().addOrRemoveApplicationInfo(false, uninstallPackageName);
                             }
                         }
                     } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED)) {
@@ -328,24 +350,5 @@ public class StatusBarService extends Service {
         }
     }
 
-    public void updateFavoriteSort(Context context, String packageName) {
-        //get the JSON array of the ordered of sorted customers
-        String jsonListOfSortedFavorites = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
-        //convert onNoteListChangedJSON array into a List<Long>
-        Gson gson1 = new Gson();
-        List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
-        }.getType());
-        for (ListIterator<String> it =
-             listOfSortFavoritesApps.listIterator(); it.hasNext
-                (); ) {
-            String removePackageName = it.next();
-            if (!TextUtils.isEmpty(removePackageName) && removePackageName.trim().equalsIgnoreCase(packageName)) {
-                it.set("");
-            }
 
-        }
-        Gson gson2 = new Gson();
-        String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
-        PrefSiempo.getInstance(context).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
-    }
 }

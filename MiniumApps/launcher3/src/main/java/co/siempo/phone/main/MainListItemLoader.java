@@ -17,6 +17,7 @@ import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.fragments.PaneFragment;
 import co.siempo.phone.fragments.ToolsPaneFragment;
 import co.siempo.phone.helper.ActivityHelper;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.models.MainListItemType;
@@ -208,80 +209,139 @@ public class MainListItemLoader {
     }
 
     public void listItemClicked(int id) {
+        String packageName, applicationName;
         switch (id) {
             case TOOLS_MAP://Map
-
+                packageName = CoreApplication.getInstance().getToolsSettings().get
+                        (TOOLS_MAP).getApplicationName().trim();
+                applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getString(R.string.title_map), applicationName);
                 new ActivityHelper(context).openAppWithPackageName
-                        (CoreApplication.getInstance().getToolsSettings().get
-                                (TOOLS_MAP).getApplicationName().trim());
+                        (packageName);
                 break;
             case TOOLS_TRANSPORT://Transport
+                packageName = CoreApplication.getInstance().getToolsSettings().get
+                        (TOOLS_TRANSPORT).getApplicationName().trim();
+                applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getString(R.string.title_transport), applicationName);
+                new ActivityHelper(context).openAppWithPackageName
+                        (packageName);
                 break;
             case TOOLS_CALENDAR://Calender
+                packageName = CoreApplication.getInstance().getToolsSettings().get
+                        (TOOLS_CALENDAR).getApplicationName().trim();
+                applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getString(R.string.title_calendar), applicationName);
                 new ActivityHelper(context).openAppWithPackageName
-                        (CoreApplication.getInstance().getToolsSettings().get
-                                (TOOLS_CALENDAR).getApplicationName().trim());
-
+                        (packageName);
                 break;
             case TOOLS_WEATHER://Weather
+                packageName = CoreApplication.getInstance().getToolsSettings().get
+                        (TOOLS_WEATHER).getApplicationName().trim();
+                applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getString(R.string.title_weather), applicationName);
+                new ActivityHelper(context).openAppWithPackageName
+                        (packageName);
                 break;
             case TOOLS_NOTES:// Notes
-
-                new ActivityHelper(context).openAppWithPackageName
-                        (CoreApplication.getInstance().getToolsSettings().get
-                                (TOOLS_NOTES).getApplicationName().trim());
-
+                packageName = CoreApplication.getInstance().getToolsSettings().get
+                        (TOOLS_WEATHER).getApplicationName().trim();
+                if (packageName.equalsIgnoreCase("Notes")) {
+                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getString(R.string.title_note), context.getString(R.string.title_note));
+                    new ActivityHelper(context).openNotesApp(false);
+                } else {
+                    applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getString(R.string.title_note), applicationName);
+                    new ActivityHelper(context).openAppWithPackageName
+                            (packageName);
+                }
                 break;
             case TOOLS_RECORDER://Recorder
+                packageName = CoreApplication.getInstance().getToolsSettings().get
+                        (TOOLS_RECORDER).getApplicationName().trim();
+                applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getString(R.string.title_recorder), applicationName);
+                new ActivityHelper(context).openAppWithPackageName
+                        (packageName);
                 break;
             case TOOLS_CAMERA:// Camera
-
+                packageName = CoreApplication.getInstance().getToolsSettings().get
+                        (TOOLS_CAMERA).getApplicationName().trim();
+                applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getString(R.string.title_camera), applicationName);
                 new ActivityHelper(context).openAppWithPackageName
-                        (CoreApplication.getInstance().getToolsSettings().get
-                                (TOOLS_CAMERA).getApplicationName().trim());
+                        (packageName);
                 break;
             case TOOLS_PHOTOS://Photos
+                packageName = CoreApplication.getInstance().getToolsSettings().get
+                        (TOOLS_PHOTOS).getApplicationName().trim();
+                applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getString(R.string.title_photos), applicationName);
                 new ActivityHelper(context).openAppWithPackageName
-                        (CoreApplication.getInstance().getToolsSettings().get
-                                (TOOLS_PHOTOS).getApplicationName().trim());
+                        (packageName);
+
                 break;
             case TOOLS_PAYMENT://Payment
+                packageName = CoreApplication.getInstance().getToolsSettings().get
+                        (TOOLS_PAYMENT).getApplicationName().trim();
+                applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getString(R.string.title_payment), applicationName);
+                new ActivityHelper(context).openAppWithPackageName
+                        (packageName);
                 break;
             case TOOLS_WELLNESS://Wellness
+                packageName = CoreApplication.getInstance().getToolsSettings().get
+                        (TOOLS_WELLNESS).getApplicationName().trim();
+                applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getString(R.string.title_wellness), applicationName);
+                new ActivityHelper(context).openAppWithPackageName
+                        (packageName);
                 break;
             case TOOLS_BROWSER:// Browser
+                packageName = CoreApplication.getInstance().getToolsSettings().get
+                        (TOOLS_BROWSER).getApplicationName().trim();
+                applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getString(R.string.title_browser), applicationName);
                 new ActivityHelper(context).openAppWithPackageName
-                        (CoreApplication.getInstance().getToolsSettings().get
-                                (TOOLS_BROWSER).getApplicationName().trim());
+                        (packageName);
                 break;
-
             case TOOLS_CALL:// Call
-
+                packageName = CoreApplication.getInstance().getToolsSettings().get
+                        (TOOLS_CALL).getApplicationName().trim();
+                applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getString(R.string.title_call), applicationName);
                 new ActivityHelper(context).openAppWithPackageName
-                        (CoreApplication.getInstance().getToolsSettings().get
-                                (TOOLS_CALL).getApplicationName().trim());
+                        (packageName);
                 break;
             case TOOLS_CLOCK://Clock
-
+                packageName = CoreApplication.getInstance().getToolsSettings().get
+                        (TOOLS_CLOCK).getApplicationName().trim();
+                applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getString(R.string.title_clock), applicationName);
                 new ActivityHelper(context).openAppWithPackageName
-                        (CoreApplication.getInstance().getToolsSettings().get
-                                (TOOLS_CLOCK).getApplicationName().trim());
+                        (packageName);
                 break;
             case TOOLS_MESSAGE:// Message
+                packageName = CoreApplication.getInstance().getToolsSettings().get
+                        (TOOLS_MESSAGE).getApplicationName().trim();
+                applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getString(R.string.title_messages), applicationName);
                 new ActivityHelper(context).openAppWithPackageName
-                        (CoreApplication.getInstance().getToolsSettings().get
-                                (TOOLS_MESSAGE).getApplicationName().trim());
-
+                        (packageName);
 
                 break;
             case TOOLS_EMAIL:// Email
 
+                packageName = CoreApplication.getInstance().getToolsSettings().get
+                        (TOOLS_EMAIL).getApplicationName().trim();
+                applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getString(R.string.title_email), applicationName);
                 new ActivityHelper(context).openAppWithPackageName
-                        (CoreApplication.getInstance().getToolsSettings().get
-                                (TOOLS_EMAIL).getApplicationName().trim());
+                        (packageName);
 
                 break;
             case 18:
+                FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getString(R.string.title_feedback), context.getString(R.string.title_feedback));
                 new ActivityHelper(context).openFeedback();
                 break;
             default:

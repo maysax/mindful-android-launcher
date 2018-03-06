@@ -71,7 +71,7 @@ public class SuppressNotificationActivity extends CoreActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        FirebaseHelper.getIntance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
+        FirebaseHelper.getInstance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
     }
 
     @Override
@@ -267,7 +267,6 @@ public class SuppressNotificationActivity extends CoreActivity {
             if (event.isVisible() && UIUtils.isMyLauncherDefault(this)) {
                 Intent startMain = new Intent(Intent.ACTION_MAIN);
                 startMain.addCategory(Intent.CATEGORY_HOME);
-                startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(startMain);
             }
 

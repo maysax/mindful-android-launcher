@@ -92,10 +92,10 @@ public class AccountSettingFragment extends CoreFragment {
                     PrefSiempo.getInstance(context).write(PrefSiempo
                             .IS_FIREBASE_ANALYTICS_ENABLE, true);
 //                    droidPrefs_.isFireBaseAnalyticsEnable().put(true);
-                    FirebaseHelper.getIntance().getFirebaseAnalytics().setAnalyticsCollectionEnabled(true);
+                    FirebaseHelper.getInstance().getFirebaseAnalytics().setAnalyticsCollectionEnabled(true);
                 } else {
 
-                    FirebaseHelper.getIntance().getFirebaseAnalytics().setAnalyticsCollectionEnabled(false);
+                    FirebaseHelper.getInstance().getFirebaseAnalytics().setAnalyticsCollectionEnabled(false);
                     PrefSiempo.getInstance(context).write(PrefSiempo
                             .IS_FIREBASE_ANALYTICS_ENABLE, false);
 //                    droidPrefs_.isFireBaseAnalyticsEnable().put(false);
@@ -129,7 +129,7 @@ public class AccountSettingFragment extends CoreFragment {
     @Override
     public void onPause() {
         super.onPause();
-        FirebaseHelper.getIntance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
+        FirebaseHelper.getInstance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
     }
 
     /**

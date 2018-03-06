@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/activity_pause"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_pause"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:background="@color/toolbar_bg"
             android:elevation="@dimen/dp_5"
-            android:minHeight="?android:attr/actionBarSize"/>
+            android:minHeight="?android:attr/actionBarSize" />
 
         <RelativeLayout
             android:id="@+id/relHideIconBranding"
@@ -37,7 +37,7 @@
                 android:padding="8dp"
                 android:text="@string/hide_icon_branding"
                 android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/linHide"
@@ -54,7 +54,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:clickable="false"/>
+                    android:clickable="false" />
             </LinearLayout>
 
             <TextView
@@ -69,7 +69,7 @@
                 android:paddingRight="8dp"
                 android:paddingTop="0dp"
                 android:text="@string/iconbranding_description_setting"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -90,7 +90,7 @@
                 android:padding="8dp"
                 android:text="@string/randomize_junkfood"
                 android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/linJunkFoodmize"
@@ -106,7 +106,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:clickable="false"/>
+                    android:clickable="false" />
             </LinearLayout>
 
             <TextView
@@ -121,7 +121,7 @@
                 android:paddingRight="8dp"
                 android:paddingTop="0dp"
                 android:text="@string/junkfood_description_setting"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
         </RelativeLayout>
 
 

@@ -54,6 +54,7 @@ import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
 import co.siempo.phone.customviews.SearchLayout;
 import co.siempo.phone.event.AppInstalledEvent;
+import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
@@ -84,15 +85,15 @@ import me.relex.circleindicator.CircleIndicator;
  */
 public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
-    public static int currentIndex = -1;
+    public static boolean isSearchVisable = false;
+    public ViewPager pagerPane;
+    public View linSearchList;
     PanePagerAdapter mPagerAdapter;
     private LinearLayout linTopDoc;
-    private ViewPager pagerPane;
     private LinearLayout linPane;
     private LinearLayout linBottomDoc;
     private EditText edtSearchToolsRounded;
     private TextView txtTopDockDate;
-    private View linSearchList;
     private SearchLayout searchLayout;
     private RelativeLayout relSearchTools;
     private ListView listView;
@@ -121,7 +122,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
     private ImageView imageClear;
     private View rootView;
     private InputMethodManager inputMethodManager;
-    private long startTime = 0;
     private CircleIndicator indicator;
 
     public PaneFragment() {
@@ -193,6 +193,24 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                 .VISIBLE) {
             imageClear.performClick();
         }
+
+        //Must be done in order to restore the visibility and alpha state of
+        // page pane
+        if (linPane.getVisibility() == View.VISIBLE) {
+            pagerPane.setAlpha(1);
+        }
+        if (DashboardActivity.currentIndexDashboard == 1) {
+            if (DashboardActivity.currentIndexPaneFragment == 0) {
+                Log.d("Firebase", "Junkfood Start");
+                DashboardActivity.startTime = System.currentTimeMillis();
+            } else if (DashboardActivity.currentIndexPaneFragment == 1) {
+                Log.d("Firebase", "Favorite Start");
+                DashboardActivity.startTime = System.currentTimeMillis();
+            } else if (DashboardActivity.currentIndexPaneFragment == 2) {
+                Log.d("Firebase", "Tools Start");
+                DashboardActivity.startTime = System.currentTimeMillis();
+            }
+        }
     }
 
 
@@ -225,14 +243,14 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         pagerPane.setAdapter(mPagerAdapter);
         indicator.setViewPager(pagerPane);
         if (DashboardActivity.isJunkFoodOpen) {
-            currentIndex = 1;
+            DashboardActivity.currentIndexPaneFragment = 1;
             DashboardActivity.isJunkFoodOpen = false;
         }
-        if (currentIndex == -1) {
-            currentIndex = 2;
-            startTime = System.currentTimeMillis();
+        if (DashboardActivity.currentIndexPaneFragment == -1) {
+            DashboardActivity.currentIndexPaneFragment = 2;
+            DashboardActivity.startTime = System.currentTimeMillis();
         }
-        pagerPane.setCurrentItem(currentIndex);
+        pagerPane.setCurrentItem(DashboardActivity.currentIndexPaneFragment);
         bindBottomDoc();
         inputMethodManager = (InputMethodManager) getActivity()
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -300,11 +318,11 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
         //Code for Page change
         setViewPagerPageChanged();
-        if (currentIndex == -1) {
-            currentIndex = 2;
+        if (DashboardActivity.currentIndexPaneFragment == -1) {
+            DashboardActivity.currentIndexPaneFragment = 2;
         }
-        pagerPane.setCurrentItem(currentIndex);
-        if (currentIndex == 0) {
+        pagerPane.setCurrentItem(DashboardActivity.currentIndexPaneFragment);
+        if (DashboardActivity.currentIndexPaneFragment == 0) {
             junkFoodAppPane();
         }
 
@@ -470,16 +488,36 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                 chipsEditText.clearFocus();
             }
 
+
             @Override
             public void onPageSelected(int i) {
                 //Indicator to be set here so that when coming from another
                 // application, the sliding dots retain the shape as previous
                 indicator.setViewPager(pagerPane);
-                if (currentIndex != -1) {
-//                    bindFirebase(i);
+
+                if (DashboardActivity.currentIndexPaneFragment == 0 && i == 1) {
+                    Log.d("Firebase ", "JunkFood End");
+                    Log.d("Firebase ", "Favorite Start");
+                    FirebaseHelper.getInstance().logScreenUsageTime(JunkFoodPaneFragment.class.getSimpleName(), DashboardActivity.startTime);
+                    DashboardActivity.startTime = System.currentTimeMillis();
+                } else if (DashboardActivity.currentIndexPaneFragment == 1 && i == 2) {
+                    Log.d("Firebase ", "Favorite End");
+                    Log.d("Firebase ", "Tools Start");
+                    FirebaseHelper.getInstance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), DashboardActivity.startTime);
+                    DashboardActivity.startTime = System.currentTimeMillis();
+                } else if (DashboardActivity.currentIndexPaneFragment == 2 && i == 1) {
+                    Log.d("Firebase ", "Tools End");
+                    Log.d("Firebase ", "Favorite Start");
+                    FirebaseHelper.getInstance().logScreenUsageTime(ToolsPaneFragment.class.getSimpleName(), DashboardActivity.startTime);
+                    DashboardActivity.startTime = System.currentTimeMillis();
+                } else if (DashboardActivity.currentIndexPaneFragment == 1 && i == 0) {
+                    Log.d("Firebase ", "Favorite End");
+                    Log.d("Firebase ", "JunkFood Start");
+                    FirebaseHelper.getInstance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), DashboardActivity.startTime);
+                    DashboardActivity.startTime = System.currentTimeMillis();
                 }
 
-                currentIndex = i;
+                DashboardActivity.currentIndexPaneFragment = i;
                 //Make the junk food pane visible
                 if (i == 0) {
                     edtSearchToolsRounded.clearFocus();
@@ -487,10 +525,14 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                     edtSearchToolsRounded.setOnFocusChangeListener(null);
                     chipsEditText.setOnFocusChangeListener(null);
                     junkFoodAppPane();
+
                     if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>()).size() == 0) {
+                        //Applied for smooth transition
+                        pagerPane.setAlpha(0);
                         Intent intent = new Intent(getActivity(), JunkfoodFlaggingActivity.class);
                         startActivity(intent);
-                        getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        getActivity().overridePendingTransition(R
+                                .anim.fade_in_junk, R.anim.fade_out_junk);
                     }
                 }
 
@@ -518,27 +560,10 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             public void onPageScrollStateChanged(int i) {
             }
         });
+
+
     }
 
-    private void bindFirebase(int i) {
-        if (currentIndex == 0 && i == 1) {
-            Log.d("Firebase ", "JunkFoodEnd");
-            FirebaseHelper.getIntance().logScreenUsageTime(JunkFoodPaneFragment.class.getSimpleName(), startTime);
-            startTime = System.currentTimeMillis();
-        } else if (currentIndex == 1 && i == 2) {
-            Log.d("Firebase ", "Favorite End");
-            FirebaseHelper.getIntance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), startTime);
-            startTime = System.currentTimeMillis();
-        } else if (currentIndex == 2 && i == 1) {
-            Log.d("Firebase ", "Tools End");
-            FirebaseHelper.getIntance().logScreenUsageTime(ToolsPaneFragment.class.getSimpleName(), startTime);
-            startTime = System.currentTimeMillis();
-        } else if (currentIndex == 1 && i == 0) {
-            Log.d("Firebase ", "Favorite End");
-            FirebaseHelper.getIntance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), startTime);
-            startTime = System.currentTimeMillis();
-        }
-    }
 
     private void junkFoodAppPane() {
         linTopDoc.setBackgroundColor(getResources().getColor(R.color
@@ -575,7 +600,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         mWindow.setStatusBarColor(getResources().getColor(R.color
                 .appland_blue_bright));
     }
-
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent appInstalledEvent) {
@@ -626,6 +650,8 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                 .getVisibility() == View.VISIBLE) {
             imageClear.performClick();
             chipsEditText.setText("");
+            linSearchList.setVisibility(View.GONE);
+            linPane.setAlpha(1);
         }
 
         super.setUserVisibleHint(isVisibleToUser);
@@ -653,7 +679,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         if (inputMethodManager != null) {
             inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
         }
-
     }
 
     public void resetSearchList() {
@@ -709,12 +734,15 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                 linSearchList.setVisibility(View.GONE);
                 linPane.setVisibility(View.VISIBLE);
                 linBottomDoc.setVisibility(View.VISIBLE);
-
+                isSearchVisable = false;
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
                 linSearchList.setVisibility(View.GONE);
+                isSearchVisable = false;
+                FirebaseHelper.getInstance().logScreenUsageTime(FirebaseHelper.SEARCH_PANE, DashboardActivity.startTime);
+                DashboardActivity.startTime = System.currentTimeMillis();
                 linPane.setAlpha(1);
 
 
@@ -727,6 +755,25 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         linSearchList.startAnimation(fadeOutAnim);
     }
 
+    @Subscribe
+    public void onBackPressedEvent(OnBackPressedEvent onBackPressedEvent) {
+        if (onBackPressedEvent.isBackPressed()) {
+            if (linSearchList.getVisibility() == View.VISIBLE) {
+                blueLineDivider.setVisibility(View.VISIBLE);
+                searchLayout.setVisibility(View.GONE);
+                cardViewEdtSearch.setVisibility(View.GONE);
+                relSearchTools.setVisibility(View.VISIBLE);
+                linSearchList.setVisibility(View.GONE);
+                isSearchVisable = false;
+                linPane.setAlpha(1);
+                imageClear.setVisibility(View.VISIBLE);
+                if (inputMethodManager != null) {
+                    inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
+                }
+            }
+        }
+    }
+
     public void searchListVisible(Context context) {
         Animation fadeOutAnim = AnimationUtils.loadAnimation(context, R.anim.fade_in);
 
@@ -735,13 +782,23 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             public void onAnimationStart(Animation animation) {
                 linSearchList.setVisibility(View.VISIBLE);
                 linSearchList.setAlpha(0.5f);
+                isSearchVisable = true;
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
                 linSearchList.setVisibility(View.VISIBLE);
+                isSearchVisable = true;
                 imageClear.setVisibility(View.VISIBLE);
                 linSearchList.setAlpha(1f);
+                if (DashboardActivity.currentIndexDashboard == 0) {
+                    if (DashboardActivity.currentIndexPaneFragment == 1) {
+                        FirebaseHelper.getInstance().logScreenUsageTime("FavoritePaneFragment", DashboardActivity.startTime);
+                    } else if (DashboardActivity.currentIndexPaneFragment == 2) {
+                        FirebaseHelper.getInstance().logScreenUsageTime("ToolsPaneFragment", DashboardActivity.startTime);
+                    }
+                }
+                DashboardActivity.startTime = System.currentTimeMillis();
             }
 
             @Override
@@ -751,6 +808,26 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         linSearchList.startAnimation(fadeOutAnim);
 
     }
+
+    private void logSearchViewShow() {
+        DashboardActivity.startTime = System.currentTimeMillis();
+    }
+
+
+    private void logSearchViewEnd() {
+        if (DashboardActivity.currentIndexDashboard == 0) {
+            if (DashboardActivity.currentIndexPaneFragment == 1) {
+                Log.d("Firebase", "Favorite Start");
+                FirebaseHelper.getInstance().logScreenUsageTime("SearchPaneFragment", DashboardActivity.startTime);
+                DashboardActivity.startTime = System.currentTimeMillis();
+            } else if (DashboardActivity.currentIndexPaneFragment == 2) {
+                Log.d("Firebase", "Tools Start");
+                FirebaseHelper.getInstance().logScreenUsageTime("SearchPaneFragment", DashboardActivity.startTime);
+                DashboardActivity.startTime = System.currentTimeMillis();
+            }
+        }
+    }
+
 
     @Subscribe
     public void filterDataMainAdapter(MainListAdapterEvent event) {

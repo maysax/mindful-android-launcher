@@ -1,11 +1,7 @@
 package co.siempo.phone.activities;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
@@ -92,13 +88,7 @@ public class AlphaSettingsActivity extends CoreActivity {
         icon_UserId.setImageDrawable(new IconDrawable(context, "fa-user-secret")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-                txt_UserId.setText(String.format("UserId: %s", telephonyManager.getDeviceId()));
-            }
-        } else {
-            txt_UserId.setText(String.format("UserId: %s", telephonyManager.getDeviceId()));
-        }
+        txt_UserId.setText(String.format("UserId: %s", CoreApplication.getInstance().getDeviceId()));
 
     }
 
@@ -129,7 +119,7 @@ public class AlphaSettingsActivity extends CoreActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        FirebaseHelper.getIntance().logScreenUsageTime(AlphaSettingsActivity.this.getClass().getSimpleName(), startTime);
+        FirebaseHelper.getInstance().logScreenUsageTime(AlphaSettingsActivity.this.getClass().getSimpleName(), startTime);
     }
 
     @Override
@@ -145,7 +135,6 @@ public class AlphaSettingsActivity extends CoreActivity {
             if (event.isVisible() && UIUtils.isMyLauncherDefault(this)) {
                 Intent startMain = new Intent(Intent.ACTION_MAIN);
                 startMain.addCategory(Intent.CATEGORY_HOME);
-                startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(startMain);
             }
 

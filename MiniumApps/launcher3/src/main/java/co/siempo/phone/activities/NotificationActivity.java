@@ -33,6 +33,7 @@ import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.AppListInfo;
 import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.Sorting;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.Subscribe;
 
@@ -72,7 +73,7 @@ public class NotificationActivity extends CoreActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        FirebaseHelper.getIntance().logScreenUsageTime(NotificationActivity.class.getSimpleName(), startTime);
+        FirebaseHelper.getInstance().logScreenUsageTime(NotificationActivity.class.getSimpleName(), startTime);
     }
 
     @Override
@@ -119,7 +120,7 @@ public class NotificationActivity extends CoreActivity {
         intent.setType("text/plain");
         List<ResolveInfo> messagingResolveList = getPackageManager().queryIntentActivities(intent, 0);
         for (ResolveInfo resolveInfo : messagingResolveList) {
-            if(!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
+            if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
                 pref_messengerList.add(resolveInfo.activityInfo.packageName);
             }
         }
@@ -215,6 +216,17 @@ public class NotificationActivity extends CoreActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         lst_appList.setLayoutManager(linearLayoutManager);
         lst_appList.setHasFixedSize(true);
+
+        if(helpfulRobot_List.size()>0) {
+            helpfulRobot_List = Sorting.sortApplication(helpfulRobot_List);
+        }
+        if(messengerList.size()>0) {
+            messengerList = Sorting.sortApplication(messengerList);
+        }
+        if(blockedList.size()>0) {
+            blockedList = Sorting.sortApplication(blockedList);
+        }
+
         TempoNotificationSectionAdapter adapter = new TempoNotificationSectionAdapter(this, helpfulRobot_List, messengerList, blockedList, headerSectionList);
 
         lst_appList.setAdapter(adapter);

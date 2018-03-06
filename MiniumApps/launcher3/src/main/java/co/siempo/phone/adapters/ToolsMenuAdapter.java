@@ -27,6 +27,7 @@ import co.siempo.phone.app.BitmapWorkerTask;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.helper.ActivityHelper;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.utils.PrefSiempo;
@@ -111,6 +112,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                     if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
                         if (appMenu.getApplicationName().equalsIgnoreCase("Notes")) {
                             new ActivityHelper(context).openNotesApp(false);
+                            FirebaseHelper.getInstance().logSiempoMenuUsage(0, item.getTitle(), "Notes");
                         } else {
                             if (UIUtils.isInstalled(context, appMenu.getApplicationName().trim())) {
                                 if (UIUtils.isAppEnabled(context, appMenu.getApplicationName().trim())) {
@@ -120,6 +122,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                                     } else {
 //                                if a 3rd party app is already assigned to this tool
                                         new ActivityHelper(context).openAppWithPackageName(appMenu.getApplicationName().trim());
+                                        FirebaseHelper.getInstance().logSiempoMenuUsage(0, item.getTitle(), CoreApplication.getInstance().getApplicationNameFromPackageName(appMenu.getApplicationName()));
                                     }
                                 } else {
                                     openAppAssignmentScreen(item);
@@ -136,6 +139,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                             String strPackageName = CoreApplication.getInstance().getApplicationByCategory(id).get(0).activityInfo.packageName;
                             if (UIUtils.isAppEnabled(context, strPackageName) && strPackageName.equalsIgnoreCase(appMenu.getApplicationName())) {
                                 new ActivityHelper(context).openAppWithPackageName(strPackageName);
+                                FirebaseHelper.getInstance().logSiempoMenuUsage(0, item.getTitle(), CoreApplication.getInstance().getApplicationNameFromPackageName(appMenu.getApplicationName()));
                             } else {
                                 openAppAssignmentScreen(item);
                             }
@@ -159,6 +163,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
      * @param item
      */
     private void openAppAssignmentScreen(MainListItem item) {
+        FirebaseHelper.getInstance().logSiempoMenuUsage(0, item.getTitle(), "");
         Intent intent = new Intent(context, AppAssignmentActivity.class);
         intent.putExtra(Constants.INTENT_MAINLISTITEM, item);
         context.startActivity(intent);

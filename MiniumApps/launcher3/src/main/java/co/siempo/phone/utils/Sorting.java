@@ -6,6 +6,7 @@ import android.content.pm.ResolveInfo;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.AppListInfo;
@@ -78,7 +79,7 @@ public class Sorting {
         return list;
     }
 
-    public static ArrayList<AppListInfo> sortApplication(ArrayList<AppListInfo> list) {
+    public static List<AppListInfo> sortApplication(List<AppListInfo> list) {
         Collections.sort(list, new Comparator<AppListInfo>() {
             @Override
             public int compare(final AppListInfo object1, final AppListInfo object2) {
