@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/activity_account_setting"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/layout_bg">
+    android:id="@+id/activity_account_setting"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layout_bg">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -15,13 +15,12 @@
             android:layout_height="wrap_content"
             android:background="@color/toolbar_bg"
             android:elevation="@dimen/dp_5"
-            android:minHeight="?android:attr/actionBarSize"/>
+            android:minHeight="?android:attr/actionBarSize" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/toolbar"
-            >
+            android:layout_below="@+id/toolbar">
 
             <RelativeLayout
                 android:id="@+id/relUpdateEmail"
@@ -43,7 +42,7 @@
                     android:paddingTop="4dp"
                     android:text="@string/lbl_updateEmail"
                     android:textSize="18sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/txtUpdateEmailDescription"
@@ -57,7 +56,7 @@
                     android:paddingRight="8dp"
                     android:paddingTop="2dp"
                     android:text="@string/lbl_updateEmailDescription"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -106,8 +105,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/relChangeHome"
                 android:layout_marginTop="16dp"
-                android:paddingLeft="50dp"
-                >
+                android:paddingLeft="50dp">
 
                 <TextView
                     android:id="@+id/txtShareAnalytics"
@@ -123,7 +121,7 @@
                     android:paddingTop="4dp"
                     android:text="@string/lbl_analytics"
                     android:textSize="18sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:id="@+id/lbl_analytics_description"
@@ -145,14 +143,14 @@
                         android:paddingRight="8dp"
                         android:paddingTop="2dp"
                         android:text="@string/lbl_analytics_description"
-                        android:textSize="16sp"/>
+                        android:textSize="16sp" />
 
                     <Switch
                         android:id="@+id/swtch_analytics"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginRight="8dp"/>
+                        android:layout_marginRight="8dp" />
 
 
                 </LinearLayout>
@@ -182,7 +180,7 @@
                         android:paddingRight="8dp"
                         android:paddingTop="2dp"
                         android:text="@string/lbl_analytics_description2"
-                        android:textSize="16sp"/>
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/txt_privacyPolicy"
@@ -195,8 +193,7 @@
                         android:paddingRight="8dp"
                         android:paddingTop="2dp"
                         android:text="@string/privacypolicy_link"
-                        android:textSize="15sp"
-                        />
+                        android:textSize="15sp" />
                 </LinearLayout>
 
                 <Switch
@@ -204,7 +201,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="8dp"
-                    android:visibility="invisible"/>
+                    android:visibility="invisible" />
 
             </LinearLayout>
 

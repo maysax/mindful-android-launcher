@@ -236,7 +236,6 @@ public class StatusBarService extends Service {
      */
     private void removeAppFromPreference(Context context, String packageName) {
 
-        HashMap<Integer, AppMenu> toolsPane = CoreApplication.getInstance().getToolsSettings();
 
         Set<String> favoriteList = PrefSiempo.getInstance(context)
                 .read
@@ -258,23 +257,41 @@ public class StatusBarService extends Service {
                     (PrefSiempo.JUNKFOOD_APPS, junkFoodList);
         }
 
+        HashMap<Integer, AppMenu> hashMap = CoreApplication.getInstance().getToolsSettings();
+        for (Map.Entry<Integer, AppMenu> has : hashMap.entrySet()) {
+            if (has.getValue().getApplicationName().equalsIgnoreCase(packageName)) {
+                has.getValue().setApplicationName("");
+            }
+        }
+        PrefSiempo
+                .getInstance(context).write
+                (PrefSiempo.TOOLS_SETTING, new Gson().toJson(hashMap));
+
         updateFavoriteSort(context, packageName);
 
-        try {
-            for (Map.Entry<Integer, AppMenu> tools : toolsPane.entrySet()) {
-                if (tools.getValue().getApplicationName().equalsIgnoreCase(packageName)) {
-                    AppMenu appMenu = tools.getValue();
-                    appMenu.setApplicationName("");
-                    String hashMapToolSettings = new Gson().toJson(tools);
-                    PrefSiempo.getInstance(this).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 
+    public void updateFavoriteSort(Context context, String packageName) {
+        //get the JSON array of the ordered of sorted customers
+        String jsonListOfSortedFavorites = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
+        //convert onNoteListChangedJSON array into a List<Long>
+        Gson gson1 = new Gson();
+        List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
+        }.getType());
+        for (ListIterator<String> it =
+             listOfSortFavoritesApps.listIterator(); it.hasNext
+                (); ) {
+            String removePackageName = it.next();
+            if (!TextUtils.isEmpty(removePackageName) && removePackageName.trim().equalsIgnoreCase(packageName)) {
+                it.set("");
+            }
+
+        }
+        Gson gson2 = new Gson();
+        String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
+        PrefSiempo.getInstance(context).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
+    }
 
     private class MyObserver extends ContentObserver {
         MyObserver(Handler handler) {
@@ -320,7 +337,7 @@ public class StatusBarService extends Service {
                                 CoreApplication.getInstance().addOrRemoveApplicationInfo(false, uninstallPackageName);
                             }
                         }
-                    } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED) && !intent.getAction().equals(Intent.ACTION_PACKAGE_REPLACED)) {
+                    } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED)) {
                         String packageName;
                         if (intent.getData().getEncodedSchemeSpecificPart() != null) {
                             packageName = intent.getData().getSchemeSpecificPart();
@@ -343,26 +360,5 @@ public class StatusBarService extends Service {
             }
 
         }
-    }
-
-    public void updateFavoriteSort(Context context, String packageName) {
-        //get the JSON array of the ordered of sorted customers
-        String jsonListOfSortedFavorites = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
-        //convert onNoteListChangedJSON array into a List<Long>
-        Gson gson1 = new Gson();
-        List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
-        }.getType());
-        for (ListIterator<String> it =
-             listOfSortFavoritesApps.listIterator(); it.hasNext
-                (); ) {
-            String removePackageName = it.next();
-            if (!TextUtils.isEmpty(removePackageName) && removePackageName.trim().equalsIgnoreCase(packageName)) {
-                it.set("");
-            }
-
-        }
-        Gson gson2 = new Gson();
-        String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
-        PrefSiempo.getInstance(context).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
     }
 }

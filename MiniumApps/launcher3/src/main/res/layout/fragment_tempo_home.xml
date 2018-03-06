@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/activity_pause"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_pause"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:background="@color/toolbar_bg"
             android:elevation="@dimen/dp_5"
-            android:minHeight="?android:attr/actionBarSize"/>
+            android:minHeight="?android:attr/actionBarSize" />
 
         <RelativeLayout
             android:id="@+id/relAllowSpecificApps"
@@ -24,8 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/toolbar"
             android:clickable="true"
-            android:paddingLeft="50dp"
-            >
+            android:paddingLeft="50dp">
 
             <TextView
                 android:id="@+id/txtDisableNotificationControls"
@@ -37,7 +36,7 @@
                 android:padding="8dp"
                 android:text="@string/disable_intentions"
                 android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <Switch
                 android:id="@+id/switchDisableIntentionsControls"
@@ -45,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/txtDisableNotificationControls"
-                android:layout_marginRight="8dp"/>
+                android:layout_marginRight="8dp" />
 
 
             <TextView
@@ -61,7 +60,7 @@
                 android:paddingRight="8dp"
                 android:paddingTop="0dp"
                 android:text="@string/when_intentions_are_disabled_your_home_screen_will_be_blank"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
         </RelativeLayout>
 

@@ -117,7 +117,7 @@ public class NotificationActivity extends CoreActivity {
         intent.setType("text/plain");
         List<ResolveInfo> messagingResolveList = getPackageManager().queryIntentActivities(intent, 0);
         for (ResolveInfo resolveInfo : messagingResolveList) {
-            if(!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
+            if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
                 pref_messengerList.add(resolveInfo.activityInfo.packageName);
             }
         }

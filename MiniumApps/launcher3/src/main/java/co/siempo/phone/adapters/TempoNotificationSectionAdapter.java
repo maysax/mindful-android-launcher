@@ -95,7 +95,7 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
         List<ResolveInfo> messagingResolveList = context.getPackageManager()
                 .queryIntentActivities(intent, 0);
         for (ResolveInfo resolveInfo : messagingResolveList) {
-            if(!resolveInfo.activityInfo.packageName.equalsIgnoreCase(context.getPackageName())) {
+            if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(context.getPackageName())) {
                 pref_messengerList.add(resolveInfo.activityInfo.packageName);
             }
         }
