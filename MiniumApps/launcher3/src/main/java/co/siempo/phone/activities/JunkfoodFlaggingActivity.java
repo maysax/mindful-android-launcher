@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.PopupMenu;
@@ -391,11 +392,20 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
+
         startTime = System.currentTimeMillis();
         //Loading apps here to refresh data in case user goes to app info and
         // disables app
-        loadApps();
+        //Making a 20 ms load time delay for better animation
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loadApps();
+            }
+        }, 20);
+
+        super.onResume();
     }
 
     @Override
