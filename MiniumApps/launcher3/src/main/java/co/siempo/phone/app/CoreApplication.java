@@ -33,7 +33,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import co.siempo.phone.R;
 import co.siempo.phone.event.AppInstalledEvent;
@@ -64,7 +66,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     LauncherApps launcherApps;
     private List<String> packagesList = new ArrayList<>();
     private ArrayList<String> disableNotificationApps = new ArrayList<>();
-    private ArrayList<String> blockedApps = new ArrayList<>();
+    private Set<String> blockedApps = new HashSet<>();
     private LruCache<String, Bitmap> mMemoryCache;
 
     public static synchronized CoreApplication getInstance() {
@@ -198,38 +200,35 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     public void setPackagesList(List<String> packagesList) {
+        try{
+            Collections.sort(packagesList, new Comparator<String>() {
+                public int compare(String v1, String v2) {
 
-        Collections.sort(packagesList, new Comparator<String>() {
-            public int compare(String v1, String v2) {
-
-                return v1.toLowerCase().compareTo(v2.toLowerCase());
-            }
-        });
-        this.packagesList = packagesList;
+                    return v1.toLowerCase().compareTo(v2.toLowerCase());
+                }
+            });
+            this.packagesList = packagesList;
 
 
-        String block_AppList = PrefSiempo.getInstance(this).read(PrefSiempo
-                .BLOCKED_APPLIST, "");
-        if (!TextUtils.isEmpty(block_AppList)) {
-            Type type = new TypeToken<ArrayList<String>>() {
-            }.getType();
-            blockedApps = new Gson().fromJson(block_AppList, type);
-        }
-        boolean isAppInstallFirstTime = PrefSiempo.getInstance(this).read(PrefSiempo
-                .IS_APP_INSTALLED_FIRSTTIME, true);
-        if (isAppInstallFirstTime) {
-            blockedApps.clear();
-        }
-        for (String applicationInfo : packagesList) {
-
+            blockedApps = PrefSiempo.getInstance(this).read(PrefSiempo
+                    .BLOCKED_APPLIST, new HashSet<String>());
+            boolean isAppInstallFirstTime = PrefSiempo.getInstance(this).read(PrefSiempo
+                    .IS_APP_INSTALLED_FIRSTTIME, true);
             if (isAppInstallFirstTime) {
-                blockedApps.add(applicationInfo);
+                blockedApps.clear();
             }
-        }
+            for (String applicationInfo : packagesList) {
 
-        String blockedList = new Gson().toJson(blockedApps);
-        PrefSiempo.getInstance(this).write(PrefSiempo
-                .BLOCKED_APPLIST, blockedList);
+                if (isAppInstallFirstTime) {
+                    blockedApps.add(applicationInfo);
+                }
+            }
+
+            PrefSiempo.getInstance(this).write(PrefSiempo
+                    .BLOCKED_APPLIST, blockedApps);
+        }
+        catch (Exception e){
+        }
     }
 
     /**

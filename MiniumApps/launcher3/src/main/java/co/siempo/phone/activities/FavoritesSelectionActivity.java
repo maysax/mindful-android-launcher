@@ -52,8 +52,8 @@ public class FavoritesSelectionActivity extends CoreActivity {
     private ListView listAllApps;
     private PopupMenu popup;
     private boolean isLoadFirstTime = true;
-    private ArrayList<AppListInfo> favoriteList = new ArrayList<>();
-    private ArrayList<AppListInfo> unfavoriteList = new ArrayList<>();
+    private List<AppListInfo> favoriteList = new ArrayList<>();
+    private List<AppListInfo> unfavoriteList = new ArrayList<>();
     private ArrayList<AppListInfo> bindingList = new ArrayList<>();
     private long startTime = 0;
 

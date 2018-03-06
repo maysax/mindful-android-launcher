@@ -52,8 +52,8 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
     private ListView listAllApps;
     private PopupMenu popup;
     private boolean isLoadFirstTime = true;
-    private ArrayList<AppListInfo> flagAppList = new ArrayList<>();
-    private ArrayList<AppListInfo> unflageAppList = new ArrayList<>();
+    private List<AppListInfo> flagAppList = new ArrayList<>();
+    private List<AppListInfo> unflageAppList = new ArrayList<>();
     private ArrayList<AppListInfo> bindingList = new ArrayList<>();
     private long startTime = 0;
     private Window mWindow;

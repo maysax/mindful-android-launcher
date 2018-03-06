@@ -20,7 +20,9 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.TempoNotificationSectionAdapter;
@@ -31,6 +33,7 @@ import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.AppListInfo;
 import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.Sorting;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.Subscribe;
 
@@ -48,7 +51,7 @@ public class NotificationActivity extends CoreActivity {
 
     private List<String> pref_messengerList = new ArrayList<>();
     private ArrayList<String> pref_helpfulRobots = new ArrayList<>();
-    private ArrayList<String> pref_blockedList = new ArrayList<>();
+    private Set<String> pref_blockedList = new HashSet<>();
 
     private List<AppListInfo> messengerList = new ArrayList<>();
     private List<AppListInfo> blockedList = new ArrayList<>();
@@ -94,7 +97,7 @@ public class NotificationActivity extends CoreActivity {
         // Initialize components
         toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
-        toolbar.setTitle(R.string.allow_specific_apps);
+        toolbar.setTitle(R.string.select_apps_title);
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorAccent));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,12 +130,8 @@ public class NotificationActivity extends CoreActivity {
             }.getType();
             pref_helpfulRobots = new Gson().fromJson(str_helpfulRobots, type);
         }
-        String str_blockedList = PrefSiempo.getInstance(this).read(PrefSiempo.BLOCKED_APPLIST, "");
-        if (!TextUtils.isEmpty(str_blockedList)) {
-            Type type = new TypeToken<ArrayList<String>>() {
-            }.getType();
-            pref_blockedList = new Gson().fromJson(str_blockedList, type);
-        }
+        pref_blockedList = PrefSiempo.getInstance(this).read(PrefSiempo.BLOCKED_APPLIST, new HashSet<String>());
+
 
         for (String packageName : CoreApplication.getInstance().getPackagesList()) {
             for (String blockedApp : pref_blockedList) {
@@ -217,6 +216,17 @@ public class NotificationActivity extends CoreActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         lst_appList.setLayoutManager(linearLayoutManager);
         lst_appList.setHasFixedSize(true);
+
+        if(helpfulRobot_List.size()>0) {
+            helpfulRobot_List = Sorting.sortApplication(helpfulRobot_List);
+        }
+        if(messengerList.size()>0) {
+            messengerList = Sorting.sortApplication(messengerList);
+        }
+        if(blockedList.size()>0) {
+            blockedList = Sorting.sortApplication(blockedList);
+        }
+
         TempoNotificationSectionAdapter adapter = new TempoNotificationSectionAdapter(this, helpfulRobot_List, messengerList, blockedList, headerSectionList);
 
         lst_appList.setAdapter(adapter);

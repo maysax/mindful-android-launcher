@@ -24,7 +24,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.viewholder.NoticationFooterViewHolder;
@@ -33,6 +35,7 @@ import co.siempo.phone.adapters.viewholder.TempoNotificationItemViewHolder;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.AppListInfo;
 import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.Sorting;
 
 /**
  * Below adapter is use to Display the section wise below apps
@@ -46,7 +49,7 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
 
     protected Context context = null;
     private ArrayList<String> pref_helpfulRobots = new ArrayList<>();
-    private ArrayList<String> pref_blockedList = new ArrayList<>();
+    private Set<String> pref_blockedList = new HashSet<>();
     private ArrayList<String> pref_headerSectionList = new ArrayList<>();
     private SharedPreferences launcherPrefs;
     private AlertDialog alertDialog;
@@ -75,12 +78,8 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
         }
 
 
-        String str_blockedAppList = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST, "");
-        if (!TextUtils.isEmpty(str_blockedAppList)) {
-            Type type = new TypeToken<ArrayList<String>>() {
-            }.getType();
-            pref_blockedList = new Gson().fromJson(str_blockedAppList, type);
-        }
+        pref_blockedList = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST, new HashSet<String>());
+
 
         String headerAppList = PrefSiempo.getInstance(context).read(PrefSiempo.HEADER_APPLIST, "");
         if (!TextUtils.isEmpty(headerAppList)) {
@@ -515,8 +514,15 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
             d.errorMessage = context.getResources().getString(R.string.msg_no_apps);
             blockedList.add(d);
         }
-
-
+        if(helpfulRobot_List.size()>0) {
+            helpfulRobot_List = Sorting.sortApplication(helpfulRobot_List);
+        }
+        if(messengerList.size()>0) {
+            messengerList = Sorting.sortApplication(messengerList);
+        }
+        if(blockedList.size()>0) {
+            blockedList = Sorting.sortApplication(blockedList);
+        }
         notifyDataSetChanged();
     }
 

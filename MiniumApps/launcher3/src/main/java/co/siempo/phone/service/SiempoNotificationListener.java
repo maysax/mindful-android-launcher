@@ -30,7 +30,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
@@ -71,7 +73,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
     Context context;
 
     ArrayList<String> enableNotificationList = new ArrayList<>();
-    ArrayList<String> blockedAppList = new ArrayList<>();
+    Set<String> blockedAppList = new HashSet<>();
 
     private static boolean isInteger(String s, int radix) {
         try {
@@ -169,13 +171,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
             }
 
 
-            String block_AppList = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST,
-                    "");
-            if (!TextUtils.isEmpty(block_AppList)) {
-                Type type = new TypeToken<ArrayList<String>>() {
-                }.getType();
-                blockedAppList = new Gson().fromJson(block_AppList, type);
-            }
+            blockedAppList = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST,
+                    new HashSet<String>());
 
             if (null != blockedAppList && blockedAppList.size() > 0 && blockedAppList.contains(notification.getPackageName())) {
 
