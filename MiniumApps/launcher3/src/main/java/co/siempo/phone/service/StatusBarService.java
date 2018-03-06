@@ -102,6 +102,7 @@ public class StatusBarService extends Service {
         intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
         intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
         intentFilter.addAction(Intent.ACTION_PACKAGE_CHANGED);
+        intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
         intentFilter.addDataScheme("package");
         registerReceiver(appInstallUninstall, intentFilter);
     }
@@ -260,6 +261,7 @@ public class StatusBarService extends Service {
         HashMap<Integer, AppMenu> hashMap = CoreApplication.getInstance().getToolsSettings();
         for (Map.Entry<Integer, AppMenu> has : hashMap.entrySet()) {
             if (has.getValue().getApplicationName().equalsIgnoreCase(packageName)) {
+                Log.d("Remove Application", packageName);
                 has.getValue().setApplicationName("");
             }
         }
@@ -328,13 +330,16 @@ public class StatusBarService extends Service {
                     } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
                         String uninstallPackageName;
                         if (intent.getData().getEncodedSchemeSpecificPart() != null) {
-                            uninstallPackageName = intent.getData().getSchemeSpecificPart();
-                            Log.d("Testing with device.", "Removed" + uninstallPackageName);
-                            if (!TextUtils.isEmpty(uninstallPackageName)) {
-                                new DBClient().deleteMsgByPackageName(uninstallPackageName);
-                                removeAppFromBlockedList(uninstallPackageName);
-                                removeAppFromPreference(context, uninstallPackageName);
-                                CoreApplication.getInstance().addOrRemoveApplicationInfo(false, uninstallPackageName);
+                            if (!(intent.getExtras().containsKey(Intent.EXTRA_REPLACING) &&
+                                    intent.getExtras().getBoolean(Intent.EXTRA_REPLACING, false))) {
+                                uninstallPackageName = intent.getData().getSchemeSpecificPart();
+                                Log.d("Testing with device.", "Removed" + uninstallPackageName);
+                                if (!TextUtils.isEmpty(uninstallPackageName)) {
+                                    new DBClient().deleteMsgByPackageName(uninstallPackageName);
+                                    removeAppFromBlockedList(uninstallPackageName);
+                                    removeAppFromPreference(context, uninstallPackageName);
+                                    CoreApplication.getInstance().addOrRemoveApplicationInfo(false, uninstallPackageName);
+                                }
                             }
                         }
                     } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED)) {
