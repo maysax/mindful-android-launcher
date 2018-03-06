@@ -193,6 +193,12 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                 .VISIBLE) {
             imageClear.performClick();
         }
+
+        //Must be done in order to restore the visibility and alpha state of
+        // page pane
+        if (linPane.getVisibility() == View.VISIBLE) {
+            pagerPane.setAlpha(1);
+        }
     }
 
 
@@ -470,6 +476,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                 chipsEditText.clearFocus();
             }
 
+
             @Override
             public void onPageSelected(int i) {
                 //Indicator to be set here so that when coming from another
@@ -487,10 +494,14 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                     edtSearchToolsRounded.setOnFocusChangeListener(null);
                     chipsEditText.setOnFocusChangeListener(null);
                     junkFoodAppPane();
+
                     if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>()).size() == 0) {
+                        //Applied for smooth transition
+                        pagerPane.setAlpha(0);
                         Intent intent = new Intent(getActivity(), JunkfoodFlaggingActivity.class);
                         startActivity(intent);
-                        getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        getActivity().overridePendingTransition(R
+                                .anim.fade_in_junk, R.anim.fade_out_junk);
                     }
                 }
 
@@ -518,6 +529,8 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             public void onPageScrollStateChanged(int i) {
             }
         });
+
+
     }
 
     private void bindFirebase(int i) {
