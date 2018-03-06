@@ -32,13 +32,21 @@ import co.siempo.phone.adapters.DashboardPagerAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.CheckVersionEvent;
 import co.siempo.phone.event.HomePressEvent;
+import co.siempo.phone.event.OnBackPressedEvent;
+import co.siempo.phone.fragments.FavoritePaneFragment;
+import co.siempo.phone.fragments.IntentionFieldFragment;
+import co.siempo.phone.fragments.JunkFoodPaneFragment;
+import co.siempo.phone.fragments.PaneFragment;
+import co.siempo.phone.fragments.ToolsPaneFragment;
 import co.siempo.phone.helper.ActivityHelper;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.service.SiempoNotificationListener_;
 import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
+import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
 public class DashboardActivity extends CoreActivity {
@@ -46,7 +54,9 @@ public class DashboardActivity extends CoreActivity {
     public static final String IS_FROM_HOME = "isFromHome";
     public static String isTextLenghGreater = "";
     public static boolean isJunkFoodOpen = false;
-    public static int index = -1;
+    public static int currentIndexDashboard = 1;
+    public static int currentIndexPaneFragment = -1;
+    public static long startTime = 0;
     PermissionUtil permissionUtil;
     ConnectivityManager connectivityManager;
     AppUpdaterUtils appUpdaterUtils;
@@ -77,6 +87,123 @@ public class DashboardActivity extends CoreActivity {
         //return ServiceUtils.isNotificationListenerServiceRunning(mContext, SiempoNotificationListener_.class);
     }
 
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_dashboard);
+        if (startTime == 0) {
+            startTime = System.currentTimeMillis();
+        }
+    }
+
+
+    private void initView() {
+
+        connectivityManager = (ConnectivityManager) getSystemService(Context
+                .CONNECTIVITY_SERVICE);
+
+
+        notificationManager =
+
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+
+        isApplicationLaunch = true;
+
+        checknavigatePermissions();
+    }
+
+
+    public void loadViews() {
+        mPager = findViewById(R.id.pager);
+        mPagerAdapter = new DashboardPagerAdapter(getFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
+        mPager.setCurrentItem(currentIndexDashboard);
+        mPager.setPageTransformer(true, new UIUtils.FadePageTransformer());
+        inputMethodManager = (InputMethodManager) this
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(mPager.getWindowToken(), 0);
+        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                if (currentIndexDashboard == 1 && i == 0) {
+                    Log.d("Firebase", "Intention End");
+                    FirebaseHelper.getInstance().logScreenUsageTime(IntentionFieldFragment.class.getSimpleName(), startTime);
+                    if (DashboardActivity.currentIndexPaneFragment == 0) {
+                        Log.d("Firebase", "Junkfood Start");
+                        startTime = System.currentTimeMillis();
+                    } else if (DashboardActivity.currentIndexPaneFragment == 1) {
+                        Log.d("Firebase", "Favorite Start");
+                        startTime = System.currentTimeMillis();
+                    } else if (DashboardActivity.currentIndexPaneFragment == 2) {
+                        Log.d("Firebase", "Tools Start");
+                        startTime = System.currentTimeMillis();
+                    }
+                } else if (currentIndexDashboard == 0 && i == 1) {
+                    if (DashboardActivity.currentIndexPaneFragment == 0) {
+                        Log.d("Firebase", "Junkfood End");
+                        FirebaseHelper.getInstance().logScreenUsageTime(JunkFoodPaneFragment.class.getSimpleName(), startTime);
+                    } else if (DashboardActivity.currentIndexPaneFragment == 1) {
+                        if (PaneFragment.isSearchVisable) {
+                            Log.d("Firebase", "Search End");
+                            FirebaseHelper.getInstance().logScreenUsageTime("SearchPaneFragment", startTime);
+                        } else {
+                            Log.d("Firebase", "Favorite End");
+                            FirebaseHelper.getInstance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), startTime);
+                        }
+                    } else if (DashboardActivity.currentIndexPaneFragment == 2) {
+                        if (PaneFragment.isSearchVisable) {
+                            Log.d("Firebase", "Search End");
+                            FirebaseHelper.getInstance().logScreenUsageTime("SearchPaneFragment", startTime);
+                        } else {
+                            Log.d("Firebase", "Tools End");
+                            FirebaseHelper.getInstance().logScreenUsageTime(ToolsPaneFragment.class.getSimpleName(), startTime);
+                        }
+                    }
+                    Log.d("Firebase", "Intention Start");
+                    startTime = System.currentTimeMillis();
+                }
+                currentIndexDashboard = i;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+                if (currentIndexDashboard == 1 && PrefSiempo.getInstance(DashboardActivity.this).read(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, true)) {
+                    PrefSiempo.getInstance(DashboardActivity.this).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, false);
+                    Intent intent = new Intent(DashboardActivity.this, JunkfoodFlaggingActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R
+                            .anim.fade_in_junk, R.anim.fade_out_junk);
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (currentIndexDashboard == 1) {
+            Log.d("Firebase", "Intention End");
+            FirebaseHelper.getInstance().logScreenUsageTime(IntentionFieldFragment.class.getSimpleName(), startTime);
+        } else if (currentIndexDashboard == 0) {
+            if (DashboardActivity.currentIndexPaneFragment == 0) {
+                Log.d("Firebase", "Junkfood End");
+                FirebaseHelper.getInstance().logScreenUsageTime(JunkFoodPaneFragment.class.getSimpleName(), startTime);
+            } else if (DashboardActivity.currentIndexPaneFragment == 1) {
+                Log.d("Firebase", "Favorite End");
+                FirebaseHelper.getInstance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), startTime);
+            } else if (DashboardActivity.currentIndexPaneFragment == 2) {
+                Log.d("Firebase", "Tools End");
+                FirebaseHelper.getInstance().logScreenUsageTime(ToolsPaneFragment.class.getSimpleName(), startTime);
+            }
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -96,85 +223,30 @@ public class DashboardActivity extends CoreActivity {
 
         } else {
             Log.d(TAG, "onResume.. ");
-
             loadViews();
         }
         //Need to change as it is heavy call for onResume
 //        initView();
     }
 
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard);
-
-
-    }
-
-    private void initView() {
-
-        connectivityManager = (ConnectivityManager) getSystemService(Context
-                .CONNECTIVITY_SERVICE);
-
-
-        notificationManager =
-
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-
-        isApplicationLaunch = true;
-
-        checknavigatePermissions();
-    }
-
-    public void loadViews() {
-        mPager = findViewById(R.id.pager);
-        mPagerAdapter = new DashboardPagerAdapter(getFragmentManager());
-        mPager.setAdapter(mPagerAdapter);
-        mPager.setCurrentItem(index == -1 ? 1 : index);
-        mPager.setPageTransformer(true, new UIUtils.FadePageTransformer());
-        inputMethodManager = (InputMethodManager) this
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(mPager.getWindowToken(), 0);
-        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {
-            }
-
-            @Override
-            public void onPageSelected(int i) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-                if (i == 0 && PrefSiempo.getInstance(DashboardActivity.this).read(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, true)) {
-                    PrefSiempo.getInstance(DashboardActivity.this).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, false);
-                    Intent intent = new Intent(DashboardActivity.this, JunkfoodFlaggingActivity.class);
-                    startActivity(intent);
-                }
-            }
-        });
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (null != mPager) {
-            index = mPager.getCurrentItem();
-        }
-    }
-
     @Override
     public void onBackPressed() {
         if (mPager != null && mPager.getCurrentItem() == 0) {
-            mPager.setCurrentItem(1);
+            if (DashboardActivity.currentIndexPaneFragment == 2 || DashboardActivity.currentIndexPaneFragment == 1) {
+                if (mPagerAdapter.getItem(0) instanceof PaneFragment) {
+                    EventBus.getDefault().post(new OnBackPressedEvent(true));
+                } else {
+                    mPager.setCurrentItem(1);
+                }
+            } else {
+                mPager.setCurrentItem(1);
+            }
         } else {
             if (mPager != null && mPager.getCurrentItem() == 0) {
                 mPager.setCurrentItem(0);
             }
         }
+
     }
 
     public void checknavigatePermissions() {
@@ -441,6 +513,8 @@ public class DashboardActivity extends CoreActivity {
     protected void onDestroy() {
         super.onDestroy();
         DashboardActivity.isTextLenghGreater = "";
+        currentIndexDashboard = 1;
+        currentIndexPaneFragment = 1;
 
 
     }
@@ -449,7 +523,7 @@ public class DashboardActivity extends CoreActivity {
     public void homePressEvent(HomePressEvent event) {
         try {
             if (UIUtils.isMyLauncherDefault(this)) {
-                index = -1;
+                currentIndexDashboard = 1;
                 // onBackPressed();
                 if (null != mPager) {
                     mPager.setCurrentItem(1);

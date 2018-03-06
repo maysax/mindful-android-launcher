@@ -31,12 +31,10 @@ import java.util.Map;
 import java.util.Set;
 
 import co.siempo.phone.R;
-import co.siempo.phone.activities.FavoritesSelectionActivity;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBClient;
 import co.siempo.phone.event.AppInstalledEvent;
-import co.siempo.phone.event.FirebaseEvent;
-import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
@@ -128,8 +126,8 @@ public class StatusBarService extends Service {
     }
 
     @Subscribe
-    public void firebaseEvent(FirebaseEvent firebaseEvent) {
-        FirebaseHelper.getIntance().logScreenUsageTime(firebaseEvent.getScreenName(), firebaseEvent.getStrStartTime());
+    public void firebaseEvent(OnBackPressedEvent onBackPressed) {
+//        FirebaseHelper.getInstance().logScreenUsageTime(onBackPressed.getScreenName(), onBackPressed.getStrStartTime());
     }
 
     @Override
@@ -153,7 +151,7 @@ public class StatusBarService extends Service {
      * @param uninstallPackageName
      */
     public void removeAppFromBlockedList(String uninstallPackageName) {
-        ArrayList<String> blockedApps = new ArrayList<>();
+        ArrayList<String> blockedApps;
         ArrayList<String> removeApps = new ArrayList<>();
         String block_AppList = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST,
                 "");
@@ -179,7 +177,7 @@ public class StatusBarService extends Service {
 
         }
 
-        ArrayList<String> disableApps = new ArrayList<>();
+        ArrayList<String> disableApps;
         String disable_AppList = PrefSiempo.getInstance(context).read
                 (PrefSiempo.HELPFUL_ROBOTS, "");
         if (!TextUtils.isEmpty(disable_AppList)) {
@@ -204,7 +202,7 @@ public class StatusBarService extends Service {
      * @param installPackageName
      */
     public void addAppFromBlockedList(String installPackageName) {
-        ArrayList<String> blockedApps = new ArrayList<>();
+        ArrayList<String> blockedApps;
         String block_AppList = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST, "");
         if (!TextUtils.isEmpty(block_AppList)) {
             try {
@@ -237,6 +235,9 @@ public class StatusBarService extends Service {
      * @param packageName
      */
     private void removeAppFromPreference(Context context, String packageName) {
+
+        HashMap<Integer, AppMenu> toolsPane = CoreApplication.getInstance().getToolsSettings();
+
         Set<String> favoriteList = PrefSiempo.getInstance(context)
                 .read
                         (PrefSiempo.FAVORITE_APPS, new HashSet<String>());
@@ -257,19 +258,23 @@ public class StatusBarService extends Service {
                     (PrefSiempo.JUNKFOOD_APPS, junkFoodList);
         }
 
-        HashMap<Integer, AppMenu> hashMap = CoreApplication.getInstance().getToolsSettings();
-        for (Map.Entry<Integer, AppMenu> has : hashMap.entrySet()) {
-            if (has.getValue().getApplicationName().equalsIgnoreCase(packageName)) {
-                has.getValue().setApplicationName("");
-            }
-        }
-        PrefSiempo
-                .getInstance(context).write
-                (PrefSiempo.TOOLS_SETTING, new Gson().toJson(hashMap));
-
         updateFavoriteSort(context, packageName);
 
+        try {
+            for (Map.Entry<Integer, AppMenu> tools : toolsPane.entrySet()) {
+                if (tools.getValue().getApplicationName().equalsIgnoreCase(packageName)) {
+                    AppMenu appMenu = tools.getValue();
+                    appMenu.setApplicationName("");
+                    String hashMapToolSettings = new Gson().toJson(tools);
+                    PrefSiempo.getInstance(this).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
 
     private class MyObserver extends ContentObserver {
         MyObserver(Handler handler) {
@@ -300,7 +305,7 @@ public class StatusBarService extends Service {
                             installPackageName = intent.getData().getEncodedSchemeSpecificPart();
                             addAppFromBlockedList(installPackageName);
                             Log.d("Testing with device.", "Added" + installPackageName);
-//                            PackageUtil.addAppInSearchList(installPackageName, context);
+                            CoreApplication.getInstance().addOrRemoveApplicationInfo(true, installPackageName);
                         }
 
                     } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
@@ -312,11 +317,10 @@ public class StatusBarService extends Service {
                                 new DBClient().deleteMsgByPackageName(uninstallPackageName);
                                 removeAppFromBlockedList(uninstallPackageName);
                                 removeAppFromPreference(context, uninstallPackageName);
-
-                                //                                PackageUtil.removeAppFromSearchList(uninstallPackageName, context);
+                                CoreApplication.getInstance().addOrRemoveApplicationInfo(false, uninstallPackageName);
                             }
                         }
-                    } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED)) {
+                    } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED) && !intent.getAction().equals(Intent.ACTION_PACKAGE_REPLACED)) {
                         String packageName;
                         if (intent.getData().getEncodedSchemeSpecificPart() != null) {
                             packageName = intent.getData().getSchemeSpecificPart();

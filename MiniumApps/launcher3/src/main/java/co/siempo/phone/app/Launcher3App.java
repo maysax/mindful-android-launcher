@@ -75,6 +75,7 @@ public class Launcher3App extends CoreApplication {
         loadConfigurationValues();
         configureEverNote();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        mFirebaseAnalytics.setUserId(getDeviceId());
         GreenDaoOpenHelper helper2 = new GreenDaoOpenHelper(this, "noti-db", null);
         Database db = helper2.getWritableDb();
         DaoMaster daoMaster = new DaoMaster(db);
@@ -151,7 +152,7 @@ public class Launcher3App extends CoreApplication {
                 isSiempoLauncher = true;
                 if (startTime == 0) {
                     startTime = System.currentTimeMillis();
-                    FirebaseHelper.getIntance().logSiempoAsDefault("On", 0);
+                    FirebaseHelper.getInstance().logSiempoAsDefault("On", 0);
                 }
             } else {
                 isSiempoLauncher = false;
@@ -164,7 +165,7 @@ public class Launcher3App extends CoreApplication {
                 isSiempoLauncher = true;
             } else {
                 if (isSiempoLauncher && startTime != 0) {
-                    FirebaseHelper.getIntance().logSiempoAsDefault("Off", startTime);
+                    FirebaseHelper.getInstance().logSiempoAsDefault("Off", startTime);
                     startTime = 0;
                 }
                 isSiempoLauncher = false;

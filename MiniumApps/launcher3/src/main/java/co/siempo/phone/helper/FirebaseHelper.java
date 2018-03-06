@@ -23,11 +23,14 @@ public class FirebaseHelper {
     public static String ACTION_CREATE_CONTACT = "create_contact";
     public static String ACTION_CONTACT_PICK = "contact_picked";
     public static String ACTION_APPLICATION_PICK = "application_picked";
+    public static String SEARCH_PANE = "search_pane";
     private static String IF_SCREEN = "if_screen";
     private static String SIEMPO_MENU = "siempo_menu";
     private static FirebaseHelper firebaseHelper;
     // Screen Name
-    private static String MENU_SCREEN = "menu_screen";
+    private static String TOOLS_PANE = "tools_pane";
+    private static String FAVORITE_PANE = "favorite_pane";
+    private static String JUNKFOOD_PANE = "junkfood_pane";
     //Event
     private static String IF_ACTION = "if_action";
     private static String THIRD_PARTY_APPLICATION = "third_party";
@@ -40,7 +43,7 @@ public class FirebaseHelper {
     private String SCREEN_NAME = "screen_name";
     private String TIME_SPENT = "time_spent";
     private String APPLICATION_NAME = "application_name";
-    private String MENU_NAME = "menu_name";
+    private String TOOL_NAME = "tool_name";
     private String INTENT_FROM = "intent_from";
     private String ACTION = "action";
     private String IF_DATA = "if_data";
@@ -54,7 +57,7 @@ public class FirebaseHelper {
 
     }
 
-    public static FirebaseHelper getIntance() {
+    public static FirebaseHelper getInstance() {
         if (firebaseHelper == null) {
             firebaseHelper = new FirebaseHelper();
         }
@@ -79,7 +82,7 @@ public class FirebaseHelper {
             bundle.putString(SCREEN_NAME, screenName);
             bundle.putLong(TIME_SPENT, longDifference);
             Tracer.d("Firebase:" + SCREEN_USAGE + ": " + bundle.toString());
-//            getFirebaseAnalytics().logEvent(SCREEN_USAGE, bundle);
+            getFirebaseAnalytics().logEvent(SCREEN_USAGE, bundle);
         }
 
     }
@@ -118,13 +121,22 @@ public class FirebaseHelper {
      * @param applicationName
      * @param actionFor
      */
-    public void logSiempoMenuUsage(String applicationName, int actionFor) {
+    public void logSiempoMenuUsage(int actionFor, String toolname, String applicationName) {
         Bundle bundle = new Bundle();
-        bundle.putString(MENU_NAME, applicationName);
         if (actionFor == 0) {
-            bundle.putString(INTENT_FROM, MENU_SCREEN);
-        } else {
-            bundle.putString(INTENT_FROM, IF_SCREEN);
+            bundle.putString(INTENT_FROM, TOOLS_PANE);
+            bundle.putString(TOOL_NAME, toolname);
+            bundle.putString(APPLICATION_NAME, applicationName);
+        } else if (actionFor == 1) {
+            bundle.putString(INTENT_FROM, FAVORITE_PANE);
+            bundle.putString(APPLICATION_NAME, applicationName);
+        } else if (actionFor == 2) {
+            bundle.putString(INTENT_FROM, JUNKFOOD_PANE);
+            bundle.putString(APPLICATION_NAME, applicationName);
+        } else if (actionFor == 3) {
+            bundle.putString(INTENT_FROM, SEARCH_PANE);
+            bundle.putString(TOOL_NAME, toolname);
+            bundle.putString(APPLICATION_NAME, applicationName);
         }
         Tracer.d("Firebase:" + SIEMPO_MENU + ": " + bundle.toString());
         getFirebaseAnalytics().logEvent(SIEMPO_MENU, bundle);

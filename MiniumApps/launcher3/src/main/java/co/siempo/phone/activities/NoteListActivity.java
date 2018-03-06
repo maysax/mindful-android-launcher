@@ -37,10 +37,9 @@ import java.util.ArrayList;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.NoteAdapter;
 import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.event.FirebaseEvent;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.managers.EvernoteManager;
-import de.greenrobot.event.EventBus;
 
 import static co.siempo.phone.utils.DataUtils.BACKUP_FILE_NAME;
 import static co.siempo.phone.utils.DataUtils.BACKUP_FOLDER_PATH;
@@ -675,7 +674,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
         else {
             int index = -1;
 
-            // Loop through array and find index of item unchecked
+            // Loop through array and find currentIndexDashboard of item unchecked
             for (int i = 0; i < checkedArray.size(); i++) {
                 if (position == checkedArray.get(i)) {
                     index = i;
@@ -683,7 +682,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
                 }
             }
 
-            // If index was found -> remove the item
+            // If currentIndexDashboard was found -> remove the item
             if (index != -1)
                 checkedArray.remove(index);
         }
@@ -1072,7 +1071,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
     @Override
     protected void onPause() {
         super.onPause();
-        EventBus.getDefault().post(new FirebaseEvent("Notes:" + NoteListActivity.this.getClass().getSimpleName(), startTime));
+        FirebaseHelper.getInstance().logScreenUsageTime(NoteListActivity.this.getClass().getSimpleName(), startTime);
     }
 
 

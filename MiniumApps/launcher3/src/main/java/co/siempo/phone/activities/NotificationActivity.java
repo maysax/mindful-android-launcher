@@ -70,7 +70,7 @@ public class NotificationActivity extends CoreActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        FirebaseHelper.getIntance().logScreenUsageTime(NotificationActivity.class.getSimpleName(), startTime);
+        FirebaseHelper.getInstance().logScreenUsageTime(NotificationActivity.class.getSimpleName(), startTime);
     }
 
     @Override

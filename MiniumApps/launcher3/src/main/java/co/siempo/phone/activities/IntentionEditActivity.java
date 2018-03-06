@@ -321,6 +321,6 @@ public class IntentionEditActivity extends CoreActivity implements View.OnClickL
     @Override
     protected void onPause() {
         super.onPause();
-        FirebaseHelper.getIntance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
+        FirebaseHelper.getInstance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
     }
 }

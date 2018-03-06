@@ -115,6 +115,6 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
     @Override
     public void onPause() {
         super.onPause();
-        FirebaseHelper.getIntance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
+        FirebaseHelper.getInstance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
     }
 }

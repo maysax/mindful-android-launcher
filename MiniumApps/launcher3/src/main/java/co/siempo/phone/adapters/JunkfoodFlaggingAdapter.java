@@ -123,7 +123,19 @@ public class JunkfoodFlaggingAdapter extends BaseAdapter {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
+                if (resolveInfo.isFlagApp) {
+                    holder.imgChevron.setImageResource(R.drawable.ic_down_arrow_red);
+                    int color = R.color.forground;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        holder.linTop.setForeground(new ColorDrawable(ContextCompat.getColor(context, color)));
+                    }
+                } else {
+                    holder.imgChevron.setImageResource(R.drawable.ic_down_arrow);
+                    int color = R.color.transparent;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        holder.linTop.setForeground(new ColorDrawable(ContextCompat.getColor(context, color)));
+                    }
+                }
             }
 
         } catch (Exception e) {

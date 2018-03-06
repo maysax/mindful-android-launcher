@@ -58,6 +58,6 @@ public class FaqFragment extends CoreFragment {
     @Override
     public void onPause() {
         super.onPause();
-        FirebaseHelper.getIntance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
+        FirebaseHelper.getInstance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
     }
 }
