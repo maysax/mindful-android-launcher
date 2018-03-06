@@ -132,13 +132,20 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
         builder.setPositiveButton(R.string.strcontinue, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                favoriteList.removeAll(list);
-                PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
-                PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.JUNKFOOD_APPS, list);
-                if (list.size() == 0 && !DashboardActivity.isJunkFoodOpen) {
-                    DashboardActivity.isJunkFoodOpen = true;
-                }
-                finish();
+                dialog.dismiss();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        favoriteList.removeAll(list);
+                        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
+                        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.JUNKFOOD_APPS, list);
+                        if (list.size() == 0 && !DashboardActivity.isJunkFoodOpen) {
+                            DashboardActivity.isJunkFoodOpen = true;
+                        }
+                        finish();
+                    }
+                });
+
             }
         });
         AlertDialog dialog = builder.create();
