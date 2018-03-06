@@ -80,6 +80,12 @@ public class DashboardActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        connectivityManager = (ConnectivityManager) getSystemService(Context
+                .CONNECTIVITY_SERVICE);
+
+
+
         permissionUtil = new PermissionUtil(this);
         if (!permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)
                 || !permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) || !permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)
@@ -99,8 +105,14 @@ public class DashboardActivity extends CoreActivity {
 
             loadViews();
         }
-        //Need to change as it is heavy call for onResume
-//        initView();
+
+
+        if (PrefSiempo.getInstance(this).read(PrefSiempo
+                .IS_APP_INSTALLED_FIRSTTIME, true)) {
+            Log.d(TAG, "Display upgrade dialog.");
+                checkUpgradeVersion();
+        }
+
     }
 
 
@@ -109,7 +121,6 @@ public class DashboardActivity extends CoreActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-
 
     }
 
@@ -251,58 +262,22 @@ public class DashboardActivity extends CoreActivity {
     }
 
     public void checkUpgradeVersion() {
+        Log.d(TAG, "Active network..");
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
         if (activeNetwork != null) {
-            Log.d(TAG, "Active network..");
-            appUpdaterUtils = new AppUpdaterUtils(this)
-                    .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
-                    .withListener(new AppUpdaterUtils.UpdateListener() {
-                        @Override
-                        public void onSuccess(Update update, Boolean isUpdateAvailable) {
-                            Log.d(TAG, "on success");
-                            if (update.getLatestVersionCode() != null) {
-                                Log.d(TAG, "check version from AppUpdater library");
-                                checkVersionFromAppUpdater();
-                                appUpdaterUtils = null;
-                            } else {
-                                Log.d(TAG, "check version from AWS");
-                                if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
-                                    ApiClient_.getInstance_(DashboardActivity.this)
-                                            .checkAppVersion(CheckVersionEvent.ALPHA);
-                                } else if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.beta))) {
-                                    ApiClient_.getInstance_(DashboardActivity.this)
-                                            .checkAppVersion(CheckVersionEvent.BETA);
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onFailed(AppUpdaterError error) {
-                            if (BuildConfig.DEBUG) {
-                                Log.d(TAG, " AppUpdater Error ::: " + error.toString());
-                            }
-                        }
-                    });
-
-            appUpdaterUtils.start();
+            if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
+                ApiClient_.getInstance_(DashboardActivity.this)
+                        .checkAppVersion(CheckVersionEvent.ALPHA);
+            } else if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.beta))) {
+                ApiClient_.getInstance_(DashboardActivity.this)
+                        .checkAppVersion(CheckVersionEvent.BETA);
+            }
         } else {
             Log.d(TAG, getString(R.string.nointernetconnection));
         }
     }
 
-    public void checkVersionFromAppUpdater() {
-        new AppUpdater(this)
-                .setDisplay(Display.DIALOG)
-                .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
-                .showEvery(5)
-                .setTitleOnUpdateAvailable("Update available")
-                .setContentOnUpdateAvailable("New version found! Would you like to update Siempo?")
-                .setTitleOnUpdateNotAvailable("Update not available")
-                .setContentOnUpdateNotAvailable("No update available. Check for updates again later!")
-                .setButtonUpdate("Update")
-                .setButtonDismiss("Maybe later")
-                .start();
-    }
+
 
     @Override
     protected void onStop() {
@@ -350,6 +325,8 @@ public class DashboardActivity extends CoreActivity {
     }
 
     private void showUpdateDialog(String str) {
+        PrefSiempo.getInstance(DashboardActivity.this).write(PrefSiempo
+                .IS_APP_INSTALLED_FIRSTTIME, false);
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
         if (activeNetwork != null) { // connected to the internet
             UIUtils.confirmWithCancel(this, "", str.equalsIgnoreCase(CheckVersionEvent.ALPHA) ? "New alpha version found! Would you like to update Siempo?" : "New beta version found! Would you like to update Siempo?", new DialogInterface.OnClickListener() {
@@ -359,8 +336,6 @@ public class DashboardActivity extends CoreActivity {
                         PrefSiempo.getInstance(DashboardActivity.this).write
                                 (PrefSiempo
                                         .UPDATE_PROMPT, false);
-//                        launcher3Prefs.edit().putBoolean("updatePrompt", false)
-//                                .apply();
                         new ActivityHelper(DashboardActivity.this).openBecomeATester();
                     }
                 }

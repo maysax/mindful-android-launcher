@@ -352,13 +352,20 @@ public class UIUtils {
     }
 
     public static Bitmap convertBytetoBitmap(byte[] byteArray) {
-        Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-        if (bitmap != null) {
-            bitmap.setWidth(bitmap.getWidth() / 2);
-            bitmap.setHeight(bitmap.getHeight() / 2);
-            return bitmap;
+        try {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            if (bitmap != null && bitmap.isMutable()) {
+                bitmap.setWidth(bitmap.getWidth() / 2);
+                bitmap.setHeight(bitmap.getHeight() / 2);
+                return bitmap;
+            }
+            else{
+                return bitmap;
+            }
         }
-        return null;
+        catch (Exception e){
+            return null;
+        }
     }
 
     public static boolean isDeviceHasSimCard(Context context) {

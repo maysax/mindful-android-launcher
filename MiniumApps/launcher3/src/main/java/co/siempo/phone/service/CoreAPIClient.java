@@ -1,6 +1,7 @@
 package co.siempo.phone.service;
 
 import android.os.Environment;
+import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
@@ -56,7 +57,6 @@ public abstract class CoreAPIClient {
                     .getAsString(new StringRequestListener() {
                         @Override
                         public void onResponse(String response) {
-
                             try {
                                 int version = Integer.parseInt(response.trim());
                                 EventBus.getDefault().post(new CheckVersionEvent(version, CheckVersionEvent.ALPHA));

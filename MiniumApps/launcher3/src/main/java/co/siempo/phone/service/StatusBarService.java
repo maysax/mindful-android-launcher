@@ -153,15 +153,11 @@ public class StatusBarService extends Service {
      * @param uninstallPackageName
      */
     public void removeAppFromBlockedList(String uninstallPackageName) {
-        ArrayList<String> blockedApps = new ArrayList<>();
+        Set<String> blockedApps = new HashSet<>();
         ArrayList<String> removeApps = new ArrayList<>();
-        String block_AppList = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST,
-                "");
-        if (!TextUtils.isEmpty(block_AppList)) {
+        blockedApps = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST,
+                new HashSet<String>());
             try {
-                Type type = new TypeToken<ArrayList<String>>() {
-                }.getType();
-                blockedApps = new Gson().fromJson(block_AppList, type);
                 for (String blockedAppName : blockedApps) {
                     if (blockedAppName.equalsIgnoreCase(uninstallPackageName.trim())) {
                         removeApps.add(blockedAppName);
@@ -170,14 +166,12 @@ public class StatusBarService extends Service {
                 if (removeApps.size() > 0) {
                     blockedApps.removeAll(removeApps);
                 }
-                String blockedList = new Gson().toJson(blockedApps);
                 PrefSiempo.getInstance(context).write(PrefSiempo.BLOCKED_APPLIST,
-                        blockedList);
+                        blockedApps);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-        }
 
         ArrayList<String> disableApps = new ArrayList<>();
         String disable_AppList = PrefSiempo.getInstance(context).read
@@ -193,7 +187,6 @@ public class StatusBarService extends Service {
             }
             String disableList = new Gson().toJson(disableApps);
             PrefSiempo.getInstance(context).write(PrefSiempo.HELPFUL_ROBOTS, disableList);
-//            sharedPreferencesLauncher3.edit().putString(Constants.HELPFUL_ROBOTS, disableList).commit();
         }
 
     }
@@ -204,13 +197,9 @@ public class StatusBarService extends Service {
      * @param installPackageName
      */
     public void addAppFromBlockedList(String installPackageName) {
-        ArrayList<String> blockedApps = new ArrayList<>();
-        String block_AppList = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST, "");
-        if (!TextUtils.isEmpty(block_AppList)) {
+        Set<String> blockedApps = new HashSet<>();
+        blockedApps = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST, new HashSet<String>());
             try {
-                Type type = new TypeToken<ArrayList<String>>() {
-                }.getType();
-                blockedApps = new Gson().fromJson(block_AppList, type);
                 boolean isAppExist = false;
                 for (String blockedAppName : blockedApps) {
                     if (blockedAppName.equalsIgnoreCase(installPackageName.trim())) {
@@ -220,14 +209,12 @@ public class StatusBarService extends Service {
                 if (!isAppExist) {
                     blockedApps.add(installPackageName.trim());
                 }
-                String blockedList = new Gson().toJson(blockedApps);
                 PrefSiempo.getInstance(context).write(PrefSiempo.BLOCKED_APPLIST,
-                        blockedList);
+                        blockedApps);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-        }
     }
 
     /**

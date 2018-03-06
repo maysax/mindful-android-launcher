@@ -20,7 +20,9 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.TempoNotificationSectionAdapter;
@@ -48,7 +50,7 @@ public class NotificationActivity extends CoreActivity {
 
     private List<String> pref_messengerList = new ArrayList<>();
     private ArrayList<String> pref_helpfulRobots = new ArrayList<>();
-    private ArrayList<String> pref_blockedList = new ArrayList<>();
+    private Set<String> pref_blockedList = new HashSet<>();
 
     private List<AppListInfo> messengerList = new ArrayList<>();
     private List<AppListInfo> blockedList = new ArrayList<>();
@@ -127,12 +129,8 @@ public class NotificationActivity extends CoreActivity {
             }.getType();
             pref_helpfulRobots = new Gson().fromJson(str_helpfulRobots, type);
         }
-        String str_blockedList = PrefSiempo.getInstance(this).read(PrefSiempo.BLOCKED_APPLIST, "");
-        if (!TextUtils.isEmpty(str_blockedList)) {
-            Type type = new TypeToken<ArrayList<String>>() {
-            }.getType();
-            pref_blockedList = new Gson().fromJson(str_blockedList, type);
-        }
+        pref_blockedList = PrefSiempo.getInstance(this).read(PrefSiempo.BLOCKED_APPLIST, new HashSet<String>());
+
 
         for (String packageName : CoreApplication.getInstance().getPackagesList()) {
             for (String blockedApp : pref_blockedList) {

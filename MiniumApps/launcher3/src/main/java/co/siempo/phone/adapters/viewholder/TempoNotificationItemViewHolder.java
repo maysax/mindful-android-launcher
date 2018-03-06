@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -108,7 +109,7 @@ public class TempoNotificationItemViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-    public void addToBlockList(String applicationInfo, boolean ischecked, ArrayList<String> blockedApps, Context context) {
+    public void addToBlockList(String applicationInfo, boolean ischecked, Set<String> blockedApps, Context context) {
 
         if (ischecked && blockedApps.contains(applicationInfo)) {
             blockedApps.remove(applicationInfo);
@@ -116,9 +117,7 @@ public class TempoNotificationItemViewHolder extends RecyclerView.ViewHolder {
         if (!ischecked && !blockedApps.contains(applicationInfo)) {
             blockedApps.add(applicationInfo);
         }
-        String blockedList = new Gson().toJson(blockedApps);
-        PrefSiempo.getInstance(context).write(PrefSiempo.BLOCKED_APPLIST, blockedList);
-//        launcherPrefs.edit().putString(Constants.BLOCKED_APPLIST, blockedList).commit();
+        PrefSiempo.getInstance(context).write(PrefSiempo.BLOCKED_APPLIST, blockedApps);
 
 
     }
