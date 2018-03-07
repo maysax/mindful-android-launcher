@@ -85,14 +85,14 @@ public class NotificationActivity extends CoreActivity {
 
     public void initView() {
 
-        pref_messengerList.clear();
-        pref_helpfulRobots.clear();
-        pref_blockedList.clear();
+        pref_messengerList = new ArrayList<>();
+        pref_helpfulRobots = new ArrayList<>();
+        pref_blockedList = new HashSet<>();
 
-        blockedList.clear();
-        messengerList.clear();
-        helpfulRobot_List.clear();
-        headerSectionList.clear();
+        blockedList = new ArrayList<>();
+        messengerList = new ArrayList<>();
+        helpfulRobot_List = new ArrayList<>();
+        headerSectionList = new ArrayList<>();
 
         // Initialize components
         toolbar = findViewById(R.id.toolbar);
