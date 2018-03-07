@@ -217,13 +217,13 @@ public class NotificationActivity extends CoreActivity {
         lst_appList.setLayoutManager(linearLayoutManager);
         lst_appList.setHasFixedSize(true);
 
-        if(helpfulRobot_List.size()>0) {
+        if (helpfulRobot_List.size() > 0) {
             helpfulRobot_List = Sorting.sortApplication(helpfulRobot_List);
         }
-        if(messengerList.size()>0) {
+        if (messengerList.size() > 0) {
             messengerList = Sorting.sortApplication(messengerList);
         }
-        if(blockedList.size()>0) {
+        if (blockedList.size() > 0) {
             blockedList = Sorting.sortApplication(blockedList);
         }
 
