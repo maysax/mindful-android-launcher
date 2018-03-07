@@ -171,18 +171,25 @@ public class PackageUtil {
                 NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 String applicationNameFromPackageName = CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName());
                 if (Build.VERSION.SDK_INT >= 26) {
+                    Tracer.d("Tracking notification greater");
                     NotificationChannel notificationChannel = createChannel(context,
                             applicationNameFromPackageName);
                     if (notificationManager != null) {
                         notificationManager.createNotificationChannel(notificationChannel);
+                        notificationChannel.enableLights(true);
+                        notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+                        Tracer.d("Tracking createNotificationChannel");
                     }
                     if (notificationManager != null) {
                         notificationManager.createNotificationChannelGroup(new NotificationChannelGroup(applicationNameFromPackageName, applicationNameFromPackageName));
+                        Tracer.d("Tracking createNotificationChannelGroup");
                     }
                 }
                 NotificationCompat.Builder groupBuilder = createGroupNotification(context, notification, applicationNameFromPackageName);
+                groupBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
 
                 NotificationCompat.Builder builder = getNotification(context, notification);
+                builder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
 
                 if (notificationManager != null) {
                     notificationManager.notify(icon, groupBuilder.build());
@@ -206,16 +213,22 @@ public class PackageUtil {
      * @return notification builder object
      */
     private static NotificationCompat.Builder getNotification(Context context, TableNotificationSms notification) {
+
+        Tracer.d("Tracking getNotification1");
         String applicationNameFromPackageName = CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName());
+        Tracer.d("Tracking getNotification2");
         int priority = !PrefSiempo.getInstance(context).read(PrefSiempo.ALLOW_PEAKING, true) ? Notification.PRIORITY_DEFAULT : Notification.PRIORITY_HIGH;
+        Tracer.d("Tracking getNotification3");
         NotificationCompat.Builder b
                 = new NotificationCompat.Builder(context, applicationNameFromPackageName);
+        b.setDefaults(Notification.DEFAULT_LIGHTS);
         PendingIntent contentIntent = getPendingIntent(context, notification);
-
+        Tracer.d("Tracking getNotification4");
         Bitmap bitmap = notification.getUser_icon() != null ? UIUtils.convertBytetoBitmap(notification.getUser_icon()) : null;
+        Tracer.d("Tracking getNotification5");
         DateFormat sdf = new SimpleDateFormat(getTimeFormat(context), Locale.getDefault());
         String time = sdf.format(notification.get_date());
-
+        Tracer.d("Tracking getNotification6");
         String title = getNotificationTitle(notification.get_contact_title(), notification.getPackageName(), context);
 
         RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.custom_notification_card);
@@ -224,6 +237,7 @@ public class PackageUtil {
             contentView.setImageViewBitmap(R.id.imgAppIcon, drawableToBitmap(drawable));
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
+            Tracer.d("Tracking getNotification load exception");
         }
 
         contentView.setImageViewBitmap(R.id.imgUserImage, bitmap);
@@ -275,9 +289,13 @@ public class PackageUtil {
      * @return notification builder object for group
      */
     private static NotificationCompat.Builder createGroupNotification(Context context, TableNotificationSms notification, String strChannelName) {
+
+        Tracer.d("Tracking createGroupNotification1");
         Bitmap bitmap = notification.getUser_icon() != null ? UIUtils.convertBytetoBitmap(notification.getUser_icon()) : null;
+        Tracer.d("Tracking createGroupNotification2");
         List<TableNotificationSms> notificationSms = DBUtility.getNotificationDao().queryBuilder()
                 .where(TableNotificationSmsDao.Properties.PackageName.eq(notification.getPackageName())).list();
+        Tracer.d("Tracking createGroupNotification3");
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 
         for (int i = 0; i < notificationSms.size(); i++) {
@@ -295,14 +313,17 @@ public class PackageUtil {
                         .setLargeIcon(bitmap)
                         .setSmallIcon(R.drawable.siempo_notification_icon)
                         .setGroupSummary(true)
+                        .setDefaults(Notification.DEFAULT_LIGHTS)
                         .setGroup(strChannelName)
                         .setOnlyAlertOnce(true)
                         .setAutoCancel(true)
                         .setContentIntent(pendingIntent);
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Tracer.d("Tracking createGroupNotification4");
             groupBuilder.setStyle(new NotificationCompat.BigTextStyle());
         } else {
             groupBuilder.setStyle(inboxStyle);
+            Tracer.d("Tracking createGroupNotification5");
         }
         return groupBuilder;
     }
@@ -412,7 +433,6 @@ public class PackageUtil {
     }
 
 
-
     public static ArrayList<MainListItem> getToolsMenuData(Context context, ArrayList<MainListItem> items) {
 
 
@@ -520,8 +540,8 @@ public class PackageUtil {
 
             for (String packageName : favorite_List_App) {
                 if (!listOfSortFavoritesApps.contains(packageName)) {
-                    boolean isEnable = UIUtils.isAppInstalledAndEnabled(context,packageName);
-                    if(isEnable){
+                    boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, packageName);
+                    if (isEnable) {
                         for (int j = 0; j < listOfSortFavoritesApps.size(); j++) {
                             if (TextUtils.isEmpty(listOfSortFavoritesApps.get(j).trim())) {
                                 listOfSortFavoritesApps.set(j, packageName);
@@ -602,7 +622,7 @@ public class PackageUtil {
             if (!TextUtils.isEmpty(appList.get(i).getPackageName())) {
                 if (appList.get(i).getPackageName().equalsIgnoreCase(CHROME_PACKAGE) || appList.get(i).getPackageName().equalsIgnoreCase(SYSTEM_SETTING)) {
                     boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, appList.get(i).getPackageName());
-                    if(isEnable){
+                    if (isEnable) {
                         items.add(appList.get(i));
                     }
                 }
@@ -629,7 +649,7 @@ public class PackageUtil {
                 for (int i = 0; i < listOfSortFavoritesApps.size(); i++) {
                     if (TextUtils.isEmpty(listOfSortFavoritesApps.get(i).trim())) {
                         boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, CHROME_PACKAGE);
-                        if(isEnable){
+                        if (isEnable) {
                             listOfSortFavoritesApps.set(i, CHROME_PACKAGE);
                             if (list != null && !list.contains(CHROME_PACKAGE)) {
                                 list.add(CHROME_PACKAGE);
@@ -644,7 +664,7 @@ public class PackageUtil {
                 for (int i = 0; i < listOfSortFavoritesApps.size(); i++) {
                     if (TextUtils.isEmpty(listOfSortFavoritesApps.get(i).trim())) {
                         boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, SYSTEM_SETTING);
-                        if(isEnable){
+                        if (isEnable) {
                             listOfSortFavoritesApps.set(i, SYSTEM_SETTING);
                             if (list != null && !list.contains(SYSTEM_SETTING)) {
                                 list.add(SYSTEM_SETTING);
@@ -657,11 +677,11 @@ public class PackageUtil {
         } else {
             listOfSortFavoritesApps = new ArrayList<>();
             boolean isChromeEnable = UIUtils.isAppInstalledAndEnabled(context, CHROME_PACKAGE);
-            if(isChromeEnable){
+            if (isChromeEnable) {
                 listOfSortFavoritesApps.add(CHROME_PACKAGE);
             }
             boolean isSystemSettingEnable = UIUtils.isAppInstalledAndEnabled(context, SYSTEM_SETTING);
-            if(isSystemSettingEnable){
+            if (isSystemSettingEnable) {
                 listOfSortFavoritesApps.add(SYSTEM_SETTING);
             }
             int remainingCount = 12 - listOfSortFavoritesApps.size();
@@ -670,10 +690,10 @@ public class PackageUtil {
             }
 
             if (list != null) {
-                if(isChromeEnable) {
+                if (isChromeEnable) {
                     list.add(CHROME_PACKAGE);
                 }
-                if(isSystemSettingEnable) {
+                if (isSystemSettingEnable) {
                     list.add(SYSTEM_SETTING);
                 }
             }

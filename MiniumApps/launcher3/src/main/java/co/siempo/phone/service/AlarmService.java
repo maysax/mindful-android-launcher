@@ -5,10 +5,8 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Build;
-import android.os.PowerManager;
 import android.os.Vibrator;
 import android.service.notification.StatusBarNotification;
 import android.support.annotation.Nullable;
@@ -72,21 +70,23 @@ public class AlarmService extends IntentService {
 
     public void createNotification(List<TableNotificationSms> notificationList, Context context) {
         try {
+            Tracer.d("Tracking createNotification");
             int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
             audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, sound, 0);
 
                 for (int i = 0; i < notificationList.size(); i++) {
                     TableNotificationSms notification = notificationList.get(i);
                     if (notification.getPackageName() != null && !notification.getPackageName().equalsIgnoreCase("android")) {
+                        Tracer.d("Tracking notification.getPackageName()");
                         PackageUtil.recreateNotification(notification, context, notification.getApp_icon());
                     }
                 }
                 if (notificationList.size() >= 1) {
-                    PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-                    PowerManager.WakeLock wl = pm != null ? pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG") : null;
-                    if (wl != null) {
-                        wl.acquire(2000);
-                    }
+//                    PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+//                    PowerManager.WakeLock wl = pm != null ? pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG") : null;
+//                    if (wl != null) {
+//                        wl.acquire(2000);
+//                    }
                     DBUtility.getNotificationDao().deleteAll();
                 }
 
@@ -132,8 +132,10 @@ public class AlarmService extends IntentService {
                           .BATCH_TIME, 15);
                 if (batchTime == 15) {
                     if (systemMinutes == 0 || systemMinutes == 15 || systemMinutes == 30 || systemMinutes == 45) {
+                        Tracer.d("Tracking Batch");
                         Tracer.d("Batch::" + "15 minute interval");
                         List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
+                        Tracer.d("Tracking notificationList.size" + notificationList.size());
                         createNotification(notificationList, context);
                     }
                 } else if (batchTime == 30) {
