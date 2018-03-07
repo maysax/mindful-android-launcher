@@ -102,6 +102,7 @@ dependencies {
     implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
     debugCompile "com.amitshekhar.android:debug-db:$debugDBVersion"
     implementation 'com.google.firebase:firebase-core:11.8.0'
+    implementation 'com.google.firebase:firebase-database:11.8.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.github.javiersantos:AppUpdater:2.6.4'
     implementation 'com.github.clans:fab:1.6.4'
