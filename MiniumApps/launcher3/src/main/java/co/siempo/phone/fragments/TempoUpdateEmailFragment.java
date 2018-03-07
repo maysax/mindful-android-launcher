@@ -146,8 +146,7 @@ public class TempoUpdateEmailFragment extends CoreFragment {
             mDatabase.child(userId).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    UserModel user = dataSnapshot.getValue(UserModel.class);
-                    Log.d("Firebase RealTime", "User name: " + user.getUserId() + ", email " + user.getEmailId());
+
                 }
 
                 @Override
