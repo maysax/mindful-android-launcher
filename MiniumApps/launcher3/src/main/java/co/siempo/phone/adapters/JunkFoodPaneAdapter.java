@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +69,9 @@ public class JunkFoodPaneAdapter extends RecyclerView.Adapter<JunkFoodPaneAdapte
             holder.imgAppIcon.setVisibility(View.GONE);
             holder.imgUnderLine.setVisibility(View.VISIBLE);
             String fontPath = "fonts/robotocondensedregular.ttf";
-            holder.txtAppTextImage.setText("" + applicationName.charAt(0));
+            if (!TextUtils.isEmpty(applicationName)) {
+                holder.txtAppTextImage.setText("" + applicationName.charAt(0));
+            }
             // Loading Font Face
             Typeface tf = Typeface.createFromAsset(context.getAssets(), fontPath);
             // Applying font
