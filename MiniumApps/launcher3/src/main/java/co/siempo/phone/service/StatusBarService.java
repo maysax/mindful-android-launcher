@@ -156,20 +156,20 @@ public class StatusBarService extends Service {
         ArrayList<String> removeApps = new ArrayList<>();
         blockedApps = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST,
                 new HashSet<String>());
-            try {
-                for (String blockedAppName : blockedApps) {
-                    if (blockedAppName.equalsIgnoreCase(uninstallPackageName.trim())) {
-                        removeApps.add(blockedAppName);
-                    }
+        try {
+            for (String blockedAppName : blockedApps) {
+                if (blockedAppName.equalsIgnoreCase(uninstallPackageName.trim())) {
+                    removeApps.add(blockedAppName);
                 }
-                if (removeApps.size() > 0) {
-                    blockedApps.removeAll(removeApps);
-                }
-                PrefSiempo.getInstance(context).write(PrefSiempo.BLOCKED_APPLIST,
-                        blockedApps);
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+            if (removeApps.size() > 0) {
+                blockedApps.removeAll(removeApps);
+            }
+            PrefSiempo.getInstance(context).write(PrefSiempo.BLOCKED_APPLIST,
+                    blockedApps);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         ArrayList<String> disableApps = new ArrayList<>();
@@ -199,21 +199,21 @@ public class StatusBarService extends Service {
     public void addAppFromBlockedList(String installPackageName) {
         Set<String> blockedApps = new HashSet<>();
         blockedApps = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST, new HashSet<String>());
-            try {
-                boolean isAppExist = false;
-                for (String blockedAppName : blockedApps) {
-                    if (blockedAppName.equalsIgnoreCase(installPackageName.trim())) {
-                        isAppExist = true;
-                    }
+        try {
+            boolean isAppExist = false;
+            for (String blockedAppName : blockedApps) {
+                if (blockedAppName.equalsIgnoreCase(installPackageName.trim())) {
+                    isAppExist = true;
                 }
-                if (!isAppExist) {
-                    blockedApps.add(installPackageName.trim());
-                }
-                PrefSiempo.getInstance(context).write(PrefSiempo.BLOCKED_APPLIST,
-                        blockedApps);
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+            if (!isAppExist) {
+                blockedApps.add(installPackageName.trim());
+            }
+            PrefSiempo.getInstance(context).write(PrefSiempo.BLOCKED_APPLIST,
+                    blockedApps);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -324,8 +324,8 @@ public class StatusBarService extends Service {
                                 Log.d("Testing with device.", "Removed" + uninstallPackageName);
                                 if (!TextUtils.isEmpty(uninstallPackageName)) {
                                     new DBClient().deleteMsgByPackageName(uninstallPackageName);
-                                    removeAppFromBlockedList(uninstallPackageName);
                                     removeAppFromPreference(context, uninstallPackageName);
+                                    removeAppFromBlockedList(uninstallPackageName);
                                     CoreApplication.getInstance().addOrRemoveApplicationInfo(false, uninstallPackageName);
                                 }
                             }
@@ -338,8 +338,9 @@ public class StatusBarService extends Service {
                             if (isEnable) {
                                 addAppFromBlockedList(packageName);
                             } else {
-                                removeAppFromBlockedList(packageName);
                                 removeAppFromPreference(context, packageName);
+                                removeAppFromBlockedList(packageName);
+
                             }
                         }
                     }
