@@ -408,11 +408,11 @@ public abstract class CoreApplication extends MultiDexApplication {
         return mMemoryCache.get(key);
     }
 
-    private class LoadApplications extends AsyncTask<Object, Object, List<String>> {
+    private class LoadApplications extends AsyncTask<Object, Object, Set<String>> {
 
         @Override
-        protected List<String> doInBackground(Object... params) {
-            List<String> applist = new ArrayList<>();
+        protected Set<String> doInBackground(Object... params) {
+            Set<String> applist = new HashSet<>();
 
             for (android.os.UserHandle profile : userManager.getUserProfiles()) {
                 for (LauncherActivityInfo activityInfo : launcherApps.getActivityList(null, profile)) {
@@ -431,10 +431,11 @@ public abstract class CoreApplication extends MultiDexApplication {
 
 
         @Override
-        protected void onPostExecute(List<String> applicationInfos) {
+        protected void onPostExecute(Set<String> applicationInfos) {
             super.onPostExecute(applicationInfos);
 //            packagesList.clear();
-            setPackagesList(applicationInfos);
+            List<String> apps = new ArrayList<String>(applicationInfos);
+            setPackagesList(apps);
             EventBus.getDefault().post(new AppInstalledEvent(true));
         }
     }
