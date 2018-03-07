@@ -80,11 +80,7 @@ public class PermissionUtil {
                     context.checkSelfPermission(Manifest.permission.WRITE_CALL_LOG) +
                     context.checkSelfPermission(Manifest.permission.CALL_PHONE) +
                     context.checkSelfPermission(Manifest.permission.SEND_SMS) +
-                    context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) +
-                    context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) +
-                    context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) +
-                    context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) +
-                    context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
         }
 
         return appPermissions == PackageManager.PERMISSION_GRANTED;

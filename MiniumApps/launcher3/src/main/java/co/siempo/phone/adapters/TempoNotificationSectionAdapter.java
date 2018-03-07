@@ -172,20 +172,22 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
         if (headerList.get(section).headerName.equals("All other apps")) {
 
             final AppListInfo otherAppsItems = blockedList.get(position);
+            holder.enableViews();
+            String appName = getAppNameFromPackage(otherAppsItems.packageName);
+            holder.render(appName);
+
+
             if (!TextUtils.isEmpty(otherAppsItems.errorMessage)) {
                 holder.render(otherAppsItems.errorMessage);
                 holder.disableViews();
-            } else {
-                holder.enableViews();
-                String appName = getAppNameFromPackage(otherAppsItems.packageName);
-                holder.render(appName);
-                holder.displayImage(otherAppsItems.packageName, packageManager, otherAppsItems.errorMessage);
-
-                holder.getLinearList().setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+            }
+            holder.displayImage(otherAppsItems.packageName, packageManager, otherAppsItems.errorMessage);
+            holder.getLinearList().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
 
+                    if (TextUtils.isEmpty(otherAppsItems.errorMessage)) {
                         if (popup != null) {
                             popup.dismiss();
                         }
@@ -308,25 +310,34 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
 
                         popup.show();
                     }
-                });
-            }
+                }
+            });
 
-        } else if (headerList.get(section).headerName.equals("Human direct messaging")) {
+
+        }
+
+
+        if (headerList.get(section).headerName.equals("Human direct messaging")) {
+
 
             final AppListInfo messengerAppsItem = messengerList.get(position);
+            String appName = getAppNameFromPackage(messengerAppsItem
+                    .packageName);
+            holder.render(appName);
+            holder.enableViews();
             if (!TextUtils.isEmpty(messengerAppsItem.errorMessage)) {
                 holder.render(messengerAppsItem.errorMessage);
                 holder.disableViews();
-            } else {
+            }
+            holder.displayImage(messengerAppsItem.packageName, packageManager, messengerAppsItem.errorMessage);
 
-                String appName = getAppNameFromPackage(messengerAppsItem
-                        .packageName);
-                holder.render(appName);
-                holder.enableViews();
-                holder.displayImage(messengerAppsItem.packageName, packageManager, messengerAppsItem.errorMessage);
-                holder.getLinearList().setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+            holder.getLinearList().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (TextUtils.isEmpty(messengerAppsItem.errorMessage)) {
+
+
                         if (popup != null) {
                             popup.dismiss();
                         }
@@ -357,28 +368,31 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
 
                         popup.show();
                     }
-                });
+                }
+            });
 
-            }
 
         }
 
 
         if (headerList.get(section).headerName.equals("Helpful robots")) {
             final AppListInfo appListItem = helpfulRobot_List.get(position);
+            holder.enableViews();
+            String appName = getAppNameFromPackage(appListItem.packageName);
+            holder.render(appName);
+
+            holder.displayImage(appListItem.packageName, packageManager, appListItem.errorMessage);
             if (!TextUtils.isEmpty(appListItem.errorMessage)) {
                 holder.render(appListItem.errorMessage);
                 holder.disableViews();
-            } else {
-                holder.enableViews();
-                String appName = getAppNameFromPackage(appListItem.packageName);
-                holder.render(appName);
+            }
 
-                holder.displayImage(appListItem.packageName, packageManager, appListItem.errorMessage);
 
-                holder.getLinearList().setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+            holder.getLinearList().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (TextUtils.isEmpty(appListItem.errorMessage)) {
+
                         if (popup != null) {
                             popup.dismiss();
                         }
@@ -407,10 +421,12 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
 
                         popup.show();
 
-
                     }
-                });
-            }
+
+
+                }
+            });
+
 
         }
 
@@ -514,13 +530,13 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
             d.errorMessage = context.getResources().getString(R.string.msg_no_apps);
             blockedList.add(d);
         }
-        if(helpfulRobot_List.size()>0) {
+        if (helpfulRobot_List.size() > 0) {
             helpfulRobot_List = Sorting.sortApplication(helpfulRobot_List);
         }
-        if(messengerList.size()>0) {
+        if (messengerList.size() > 0) {
             messengerList = Sorting.sortApplication(messengerList);
         }
-        if(blockedList.size()>0) {
+        if (blockedList.size() > 0) {
             blockedList = Sorting.sortApplication(blockedList);
         }
         notifyDataSetChanged();

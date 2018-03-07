@@ -85,14 +85,14 @@ public class NotificationActivity extends CoreActivity {
 
     public void initView() {
 
-        pref_messengerList.clear();
-        pref_helpfulRobots.clear();
-        pref_blockedList.clear();
+        pref_messengerList = new ArrayList<>();
+        pref_helpfulRobots = new ArrayList<>();
+        pref_blockedList = new HashSet<>();
 
-        blockedList.clear();
-        messengerList.clear();
-        helpfulRobot_List.clear();
-        headerSectionList.clear();
+        blockedList = new ArrayList<>();
+        messengerList = new ArrayList<>();
+        helpfulRobot_List = new ArrayList<>();
+        headerSectionList = new ArrayList<>();
 
         // Initialize components
         toolbar = findViewById(R.id.toolbar);
@@ -217,13 +217,13 @@ public class NotificationActivity extends CoreActivity {
         lst_appList.setLayoutManager(linearLayoutManager);
         lst_appList.setHasFixedSize(true);
 
-        if(helpfulRobot_List.size()>0) {
+        if (helpfulRobot_List.size() > 0) {
             helpfulRobot_List = Sorting.sortApplication(helpfulRobot_List);
         }
-        if(messengerList.size()>0) {
+        if (messengerList.size() > 0) {
             messengerList = Sorting.sortApplication(messengerList);
         }
-        if(blockedList.size()>0) {
+        if (blockedList.size() > 0) {
             blockedList = Sorting.sortApplication(blockedList);
         }
 
