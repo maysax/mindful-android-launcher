@@ -11,7 +11,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -100,6 +102,21 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
         Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         installedPackageList = getPackageManager().queryIntentActivities(mainIntent, 0);
+
+        List<ResolveInfo> appList= new ArrayList<>();
+        for(int i=0;i<installedPackageList.size();i++){
+            boolean isAdded=false;
+            for(int j=0;j<appList.size();j++){
+                if(!TextUtils.isEmpty(installedPackageList.get(i).activityInfo.packageName) && appList.get(j).activityInfo.packageName.equalsIgnoreCase(installedPackageList.get(i).activityInfo.packageName)){
+                    isAdded=true;
+                }
+            }
+            if(!isAdded){
+                appList.add(installedPackageList.get(i));
+            }
+        }
+
+        installedPackageList=appList;
 
         bindData(false);
         if (PrefSiempo.getInstance(this).read(PrefSiempo.IS_JUNKFOOD_FIRSTTIME, true)) {
