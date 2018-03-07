@@ -175,9 +175,8 @@ public class PackageUtil {
                     NotificationChannel notificationChannel = createChannel(context,
                             applicationNameFromPackageName);
                     if (notificationManager != null) {
-                        notificationManager.createNotificationChannel(notificationChannel);
-                        notificationChannel.enableLights(true);
                         notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+                        notificationManager.createNotificationChannel(notificationChannel);
                         Tracer.d("Tracking createNotificationChannel");
                     }
                     if (notificationManager != null) {
@@ -186,10 +185,10 @@ public class PackageUtil {
                     }
                 }
                 NotificationCompat.Builder groupBuilder = createGroupNotification(context, notification, applicationNameFromPackageName);
-                groupBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+
 
                 NotificationCompat.Builder builder = getNotification(context, notification);
-                builder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+
 
                 if (notificationManager != null) {
                     notificationManager.notify(icon, groupBuilder.build());
@@ -221,6 +220,7 @@ public class PackageUtil {
         Tracer.d("Tracking getNotification3");
         NotificationCompat.Builder b
                 = new NotificationCompat.Builder(context, applicationNameFromPackageName);
+        b.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         b.setDefaults(Notification.DEFAULT_LIGHTS);
         PendingIntent contentIntent = getPendingIntent(context, notification);
         Tracer.d("Tracking getNotification4");
@@ -318,6 +318,7 @@ public class PackageUtil {
                         .setOnlyAlertOnce(true)
                         .setAutoCancel(true)
                         .setContentIntent(pendingIntent);
+        groupBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Tracer.d("Tracking createGroupNotification4");
             groupBuilder.setStyle(new NotificationCompat.BigTextStyle());
@@ -741,7 +742,7 @@ public class PackageUtil {
             // Load RecentItem List from Storage
             Type baseType = new TypeToken<List<MainListItem>>() {
             }.getType();
-            List<MainListItem> recentItemList = new ArrayList<>();
+            List<MainListItem> recentItemList;
             recentItemList = loadRecentItemsFromStore(context);
 
             // Validate if stored RecentItem List having this item or not.
@@ -752,7 +753,7 @@ public class PackageUtil {
                 String packageName = recentItemList.get(j).getPackageName();
 
                 if (TextUtils.isEmpty(item.getPackageName())) {
-                    if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(item.getTitle()) && title.toString().toLowerCase().trim().equalsIgnoreCase(item.getTitle().toLowerCase().trim())) {
+                    if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(item.getTitle()) && title.toLowerCase().trim().equalsIgnoreCase(item.getTitle().toLowerCase().trim())) {
                         isItemAvailable = true;
                         removeItem = recentItemList.get(j);
                     }
@@ -764,9 +765,9 @@ public class PackageUtil {
                 }
             }
 
-            /**
-             *  1.) If RecentItem List do not contain this item, then add and store into the list.
-             *  2.) If RecentItem lsit contain this item, then update it to first position
+            /*
+               1.) If RecentItem List do not contain this item, then add and store into the list.
+               2.) If RecentItem lsit contain this item, then update it to first position
              */
             if (!isItemAvailable) {
                 recentItemList.add(0, item);
@@ -785,7 +786,7 @@ public class PackageUtil {
 
     public static List<MainListItem> getListWithMostRecentData(List<MainListItem> allItems, Context context) {
 
-        List<MainListItem> recentItemList = new ArrayList<>();
+        List<MainListItem> recentItemList;
         recentItemList = loadRecentItemsFromStore(context);
 
         List<MainListItem> removeList = new ArrayList<>();
@@ -821,7 +822,7 @@ public class PackageUtil {
         return listWithMostRecentdata;
     }
 
-    public static List<MainListItem> loadRecentItemsFromStore(Context context) {
+    private static List<MainListItem> loadRecentItemsFromStore(Context context) {
         Type baseType = new TypeToken<List<MainListItem>>() {
         }.getType();
         List<MainListItem> recentItemList = new ArrayList<>();
@@ -838,7 +839,7 @@ public class PackageUtil {
     private static List<MainListItem> getJunkListItems(List<MainListItem> allItems, Context context) {
         HashMap<Integer, AppMenu> toolSetting = CoreApplication.getInstance()
                 .getToolsSettings();
-        ArrayList<String> junkFoodAppList = new ArrayList<>();
+        ArrayList<String> junkFoodAppList;
         Set<String> junkFoodList = PrefSiempo
                 .getInstance(context).read
                         (PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
