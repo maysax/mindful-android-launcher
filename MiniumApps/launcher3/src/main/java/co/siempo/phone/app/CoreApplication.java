@@ -16,7 +16,6 @@ import android.os.UserManager;
 import android.provider.AlarmClock;
 import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
-import android.text.TextUtils;
 import android.util.LruCache;
 
 import com.androidnetworking.AndroidNetworking;
@@ -28,7 +27,6 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -369,7 +367,9 @@ public abstract class CoreApplication extends MultiDexApplication {
                 ApplicationInfo appInfo = getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA);
                 getPackagesList().add(appInfo.packageName);
             } else {
-                getPackagesList().remove(getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA).packageName);
+                if (getPackagesList().contains(packageName)) {
+                    getPackagesList().remove(packageName);
+                }
             }
             EventBus.getDefault().post(new AppInstalledEvent(true));
         } catch (PackageManager.NameNotFoundException e) {

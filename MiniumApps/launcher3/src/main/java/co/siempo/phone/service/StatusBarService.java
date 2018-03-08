@@ -339,10 +339,7 @@ public class StatusBarService extends Service {
                                     new DBClient().deleteMsgByPackageName(uninstallPackageName);
                                     removeAppFromPreference(context, uninstallPackageName);
                                     removeAppFromBlockedList(uninstallPackageName);
-                                    Log.d("Testing with device.", "Removed" + uninstallPackageName);
                                     CoreApplication.getInstance().addOrRemoveApplicationInfo(false, uninstallPackageName);
-                                    Log.d("Testing with device.", "Event " +
-                                            "posted" + uninstallPackageName);
                                 }
                             }
                         }
