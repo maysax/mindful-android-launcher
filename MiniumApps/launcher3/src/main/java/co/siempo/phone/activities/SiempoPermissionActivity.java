@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -125,6 +124,7 @@ public class SiempoPermissionActivity extends CoreActivity {
     };
     private PermissionUtil permissionUtil;
     private boolean isFromHome;
+    private ProgressDialog pd;
 
     @AfterViews
     void afterViews() {
@@ -139,6 +139,7 @@ public class SiempoPermissionActivity extends CoreActivity {
         if (intent != null) {
             isFromHome = intent.getBooleanExtra(DashboardActivity.IS_FROM_HOME, false);
         }
+        pd = new ProgressDialog(this);
 
 
     }
@@ -282,24 +283,29 @@ public class SiempoPermissionActivity extends CoreActivity {
 
     @OnActivityResult(PermissionUtil.DRAWING_OVER_OTHER_APPS)
     void onResultDrawingAccess(int resultCode) {
-        final ProgressDialog pd = new ProgressDialog(this);
-        pd.setMessage("Please wait...");
-        pd.show();
 
-        Handler handler= new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(pd!=null){
-                    pd.dismiss();
+        try {
+            pd.setMessage("Please wait...");
+            pd.show();
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (pd != null && pd.isShowing() && !isFinishing()) {
+                        pd.dismiss();
+                    }
+                    if (!new PermissionUtil(SiempoPermissionActivity.this).hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
+                        switchOverlayAccess.setChecked(false);
+                    } else {
+                        switchOverlayAccess.setChecked(true);
+                    }
                 }
-                if (!new PermissionUtil(SiempoPermissionActivity.this).hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
-                    switchOverlayAccess.setChecked(false);
-                } else {
-                    switchOverlayAccess.setChecked(true);
-                }
-            }
-        },5000);
+            }, 5000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
