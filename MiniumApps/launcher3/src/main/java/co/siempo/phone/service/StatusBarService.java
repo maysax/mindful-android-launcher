@@ -311,7 +311,6 @@ public class StatusBarService extends Service {
                         if (intent.getData().getEncodedSchemeSpecificPart() != null) {
                             installPackageName = intent.getData().getEncodedSchemeSpecificPart();
                             addAppFromBlockedList(installPackageName);
-                            Log.d("Testing with device.", "Added" + installPackageName);
                             CoreApplication.getInstance().addOrRemoveApplicationInfo(true, installPackageName);
                         }
 

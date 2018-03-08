@@ -9,7 +9,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -160,9 +159,7 @@ public class NotificationActivity extends CoreActivity {
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
         if (event.isAppInstalledSuccessfully()) {
-
             initView();
-            Log.d("App removed", "App remove event");
         }
     }
 
