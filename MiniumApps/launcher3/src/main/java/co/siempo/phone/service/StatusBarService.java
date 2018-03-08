@@ -153,23 +153,30 @@ public class StatusBarService extends Service {
      */
     public void removeAppFromBlockedList(String uninstallPackageName) {
         Set<String> blockedApps = new HashSet<>();
-        ArrayList<String> removeApps = new ArrayList<>();
+        Set<String> removeApps = new HashSet<>();
         blockedApps = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST,
                 new HashSet<String>());
         try {
-            for (String blockedAppName : blockedApps) {
-                if (blockedAppName.equalsIgnoreCase(uninstallPackageName.trim())) {
-                    removeApps.add(blockedAppName);
-                }
+
+
+            if (blockedApps.contains(uninstallPackageName)) {
+                blockedApps.remove(uninstallPackageName);
             }
-            if (removeApps.size() > 0) {
-                blockedApps.removeAll(removeApps);
-            }
+//            for (String blockedAppName : blockedApps) {
+//                if (blockedAppName.equalsIgnoreCase(uninstallPackageName.trim())) {
+//                    removeApps.add(blockedAppName);
+//                }
+//            }
+//            if (removeApps.size() > 0) {
+//                blockedApps.removeAll(removeApps);
+//            }
+//            if(blockedApps.contains(removeApps))
+//            {
+//                blockedApps.remove(removeApps);
+//            }
             PrefSiempo.getInstance(context).write(PrefSiempo.BLOCKED_APPLIST,
                     blockedApps);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
 
 
         ArrayList<String> disableApps = new ArrayList<>();
@@ -186,7 +193,10 @@ public class StatusBarService extends Service {
             }
             String disableList = new Gson().toJson(disableApps);
             PrefSiempo.getInstance(context).write(PrefSiempo.HELPFUL_ROBOTS, disableList);
-//            sharedPreferencesLauncher3.edit().putString(Constants.HELPFUL_ROBOTS, disableList).commit();
+        }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
@@ -321,12 +331,15 @@ public class StatusBarService extends Service {
                             if (!(intent.getExtras().containsKey(Intent.EXTRA_REPLACING) &&
                                     intent.getExtras().getBoolean(Intent.EXTRA_REPLACING, false))) {
                                 uninstallPackageName = intent.getData().getSchemeSpecificPart();
-                                Log.d("Testing with device.", "Removed" + uninstallPackageName);
+
                                 if (!TextUtils.isEmpty(uninstallPackageName)) {
                                     new DBClient().deleteMsgByPackageName(uninstallPackageName);
                                     removeAppFromPreference(context, uninstallPackageName);
                                     removeAppFromBlockedList(uninstallPackageName);
+                                    Log.d("Testing with device.", "Removed" + uninstallPackageName);
                                     CoreApplication.getInstance().addOrRemoveApplicationInfo(false, uninstallPackageName);
+                                    Log.d("Testing with device.", "Event " +
+                                            "posted" + uninstallPackageName);
                                 }
                             }
                         }
