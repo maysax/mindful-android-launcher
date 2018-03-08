@@ -186,11 +186,14 @@ public class StatusBarService extends Service {
             Type type = new TypeToken<ArrayList<String>>() {
             }.getType();
             disableApps = new Gson().fromJson(disable_AppList, type);
+            ArrayList<String> removedisableApps = new ArrayList<>();
             for (String disableAppName : disableApps) {
                 if (disableAppName.equalsIgnoreCase(uninstallPackageName.trim())) {
-                    disableApps.remove(disableAppName);
+                    removedisableApps.add(disableAppName);
                 }
             }
+
+            disableApps.removeAll(removedisableApps);
             String disableList = new Gson().toJson(disableApps);
             PrefSiempo.getInstance(context).write(PrefSiempo.HELPFUL_ROBOTS, disableList);
         }
