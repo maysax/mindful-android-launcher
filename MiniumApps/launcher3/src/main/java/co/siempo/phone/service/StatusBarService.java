@@ -162,41 +162,28 @@ public class StatusBarService extends Service {
             if (blockedApps.contains(uninstallPackageName)) {
                 blockedApps.remove(uninstallPackageName);
             }
-//            for (String blockedAppName : blockedApps) {
-//                if (blockedAppName.equalsIgnoreCase(uninstallPackageName.trim())) {
-//                    removeApps.add(blockedAppName);
-//                }
-//            }
-//            if (removeApps.size() > 0) {
-//                blockedApps.removeAll(removeApps);
-//            }
-//            if(blockedApps.contains(removeApps))
-//            {
-//                blockedApps.remove(removeApps);
-//            }
             PrefSiempo.getInstance(context).write(PrefSiempo.BLOCKED_APPLIST,
                     blockedApps);
 
 
-
-        ArrayList<String> disableApps = new ArrayList<>();
-        String disable_AppList = PrefSiempo.getInstance(context).read
-                (PrefSiempo.HELPFUL_ROBOTS, "");
-        if (!TextUtils.isEmpty(disable_AppList)) {
-            Type type = new TypeToken<ArrayList<String>>() {
-            }.getType();
-            disableApps = new Gson().fromJson(disable_AppList, type);
-            ArrayList<String> removedisableApps = new ArrayList<>();
-            for (String disableAppName : disableApps) {
-                if (disableAppName.equalsIgnoreCase(uninstallPackageName.trim())) {
-                    removedisableApps.add(disableAppName);
+            ArrayList<String> disableApps = new ArrayList<>();
+            String disable_AppList = PrefSiempo.getInstance(context).read
+                    (PrefSiempo.HELPFUL_ROBOTS, "");
+            if (!TextUtils.isEmpty(disable_AppList)) {
+                Type type = new TypeToken<ArrayList<String>>() {
+                }.getType();
+                disableApps = new Gson().fromJson(disable_AppList, type);
+                ArrayList<String> removedisableApps = new ArrayList<>();
+                for (String disableAppName : disableApps) {
+                    if (disableAppName.equalsIgnoreCase(uninstallPackageName.trim())) {
+                        removedisableApps.add(disableAppName);
+                    }
                 }
-            }
 
-            disableApps.removeAll(removedisableApps);
-            String disableList = new Gson().toJson(disableApps);
-            PrefSiempo.getInstance(context).write(PrefSiempo.HELPFUL_ROBOTS, disableList);
-        }
+                disableApps.removeAll(removedisableApps);
+                String disableList = new Gson().toJson(disableApps);
+                PrefSiempo.getInstance(context).write(PrefSiempo.HELPFUL_ROBOTS, disableList);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
