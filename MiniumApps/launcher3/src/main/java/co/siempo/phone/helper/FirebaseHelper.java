@@ -20,11 +20,9 @@ public class FirebaseHelper {
     public static String ACTION_CALL = "call";
     public static String ACTION_SMS = "send_as_sms";
     public static String ACTION_SAVE_NOTE = "save_note";
-    public static String ACTION_CREATE_CONTACT = "create_contact";
     public static String ACTION_CONTACT_PICK = "contact_picked";
     public static String ACTION_APPLICATION_PICK = "application_picked";
     public static String SEARCH_PANE = "search_pane";
-    private static String IF_SCREEN = "if_screen";
     private static String SIEMPO_MENU = "siempo_menu";
     private static FirebaseHelper firebaseHelper;
     // Screen Name
@@ -33,7 +31,6 @@ public class FirebaseHelper {
     private static String JUNKFOOD_PANE = "junkfood_pane";
     //Event
     private static String IF_ACTION = "if_action";
-    private static String THIRD_PARTY_APPLICATION = "third_party";
     private static String SCREEN_USAGE = "screen_usage";
     private static String SIEMPO_DEFAULT = "siempo_default";
     private static String SUPPRESSED_NOTIFICATION = "suppressed_notification";
@@ -101,22 +98,13 @@ public class FirebaseHelper {
         getFirebaseAnalytics().logEvent(SUPPRESSED_NOTIFICATION, bundle);
     }
 
-    /**
-     * Used for Third party application open by User from application list.
-     *
-     * @param applicationName
-     */
-    public void logAppUsage(String applicationName) {
-        Bundle bundle = new Bundle();
-        bundle.putString(APPLICATION_NAME, applicationName);
-        Tracer.d("Firebase:" + THIRD_PARTY_APPLICATION + ": " + bundle.toString());
-        getFirebaseAnalytics().logEvent(THIRD_PARTY_APPLICATION, bundle);
-    }
 
     /**
-     * Used fot menu used by user from either IF or menu list based in from.
-     * from = 0 for Menu List
-     * from = 1 for IF Screen
+     * Used fot Tool/App used by user from either IF or 3 panes.
+     * from = 0 for Tool Pane.
+     * from = 1 for Favorite Pane
+     * from = 2 for Junkfood Pane
+     * from = 3 for Search Pane
      *
      * @param applicationName
      * @param actionFor
