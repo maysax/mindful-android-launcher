@@ -447,5 +447,17 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
         }
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //Done in order to prevent user opening empty junk food pane,
+        //Below code will mark junk food pane as empty and while switching
+        // from Intention fragment to pane fragment , this boolean is the
+        // deciding factor on which pane to open
+        if (list != null && list.size() == 0 && !DashboardActivity
+                .isJunkFoodOpen) {
+            DashboardActivity.isJunkFoodOpen = true;
+        }
 
+    }
 }

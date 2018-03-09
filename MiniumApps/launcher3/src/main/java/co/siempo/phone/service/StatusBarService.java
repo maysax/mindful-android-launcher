@@ -153,40 +153,40 @@ public class StatusBarService extends Service {
      */
     public void removeAppFromBlockedList(String uninstallPackageName) {
         Set<String> blockedApps = new HashSet<>();
-        ArrayList<String> removeApps = new ArrayList<>();
+        Set<String> removeApps = new HashSet<>();
         blockedApps = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST,
                 new HashSet<String>());
         try {
-            for (String blockedAppName : blockedApps) {
-                if (blockedAppName.equalsIgnoreCase(uninstallPackageName.trim())) {
-                    removeApps.add(blockedAppName);
-                }
-            }
-            if (removeApps.size() > 0) {
-                blockedApps.removeAll(removeApps);
+
+
+            if (blockedApps.contains(uninstallPackageName)) {
+                blockedApps.remove(uninstallPackageName);
             }
             PrefSiempo.getInstance(context).write(PrefSiempo.BLOCKED_APPLIST,
                     blockedApps);
+
+
+            ArrayList<String> disableApps = new ArrayList<>();
+            String disable_AppList = PrefSiempo.getInstance(context).read
+                    (PrefSiempo.HELPFUL_ROBOTS, "");
+            if (!TextUtils.isEmpty(disable_AppList)) {
+                Type type = new TypeToken<ArrayList<String>>() {
+                }.getType();
+                disableApps = new Gson().fromJson(disable_AppList, type);
+                ArrayList<String> removedisableApps = new ArrayList<>();
+                for (String disableAppName : disableApps) {
+                    if (disableAppName.equalsIgnoreCase(uninstallPackageName.trim())) {
+                        removedisableApps.add(disableAppName);
+                    }
+                }
+
+                disableApps.removeAll(removedisableApps);
+                String disableList = new Gson().toJson(disableApps);
+                PrefSiempo.getInstance(context).write(PrefSiempo.HELPFUL_ROBOTS, disableList);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
-        }
-
-
-        ArrayList<String> disableApps = new ArrayList<>();
-        String disable_AppList = PrefSiempo.getInstance(context).read
-                (PrefSiempo.HELPFUL_ROBOTS, "");
-        if (!TextUtils.isEmpty(disable_AppList)) {
-            Type type = new TypeToken<ArrayList<String>>() {
-            }.getType();
-            disableApps = new Gson().fromJson(disable_AppList, type);
-            for (String disableAppName : disableApps) {
-                if (disableAppName.equalsIgnoreCase(uninstallPackageName.trim())) {
-                    disableApps.remove(disableAppName);
-                }
-            }
-            String disableList = new Gson().toJson(disableApps);
-            PrefSiempo.getInstance(context).write(PrefSiempo.HELPFUL_ROBOTS, disableList);
-//            sharedPreferencesLauncher3.edit().putString(Constants.HELPFUL_ROBOTS, disableList).commit();
         }
 
     }
@@ -311,7 +311,6 @@ public class StatusBarService extends Service {
                         if (intent.getData().getEncodedSchemeSpecificPart() != null) {
                             installPackageName = intent.getData().getEncodedSchemeSpecificPart();
                             addAppFromBlockedList(installPackageName);
-                            Log.d("Testing with device.", "Added" + installPackageName);
                             CoreApplication.getInstance().addOrRemoveApplicationInfo(true, installPackageName);
                         }
 
@@ -321,7 +320,7 @@ public class StatusBarService extends Service {
                             if (!(intent.getExtras().containsKey(Intent.EXTRA_REPLACING) &&
                                     intent.getExtras().getBoolean(Intent.EXTRA_REPLACING, false))) {
                                 uninstallPackageName = intent.getData().getSchemeSpecificPart();
-                                Log.d("Testing with device.", "Removed" + uninstallPackageName);
+
                                 if (!TextUtils.isEmpty(uninstallPackageName)) {
                                     new DBClient().deleteMsgByPackageName(uninstallPackageName);
                                     removeAppFromPreference(context, uninstallPackageName);

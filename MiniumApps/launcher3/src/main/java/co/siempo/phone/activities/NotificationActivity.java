@@ -68,6 +68,7 @@ public class NotificationActivity extends CoreActivity {
     protected void onResume() {
         super.onResume();
         startTime = System.currentTimeMillis();
+        initView();
     }
 
     @Override
@@ -80,7 +81,7 @@ public class NotificationActivity extends CoreActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tempo_list_notification);
-        initView();
+
     }
 
     public void initView() {
