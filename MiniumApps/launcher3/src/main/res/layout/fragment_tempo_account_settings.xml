@@ -81,7 +81,7 @@
                     android:paddingTop="4dp"
                     android:text="@string/lbl_exitSiempo"
                     android:textSize="18sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/txtExitSiempoServiceDescription"
@@ -95,7 +95,7 @@
                     android:paddingRight="8dp"
                     android:paddingTop="2dp"
                     android:text="@string/lbl_switchSiempo"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
             </RelativeLayout>
 
 

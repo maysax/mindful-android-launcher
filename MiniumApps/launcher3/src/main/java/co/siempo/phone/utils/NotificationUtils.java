@@ -27,7 +27,7 @@ public class NotificationUtils extends ContextWrapper {
 
     public void createChannels() {
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             // create android channel
             NotificationChannel androidChannel = new NotificationChannel(ANDROID_CHANNEL_ID,
@@ -62,8 +62,8 @@ public class NotificationUtils extends ContextWrapper {
     }
 
     public Notification.Builder getAndroidChannelNotification(String title, String body) {
-        Notification.Builder builder=null;
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        Notification.Builder builder = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             builder = new Notification.Builder(getApplicationContext(), ANDROID_CHANNEL_ID)
                     .setContentTitle(title)
                     .setSortKey(getResources().getString(R.string.lock_screen_label))
@@ -71,7 +71,7 @@ public class NotificationUtils extends ContextWrapper {
                     .setSmallIcon(android.R.drawable.stat_notify_more)
                     .setAutoCancel(true);
         }
-        return  builder;
-        
+        return builder;
+
     }
 }

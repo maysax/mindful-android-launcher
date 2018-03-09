@@ -23,7 +23,6 @@ import com.github.javiersantos.appupdater.objects.Update;
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.activities.CoreActivity;
-import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.event.CheckVersionEvent;
 import co.siempo.phone.service.ApiClient_;
 
@@ -40,7 +39,7 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
     private TextView txtFaq;
     private TextView txtVersionValue;
     private View view;
-    private String TAG="HelpFragment";
+    private String TAG = "HelpFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -124,7 +123,6 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
                 break;
         }
     }
-
 
 
     public void checkUpgradeVersion() {

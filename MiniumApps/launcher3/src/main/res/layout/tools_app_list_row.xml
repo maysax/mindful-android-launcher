@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/linearList"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:clickable="true"
-              android:gravity="center"
-              android:orientation="vertical"
-              android:showDividers="none"
-              tools:ignore="UseCompoundDrawables">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearList"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:showDividers="none"
+    tools:ignore="UseCompoundDrawables">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
             android:layout_width="32dp"
             android:layout_height="28dp"
             android:layout_centerVertical="true"
-            tools:ignore="ContentDescription,PrivateResource"/>
+            tools:ignore="ContentDescription,PrivateResource" />
 
         <TextView
             android:id="@+id/txtAppName"
@@ -43,7 +43,7 @@
             android:text="Sound"
             android:textColor="#000000"
             android:textSize="16sp"
-            tools:ignore="HardcodedText"/>
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/txtAssignApp"
@@ -57,7 +57,7 @@
             android:paddingLeft="@dimen/dp_5"
             android:paddingRight="@dimen/dp_5"
             android:text="@string/assign_app"
-            android:textColor="@color/colorAccent"/>
+            android:textColor="@color/colorAccent" />
 
         <CheckBox
             android:id="@+id/checkbox"
@@ -68,7 +68,7 @@
             android:layout_gravity="center"
             android:background="@null"
             android:button="@drawable/checkbox_selector"
-            android:clickable="false"/>
+            android:clickable="false" />
     </RelativeLayout>
 
 </LinearLayout>

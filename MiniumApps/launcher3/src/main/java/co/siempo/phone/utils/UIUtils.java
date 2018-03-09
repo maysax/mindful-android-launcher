@@ -358,12 +358,10 @@ public class UIUtils {
                 bitmap.setWidth(bitmap.getWidth() / 2);
                 bitmap.setHeight(bitmap.getHeight() / 2);
                 return bitmap;
-            }
-            else{
+            } else {
                 return bitmap;
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }

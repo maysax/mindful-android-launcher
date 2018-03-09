@@ -13,8 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -85,7 +83,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                 } else {
                     BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, appMenu.getApplicationName());
                     CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
-                        holder.icon.setImageResource(item.getDrawable());
+                    holder.icon.setImageResource(item.getDrawable());
                     holder.text.setText(item.getTitle());
                 }
             }

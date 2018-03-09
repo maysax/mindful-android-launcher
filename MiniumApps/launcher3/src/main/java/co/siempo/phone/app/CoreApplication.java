@@ -16,7 +16,6 @@ import android.os.UserManager;
 import android.provider.AlarmClock;
 import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
-import android.text.TextUtils;
 import android.util.LruCache;
 
 import com.androidnetworking.AndroidNetworking;
@@ -28,7 +27,6 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -200,7 +198,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     public void setPackagesList(List<String> packagesList) {
-        try{
+        try {
             Collections.sort(packagesList, new Comparator<String>() {
                 public int compare(String v1, String v2) {
 
@@ -226,8 +224,7 @@ public abstract class CoreApplication extends MultiDexApplication {
 
             PrefSiempo.getInstance(this).write(PrefSiempo
                     .BLOCKED_APPLIST, blockedApps);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
         }
     }
 

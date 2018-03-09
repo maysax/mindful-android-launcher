@@ -176,24 +176,24 @@ public class SuppressNotificationActivity extends CoreActivity {
         }
 
         for (int i = 0; i < items.size(); i++) {
-                DateFormat sdf = new SimpleDateFormat(getTimeFormat(context));
-                String time = sdf.format(items.get(i).get_date());
-                if (items.get(i).getNotification_type() == NotificationUtility.NOTIFICATION_TYPE_EVENT) {
-                    Notification notification = new Notification();
-                    notification.setId(items.get(i).getId());
-                    notification.setNotitification_date(items.get(i).getNotification_date());
-                    notification.setNotificationType(items.get(i).getNotification_type());
-                    notification.setApp_icon(items.get(i).getApp_icon());
-                    notification.setUser_icon(items.get(i).getUser_icon());
-                    notification.setPackageName(items.get(i).getPackageName());
-                    notification.set_time(time);
-                    notification.setStrTitle(items.get(i).get_contact_title());
-                    notification.set_text(items.get(i).get_message());
-                    notificationList.add(notification);
-                } else {
-                    Notification n = new Notification(gettingNameAndImageFromPhoneNumber(items.get(i).get_contact_title()), items.get(i).getId(), items.get(i).get_contact_title(), items.get(i).get_message(), time, false, items.get(i).getNotification_type(), items.get(i).getPackageName());
-                    notificationList.add(n);
-                }
+            DateFormat sdf = new SimpleDateFormat(getTimeFormat(context));
+            String time = sdf.format(items.get(i).get_date());
+            if (items.get(i).getNotification_type() == NotificationUtility.NOTIFICATION_TYPE_EVENT) {
+                Notification notification = new Notification();
+                notification.setId(items.get(i).getId());
+                notification.setNotitification_date(items.get(i).getNotification_date());
+                notification.setNotificationType(items.get(i).getNotification_type());
+                notification.setApp_icon(items.get(i).getApp_icon());
+                notification.setUser_icon(items.get(i).getUser_icon());
+                notification.setPackageName(items.get(i).getPackageName());
+                notification.set_time(time);
+                notification.setStrTitle(items.get(i).get_contact_title());
+                notification.set_text(items.get(i).get_message());
+                notificationList.add(notification);
+            } else {
+                Notification n = new Notification(gettingNameAndImageFromPhoneNumber(items.get(i).get_contact_title()), items.get(i).getId(), items.get(i).get_contact_title(), items.get(i).get_message(), time, false, items.get(i).getNotification_type(), items.get(i).getPackageName());
+                notificationList.add(n);
+            }
             adapter = new SuppressNotificationAdapter(context, notificationList);
             recyclerView.setAdapter(adapter);
 

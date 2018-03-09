@@ -20,7 +20,7 @@ public class SingleItemDelete implements DeleteStrategy {
                         .where(TableNotificationSmsDao.Properties.Id.eq(notification.getId()))
                         .unique();
             } else {
-                 notificationSms = DBUtility.getNotificationDao().queryBuilder()
+                notificationSms = DBUtility.getNotificationDao().queryBuilder()
                         .where(TableNotificationSmsDao.Properties._contact_title.eq(notification.getNumber()),
                                 TableNotificationSmsDao.Properties.Notification_type.eq(notification.getNotificationType()),
                                 TableNotificationSmsDao.Properties.Id.eq(notification.getId()))

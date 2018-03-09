@@ -17,7 +17,7 @@ public class AppListInfo {
      */
     public boolean ischecked;
 
-    public String errorMessage="";
+    public String errorMessage = "";
 
     public String headerName = "";
 
