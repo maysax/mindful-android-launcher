@@ -150,5 +150,6 @@
     <color name="find_friends_eyeem_bg">#727272</color>
     <color name="find_friends_eyeem_bg_pressed">#505050</color>
     <color name="person_row_selected_bg">#66000000</color>
-
+    <color name="app_assignment_normal">#61000000</color>
+    <color name="app_assignment_junkfood">#DE000000</color>
 </resources>

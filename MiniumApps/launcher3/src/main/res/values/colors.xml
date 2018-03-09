@@ -1,25 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#FBFBFA</color>
-    <color name="colorPrimaryDark">#FFFFFF</color>
     <!--<color name="colorAccent">#331749</color>-->
     <color name="colorAccent">#448AFF</color>
     <color name="menu_circle">#F3F3F3</color>
-    <color name="pointer">#f7f8f9</color>
-    <color name="pointerHalo">@color/colorAccent</color>
-    <color name="pauseSeekBarActive">#332d6d</color>
-    <color name="pauseSeekBarInactive">#26000000</color>
     <color name="dim_foreground_dark_inverse">#323232</color>
-    <color name="transparent">#00000000</color>
-    <color name="text.ongoingcall">#646464</color>
-    <color name="border.color">#42000000</color>"
-    <color name="automcoplete">#bcbcbc</color>
-    <color name="temp_bg">#B9B9B9</color>
-    <color name="temp_bg_fab_menu">#ccffffff</color>
+    "
     <color name="toolbar_bg">#EEEEEE</color>
     <color name="layout_bg">#F3F3F3</color>
-    <color name="black_overlay">#66000000</color>
     <color name="errorColor">#EA3D85</color>
-    <color name="blackcolor">#000000</color>
 
+
+    <!--colors new added for design-->
+    <color name="indicator_inactive">#3342A4FF</color>
+    <color name="indicator_active">#33000000</color>
+
+    <!--color used in notes-->
+    <color name="drop_shadow_grey">#87737373</color>
+
+    <color name="black_95">#F2000000</color>
+    <color name="black_80">#CC000000</color>
+    <color name="black_50">#80000000</color>
+    <color name="black_10">#1A000000</color>
+    <color name="black_05">#0E000000</color>
+    <color name="dialog_red">#FF4291</color>
+    <color name="dialog_blue">#42A4FF</color>
+    <color name="dialog_message">#8A000000</color>
+    <color name="dialog_title">#DE000000</color>
+    <color name="bottom_doc">#E8E8E8</color>
+    <color name="appland_blue">#8A42A4FF</color>
+    <color name="appland_blue_bright">#42A4FF</color>
+    <color name="appland_contact_black">#CC000000</color>
+    <color name="appland_date">#8A000000</color>
+    <color name="bg_junk_apps_top_dock">#42A4FF</color>
+
+    <string-array name="colours" translatable="false">
+        <item>#44A1EB</item> <!-- blue -->
+        <item>#77DDBB</item> <!-- teal -->
+        <item>#BBE535</item> <!-- green -->
+        <item>#F56545</item> <!-- red -->
+        <item>#FFBB22</item> <!-- orange -->
+        <item>#EEEE22</item> <!-- yellow -->
+        <item>#FF5997</item> <!-- pink -->
+        <item>#A767FF</item> <!-- purple -->
+        <item>#FFFFFF</item> <!-- white -->
+    </string-array>
+
+
+    <!-- Theme Red -->
+
+    <!-- Theme Pink -->
+
+    <!-- Theme Purple -->
+
+    <!-- Theme Deep Purple -->
+
+    <!-- Theme Indigo -->
+
+    <!-- Theme Blue -->
+    <color name="colorPrimaryBlue">@color/material.core.blue</color>
+
+    <!-- Theme Light Blue -->
+
+    <!-- Theme Cyan -->
+
+    <!-- Theme Teal -->
+
+    <!-- Theme Green -->
+
+    <!-- Theme Light Green -->
+
+    <!-- Theme Lime -->
+
+    <!-- Theme Yellow -->
+
+    <!-- Theme Amber -->
+
+    <!-- Theme Orange -->
+
+    <!-- Theme DeepOrange -->
+
+    <!-- Theme Brown -->
+
+    <!-- Theme Grey -->
+
+    <!-- Theme Blue Grey -->
+
+    <!-- Material flat UI colors -->
+
+
+    <!-- Material core colors -->
+    <color name="material.core.red">#f44336</color>
+    <color name="material.core.blue">#2196F3</color>
+    <color name="material.core.cyan">#00BCD4</color>
+    <color name="material.core.orange">#FF9800</color>
+
+    <!-- Android core colors for easy access -->
+    <color name="dialog_text">#202020</color>
+    <color name="white">@android:color/white</color>
+    <color name="black">@android:color/black</color>
+    <color name="shadow">#727272</color>
+    <color name="transparent">@android:color/transparent</color>
+    <color name="darker_gray">@android:color/darker_gray</color>
+
+    <!-- Text colors -->
+    <color name="text.primary">#212121</color>
+    <color name="text.secondary">#727272</color>
+
+    <!-- Complementary colors -->
+
+
+    <color name="section_title_bg">#666666</color>
+    <color name="section_title_text">#57000000</color>
+    <color name="forground">#26E81313</color>
+    <color name="flageapp_header">#E81313</color>
+    <color name="unflageapp_header">#666666</color>
 </resources>

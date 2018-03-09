@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.net.Uri;
@@ -24,18 +23,25 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Set;
 
 import co.siempo.phone.R;
-import co.siempo.phone.app.Constants;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBClient;
-import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.event.AppInstalledEvent;
+import co.siempo.phone.event.OnBackPressedEvent;
+import co.siempo.phone.models.AppMenu;
+import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.event.AppInstalledEvent;
-import minium.co.core.event.FirebaseEvent;
 
-import static co.siempo.phone.SiempoNotificationBar.NotificationUtils.ANDROID_CHANNEL_ID;
+import static co.siempo.phone.utils.NotificationUtils.ANDROID_CHANNEL_ID;
 
 /**
  * This background service used for detect torch status and feature used for any other background status.
@@ -43,7 +49,6 @@ import static co.siempo.phone.SiempoNotificationBar.NotificationUtils.ANDROID_CH
 
 public class StatusBarService extends Service {
 
-    SharedPreferences sharedPreferences, sharedPreferencesLauncher3;
     Context context;
     private MyObserver myObserver;
     private AppInstallUninstall appInstallUninstall;
@@ -68,8 +73,6 @@ public class StatusBarService extends Service {
     public void onCreate() {
         super.onCreate();
         context = this;
-        sharedPreferences = getSharedPreferences("DroidPrefs", 0);
-        sharedPreferencesLauncher3 = getSharedPreferences("Launcher3Prefs", 0);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         registerObserverForContact();
         registerObserverForAppInstallUninstall();
@@ -99,6 +102,7 @@ public class StatusBarService extends Service {
         intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
         intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
         intentFilter.addAction(Intent.ACTION_PACKAGE_CHANGED);
+        intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
         intentFilter.addDataScheme("package");
         registerReceiver(appInstallUninstall, intentFilter);
     }
@@ -123,8 +127,8 @@ public class StatusBarService extends Service {
     }
 
     @Subscribe
-    public void firebaseEvent(FirebaseEvent firebaseEvent) {
-        FirebaseHelper.getIntance().logScreenUsageTime(firebaseEvent.getScreenName(), firebaseEvent.getStrStartTime());
+    public void firebaseEvent(OnBackPressedEvent onBackPressed) {
+//        FirebaseHelper.getInstance().logScreenUsageTime(onBackPressed.getScreenName(), onBackPressed.getStrStartTime());
     }
 
     @Override
@@ -142,6 +146,143 @@ public class StatusBarService extends Service {
         super.onDestroy();
     }
 
+    /**
+     * Remove uninstall app if it contains in blocked list OR HelpfulRobots
+     *
+     * @param uninstallPackageName
+     */
+    public void removeAppFromBlockedList(String uninstallPackageName) {
+        Set<String> blockedApps = new HashSet<>();
+        ArrayList<String> removeApps = new ArrayList<>();
+        blockedApps = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST,
+                new HashSet<String>());
+        try {
+            for (String blockedAppName : blockedApps) {
+                if (blockedAppName.equalsIgnoreCase(uninstallPackageName.trim())) {
+                    removeApps.add(blockedAppName);
+                }
+            }
+            if (removeApps.size() > 0) {
+                blockedApps.removeAll(removeApps);
+            }
+            PrefSiempo.getInstance(context).write(PrefSiempo.BLOCKED_APPLIST,
+                    blockedApps);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        ArrayList<String> disableApps = new ArrayList<>();
+        String disable_AppList = PrefSiempo.getInstance(context).read
+                (PrefSiempo.HELPFUL_ROBOTS, "");
+        if (!TextUtils.isEmpty(disable_AppList)) {
+            Type type = new TypeToken<ArrayList<String>>() {
+            }.getType();
+            disableApps = new Gson().fromJson(disable_AppList, type);
+            for (String disableAppName : disableApps) {
+                if (disableAppName.equalsIgnoreCase(uninstallPackageName.trim())) {
+                    disableApps.remove(disableAppName);
+                }
+            }
+            String disableList = new Gson().toJson(disableApps);
+            PrefSiempo.getInstance(context).write(PrefSiempo.HELPFUL_ROBOTS, disableList);
+//            sharedPreferencesLauncher3.edit().putString(Constants.HELPFUL_ROBOTS, disableList).commit();
+        }
+
+    }
+
+    /**
+     * Add install app in blocked list
+     *
+     * @param installPackageName
+     */
+    public void addAppFromBlockedList(String installPackageName) {
+        Set<String> blockedApps = new HashSet<>();
+        blockedApps = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST, new HashSet<String>());
+        try {
+            boolean isAppExist = false;
+            for (String blockedAppName : blockedApps) {
+                if (blockedAppName.equalsIgnoreCase(installPackageName.trim())) {
+                    isAppExist = true;
+                }
+            }
+            if (!isAppExist) {
+                blockedApps.add(installPackageName.trim());
+            }
+            PrefSiempo.getInstance(context).write(PrefSiempo.BLOCKED_APPLIST,
+                    blockedApps);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Remove application from Shared Preference when user disable application.
+     *
+     * @param context
+     * @param packageName
+     */
+    private void removeAppFromPreference(Context context, String packageName) {
+
+
+        Set<String> favoriteList = PrefSiempo.getInstance(context)
+                .read
+                        (PrefSiempo.FAVORITE_APPS, new HashSet<String>());
+        Set<String> junkFoodList = PrefSiempo
+                .getInstance(context).read
+                        (PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
+
+        if (favoriteList.contains(packageName)) {
+            favoriteList.remove(packageName);
+            PrefSiempo.getInstance(context)
+                    .write
+                            (PrefSiempo.FAVORITE_APPS, favoriteList);
+        }
+        if (junkFoodList.contains(packageName)) {
+            junkFoodList.remove(packageName);
+            PrefSiempo
+                    .getInstance(context).write
+                    (PrefSiempo.JUNKFOOD_APPS, junkFoodList);
+        }
+
+        HashMap<Integer, AppMenu> hashMap = CoreApplication.getInstance().getToolsSettings();
+        for (Map.Entry<Integer, AppMenu> has : hashMap.entrySet()) {
+            if (has.getValue().getApplicationName().equalsIgnoreCase(packageName)) {
+                Log.d("Remove Application", packageName);
+                has.getValue().setApplicationName("");
+            }
+        }
+        PrefSiempo
+                .getInstance(context).write
+                (PrefSiempo.TOOLS_SETTING, new Gson().toJson(hashMap));
+
+        updateFavoriteSort(context, packageName);
+
+
+    }
+
+    public void updateFavoriteSort(Context context, String packageName) {
+        //get the JSON array of the ordered of sorted customers
+        String jsonListOfSortedFavorites = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
+        //convert onNoteListChangedJSON array into a List<Long>
+        Gson gson1 = new Gson();
+        List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
+        }.getType());
+        for (ListIterator<String> it =
+             listOfSortFavoritesApps.listIterator(); it.hasNext
+                (); ) {
+            String removePackageName = it.next();
+            if (!TextUtils.isEmpty(removePackageName) && removePackageName.trim().equalsIgnoreCase(packageName)) {
+                it.set("");
+            }
+
+        }
+        Gson gson2 = new Gson();
+        String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
+        PrefSiempo.getInstance(context).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
+    }
+
     private class MyObserver extends ContentObserver {
         MyObserver(Handler handler) {
             super(handler);
@@ -154,11 +295,8 @@ public class StatusBarService extends Service {
 
         @Override
         public void onChange(boolean selfChange, Uri uri) {
-            // do s.th.
-            // depending on the handler you might be on the UI
-            // thread, so be cautious!
-
-            sharedPreferences.edit().putBoolean("isContactUpdate", true).apply();
+            PrefSiempo.getInstance(context).write(PrefSiempo.IS_CONTACT_UPDATE, true);
+//            PackageUtil.contactsUpdateInSearchList(context);
         }
     }
 
@@ -167,7 +305,6 @@ public class StatusBarService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             try {
-                CoreApplication.getInstance().getAllApplicationPackageName();
                 if (intent != null && intent.getAction() != null) {
                     if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) {
                         String installPackageName;
@@ -175,20 +312,40 @@ public class StatusBarService extends Service {
                             installPackageName = intent.getData().getEncodedSchemeSpecificPart();
                             addAppFromBlockedList(installPackageName);
                             Log.d("Testing with device.", "Added" + installPackageName);
+                            CoreApplication.getInstance().addOrRemoveApplicationInfo(true, installPackageName);
                         }
 
                     } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
                         String uninstallPackageName;
                         if (intent.getData().getEncodedSchemeSpecificPart() != null) {
-                            uninstallPackageName = intent.getData().getSchemeSpecificPart();
-                            Log.d("Testing with device.", "Removed" + uninstallPackageName);
-                            if (!TextUtils.isEmpty(uninstallPackageName)) {
-                                new DBClient().deleteMsgByPackageName(uninstallPackageName);
-                                removeAppFromBlockedList(uninstallPackageName);
+                            if (!(intent.getExtras().containsKey(Intent.EXTRA_REPLACING) &&
+                                    intent.getExtras().getBoolean(Intent.EXTRA_REPLACING, false))) {
+                                uninstallPackageName = intent.getData().getSchemeSpecificPart();
+                                Log.d("Testing with device.", "Removed" + uninstallPackageName);
+                                if (!TextUtils.isEmpty(uninstallPackageName)) {
+                                    new DBClient().deleteMsgByPackageName(uninstallPackageName);
+                                    removeAppFromPreference(context, uninstallPackageName);
+                                    removeAppFromBlockedList(uninstallPackageName);
+                                    CoreApplication.getInstance().addOrRemoveApplicationInfo(false, uninstallPackageName);
+                                }
+                            }
+                        }
+                    } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED)) {
+                        String packageName;
+                        if (intent.getData().getEncodedSchemeSpecificPart() != null) {
+                            packageName = intent.getData().getSchemeSpecificPart();
+                            boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, packageName);
+                            if (isEnable) {
+                                addAppFromBlockedList(packageName);
+                            } else {
+                                removeAppFromPreference(context, packageName);
+                                removeAppFromBlockedList(packageName);
+
                             }
                         }
                     }
-                    sharedPreferences.edit().putBoolean("isAppUpdated", true).apply();
+                    PrefSiempo.getInstance(context).write
+                            (PrefSiempo.IS_APP_UPDATED, true);
                     EventBus.getDefault().post(new AppInstalledEvent(true));
                 }
             } catch (Exception e) {
@@ -199,78 +356,5 @@ public class StatusBarService extends Service {
         }
     }
 
-    /**
-     * Remove uninstall app if it contains in blocked list OR HelpfulRobots
-     * @param uninstallPackageName
-     */
-    public void removeAppFromBlockedList(String uninstallPackageName){
-        ArrayList<String> blockedApps = new ArrayList<>();
-        String block_AppList = sharedPreferencesLauncher3.getString(Constants.BLOCKED_APPLIST,"");
-        if (!TextUtils.isEmpty(block_AppList)) {
-            try{
-                Type type = new TypeToken<ArrayList<String>>() {
-                }.getType();
-                blockedApps = new Gson().fromJson(block_AppList, type);
-                for (String blockedAppName:blockedApps) {
-                    if(blockedAppName.equalsIgnoreCase(uninstallPackageName.trim())){
-                        blockedApps.remove(blockedAppName);
-                    }
-                }
-                String blockedList = new Gson().toJson(blockedApps);
-                sharedPreferencesLauncher3.edit().putString(Constants.BLOCKED_APPLIST, blockedList).commit();
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
 
-        }
-
-        ArrayList<String> disableApps= new ArrayList<>();
-        String disable_AppList = sharedPreferencesLauncher3.getString(Constants.HELPFUL_ROBOTS, "");
-        if (!TextUtils.isEmpty(disable_AppList)) {
-            Type type = new TypeToken<ArrayList<String>>() {
-            }.getType();
-            disableApps = new Gson().fromJson(disable_AppList, type);
-            for (String disableAppName:disableApps) {
-                if(disableAppName.equalsIgnoreCase(uninstallPackageName.trim())){
-                    disableApps.remove(disableAppName);
-                }
-            }
-            String disableList = new Gson().toJson(disableApps);
-            sharedPreferencesLauncher3.edit().putString(Constants.HELPFUL_ROBOTS, disableList).commit();
-        }
-
-    }
-
-
-    /**
-     * Add install app in blocked list
-     * @param installPackageName
-     */
-    public void addAppFromBlockedList(String installPackageName){
-        ArrayList<String> blockedApps = new ArrayList<>();
-        String block_AppList = sharedPreferencesLauncher3.getString(Constants.BLOCKED_APPLIST,"");
-        if (!TextUtils.isEmpty(block_AppList)) {
-            try{
-                Type type = new TypeToken<ArrayList<String>>() {
-                }.getType();
-                blockedApps = new Gson().fromJson(block_AppList, type);
-                boolean isAppExist=false;
-                for (String blockedAppName:blockedApps) {
-                    if(blockedAppName.equalsIgnoreCase(installPackageName.trim())){
-                        isAppExist=true;
-                    }
-                }
-                if(!isAppExist){
-                    blockedApps.add(installPackageName.trim());
-                }
-                String blockedList = new Gson().toJson(blockedApps);
-                sharedPreferencesLauncher3.edit().putString(Constants.BLOCKED_APPLIST, blockedList).commit();
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
-
-        }
-    }
 }

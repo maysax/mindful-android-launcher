@@ -26,6 +26,12 @@
         tools:ignore="UseCompoundDrawables,UselessParent">
 
         <ImageView
+            android:id="@+id/temp"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:visibility="gone" />
+
+        <ImageView
             android:id="@+id/icon"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -45,10 +51,13 @@
                 android:id="@+id/text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
                 android:fontFamily="sans-serif-medium"
                 android:gravity="center"
-                android:textSize="14sp"
-                tools:text="Send as SMS" />
+                android:maxLines="1"
+                android:textColor="@color/black_80"
+                android:textSize="13sp"
+                tools:text="Send as a message" />
 
             <TextView
                 android:id="@+id/textDefaultApp"

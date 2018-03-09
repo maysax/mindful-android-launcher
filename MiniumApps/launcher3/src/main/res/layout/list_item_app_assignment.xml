@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relMenu"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:tag="list">
+
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/linearList"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:layout_centerVertical="true"
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables,UselessParent">
+
+        <ImageView
+            android:id="@+id/imgIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="18dp"
+            android:contentDescription="@null"
+            android:padding="6dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="18dp"
+            android:layout_toLeftOf="@+id/btnHideApps"
+            android:layout_toRightOf="@+id/imgIcon"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtAppName"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:textSize="16sp"
+                tools:text="Send as a message" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnHideApps"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right"
+            android:layout_marginEnd="18dp"
+            android:background="@null"
+            android:text="Unhide APP"
+            android:textAllCaps="true"
+            android:textColor="@color/colorPrimaryBlue"
+            android:textSize="16sp" />
+    </RelativeLayout>
+</RelativeLayout>

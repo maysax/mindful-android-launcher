@@ -65,4 +65,5 @@ public class Constants {
     public static String APP_DISABLE_COUNT="APP_DISABLE_COUNT";
     public static String HEADER_APPLIST="HEADER_APPLIST";
     public static String CALL_RUNNING = "CALLRUNNING";
+    public static String INTENT_MAINLISTITEM = "MainListItem";
 }

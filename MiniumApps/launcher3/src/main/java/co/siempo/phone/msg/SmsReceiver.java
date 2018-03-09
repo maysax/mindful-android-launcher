@@ -3,36 +3,28 @@ package co.siempo.phone.msg;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Telephony;
 import android.telephony.SmsMessage;
 import android.text.TextUtils;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import org.androidannotations.annotations.EReceiver;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
-import co.siempo.phone.app.Constants;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.app.Launcher3App;
-import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.DaoSession;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.NewNotificationEvent;
-import co.siempo.phone.notification.NotificationUtility;
+import co.siempo.phone.log.Tracer;
+import co.siempo.phone.utils.NotificationUtility;
+import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.EventBus;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.app.DroidPrefs_;
-import minium.co.core.log.Tracer;
 
 /**
  * Created by Shahab on 7/29/2016.
@@ -40,21 +32,13 @@ import minium.co.core.log.Tracer;
 @EReceiver
 public class SmsReceiver extends BroadcastReceiver {
 
-    public static final Uri RECEIVED_MESSAGE_CONTENT_PROVIDER = Uri.parse("content://sms/inbox");
-    @Pref
-    DroidPrefs_ prefs;
-    @Pref
-    Launcher3Prefs_ launcherPrefs;
-    TableNotificationSmsDao smsDao;
-    ArrayList<String> disableNotificationApps = new ArrayList<>();
-    ArrayList<String> blockedApps = new ArrayList<>();
+    Set<String> blockedApps = new HashSet<>();
     private String mAddress;
     private String mBody;
     private Date mDate;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
         Tracer.d("Messages: onReceive in Launcher3");
         if (intent != null && intent.getAction() != null && intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
             Bundle bundle = intent.getExtras();
@@ -81,52 +65,26 @@ public class SmsReceiver extends BroadcastReceiver {
                 mAddress = sms.getDisplayOriginatingAddress(); // sms..getOriginatingAddress();
                 mDate = new Date(sms.getTimestampMillis());
 
-                if (launcherPrefs.isAppDefaultOrFront().get()) {
-                    SharedPreferences prefs1 = context.getSharedPreferences("Launcher3Prefs", 0);
-                    String disable_AppList = prefs1.getString(Constants.HELPFUL_ROBOTS, "");
-                    if (!TextUtils.isEmpty(disable_AppList)) {
-                        Type type = new TypeToken<ArrayList<String>>() {
-                        }.getType();
-                        disableNotificationApps = new ArrayList<>();
-                        disableNotificationApps = new Gson().fromJson(disable_AppList, type);
-                        SharedPreferences sharedPreferences = context.getSharedPreferences("Launcher3Prefs", 0);
 
-                        String block_AppList = sharedPreferences.getString(Constants.BLOCKED_APPLIST, "");
-                        if (!TextUtils.isEmpty(block_AppList)) {
-                            Type blockType = new TypeToken<ArrayList<String>>() {
-                            }.getType();
-                            blockedApps = new Gson().fromJson(block_AppList, blockType);
-                        }
-                        boolean isShowNotification = true;
+                if (PrefSiempo.getInstance(context).read(PrefSiempo
+                        .IS_APP_DEFAULT_OR_FRONT, false)) {
 
 
-                        String messagingAppPackage=    Telephony.Sms.getDefaultSmsPackage(context);
-                        if (null != blockedApps && blockedApps.size() > 0 && !TextUtils.isEmpty(messagingAppPackage)) {
-                            for (String blockedApp : blockedApps) {
-                                if (blockedApp.equalsIgnoreCase(messagingAppPackage)) {
-                                    if (prefs.tempoType().get() != 0) {
-                                        saveMessage(mAddress, mBody, mDate, context);
-                                    }
+                    blockedApps = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST,
+                            new HashSet<String>());
+
+                    String messagingAppPackage = Telephony.Sms.getDefaultSmsPackage(context);
+                    if (null != blockedApps && blockedApps.size() > 0 && !TextUtils.isEmpty(messagingAppPackage)) {
+                        for (String blockedApp : blockedApps) {
+                            if (blockedApp.equalsIgnoreCase(messagingAppPackage)) {
+                                if (PrefSiempo.getInstance(context).read(PrefSiempo
+                                        .TEMPO_TYPE, 0) != 0) {
+                                    saveMessage(mAddress, mBody, mDate, context);
                                 }
                             }
                         }
-
-
-//                        if (null != blockedApps && blockedApps.size() > 0) {
-//                            for (String blockedApp : blockedApps) {
-//                                if (blockedApp.equalsIgnoreCase(messagingAppPackage)) {
-//                                    isShowNotification = false;
-//                                }
-//                            }
-//
-//                        }
-//
-//                        if (disableNotificationApps.contains(messagingAppPackage) && isShowNotification) {
-//                            if (prefs.tempoType().get() != 0) {
-//                                saveMessage(mAddress, mBody, mDate, context);
-//                            }
-//                        }
                     }
+
                 }
             }
         }
@@ -164,8 +122,6 @@ public class SmsReceiver extends BroadcastReceiver {
             CoreApplication.getInstance().logException(e);
         }
     }
-
-
 
 
 }

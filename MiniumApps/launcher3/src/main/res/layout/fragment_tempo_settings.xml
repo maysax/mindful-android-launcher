@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/layout_bg"
     android:orientation="vertical"
-    tools:context="co.siempo.phone.pause.PauseActivity"
     tools:ignore="UnusedIds">
 
     <android.support.v7.widget.Toolbar
@@ -22,91 +21,114 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/relHome"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:layout_marginLeft="5dp">
+            android:clickable="true"
+            android:paddingLeft="50dp">
+
             <TextView
                 android:id="@+id/txtHome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                android:padding="8dp"
                 android:text="@string/home_screen"
-                android:layout_marginLeft="50dp"
                 android:textSize="@dimen/text.size.large" />
-        </LinearLayout>
+        </RelativeLayout>
 
 
-        <LinearLayout
-            android:id="@+id/relAppMenus"
-            android:layout_width="match_parent"
+        <RelativeLayout
+            android:id="@+id/relAppMenu"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:layout_marginLeft="5dp">
+            android:clickable="true"
+            android:paddingLeft="50dp">
+
 
             <TextView
                 android:id="@+id/txtAppMenus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                android:padding="8dp"
                 android:text="@string/app_menus"
-                android:layout_marginLeft="50dp"
                 android:textSize="@dimen/text.size.large" />
-
-        </LinearLayout>
-
+        </RelativeLayout>
 
 
-
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/relNotification"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:layout_marginLeft="5dp">
+            android:clickable="true"
+            android:paddingLeft="50dp">
+
             <TextView
                 android:id="@+id/txtNotification"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="50dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                android:padding="8dp"
                 android:text="@string/string_notification_title"
                 android:textSize="@dimen/text.size.large" />
-        </LinearLayout>
+        </RelativeLayout>
 
-
-
-
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/relAccount"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:layout_marginLeft="5dp">
 
-        <TextView
-            android:id="@+id/txtAccount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:text="@string/account"
-            android:textSize="@dimen/text.size.large" />
-        </LinearLayout>
+            android:clickable="true"
+            android:paddingLeft="50dp">
 
 
-        <LinearLayout
-            android:id="@+id/relAppAlphaSetting"
-            android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/txtAccount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                android:padding="8dp"
+                android:text="@string/string_account_service_title"
+                android:textSize="@dimen/text.size.large" />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/relAlphaSettings"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:layout_marginLeft="5dp">
-        <TextView
-            android:id="@+id/txtAlphaSettings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:text="@string/alpha_settings"
-            android:textSize="@dimen/text.size.large" />
-        </LinearLayout>
+
+            android:clickable="true"
+            android:paddingLeft="50dp">
+
+            <TextView
+                android:id="@+id/txtAlphaSettings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                android:padding="8dp"
+                android:text="@string/alpha_settings"
+                android:textColor="#EB5757"
+                android:textSize="@dimen/text.size.large" />
+        </RelativeLayout>
+
     </LinearLayout>
 </LinearLayout>

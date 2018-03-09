@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/layout_bg"
     android:orientation="vertical"
-    tools:context="co.siempo.phone.pause.PauseActivity"
     tools:ignore="UnusedIds">
 
     <android.support.v7.widget.Toolbar
@@ -27,8 +26,8 @@
             android:id="@+id/relFaq"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:layout_marginLeft="5dp">
+            android:layout_marginLeft="5dp"
+            android:padding="16dp">
             <TextView
                 android:id="@+id/txtFaq"
                 android:layout_width="match_parent"
@@ -45,8 +44,8 @@
             android:id="@+id/relPrivacyPolicy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:layout_marginLeft="5dp">
+            android:layout_marginLeft="5dp"
+            android:padding="16dp">
 
 
             <TextView
@@ -65,8 +64,8 @@
             android:id="@+id/relFeedback"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:layout_marginLeft="5dp">
+            android:layout_marginLeft="5dp"
+            android:padding="16dp">
 
             <TextView
                 android:id="@+id/txtSendFeedback"
@@ -83,10 +82,10 @@
             android:id="@+id/relVersion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:paddingTop="16dp"
-            android:layout_marginLeft="5dp">
+            android:paddingTop="16dp">
 
             <TextView
                 android:id="@+id/txtVersion"

@@ -5,7 +5,6 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -23,21 +22,21 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EService;
 import org.androidannotations.annotations.SystemService;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import co.siempo.phone.app.Constants;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.app.Launcher3App;
-import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.DBClient;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.DaoSession;
@@ -46,14 +45,12 @@ import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.NewNotificationEvent;
 import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.helper.FirebaseHelper;
-import co.siempo.phone.notification.NotificationUtility;
-import co.siempo.phone.util.PackageUtil;
-import co.siempo.phone.util.VibrationUtils;
+import co.siempo.phone.log.Tracer;
+import co.siempo.phone.utils.NotificationUtility;
+import co.siempo.phone.utils.PackageUtil;
+import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.app.DroidPrefs_;
-import minium.co.core.log.Tracer;
-import minium.co.core.util.UIUtils;
 
 /**
  * Created by Shahab on 5/16/2017.
@@ -65,11 +62,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
     public static final String TAG = SiempoNotificationListener.class.getName();
 
 
-    @Pref
-    DroidPrefs_ droidPrefs;
-
-    @Pref
-    Launcher3Prefs_ launcherPrefs;
 
     @SystemService
     AudioManager audioManager;
@@ -77,13 +69,11 @@ public class SiempoNotificationListener extends NotificationListenerService {
     @SystemService
     NotificationManager notificationManager;
 
-    @Bean
-    VibrationUtils vibrationUtils;
 
     Context context;
 
     ArrayList<String> enableNotificationList = new ArrayList<>();
-    ArrayList<String> blockedAppList = new ArrayList<>();
+    Set<String> blockedAppList = new HashSet<>();
 
     private static boolean isInteger(String s, int radix) {
         try {
@@ -172,8 +162,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 e.printStackTrace();
             }
 
-            SharedPreferences prefs = getSharedPreferences("Launcher3Prefs", 0);
-            String strEnableApps = prefs.getString(Constants.HELPFUL_ROBOTS, "");
+            String strEnableApps = PrefSiempo.getInstance(context).read(PrefSiempo.HELPFUL_ROBOTS, "");
 
             if (!TextUtils.isEmpty(strEnableApps)) {
                 Type type = new TypeToken<ArrayList<String>>() {
@@ -181,29 +170,31 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 enableNotificationList = new Gson().fromJson(strEnableApps, type);
             }
 
-            String block_AppList = prefs.getString(Constants.BLOCKED_APPLIST, "");
-            if (!TextUtils.isEmpty(block_AppList)) {
-                Type type = new TypeToken<ArrayList<String>>() {
-                }.getType();
-                blockedAppList = new Gson().fromJson(block_AppList, type);
-            }
 
-                if (null != blockedAppList && blockedAppList.size() > 0 && blockedAppList.contains(notification.getPackageName())) {
-                     if (!notification.getPackageName().equalsIgnoreCase(getPackageName()) && droidPrefs.tempoType().get() != 0) {
-                        SiempoNotificationListener.this.cancelNotification(notification.getKey());
-                        if (droidPrefs.tempoType().get() == 1 && droidPrefs.tempoType().get() == 2) {
-                            int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
-                            if (sound != 1) {
-                                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
-                            }
+            blockedAppList = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST,
+                    new HashSet<String>());
+
+            if (null != blockedAppList && blockedAppList.size() > 0 && blockedAppList.contains(notification.getPackageName())) {
+
+
+                if (!notification.getPackageName().equalsIgnoreCase(getPackageName()) && PrefSiempo.getInstance(context).read(PrefSiempo
+                        .TEMPO_TYPE, 0) != 0) {
+                    SiempoNotificationListener.this.cancelNotification(notification.getKey());
+                    if (PrefSiempo.getInstance(context).read(PrefSiempo
+                            .TEMPO_TYPE, 0) == 1 && PrefSiempo.getInstance(context).read(PrefSiempo
+                            .TEMPO_TYPE, 0) == 2) {
+                        int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
+                        if (sound != 1) {
+                            audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
                         }
-                        filterByCategory(notification);
-                        return;
                     }
-                } else {
+                    filterByCategory(notification);
                     return;
                 }
+            } else {
+                return;
             }
+        }
 
     }
 
@@ -404,7 +395,9 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 && !statusBarNotification.getPackageName().equalsIgnoreCase("com.google.android.apps.messaging")
                 && !statusBarNotification.getPackageName().trim().equalsIgnoreCase("android"))) {
 
-            if (launcherPrefs.getSharedPreferences().getBoolean(Constants.CALL_RUNNING, false)) {
+
+//            if (launcherPrefs.getSharedPreferences().getBoolean(Constants.CALL_RUNNING, false)) {
+            if (PrefSiempo.getInstance(context).read(PrefSiempo.CALL_RUNNING, false)) {
                 Log.d(TAG, "OnGoing Call is Running.. no need to generate notification");
                 return;
             }
@@ -868,7 +861,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
     private void logFirebaseCount(String strPackageName, int count) {
         try {
             Log.d("Count Suppressed", "PackageName:" + strPackageName + " " + count);
-            FirebaseHelper.getIntance().logSuppressedNotification(getAppName(strPackageName), count);
+            FirebaseHelper.getInstance().logSuppressedNotification(getAppName(strPackageName), count);
         } catch (Exception e) {
             e.printStackTrace();
             CoreApplication.getInstance().logException(e);
@@ -880,11 +873,9 @@ public class SiempoNotificationListener extends NotificationListenerService {
         super.onNotificationRemoved(notification);
         Tracer.d("Notification removed: " + getNotificationToString(notification));
 
-        if (PackageUtil.isSiempoBlocker(notification.getId())) {
-            launcherPrefs.isNotificationBlockerRunning().put(false);
-        }
         if (!PackageUtil.isSiempoLauncher(this)
-                && !launcherPrefs.isAppDefaultOrFront().get()) {
+                && !PrefSiempo.getInstance(context).read(PrefSiempo
+                .IS_APP_DEFAULT_OR_FRONT, false)) {
             if (PackageUtil.isMsgPackage(notification.getPackageName())) {
                 new DBClient().deleteMsgByType(NotificationUtility.NOTIFICATION_TYPE_SMS);
             } else if (PackageUtil.isCallPackage(notification.getPackageName())) {

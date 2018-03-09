@@ -13,15 +13,11 @@
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
         <item name="popupMenuStyle">@style/interrupt_popup_menu</item>
+        <item name="actionMenuTextColor">@color/colorAccent</item>
     </style>
 
-
-
-    <style name="MenuButtonsSmall">
-        <item name="fab_size">mini</item>
-        <item name="fab_colorNormal">#1565C0</item>
-        <item name="fab_colorPressed">#2272CD</item>
-        <item name="fab_colorRipple">#62B2FF</item>
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">20sp</item>
     </style>
 
 
@@ -66,38 +62,6 @@
     <!--<style name="WheelDemoTheme" parent="android:Theme">-->
     <!--</style>-->
 
-    <style name="ProgressTheme" parent="android:Theme.Holo.Dialog">
-        <item name="android:alertDialogStyle">@style/CustomAlertDialogStyle</item>
-        <item name="android:windowBackground">@color/transparent</item>
-        <item name="android:textColorPrimary">#FFFFFF</item>
-        <item name="android:backgroundDimEnabled">false</item>
-        <item name="android:textColor">#FFFFFF</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textSize">12sp</item>
-    </style>
-
-
-    <style name="CustomAlertDialogStyle">
-        <item name="android:bottomBright">@color/transparent</item>
-        <item name="android:bottomDark">@color/transparent</item>
-        <item name="android:bottomMedium">@color/transparent</item>
-        <item name="android:centerBright">@color/transparent</item>
-        <item name="android:centerDark">@color/transparent</item>
-        <item name="android:centerMedium">@color/transparent</item>
-        <item name="android:fullBright">@color/transparent</item>
-        <item name="android:fullDark">@color/transparent</item>
-        <item name="android:topBright">@color/transparent</item>
-        <item name="android:topDark">@color/transparent</item>
-    </style>
-
-    <style name="SiempoAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="SiempoAppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="Autocomplete">
-        <item name="colorControlNormal">@color/automcoplete</item>
-        <item name="colorControlActivated">@color/automcoplete</item>
-    </style>
 
     <style name="error_appearance" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/errorColor</item>
@@ -109,5 +73,38 @@
         <item name="android:dropDownHorizontalOffset">-8dp</item>
         <item name="android:dropDownVerticalOffset">12dp</item>
     </style>
+
+    <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColor">@color/dialog_title</item>
+        <item name="android:textColorPrimary">@color/dialog_message</item>
+    </style>
+
+    <style name="AlertDialogThemeChangeLauncher" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColor">@color/dialog_title</item>
+        <item name="android:textColorPrimary">@color/appland_date</item>
+    </style>
+
+    <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="android:colorForeground">@android:color/primary_text_dark</item>
+    </style>
+
+    <!-- Base application theme. -->
+    <style name="CoreTheme" parent="BaseTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorButtonNormal">@color/white</item>
+        <item name="android:textColorPrimary">@color/text.primary</item>
+        <item name="android:textColorSecondary">@color/text.secondary</item>
+    </style>
+
+
+    <style name="feedbackDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorPrimary">#A3A3A3</item>
+    </style>
+
 
 </resources>

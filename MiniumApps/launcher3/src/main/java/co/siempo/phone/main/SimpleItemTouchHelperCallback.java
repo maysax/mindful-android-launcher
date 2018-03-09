@@ -26,8 +26,9 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import co.siempo.phone.R;
-import co.siempo.phone.old.OldMenuFragment;
-import minium.co.core.util.UIUtils;
+import co.siempo.phone.interfaces.ItemTouchHelperAdapter;
+import co.siempo.phone.interfaces.ItemTouchHelperViewHolder;
+import co.siempo.phone.utils.UIUtils;
 
 /**
  * An implementation of {@link ItemTouchHelper.Callback} that enables basic drag & drop and
@@ -42,9 +43,8 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     private static final float ALPHA_FULL = 1.0f;
 
     private final ItemTouchHelperAdapter mAdapter;
-    private OldMenuFragment oldMenuFragment = null;
-    int dragFrom = -1;
-    int dragTo = -1;
+    private int dragFrom = -1;
+    private int dragTo = -1;
     private Context mContext = null;
 
     public SimpleItemTouchHelperCallback(ItemTouchHelperAdapter adapter, Context context) {
@@ -52,10 +52,6 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
         mContext = context;
     }
 
-    public SimpleItemTouchHelperCallback(ItemTouchHelperAdapter adapter, OldMenuFragment oldMenuFragment) {
-        mAdapter = adapter;
-        this.oldMenuFragment = oldMenuFragment;
-    }
 
     @Override
     public boolean isLongPressDragEnabled() {
@@ -73,19 +69,19 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
         if (recyclerView.getLayoutManager() instanceof GridLayoutManager) {
             final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
             final int swipeFlags = 0;
-            if (oldMenuFragment == null) {
-                return makeMovementFlags(dragFlags, swipeFlags);
-            } else {
-                return makeMovementFlags(dragFlags, 0);
-            }
+//            if (oldMenuFragment == null) {
+//                return makeMovementFlags(dragFlags, swipeFlags);
+//            } else {
+            return makeMovementFlags(dragFlags, 0);
+//            }
         } else {
             final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
             final int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
-            if (oldMenuFragment == null) {
-                return makeMovementFlags(dragFlags, swipeFlags);
-            } else {
-                return makeMovementFlags(dragFlags, 0);
-            }
+//            if (oldMenuFragment == null) {
+//                return makeMovementFlags(dragFlags, swipeFlags);
+//            } else {
+            return makeMovementFlags(dragFlags, 0);
+//            }
         }
     }
 
@@ -98,8 +94,9 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
         int toPosition = target.getAdapterPosition();
 
 
-        if(dragFrom == -1) {
-            dragFrom =  fromPosition;
+        if (dragFrom == -1) {
+            dragFrom = fromPosition;
+
         }
         dragTo = toPosition;
         // Notify the adapter of the move
@@ -132,9 +129,13 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
             int bottom = itemView.getBottom() - itemView.getHeight() / 2 + r;
 
 //          d.setBounds(itemView.getLeft(), itemView.getTop(), (int) dx, itemView.getBottom());
-            d.setBounds(left, top, right, bottom);
+            if (d != null) {
+                d.setBounds(left, top, right, bottom);
+            }
 
-            d.draw(c);
+            if (d != null) {
+                d.draw(c);
+            }
 
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         } else {
@@ -164,7 +165,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
         if (viewHolder instanceof ItemTouchHelperViewHolder) {
             // Tell the view holder it's time to restore the idle state
-            if(dragFrom != -1 && dragTo != -1 && dragFrom != dragTo) {
+            if (dragFrom != -1 && dragTo != -1 && dragFrom != dragTo) {
                 reallyMoved(dragFrom, dragTo);
             }
 
@@ -173,6 +174,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
             itemViewHolder.onItemClear();
         }
     }
+
     private void reallyMoved(int from, int to) {
         // I guessed this was what you want...
     }

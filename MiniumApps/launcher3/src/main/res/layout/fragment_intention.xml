@@ -1,0 +1,88 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relRootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layout_bg">
+
+    <RelativeLayout
+        android:id="@+id/relTop"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true">
+
+            <ImageView
+                android:id="@+id/imgPullTab"
+                android:layout_width="70dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:background="@drawable/app_menus_icon"
+                android:scaleType="centerInside" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linBell"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal"
+            android:padding="@dimen/dp_5"
+            tools:ignore="UselessParent">
+
+
+            <ImageView
+                android:id="@+id/imgTempo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/dp_5"
+                android:padding="@dimen/dp_5"
+                android:src="@drawable/ic_tempo_dailog" />
+
+            <ImageView
+                android:id="@+id/imgOverFlow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp_5"
+                android:src="@drawable/ic_more_vert_black_24dp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/linIF"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/dp_20"
+        android:paddingLeft="@dimen/margin.5"
+        android:paddingRight="@dimen/margin.5"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/txtIntention"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_3"
+            android:hint="@string/what_s_your_intention"
+            android:maxEms="48"
+            android:maxLines="2"
+            android:text=""
+            android:textColor="#7F7F7F"
+            android:textSize="15sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:background="#93BCF5" />
+    </LinearLayout>
+</RelativeLayout>

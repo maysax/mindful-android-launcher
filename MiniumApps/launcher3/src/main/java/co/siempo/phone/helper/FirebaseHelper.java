@@ -4,9 +4,9 @@ import android.os.Bundle;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.app.Launcher3App;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.log.Tracer;
+import co.siempo.phone.log.Tracer;
 
 /**
  * Created by Volansys
@@ -20,17 +20,17 @@ public class FirebaseHelper {
     public static String ACTION_CALL = "call";
     public static String ACTION_SMS = "send_as_sms";
     public static String ACTION_SAVE_NOTE = "save_note";
-    public static String ACTION_CREATE_CONTACT = "create_contact";
     public static String ACTION_CONTACT_PICK = "contact_picked";
     public static String ACTION_APPLICATION_PICK = "application_picked";
-    public static String IF_SCREEN = "if_screen";
-    public static String SIEMPO_MENU = "siempo_menu";
+    public static String SEARCH_PANE = "search_pane";
+    private static String SIEMPO_MENU = "siempo_menu";
     private static FirebaseHelper firebaseHelper;
     // Screen Name
-    private static String MENU_SCREEN = "menu_screen";
+    private static String TOOLS_PANE = "tools_pane";
+    private static String FAVORITE_PANE = "favorite_pane";
+    private static String JUNKFOOD_PANE = "junkfood_pane";
     //Event
     private static String IF_ACTION = "if_action";
-    private static String THIRD_PARTY_APPLICATION = "third_party";
     private static String SCREEN_USAGE = "screen_usage";
     private static String SIEMPO_DEFAULT = "siempo_default";
     private static String SUPPRESSED_NOTIFICATION = "suppressed_notification";
@@ -40,7 +40,7 @@ public class FirebaseHelper {
     private String SCREEN_NAME = "screen_name";
     private String TIME_SPENT = "time_spent";
     private String APPLICATION_NAME = "application_name";
-    private String MENU_NAME = "menu_name";
+    private String TOOL_NAME = "tool_name";
     private String INTENT_FROM = "intent_from";
     private String ACTION = "action";
     private String IF_DATA = "if_data";
@@ -54,7 +54,7 @@ public class FirebaseHelper {
 
     }
 
-    public static FirebaseHelper getIntance() {
+    public static FirebaseHelper getInstance() {
         if (firebaseHelper == null) {
             firebaseHelper = new FirebaseHelper();
         }
@@ -73,15 +73,13 @@ public class FirebaseHelper {
      * @param startTime
      */
     public void logScreenUsageTime(String screenName, long startTime) {
-        if (CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable", true)) {
-            long longDifference = getTime(startTime, System.currentTimeMillis());
-            if (longDifference != 0) {
-                Bundle bundle = new Bundle();
-                bundle.putString(SCREEN_NAME, screenName);
-                bundle.putLong(TIME_SPENT, longDifference);
-                Tracer.d("Firebase:" + SCREEN_USAGE + ": " + bundle.toString());
-                getFirebaseAnalytics().logEvent(SCREEN_USAGE, bundle);
-            }
+        long longDifference = getTime(startTime, System.currentTimeMillis());
+        if (longDifference != 0) {
+            Bundle bundle = new Bundle();
+            bundle.putString(SCREEN_NAME, screenName);
+            bundle.putLong(TIME_SPENT, longDifference);
+            Tracer.d("Firebase:" + SCREEN_USAGE + ": " + bundle.toString());
+            getFirebaseAnalytics().logEvent(SCREEN_USAGE, bundle);
         }
 
     }
@@ -93,49 +91,43 @@ public class FirebaseHelper {
      * @param count
      */
     public void logSuppressedNotification(String applicationName, long count) {
-        if (CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable", true)) {
-            Bundle bundle = new Bundle();
-            bundle.putLong(SUPPRESSED_COUNT, count);
-            bundle.putString(APPLICATION_NAME, applicationName);
-            Tracer.d("Firebase:" + SUPPRESSED_NOTIFICATION + ": " + bundle.toString());
-            getFirebaseAnalytics().logEvent(SUPPRESSED_NOTIFICATION, bundle);
-        }
+        Bundle bundle = new Bundle();
+        bundle.putLong(SUPPRESSED_COUNT, count);
+        bundle.putString(APPLICATION_NAME, applicationName);
+        Tracer.d("Firebase:" + SUPPRESSED_NOTIFICATION + ": " + bundle.toString());
+        getFirebaseAnalytics().logEvent(SUPPRESSED_NOTIFICATION, bundle);
     }
 
-    /**
-     * Used for Third party application open by User from application list.
-     *
-     * @param applicationName
-     */
-    public void logAppUsage(String applicationName) {
-        if (CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable", true)) {
-            Bundle bundle = new Bundle();
-            bundle.putString(APPLICATION_NAME, applicationName);
-            Tracer.d("Firebase:" + THIRD_PARTY_APPLICATION + ": " + bundle.toString());
-            getFirebaseAnalytics().logEvent(THIRD_PARTY_APPLICATION, bundle);
-        }
-    }
 
     /**
-     * Used fot menu used by user from either IF or menu list based in from.
-     * from = 0 for Menu List
-     * from = 1 for IF Screen
+     * Used fot Tool/App used by user from either IF or 3 panes.
+     * from = 0 for Tool Pane.
+     * from = 1 for Favorite Pane
+     * from = 2 for Junkfood Pane
+     * from = 3 for Search Pane
      *
      * @param applicationName
      * @param actionFor
      */
-    public void logSiempoMenuUsage(String applicationName, int actionFor) {
-        if (CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable", true)) {
-            Bundle bundle = new Bundle();
-            bundle.putString(MENU_NAME, applicationName);
-            if (actionFor == 0) {
-                bundle.putString(INTENT_FROM, MENU_SCREEN);
-            } else {
-                bundle.putString(INTENT_FROM, IF_SCREEN);
-            }
-            Tracer.d("Firebase:" + SIEMPO_MENU + ": " + bundle.toString());
-            getFirebaseAnalytics().logEvent(SIEMPO_MENU, bundle);
+    public void logSiempoMenuUsage(int actionFor, String toolname, String applicationName) {
+        Bundle bundle = new Bundle();
+        if (actionFor == 0) {
+            bundle.putString(INTENT_FROM, TOOLS_PANE);
+            bundle.putString(TOOL_NAME, toolname);
+            bundle.putString(APPLICATION_NAME, applicationName);
+        } else if (actionFor == 1) {
+            bundle.putString(INTENT_FROM, FAVORITE_PANE);
+            bundle.putString(APPLICATION_NAME, applicationName);
+        } else if (actionFor == 2) {
+            bundle.putString(INTENT_FROM, JUNKFOOD_PANE);
+            bundle.putString(APPLICATION_NAME, applicationName);
+        } else if (actionFor == 3) {
+            bundle.putString(INTENT_FROM, SEARCH_PANE);
+            bundle.putString(TOOL_NAME, toolname);
+            bundle.putString(APPLICATION_NAME, applicationName);
         }
+        Tracer.d("Firebase:" + SIEMPO_MENU + ": " + bundle.toString());
+        getFirebaseAnalytics().logEvent(SIEMPO_MENU, bundle);
     }
 
     /**
@@ -145,17 +137,15 @@ public class FirebaseHelper {
      * @param applicationName
      */
     public void logIFAction(String action, String applicationName, String data) {
-        if (CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable", true)) {
-            Bundle bundle = new Bundle();
-            bundle.putString(ACTION, action);
-            if (!applicationName.equalsIgnoreCase("")) {
-                bundle.putString(APPLICATION_NAME, applicationName);
-            } else {
-                bundle.putString(IF_DATA, data);
-            }
-            Tracer.d(IF_ACTION + ": " + bundle.toString());
-            getFirebaseAnalytics().logEvent(IF_ACTION, bundle);
+        Bundle bundle = new Bundle();
+        bundle.putString(ACTION, action);
+        if (!applicationName.equalsIgnoreCase("")) {
+            bundle.putString(APPLICATION_NAME, applicationName);
+        } else {
+            bundle.putString(IF_DATA, data);
         }
+        Tracer.d(IF_ACTION + ": " + bundle.toString());
+        getFirebaseAnalytics().logEvent(IF_ACTION, bundle);
     }
 
     /**
@@ -165,20 +155,19 @@ public class FirebaseHelper {
      * @param startTime
      */
     public void logSiempoAsDefault(String action, long startTime) {
-        if (CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable", true)) {
-            Bundle bundle = new Bundle();
-            bundle.putString(ACTION, action);
-            if (startTime != 0) {
-                long longDifference = getTime(startTime, System.currentTimeMillis());
-                if (longDifference != 0) {
-                    bundle.putLong(TIME_SPENT, longDifference);
-                    Tracer.d("Firebase:" + SIEMPO_DEFAULT + ": " + bundle.toString());
-                    getFirebaseAnalytics().logEvent(SIEMPO_DEFAULT, bundle);
-                }
-            } else {
+
+        Bundle bundle = new Bundle();
+        bundle.putString(ACTION, action);
+        if (startTime != 0) {
+            long longDifference = getTime(startTime, System.currentTimeMillis());
+            if (longDifference != 0) {
+                bundle.putLong(TIME_SPENT, longDifference);
                 Tracer.d("Firebase:" + SIEMPO_DEFAULT + ": " + bundle.toString());
                 getFirebaseAnalytics().logEvent(SIEMPO_DEFAULT, bundle);
             }
+        } else {
+            Tracer.d("Firebase:" + SIEMPO_DEFAULT + ": " + bundle.toString());
+            getFirebaseAnalytics().logEvent(SIEMPO_DEFAULT, bundle);
         }
     }
 
