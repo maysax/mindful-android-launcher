@@ -85,6 +85,7 @@ public class FavoriteFlaggingAdapter extends BaseAdapter {
                 }
             } else if (resolveInfo.isShowHeader && !resolveInfo.isShowTitle) {
                 holder.txtHeader.setVisibility(View.VISIBLE);
+                holder.txtNoAppsMessage.setVisibility(View.GONE);
                 holder.linTop.setVisibility(View.GONE);
                 if (resolveInfo.isFlagApp) {
                     holder.txtHeader.setBackgroundColor(ContextCompat.getColor(context, R.color.section_title_bg));

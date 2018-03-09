@@ -366,7 +366,9 @@ public abstract class CoreApplication extends MultiDexApplication {
                 ApplicationInfo appInfo = getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA);
                 getPackagesList().add(appInfo.packageName);
             } else {
-                getPackagesList().remove(getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA).packageName);
+                if (getPackagesList().contains(packageName)) {
+                    getPackagesList().remove(packageName);
+                }
             }
             EventBus.getDefault().post(new AppInstalledEvent(true));
         } catch (PackageManager.NameNotFoundException e) {
