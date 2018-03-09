@@ -13,7 +13,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -103,20 +102,20 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         installedPackageList = getPackageManager().queryIntentActivities(mainIntent, 0);
 
-        List<ResolveInfo> appList= new ArrayList<>();
-        for(int i=0;i<installedPackageList.size();i++){
-            boolean isAdded=false;
-            for(int j=0;j<appList.size();j++){
-                if(!TextUtils.isEmpty(installedPackageList.get(i).activityInfo.packageName) && appList.get(j).activityInfo.packageName.equalsIgnoreCase(installedPackageList.get(i).activityInfo.packageName)){
-                    isAdded=true;
+        List<ResolveInfo> appList = new ArrayList<>();
+        for (int i = 0; i < installedPackageList.size(); i++) {
+            boolean isAdded = false;
+            for (int j = 0; j < appList.size(); j++) {
+                if (!TextUtils.isEmpty(installedPackageList.get(i).activityInfo.packageName) && appList.get(j).activityInfo.packageName.equalsIgnoreCase(installedPackageList.get(i).activityInfo.packageName)) {
+                    isAdded = true;
                 }
             }
-            if(!isAdded){
+            if (!isAdded) {
                 appList.add(installedPackageList.get(i));
             }
         }
 
-        installedPackageList=appList;
+        installedPackageList = appList;
 
         bindData(false);
         if (PrefSiempo.getInstance(this).read(PrefSiempo.IS_JUNKFOOD_FIRSTTIME, true)) {
@@ -448,5 +447,17 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
         }
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //Done in order to prevent user opening empty junk food pane,
+        //Below code will mark junk food pane as empty and while switching
+        // from Intention fragment to pane fragment , this boolean is the
+        // deciding factor on which pane to open
+        if (list != null && list.size() == 0 && !DashboardActivity
+                .isJunkFoodOpen) {
+            DashboardActivity.isJunkFoodOpen = true;
+        }
 
+    }
 }
