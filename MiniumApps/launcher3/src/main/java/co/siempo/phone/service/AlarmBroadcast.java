@@ -3,11 +3,12 @@ package co.siempo.phone.service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 
 import java.util.Calendar;
 
-import co.siempo.phone.util.PackageUtil;
-import minium.co.core.log.Tracer;
+import co.siempo.phone.log.Tracer;
+import co.siempo.phone.utils.PackageUtil;
 
 /**
  * Created by rajeshjadi on 8/1/18.
@@ -18,9 +19,13 @@ public class AlarmBroadcast extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Tracer.d("Time", "" + Calendar.getInstance().getTime());
+        Tracer.d("Tracking Time", "" + Calendar.getInstance().getTime());
         PackageUtil.enableAlarm(context);
         Intent intent1 = new Intent(context, AlarmService.class);
-        context.startService(intent1);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(intent1);
+        } else {
+            context.startService(intent1);
+        }
     }
 }

@@ -1,14 +1,12 @@
 package co.siempo.phone.service;
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Build;
-import android.os.PowerManager;
 import android.os.Vibrator;
 import android.service.notification.StatusBarNotification;
 import android.support.annotation.Nullable;
@@ -19,12 +17,13 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
-import co.siempo.phone.util.PackageUtil;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.log.Tracer;
+import co.siempo.phone.log.Tracer;
+import co.siempo.phone.utils.PackageUtil;
+import co.siempo.phone.utils.PrefSiempo;
 
 /**
  * Created by rajeshjadi on 8/1/18.
@@ -34,14 +33,11 @@ public class AlarmService extends IntentService {
 
 
     Context context;
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences sharedPreferencesLauncher3;
     private AudioManager audioManager;
     private Vibrator vibrator;
     private ArrayList<Integer> everyHourList = new ArrayList<>();
     private ArrayList<Integer> everyTwoHourList = new ArrayList<>();
     private ArrayList<Integer> everyFourHoursList = new ArrayList<>();
-    private MediaPlayer notificationMediaPlayer;
 
     public AlarmService() {
         super("MyServerOrWhatever");
@@ -51,12 +47,17 @@ public class AlarmService extends IntentService {
         super(name);
     }
 
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        startForeground(1, new Notification());
+    }
+
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         context = this;
         Tracer.d("-1");
-        sharedPreferences = getSharedPreferences("DroidPrefs", 0);
-        sharedPreferencesLauncher3 = getSharedPreferences("Launcher3Prefs", 0);
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         everyHourList.addAll(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24));
@@ -67,27 +68,28 @@ public class AlarmService extends IntentService {
     }
 
 
-    public void recreateNotification(List<TableNotificationSms> notificationList, Context context, boolean isAllowNotificationOnLockScreen) {
+    public void createNotification(List<TableNotificationSms> notificationList, Context context) {
         try {
+            Tracer.d("Tracking createNotification");
             int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
             audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, sound, 0);
-            boolean isTempoNotificationControlsDisabled = sharedPreferences.getBoolean("isTempoNotificationControlsDisabled", false);
-            if (!isTempoNotificationControlsDisabled) {
+
                 for (int i = 0; i < notificationList.size(); i++) {
                     TableNotificationSms notification = notificationList.get(i);
                     if (notification.getPackageName() != null && !notification.getPackageName().equalsIgnoreCase("android")) {
-                        PackageUtil.recreateNotification(notification, context, notification.getApp_icon(), true);
+                        Tracer.d("Tracking notification.getPackageName()");
+                        PackageUtil.recreateNotification(notification, context, notification.getApp_icon());
                     }
                 }
                 if (notificationList.size() >= 1) {
-                    PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-                    PowerManager.WakeLock wl = pm != null ? pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG") : null;
-                    if (wl != null) {
-                        wl.acquire(2000);
-                    }
+//                    PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+//                    PowerManager.WakeLock wl = pm != null ? pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG") : null;
+//                    if (wl != null) {
+//                        wl.acquire(2000);
+//                    }
                     DBUtility.getNotificationDao().deleteAll();
                 }
-            }
+
         } catch (Exception e) {
             e.printStackTrace();
             CoreApplication.getInstance().logException(e);
@@ -121,47 +123,51 @@ public class AlarmService extends IntentService {
             Calendar calendar = Calendar.getInstance();
             int systemHours = calendar.get(Calendar.HOUR_OF_DAY);
             int systemMinutes = calendar.get(Calendar.MINUTE);
-            int tempoType = sharedPreferences.getInt("tempoType", 0);
+            int tempoType = PrefSiempo.getInstance(context).read(PrefSiempo
+                    .TEMPO_TYPE, 0);
             Tracer.d("3");
-            boolean isTempoNotificationControlsDisabled = sharedPreferences.getBoolean("isTempoNotificationControlsDisabled", false);
-            if (!isTempoNotificationControlsDisabled && tempoType == 1) {
+              if (tempoType == 1) {
                 Tracer.d("4");
-                int batchTime = sharedPreferences.getInt("batchTime", 15);
+                  int batchTime = PrefSiempo.getInstance(context).read(PrefSiempo
+                          .BATCH_TIME, 15);
                 if (batchTime == 15) {
                     if (systemMinutes == 0 || systemMinutes == 15 || systemMinutes == 30 || systemMinutes == 45) {
+                        Tracer.d("Tracking Batch");
                         Tracer.d("Batch::" + "15 minute interval");
                         List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                        recreateNotification(notificationList, context, sharedPreferencesLauncher3.getBoolean("isAllowNotificationOnLockScreen", true));
+                        Tracer.d("Tracking notificationList.size" + notificationList.size());
+                        createNotification(notificationList, context);
                     }
                 } else if (batchTime == 30) {
                     if (systemMinutes == 0 || systemMinutes == 30) {
                         Tracer.d("Batch::" + "30 minute interval");
                         List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                        recreateNotification(notificationList, context, sharedPreferencesLauncher3.getBoolean("isAllowNotificationOnLockScreen", true));
+                        createNotification(notificationList, context);
                     }
                 } else if (batchTime == 1) {
                     if (everyHourList.contains(systemHours) && systemMinutes == 0) {
                         Tracer.d("Batch::" + "Every Hour interval");
                         List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                        recreateNotification(notificationList, context, sharedPreferencesLauncher3.getBoolean("isAllowNotificationOnLockScreen", true));
+                        createNotification(notificationList, context);
                     }
                 } else if (batchTime == 2) {
-                    if (everyTwoHourList.contains(systemHours) && systemMinutes == 0) {
+                    if (systemHours % 2 == 0 && systemMinutes == 0) {
                         Tracer.d("Batch::" + "Every 2 Hour interval");
                         List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                        recreateNotification(notificationList, context, sharedPreferencesLauncher3.getBoolean("isAllowNotificationOnLockScreen", true));
+                        createNotification(notificationList, context);
                     }
                 } else if (batchTime == 4) {
-                    if (everyFourHoursList.contains(systemHours) && systemMinutes == 0) {
+                    if (systemHours % 4 == 0 && systemMinutes == 0) {
                         Tracer.d("Batch::" + "Every 4 Hour interval");
                         List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                        recreateNotification(notificationList, context, sharedPreferencesLauncher3.getBoolean("isAllowNotificationOnLockScreen", true));
+                        createNotification(notificationList, context);
                     }
                 }
 
-            } else if (!isTempoNotificationControlsDisabled && tempoType == 2) {
+            } else if (tempoType == 2) {
                 Tracer.d("5");
-                String strTimeData = sharedPreferences.getString("onlyAt", "");
+                  String strTimeData = PrefSiempo.getInstance(context).read(PrefSiempo
+                          .ONLY_AT, "12:01");
                 if (!strTimeData.equalsIgnoreCase("")) {
                     Tracer.d("6");
                     String strTime[] = strTimeData.split(",");
@@ -174,7 +180,7 @@ public class AlarmService extends IntentService {
                         if (hours == systemHours && minutes == systemMinutes) {
                             Tracer.d("Only at::" + str);
                             List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                            recreateNotification(notificationList, context, sharedPreferencesLauncher3.getBoolean("isAllowNotificationOnLockScreen", true));
+                            createNotification(notificationList, context);
                         }
                     }
                 }

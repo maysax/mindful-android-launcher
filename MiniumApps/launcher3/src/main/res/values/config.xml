@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Notosans fonts -->
+    <string name="fonts.noto.sans.regular" translatable="false">fonts/notosans-unhinted/NotoSans-Regular.ttf</string>
+
+    <item name="mainView" type="id" />
+</resources>

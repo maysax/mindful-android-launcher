@@ -9,8 +9,8 @@ import android.os.Handler;
 import android.provider.Telephony;
 import android.telephony.PhoneNumberUtils;
 
-import minium.co.core.app.CoreApplication;
-import minium.co.core.log.Tracer;
+import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.log.Tracer;
 
 /**
  * Created by Shahab on 5/10/2016.
@@ -24,22 +24,13 @@ public class SmsObserver extends ContentObserver {
     private final String address;
     private final String body;
 
-    public interface OnSmsSentListener {
-        void onSmsSent(int threadId);
-    }
-
     public SmsObserver(Context context, String address, String body) {
         super(handler);
+        this.context = context;
+        this.resolver = context.getContentResolver();
+        this.address = address;
+        this.body = body;
 
-        if (context instanceof OnSmsSentListener) {
-            this.context = context;
-            this.resolver = context.getContentResolver();
-            this.address = address;
-            this.body = body;
-        } else {
-            throw new IllegalArgumentException(
-                    "Context must implement OnSmsSentListener interface");
-        }
     }
 
     public void start() {
@@ -67,13 +58,10 @@ public class SmsObserver extends ContentObserver {
                             cursor.getColumnIndex(Telephony.Sms.ADDRESS));
                     final String body = cursor.getString(
                             cursor.getColumnIndex(Telephony.Sms.BODY));
-                    final int threadId = cursor.getInt(
-                            cursor.getColumnIndex(Telephony.Sms.THREAD_ID));
 
                     if (PhoneNumberUtils.compare(address, this.address) &&
                             body.equals(this.body)) {
 
-                        ((OnSmsSentListener) context).onSmsSent(threadId);
                         resolver.unregisterContentObserver(this);
                     }
                 }
@@ -86,5 +74,9 @@ public class SmsObserver extends ContentObserver {
                 cursor.close();
             }
         }
+    }
+
+    public interface OnSmsSentListener {
+        void onSmsSent(int threadId);
     }
 }

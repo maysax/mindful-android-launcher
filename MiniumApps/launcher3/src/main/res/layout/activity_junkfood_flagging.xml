@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FAFAFA"
+    android:orientation="vertical"
+    tools:context="co.siempo.phone.activities.ToolPositioningActivity">
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/toolbar_bg"
+        android:elevation="@dimen/dp_5"
+        android:minHeight="?android:attr/actionBarSize" />
+
+    <ListView
+        android:id="@+id/listAllApps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@color/darker_gray"
+        android:dividerHeight="@dimen/dp_1"
+        android:listSelector="@color/transparent"
+        tools:listitem="@layout/list_item_junkfoodflag" />
+
+
+</LinearLayout>

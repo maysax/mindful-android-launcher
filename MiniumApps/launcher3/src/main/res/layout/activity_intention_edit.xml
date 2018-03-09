@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:transitionName="@string/what_s_your_intention"
-    tools:context="co.siempo.phone.pause.PauseActivity"
     tools:ignore="UnusedIds">
 
     <Toolbar
@@ -71,7 +70,7 @@
             android:paddingTop="@dimen/dp_2"
             tools:ignore="RtlSymmetry">
 
-            <co.siempo.phone.LockEditText
+            <co.siempo.phone.customviews.LockEditText
                 android:id="@+id/edtIntention"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -84,7 +83,7 @@
                 android:hint="@string/type_a_few_words"
                 android:imeActionLabel="SAVE"
                 android:imeOptions="actionDone"
-                android:inputType="text"
+                android:inputType="textCapSentences"
                 android:maxLength="48"
                 android:padding="5dp"
                 android:paddingBottom="@dimen/dp_10"
@@ -98,7 +97,7 @@
                 tools:text="Try out new music">
 
                 <requestFocus />
-            </co.siempo.phone.LockEditText>
+            </co.siempo.phone.customviews.LockEditText>
 
             <ImageView
                 android:id="@+id/imgClear"

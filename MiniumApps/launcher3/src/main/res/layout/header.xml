@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#E81313"
+        android:gravity="center_vertical"
+        android:paddingLeft="55dp"
+        android:paddingRight="55dp"
+        android:text="@string/flag_app"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+</LinearLayout>

@@ -20,171 +20,120 @@
             android:elevation="@dimen/dp_5"
             android:minHeight="?android:attr/actionBarSize" />
 
-
-        <RelativeLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/toolbar"
-            android:orientation="vertical"
-            android:paddingLeft="50dp">
+            android:layout_below="@+id/toolbar">
 
-            <RelativeLayout
-                android:id="@+id/relAllowSpecificApps"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingRight="60dp">
+                android:orientation="vertical">
 
-
-                <TextView
-                    android:id="@+id/txtAllowApps"
+                <RelativeLayout
+                    android:id="@+id/relContainerAllowSpecificApps"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp">
 
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginTop="8dp"
-                    android:padding="8dp"
-                    android:text="Allow specific apps"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    <RelativeLayout
+                        android:id="@+id/relAllowSpecificApps"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/txtAllowAppsText"
-                    android:layout_width="match_parent"
+                        <ImageView
+                            android:id="@+id/img_tempo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginTop="3dp"
+                            android:src="@drawable/ic_tempo_dailog" />
+
+
+                        <TextView
+                            android:id="@+id/txtAllowApps"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginLeft="35dp"
+                            android:layout_marginRight="60dp"
+                            android:layout_toRightOf="@+id/img_tempo"
+                            android:text="@string/notification_interrupt_title"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/txtAllowAppsText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/txtAllowApps"
+                            android:layout_marginLeft="35dp"
+                            android:layout_marginRight="60dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_toRightOf="@+id/img_tempo"
+                            android:text="@string/notification_interrupt_description"
+                            android:textSize="16sp" />
+
+                    </RelativeLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relAllowPicking"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/txtAllowApps"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:paddingBottom="4dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingTop="4dp"
-                    android:text="Notifications from all apps are blocked, except that you specifically choose to allow."
-                    android:textSize="16sp" />
-            </RelativeLayout>
+                    android:paddingLeft="50dp">
+
+                    <TextView
+                        android:id="@+id/txtAllowPicking"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginTop="8dp"
+                        android:padding="8dp"
+                        android:text="@string/allow_peaking"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:id="@+id/lin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/txtAllowPickingtxt"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignTop="@+id/txtAllowPickingtxt">
+
+                        <Switch
+                            android:id="@+id/switchAllowPicking"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="8dp"
+                            android:clickable="false" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/txtAllowPickingtxt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txtAllowPicking"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_toLeftOf="@+id/lin"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="0dp"
+                        android:text="@string/msg_allowpeaking"
+                        android:textSize="16sp" />
+
+                </RelativeLayout>
+            </LinearLayout>
+        </ScrollView>
 
 
-            <TextView
-                android:id="@+id/txtAllowPeaking"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/relAllowSpecificApps"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="8dp"
-                android:padding="8dp"
-                android:text="Allow peaking"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:visibility="gone" />
-
-            <Switch
-                android:id="@+id/switchAllowPeaking"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/txtAllowPeakingText"
-                android:layout_alignParentRight="true"
-                android:layout_alignTop="@+id/txtAllowPeakingText"
-                android:layout_below="@+id/txtAllowPeaking"
-                android:layout_marginRight="8dp"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/txtAllowPeakingText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtAllowPeaking"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_toLeftOf="@+id/switchAllowPeaking"
-                android:paddingBottom="4dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="4dp"
-                android:text="Off. The status bar will show you when you have new notifications in your tray, but your tray won't pop up automatically."
-                android:textSize="16sp"
-                android:visibility="gone" />
-
-
-            <TextView
-                android:id="@+id/txtAllowOnLockScreen"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtAllowPeakingText"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="8dp"
-                android:padding="8dp"
-                android:text="Allow on lock screen"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <Switch
-                android:id="@+id/switchAllowOnLockScreen"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/txtAllowOnLockScreenText"
-                android:layout_alignParentRight="true"
-                android:layout_alignTop="@+id/txtAllowOnLockScreenText"
-                android:layout_below="@+id/txtAllowOnLockScreenText"
-                android:layout_marginRight="8dp" />
-
-            <TextView
-                android:id="@+id/txtAllowOnLockScreenText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtAllowOnLockScreen"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_toLeftOf="@+id/switchAllowOnLockScreen"
-                android:paddingBottom="4dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="4dp"
-                android:text="Off. All notifications will be hidden from the lock screen."
-                android:textSize="16sp" />
-
-
-            <TextView
-                android:id="@+id/txtDisableNotificationControls"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtAllowOnLockScreenText"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="8dp"
-                android:padding="8dp"
-                android:text="Disable notification controls"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <Switch
-                android:id="@+id/switchDisableNotificationControls"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/txtDisableNotificationControlsTxt"
-                android:layout_alignParentRight="true"
-                android:layout_alignTop="@+id/txtDisableNotificationControlsTxt"
-                android:layout_below="@+id/txtDisableNotificationControls"
-                android:layout_marginRight="8dp" />
-
-
-            <TextView
-                android:id="@+id/txtDisableNotificationControlsTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtDisableNotificationControls"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_toLeftOf="@+id/switchDisableNotificationControls"
-                android:paddingBottom="4dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="4dp"
-                android:text="Disabling Siempo's notification controls means that you can no longer schedule nor control the appearance of notifications."
-                android:textSize="16sp" />
-
-        </RelativeLayout>
     </RelativeLayout>
 
 </LinearLayout>

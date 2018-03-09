@@ -11,19 +11,14 @@ import java.util.List;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
+import co.siempo.phone.activities.AlphaSettingsActivity_;
+import co.siempo.phone.activities.CoreActivity;
+import co.siempo.phone.activities.NoteListActivity;
+import co.siempo.phone.activities.SuppressNotificationActivity;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.launcher.FakeLauncherActivity;
-import co.siempo.phone.settings.AppListNotification;
-import co.siempo.phone.settings.SiempoAlphaSettingsActivity_;
-import co.siempo.phone.settings.SiempoMainSettingsActivity_;
-import co.siempo.phone.settings.SiempoPhoneSettingsActivity;
-import co.siempo.phone.settings.SiempoSettingsActivity_;
-import co.siempo.phone.settings.SiempoSettingsDefaultAppActivity_;
-import co.siempo.phone.settings.SiempoSupressNotificationActivity;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.log.Tracer;
-import minium.co.core.ui.CoreActivity;
-import minium.co.core.util.UIUtils;
-import minium.co.notes.ui.MainActivity;
+import co.siempo.phone.log.Tracer;
+import co.siempo.phone.utils.UIUtils;
 
 
 public class ActivityHelper {
@@ -40,8 +35,8 @@ public class ActivityHelper {
 
     public void openNotesApp(boolean openLast) {
         try {
-            Intent intent = new Intent(getContext(), MainActivity.class);
-            intent.putExtra(MainActivity.EXTRA_OPEN_LATEST, openLast);
+            Intent intent = new Intent(getContext(), NoteListActivity.class);
+            intent.putExtra(NoteListActivity.EXTRA_OPEN_LATEST, openLast);
             getContext().startActivity(intent);
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
@@ -49,14 +44,6 @@ public class ActivityHelper {
         }
     }
 
-    public void openSettingsApp() {
-        try {
-            SiempoMainSettingsActivity_.intent(getContext()).start();
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            Tracer.e(e, e.getMessage());
-        }
-    }
 
     public void handleDefaultLauncher(CoreActivity activity) {
         if (activity != null) {
@@ -117,7 +104,8 @@ public class ActivityHelper {
             ResolveInfo best = null;
             for (final ResolveInfo info : matches)
                 if (info.activityInfo.packageName.endsWith(".gm") ||
-                        info.activityInfo.name.toLowerCase().contains("gmail")) best = info;
+                        info.activityInfo.name.toLowerCase().contains("gmail"))
+                    best = info;
             if (best != null) {
                 emailIntent.setClassName(best.activityInfo.packageName, best.activityInfo.name);
                 context.startActivity(emailIntent);
@@ -144,51 +132,30 @@ public class ActivityHelper {
     /**
      * Open the application with predefine package name.
      */
-    public void openAppWithPackageName(String packageName) {
+    public boolean openAppWithPackageName(String packageName) {
         if (packageName != null && !packageName.equalsIgnoreCase("")) {
             try {
                 Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
                 context.startActivity(intent);
+                return true;
             } catch (Exception e) {
                 e.printStackTrace();
                 CoreApplication.getInstance().logException(e);
                 UIUtils.alert(context, context.getString(R.string.app_not_found));
+                return false;
             }
         } else {
             UIUtils.alert(context, context.getString(R.string.app_not_found));
+            return false;
         }
     }
 
-    public void openPhoneSettingsApp() {
-        try {
-            // Below logic is use for further development
-            //SiempoPhoneSettingsActivity_.intent(getContext()).start();
-            Intent i = new Intent(getContext(), SiempoPhoneSettingsActivity.class);
-            getContext().startActivity(i);
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            Tracer.e(e, e.getMessage());
-        }
-    }
 
-    /**
-     * Open default Setting page for default application for menu.
-     *
-     * @return
-     */
-    public void openSiempoDefaultAppSettings() {
-        try {
-            SiempoSettingsDefaultAppActivity_.intent(getContext()).start();
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            Tracer.e(e, e.getMessage());
-        }
-    }
 
 
     public void openSiempoSuppressNotificationsSettings() {
         try {
-            Intent i = new Intent(context, SiempoSupressNotificationActivity.class);
+            Intent i = new Intent(context, SuppressNotificationActivity.class);
             context.startActivity(i);
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
@@ -196,29 +163,10 @@ public class ActivityHelper {
         }
     }
 
-
-    public void openAppListNotifications() {
-        try {
-            Intent i = new Intent(context, AppListNotification.class);
-            context.startActivity(i);
-        } catch (Exception e) {
-            Tracer.e(e, e.getMessage());
-            CoreApplication.getInstance().logException(e);
-        }
-    }
-
-    public void openSiempoSettingsApp() {
-        try {
-            SiempoSettingsActivity_.intent(getContext()).start();
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            Tracer.e(e, e.getMessage());
-        }
-    }
 
     public void openSiempoAlphaSettingsApp() {
         try {
-            SiempoAlphaSettingsActivity_.intent(getContext()).start();
+            AlphaSettingsActivity_.intent(getContext()).start();
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());

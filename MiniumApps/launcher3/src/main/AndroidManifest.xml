@@ -34,9 +34,11 @@
     <uses-permission android:name="android.permission.RECEIVE_MMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.WRITE_SMS" />
-    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"></uses-permission>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -64,38 +66,17 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:launchMode="singleInstance"
+
         android:supportsRtl="true"
         android:theme="@style/SiempoAppTheme"
-        tools:ignore="AllowBackup"
-        tools:replace="android:theme,name,label">
+        tools:ignore="AllowBackup">
 
         <!-- Fabric configuration -->
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="6a700e064d3ba9dbf81d871dd3c0b3081ab158f7" />
 
-        <activity
-            android:name=".MainActivity_"
-            android:clearTaskOnLaunch="true"
-            android:excludeFromRecents="true"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:stateNotNeeded="true"
-            android:windowSoftInputMode="stateHidden">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.HOME" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="RUN_AT_BOOT" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".tempo.TempoActivity_"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".launcher.FakeLauncherActivity"
             android:enabled="false">
@@ -116,9 +97,8 @@
             </intent-filter>
         </service>
 
-
         <receiver
-            android:name=".call.CallReceiver_"
+            android:name=".receivers.CallReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.PHONE_STATE" />
@@ -135,56 +115,22 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-        <activity
-            android:name=".debug.DebugActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.nfc.action.TAG_DISCOVERED" />
-                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-                <action android:name="android.nfc.action.TECH_DISCOVERED" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".applist.AppDrawerActivity_"
-            android:label="@string/title_activity_installed_app_list"
-            android:screenOrientation="portrait" />
-
-        <receiver android:name=".network.NetworkChangeReceiver_">
-            <intent-filter>
-                <action
-                    android:name="android.net.conn.CONNECTIVITY_CHANGE"
-                    tools:ignore="BatteryLife" />
-                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
-                <action android:name="android.intent.action.AIRPLANE_MODE" />
-                <action android:name="android.net.wifi.RSSI_CHANGED" />
-            </intent-filter>
-        </receiver>
 
         <activity android:name=".ui.UpdateActivity_" />
-        <activity android:name=".settings.SiempoPhoneSettingsActivity" />
-        <activity android:name=".settings.SiempoSettingsActivity_" />
-        <activity android:name=".settings.SiempoSettingsDefaultAppActivity_" />
-        <activity android:name=".settings.SiempoMainSettingsActivity_" />
-        <activity android:name=".settings.SiempoAlphaSettingsActivity_" />
+        <activity android:name=".activities.AlphaSettingsActivity_" />
 
         <service
             android:name=".service.StatusBarService"
             android:enabled="true"
             android:exported="false" />
 
+        <activity android:name=".activities.SuppressNotificationActivity" />
+        <activity android:name=".activities.SiempoPermissionActivity_" />
+        <activity android:name=".activities.SettingsActivity_" />
+        <activity android:name=".activities.NotificationActivity" />
+        <activity android:name=".activities.HelpActivity" />
         <activity
-            android:name=".settings.AppListNotificationSetting"
-            android:label="@string/title_activity_app_list_notification" />
-        <activity
-            android:name=".settings.AppListNotification"
-            android:label="@string/title_activity_app_list_notification" />
-        <activity android:name=".settings.SiempoSupressNotificationActivity" />
-        <activity android:name=".ui.SiempoPermissionActivity_" />
-        <activity android:name=".tempo.TempoSettingsActivity_" />
-        <activity android:name=".tempo.TempoAppNotificationActivity" />
-        <activity android:name=".HelpActivity_" />
-        <activity
-            android:name=".IntentionEditActivity_"
+            android:name=".activities.IntentionEditActivity"
             android:windowSoftInputMode="stateAlwaysVisible" />
 
         <receiver android:name=".service.AlarmBroadcast">
@@ -195,16 +141,72 @@
 
         <service android:name=".service.AlarmService" />
 
-        <receiver android:name=".notification.BootReceiver">
+        <receiver android:name=".receivers.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
         <activity
-            android:name=".IntentionConfirmationActivity_"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_intention_confirmation"></activity>
+            android:name=".activities.DashboardActivity"
+            android:clearTaskOnLaunch="true"
+            android:configChanges="keyboard|keyboardHidden|navigation"
+            android:enabled="true"
+            android:excludeFromRecents="true"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:resumeWhilePausing="true"
+            android:stateNotNeeded="true"
+            android:taskAffinity=""
+            android:theme="@style/SiempoAppTheme"
+            android:windowSoftInputMode="adjustPan|adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.MONKEY" />
+                <category android:name="RUN_AT_BOOT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.NoteListActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name"
+            android:theme="@style/CoreTheme" />
+        <activity
+            android:name=".activities.NotesEditActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name"
+            android:parentActivityName=".activities.NotesEditActivity"
+            android:theme="@style/CoreTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.NotesEditActivity" />
+        </activity>
+
+        <receiver
+            android:name=".receivers.NoteEventReceiver"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name="minium.co.notes.CREATE_NOTES" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="minium.co.notes.EDIT_NOTES" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name="com.evernote.client.android.EvernoteOAuthActivity" />
+        <activity android:name="com.evernote.client.android.login.EvernoteLoginActivity" />
+        <activity android:name=".activities.AppAssignmentActivity" />
+        <activity android:name=".activities.JunkfoodFlaggingActivity" />
+        <activity android:name=".activities.FavoritesSelectionActivity" />
+        <activity android:name=".activities.ToolPositioningActivity" />
+        <activity android:name=".activities.FavoriteAppsPositionActivity" />
+        <activity android:name=".activities.ToolSelectionActivity"></activity>
     </application>
 
 </manifest>

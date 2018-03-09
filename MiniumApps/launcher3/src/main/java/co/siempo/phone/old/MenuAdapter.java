@@ -13,30 +13,40 @@ import android.widget.TextView;
 
 import com.joanzapata.iconify.IconDrawable;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.app.Launcher3Prefs_;
-import co.siempo.phone.helper.FirebaseHelper;
-import co.siempo.phone.main.ItemTouchHelperAdapter;
-import co.siempo.phone.main.ItemTouchHelperViewHolder;
+import co.siempo.phone.interfaces.ItemTouchHelperAdapter;
+import co.siempo.phone.interfaces.ItemTouchHelperViewHolder;
+import co.siempo.phone.interfaces.OnToolItemListChangedListener;
 import co.siempo.phone.main.MainListItemLoader;
-import co.siempo.phone.main.OnCustomerListChangedListener;
 import co.siempo.phone.main.OnStartDragListener;
-import co.siempo.phone.model.MainListItem;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.app.DroidPrefs_;
+import co.siempo.phone.models.MainListItem;
 
 
-class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> implements ItemTouchHelperAdapter {
+public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> implements ItemTouchHelperAdapter {
     private final Activity context;
-    private List<MainListItem> arrayList;
+    private ArrayList<MainListItem> arrayList;
     private boolean isGrid;
     private OnStartDragListener mDragStartListener;
-    private OnCustomerListChangedListener mListChangedListener;
+    private OnToolItemListChangedListener mListChangedListener;
     private DroidPrefs_ droidPrefs_;
 
+
+    // Provide a suitable constructor (depends on the kind of dataset)
+    MenuAdapter(Activity context, RecyclerView activity_grid_view, Launcher3Prefs_ prefs, DroidPrefs_ droidPrefs_, ArrayList<MainListItem> arrayList, boolean isGrid, OnStartDragListener dragListener,
+                OnToolItemListChangedListener listChangedListener) {
+        this.context = context;
+        this.arrayList = arrayList;
+        this.isGrid = isGrid;
+        this.droidPrefs_ = droidPrefs_;
+        mDragStartListener = dragListener;
+        mListChangedListener = listChangedListener;
+    }
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
@@ -51,7 +61,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
                         Collections.swap(arrayList, i, i - 1);
                     }
                 }
-                mListChangedListener.onNoteListChanged(arrayList);
+                mListChangedListener.onToolItemListChanged(arrayList);
                 notifyItemMoved(fromPosition, toPosition);
             }
         } catch (Exception e) {
@@ -67,17 +77,6 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
 
     }
 
-
-    // Provide a suitable constructor (depends on the kind of dataset)
-    MenuAdapter(Activity context, RecyclerView activity_grid_view, Launcher3Prefs_ prefs, DroidPrefs_ droidPrefs_, List<MainListItem> arrayList, boolean isGrid, OnStartDragListener dragListener,
-                OnCustomerListChangedListener listChangedListener) {
-        this.context = context;
-        this.arrayList = arrayList;
-        this.isGrid = isGrid;
-        this.droidPrefs_ = droidPrefs_;
-        mDragStartListener = dragListener;
-        mListChangedListener = listChangedListener;
-    }
 
     // Create new views (invoked by the layout manager)
     @Override
@@ -112,7 +111,6 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
                 int id;
                 if (item != null) {
                     id = item.getId();
-                    FirebaseHelper.getIntance().logSiempoMenuUsage(item.getTitle(), 0);
                     new MainListItemLoader(context).listItemClicked(id);
                 }
 
@@ -171,9 +169,9 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
 
     static class ItemViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder {
+        public View layout;
         // each data item is just a string in this case
         ImageView icon, imgView;
-        public View layout;
         TextView text, textDefaultApp;
         RelativeLayout relMenu;
         private LinearLayout linearLayout;

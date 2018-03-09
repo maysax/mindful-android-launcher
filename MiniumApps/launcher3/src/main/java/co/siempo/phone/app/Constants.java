@@ -58,11 +58,12 @@ public class Constants {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.ACCESS_NETWORK_STATE};
-    public static String DISABLE_APPLIST="DISABLE_APPLIST";
+    public static String HELPFUL_ROBOTS ="HELPFUL_ROBOTS";
     public static String BLOCKED_APPLIST = "BLOCKED_APPLIST";
     public static String SOCIAL_DISABLE_COUNT="SOCIAL_DISABLE_COUNT";
     public static String MESSENGER_DISABLE_COUNT="MESSENGER_DISABLE_COUNT";
     public static String APP_DISABLE_COUNT="APP_DISABLE_COUNT";
     public static String HEADER_APPLIST="HEADER_APPLIST";
     public static String CALL_RUNNING = "CALLRUNNING";
+    public static String INTENT_MAINLISTITEM = "MainListItem";
 }

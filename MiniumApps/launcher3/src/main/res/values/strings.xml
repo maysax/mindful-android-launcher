@@ -3,67 +3,42 @@
 
     <string name="format.battery" tools:ignore="UnusedResources">%1$s %2$d%%</string>
     <string name="format.signal" tools:ignore="UnusedResources">{fa-signal 12dp} %1$s {fa-wifi 12dp}</string>
-    <string name="format.duration">(Duration: %1$s)</string>
 
     <string name="title.text" tools:ignore="UnusedResources">Text</string>
-    <string name="title.call">Call</string>
     <string name="title.note" tools:ignore="UnusedResources">Note</string>
-    <string name="title.messages">Messages</string>
+
     <string name="title.callLog" tools:ignore="UnusedResources">Call Log</string>
-    <string name="title.calls">Calls</string>
-    <string name="title.contacts">Contacts</string>
-    <string name="title.pause">Pause</string>
     <string name="title.voicemail" tools:ignore="UnusedResources">Voicemail</string>
-    <string name="title.notes">Notes</string>
-    <string name="title.clock">Clock</string>
-    <string name="title.settings">Settings</string>
+
     <string name="title.theme" tools:ignore="UnusedResources">Theme</string>
-    <string name="title.map">Map</string>
-    <string name="title.email">Email</string>
+
+
     <string name="title.feedback">Feedback</string>
     <string name="title.faq">FAQ</string>
-    <string name="title.appNotifications">Notification manager</string>
     <string name="title.suppressedNotifications">View Suppressed Notification</string>
     <string name="title.siempoPermissions">Siempo Permissions</string>
-    <string name="title.managenotifications">Manage Notifications</string>
     <string name="title.inbox" tools:ignore="UnusedResources">Google Inbox</string>
     <string name="title.defaultLauncher">Set default home app</string>
     <string name="title_tracking" tools:ignore="UnusedResources">Tracking</string>
     <string name="title.version">Version: %1$s</string>
     <string name="title.defaultapp">Assign app defaults</string>
-    <string name="title.lockScreenNotifications">Hide notifications on lock screen </string>
-    <string name="title.allowNotification">Notification for messenger</string>
     <string name="title.apps">Apps</string>
     <string name="title.calendar">Calendar</string>
 
-    <string name="title.mindfulMorning">Mindful Morning</string>
     <string name="title.mindfulMorningAlarm" tools:ignore="UnusedResources">Mindful Morning Alarm</string>
-    <string name="title.sendAsSMS">Send as SMS</string>
-    <string name="title.saveNote">Save Note</string>
-    <string name="title.createContact">Create Contact</string>
-    <string name="title.tempo">Tempo</string>
+    <string name="title.sendAsSMS">Send as a message</string>
+    <string name="title.saveNote">Save as a note</string>
+    <string name="title.swipe">Swipe right to show flagged apps</string>
 
     <string name="label_multiple_numbers">Multiple numbers</string>
     <string name="string_notification_title">Notifications</string>
     <string name="string_account_title">Account</string>
+    <string name="string_account_service_title">"Account &amp; services"</string>
     <string name="string_update_email_title">Update Email</string>
-
-    <string name="icon.outgoingCall">{fa-arrow-up @color/material.core.green 12dp}</string>
-    <string name="icon.incomingCall">{fa-arrow-down @color/material.core.indigo 12dp}</string>
-    <string name="icon.missedCall">{fa-arrow-down @color/material.core.red 12dp}</string>
-
-    <string name="hint.intentionField">What\'s your intention?</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" tools:ignore="UnusedResources">Hello blank fragment</string>
     <string name="title_activity_installed_app_list">Installed App List </string>
-    <string name="msg_tempo_inactive">Turn on Tempo to batch notifications at set intervals</string>
-    <string name="msg_tempo_active" tools:ignore="PluralsCandidate">"Notifications now come batched every %1$d minutes, starting at the top of the hour"</string>
-    <string name="msg_siempo_active_title">Siempo</string>
-    <string name="msg_siempo_active_text">Siempo is running</string>
-    <string name="title_photos">Photos</string>
-    <string name="title_camera">Camera</string>
-    <string name="title_browser">Browser</string>
     <string name="msg.notificationEmpty">Nothing new. Feel free to take a breath and look at your surroundings.</string>
     <string name="nointernetconnection">No internet connection available</string>
 
@@ -206,26 +181,16 @@
     <string name="date_time_settings_summary">Date and time</string>
     <string name="pref_accessibility">Accessibility</string>
     <string name="pref_printing">Printing</string>
-    <string name="pref_developer_option">Developer options</string>
     <string name="pref_about_phone">About phone</string>
     <string name="pref_system">System</string>
     <string name="str_phonesettings">Phone Settings</string>
     <string name="str_siemposettings">Siempo Settings</string>
-    <string name="str_siempo_alphasettings">Siempo Alpha Settings</string>
     <string name="str_keyboard_configuration">Always show the keyboard on the \nhome screen</string>
-    <string name="view_save_note">View saved note</string>
     <string name="phone_replace_regex">\-</string>
     <string name="missed_call">Missed call</string>
-    <string name="ongoing_call">Ongoing call</string>
-    <string name="hangup">HANG UP</string>
     <string name="phone">Phone</string>
-    <string name="msg_accessibility">Siempo Accessibility service is not enabled.\nPlease allow Siempo to access accessibility service.</string>
-    <string name="msg_accessibility2">Siempo Accessibility service is required to use app features.</string>
     <string name="msg_noti_service_dialog">Siempo Notification service is not enabled. Please allow Siempo to access notification service</string>
-    <string name="msg_noti_service_force_dialog">Siempo Notification service is not enabled.It\'s required to use app features.</string>
     <string name="msg_overlay_settings">Siempo needs overlay permission enabled mandatorily.</string>
-    <string name="icon.ble">&#xf1fe;</string>
-    <string name="msg_no_more_application">No other option.</string>
     <string name="open_with">Open With</string>
     <string name="just_once">Just Once</string>
     <string name="always">Always</string>
@@ -233,25 +198,7 @@
     <string name="default_apps">Default Apps</string>
     <string name="clear_all">Clear All</string>
     <string name="siempo_note">Siempo Note</string>
-    <string name="messaging">Messaging</string>
-    <string name="title_activity_app_list_notification">AppListNotification</string>
 
-    <string-array name="socialAppList">
-        <item>com.facebook.lite</item>
-        <item>com.facebook.katana</item>
-        <item>com.instagram.android</item>
-    </string-array>
-
-
-    <string-array name="messengerAppList">
-
-        <item>com.facebook.orca</item>
-        <item>com.facebook.mlite</item>
-        <item>com.whatsapp</item>
-        <item>com.Slack</item>
-        <item>com.google.android.talk</item>
-        <item>com.google.android.apps.messaging</item>
-    </string-array>
 
     <string-array name="systemAppList">
         <item>com.android.providers.contacts</item>
@@ -273,20 +220,15 @@
     <string name="help">Help</string>
     <string name="privacypolicy">Privacy Policy</string>
     <string name="faq_section">FAQ</string>
-    <string name="app_permission">App permission</string>
     <string name="contact_permission">Contacts</string>
     <string name="call_permission">Calls</string>
     <string name="sms_permission">SMS</string>
-    <string name="video_permission">Pictures and Videos</string>
     <string name="storage_permission">Access File Manager</string>
     <string name="location_permission">Location</string>
     <string name="notificationAccess">Notification access</string>
     <string name="draw_overlay">Draw over other Apps</string>
-    <string name="usageStatistics">Usage statistics</string>
-    <string name="label.drawingOver">Drawing over other apps</string>
     <string name="permission_title">"Please enable the following permission(s) to allow the app to work correctly:"</string>
     <string name="permission_siempo_alpha_title">"Siempo is using following permissions\n"</string>
-    <string name="permission_rejected_text"><![CDATA[As you have rejected this permission, app can not provide you the seamless integration.  Please consider turn on permissions at Setting > Permission]]></string>
     <string name="grant_all_to_proceed_text">Please grant all the permissions to proceed</string>
     <string name="runtime_permission_text">Please consider turn on permissions at Setting > Permission</string>
     <string name="permission_proceed_text">Press Continue to proceed</string>
@@ -297,25 +239,24 @@
     <string name="batched_every_15_minutes">Batched, every 15 minutes</string>
     <string name="batched_every_30_minutes">Batched, every 30 minutes</string>
     <string name="batched_every_1_hour">Batched, every 1 hour</string>
-    <string name="batched_every_2_hour">Batched, every 2 hour</string>
-    <string name="batched_every_4_hour">Batched, every 4 hour</string>
+    <string name="batched_every_2_hour">Batched, every 2 hours</string>
+    <string name="batched_every_4_hour">Batched, every 4 hours</string>
     <string name="only_at">Only at:</string>
-    <string name="_09_15am_amp_05_32pm_amp_05_32pm"><![CDATA[09:15am & 05:32pm & 05:32pm]]></string>
     <string name="add">ADD</string>
-    <string name="individually">Individually</string>
-    <string name="app_menus">App Menus</string>
     <string name="home_screen">Home Screen</string>
     <string name="account">Account</string>
     <string name="alpha_settings">Alpha Settings</string>
     <string name="allow_specific_apps">Allow specific apps</string>
+    <string name="select_apps_title">Select apps</string>
     <string name="app_name_tools">App Name</string>
     <string name="user_name">User Name</string>
-    <string name="tbd">TBD</string>
 
     <!--Account Setting Section-->
 
     <string name="lbl_updateEmail">Update email address</string>
+    <string name="lbl_exitSiempo">Exit Siempo services</string>
     <string name="lbl_updateEmailDescription">Siempo will never email you unless you request support or opt-in.</string>
+    <string name="lbl_switchSiempo">Switch to another home app</string>
     <string name="lbl_analytics">Share analytics &amp; diagnostics</string>
     <string name="lbl_analytics_description">Help improve your Siempo experience by automatically sending analytics, diagnostics, and usage data to Siempo. </string>
     <string name="lbl_analytics_description2">\nThe data you share is anonymous and aggregated with data from other users.  We use that data, for example, to recommend a healthy amount of phone use. \n\nTo learn more, please view our </string>
@@ -338,15 +279,17 @@
 
 
     <string name="cancel">CANCEL</string>
+    <string name="strcontinue">CONTINUE</string>
+    <string name="gotit">GOT IT</string>
     <string name="remove">REMOVE</string>
     <string name="msg_sametime">You can\'t set same time multiple times</string>
-    <string name="msg_individual">Notifications will be delivered up to \n 1 minute late or as soon as they arrive.</string>
+    <string name="msg_individual">Notifications will be delivered up to \n1 minute late or as soon as they arrive.</string>
     <string name="msg_do_not_disturb">Do not disturb is on between deliveries.</string>
     <string name="msg_quarter">Batches will arrive on the quarter-hour.</string>
     <string name="msg_half">Batches will arrive on the half-hour.</string>
     <string name="msg_1hour">Batches will arrive on the hour.</string>
-    <string name="msg_2hour">Batches will arrive every 2 hour.</string>
-    <string name="msg_4hour">Batches will arrive every 4 hour.</string>
+    <string name="msg_2hour">Batches will arrive 12 times per day.</string>
+    <string name="msg_4hour">Batches will arrive 8 times per day.</string>
     <string name="msg_next_delivery">Next Delivery: </string>
     <string name="message1">For the next day, week, or month, what do you want to remind yourself about whenever you unlock your phone?</string>
     <string name="message2">An intention is a goal or an idea that you want to focus on. Unlike a task, it might never be \"complete\", but your top priority may change.</string>
@@ -357,16 +300,148 @@
     <string name="type_a_few_words">Type a few words</string>
     <string name="close">CLOSE</string>
     <string name="next">NEXT</string>
-    
+
     <string name="faqlink">http://www.getsiempo.com/apps/android/beta/faq.htm</string>
-<string name="privacypolicy_link"><a href="" >Privacy Policy</a></string>
-    <string name="title_activity_intention_confirmation">IntentionConfirmationActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="privacypolicy_link"><a href="">Privacy Policy.</a></string>
     <string name="disable_intentions">Disable intentions</string>
     <string name="when_intentions_are_disabled_your_home_screen_will_be_blank">When intentions are disabled, your home screen will be blank.</string>
     <string name="homescreen">Home Screen</string>
+    <string name="app_menus">App menus</string>
     <string name="msg_no_apps">You haven\'t moved any apps into this category.</string>
     <string name="search_hint">Find app, send message, or save note</string>
-    <string name="msg_tempo_disable">All Siempo notifications options have been disabled, including Tempo and blocking apps by category. Use Android system settings to adjust notifications or re-enable this setting.</string>
+    <string name="notification_interrupt_title">Select apps that may interrupt you</string>
+    <string name="notification_interrupt_description">Normally, when you schedule your notifications to arrive at certain times of day or at a certain interval, then all apps will be blocked until the that scheduled arrival times. \n \nHowever, you can use this setting to choose to allow some apps to interrupt you immediately.</string>
+    <string name="allow_interrupt_msg">Allow this app to interrupt you</string>
+    <string name="info_or_uninstall">Get info or uninstall app</string>
+    <string name="stop_interrupt_msg">Stop allowing interruptions</string>
+
+    <!--notes strings-->
+    <string name="title.noteColor">Note color</string>
+    <string name="title.notesDelete">Selected notes will be deleted</string>
+    <string name="title.restoreFailed">No backup found</string>
+    <string name="title.backupCreated">Backup successful</string>
+
+    <string name="label.hideNoteBody">Hide note body in list</string>
+    <string name="label.showNoteBody">Show note body in list</string>
+    <string name="label.selected">Selected</string>
+
+
+    <string name="msg.emptyNotes" tools:ignore="TypographyQuotes">Press \'+\' to add new note</string>
+    <string name="msg.deleteSuccessful">Delete successful</string>
+    <string name="msg.emptyNoteDiscarded">Empty note discarded</string>
+    <string name="msg.titleCannotBeEmpty">Title cannot be empty</string>
+    <string name="msg.noteWillBeHidden">Note body will now be hidden in notes list</string>
+    <string name="msg.noteWillBeShown">Note body will now be shown in notes list</string>
+    <string name="msg.backupUnsuccessful">Backup unsuccessful</string>
+    <string name="msg.noNotesToBackup">No notes to backup</string>
+    <string name="msg.notesRestored">Notes restored</string>
+    <string name="msg.restoreUnsuccessful">Restore unsuccessful</string>
+    <string name="msg.restoreFailed" tools:ignore="TypographyQuotes">To restore notes, the backup file has to be in \'External/Ebb/ebbNotes_backup.json\'</string>
+    <string name="msg.backupCreated">Backup created in</string>
+
+    <string name="prompt.restore">Are you sure you want to restore backup notes? (Cannot be undone)</string>
+    <string name="prompt.backup">Are you sure you want to backup current notes?</string>
+
+
+    <string name="title.fontSize">Change font size</string>
+    <string name="title.saveChanges">Save changes?</string>
+
+    <string-array name="fontSizeNames">
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
+    </string-array>
+
+    <string name="you_ve_flag">"You've flagged these apps.Your current intention:"
+</string>
+
+
+    <!-- errors -->
+    <string name="error.requiredField">This field is required</string>
+    <string name="error.invalidEmail">This email address is not valid</string>
+    <string name="error.invalidPassword">This password has to be at least 8 characters and can contain alpha-numeric characters and/or @#$%</string>
+    <string name="error.mismatchPassword">The passwords do not match</string>
+
+    <!-- messages -->
+    <string name="msg.not.yet.implemented">Not yet implemented</string>
+    <string name="msg.noteSaved">Your note has been saved.</string>
+    <string name="msg.noteCreated">Note created</string>
+    <!-- Icons -->
+
+    <string name="label.yes">Yes</string>
+    <string name="label.no">No</string>
+    <string name="label.search">Search</string>
+    <string name="label.backup">Backup</string>
+    <string name="label.restore">Restore</string>
+    <string name="label.color">Color</string>
+    <string name="label.delete">Delete</string>
+    <string name="label.fontSize">Font size</string>
+    <string name="label.title">Title</string>
+    <string name="label.note">Note</string>
+    <string name="label.favorite">Favorite</string>
+    <string name="make_siempo_your_default_home_app">Make Siempo your default home app:</string>
+    <string name="select">Select</string>
+    <string name="select_your_prefered_home_app">Select your preferred Home app</string>
+    <string name="tap_always" tools:ignore="TypographyQuotes">Tap \"Always\"</string>
+    <string name="notes">Notes</string>
+
+
+    <!--name tools menu-->
+    <string name="title.map">Maps</string>
+    <string name="title.transport">Transport</string>
+    <string name="title.weather">Weather</string>
+    <string name="title.recorder">Recorder</string>
+    <string name="title.camera">Camera</string>
+    <string name="title.photos">Photos</string>
+    <string name="title.payment">Payment</string>
+    <string name="title.wellness">Wellness</string>
+    <string name="title.browser">Browser</string>
+    <string name="title.call">Calls</string>
+    <string name="title.clock">Clock</string>
+    <string name="title.messages">Messages</string>
+    <string name="title.email">Email</string>
+    <string name="hide_icon_branding">Hide icon branding</string>
+    <string name="randomize_junkfood">Randomize junk-food icons</string>
+    <string name="junkfood_description_setting">App icons will have a different position each time you open the junk-food menu.</string>
+    <string name="iconbranding_description_setting">App icon logos are replaced with less enticing images and patterns.</string>
+    <string name="assign_an_app">Assign an app to </string>
+    <string name="title_flagging_screen">Flag apps</string>
+    <string name="all_other_installed_apps">All other installed apps</string>
+    <string name="tap_apps_below_to_move_them_into_this_section">Tap apps below to move them into this section.</string>
+    <string name="tap_apps_above_to_move_them_into_this_section">Tap apps above to move them into this section.</string>
+    <string name="str_frequently_used_apps">Frequently used apps</string>
+    <string name="msg_congratulations">Congratulations!</string>
+    <string name="flag_app">Flag this app to use it less</string>
+    <string name="flag_app_first_time">Flag apps to use them less</string>
+    <string name="unflagapp">Un-flag this app</string>
+    <string name="favorite_menu_unselect">Unselect as frequently used</string>
+    <string name="favorite_menu_select">Select as frequently used app</string>
+    <string name="get_info_or_uninstall_app">Get info or uninstall app</string>
+    <string name="msg_flage_save_dialog">You\'ve taken an important step towards reducing the use of apps that can make you feel bad when you overuse them.</string>
+    <string name="flag_first_time_install">When you flag an app, Siempo will gently discourage you from over-using it. We\'ve flagged some apps that most users say they want to use less.  You can change these flags now or later.</string>
+    <string name="msg_flag_first_time">Most users report that the more apps they flag, the less they use their phones.  Flagging will make these apps just a bit harder to launch and use unintentionally.</string>
+    <string name="str_blank_validation_below">Taps apps below to move them into this section</string>
+    <string name="str_blank_validation_above">Taps apps above to move them into this section</string>
+    <string name="yes_unhide">YES, UNHIDE</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="exiting_siempo">Exiting Siempo</string>
+    <string name="exit">EXIT</string>
+    <string name="exiting_siempo_msg">To re-enable Siempo protections after exiting, launch the Siempo app at any time.  Using Siempo can help decrease unintended app use.</string>
+    <string name="editing_tools">Editing tools</string>
+    <string name="editing_frequently_apps">Editing frequently used apps</string>
+    <string name="select_tools">Select Tools</string>
+    <string name="select_apps">Select Apps</string>
+    <string name="assign_app">ASSIGN APP</string>
+    <string name="msg_allowpeakingon">On. When new notifications arrive, they may pop up over the current app. The status bar will also show when you have new notifications.</string>
+    <string name="msg_allowpeaking">Off.The status bar will show you when you have new notifications in your tray, but your tray won\'t pop up automatically.</string>
+    <string name="allow_peaking">Allow peaking</string>
+    <string name="you_have_t_selected_any_junkfood_app_nselect_junkfood">"You haven\'t selected any Junkfood app."</string>
+    <string name="select_junkfood">Select Junkfood</string>
+    <string name="you_have_t_selected_any_favourite_app">"You haven\'t selected any Favorite app."</string>
+    <string name="select_favourite">Select Favorite</string>
+    <string name="atleast_one_fav_app">"Atleast one app will stay as favorite"</string>
+    <string name="not_more_than_twelve_fav_app">Please unselect any of the apps from Frequently used apps section</string>
+    <string name="find_app_send_message_or_save_note">Find app, send message, or save note</string>
+
+
 </resources>
