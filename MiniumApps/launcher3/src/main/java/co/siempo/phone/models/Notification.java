@@ -24,7 +24,7 @@ public class Notification {
     public Notification() {
     }
 
-    public Notification(NotificationContactModel notificationContactModel, Long id, String number, String _text, String _time, boolean _status, int notificationType,String packageName) {
+    public Notification(NotificationContactModel notificationContactModel, Long id, String number, String _text, String _time, boolean _status, int notificationType, String packageName) {
         this.notificationContactModel = notificationContactModel;
         this.id = id;
         this._text = _text;
@@ -32,11 +32,11 @@ public class Notification {
         this._time = _time;
         this.notificationType = notificationType;
         this.number = number;
-        this.packageName =packageName;
+        this.packageName = packageName;
     }
 
-    public Notification(int notificationType,int app_icon,String packageName,String dateTime,String strTitle,String message){
-       this.notificationType = notificationType;
+    public Notification(int notificationType, int app_icon, String packageName, String dateTime, String strTitle, String message) {
+        this.notificationType = notificationType;
         this.app_icon = app_icon;
         this.packageName = packageName;
         this._time = dateTime;

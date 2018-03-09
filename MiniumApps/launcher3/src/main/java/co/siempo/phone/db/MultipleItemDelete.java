@@ -21,7 +21,7 @@ public class MultipleItemDelete implements DeleteStrategy {
                     .list();
 
             DBUtility.getNotificationDao().deleteInTx(notificationSmsesList);
-        }catch (Exception e) {
+        } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }

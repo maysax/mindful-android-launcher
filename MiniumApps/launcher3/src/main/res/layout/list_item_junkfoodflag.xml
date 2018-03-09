@@ -9,6 +9,7 @@
     android:orientation="vertical"
     android:showDividers="none"
     tools:ignore="UseCompoundDrawables">
+
     <TextView
         android:id="@+id/txtHeader"
         android:layout_width="match_parent"

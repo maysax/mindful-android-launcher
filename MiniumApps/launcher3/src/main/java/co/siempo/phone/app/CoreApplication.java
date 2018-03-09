@@ -198,7 +198,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     public void setPackagesList(List<String> packagesList) {
-        try{
+        try {
             Collections.sort(packagesList, new Comparator<String>() {
                 public int compare(String v1, String v2) {
 
@@ -224,8 +224,7 @@ public abstract class CoreApplication extends MultiDexApplication {
 
             PrefSiempo.getInstance(this).write(PrefSiempo
                     .BLOCKED_APPLIST, blockedApps);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
         }
     }
 

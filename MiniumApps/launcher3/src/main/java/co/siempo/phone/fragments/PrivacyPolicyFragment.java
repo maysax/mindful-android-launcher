@@ -39,13 +39,12 @@ public class PrivacyPolicyFragment extends CoreFragment {
             }
         });
 
-        try{
+        try {
             web_PrivacyPolicy.setHorizontalScrollBarEnabled(false);
             web_PrivacyPolicy.getSettings().setJavaScriptEnabled(true);
             web_PrivacyPolicy.loadUrl("file:///android_asset/privacypolicy.htm");
             web_PrivacyPolicy.setBackgroundColor(Color.TRANSPARENT);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

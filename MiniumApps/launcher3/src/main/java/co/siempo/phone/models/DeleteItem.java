@@ -18,7 +18,7 @@ public class DeleteItem {
         deleteStrategy.delete(notification);
     }
 
-    public void deleteAll(){
+    public void deleteAll() {
         deleteStrategy.deleteAll();
     }
 }

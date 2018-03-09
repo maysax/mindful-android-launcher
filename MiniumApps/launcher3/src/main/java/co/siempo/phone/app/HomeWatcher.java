@@ -1,7 +1,7 @@
 package co.siempo.phone.app;
 
-/**
- * Created by rajeshjadi on 10/8/17.
+/*
+  Created by rajeshjadi on 10/8/17.
  */
 
 import android.content.BroadcastReceiver;
@@ -12,7 +12,7 @@ import android.util.Log;
 
 public class HomeWatcher {
 
-    static final String TAG = "hg";
+    private static final String TAG = "hg";
     private Context mContext;
     private IntentFilter mFilter;
     private OnHomePressedListener mListener;
@@ -64,7 +64,7 @@ public class HomeWatcher {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
+            if (action != null && action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
                 String reason = intent.getStringExtra(SYSTEM_DIALOG_REASON_KEY);
                 if (reason != null) {
                     Log.e(TAG, "action:" + action + ",reason:" + reason);

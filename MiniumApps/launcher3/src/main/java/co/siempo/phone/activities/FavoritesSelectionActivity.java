@@ -96,19 +96,19 @@ public class FavoritesSelectionActivity extends CoreActivity {
         Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         installedPackageList = getPackageManager().queryIntentActivities(mainIntent, 0);
-        List<ResolveInfo> appList= new ArrayList<>();
-        for(int i=0;i<installedPackageList.size();i++){
-            boolean isAdded=false;
-            for(int j=0;j<appList.size();j++){
-                if(!TextUtils.isEmpty(installedPackageList.get(i).activityInfo.packageName) && appList.get(j).activityInfo.packageName.equalsIgnoreCase(installedPackageList.get(i).activityInfo.packageName)){
-                    isAdded=true;
+        List<ResolveInfo> appList = new ArrayList<>();
+        for (int i = 0; i < installedPackageList.size(); i++) {
+            boolean isAdded = false;
+            for (int j = 0; j < appList.size(); j++) {
+                if (!TextUtils.isEmpty(installedPackageList.get(i).activityInfo.packageName) && appList.get(j).activityInfo.packageName.equalsIgnoreCase(installedPackageList.get(i).activityInfo.packageName)) {
+                    isAdded = true;
                 }
             }
-            if(!isAdded){
+            if (!isAdded) {
                 appList.add(installedPackageList.get(i));
             }
         }
-        installedPackageList=appList;
+        installedPackageList = appList;
         bindData(false);
     }
 

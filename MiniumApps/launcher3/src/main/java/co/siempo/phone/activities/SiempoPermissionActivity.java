@@ -176,7 +176,6 @@ public class SiempoPermissionActivity extends CoreActivity {
         }
 
 
-
         if (isFromHome) {
             switchContactPermission.setVisibility(View.VISIBLE);
             switchCallPermission.setVisibility(View.VISIBLE);

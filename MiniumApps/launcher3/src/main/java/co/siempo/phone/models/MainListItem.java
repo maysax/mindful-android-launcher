@@ -42,11 +42,11 @@ public class MainListItem implements Serializable {
         this.packageName = packageName;
     }
 
-    public MainListItem(int id, String title, String packageName,int drawable) {
+    public MainListItem(int id, String title, String packageName, int drawable) {
         this.id = id;
         this.title = title;
         this.packageName = packageName;
-        this.drawable=drawable;
+        this.drawable = drawable;
     }
 
     public MainListItem(int id, String title, String icon, MainListItemType itemType) {

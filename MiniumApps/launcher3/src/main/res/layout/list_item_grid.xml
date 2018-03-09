@@ -29,7 +29,7 @@
             android:id="@+id/temp"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/icon"
@@ -57,7 +57,7 @@
                 android:maxLines="1"
                 android:textColor="@color/black_80"
                 android:textSize="13sp"
-                tools:text="Send as a message"/>
+                tools:text="Send as a message" />
 
             <TextView
                 android:id="@+id/textDefaultApp"

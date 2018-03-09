@@ -56,7 +56,6 @@ public class FavoriteAppsPositionActivity extends CoreActivity implements OnFavo
     };
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

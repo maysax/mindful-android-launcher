@@ -123,7 +123,7 @@ public class AlarmService extends IntentService {
             Calendar calendar = Calendar.getInstance();
             int systemHours = calendar.get(Calendar.HOUR_OF_DAY);
             int systemMinutes = calendar.get(Calendar.MINUTE);
-            int tempoType=PrefSiempo.getInstance(context).read(PrefSiempo
+            int tempoType = PrefSiempo.getInstance(context).read(PrefSiempo
                     .TEMPO_TYPE, 0);
             Tracer.d("3");
               if (tempoType == 1) {

@@ -30,7 +30,6 @@ public class TempoNotificationAppsFragment extends CoreFragment {
     TextView txtAllowApps;
 
 
-
     public TempoNotificationAppsFragment() {
         // Required empty public constructor
     }

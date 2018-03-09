@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:transitionName="@string/what_s_your_intention"
-    tools:context="co.siempo.phone.pause.PauseActivity"
     tools:ignore="UnusedIds">
 
     <Toolbar

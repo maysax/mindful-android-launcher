@@ -19,12 +19,7 @@ import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import com.github.javiersantos.appupdater.AppUpdater;
 import com.github.javiersantos.appupdater.AppUpdaterUtils;
-import com.github.javiersantos.appupdater.enums.AppUpdaterError;
-import com.github.javiersantos.appupdater.enums.Display;
-import com.github.javiersantos.appupdater.enums.UpdateFrom;
-import com.github.javiersantos.appupdater.objects.Update;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
@@ -95,7 +90,6 @@ public class DashboardActivity extends CoreActivity {
                 .CONNECTIVITY_SERVICE);
 
 
-
         permissionUtil = new PermissionUtil(this);
         if (!permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)
                 || !permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) || !permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)
@@ -121,11 +115,10 @@ public class DashboardActivity extends CoreActivity {
         if (PrefSiempo.getInstance(this).read(PrefSiempo
                 .IS_APP_INSTALLED_FIRSTTIME, true)) {
             Log.d(TAG, "Display upgrade dialog.");
-                checkUpgradeVersion();
+            checkUpgradeVersion();
         }
 
     }
-
 
 
     @Override
@@ -350,7 +343,6 @@ public class DashboardActivity extends CoreActivity {
             Log.d(TAG, getString(R.string.nointernetconnection));
         }
     }
-
 
 
     @Override

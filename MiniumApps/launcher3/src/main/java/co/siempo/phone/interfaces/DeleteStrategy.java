@@ -9,5 +9,6 @@ import co.siempo.phone.models.Notification;
 
 public interface DeleteStrategy {
     void delete(Notification notification);
+
     void deleteAll();
 }

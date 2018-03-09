@@ -1,7 +1,6 @@
 package co.siempo.phone.service;
 
 import android.os.Environment;
-import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;

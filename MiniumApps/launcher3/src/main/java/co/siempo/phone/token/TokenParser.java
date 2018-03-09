@@ -5,7 +5,8 @@ package co.siempo.phone.token;
  */
 public class TokenParser {
 
-    TokenRouter router ;
+    private TokenRouter router;
+
     public TokenParser(TokenRouter router) {
         this.router = router;
     }

@@ -44,7 +44,7 @@ public class FaqFragment extends CoreFragment {
             web_Faq.getSettings().setJavaScriptEnabled(true);
             web_Faq.loadUrl(getString(R.string.faqlink));
             web_Faq.setBackgroundColor(Color.TRANSPARENT);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

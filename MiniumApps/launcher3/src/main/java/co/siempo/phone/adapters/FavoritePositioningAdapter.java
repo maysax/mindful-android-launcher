@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,7 +27,6 @@ import co.siempo.phone.interfaces.ItemTouchHelperAdapter;
 import co.siempo.phone.interfaces.ItemTouchHelperViewHolder;
 import co.siempo.phone.interfaces.OnFavoriteItemListChangedListener;
 import co.siempo.phone.main.OnStartDragListener;
-import co.siempo.phone.interfaces.OnToolItemListChangedListener;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
 
@@ -45,11 +43,11 @@ public class FavoritePositioningAdapter extends RecyclerView.Adapter<FavoritePos
     private OnFavoriteItemListChangedListener mListChangedListener;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public FavoritePositioningAdapter(Activity context,boolean isHideIconBranding, ArrayList<MainListItem> arrayList, OnStartDragListener dragListener,
+    public FavoritePositioningAdapter(Activity context, boolean isHideIconBranding, ArrayList<MainListItem> arrayList, OnStartDragListener dragListener,
                                       OnFavoriteItemListChangedListener listChangedListener) {
         this.context = context;
         this.arrayList = arrayList;
-        this.isHideIconBranding=isHideIconBranding;
+        this.isHideIconBranding = isHideIconBranding;
         mDragStartListener = dragListener;
         mListChangedListener = listChangedListener;
         map = CoreApplication.getInstance().getToolsSettings();
@@ -107,11 +105,11 @@ public class FavoritePositioningAdapter extends RecyclerView.Adapter<FavoritePos
             holder.text.setText(item.getTitle());
         }
         if (!TextUtils.isEmpty(item.getPackageName())) {
-            if(isHideIconBranding){
+            if (isHideIconBranding) {
                 holder.imgAppIcon.setVisibility(View.GONE);
                 holder.txtAppTextImage.setVisibility(View.VISIBLE);
                 holder.imgUnderLine.setVisibility(View.VISIBLE);
-                if(!TextUtils.isEmpty(item.getTitle())){
+                if (!TextUtils.isEmpty(item.getTitle())) {
                     String fontPath = "fonts/robotocondensedregular.ttf";
                     holder.txtAppTextImage.setText("" + item
                             .getTitle().charAt(0));
@@ -122,19 +120,17 @@ public class FavoritePositioningAdapter extends RecyclerView.Adapter<FavoritePos
                     holder.txtAppTextImage.setTypeface(tf);
                 }
 
-            }
-            else{
+            } else {
                 holder.imgAppIcon.setVisibility(View.VISIBLE);
                 holder.txtAppTextImage.setVisibility(View.GONE);
                 holder.imgUnderLine.setVisibility(View.GONE);
-                Drawable drawable=getAppIconByPackageName(item.getPackageName(),context);
-                if (drawable!=null) {
+                Drawable drawable = getAppIconByPackageName(item.getPackageName(), context);
+                if (drawable != null) {
                     holder.imgAppIcon.setImageDrawable(drawable);
                 } else {
                     holder.linearLayout.setVisibility(View.INVISIBLE);
                 }
             }
-
 
 
         } else {
@@ -145,7 +141,7 @@ public class FavoritePositioningAdapter extends RecyclerView.Adapter<FavoritePos
         holder.linearLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(!TextUtils.isEmpty(item.getPackageName())) {
+                if (!TextUtils.isEmpty(item.getPackageName())) {
                     if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
                         mDragStartListener.onStartDrag(holder);
                     }
@@ -162,12 +158,28 @@ public class FavoritePositioningAdapter extends RecyclerView.Adapter<FavoritePos
         return arrayList.size();
     }
 
+    public Drawable getAppIconByPackageName(String ApkTempPackageName, Context context) {
+
+        Drawable drawable;
+
+        try {
+            drawable = context.getPackageManager().getApplicationIcon(ApkTempPackageName);
+
+        } catch (PackageManager.NameNotFoundException e) {
+
+            e.printStackTrace();
+
+            drawable = ContextCompat.getDrawable(context, R.mipmap.ic_launcher);
+        }
+        return drawable;
+    }
+
     class ItemViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder {
         public View layout;
         // each data item is just a string in this case
-        ImageView  imgView,imgAppIcon,imgUnderLine;
-        TextView text,txtAppTextImage;
+        ImageView imgView, imgAppIcon, imgUnderLine;
+        TextView text, txtAppTextImage;
         TextView textDefaultApp;
         RelativeLayout relMenu;
         private LinearLayout linearLayout;
@@ -176,12 +188,12 @@ public class FavoritePositioningAdapter extends RecyclerView.Adapter<FavoritePos
             super(v);
             layout = v;
             linearLayout = v.findViewById(R.id.linearList);
-            imgUnderLine=v.findViewById(R.id.imgUnderLine);
+            imgUnderLine = v.findViewById(R.id.imgUnderLine);
             relMenu = v.findViewById(R.id.relMenu);
             text = v.findViewById(R.id.text);
             textDefaultApp = v.findViewById(R.id.textDefaultApp);
             txtAppTextImage = v.findViewById(R.id.txtAppTextImage);
-            imgAppIcon=v.findViewById(R.id.imgAppIcon);
+            imgAppIcon = v.findViewById(R.id.imgAppIcon);
             imgView = v.findViewById(R.id.imgView);
         }
 
@@ -199,23 +211,6 @@ public class FavoritePositioningAdapter extends RecyclerView.Adapter<FavoritePos
             }
 
         }
-    }
-
-    public Drawable getAppIconByPackageName(String ApkTempPackageName, Context context){
-
-        Drawable drawable;
-
-        try{
-            drawable = context.getPackageManager().getApplicationIcon(ApkTempPackageName);
-
-        }
-        catch (PackageManager.NameNotFoundException e){
-
-            e.printStackTrace();
-
-            drawable = ContextCompat.getDrawable(context, R.mipmap.ic_launcher);
-        }
-        return drawable;
     }
 
 }
