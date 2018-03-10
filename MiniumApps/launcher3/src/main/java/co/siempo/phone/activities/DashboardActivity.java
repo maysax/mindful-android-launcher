@@ -16,6 +16,7 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
@@ -152,7 +153,9 @@ public class DashboardActivity extends CoreActivity {
         mPager = findViewById(R.id.pager);
         mPagerAdapter = new DashboardPagerAdapter(getFragmentManager());
         mPager.setAdapter(mPagerAdapter);
-        mPager.setCurrentItem(currentIndexDashboard);
+        if(mPager.getAdapter()!=null && mPagerAdapter!=null) {
+            mPager.setCurrentItem(currentIndexDashboard);
+        }
         mPager.setPageTransformer(true, new UIUtils.FadePageTransformer());
         inputMethodManager = (InputMethodManager) this
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -216,6 +219,7 @@ public class DashboardActivity extends CoreActivity {
             }
         });
     }
+
 
     @Override
     protected void onPause() {

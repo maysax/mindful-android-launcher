@@ -339,15 +339,11 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             @Override
             public void onClick(View v) {
 
-
-                chipsEditText.clearFocus();
-                chipsEditText.setText("");
-
                 if (inputMethodManager != null) {
                     inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
                 }
-                listView.setAdapter(adapter);
-
+                chipsEditText.clearFocus();
+                chipsEditText.setText("");
             }
         });
         searchEditTextFocusChanged();
@@ -491,6 +487,44 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
             @Override
             public void onPageSelected(int i) {
+
+                if (i == 0) {
+                    if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>()).size() == 0) {
+                        //Applied for smooth transition
+                        pagerPane.setAlpha(0);
+                        Intent intent = new Intent(getActivity(), JunkfoodFlaggingActivity.class);
+                        startActivity(intent);
+                        getActivity().overridePendingTransition(R
+                                .anim.fade_in_junk, R.anim.fade_out_junk);
+                    }
+
+                    edtSearchToolsRounded.clearFocus();
+                    chipsEditText.clearFocus();
+                    edtSearchToolsRounded.setOnFocusChangeListener(null);
+                    chipsEditText.setOnFocusChangeListener(null);
+                    junkFoodAppPane();
+
+
+                }
+
+                //Tools and Favourite Pane
+                else {
+                    linTopDoc.setBackground(getResources().getDrawable(R
+                            .drawable.top_bar_bg));
+                    txtTopDockDate.setVisibility(View.VISIBLE);
+                    searchLayout.setVisibility(View.VISIBLE);
+                    edtSearchToolsRounded.setVisibility(View.VISIBLE);
+                    txtIntention.setVisibility(View.GONE);
+                    txtIntentionLabelJunkPane.setVisibility(View.GONE);
+
+                    // finally change the color
+                    mWindow.setStatusBarColor(defaultStatusBarColor);
+                    edtSearchToolsRounded.clearFocus();
+                    chipsEditText.clearFocus();
+                    //Focus Change Listener for Search in List
+                    searchEditTextFocusChanged();
+                }
+
                 //Indicator to be set here so that when coming from another
                 // application, the sliding dots retain the shape as previous
                 indicator.setViewPager(pagerPane);
@@ -519,40 +553,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
                 DashboardActivity.currentIndexPaneFragment = i;
                 //Make the junk food pane visible
-                if (i == 0) {
-                    edtSearchToolsRounded.clearFocus();
-                    chipsEditText.clearFocus();
-                    edtSearchToolsRounded.setOnFocusChangeListener(null);
-                    chipsEditText.setOnFocusChangeListener(null);
-                    junkFoodAppPane();
 
-                    if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>()).size() == 0) {
-                        //Applied for smooth transition
-                        pagerPane.setAlpha(0);
-                        Intent intent = new Intent(getActivity(), JunkfoodFlaggingActivity.class);
-                        startActivity(intent);
-                        getActivity().overridePendingTransition(R
-                                .anim.fade_in_junk, R.anim.fade_out_junk);
-                    }
-                }
-
-                //Tools and Favourite Pane
-                else {
-                    linTopDoc.setBackground(getResources().getDrawable(R
-                            .drawable.top_bar_bg));
-                    txtTopDockDate.setVisibility(View.VISIBLE);
-                    searchLayout.setVisibility(View.VISIBLE);
-                    edtSearchToolsRounded.setVisibility(View.VISIBLE);
-                    txtIntention.setVisibility(View.GONE);
-                    txtIntentionLabelJunkPane.setVisibility(View.GONE);
-
-                    // finally change the color
-                    mWindow.setStatusBarColor(defaultStatusBarColor);
-                    edtSearchToolsRounded.clearFocus();
-                    chipsEditText.clearFocus();
-                    //Focus Change Listener for Search in List
-                    searchEditTextFocusChanged();
-                }
 
             }
 

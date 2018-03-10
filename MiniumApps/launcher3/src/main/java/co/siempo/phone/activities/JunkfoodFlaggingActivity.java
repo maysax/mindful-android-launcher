@@ -408,20 +408,9 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
 
     @Override
     protected void onResume() {
-
-        startTime = System.currentTimeMillis();
-        //Loading apps here to refresh data in case user goes to app info and
-        // disables app
-        //Making a 20 ms load time delay for better animation
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                loadApps();
-            }
-        }, 20);
-
         super.onResume();
+        startTime = System.currentTimeMillis();
+        loadApps();
     }
 
     @Override
