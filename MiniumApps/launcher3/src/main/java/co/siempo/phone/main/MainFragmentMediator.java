@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.text.TextUtils;
 
 import java.text.DateFormat;
@@ -51,7 +52,6 @@ public class MainFragmentMediator {
     }
 
     public void loadData() {
-
         items = new ArrayList<>();
         contactItems = new ArrayList<>();
         loadActions();
@@ -62,17 +62,30 @@ public class MainFragmentMediator {
     }
 
     public void resetData() {
-        items = new ArrayList<>();
-        contactItems = new ArrayList<>();
-        loadActions();
-        loadContacts();
-        loadDefaults();
-        items = PackageUtil.getListWithMostRecentData(items, context);
 
-        if (getAdapter() != null) {
-            getAdapter().loadData(items);
-            getAdapter().notifyDataSetChanged();
-        }
+        new AsyncTask<String, String, List<MainListItem>>() {
+
+            @Override
+            protected List<MainListItem> doInBackground(String... strings) {
+                items = new ArrayList<>();
+                contactItems = new ArrayList<>();
+                loadActions();
+                loadContacts();
+                loadDefaults();
+                items = PackageUtil.getListWithMostRecentData(items, context);
+                return items;
+            }
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                if (getAdapter() != null) {
+                    getAdapter().loadData(items);
+                    getAdapter().notifyDataSetChanged();
+                }
+            }
+        }.execute();
+
 
     }
 

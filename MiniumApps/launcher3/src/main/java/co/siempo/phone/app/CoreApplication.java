@@ -4,8 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.LauncherActivityInfo;
 import android.content.pm.LauncherApps;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
@@ -410,18 +410,29 @@ public abstract class CoreApplication extends MultiDexApplication {
         @Override
         protected Set<String> doInBackground(Object... params) {
             Set<String> applist = new HashSet<>();
-
-            for (android.os.UserHandle profile : userManager.getUserProfiles()) {
-                for (LauncherActivityInfo activityInfo : launcherApps.getActivityList(null, profile)) {
-                    ApplicationInfo appInfo = activityInfo.getApplicationInfo();
-                    appInfo.name = activityInfo.getLabel().toString();
-                    if (!appInfo.packageName.equalsIgnoreCase("co.siempo.phone")) {
-                        Drawable drawable = getPackageManager().getApplicationIcon(appInfo);
-                        Bitmap bitmap = PackageUtil.drawableToBitmap(drawable);
-                        addBitmapToMemoryCache(appInfo.packageName, bitmap);
-                        applist.add(appInfo.packageName);
+            List<PackageInfo> packs = getPackageManager().getInstalledPackages(0);
+            for (int i = 0; i < packs.size(); i++) {
+                try {
+                    PackageInfo p = packs.get(i);
+                    if ((packs.get(i).applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
+                        continue;
                     }
+                    String packageName = p.packageName;
+                    applist.add(packageName);
+                    Drawable drawable = null;
+                    try {
+                        drawable = p.applicationInfo.loadIcon(getPackageManager());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if (drawable != null) {
+                        Bitmap bitmap = PackageUtil.drawableToBitmap(drawable);
+                        addBitmapToMemoryCache(packageName, bitmap);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
             }
             return applist;
         }
