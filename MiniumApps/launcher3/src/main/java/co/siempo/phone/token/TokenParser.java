@@ -17,7 +17,6 @@ public class TokenParser {
         if (str.isEmpty()) {
             TokenManager.getInstance().clear();
         } else if (str.equals("@") && !TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT)) {
-
             router.setCurrent(new TokenItem(TokenItemType.CONTACT));
         } else {
             for (TokenItem item : TokenManager.getInstance().getItems()) {

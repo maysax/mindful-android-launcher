@@ -188,7 +188,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         }
 
         if (null != imageClear && imageClear.getVisibility() == View
-                .VISIBLE) {
+                .VISIBLE && pagerPane.getCurrentItem() != 0) {
             imageClear.performClick();
         }
 
@@ -352,6 +352,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             public void onClick(View v) {
                 if (searchLayout.getVisibility() == View.GONE) {
                     hidePaneAndBottomView(context);
+                    listView.setAdapter(adapter);
                     imageClear.setVisibility(View.GONE);
                     blueLineDivider.setVisibility(View.GONE);
                     searchLayout.setVisibility(View.VISIBLE);
@@ -385,6 +386,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                 if (searchLayout != null && chipsEditText != null && chipsEditText.getText().toString().length() > 0) {
                     searchLayout.txtSearchBox.setText("");
                 }
+
             }
         });
 
@@ -635,6 +637,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
         //Changing the status bar default value on page change
         if (!isVisibleToUser && null != mWindow) {
             mWindow.setStatusBarColor(defaultStatusBarColor);
@@ -645,13 +648,12 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         }
         if (!isVisibleToUser && null != imageClear && linSearchList
                 .getVisibility() == View.VISIBLE) {
-            imageClear.performClick();
-            chipsEditText.setText("");
+
             linSearchList.setVisibility(View.GONE);
             linPane.setAlpha(1);
         }
 
-        super.setUserVisibleHint(isVisibleToUser);
+
     }
 
     public DateFormat getDateInstanceWithoutYears(Locale locale) {

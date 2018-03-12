@@ -16,7 +16,6 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
@@ -152,11 +151,13 @@ public class DashboardActivity extends CoreActivity {
     public void loadViews() {
         mPager = findViewById(R.id.pager);
         mPagerAdapter = new DashboardPagerAdapter(getFragmentManager());
-        mPager.setAdapter(mPagerAdapter);
-        if(mPager.getAdapter()!=null && mPagerAdapter!=null) {
+        if (mPager.getAdapter() != null && mPagerAdapter != null) {
+            mPager.setCurrentItem(currentIndexDashboard);
+        } else {
+            mPager.setAdapter(mPagerAdapter);
             mPager.setCurrentItem(currentIndexDashboard);
         }
-        mPager.setPageTransformer(true, new UIUtils.FadePageTransformer());
+//        mPager.setPageTransformer(true, new UIUtils.FadePageTransformer());
         inputMethodManager = (InputMethodManager) this
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(mPager.getWindowToken(), 0);

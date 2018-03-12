@@ -30,7 +30,6 @@ public class SettingsActivity extends CoreActivity {
             if (event.isVisible() && UIUtils.isMyLauncherDefault(this)) {
                 finish();
             }
-
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
