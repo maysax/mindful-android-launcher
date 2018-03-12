@@ -2,6 +2,8 @@ package co.siempo.phone.main;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
@@ -177,16 +179,19 @@ public class MainListItemLoader {
 
             if (fragment instanceof PaneFragment || fragment instanceof ToolsPaneFragment) {
                 try {
-                    List<String> list = CoreApplication.getInstance().getPackagesList();
-                    for (String resolveInfo : list) {
-                        if (!TextUtils.isEmpty(resolveInfo)) {
-                            String applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(resolveInfo);
-                            boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, resolveInfo);
-                            if (isEnable) {
-                                appItems.add(new MainListItem(-1, "" + applicationName, resolveInfo));
+                    Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+                    mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+                    List<ResolveInfo> installedPackageList = context.getPackageManager().queryIntentActivities(mainIntent, 0);
+                    for (ResolveInfo resolveInfo : installedPackageList) {
+                        if (!TextUtils.isEmpty(resolveInfo.activityInfo.packageName) && !TextUtils.isEmpty(resolveInfo.loadLabel(context.getPackageManager()))) {
+                            String packageName = resolveInfo.activityInfo.packageName;
+                            boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, packageName);
+                            if (isEnable && !packageName.equalsIgnoreCase(context.getPackageName())) {
+                                appItems.add(new MainListItem(-1, "" + resolveInfo.loadLabel(context.getPackageManager()), resolveInfo.activityInfo.packageName));
                             }
                         }
                     }
+
                 } catch (Exception e) {
                     CoreApplication.getInstance().logException(e);
                     e.printStackTrace();

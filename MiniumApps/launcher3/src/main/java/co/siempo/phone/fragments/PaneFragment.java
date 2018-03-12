@@ -256,9 +256,8 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (null != imageClear && imageClear.getVisibility() == View
-                        .VISIBLE) {
+                        .VISIBLE && searchLayout.getVisibility() == View.VISIBLE) {
                     imageClear.performClick();
-//                    chipsEditText.setText("");
                 }
                 return true;
             }
@@ -353,7 +352,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                 if (searchLayout.getVisibility() == View.GONE) {
                     hidePaneAndBottomView(context);
                     listView.setAdapter(adapter);
-                    imageClear.setVisibility(View.GONE);
+                    imageClear.setVisibility(View.VISIBLE);
                     blueLineDivider.setVisibility(View.GONE);
                     searchLayout.setVisibility(View.VISIBLE);
                     searchLayout.getTxtSearchBox().requestFocus();
@@ -364,15 +363,16 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                             InputMethodManager.SHOW_FORCED, 0);
 
                 } else {
+                    if (inputMethodManager != null) {
+                        inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
+                    }
                     showPaneAndBottomView(context);
                     blueLineDivider.setVisibility(View.VISIBLE);
                     searchLayout.setVisibility(View.GONE);
                     cardViewEdtSearch.setVisibility(View.GONE);
                     relSearchTools.setVisibility(View.VISIBLE);
-                    imageClear.setVisibility(View.VISIBLE);
-                    if (inputMethodManager != null) {
-                        inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
-                    }
+                    imageClear.setVisibility(View.GONE);
+
                 }
             }
         });
@@ -487,6 +487,9 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                         getActivity().overridePendingTransition(R
                                 .anim.fade_in_junk, R.anim.fade_out_junk);
                     }
+                    if (inputMethodManager != null) {
+                        inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
+                    }
                     if (linSearchList.getVisibility() == View.VISIBLE) {
                         linSearchList.setVisibility(View.GONE);
                         linPane.setAlpha(1);
@@ -507,9 +510,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                     if (searchLayout != null && chipsEditText != null && chipsEditText.getText().toString().length() > 0) {
                         searchLayout.txtSearchBox.setText("");
                     }
-                    if (inputMethodManager != null) {
-                        inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
-                    }
+
                     junkFoodAppPane();
                 } else {
                     /* Tools and Favourite Pane */
@@ -690,71 +691,32 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
     public void setCurrentPage(int viewPagerPage) {
         pagerPane.setCurrentItem(viewPagerPage);
-        if (inputMethodManager != null) {
-            inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
-        }
+
     }
 
     public void hidePaneAndBottomView(final Context context) {
-        Animation fadeOutAnim = AnimationUtils.loadAnimation(context, R.anim.fade_out);
-
-        fadeOutAnim.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                linPane.setAlpha(0.5f);
-                linPane.setVisibility(View.GONE);
-                linBottomDoc.setVisibility(View.GONE);
-                searchListVisible(context);
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
-        linPane.startAnimation(fadeOutAnim);
-        linBottomDoc.startAnimation(fadeOutAnim);
+        linPane.setVisibility(View.GONE);
+        linBottomDoc.setVisibility(View.GONE);
+        searchListVisible(context);
     }
 
 
     public void showPaneAndBottomView(final Context context) {
-        Animation fadeOutAnim = AnimationUtils.loadAnimation(context, R.anim.fade_out);
-
-        fadeOutAnim.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                linSearchList.setAlpha(0.5f);
-                linSearchList.setVisibility(View.GONE);
-                linPane.setVisibility(View.VISIBLE);
-                linBottomDoc.setVisibility(View.VISIBLE);
-                isSearchVisable = false;
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                linSearchList.setVisibility(View.GONE);
-                isSearchVisable = false;
-                FirebaseHelper.getInstance().logScreenUsageTime(FirebaseHelper.SEARCH_PANE, DashboardActivity.startTime);
-                DashboardActivity.startTime = System.currentTimeMillis();
-                linPane.setAlpha(1);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
-        linSearchList.startAnimation(fadeOutAnim);
+        linSearchList.setVisibility(View.GONE);
+        linPane.setVisibility(View.VISIBLE);
+        linBottomDoc.setVisibility(View.VISIBLE);
+        isSearchVisable = false;
+        FirebaseHelper.getInstance().logScreenUsageTime(FirebaseHelper.SEARCH_PANE, DashboardActivity.startTime);
+        DashboardActivity.startTime = System.currentTimeMillis();
     }
 
     @Subscribe
     public void onBackPressedEvent(OnBackPressedEvent onBackPressedEvent) {
         if (onBackPressedEvent.isBackPressed()) {
             if (linSearchList.getVisibility() == View.VISIBLE) {
+                if (inputMethodManager != null) {
+                    inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
+                }
                 blueLineDivider.setVisibility(View.VISIBLE);
                 searchLayout.setVisibility(View.GONE);
                 cardViewEdtSearch.setVisibility(View.GONE);
@@ -765,9 +727,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                 isSearchVisable = false;
                 linPane.setAlpha(1);
                 imageClear.setVisibility(View.VISIBLE);
-                if (inputMethodManager != null) {
-                    inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
-                }
             }
         }
     }
@@ -787,37 +746,17 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
     }
 
     public void searchListVisible(Context context) {
-        Animation fadeOutAnim = AnimationUtils.loadAnimation(context, R.anim.fade_in);
-
-        fadeOutAnim.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                linSearchList.setVisibility(View.VISIBLE);
-                linSearchList.setAlpha(0.5f);
-                isSearchVisable = true;
+        linSearchList.setVisibility(View.VISIBLE);
+        isSearchVisable = true;
+        imageClear.setVisibility(View.VISIBLE);
+        if (DashboardActivity.currentIndexDashboard == 0) {
+            if (DashboardActivity.currentIndexPaneFragment == 1) {
+                FirebaseHelper.getInstance().logScreenUsageTime("FavoritePaneFragment", DashboardActivity.startTime);
+            } else if (DashboardActivity.currentIndexPaneFragment == 2) {
+                FirebaseHelper.getInstance().logScreenUsageTime("ToolsPaneFragment", DashboardActivity.startTime);
             }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                linSearchList.setVisibility(View.VISIBLE);
-                isSearchVisable = true;
-                imageClear.setVisibility(View.VISIBLE);
-                linSearchList.setAlpha(1f);
-                if (DashboardActivity.currentIndexDashboard == 0) {
-                    if (DashboardActivity.currentIndexPaneFragment == 1) {
-                        FirebaseHelper.getInstance().logScreenUsageTime("FavoritePaneFragment", DashboardActivity.startTime);
-                    } else if (DashboardActivity.currentIndexPaneFragment == 2) {
-                        FirebaseHelper.getInstance().logScreenUsageTime("ToolsPaneFragment", DashboardActivity.startTime);
-                    }
-                }
-                DashboardActivity.startTime = System.currentTimeMillis();
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
-        linSearchList.startAnimation(fadeOutAnim);
+        }
+        DashboardActivity.startTime = System.currentTimeMillis();
 
     }
 
