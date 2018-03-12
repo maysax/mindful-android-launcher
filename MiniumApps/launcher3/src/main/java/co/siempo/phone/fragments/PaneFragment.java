@@ -186,7 +186,8 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         }
 
         if (null != imageClear && imageClear.getVisibility() == View
-                .VISIBLE && pagerPane.getCurrentItem() != 0) {
+                .VISIBLE && pagerPane.getCurrentItem() != 0 && linSearchList
+                .getVisibility() == View.VISIBLE) {
             imageClear.performClick();
         }
 
