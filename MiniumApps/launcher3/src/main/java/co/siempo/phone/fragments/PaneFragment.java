@@ -18,8 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -494,7 +492,8 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                         linSearchList.setVisibility(View.GONE);
                         linPane.setAlpha(1);
                     }
-                    if (linPane.getVisibility() == View.GONE) linPane.setVisibility(View.VISIBLE);
+                    if (linPane.getVisibility() == View.GONE)
+                        linPane.setVisibility(View.VISIBLE);
                     if (linBottomDoc.getVisibility() == View.GONE)
                         linBottomDoc.setVisibility(View.VISIBLE);
                     if (blueLineDivider.getVisibility() == View.GONE)
@@ -649,7 +648,9 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         }
         if (!isVisibleToUser && null != imageClear && linSearchList
                 .getVisibility() == View.VISIBLE) {
-
+            //Perform click in order to set it when user moves from search
+            // pane to DashboardActivity and comes back so as to hide the list
+            imageClear.performClick();
             linSearchList.setVisibility(View.GONE);
             linPane.setAlpha(1);
         }
