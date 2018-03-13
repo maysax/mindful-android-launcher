@@ -140,6 +140,7 @@ public class SiempoPermissionActivity extends CoreActivity {
             isFromHome = intent.getBooleanExtra(DashboardActivity.IS_FROM_HOME, false);
         }
         pd = new ProgressDialog(this);
+        pd.setCanceledOnTouchOutside(false);
 
 
     }
