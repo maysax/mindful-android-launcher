@@ -177,13 +177,15 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         }
         //Resetting the status bar color on Resume , in order to retain the
         // status bar color when screen is locked and unlocked and the active
-        // viewpager page is Junk Food Pane
-//        if (pagerPane != null && pagerPane.getCurrentItem() == 0 && isVisible()) {
-//            mWindow.setStatusBarColor(getResources().getColor(R.color
-//                    .appland_blue_bright));
-//        } else {
-//            mWindow.setStatusBarColor(defaultStatusBarColor);
-//        }
+        // viewpager page is Junk Food Pane, added dashboard index check to
+        // solve SSA-1326
+        if (pagerPane != null && pagerPane.getCurrentItem() == 0 && isVisible
+                () && DashboardActivity.currentIndexDashboard == 0) {
+            mWindow.setStatusBarColor(getResources().getColor(R.color
+                    .appland_blue_bright));
+        } else {
+            mWindow.setStatusBarColor(defaultStatusBarColor);
+        }
 
         if (null != imageClear && imageClear.getVisibility() == View
                 .VISIBLE && pagerPane.getCurrentItem() != 0 && linSearchList
@@ -596,7 +598,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         }
 
 
-        // finally change the color
+//        // finally change the color
         mWindow.setStatusBarColor(getResources().getColor(R.color
                 .appland_blue_bright));
     }
@@ -639,13 +641,15 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        //Changing the status bar default value on page change
-        if (!isVisibleToUser && null != mWindow) {
-            mWindow.setStatusBarColor(defaultStatusBarColor);
-        }
+        //Changing the status bar default value on page change from dashboard
+        // to direct Junk Food pane
         if (isVisibleToUser && null != mWindow && pagerPane.getCurrentItem() == 0) {
             mWindow.setStatusBarColor(getResources().getColor(R.color
                     .appland_blue_bright));
+        } else {
+            if (null != mWindow) {
+                mWindow.setStatusBarColor(defaultStatusBarColor);
+            }
         }
         if (!isVisibleToUser && null != imageClear && linSearchList
                 .getVisibility() == View.VISIBLE) {
@@ -675,9 +679,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
     public void onPause() {
 
         super.onPause();
-        if (null != mWindow) {
-            mWindow.setStatusBarColor(defaultStatusBarColor);
-        }
         if (inputMethodManager != null) {
             inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
         }
