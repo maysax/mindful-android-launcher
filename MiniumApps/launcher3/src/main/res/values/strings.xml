@@ -310,7 +310,7 @@
     <string name="msg_no_apps">You haven\'t moved any apps into this category.</string>
     <string name="search_hint">Find app, send message, or save note</string>
     <string name="notification_interrupt_title">Select apps that may interrupt you</string>
-    <string name="notification_interrupt_description">Normally, when you schedule your notifications to arrive at certain times of day or at a certain interval, then all apps will be blocked until the that scheduled arrival times. \n \nHowever, you can use this setting to choose to allow some apps to interrupt you immediately.</string>
+    <string name="notification_interrupt_description">Normally, when you schedule your notifications to arrive at certain times of day or at a certain interval, then all apps will be blocked until the scheduled arrival times. \n \nHowever, you can use this setting to choose to allow some apps to interrupt you immediately.</string>
     <string name="allow_interrupt_msg">Allow this app to interrupt you</string>
     <string name="info_or_uninstall">Get info or uninstall app</string>
     <string name="stop_interrupt_msg">Stop allowing interruptions</string>
