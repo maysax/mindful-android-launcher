@@ -110,8 +110,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         }
         itemDecoration = new ItemOffsetDecoration(this, R.dimen.dp_10);
         recyclerView.addItemDecoration(itemDecoration);
-        boolean is_icon_branding = PrefSiempo.getInstance(this).read(PrefSiempo.IS_ICON_BRANDING, true);
-        mAdapter = new ToolPositioningAdapter(this, items, this, this, is_icon_branding);
+        mAdapter = new ToolPositioningAdapter(this, items, this, this, CoreApplication.getInstance().isHideIconBranding());
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mAdapter, this);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);

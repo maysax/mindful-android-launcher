@@ -3,6 +3,7 @@ package co.siempo.phone.fragments;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import java.util.Set;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.JunkFoodPaneAdapter;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.Sorting;
@@ -41,10 +43,6 @@ public class JunkFoodPaneFragment extends CoreFragment {
         return new JunkFoodPaneFragment();
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,15 +55,8 @@ public class JunkFoodPaneFragment extends CoreFragment {
     @Override
     public void onResume() {
         super.onResume();
+        Log.d("Rajesh", getClass().getSimpleName());
         initView();
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            initView();
-        }
     }
 
     private void initView() {
@@ -75,7 +66,7 @@ public class JunkFoodPaneFragment extends CoreFragment {
             btnSelect = view.findViewById(R.id.btnSelect);
             if (junkFoodList.size() > 0) {
                 items = new ArrayList<>(junkFoodList);
-                if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, true)) {
+                if (CoreApplication.getInstance().isIsrandomize()) {
                     Collections.shuffle(items);
                 } else {
                     items = Sorting.sortJunkAppAssignment(items);
@@ -88,8 +79,7 @@ public class JunkFoodPaneFragment extends CoreFragment {
                 }
                 itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_10);
                 recyclerView.addItemDecoration(itemDecoration);
-                boolean isHideIconBranding = PrefSiempo.getInstance(context).read(PrefSiempo.IS_ICON_BRANDING, true);
-                mAdapter = new JunkFoodPaneAdapter(getActivity(), items, isHideIconBranding);
+                mAdapter = new JunkFoodPaneAdapter(getActivity(), items, CoreApplication.getInstance().isHideIconBranding());
                 recyclerView.setAdapter(mAdapter);
                 mAdapter.notifyDataSetChanged();
                 linSelectJunkFood.setVisibility(View.GONE);

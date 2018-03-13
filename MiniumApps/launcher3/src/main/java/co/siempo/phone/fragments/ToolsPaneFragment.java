@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +13,14 @@ import java.util.ArrayList;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.ToolsMenuAdapter;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
+import co.siempo.phone.event.NotifyView;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.utils.PackageUtil;
-import co.siempo.phone.utils.PrefSiempo;
+import de.greenrobot.event.Subscribe;
 
 
 public class ToolsPaneFragment extends CoreFragment {
@@ -46,6 +50,8 @@ public class ToolsPaneFragment extends CoreFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_tools_pane, container, false);
+        recyclerView = view.findViewById(R.id.recyclerView);
+
         return view;
 
     }
@@ -53,25 +59,52 @@ public class ToolsPaneFragment extends CoreFragment {
     @Override
     public void onResume() {
         super.onResume();
+        Log.d("Rajesh", getClass().getSimpleName());
         initView();
     }
 
-    private void initView() {
-        items = new ArrayList<>();
-        new MainListItemLoader(getActivity()).loadItemsDefaultApp(items);
-        items = PackageUtil.getToolsMenuData(getActivity(), items);
-        recyclerView = view.findViewById(R.id.recyclerView);
-        mLayoutManager = new GridLayoutManager(getActivity(), 4);
-        recyclerView.setLayoutManager(mLayoutManager);
-        if (itemDecoration != null) {
-            recyclerView.removeItemDecoration(itemDecoration);
+    @Override
+    public void setMenuVisibility(final boolean visible) {
+        super.setMenuVisibility(visible);
+        if (visible) {
+//            initView();
         }
-        itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_10);
-        recyclerView.addItemDecoration(itemDecoration);
-        boolean isHideIconBranding = PrefSiempo.getInstance(context).read(PrefSiempo.IS_ICON_BRANDING, true);
-        mAdapter = new ToolsMenuAdapter(getActivity(), isHideIconBranding, false, items);
-        recyclerView.setAdapter(mAdapter);
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+    }
+
+    private void initView() {
+        if (getActivity() != null && recyclerView != null) {
+            items = new ArrayList<>();
+            new MainListItemLoader(getActivity()).loadItemsDefaultApp(items);
+            items = PackageUtil.getToolsMenuData(getActivity(), items);
+            mLayoutManager = new GridLayoutManager(getActivity(), 4);
+            recyclerView.setLayoutManager(mLayoutManager);
+            if (itemDecoration != null) {
+                recyclerView.removeItemDecoration(itemDecoration);
+            }
+            itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_10);
+            recyclerView.addItemDecoration(itemDecoration);
+            boolean isHideIconBranding = CoreApplication.getInstance().isHideIconBranding();
+            mAdapter = new ToolsMenuAdapter(getActivity(), isHideIconBranding, false, items);
+            recyclerView.setAdapter(mAdapter);
+
+        }
+    }
+
+    @Subscribe
+    public void notifyView(NotifyView event) {
+        try {
+            if (mAdapter != null) {
+                mAdapter.setHideIconBranding(CoreApplication.getInstance().isHideIconBranding());
+
+            }
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
+        }
+    }
 
 }

@@ -37,7 +37,6 @@ import java.io.ByteArrayOutputStream;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
-import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.app.CoreApplication;
 
 
@@ -229,7 +228,7 @@ public class UIUtils {
      * @param activity
      * @return
      */
-    public static boolean isMyLauncherDefault(CoreActivity activity) {
+    public static boolean isMyLauncherDefault(Activity activity) {
         return getLauncherPackageName(activity).equals(activity.getPackageName());
     }
 
@@ -239,7 +238,7 @@ public class UIUtils {
      * @param activity
      * @return
      */
-    public static String getLauncherPackageName(CoreActivity activity) {
+    public static String getLauncherPackageName(Activity activity) {
         PackageManager localPackageManager = activity.getPackageManager();
         Intent intent = new Intent("android.intent.action.MAIN");
         intent.addCategory("android.intent.category.HOME");

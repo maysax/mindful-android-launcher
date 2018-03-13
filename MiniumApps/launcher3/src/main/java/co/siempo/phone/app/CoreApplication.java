@@ -38,11 +38,14 @@ import java.util.Set;
 import co.siempo.phone.R;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.log.Tracer;
+import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.models.AppMenu;
+import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.utils.FontUtils;
 import co.siempo.phone.utils.LifecycleHandler;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.Sorting;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.BuildConfig;
@@ -66,9 +69,45 @@ public abstract class CoreApplication extends MultiDexApplication {
     private ArrayList<String> disableNotificationApps = new ArrayList<>();
     private Set<String> blockedApps = new HashSet<>();
     private LruCache<String, Bitmap> mMemoryCache;
+    private ArrayList<String> junkFoodList = new ArrayList<>();
+    private ArrayList<MainListItem> toolItemsList = new ArrayList<>();
+    private boolean isHideIconBranding = true;
+    private boolean israndomize = true;
 
     public static synchronized CoreApplication getInstance() {
         return sInstance;
+    }
+
+    public boolean isHideIconBranding() {
+        return isHideIconBranding;
+    }
+
+    public void setHideIconBranding(boolean hideIconBranding) {
+        isHideIconBranding = hideIconBranding;
+    }
+
+    public boolean isIsrandomize() {
+        return israndomize;
+    }
+
+    public void setIsrandomize(boolean israndomize) {
+        this.israndomize = israndomize;
+    }
+
+    public ArrayList<String> getJunkFoodList() {
+        return junkFoodList;
+    }
+
+    public void setJunkFoodList(ArrayList<String> junkFoodList) {
+        this.junkFoodList = junkFoodList;
+    }
+
+    public ArrayList<MainListItem> getToolItemsList() {
+        return toolItemsList;
+    }
+
+    public void setToolItemsList(ArrayList<MainListItem> toolItemsList) {
+        this.toolItemsList = toolItemsList;
     }
 
     @Override
@@ -104,6 +143,38 @@ public abstract class CoreApplication extends MultiDexApplication {
         configureLifecycle();
         configureNetworking();
         configureToolsPane();
+        setHideIconBranding(PrefSiempo.getInstance(sInstance).read(PrefSiempo.IS_ICON_BRANDING, true));
+        setHideIconBranding(PrefSiempo.getInstance(sInstance).read(PrefSiempo.IS_ICON_BRANDING, true));
+    }
+
+
+    public void loadJunkFoodList() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Set<String> junkFoodList = PrefSiempo.getInstance(sInstance).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
+                if (junkFoodList.size() > 0) {
+                    ArrayList<String> items = new ArrayList<>(junkFoodList);
+                    if (PrefSiempo.getInstance(sInstance).read(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, true)) {
+                        Collections.shuffle(items);
+                    } else {
+                        items = Sorting.sortJunkAppAssignment(items);
+                    }
+                    setJunkFoodList(items);
+                }
+            }
+        }).start();
+    }
+
+    public void loadToolPaneList() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<MainListItem> items = new ArrayList<>();
+                new MainListItemLoader(sInstance).loadItemsDefaultApp(items);
+                setToolItemsList(PackageUtil.getToolsMenuData(sInstance, items));
+            }
+        }).start();
     }
 
     /**

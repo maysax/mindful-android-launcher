@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +18,10 @@ import java.util.ArrayList;
 import co.siempo.phone.R;
 import co.siempo.phone.activities.FavoritesSelectionActivity;
 import co.siempo.phone.adapters.FavoritesPaneAdapter;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.utils.PackageUtil;
-import co.siempo.phone.utils.PrefSiempo;
 
 
 public class FavoritePaneFragment extends CoreFragment {
@@ -59,6 +60,7 @@ public class FavoritePaneFragment extends CoreFragment {
     @Override
     public void onResume() {
         super.onResume();
+        Log.d("Rajesh", getClass().getSimpleName());
         initView();
     }
 
@@ -86,9 +88,8 @@ public class FavoritePaneFragment extends CoreFragment {
             }
             itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_10);
             recyclerView.addItemDecoration(itemDecoration);
-            boolean isHideIconBranding = PrefSiempo.getInstance(context).read(PrefSiempo.IS_ICON_BRANDING, true);
 
-            mAdapter = new FavoritesPaneAdapter(getActivity(), isHideIconBranding, false, items);
+            mAdapter = new FavoritesPaneAdapter(getActivity(), CoreApplication.getInstance().isHideIconBranding(), false, items);
             recyclerView.setAdapter(mAdapter);
 
 
@@ -116,15 +117,4 @@ public class FavoritePaneFragment extends CoreFragment {
 
         }
     }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            if (getActivity() != null && isAdded()) {
-                initView();
-            }
-        }
-    }
-
 }

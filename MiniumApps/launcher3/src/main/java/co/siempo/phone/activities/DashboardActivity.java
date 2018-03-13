@@ -11,7 +11,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -24,9 +23,8 @@ import com.github.javiersantos.appupdater.AppUpdaterUtils;
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.DashboardPagerAdapter;
-import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.CheckVersionEvent;
-import co.siempo.phone.event.HomePressEvent;
+import co.siempo.phone.event.NotifyView;
 import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.fragments.FavoritePaneFragment;
 import co.siempo.phone.fragments.IntentionFieldFragment;
@@ -85,19 +83,12 @@ public class DashboardActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        connectivityManager = (ConnectivityManager) getSystemService(Context
-                .CONNECTIVITY_SERVICE);
-
-
         permissionUtil = new PermissionUtil(this);
         if (!permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)
                 || !permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) || !permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)
                 || !permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)
                 || !permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) || !permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)
                 ) {
-
-
             Intent intent = new Intent(DashboardActivity.this, SiempoPermissionActivity_
                     .class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -107,16 +98,12 @@ public class DashboardActivity extends CoreActivity {
 
         } else {
             Log.d(TAG, "onResume.. ");
-
-            loadViews();
+            if (mPager != null && mPagerAdapter != null) {
+//                mPager.getAdapter().notifyDataSetChanged();
+                mPager.setCurrentItem(currentIndexDashboard);
+            }
         }
 
-
-        if (PrefSiempo.getInstance(this).read(PrefSiempo
-                .IS_APP_INSTALLED_FIRSTTIME, true)) {
-            Log.d(TAG, "Display upgrade dialog.");
-            checkUpgradeVersion();
-        }
 
     }
 
@@ -125,6 +112,9 @@ public class DashboardActivity extends CoreActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+        mPager = findViewById(R.id.pager);
+        loadViews();
         if (startTime == 0) {
             startTime = System.currentTimeMillis();
         }
@@ -149,18 +139,10 @@ public class DashboardActivity extends CoreActivity {
 
 
     public void loadViews() {
-        mPager = findViewById(R.id.pager);
         mPagerAdapter = new DashboardPagerAdapter(getFragmentManager());
-        if (mPager.getAdapter() != null && mPagerAdapter != null) {
-            mPager.setCurrentItem(currentIndexDashboard);
-        } else {
-            mPager.setAdapter(mPagerAdapter);
-            mPager.setCurrentItem(currentIndexDashboard);
-        }
-//        mPager.setPageTransformer(true, new UIUtils.FadePageTransformer());
-        inputMethodManager = (InputMethodManager) this
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(mPager.getWindowToken(), 0);
+        mPager.setAdapter(mPagerAdapter);
+        mPager.setCurrentItem(currentIndexDashboard);
+        mPager.setOffscreenPageLimit(0);
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
@@ -169,6 +151,7 @@ public class DashboardActivity extends CoreActivity {
             @Override
             public void onPageSelected(int i) {
                 if (currentIndexDashboard == 1 && i == 0) {
+                    EventBus.getDefault().post(new NotifyView(true));
                     Log.d("Firebase", "Intention End");
                     FirebaseHelper.getInstance().logScreenUsageTime(IntentionFieldFragment.class.getSimpleName(), startTime);
                     if (DashboardActivity.currentIndexPaneFragment == 0) {
@@ -206,6 +189,10 @@ public class DashboardActivity extends CoreActivity {
                     startTime = System.currentTimeMillis();
                 }
                 currentIndexDashboard = i;
+//                Fragment fragment = mPagerAdapter.getFragment(i);
+//                if (fragment != null) {
+//                    fragment.onResume();
+//                }
             }
 
             @Override
@@ -219,6 +206,12 @@ public class DashboardActivity extends CoreActivity {
                 }
             }
         });
+
+        if (PrefSiempo.getInstance(this).read(PrefSiempo
+                .IS_APP_INSTALLED_FIRSTTIME, true)) {
+            Log.d(TAG, "Display upgrade dialog.");
+            checkUpgradeVersion();
+        }
     }
 
 
@@ -272,9 +265,7 @@ public class DashboardActivity extends CoreActivity {
             }
         }
 
-
         if (!isEnabled(DashboardActivity.this)) {
-
             notificatoinAccessDialog();
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // Show alert dialog to the user saying a separate permission is needed
@@ -284,57 +275,15 @@ public class DashboardActivity extends CoreActivity {
                         .LENGTH_SHORT).show();
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
                 startActivityForResult(intent, 102);
-            } else {
-                checkAppLoadFirstTime();
             }
         }
     }
 
-    private void checkAppLoadFirstTime() {
-        if (PrefSiempo.getInstance(this).read(PrefSiempo
-                .IS_APP_INSTALLED_FIRSTTIME, true)) {
-            PrefSiempo.getInstance(this).write(PrefSiempo
-                    .IS_APP_INSTALLED_FIRSTTIME, false);
-            final ActivityHelper activityHelper = new ActivityHelper(DashboardActivity.this);
-            if (!UIUtils.isMyLauncherDefault(DashboardActivity.this)) {
-
-                android.os.Handler handler = new android.os.Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        activityHelper.handleDefaultLauncher(DashboardActivity.this);
-                        loadDialog();
-                    }
-                }, 1000);
-            }
-        } else {
-
-            if (PrefSiempo.getInstance(this).read(PrefSiempo
-                    .GET_CURRENT_VERSION, 0) != 0) {
-                if (!UIUtils.isMyLauncherDefault(this)
-                        && BuildConfig.VERSION_CODE > PrefSiempo.getInstance(this).read(PrefSiempo
-                        .GET_CURRENT_VERSION, 0)) {
-                    new ActivityHelper(this).handleDefaultLauncher(this);
-                    loadDialog();
-                    PrefSiempo.getInstance(this).write(PrefSiempo
-                            .GET_CURRENT_VERSION, UIUtils
-                            .getCurrentVersionCode(this));
-
-                } else {
-                    PrefSiempo.getInstance(this).write(PrefSiempo
-                            .GET_CURRENT_VERSION, UIUtils
-                            .getCurrentVersionCode(this));
-                }
-            } else {
-                PrefSiempo.getInstance(this).write(PrefSiempo
-                        .GET_CURRENT_VERSION, UIUtils
-                        .getCurrentVersionCode(this));
-            }
-        }
-    }
 
     public void checkUpgradeVersion() {
         Log.d(TAG, "Active network..");
+        connectivityManager = (ConnectivityManager) getSystemService(Context
+                .CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
         if (activeNetwork != null) {
             if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
@@ -441,8 +390,6 @@ public class DashboardActivity extends CoreActivity {
                                     android.provider.Settings
                                             .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
                             startActivityForResult(intent, 103);
-                        } else {
-                            checkAppLoadFirstTime();
                         }
                     }
                 }
@@ -452,9 +399,7 @@ public class DashboardActivity extends CoreActivity {
             }
         }
         if (requestCode == 102) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                checkAppLoadFirstTime();
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (!Settings.canDrawOverlays(DashboardActivity.this)) {
                     Toast.makeText(this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
@@ -466,8 +411,6 @@ public class DashboardActivity extends CoreActivity {
                                 android.provider.Settings
                                         .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
                         startActivityForResult(intent, 103);
-                    } else {
-                        checkAppLoadFirstTime();
                     }
                 }
             }
@@ -480,8 +423,6 @@ public class DashboardActivity extends CoreActivity {
                         android.provider.Settings
                                 .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
                 startActivityForResult(intent, 103);
-            } else {
-                checkAppLoadFirstTime();
             }
         }
     }
@@ -492,43 +433,5 @@ public class DashboardActivity extends CoreActivity {
         DashboardActivity.isTextLenghGreater = "";
         currentIndexDashboard = 1;
         currentIndexPaneFragment = 1;
-
-
     }
-
-    @Subscribe
-    public void homePressEvent(HomePressEvent event) {
-        try {
-            if (UIUtils.isMyLauncherDefault(this)) {
-                currentIndexDashboard = 1;
-                // onBackPressed();
-                if (null != mPager) {
-                    mPager.setCurrentItem(1);
-                }
-
-            } else {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                            if (!isOnStopCalled && !UIUtils
-                                    .isMyLauncherDefault(DashboardActivity.this))
-                                loadDialog();
-                        } else {
-                            if (!isOnStopCalled && !UIUtils
-                                    .isMyLauncherDefault(DashboardActivity.this))
-                                if (Settings.canDrawOverlays(DashboardActivity.this)) {
-                                    loadDialog();
-                                }
-                        }
-                    }
-                }, 1000);
-            }
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            Tracer.e(e, e.getMessage());
-        }
-    }
-
-
 }

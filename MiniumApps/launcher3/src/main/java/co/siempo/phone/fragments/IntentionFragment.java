@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,10 +21,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import co.siempo.phone.R;
+import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.activities.HelpActivity;
 import co.siempo.phone.activities.IntentionEditActivity;
 import co.siempo.phone.activities.SettingsActivity_;
 import co.siempo.phone.dialog.DialogTempoSetting;
+import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.service.StatusBarService;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
@@ -83,7 +86,28 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
         mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         defaultStatusBarColor = mWindow.getStatusBarColor();
+        if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME_SHOW_TOOLTIP, true)) {
+            if (!UIUtils.isMyLauncherDefault(getActivity())) {
+                android.os.Handler handler = new android.os.Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            if (Settings.canDrawOverlays(getActivity())) {
+                                new ActivityHelper(getActivity()).handleDefaultLauncher(getActivity());
+                                ((CoreActivity) getActivity()).loadDialog();
+                                PrefSiempo.getInstance(getActivity()).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME_SHOW_TOOLTIP, false);
+                            }
+                        } else {
+                            new ActivityHelper(getActivity()).handleDefaultLauncher(getActivity());
+                            ((CoreActivity) getActivity()).loadDialog();
+                            PrefSiempo.getInstance(getActivity()).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME_SHOW_TOOLTIP, false);
+                        }
 
+                    }
+                }, 500);
+            }
+        }
     }
 
     @Override

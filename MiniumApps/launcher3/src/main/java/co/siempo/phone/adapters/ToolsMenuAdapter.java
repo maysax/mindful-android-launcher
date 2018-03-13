@@ -41,13 +41,19 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
     private List<MainListItem> mainListItemList;
     private boolean isHideIconBranding = true, isBottomDoc = false;
     private HashMap<Integer, AppMenu> map;
-
     public ToolsMenuAdapter(Context context, boolean isHideIconBranding, boolean isBottomDoc, List<MainListItem> mainListItemList) {
         this.context = context;
         this.mainListItemList = mainListItemList;
         this.isHideIconBranding = isHideIconBranding;
         this.isBottomDoc = isBottomDoc;
         map = CoreApplication.getInstance().getToolsSettings();
+    }
+
+    public void setHideIconBranding(boolean hideIconBranding) {
+        if (this.isHideIconBranding != hideIconBranding) {
+            this.isHideIconBranding = hideIconBranding;
+            notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -81,8 +87,10 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                 if (bitmap != null) {
                     holder.icon.setImageBitmap(bitmap);
                 } else {
-                    BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, appMenu.getApplicationName());
-                    CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                    if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
+                        BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, appMenu.getApplicationName());
+                        CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                    }
                     holder.icon.setImageResource(item.getDrawable());
                     holder.text.setText(item.getTitle());
                 }
@@ -169,7 +177,11 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
 
     @Override
     public int getItemCount() {
-        return isBottomDoc ? 4 : 12;
+        if (mainListItemList == null) {
+            return 0;
+        } else {
+            return isBottomDoc ? 4 : 12;
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

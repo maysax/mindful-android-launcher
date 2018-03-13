@@ -17,7 +17,6 @@ import co.siempo.phone.R;
 import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.adapters.MainListAdapter;
 import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.event.CreateNoteEvent;
 import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.fragments.PaneFragment;
 import co.siempo.phone.helper.ActivityHelper;
@@ -52,12 +51,33 @@ public class MainFragmentMediator {
     }
 
     public void loadData() {
-        items = new ArrayList<>();
-        contactItems = new ArrayList<>();
-        loadActions();
-        loadContacts();
-        loadDefaults();
-        items = PackageUtil.getListWithMostRecentData(items, context);
+        new AsyncTask<String, String, List<MainListItem>>() {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                items = new ArrayList<>();
+                contactItems = new ArrayList<>();
+            }
+
+            @Override
+            protected void onPostExecute(List<MainListItem> s) {
+                super.onPostExecute(s);
+                items = s;
+                if (getAdapter() != null) {
+                    getAdapter().loadData(items);
+                    getAdapter().notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            protected List<MainListItem> doInBackground(String... strings) {
+                loadActions();
+                loadContacts();
+                loadDefaults();
+                return PackageUtil.getListWithMostRecentData(items, context);
+            }
+        }.execute();
 
     }
 
@@ -81,6 +101,15 @@ public class MainFragmentMediator {
                 super.onPreExecute();
                 if (getAdapter() != null) {
                     getAdapter().loadData(items);
+                    getAdapter().notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            protected void onPostExecute(List<MainListItem> mainListItems) {
+                super.onPostExecute(mainListItems);
+                if (getAdapter() != null) {
+                    getAdapter().loadData(mainListItems);
                     getAdapter().notifyDataSetChanged();
                 }
             }
@@ -200,7 +229,6 @@ public class MainFragmentMediator {
                             if (router != null && fragment != null) {
                                 router.createNote(fragment.getActivity());
                                 FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_SAVE_NOTE, "", data);
-                                EventBus.getDefault().post(new CreateNoteEvent());
                                 new ActivityHelper(context).openNotesApp(true);
                             }
                             break;

@@ -1,10 +1,9 @@
 package co.siempo.phone.fragments;
 
-import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
@@ -18,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -50,6 +48,7 @@ import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
 import co.siempo.phone.customviews.SearchLayout;
 import co.siempo.phone.event.AppInstalledEvent;
+import co.siempo.phone.event.NotifyView;
 import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
 import co.siempo.phone.helper.FirebaseHelper;
@@ -79,7 +78,7 @@ import me.relex.circleindicator.CircleIndicator;
  * 2. Favourites Pane
  * 3. Junkfood Pane
  */
-public class PaneFragment extends CoreFragment implements View.OnClickListener {
+public class PaneFragment extends CoreFragment {
 
     public static boolean isSearchVisable = false;
     public ViewPager pagerPane;
@@ -108,16 +107,9 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
     private ToolsMenuAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ItemOffsetDecoration itemDecoration;
-    /**
-     * Edit Text inside the SearchLayout
-     */
     private ChipsEditText chipsEditText;
-    /**
-     * Clear button inside the SearchLayout
-     */
     private ImageView imageClear;
     private View rootView;
-    private InputMethodManager inputMethodManager;
     private CircleIndicator indicator;
 
     public PaneFragment() {
@@ -129,36 +121,15 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_pane, container, false);
-        context = (CoreActivity) getActivity();
-        initView(rootView);
-        return rootView;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
         mediator = new MainFragmentMediator(this);
-
-        Handler handler = new Handler();
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                loadData();
-            }
-        });
-    }
-
-    public void loadData() {
         mediator.loadData();
-        loadView();
+        context = (CoreActivity) getActivity();
+        mWindow = getActivity().getWindow();
+        getColorOfStatusBar();
+        return rootView;
     }
 
     public void loadView() {
@@ -172,30 +143,8 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        if (adapter != null) {
-            adapter.getFilter().filter("");
-        }
-        //Resetting the status bar color on Resume , in order to retain the
-        // status bar color when screen is locked and unlocked and the active
-        // viewpager page is Junk Food Pane
-        if (pagerPane != null && pagerPane.getCurrentItem() == 0) {
-            mWindow.setStatusBarColor(getResources().getColor(R.color
-                    .appland_blue_bright));
-        } else {
-            mWindow.setStatusBarColor(defaultStatusBarColor);
-        }
+        Log.d("Rajesh", getClass().getSimpleName());
 
-        if (null != imageClear && imageClear.getVisibility() == View
-                .VISIBLE && pagerPane.getCurrentItem() != 0 && linSearchList
-                .getVisibility() == View.VISIBLE) {
-            imageClear.performClick();
-        }
-
-        //Must be done in order to restore the visibility and alpha state of
-        // page pane
-        if (linPane.getVisibility() == View.VISIBLE) {
-            pagerPane.setAlpha(1);
-        }
         if (DashboardActivity.currentIndexDashboard == 1) {
             if (DashboardActivity.currentIndexPaneFragment == 0) {
                 Log.d("Firebase", "Junkfood Start");
@@ -208,13 +157,23 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                 DashboardActivity.startTime = System.currentTimeMillis();
             }
         }
+        changeColorofStatusBar();
+        initView(rootView);
     }
 
+    private void changeColorofStatusBar() {
+        if (pagerPane != null && pagerPane.getCurrentItem() == 0) {
+            mWindow.setStatusBarColor(getResources().getColor(R.color
+                    .appland_blue_bright));
+        } else {
+            mWindow.setStatusBarColor(defaultStatusBarColor);
+        }
+    }
 
     private void initView(View view) {
         linTopDoc = view.findViewById(R.id.linTopDoc);
-        linTopDoc.setOnClickListener(this);
         linPane = view.findViewById(R.id.linPane);
+        recyclerViewBottomDoc = rootView.findViewById(R.id.recyclerViewBottomDoc);
         edtSearchToolsRounded = view.findViewById(R.id.edtSearchTools);
         blueLineDivider = view.findViewById(R.id.blueLineView);
         cardViewEdtSearch = view.findViewById(R.id.cardViewEdtSearch);
@@ -223,22 +182,36 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         txtTopDockDate = view.findViewById(R.id.txtTopDockDate);
         txtIntentionLabelJunkPane = view.findViewById(R.id.txtIntentionLabelJunkPane);
         txtIntention = view.findViewById(R.id.txtIntention);
-        linPane.setOnClickListener(this);
         linBottomDoc = view.findViewById(R.id.linBottomDoc);
         linSearchList = view.findViewById(R.id.linSearchList);
         listView = view.findViewById(R.id.listView);
-        linBottomDoc.setOnClickListener(this);
         indicator = view.findViewById(R.id.indicator);
         pagerPane = view.findViewById(R.id.pagerPane);
+        pagerPane.setAlpha(1);
         chipsEditText = searchLayout.getTxtSearchBox();
         imageClear = searchLayout.getBtnClear();
 
         edtSearchToolsRounded.clearFocus();
         chipsEditText.clearFocus();
 
+        bindViewPager();
+        if (DashboardActivity.currentIndexPaneFragment == 0) {
+            junkFoodAppPane();
+        }
+        bindBottomDock();
+
+        setToolsPaneDate();
+
+        bindSearchView();
+
+
+    }
+
+    private void bindViewPager() {
         mPagerAdapter = new PanePagerAdapter(getChildFragmentManager());
         pagerPane.setAdapter(mPagerAdapter);
         indicator.setViewPager(pagerPane);
+        pagerPane.setOffscreenPageLimit(3);
         if (DashboardActivity.isJunkFoodOpen) {
             DashboardActivity.currentIndexPaneFragment = 1;
             DashboardActivity.isJunkFoodOpen = false;
@@ -247,27 +220,109 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             DashboardActivity.currentIndexPaneFragment = 2;
             DashboardActivity.startTime = System.currentTimeMillis();
         }
+        //Code for Page change
         pagerPane.setCurrentItem(DashboardActivity.currentIndexPaneFragment);
-        bindBottomDoc();
-        inputMethodManager = (InputMethodManager) getActivity()
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        txtTopDockDate.setOnTouchListener(new View.OnTouchListener() {
+        pagerPane.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (null != imageClear && imageClear.getVisibility() == View
-                        .VISIBLE && searchLayout.getVisibility() == View.VISIBLE) {
-                    imageClear.performClick();
+            public void onPageScrolled(int i, float v, int i1) {
+                edtSearchToolsRounded.clearFocus();
+                chipsEditText.clearFocus();
+            }
+
+
+            @Override
+            public void onPageSelected(int i) {
+
+                if (i == 0) {
+                      /* Junkfood Pane */
+                    if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>()).size() == 0) {
+                        //Applied for smooth transition
+                        pagerPane.setAlpha(0);
+                        Intent intent = new Intent(getActivity(), JunkfoodFlaggingActivity.class);
+                        startActivity(intent);
+                        getActivity().overridePendingTransition(R
+                                .anim.fade_in_junk, R.anim.fade_out_junk);
+                    }
+                    UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
+
+                    if (linSearchList.getVisibility() == View.VISIBLE) {
+                        linSearchList.setVisibility(View.GONE);
+                        linPane.setAlpha(1);
+                    }
+                    if (linPane.getVisibility() == View.GONE)
+                        linPane.setVisibility(View.VISIBLE);
+                    if (linBottomDoc.getVisibility() == View.GONE)
+                        linBottomDoc.setVisibility(View.VISIBLE);
+                    if (blueLineDivider.getVisibility() == View.GONE)
+                        blueLineDivider.setVisibility(View.VISIBLE);
+                    if (searchLayout.getVisibility() == View.VISIBLE)
+                        searchLayout.setVisibility(View.GONE);
+                    if (cardViewEdtSearch.getVisibility() == View.VISIBLE)
+                        cardViewEdtSearch.setVisibility(View.GONE);
+                    if (relSearchTools.getVisibility() == View.GONE)
+                        relSearchTools.setVisibility(View.VISIBLE);
+                    isSearchVisable = false;
+                    imageClear.setVisibility(View.VISIBLE);
+                    if (searchLayout != null && chipsEditText != null && chipsEditText.getText().toString().length() > 0) {
+                        if (linSearchList.getVisibility() == View.VISIBLE)
+                            searchLayout.txtSearchBox.setText("");
+                    }
+
+                    junkFoodAppPane();
+                } else {
+                    /* Tools and Favourite Pane */
+                    linTopDoc.setBackground(getResources().getDrawable(R
+                            .drawable.top_bar_bg));
+                    txtTopDockDate.setVisibility(View.VISIBLE);
+                    edtSearchToolsRounded.setVisibility(View.VISIBLE);
+                    txtIntention.setVisibility(View.GONE);
+                    txtIntentionLabelJunkPane.setVisibility(View.GONE);
+
+                    // finally change the color
+                    mWindow.setStatusBarColor(defaultStatusBarColor);
                 }
-                return true;
+
+                //Indicator to be set here so that when coming from another
+                // application, the sliding dots retain the shape as previous
+                indicator.setViewPager(pagerPane);
+
+                if (DashboardActivity.currentIndexPaneFragment == 0 && i == 1) {
+                    Log.d("Firebase ", "JunkFood End");
+                    Log.d("Firebase ", "Favorite Start");
+                    FirebaseHelper.getInstance().logScreenUsageTime(JunkFoodPaneFragment.class.getSimpleName(), DashboardActivity.startTime);
+                    DashboardActivity.startTime = System.currentTimeMillis();
+                } else if (DashboardActivity.currentIndexPaneFragment == 1 && i == 2) {
+                    Log.d("Firebase ", "Favorite End");
+                    Log.d("Firebase ", "Tools Start");
+                    FirebaseHelper.getInstance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), DashboardActivity.startTime);
+                    DashboardActivity.startTime = System.currentTimeMillis();
+                } else if (DashboardActivity.currentIndexPaneFragment == 2 && i == 1) {
+                    Log.d("Firebase ", "Tools End");
+                    Log.d("Firebase ", "Favorite Start");
+                    FirebaseHelper.getInstance().logScreenUsageTime(ToolsPaneFragment.class.getSimpleName(), DashboardActivity.startTime);
+                    DashboardActivity.startTime = System.currentTimeMillis();
+                } else if (DashboardActivity.currentIndexPaneFragment == 1 && i == 0) {
+                    Log.d("Firebase ", "Favorite End");
+                    Log.d("Firebase ", "JunkFood Start");
+                    FirebaseHelper.getInstance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), DashboardActivity.startTime);
+                    DashboardActivity.startTime = System.currentTimeMillis();
+                }
+                Fragment fragment = mPagerAdapter.getFragment(i);
+                if (fragment != null) {
+                    fragment.onResume();
+                }
+                DashboardActivity.currentIndexPaneFragment = i;
+                //Make the junk food pane visible
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
             }
         });
-        resetSearchList();
-
-        pagerPane.setPageTransformer(true, new UIUtils.FadePageTransformer());
-
     }
 
-    private void bindBottomDoc() {
+    private void bindBottomDock() {
         ArrayList<MainListItem> itemsLocal = new ArrayList<>();
         new MainListItemLoader(getActivity()).loadItemsDefaultApp(itemsLocal);
         itemsLocal = PackageUtil.getToolsMenuData(getActivity(), itemsLocal);
@@ -285,7 +340,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             }
         }
 
-        recyclerViewBottomDoc = rootView.findViewById(R.id.recyclerViewBottomDoc);
+
         mLayoutManager = new GridLayoutManager(getActivity(), 4);
         recyclerViewBottomDoc.setLayoutManager(mLayoutManager);
         if (itemDecoration != null) {
@@ -293,58 +348,37 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         }
         itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_10);
         recyclerViewBottomDoc.addItemDecoration(itemDecoration);
-        boolean isHideIconBranding = PrefSiempo.getInstance(context).read(PrefSiempo.IS_ICON_BRANDING, true);
-        mAdapter = new ToolsMenuAdapter(getActivity(), isHideIconBranding, true, items);
+        mAdapter = new ToolsMenuAdapter(getActivity(), CoreApplication.getInstance().isHideIconBranding(), true, items);
         recyclerViewBottomDoc.setAdapter(mAdapter);
+    }
 
-        router = new TokenRouter();
-        parser = new TokenParser(router);
+    private void getColorOfStatusBar() {
         mWindow = getActivity().getWindow();
-
         // clear FLAG_TRANSLUCENT_STATUS flag:
         mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
         // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
         mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         defaultStatusBarColor = mWindow.getStatusBarColor();
-
-
-        //Code for Date setting
-        setToolsPaneDate();
-
-        //Code for Page change
-        setViewPagerPageChanged();
-        if (DashboardActivity.currentIndexPaneFragment == -1) {
-            DashboardActivity.currentIndexPaneFragment = 2;
-        }
-        pagerPane.setCurrentItem(DashboardActivity.currentIndexPaneFragment);
-        if (DashboardActivity.currentIndexPaneFragment == 0) {
-            junkFoodAppPane();
-        }
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (router != null && searchLayout != null && searchLayout.getTxtSearchBox() != null) {
-                    mediator.listItemClicked(router, position, searchLayout.getTxtSearchBox().getStrText());
-                }
-            }
-        });
-
-
-        searchEditTextFocusChanged();
-
-
     }
-
 
     public MainListAdapter getAdapter() {
         return adapter;
     }
 
-    private void searchEditTextFocusChanged() {
+    private void bindSearchView() {
 //        //Circular Edit Text
-
+        router = new TokenRouter();
+        parser = new TokenParser(router);
+        loadView();
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (router != null && searchLayout != null && searchLayout.getTxtSearchBox() != null) {
+                    imageClear.performClick();
+                    mediator.listItemClicked(router, position, searchLayout.getTxtSearchBox().getStrText());
+                }
+            }
+        });
         edtSearchToolsRounded.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -357,14 +391,10 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                     searchLayout.getTxtSearchBox().requestFocus();
                     cardViewEdtSearch.setVisibility(View.VISIBLE);
                     relSearchTools.setVisibility(View.GONE);
-                    inputMethodManager.toggleSoftInputFromWindow(
-                            searchLayout.getApplicationWindowToken(),
-                            InputMethodManager.SHOW_FORCED, 0);
+                    UIUtils.showKeyboard(chipsEditText);
 
                 } else {
-                    if (inputMethodManager != null) {
-                        inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
-                    }
+                    UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
                     showPaneAndBottomView(context);
                     blueLineDivider.setVisibility(View.VISIBLE);
                     searchLayout.setVisibility(View.GONE);
@@ -410,7 +440,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             Tracer.e(e, e.getMessage());
         }
     }
-
 
     @Subscribe
     public void tokenManagerEvent(TokenUpdateEvent event) {
@@ -459,113 +488,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         }
     }
 
-
-    /**
-     * Page Change Listener and modification of UI based on Page change
-     */
-    private void setViewPagerPageChanged() {
-        pagerPane.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {
-                edtSearchToolsRounded.clearFocus();
-                chipsEditText.clearFocus();
-            }
-
-
-            @Override
-            public void onPageSelected(int i) {
-
-                if (i == 0) {
-                      /* Junkfood Pane */
-                    if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>()).size() == 0) {
-                        //Applied for smooth transition
-                        pagerPane.setAlpha(0);
-                        Intent intent = new Intent(getActivity(), JunkfoodFlaggingActivity.class);
-                        startActivity(intent);
-                        getActivity().overridePendingTransition(R
-                                .anim.fade_in_junk, R.anim.fade_out_junk);
-                    }
-                    if (inputMethodManager != null) {
-                        inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
-                    }
-                    if (linSearchList.getVisibility() == View.VISIBLE) {
-                        linSearchList.setVisibility(View.GONE);
-                        linPane.setAlpha(1);
-                    }
-                    if (linPane.getVisibility() == View.GONE)
-                        linPane.setVisibility(View.VISIBLE);
-                    if (linBottomDoc.getVisibility() == View.GONE)
-                        linBottomDoc.setVisibility(View.VISIBLE);
-                    if (blueLineDivider.getVisibility() == View.GONE)
-                        blueLineDivider.setVisibility(View.VISIBLE);
-                    if (searchLayout.getVisibility() == View.VISIBLE)
-                        searchLayout.setVisibility(View.GONE);
-                    if (cardViewEdtSearch.getVisibility() == View.VISIBLE)
-                        cardViewEdtSearch.setVisibility(View.GONE);
-                    if (relSearchTools.getVisibility() == View.GONE)
-                        relSearchTools.setVisibility(View.VISIBLE);
-                    isSearchVisable = false;
-                    imageClear.setVisibility(View.VISIBLE);
-                    if (searchLayout != null && chipsEditText != null && chipsEditText.getText().toString().length() > 0) {
-                        searchLayout.txtSearchBox.setText("");
-                    }
-
-                    junkFoodAppPane();
-                } else {
-                    /* Tools and Favourite Pane */
-                    linTopDoc.setBackground(getResources().getDrawable(R
-                            .drawable.top_bar_bg));
-                    txtTopDockDate.setVisibility(View.VISIBLE);
-                    edtSearchToolsRounded.setVisibility(View.VISIBLE);
-                    txtIntention.setVisibility(View.GONE);
-                    txtIntentionLabelJunkPane.setVisibility(View.GONE);
-
-                    // finally change the color
-                    mWindow.setStatusBarColor(defaultStatusBarColor);
-                }
-
-                //Indicator to be set here so that when coming from another
-                // application, the sliding dots retain the shape as previous
-                indicator.setViewPager(pagerPane);
-
-                if (DashboardActivity.currentIndexPaneFragment == 0 && i == 1) {
-                    Log.d("Firebase ", "JunkFood End");
-                    Log.d("Firebase ", "Favorite Start");
-                    FirebaseHelper.getInstance().logScreenUsageTime(JunkFoodPaneFragment.class.getSimpleName(), DashboardActivity.startTime);
-                    DashboardActivity.startTime = System.currentTimeMillis();
-                } else if (DashboardActivity.currentIndexPaneFragment == 1 && i == 2) {
-                    Log.d("Firebase ", "Favorite End");
-                    Log.d("Firebase ", "Tools Start");
-                    FirebaseHelper.getInstance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), DashboardActivity.startTime);
-                    DashboardActivity.startTime = System.currentTimeMillis();
-                } else if (DashboardActivity.currentIndexPaneFragment == 2 && i == 1) {
-                    Log.d("Firebase ", "Tools End");
-                    Log.d("Firebase ", "Favorite Start");
-                    FirebaseHelper.getInstance().logScreenUsageTime(ToolsPaneFragment.class.getSimpleName(), DashboardActivity.startTime);
-                    DashboardActivity.startTime = System.currentTimeMillis();
-                } else if (DashboardActivity.currentIndexPaneFragment == 1 && i == 0) {
-                    Log.d("Firebase ", "Favorite End");
-                    Log.d("Firebase ", "JunkFood Start");
-                    FirebaseHelper.getInstance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), DashboardActivity.startTime);
-                    DashboardActivity.startTime = System.currentTimeMillis();
-                }
-
-                DashboardActivity.currentIndexPaneFragment = i;
-                //Make the junk food pane visible
-
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-            }
-        });
-
-
-    }
-
-
     private void junkFoodAppPane() {
         linTopDoc.setBackgroundColor(getResources().getColor(R.color
                 .bg_junk_apps_top_dock));
@@ -595,7 +517,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             txtIntentionLabelJunkPane.setVisibility(View.INVISIBLE);
         }
 
-
         // finally change the color
         mWindow.setStatusBarColor(getResources().getColor(R.color
                 .appland_blue_bright));
@@ -604,7 +525,9 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent appInstalledEvent) {
         if (appInstalledEvent.isAppInstalledSuccessfully()) {
-            loadData();
+            if (mediator != null) {
+                mediator.loadData();
+            }
         }
     }
 
@@ -616,25 +539,18 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         DateFormat df = getDateInstanceWithoutYears(Locale
                 .getDefault());
         txtTopDockDate.setText(df.format(c.getTime()));
+        txtTopDockDate.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (null != imageClear && imageClear.getVisibility() == View
+                        .VISIBLE && searchLayout.getVisibility() == View.VISIBLE) {
+                    imageClear.performClick();
+                }
+                return true;
+            }
+        });
 
     }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            default:
-                break;
-            case R.id.linTopDoc:
-                break;
-            case R.id.pagerPane:
-                break;
-            case R.id.linPane:
-                break;
-            case R.id.linBottomDoc:
-                break;
-        }
-    }
-
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -673,23 +589,13 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
     @Override
     public void onPause() {
-
         super.onPause();
         if (null != mWindow) {
             mWindow.setStatusBarColor(defaultStatusBarColor);
         }
-        if (inputMethodManager != null) {
-            inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
-        }
-    }
+        UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
 
-    public void resetSearchList() {
-        parser.parse("");
-        if (adapter != null) {
-            adapter.getFilter().filter("");
-        }
     }
-
 
     public void setCurrentPage(int viewPagerPage) {
         pagerPane.setCurrentItem(viewPagerPage);
@@ -701,7 +607,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         linBottomDoc.setVisibility(View.GONE);
         searchListVisible(context);
     }
-
 
     public void showPaneAndBottomView(final Context context) {
         linSearchList.setVisibility(View.GONE);
@@ -716,9 +621,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
     public void onBackPressedEvent(OnBackPressedEvent onBackPressedEvent) {
         if (onBackPressedEvent.isBackPressed()) {
             if (linSearchList.getVisibility() == View.VISIBLE) {
-                if (inputMethodManager != null) {
-                    inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
-                }
+                UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
                 blueLineDivider.setVisibility(View.VISIBLE);
                 searchLayout.setVisibility(View.GONE);
                 cardViewEdtSearch.setVisibility(View.GONE);
@@ -766,7 +669,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         DashboardActivity.startTime = System.currentTimeMillis();
     }
 
-
     private void logSearchViewEnd() {
         if (DashboardActivity.currentIndexDashboard == 0) {
             if (DashboardActivity.currentIndexPaneFragment == 1) {
@@ -780,7 +682,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             }
         }
     }
-
 
     @Subscribe
     public void filterDataMainAdapter(MainListAdapterEvent event) {
@@ -798,6 +699,16 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
+            Tracer.e(e, e.getMessage());
+        }
+    }
+
+    @Subscribe
+    public void notifyView(NotifyView event) {
+        try {
+            if (mAdapter != null)
+                mAdapter.notifyDataSetChanged();
+        } catch (Exception e) {
             Tracer.e(e, e.getMessage());
         }
     }

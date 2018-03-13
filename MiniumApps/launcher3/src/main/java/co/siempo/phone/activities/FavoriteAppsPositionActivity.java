@@ -102,10 +102,9 @@ public class FavoriteAppsPositionActivity extends CoreActivity implements OnFavo
         }
         itemDecoration = new ItemOffsetDecoration(this, R.dimen.dp_10);
         recyclerView.addItemDecoration(itemDecoration);
-        boolean isHideIconBranding = PrefSiempo.getInstance(FavoriteAppsPositionActivity.this).read(PrefSiempo.IS_ICON_BRANDING, true);
 
 
-        mAdapter = new FavoritePositioningAdapter(this, isHideIconBranding, items, this, this);
+        mAdapter = new FavoritePositioningAdapter(this, CoreApplication.getInstance().isHideIconBranding(), items, this, this);
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mAdapter, this);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
