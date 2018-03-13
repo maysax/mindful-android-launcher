@@ -174,6 +174,12 @@ public class SiempoPermissionActivity extends CoreActivity {
         } else {
             switchNotificationAccess.setChecked(false);
         }
+        //Added for bug solve SSA-1324
+        if (permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
+            switchOverlayAccess.setChecked(true);
+        } else {
+            switchOverlayAccess.setChecked(false);
+        }
 
 
         if (isFromHome) {
