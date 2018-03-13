@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -32,6 +33,7 @@ public class JunkFoodPaneFragment extends CoreFragment {
     private Set<String> junkFoodList = new HashSet<>();
     private LinearLayout linSelectJunkFood;
     private Button btnSelect;
+    private Window mWindow;
 
     public JunkFoodPaneFragment() {
         // Required empty public constructor
@@ -44,29 +46,29 @@ public class JunkFoodPaneFragment extends CoreFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mWindow = getActivity().getWindow();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_junkfood_pane, container, false);
+        if (mWindow != null && isVisible()) {
+            mWindow.setStatusBarColor(getResources().getColor(R.color
+                    .appland_blue_bright));
+        }
         return view;
 
     }
 
     @Override
     public void onResume() {
+
         super.onResume();
         initView();
+
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            initView();
-        }
-    }
 
     private void initView() {
         junkFoodList = PrefSiempo.getInstance(getActivity()).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
@@ -98,5 +100,13 @@ public class JunkFoodPaneFragment extends CoreFragment {
         }
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
 }

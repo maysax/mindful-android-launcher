@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.PopupMenu;
@@ -257,8 +256,10 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
             listAllApps.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (!bindingList.get(position).packageName.equalsIgnoreCase("")) {
-                        showPopUp(view, position);
+
+                    AppListInfo appListInfo = bindingList.get(position);
+                    if (!appListInfo.packageName.equalsIgnoreCase("")) {
+                        showPopUp(view, position, appListInfo.isFlagApp);
                     }
                 }
             });
@@ -311,8 +312,9 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
      *
      * @param view
      * @param position
+     * @param isFlagApp
      */
-    private void showPopUp(View view, final int position) {
+    private void showPopUp(View view, final int position, final boolean isFlagApp) {
         if (popup != null) {
             popup.dismiss();
         }
@@ -322,7 +324,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.item_Unflag) {
                     try {
-                        if (isLoadFirstTime) {
+                        if (isLoadFirstTime && isFlagApp) {
                             showAlertForFirstTime(position);
                         } else {
                             popup.dismiss();
@@ -397,6 +399,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
         builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                isLoadFirstTime = false;
                 dialog.dismiss();
             }
         });
@@ -436,5 +439,8 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
         }
     }
 
-
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
 }
