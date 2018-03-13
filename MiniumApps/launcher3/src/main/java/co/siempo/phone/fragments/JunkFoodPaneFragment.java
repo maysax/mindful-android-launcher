@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -34,7 +33,7 @@ public class JunkFoodPaneFragment extends CoreFragment {
     private Set<String> junkFoodList = new HashSet<>();
     private LinearLayout linSelectJunkFood;
     private Button btnSelect;
-    private Window mWindow;
+
 
     public JunkFoodPaneFragment() {
         // Required empty public constructor
@@ -47,13 +46,14 @@ public class JunkFoodPaneFragment extends CoreFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mWindow = getActivity().getWindow();
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_junkfood_pane, container, false);
+
         return view;
 
     }
@@ -62,7 +62,6 @@ public class JunkFoodPaneFragment extends CoreFragment {
     public void onResume() {
         super.onResume();
         initView();
-
     }
 
 
@@ -91,9 +90,9 @@ public class JunkFoodPaneFragment extends CoreFragment {
                 recyclerView.setAdapter(mAdapter);
                 mAdapter.notifyDataSetChanged();
                 linSelectJunkFood.setVisibility(View.GONE);
+
             }
         }
     }
-
 
 }

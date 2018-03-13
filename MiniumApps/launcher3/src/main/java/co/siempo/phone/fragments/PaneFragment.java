@@ -1,11 +1,9 @@
 package co.siempo.phone.fragments;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
@@ -134,15 +132,6 @@ public class PaneFragment extends CoreFragment {
         return rootView;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     public void loadView() {
         if (getActivity() != null) {
@@ -168,12 +157,13 @@ public class PaneFragment extends CoreFragment {
                 DashboardActivity.startTime = System.currentTimeMillis();
             }
         }
-        changeColorofStatusBar();
+        changeColorOfStatusBar();
         initView(rootView);
     }
 
-    private void changeColorofStatusBar() {
-        if (pagerPane != null && pagerPane.getCurrentItem() == 0) {
+    private void changeColorOfStatusBar() {
+        if (pagerPane != null && pagerPane.getCurrentItem() == 0
+                && DashboardActivity.currentIndexDashboard == 0) {
             mWindow.setStatusBarColor(getResources().getColor(R.color
                     .appland_blue_bright));
         } else {
@@ -452,6 +442,7 @@ public class PaneFragment extends CoreFragment {
         }
     }
 
+
     @Subscribe
     public void tokenManagerEvent(TokenUpdateEvent event) {
         try {
@@ -566,13 +557,15 @@ public class PaneFragment extends CoreFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        //Changing the status bar default value on page change
-        if (!isVisibleToUser && null != mWindow) {
-            mWindow.setStatusBarColor(defaultStatusBarColor);
-        }
+        //Changing the status bar default value on page change from dashboard
+        // to direct Junk Food pane
         if (isVisibleToUser && null != mWindow && pagerPane.getCurrentItem() == 0) {
             mWindow.setStatusBarColor(getResources().getColor(R.color
                     .appland_blue_bright));
+        } else {
+            if (null != mWindow) {
+                mWindow.setStatusBarColor(defaultStatusBarColor);
+            }
         }
         if (!isVisibleToUser && null != imageClear && linSearchList
                 .getVisibility() == View.VISIBLE) {
@@ -601,9 +594,6 @@ public class PaneFragment extends CoreFragment {
     @Override
     public void onPause() {
         super.onPause();
-        if (null != mWindow) {
-            mWindow.setStatusBarColor(defaultStatusBarColor);
-        }
         UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
 
     }

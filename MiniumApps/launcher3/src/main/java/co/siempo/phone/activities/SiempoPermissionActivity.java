@@ -140,6 +140,7 @@ public class SiempoPermissionActivity extends CoreActivity {
             isFromHome = intent.getBooleanExtra(DashboardActivity.IS_FROM_HOME, false);
         }
         pd = new ProgressDialog(this);
+        pd.setCanceledOnTouchOutside(false);
 
 
     }
@@ -173,6 +174,12 @@ public class SiempoPermissionActivity extends CoreActivity {
             switchNotificationAccess.setChecked(true);
         } else {
             switchNotificationAccess.setChecked(false);
+        }
+        //Added for bug solve SSA-1324
+        if (permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
+            switchOverlayAccess.setChecked(true);
+        } else {
+            switchOverlayAccess.setChecked(false);
         }
 
 
