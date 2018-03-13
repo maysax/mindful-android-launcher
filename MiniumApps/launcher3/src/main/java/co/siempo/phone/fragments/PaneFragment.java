@@ -598,7 +598,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         }
 
 
-        // finally change the color
+//        // finally change the color
         mWindow.setStatusBarColor(getResources().getColor(R.color
                 .appland_blue_bright));
     }
@@ -641,13 +641,15 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        //Changing the status bar default value on page change
-        if (!isVisibleToUser && null != mWindow) {
-            mWindow.setStatusBarColor(defaultStatusBarColor);
-        }
+        //Changing the status bar default value on page change from dashboard
+        // to direct Junk Food pane
         if (isVisibleToUser && null != mWindow && pagerPane.getCurrentItem() == 0) {
             mWindow.setStatusBarColor(getResources().getColor(R.color
                     .appland_blue_bright));
+        } else {
+            if (null != mWindow) {
+                mWindow.setStatusBarColor(defaultStatusBarColor);
+            }
         }
         if (!isVisibleToUser && null != imageClear && linSearchList
                 .getVisibility() == View.VISIBLE) {
@@ -677,9 +679,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
     public void onPause() {
 
         super.onPause();
-        if (null != mWindow) {
-            mWindow.setStatusBarColor(defaultStatusBarColor);
-        }
         if (inputMethodManager != null) {
             inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
         }

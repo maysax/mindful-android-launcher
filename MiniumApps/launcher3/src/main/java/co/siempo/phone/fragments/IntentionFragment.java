@@ -10,8 +10,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,8 +36,6 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
     private LinearLayout linIF;
     private PopupWindow mPopupWindow;
     private RelativeLayout relRootLayout;
-    private Window mWindow;
-    private int defaultStatusBarColor;
 
     public IntentionFragment() {
         // Required empty public constructor
@@ -52,16 +48,6 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mWindow = getActivity().getWindow();
-
-        if (null != mWindow) {
-            // clear FLAG_TRANSLUCENT_STATUS flag:
-            mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-            mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            defaultStatusBarColor = mWindow.getStatusBarColor();
-        }
     }
 
     @Override
@@ -209,13 +195,5 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         }
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            if (mWindow != null) {
-                mWindow.setStatusBarColor(defaultStatusBarColor);
-            }
-        }
-    }
+
 }
