@@ -12,6 +12,8 @@ public class Constants {
     public static final String WHATSAPP_PACKAGE = "com.whatsapp";
     public static final String GOOGLE_CALENDAR_PACKAGES = "com.google.android.calendar";
     public static final String FACEBOOK_PACKAGE = "com.facebook.katana";
+    public static final String SNAP_PACKAGE = "com.snapchat.android";
+    public static final String INSTAGRAM_PACKAGE = "com.instagram.android";
     public static final String FACEBOOK_MESSENGER_PACKAGE = "com.facebook.orca";
     public static final String FACEBOOK_LITE_PACKAGE = "com.facebook.mlite";
     public static final String GOOGLE_HANGOUTS_PACKAGES = "com.google.android.talk";

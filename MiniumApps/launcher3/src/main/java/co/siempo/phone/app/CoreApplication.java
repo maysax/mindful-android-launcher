@@ -151,9 +151,21 @@ public abstract class CoreApplication extends MultiDexApplication {
             String hashMapToolSettings = new Gson().toJson(map);
             PrefSiempo.getInstance(this).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
 
-//            Set<String> junkfoodList = new HashSet<>();
-//            junkfoodList.add("net.sourceforge.opencamera");
-//            PrefSiempo.getInstance(this).write(PrefSiempo.JUNKFOOD_APPS, junkfoodList);
+            Set<String> junkfoodList = new HashSet<>();
+            String facebookPackage = Constants.FACEBOOK_PACKAGE;
+            String snapPackage = Constants.SNAP_PACKAGE;
+            String instaPackage = Constants.INSTAGRAM_PACKAGE;
+
+            if (UIUtils.isAppInstalledAndEnabled(getApplicationContext(), facebookPackage)) {
+                junkfoodList.add(facebookPackage);
+            }
+            if (UIUtils.isAppInstalledAndEnabled(getApplicationContext(), snapPackage)) {
+                junkfoodList.add(snapPackage);
+            }
+            if (UIUtils.isAppInstalledAndEnabled(getApplicationContext(), instaPackage)) {
+                junkfoodList.add(instaPackage);
+            }
+            PrefSiempo.getInstance(this).write(PrefSiempo.JUNKFOOD_APPS, junkfoodList);
         }
     }
 
