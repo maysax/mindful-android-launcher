@@ -52,6 +52,16 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mWindow = getActivity().getWindow();
+
+        if (null != mWindow) {
+            // clear FLAG_TRANSLUCENT_STATUS flag:
+            mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+            mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            defaultStatusBarColor = mWindow.getStatusBarColor();
+        }
     }
 
     @Override
@@ -75,14 +85,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         txtIntention = view.findViewById(R.id.txtIntention);
         txtIntention.setOnClickListener(this);
         linIF = view.findViewById(R.id.linIF);
-        mWindow = getActivity().getWindow();
 
-        // clear FLAG_TRANSLUCENT_STATUS flag:
-        mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-        mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        defaultStatusBarColor = mWindow.getStatusBarColor();
 
     }
 
@@ -95,7 +98,9 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
             linIF.setVisibility(View.VISIBLE);
         }
         txtIntention.setText(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_INTENTION, ""));
-        mWindow.setStatusBarColor(defaultStatusBarColor);
+        if (mWindow != null) {
+            mWindow.setStatusBarColor(defaultStatusBarColor);
+        }
     }
 
     @Override
@@ -200,6 +205,16 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
 
                     }
                 });
+            }
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            if (mWindow != null) {
+                mWindow.setStatusBarColor(defaultStatusBarColor);
             }
         }
     }
