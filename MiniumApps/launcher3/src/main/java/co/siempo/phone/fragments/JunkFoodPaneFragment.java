@@ -3,10 +3,10 @@ package co.siempo.phone.fragments;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -34,6 +34,7 @@ public class JunkFoodPaneFragment extends CoreFragment {
     private Set<String> junkFoodList = new HashSet<>();
     private LinearLayout linSelectJunkFood;
     private Button btnSelect;
+    private Window mWindow;
 
     public JunkFoodPaneFragment() {
         // Required empty public constructor
@@ -43,6 +44,11 @@ public class JunkFoodPaneFragment extends CoreFragment {
         return new JunkFoodPaneFragment();
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mWindow = getActivity().getWindow();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,9 +61,10 @@ public class JunkFoodPaneFragment extends CoreFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("Rajesh", getClass().getSimpleName());
         initView();
+
     }
+
 
     private void initView() {
         junkFoodList = PrefSiempo.getInstance(getActivity()).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
@@ -79,11 +86,11 @@ public class JunkFoodPaneFragment extends CoreFragment {
                 }
                 itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_10);
                 recyclerView.addItemDecoration(itemDecoration);
-                mAdapter = new JunkFoodPaneAdapter(getActivity(), items, CoreApplication.getInstance().isHideIconBranding());
+                boolean isHideIconBranding = CoreApplication.getInstance().isHideIconBranding();
+                mAdapter = new JunkFoodPaneAdapter(getActivity(), items, isHideIconBranding);
                 recyclerView.setAdapter(mAdapter);
                 mAdapter.notifyDataSetChanged();
                 linSelectJunkFood.setVisibility(View.GONE);
-
             }
         }
     }

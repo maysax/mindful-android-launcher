@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -51,33 +52,33 @@ public class MainFragmentMediator {
     }
 
     public void loadData() {
-        new AsyncTask<String, String, List<MainListItem>>() {
+//        new AsyncTask<String, String, List<MainListItem>>() {
+//
+//            @Override
+//            protected void onPreExecute() {
+//                super.onPreExecute();
+        items = new ArrayList<>();
+        contactItems = new ArrayList<>();
+//            }
+//
+//            @Override
+//            protected void onPostExecute(List<MainListItem> s) {
+//                super.onPostExecute(s);
+//                items = s;
+//                if (getAdapter() != null) {
+//                    getAdapter().loadData(items);
+//                    getAdapter().notifyDataSetChanged();
+//                }
+//            }
 
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                items = new ArrayList<>();
-                contactItems = new ArrayList<>();
-            }
-
-            @Override
-            protected void onPostExecute(List<MainListItem> s) {
-                super.onPostExecute(s);
-                items = s;
-                if (getAdapter() != null) {
-                    getAdapter().loadData(items);
-                    getAdapter().notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            protected List<MainListItem> doInBackground(String... strings) {
-                loadActions();
-                loadContacts();
-                loadDefaults();
-                return PackageUtil.getListWithMostRecentData(items, context);
-            }
-        }.execute();
+//            @Override
+//            protected List<MainListItem> doInBackground(String... strings) {
+        loadActions();
+        loadContacts();
+        loadDefaults();
+        items = PackageUtil.getListWithMostRecentData(items, context);
+//            }
+//        }.execute();
 
     }
 
@@ -205,11 +206,13 @@ public class MainFragmentMediator {
                         new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
                     } else {
                         if (fragment != null) {
+
                             DashboardActivity.isTextLenghGreater = "";
                             UIUtils.hideSoftKeyboard(fragment.getActivity(), fragment.getActivity().getWindow().getDecorView().getWindowToken());
                             boolean status = new ActivityHelper(fragment.getActivity()).openAppWithPackageName(getAdapter().getItem(position).getPackageName());
                             FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_APPLICATION_PICK, getAdapter().getItem(position).getPackageName(), "");
                             if (status) {
+
                                 PackageUtil.addRecentItemList(getAdapter().getItem(position), context);
                             }
                         }

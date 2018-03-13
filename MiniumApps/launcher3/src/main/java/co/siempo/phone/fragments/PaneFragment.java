@@ -1,9 +1,11 @@
 package co.siempo.phone.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
@@ -132,6 +134,16 @@ public class PaneFragment extends CoreFragment {
         return rootView;
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
     public void loadView() {
         if (getActivity() != null) {
             adapter = new MainListAdapter(getActivity(), mediator.getItems());
@@ -143,7 +155,6 @@ public class PaneFragment extends CoreFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("Rajesh", getClass().getSimpleName());
 
         if (DashboardActivity.currentIndexDashboard == 1) {
             if (DashboardActivity.currentIndexPaneFragment == 0) {

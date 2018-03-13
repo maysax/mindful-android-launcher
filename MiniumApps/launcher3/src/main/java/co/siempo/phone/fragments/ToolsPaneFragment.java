@@ -59,7 +59,6 @@ public class ToolsPaneFragment extends CoreFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("Rajesh", getClass().getSimpleName());
         initView();
     }
 
