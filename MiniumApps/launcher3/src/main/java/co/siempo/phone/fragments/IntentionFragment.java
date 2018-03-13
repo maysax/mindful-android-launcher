@@ -98,9 +98,9 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
             linIF.setVisibility(View.VISIBLE);
         }
         txtIntention.setText(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_INTENTION, ""));
-        if (mWindow != null) {
-            mWindow.setStatusBarColor(defaultStatusBarColor);
-        }
+//        if (mWindow != null) {
+//            mWindow.setStatusBarColor(defaultStatusBarColor);
+//        }
     }
 
     @Override
