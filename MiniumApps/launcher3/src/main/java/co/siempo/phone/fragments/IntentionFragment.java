@@ -11,6 +11,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,6 +41,8 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
     private LinearLayout linIF;
     private PopupWindow mPopupWindow;
     private RelativeLayout relRootLayout;
+    private Window mWindow;
+    private int defaultStatusBarColor;
 
     public IntentionFragment() {
         // Required empty public constructor
@@ -57,11 +61,13 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_intention, container, false);
+        mWindow = getActivity().getWindow();
         Intent myService = new Intent(getActivity(), StatusBarService.class);
         getActivity().startService(myService);
         initView(view);
         return view;
     }
+
 
     private void initView(View view) {
         relRootLayout = view.findViewById(R.id.relRootLayout);

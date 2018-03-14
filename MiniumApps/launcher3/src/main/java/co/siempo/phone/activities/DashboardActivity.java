@@ -24,7 +24,6 @@ import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.DashboardPagerAdapter;
 import co.siempo.phone.event.CheckVersionEvent;
-import co.siempo.phone.event.NotifyView;
 import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.fragments.FavoritePaneFragment;
 import co.siempo.phone.fragments.IntentionFieldFragment;
@@ -98,10 +97,7 @@ public class DashboardActivity extends CoreActivity {
 
         } else {
             Log.d(TAG, "onResume.. ");
-            if (mPager != null && mPagerAdapter != null) {
-//                mPager.getAdapter().notifyDataSetChanged();
-                mPager.setCurrentItem(currentIndexDashboard);
-            }
+            loadViews();
         }
 
 
@@ -142,7 +138,7 @@ public class DashboardActivity extends CoreActivity {
         mPagerAdapter = new DashboardPagerAdapter(getFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(currentIndexDashboard);
-        mPager.setOffscreenPageLimit(0);
+        mPager.setOffscreenPageLimit(2);
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
@@ -151,7 +147,6 @@ public class DashboardActivity extends CoreActivity {
             @Override
             public void onPageSelected(int i) {
                 if (currentIndexDashboard == 1 && i == 0) {
-                    EventBus.getDefault().post(new NotifyView(true));
                     Log.d("Firebase", "Intention End");
                     FirebaseHelper.getInstance().logScreenUsageTime(IntentionFieldFragment.class.getSimpleName(), startTime);
                     if (DashboardActivity.currentIndexPaneFragment == 0) {
@@ -189,10 +184,6 @@ public class DashboardActivity extends CoreActivity {
                     startTime = System.currentTimeMillis();
                 }
                 currentIndexDashboard = i;
-//                Fragment fragment = mPagerAdapter.getFragment(i);
-//                if (fragment != null) {
-//                    fragment.onResume();
-//                }
             }
 
             @Override
@@ -356,8 +347,6 @@ public class DashboardActivity extends CoreActivity {
                         PrefSiempo.getInstance(DashboardActivity.this).write
                                 (PrefSiempo
                                         .UPDATE_PROMPT, false);
-//                        launcher3Prefs.edit().putBoolean("updatePrompt", false)
-//                                .apply();
                         new ActivityHelper(DashboardActivity.this).openBecomeATester();
                     }
                 }

@@ -14,12 +14,9 @@ import co.siempo.phone.R;
 import co.siempo.phone.adapters.ToolsMenuAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
-import co.siempo.phone.event.NotifyView;
-import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.utils.PackageUtil;
-import de.greenrobot.event.Subscribe;
 
 
 public class ToolsPaneFragment extends CoreFragment {
@@ -50,7 +47,6 @@ public class ToolsPaneFragment extends CoreFragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_tools_pane, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
-
         return view;
 
     }
@@ -59,19 +55,6 @@ public class ToolsPaneFragment extends CoreFragment {
     public void onResume() {
         super.onResume();
         initView();
-    }
-
-    @Override
-    public void setMenuVisibility(final boolean visible) {
-        super.setMenuVisibility(visible);
-        if (visible) {
-//            initView();
-        }
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
     }
 
     private void initView() {
@@ -92,17 +75,4 @@ public class ToolsPaneFragment extends CoreFragment {
 
         }
     }
-
-    @Subscribe
-    public void notifyView(NotifyView event) {
-        try {
-            if (mAdapter != null) {
-                mAdapter.setHideIconBranding(CoreApplication.getInstance().isHideIconBranding());
-
-            }
-        } catch (Exception e) {
-            Tracer.e(e, e.getMessage());
-        }
-    }
-
 }

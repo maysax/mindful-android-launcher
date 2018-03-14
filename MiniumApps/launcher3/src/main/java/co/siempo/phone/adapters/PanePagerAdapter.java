@@ -4,10 +4,6 @@ package co.siempo.phone.adapters;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentStatePagerAdapter;
-import android.view.ViewGroup;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import co.siempo.phone.fragments.FavoritePaneFragment;
 import co.siempo.phone.fragments.JunkFoodPaneFragment;
@@ -20,13 +16,8 @@ import co.siempo.phone.fragments.ToolsPaneFragment;
  */
 
 public class PanePagerAdapter extends FragmentStatePagerAdapter {
-    private Map<Integer, String> mFragmentTags;
-    private FragmentManager mFragmentManager;
-
     public PanePagerAdapter(FragmentManager fm) {
         super(fm);
-        mFragmentManager = fm;
-        mFragmentTags = new HashMap<>();
     }
 
     @Override
@@ -49,26 +40,6 @@ public class PanePagerAdapter extends FragmentStatePagerAdapter {
                 break;
             default:
                 break;
-        }
-        return fragment;
-    }
-
-    @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        Object object = super.instantiateItem(container, position);
-        if (object instanceof Fragment) {
-            Fragment fragment = (Fragment) object;
-            String tag = fragment.getTag();
-            mFragmentTags.put(position, tag);
-        }
-        return object;
-    }
-
-    public Fragment getFragment(int position) {
-        Fragment fragment = null;
-        String tag = mFragmentTags.get(position);
-        if (tag != null) {
-            fragment = mFragmentManager.findFragmentByTag(tag);
         }
         return fragment;
     }

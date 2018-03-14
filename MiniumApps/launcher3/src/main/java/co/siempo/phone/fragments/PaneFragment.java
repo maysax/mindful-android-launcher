@@ -1,6 +1,5 @@
 package co.siempo.phone.fragments;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -48,7 +47,6 @@ import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
 import co.siempo.phone.customviews.SearchLayout;
 import co.siempo.phone.event.AppInstalledEvent;
-import co.siempo.phone.event.NotifyView;
 import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
 import co.siempo.phone.helper.FirebaseHelper;
@@ -124,20 +122,21 @@ public class PaneFragment extends CoreFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_pane, container, false);
-        mediator = new MainFragmentMediator(this);
-        mediator.loadData();
         context = (CoreActivity) getActivity();
-        mWindow = getActivity().getWindow();
         getColorOfStatusBar();
         return rootView;
     }
 
-
     public void loadView() {
         if (getActivity() != null) {
-            adapter = new MainListAdapter(getActivity(), mediator.getItems());
-            listView.setAdapter(adapter);
-            adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    adapter = new MainListAdapter(getActivity(), mediator.getItems());
+                    listView.setAdapter(adapter);
+                    adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());
+                }
+            });
         }
     }
 
@@ -158,6 +157,13 @@ public class PaneFragment extends CoreFragment {
             }
         }
         changeColorOfStatusBar();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mediator = new MainFragmentMediator(PaneFragment.this);
+                mediator.loadData();
+            }
+        });
         initView(rootView);
     }
 
@@ -308,10 +314,6 @@ public class PaneFragment extends CoreFragment {
                     Log.d("Firebase ", "JunkFood Start");
                     FirebaseHelper.getInstance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), DashboardActivity.startTime);
                     DashboardActivity.startTime = System.currentTimeMillis();
-                }
-                Fragment fragment = mPagerAdapter.getFragment(i);
-                if (fragment != null) {
-                    fragment.onResume();
                 }
                 DashboardActivity.currentIndexPaneFragment = i;
                 //Make the junk food pane visible
@@ -700,16 +702,6 @@ public class PaneFragment extends CoreFragment {
 
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
-            Tracer.e(e, e.getMessage());
-        }
-    }
-
-    @Subscribe
-    public void notifyView(NotifyView event) {
-        try {
-            if (mAdapter != null)
-                mAdapter.notifyDataSetChanged();
-        } catch (Exception e) {
             Tracer.e(e, e.getMessage());
         }
     }
