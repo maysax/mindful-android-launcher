@@ -15,6 +15,8 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
@@ -54,6 +56,8 @@ public class DashboardActivity extends CoreActivity {
     AppUpdaterUtils appUpdaterUtils;
     boolean isApplicationLaunch = false;
     NotificationManager notificationManager;
+    private Window mWindow;
+    public static int defaultStatusBarColor;
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
      * and next wizard steps.
@@ -114,6 +118,13 @@ public class DashboardActivity extends CoreActivity {
         if (startTime == 0) {
             startTime = System.currentTimeMillis();
         }
+        mWindow = getWindow();
+        // clear FLAG_TRANSLUCENT_STATUS flag:
+        mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        defaultStatusBarColor = mWindow.getStatusBarColor();
     }
 
 
