@@ -90,7 +90,7 @@ public class MainFragmentMediator {
                 items = new ArrayList<>();
                 contactItems = new ArrayList<>();
                 loadActions();
-                loadContacts();
+//                loadContacts();
                 loadDefaults();
                 items = PackageUtil.getListWithMostRecentData(items, context);
                 return items;

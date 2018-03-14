@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
@@ -37,18 +38,20 @@ import co.siempo.phone.event.HomePressEvent;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.AppListInfo;
+import co.siempo.phone.service.LoadJunkFoodPane;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.Sorting;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.Subscribe;
 
-public class JunkfoodFlaggingActivity extends CoreActivity {
+public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterView.OnItemClickListener {
     Set<String> list = new HashSet<>();
     Set<String> favoriteList = new HashSet<>();
     JunkfoodFlaggingAdapter junkfoodFlaggingAdapter;
     int firstPosition;
     List<ResolveInfo> installedPackageList;
+    boolean isClickOnView = true;
     private Toolbar toolbar;
     private ListView listAllApps;
     private PopupMenu popup;
@@ -90,6 +93,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
                 .colorAccent));
         listAllApps = findViewById(R.id.listAllApps);
+        listAllApps.setOnItemClickListener(JunkfoodFlaggingActivity.this);
     }
 
 
@@ -115,7 +119,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
         }
 
         installedPackageList = appList;
-
+//        new FilterApps(false).execute();
         bindData(false);
         if (PrefSiempo.getInstance(this).read(PrefSiempo.IS_JUNKFOOD_FIRSTTIME, true)) {
             PrefSiempo.getInstance(this).write(PrefSiempo.IS_JUNKFOOD_FIRSTTIME, false);
@@ -158,6 +162,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
                         if (list.size() == 0 && !DashboardActivity.isJunkFoodOpen) {
                             DashboardActivity.isJunkFoodOpen = true;
                         }
+                        new LoadJunkFoodPane(JunkfoodFlaggingActivity.this).execute();
                         finish();
                     }
                 });
@@ -195,6 +200,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
         }
     }
 
+
     /**
      * change text color of menuitem
      *
@@ -205,6 +211,16 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
         SpannableString spanString = new SpannableString(menuItem.getTitle().toString());
         spanString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, color)), 0, spanString.length(), 0);
         menuItem.setTitle(spanString);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (bindingList != null && bindingList.get(position) != null) {
+            AppListInfo appListInfo = bindingList.get(position);
+            if (!appListInfo.packageName.equalsIgnoreCase("")) {
+                showPopUp(view, position, appListInfo.isFlagApp);
+            }
+        }
     }
 
     /**
@@ -224,12 +240,9 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
                     }
                 }
             }
-
-
             //Code for removing the junk app from Favorite Sorted Menu and
             //Favorite List
             removeJunkAppsFromFavorites();
-
 
             if (flagAppList.size() == 0) {
                 flagAppList.add(new AppListInfo("", true, true, true));
@@ -253,16 +266,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
                 listAllApps.setSelection(firstPosition);
             }
 
-            listAllApps.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                    AppListInfo appListInfo = bindingList.get(position);
-                    if (!appListInfo.packageName.equalsIgnoreCase("")) {
-                        showPopUp(view, position, appListInfo.isFlagApp);
-                    }
-                }
-            });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -337,7 +341,8 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
                                         list.add(bindingList.get(position).packageName);
                                     }
                                     firstPosition = listAllApps.getFirstVisiblePosition();
-                                    bindData(true);
+//                                    bindData(true);
+                                    new FilterApps(true).execute();
                                 }
                             });
                         }
@@ -390,7 +395,8 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
                         }
                         isLoadFirstTime = false;
                         firstPosition = listAllApps.getFirstVisiblePosition();
-                        bindData(true);
+//                        bindData(true);
+                        new FilterApps(true).execute();
                     }
                 });
 
@@ -442,5 +448,73 @@ public class JunkfoodFlaggingActivity extends CoreActivity {
     @Override
     protected void onStop() {
         super.onStop();
+    }
+
+    class FilterApps extends AsyncTask<String, String, ArrayList<AppListInfo>> {
+        boolean isNotify;
+
+        FilterApps(boolean isNotify) {
+            this.isNotify = isNotify;
+            listAllApps.setOnItemClickListener(null);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            isClickOnView = false;
+            flagAppList = new ArrayList<>();
+            unflageAppList = new ArrayList<>();
+            bindingList = new ArrayList<>();
+        }
+
+        @Override
+        protected ArrayList<AppListInfo> doInBackground(String... strings) {
+            for (ResolveInfo resolveInfo : installedPackageList) {
+                if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
+                    if (list.contains(resolveInfo.activityInfo.packageName)) {
+                        flagAppList.add(new AppListInfo(resolveInfo.activityInfo.packageName, false, false, true));
+                    } else {
+                        unflageAppList.add(new AppListInfo(resolveInfo.activityInfo.packageName, false, false, false));
+                    }
+                }
+            }
+            //Code for removing the junk app from Favorite Sorted Menu and
+            //Favorite List
+            removeJunkAppsFromFavorites();
+
+            if (flagAppList.size() == 0) {
+                flagAppList.add(new AppListInfo("", true, true, true));
+            } else {
+                flagAppList.add(0, new AppListInfo("", true, false, true));
+            }
+            flagAppList = Sorting.sortApplication(flagAppList);
+            bindingList.addAll(flagAppList);
+
+            if (unflageAppList.size() == 0) {
+                unflageAppList.add(new AppListInfo("", true, true, false));
+            } else {
+                unflageAppList.add(0, new AppListInfo("", true, false, false));
+            }
+            unflageAppList = Sorting.sortApplication(unflageAppList);
+            bindingList.addAll(unflageAppList);
+            return bindingList;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<AppListInfo> s) {
+            super.onPostExecute(s);
+            try {
+                junkfoodFlaggingAdapter = new JunkfoodFlaggingAdapter(JunkfoodFlaggingActivity.this, bindingList, list);
+                listAllApps.setAdapter(junkfoodFlaggingAdapter);
+                if (isNotify) {
+                    junkfoodFlaggingAdapter.notifyDataSetChanged();
+                    listAllApps.setSelection(firstPosition);
+                }
+                isClickOnView = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            listAllApps.setOnItemClickListener(JunkfoodFlaggingActivity.this);
+        }
     }
 }

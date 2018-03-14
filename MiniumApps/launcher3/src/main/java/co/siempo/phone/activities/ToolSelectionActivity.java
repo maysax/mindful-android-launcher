@@ -21,6 +21,8 @@ import co.siempo.phone.R;
 import co.siempo.phone.adapters.ToolsListAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.HomePressEvent;
+import co.siempo.phone.event.NotifyBottomView;
+import co.siempo.phone.event.NotifyToolView;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainListItemLoader;
@@ -29,6 +31,7 @@ import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.Sorting;
 import co.siempo.phone.utils.UIUtils;
+import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
 public class ToolSelectionActivity extends CoreActivity {
@@ -52,6 +55,8 @@ public class ToolSelectionActivity extends CoreActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 if (mAdapter != null) {
                     PrefSiempo.getInstance(ToolSelectionActivity.this).write(PrefSiempo.TOOLS_SETTING, new Gson().toJson(mAdapter.getMap()));
+                    EventBus.getDefault().postSticky(new NotifyBottomView(true));
+                    EventBus.getDefault().postSticky(new NotifyToolView(true));
                     finish();
                 }
                 return false;

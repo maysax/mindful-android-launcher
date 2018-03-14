@@ -9,13 +9,13 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.github.javiersantos.appupdater.AppUpdaterUtils;
@@ -24,6 +24,7 @@ import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.DashboardPagerAdapter;
 import co.siempo.phone.event.CheckVersionEvent;
+import co.siempo.phone.event.HomePress;
 import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.fragments.FavoritePaneFragment;
 import co.siempo.phone.fragments.IntentionFieldFragment;
@@ -34,6 +35,9 @@ import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.service.ApiClient_;
+import co.siempo.phone.service.LoadFavoritePane;
+import co.siempo.phone.service.LoadJunkFoodPane;
+import co.siempo.phone.service.LoadToolPane;
 import co.siempo.phone.service.SiempoNotificationListener_;
 import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.PrefSiempo;
@@ -65,7 +69,6 @@ public class DashboardActivity extends CoreActivity {
      */
     private DashboardPagerAdapter mPagerAdapter;
     private AlertDialog notificationDialog;
-    private InputMethodManager inputMethodManager;
 
     /**
      * @return True if {@link android.service.notification.NotificationListenerService} is enabled.
@@ -96,11 +99,9 @@ public class DashboardActivity extends CoreActivity {
             startActivity(intent);
 
         } else {
-            Log.d(TAG, "onResume.. ");
-            loadViews();
+            System.out.println("Rajesh onResume");
+//            loadViews();
         }
-
-
     }
 
 
@@ -108,37 +109,29 @@ public class DashboardActivity extends CoreActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-
+        System.out.println("Rajesh onNewIntent");
         mPager = findViewById(R.id.pager);
         loadViews();
+
         if (startTime == 0) {
             startTime = System.currentTimeMillis();
         }
     }
 
-
-    private void initView() {
-
-        connectivityManager = (ConnectivityManager) getSystemService(Context
-                .CONNECTIVITY_SERVICE);
-
-
-        notificationManager =
-
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-
-        isApplicationLaunch = true;
-
-        checknavigatePermissions();
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        System.out.println("Rajesh onNewIntent");
+        currentIndexDashboard = 1;
+        currentIndexPaneFragment = 2;
+        mPager.setCurrentItem(currentIndexDashboard);
     }
-
 
     public void loadViews() {
         mPagerAdapter = new DashboardPagerAdapter(getFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(currentIndexDashboard);
-        mPager.setOffscreenPageLimit(2);
+//        mPager.setOffscreenPageLimit(2);
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
@@ -198,11 +191,16 @@ public class DashboardActivity extends CoreActivity {
             }
         });
 
+
+        new LoadToolPane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadFavoritePane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadJunkFoodPane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         if (PrefSiempo.getInstance(this).read(PrefSiempo
                 .IS_APP_INSTALLED_FIRSTTIME, true)) {
             Log.d(TAG, "Display upgrade dialog.");
             checkUpgradeVersion();
         }
+
     }
 
 
@@ -244,32 +242,6 @@ public class DashboardActivity extends CoreActivity {
             }
         }
     }
-
-    public void checknavigatePermissions() {
-
-
-        if (!PrefSiempo.getInstance(this).read(PrefSiempo
-                .IS_APP_INSTALLED_FIRSTTIME, true)) {
-            Log.d(TAG, "Display upgrade dialog.");
-            if (isApplicationLaunch) {
-                checkUpgradeVersion();
-            }
-        }
-
-        if (!isEnabled(DashboardActivity.this)) {
-            notificatoinAccessDialog();
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // Show alert dialog to the user saying a separate permission is needed
-            // Launch the settings activity if the user prefers
-            if (!Settings.canDrawOverlays(DashboardActivity.this)) {
-                Toast.makeText(DashboardActivity.this, R.string.msg_overlay_settings, Toast
-                        .LENGTH_SHORT).show();
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, 102);
-            }
-        }
-    }
-
 
     public void checkUpgradeVersion() {
         Log.d(TAG, "Active network..");
@@ -422,5 +394,12 @@ public class DashboardActivity extends CoreActivity {
         DashboardActivity.isTextLenghGreater = "";
         currentIndexDashboard = 1;
         currentIndexPaneFragment = 1;
+    }
+
+    @Subscribe
+    public void homePress(HomePress event) {
+//        if (event != null) {
+//            mPager.setCurrentItem(event.getCurrentIndexDashboard());
+//        }
     }
 }

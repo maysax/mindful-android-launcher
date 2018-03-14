@@ -18,7 +18,6 @@ import android.nfc.NdefRecord;
 import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -40,6 +39,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.Config;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.DownloadApkEvent;
+import co.siempo.phone.event.HomePress;
 import co.siempo.phone.helper.Validate;
 import co.siempo.phone.interfaces.NFCInterface;
 import co.siempo.phone.log.Tracer;
@@ -61,7 +61,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     public static File localPath, backupPath;
     public int currentIndex = 0;
     public View mTestView = null;
-    private IntentFilter mFilter;
     public WindowManager windowManager = null;
     public boolean isOnStopCalled = false;
     @SystemService
@@ -69,9 +68,11 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     int onStartCount = 0;
     SharedPreferences launcherPrefs;
     UserPresentBroadcastReceiver userPresentBroadcastReceiver;
+    private IntentFilter mFilter;
     private InnerRecevier mRecevier;
     private String state = "";
-    private String TAG="CoreActivity";
+    private String TAG = "CoreActivity";
+
     // Static method to return File at localPath
     public static File getLocalPath() {
         return localPath;
@@ -403,11 +404,12 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                 String reason = intent.getStringExtra(SYSTEM_DIALOG_REASON_KEY);
                 if (reason != null) {
                     Log.e(TAG, "action:" + action + ",reason:" + reason);
-                        if (!state.equalsIgnoreCase(SYSTEM_DIALOG_REASON_RECENT_APPS) && reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
-                            DashboardActivity.currentIndexDashboard = 1;
-                            DashboardActivity.currentIndexPaneFragment=2;
-                        }
-                        state = reason;
+                    if (!state.equalsIgnoreCase(SYSTEM_DIALOG_REASON_RECENT_APPS) && reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
+                        DashboardActivity.currentIndexDashboard = 1;
+                        DashboardActivity.currentIndexPaneFragment = 2;
+                        EventBus.getDefault().post(new HomePress(1, 2));
+                    }
+                    state = reason;
                 }
             }
         }

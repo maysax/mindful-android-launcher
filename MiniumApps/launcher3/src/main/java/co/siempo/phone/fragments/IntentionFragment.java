@@ -122,6 +122,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         txtIntention.setText(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_INTENTION, ""));
     }
 
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

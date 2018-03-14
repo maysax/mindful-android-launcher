@@ -13,8 +13,13 @@ import android.widget.Switch;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.event.NotifyBottomView;
+import co.siempo.phone.event.NotifyFavortieView;
+import co.siempo.phone.event.NotifyJunkFoodView;
+import co.siempo.phone.event.NotifyToolView;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.utils.PrefSiempo;
+import de.greenrobot.event.EventBus;
 
 
 public class AppMenuFragment extends CoreFragment implements View.OnClickListener {
@@ -95,7 +100,7 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
                     PrefSiempo.getInstance(context).write(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, true);
                     CoreApplication.getInstance().setIsrandomize(true);
                 }
-
+                EventBus.getDefault().postSticky(new NotifyJunkFoodView(true));
                 break;
             case R.id.relHideIconBranding:
                 if (switchHideIcon.isChecked()) {
@@ -107,6 +112,10 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
                     PrefSiempo.getInstance(context).write(PrefSiempo.IS_ICON_BRANDING, true);
                     CoreApplication.getInstance().setHideIconBranding(true);
                 }
+                EventBus.getDefault().postSticky(new NotifyJunkFoodView(true));
+                EventBus.getDefault().postSticky(new NotifyFavortieView(true));
+                EventBus.getDefault().postSticky(new NotifyToolView(true));
+                EventBus.getDefault().postSticky(new NotifyBottomView(true));
                 break;
         }
     }

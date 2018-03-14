@@ -33,8 +33,6 @@ import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.CoreActivity;
@@ -47,14 +45,13 @@ import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
 import co.siempo.phone.customviews.SearchLayout;
 import co.siempo.phone.event.AppInstalledEvent;
+import co.siempo.phone.event.NotifyBottomView;
 import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainFragmentMediator;
 import co.siempo.phone.main.MainListAdapterEvent;
-import co.siempo.phone.main.MainListItemLoader;
-import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.token.TokenCompleteType;
 import co.siempo.phone.token.TokenItem;
@@ -63,10 +60,11 @@ import co.siempo.phone.token.TokenManager;
 import co.siempo.phone.token.TokenParser;
 import co.siempo.phone.token.TokenRouter;
 import co.siempo.phone.token.TokenUpdateEvent;
-import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
+import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 import me.relex.circleindicator.CircleIndicator;
 
 /**
@@ -122,28 +120,30 @@ public class PaneFragment extends CoreFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_pane, container, false);
+        Log.d("Test", "P1");
         context = (CoreActivity) getActivity();
         getColorOfStatusBar();
+        initView(rootView);
+        changeColorOfStatusBar();
+
+        mediator = new MainFragmentMediator(PaneFragment.this);
+        mediator.loadData();
+
+        bindView();
+        Log.d("Test", "P2");
         return rootView;
     }
 
-    public void loadView() {
-        if (getActivity() != null) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    adapter = new MainListAdapter(getActivity(), mediator.getItems());
-                    listView.setAdapter(adapter);
-                    adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());
-                }
-            });
-        }
+    @Override
+    public void onPause() {
+        super.onPause();
+        UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
         if (DashboardActivity.currentIndexDashboard == 1) {
             if (DashboardActivity.currentIndexPaneFragment == 0) {
                 Log.d("Firebase", "Junkfood Start");
@@ -156,15 +156,47 @@ public class PaneFragment extends CoreFragment {
                 DashboardActivity.startTime = System.currentTimeMillis();
             }
         }
-        changeColorOfStatusBar();
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mediator = new MainFragmentMediator(PaneFragment.this);
-                mediator.loadData();
+
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        //Changing the status bar default value on page change from dashboard
+        // to direct Junk Food pane
+        if (isVisibleToUser && null != mWindow && pagerPane.getCurrentItem() == 0) {
+            mWindow.setStatusBarColor(getResources().getColor(R.color
+                    .appland_blue_bright));
+        } else {
+            if (null != mWindow) {
+                mWindow.setStatusBarColor(defaultStatusBarColor);
             }
-        });
-        initView(rootView);
+        }
+        if (!isVisibleToUser && null != imageClear && linSearchList
+                .getVisibility() == View.VISIBLE) {
+            //Perform click in order to set it when user moves from search
+            // pane to DashboardActivity and comes back so as to hide the list
+            imageClear.performClick();
+            linSearchList.setVisibility(View.GONE);
+            linPane.setAlpha(1);
+        }
+
+
+    }
+
+    public void loadView() {
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (mediator != null && mediator.getItems() != null) {
+                        adapter = new MainListAdapter(getActivity(), mediator.getItems());
+                        listView.setAdapter(adapter);
+                        adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());
+                    }
+                }
+            });
+        }
     }
 
     private void changeColorOfStatusBar() {
@@ -174,6 +206,19 @@ public class PaneFragment extends CoreFragment {
                     .appland_blue_bright));
         } else {
             mWindow.setStatusBarColor(defaultStatusBarColor);
+        }
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MainThread)
+    public void onEvent(NotifyBottomView notifyBottomView) {
+        if (notifyBottomView != null) {
+            items = CoreApplication.getInstance().getToolBottomItemsList();
+            Log.d("Test:", "" + CoreApplication.getInstance().isHideIconBranding());
+//            mAdapter.setMainListItemList(items, true, CoreApplication.getInstance().isHideIconBranding());
+            mAdapter = new ToolsMenuAdapter(getActivity(), CoreApplication.getInstance().isHideIconBranding(), true, items);
+            recyclerViewBottomDoc.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
+            EventBus.getDefault().removeStickyEvent(notifyBottomView);
         }
     }
 
@@ -197,21 +242,18 @@ public class PaneFragment extends CoreFragment {
         pagerPane.setAlpha(1);
         chipsEditText = searchLayout.getTxtSearchBox();
         imageClear = searchLayout.getBtnClear();
-
         edtSearchToolsRounded.clearFocus();
         chipsEditText.clearFocus();
+    }
 
+    private void bindView() {
         bindViewPager();
-        if (DashboardActivity.currentIndexPaneFragment == 0) {
-            junkFoodAppPane();
-        }
+
         bindBottomDock();
 
         setToolsPaneDate();
 
         bindSearchView();
-
-
     }
 
     private void bindViewPager() {
@@ -288,6 +330,10 @@ public class PaneFragment extends CoreFragment {
 
                     // finally change the color
                     mWindow.setStatusBarColor(defaultStatusBarColor);
+//                    if (CoreApplication.getInstance().isIsrandomize()) {
+//                        Collections.shuffle(CoreApplication.getInstance().getJunkFoodList());
+//                        EventBus.getDefault().postSticky(new NotifyJunkFoodView(true));
+//                    }
                 }
 
                 //Indicator to be set here so that when coming from another
@@ -323,25 +369,29 @@ public class PaneFragment extends CoreFragment {
             public void onPageScrollStateChanged(int i) {
             }
         });
+
+        if (DashboardActivity.currentIndexPaneFragment == 0) {
+            junkFoodAppPane();
+        }
     }
 
     private void bindBottomDock() {
-        ArrayList<MainListItem> itemsLocal = new ArrayList<>();
-        new MainListItemLoader(getActivity()).loadItemsDefaultApp(itemsLocal);
-        itemsLocal = PackageUtil.getToolsMenuData(getActivity(), itemsLocal);
-        Set<Integer> list = new HashSet<>();
-
-        for (Map.Entry<Integer, AppMenu> entry : CoreApplication.getInstance().getToolsSettings().entrySet()) {
-            if (entry.getValue().isBottomDoc()) {
-                list.add(entry.getKey());
-            }
-        }
-
-        for (MainListItem mainListItem : itemsLocal) {
-            if (list.contains(mainListItem.getId())) {
-                items.add(mainListItem);
-            }
-        }
+//        ArrayList<MainListItem> itemsLocal = new ArrayList<>();
+//        new MainListItemLoader(getActivity()).loadItemsDefaultApp(itemsLocal);
+//        itemsLocal = PackageUtil.getToolsMenuData(getActivity(), itemsLocal);
+//        Set<Integer> list = new HashSet<>();
+//
+//        for (Map.Entry<Integer, AppMenu> entry : CoreApplication.getInstance().getToolsSettings().entrySet()) {
+//            if (entry.getValue().isBottomDoc()) {
+//                list.add(entry.getKey());
+//            }
+//        }
+//
+//        for (MainListItem mainListItem : itemsLocal) {
+//            if (list.contains(mainListItem.getId())) {
+//                items.add(mainListItem);
+//            }
+//        }
 
 
         mLayoutManager = new GridLayoutManager(getActivity(), 4);
@@ -351,6 +401,7 @@ public class PaneFragment extends CoreFragment {
         }
         itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_10);
         recyclerViewBottomDoc.addItemDecoration(itemDecoration);
+        items = new ArrayList<>();
         mAdapter = new ToolsMenuAdapter(getActivity(), CoreApplication.getInstance().isHideIconBranding(), true, items);
         recyclerViewBottomDoc.setAdapter(mAdapter);
     }
@@ -424,6 +475,187 @@ public class PaneFragment extends CoreFragment {
 
     }
 
+    private void junkFoodAppPane() {
+        linTopDoc.setBackgroundColor(getResources().getColor(R.color
+                .bg_junk_apps_top_dock));
+        txtTopDockDate.setVisibility(View.GONE);
+        searchLayout.setVisibility(View.GONE);
+        edtSearchToolsRounded.setVisibility(View.GONE);
+
+        txtIntention.setVisibility(View.VISIBLE);
+        txtIntentionLabelJunkPane.setVisibility(View.VISIBLE);
+
+        String strIntention = PrefSiempo.getInstance(getActivity()).read
+                (PrefSiempo.DEFAULT_INTENTION, "");
+
+        //If Intentions are enabled and intention field is not empty then show
+        //it in Junk food Top dock else not
+        if (!TextUtils.isEmpty(strIntention) && !PrefSiempo.getInstance
+                (context).read(PrefSiempo
+                .IS_INTENTION_ENABLE, false)) {
+            txtIntentionLabelJunkPane.setText(getString(R.string
+                    .you_ve_flag));
+            txtIntention.setText(strIntention);
+            txtIntention.setVisibility(View.VISIBLE);
+            txtIntentionLabelJunkPane.setVisibility(View.VISIBLE);
+
+        } else {
+            txtIntention.setText("You chose to hide these apps.");
+            txtIntentionLabelJunkPane.setVisibility(View.INVISIBLE);
+        }
+
+        // finally change the color
+        mWindow.setStatusBarColor(getResources().getColor(R.color
+                .appland_blue_bright));
+    }
+
+    /**
+     * Set Date for Tools Pane
+     */
+    private void setToolsPaneDate() {
+        Calendar c = Calendar.getInstance();
+        DateFormat df = getDateInstanceWithoutYears(Locale
+                .getDefault());
+        txtTopDockDate.setText(df.format(c.getTime()));
+        txtTopDockDate.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (null != imageClear && imageClear.getVisibility() == View
+                        .VISIBLE && searchLayout.getVisibility() == View.VISIBLE) {
+                    imageClear.performClick();
+                }
+                return true;
+            }
+        });
+
+    }
+
+    public DateFormat getDateInstanceWithoutYears(Locale locale) {
+        SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance
+                (DateFormat.FULL, locale);
+        sdf.applyPattern(sdf.toPattern().replaceAll("[^\\p{Alpha}]*y+[^\\p{Alpha}]*", ""));
+        return sdf;
+    }
+
+    public TokenManager getManager() {
+        return TokenManager.getInstance();
+    }
+
+    public void setCurrentPage(int viewPagerPage) {
+        pagerPane.setCurrentItem(viewPagerPage);
+
+    }
+
+    public void hidePaneAndBottomView(final Context context) {
+        linPane.setVisibility(View.GONE);
+        linBottomDoc.setVisibility(View.GONE);
+        searchListVisible(context);
+    }
+
+    public void showPaneAndBottomView(final Context context) {
+        linSearchList.setVisibility(View.GONE);
+        linPane.setVisibility(View.VISIBLE);
+        linBottomDoc.setVisibility(View.VISIBLE);
+        isSearchVisable = false;
+        FirebaseHelper.getInstance().logScreenUsageTime(FirebaseHelper.SEARCH_PANE, DashboardActivity.startTime);
+        DashboardActivity.startTime = System.currentTimeMillis();
+    }
+
+    private void showViews(boolean wantToShow, ArrayList<View> viewArrayList) {
+        for (View view : viewArrayList) {
+            if (wantToShow) {
+                if (view.getVisibility() == View.GONE) {
+                    view.setVisibility(View.VISIBLE);
+                }
+            } else {
+                if (view.getVisibility() == View.VISIBLE) {
+                    view.setVisibility(View.GONE);
+                }
+            }
+        }
+    }
+
+    public void searchListVisible(Context context) {
+        linSearchList.setVisibility(View.VISIBLE);
+        isSearchVisable = true;
+        imageClear.setVisibility(View.VISIBLE);
+        if (DashboardActivity.currentIndexDashboard == 0) {
+            if (DashboardActivity.currentIndexPaneFragment == 1) {
+                FirebaseHelper.getInstance().logScreenUsageTime("FavoritePaneFragment", DashboardActivity.startTime);
+            } else if (DashboardActivity.currentIndexPaneFragment == 2) {
+                FirebaseHelper.getInstance().logScreenUsageTime("ToolsPaneFragment", DashboardActivity.startTime);
+            }
+        }
+        DashboardActivity.startTime = System.currentTimeMillis();
+
+    }
+
+    private void logSearchViewShow() {
+        DashboardActivity.startTime = System.currentTimeMillis();
+    }
+
+    private void logSearchViewEnd() {
+        if (DashboardActivity.currentIndexDashboard == 0) {
+            if (DashboardActivity.currentIndexPaneFragment == 1) {
+                Log.d("Firebase", "Favorite Start");
+                FirebaseHelper.getInstance().logScreenUsageTime("SearchPaneFragment", DashboardActivity.startTime);
+                DashboardActivity.startTime = System.currentTimeMillis();
+            } else if (DashboardActivity.currentIndexPaneFragment == 2) {
+                Log.d("Firebase", "Tools Start");
+                FirebaseHelper.getInstance().logScreenUsageTime("SearchPaneFragment", DashboardActivity.startTime);
+                DashboardActivity.startTime = System.currentTimeMillis();
+            }
+        }
+    }
+
+    @Subscribe
+    public void appInstalledEvent(AppInstalledEvent appInstalledEvent) {
+        if (appInstalledEvent.isAppInstalledSuccessfully()) {
+            if (mediator != null) {
+                mediator.loadData();
+            }
+        }
+    }
+
+    @Subscribe
+    public void onBackPressedEvent(OnBackPressedEvent onBackPressedEvent) {
+        if (onBackPressedEvent.isBackPressed()) {
+            if (linSearchList.getVisibility() == View.VISIBLE) {
+                UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
+                blueLineDivider.setVisibility(View.VISIBLE);
+                searchLayout.setVisibility(View.GONE);
+                cardViewEdtSearch.setVisibility(View.GONE);
+                relSearchTools.setVisibility(View.VISIBLE);
+                linSearchList.setVisibility(View.GONE);
+                linBottomDoc.setVisibility(View.VISIBLE);
+                linPane.setVisibility(View.VISIBLE);
+                isSearchVisable = false;
+                linPane.setAlpha(1);
+                imageClear.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    @Subscribe
+    public void filterDataMainAdapter(MainListAdapterEvent event) {
+        try {
+
+            List<MainListItem> mainListItems = event.getData();
+            if (null != mainListItems && mainListItems.size() > 0 && mainListItems
+                    .size() <= 3) {
+                listView.setOnTouchListener(new OnSwipeTouchListener(context,
+                        listView));
+            } else {
+                listView.setOnTouchListener(null);
+            }
+
+
+        } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
+            Tracer.e(e, e.getMessage());
+        }
+    }
+
     @Subscribe
     public void searchLayoutEvent(final SearchLayoutEvent event) {
         try {
@@ -486,220 +718,6 @@ public class PaneFragment extends CoreFragment {
                     }
                 }
             }
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            Tracer.e(e, e.getMessage());
-        }
-    }
-
-    private void junkFoodAppPane() {
-        linTopDoc.setBackgroundColor(getResources().getColor(R.color
-                .bg_junk_apps_top_dock));
-        txtTopDockDate.setVisibility(View.GONE);
-        searchLayout.setVisibility(View.GONE);
-        edtSearchToolsRounded.setVisibility(View.GONE);
-
-        txtIntention.setVisibility(View.VISIBLE);
-        txtIntentionLabelJunkPane.setVisibility(View.VISIBLE);
-
-        String strIntention = PrefSiempo.getInstance(getActivity()).read
-                (PrefSiempo.DEFAULT_INTENTION, "");
-
-        //If Intentions are enabled and intention field is not empty then show
-        //it in Junk food Top dock else not
-        if (!TextUtils.isEmpty(strIntention) && !PrefSiempo.getInstance
-                (context).read(PrefSiempo
-                .IS_INTENTION_ENABLE, false)) {
-            txtIntentionLabelJunkPane.setText(getString(R.string
-                    .you_ve_flag));
-            txtIntention.setText(strIntention);
-            txtIntention.setVisibility(View.VISIBLE);
-            txtIntentionLabelJunkPane.setVisibility(View.VISIBLE);
-
-        } else {
-            txtIntention.setText("You chose to hide these apps.");
-            txtIntentionLabelJunkPane.setVisibility(View.INVISIBLE);
-        }
-
-        // finally change the color
-        mWindow.setStatusBarColor(getResources().getColor(R.color
-                .appland_blue_bright));
-    }
-
-    @Subscribe
-    public void appInstalledEvent(AppInstalledEvent appInstalledEvent) {
-        if (appInstalledEvent.isAppInstalledSuccessfully()) {
-            if (mediator != null) {
-                mediator.loadData();
-            }
-        }
-    }
-
-    /**
-     * Set Date for Tools Pane
-     */
-    private void setToolsPaneDate() {
-        Calendar c = Calendar.getInstance();
-        DateFormat df = getDateInstanceWithoutYears(Locale
-                .getDefault());
-        txtTopDockDate.setText(df.format(c.getTime()));
-        txtTopDockDate.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (null != imageClear && imageClear.getVisibility() == View
-                        .VISIBLE && searchLayout.getVisibility() == View.VISIBLE) {
-                    imageClear.performClick();
-                }
-                return true;
-            }
-        });
-
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        //Changing the status bar default value on page change from dashboard
-        // to direct Junk Food pane
-        if (isVisibleToUser && null != mWindow && pagerPane.getCurrentItem() == 0) {
-            mWindow.setStatusBarColor(getResources().getColor(R.color
-                    .appland_blue_bright));
-        } else {
-            if (null != mWindow) {
-                mWindow.setStatusBarColor(defaultStatusBarColor);
-            }
-        }
-        if (!isVisibleToUser && null != imageClear && linSearchList
-                .getVisibility() == View.VISIBLE) {
-            //Perform click in order to set it when user moves from search
-            // pane to DashboardActivity and comes back so as to hide the list
-            imageClear.performClick();
-            linSearchList.setVisibility(View.GONE);
-            linPane.setAlpha(1);
-        }
-
-
-    }
-
-    public DateFormat getDateInstanceWithoutYears(Locale locale) {
-        SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance
-                (DateFormat.FULL, locale);
-        sdf.applyPattern(sdf.toPattern().replaceAll("[^\\p{Alpha}]*y+[^\\p{Alpha}]*", ""));
-        return sdf;
-    }
-
-
-    public TokenManager getManager() {
-        return TokenManager.getInstance();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
-
-    }
-
-    public void setCurrentPage(int viewPagerPage) {
-        pagerPane.setCurrentItem(viewPagerPage);
-
-    }
-
-    public void hidePaneAndBottomView(final Context context) {
-        linPane.setVisibility(View.GONE);
-        linBottomDoc.setVisibility(View.GONE);
-        searchListVisible(context);
-    }
-
-    public void showPaneAndBottomView(final Context context) {
-        linSearchList.setVisibility(View.GONE);
-        linPane.setVisibility(View.VISIBLE);
-        linBottomDoc.setVisibility(View.VISIBLE);
-        isSearchVisable = false;
-        FirebaseHelper.getInstance().logScreenUsageTime(FirebaseHelper.SEARCH_PANE, DashboardActivity.startTime);
-        DashboardActivity.startTime = System.currentTimeMillis();
-    }
-
-    @Subscribe
-    public void onBackPressedEvent(OnBackPressedEvent onBackPressedEvent) {
-        if (onBackPressedEvent.isBackPressed()) {
-            if (linSearchList.getVisibility() == View.VISIBLE) {
-                UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
-                blueLineDivider.setVisibility(View.VISIBLE);
-                searchLayout.setVisibility(View.GONE);
-                cardViewEdtSearch.setVisibility(View.GONE);
-                relSearchTools.setVisibility(View.VISIBLE);
-                linSearchList.setVisibility(View.GONE);
-                linBottomDoc.setVisibility(View.VISIBLE);
-                linPane.setVisibility(View.VISIBLE);
-                isSearchVisable = false;
-                linPane.setAlpha(1);
-                imageClear.setVisibility(View.VISIBLE);
-            }
-        }
-    }
-
-    private void showViews(boolean wantToShow, ArrayList<View> viewArrayList) {
-        for (View view : viewArrayList) {
-            if (wantToShow) {
-                if (view.getVisibility() == View.GONE) {
-                    view.setVisibility(View.VISIBLE);
-                }
-            } else {
-                if (view.getVisibility() == View.VISIBLE) {
-                    view.setVisibility(View.GONE);
-                }
-            }
-        }
-    }
-
-    public void searchListVisible(Context context) {
-        linSearchList.setVisibility(View.VISIBLE);
-        isSearchVisable = true;
-        imageClear.setVisibility(View.VISIBLE);
-        if (DashboardActivity.currentIndexDashboard == 0) {
-            if (DashboardActivity.currentIndexPaneFragment == 1) {
-                FirebaseHelper.getInstance().logScreenUsageTime("FavoritePaneFragment", DashboardActivity.startTime);
-            } else if (DashboardActivity.currentIndexPaneFragment == 2) {
-                FirebaseHelper.getInstance().logScreenUsageTime("ToolsPaneFragment", DashboardActivity.startTime);
-            }
-        }
-        DashboardActivity.startTime = System.currentTimeMillis();
-
-    }
-
-    private void logSearchViewShow() {
-        DashboardActivity.startTime = System.currentTimeMillis();
-    }
-
-    private void logSearchViewEnd() {
-        if (DashboardActivity.currentIndexDashboard == 0) {
-            if (DashboardActivity.currentIndexPaneFragment == 1) {
-                Log.d("Firebase", "Favorite Start");
-                FirebaseHelper.getInstance().logScreenUsageTime("SearchPaneFragment", DashboardActivity.startTime);
-                DashboardActivity.startTime = System.currentTimeMillis();
-            } else if (DashboardActivity.currentIndexPaneFragment == 2) {
-                Log.d("Firebase", "Tools Start");
-                FirebaseHelper.getInstance().logScreenUsageTime("SearchPaneFragment", DashboardActivity.startTime);
-                DashboardActivity.startTime = System.currentTimeMillis();
-            }
-        }
-    }
-
-    @Subscribe
-    public void filterDataMainAdapter(MainListAdapterEvent event) {
-        try {
-
-            List<MainListItem> mainListItems = event.getData();
-            if (null != mainListItems && mainListItems.size() > 0 && mainListItems
-                    .size() <= 3) {
-                listView.setOnTouchListener(new OnSwipeTouchListener(context,
-                        listView));
-            } else {
-                listView.setOnTouchListener(null);
-            }
-
-
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());

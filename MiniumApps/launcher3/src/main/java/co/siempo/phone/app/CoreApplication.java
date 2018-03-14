@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.LauncherApps;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
@@ -38,14 +37,12 @@ import java.util.Set;
 import co.siempo.phone.R;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.log.Tracer;
-import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.utils.FontUtils;
 import co.siempo.phone.utils.LifecycleHandler;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
-import co.siempo.phone.utils.Sorting;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.BuildConfig;
@@ -71,6 +68,8 @@ public abstract class CoreApplication extends MultiDexApplication {
     private LruCache<String, Bitmap> mMemoryCache;
     private ArrayList<String> junkFoodList = new ArrayList<>();
     private ArrayList<MainListItem> toolItemsList = new ArrayList<>();
+    private ArrayList<MainListItem> toolBottomItemsList = new ArrayList<>();
+    private ArrayList<MainListItem> favoriteItemsList = new ArrayList<>();
     private boolean isHideIconBranding = true;
     private boolean israndomize = true;
 
@@ -110,6 +109,22 @@ public abstract class CoreApplication extends MultiDexApplication {
         this.toolItemsList = toolItemsList;
     }
 
+    public ArrayList<MainListItem> getFavoriteItemsList() {
+        return favoriteItemsList;
+    }
+
+    public void setFavoriteItemsList(ArrayList<MainListItem> favoriteItemsList) {
+        this.favoriteItemsList = favoriteItemsList;
+    }
+
+    public ArrayList<MainListItem> getToolBottomItemsList() {
+        return toolBottomItemsList;
+    }
+
+    public void setToolBottomItemsList(ArrayList<MainListItem> toolBottomItemsList) {
+        this.toolBottomItemsList = toolBottomItemsList;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -144,38 +159,9 @@ public abstract class CoreApplication extends MultiDexApplication {
         configureNetworking();
         configureToolsPane();
         setHideIconBranding(PrefSiempo.getInstance(sInstance).read(PrefSiempo.IS_ICON_BRANDING, true));
-        setHideIconBranding(PrefSiempo.getInstance(sInstance).read(PrefSiempo.IS_ICON_BRANDING, true));
+        setIsrandomize(PrefSiempo.getInstance(sInstance).read(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, true));
     }
 
-
-    public void loadJunkFoodList() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Set<String> junkFoodList = PrefSiempo.getInstance(sInstance).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
-                if (junkFoodList.size() > 0) {
-                    ArrayList<String> items = new ArrayList<>(junkFoodList);
-                    if (PrefSiempo.getInstance(sInstance).read(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, true)) {
-                        Collections.shuffle(items);
-                    } else {
-                        items = Sorting.sortJunkAppAssignment(items);
-                    }
-                    setJunkFoodList(items);
-                }
-            }
-        }).start();
-    }
-
-    public void loadToolPaneList() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ArrayList<MainListItem> items = new ArrayList<>();
-                new MainListItemLoader(sInstance).loadItemsDefaultApp(items);
-                setToolItemsList(PackageUtil.getToolsMenuData(sInstance, items));
-            }
-        }).start();
-    }
 
     /**
      * first time called when user launch the application to set the default value for the
@@ -316,7 +302,6 @@ public abstract class CoreApplication extends MultiDexApplication {
                 blockedApps.clear();
             }
             for (String applicationInfo : packagesList) {
-
                 if (isAppInstallFirstTime) {
                     blockedApps.add(applicationInfo);
                 }
@@ -490,7 +475,6 @@ public abstract class CoreApplication extends MultiDexApplication {
         };
     }
 
-
     public void includeTaskPool(AsyncTask asyncTask, Object object) {
         asyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, object);
     }
@@ -509,26 +493,28 @@ public abstract class CoreApplication extends MultiDexApplication {
 
         @Override
         protected Set<String> doInBackground(Object... params) {
+            Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+            mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+            List<ResolveInfo> pkgAppsList = getPackageManager().queryIntentActivities(mainIntent, 0);
             Set<String> applist = new HashSet<>();
-            List<PackageInfo> packs = getPackageManager().getInstalledPackages(0);
-            for (int i = 0; i < packs.size(); i++) {
+            for (ResolveInfo appInfo : pkgAppsList) {
                 try {
-                    PackageInfo p = packs.get(i);
-                    if ((packs.get(i).applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
-                        continue;
+                    String packageName = appInfo.activityInfo.packageName;
+                    if (!packageName.equalsIgnoreCase(getPackageName())) {
+                        Drawable drawable = null;
+                        try {
+                            drawable = appInfo.loadIcon
+                                    (getPackageManager());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (drawable != null) {
+                            Bitmap bitmap = PackageUtil.drawableToBitmap(drawable);
+                            addBitmapToMemoryCache(packageName, bitmap);
+                        }
+                        applist.add(packageName);
                     }
-                    String packageName = p.packageName;
-                    applist.add(packageName);
-                    Drawable drawable = null;
-                    try {
-                        drawable = p.applicationInfo.loadIcon(getPackageManager());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    if (drawable != null) {
-                        Bitmap bitmap = PackageUtil.drawableToBitmap(drawable);
-                        addBitmapToMemoryCache(packageName, bitmap);
-                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

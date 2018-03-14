@@ -34,6 +34,7 @@ import co.siempo.phone.event.HomePressEvent;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.AppListInfo;
+import co.siempo.phone.service.LoadFavoritePane;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.Sorting;
@@ -123,6 +124,7 @@ public class FavoritesSelectionActivity extends CoreActivity {
                 junkFoodList.removeAll(list);
                 PrefSiempo.getInstance(FavoritesSelectionActivity.this).write(PrefSiempo.FAVORITE_APPS, list);
                 PrefSiempo.getInstance(FavoritesSelectionActivity.this).write(PrefSiempo.JUNKFOOD_APPS, junkFoodList);
+                new LoadFavoritePane(FavoritesSelectionActivity.this).execute();
                 finish();
                 return false;
             }

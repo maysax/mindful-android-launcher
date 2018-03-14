@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,19 +42,13 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
     private List<MainListItem> mainListItemList;
     private boolean isHideIconBranding = true, isBottomDoc = false;
     private HashMap<Integer, AppMenu> map;
+
     public ToolsMenuAdapter(Context context, boolean isHideIconBranding, boolean isBottomDoc, List<MainListItem> mainListItemList) {
         this.context = context;
         this.mainListItemList = mainListItemList;
         this.isHideIconBranding = isHideIconBranding;
         this.isBottomDoc = isBottomDoc;
         map = CoreApplication.getInstance().getToolsSettings();
-    }
-
-    public void setHideIconBranding(boolean hideIconBranding) {
-        if (this.isHideIconBranding != hideIconBranding) {
-            this.isHideIconBranding = hideIconBranding;
-            notifyDataSetChanged();
-        }
     }
 
     @Override
@@ -76,17 +71,22 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
         if (appMenu.isVisible() && item.getId() != 12) {
             holder.linearLayout.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(item.getTitle())) {
+                Log.d("Test", "Title is ::" + item.getTitle());
                 holder.text.setText(item.getTitle());
             }
             if (isHideIconBranding) {
+                Log.d("Test", "hideIcon branding true tooolll");
                 holder.icon.setImageResource(item.getDrawable());
                 holder.text.setText(item.getTitle());
             } else {
+                Log.d("Test", "hideIcon branding false...");
                 holder.text.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(appMenu.getApplicationName()));
                 Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(appMenu.getApplicationName());
                 if (bitmap != null) {
+                    Log.d("Test", "bitmap  null");
                     holder.icon.setImageBitmap(bitmap);
                 } else {
+                    Log.d("Test", "bitmap  not null");
                     if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
                         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, appMenu.getApplicationName());
                         CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
@@ -177,11 +177,20 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
 
     @Override
     public int getItemCount() {
-        if (mainListItemList == null) {
+        if (mainListItemList.size() == 0) {
             return 0;
         } else {
             return isBottomDoc ? 4 : 12;
         }
+    }
+
+    public void setMainListItemList(List<MainListItem> mainListItemList, boolean isBottomDoc, boolean isHideIconBranding) {
+        this.mainListItemList = mainListItemList;
+        this.isBottomDoc = isBottomDoc;
+        this.isHideIconBranding = isHideIconBranding;
+        Log.d("Test", "" + isHideIconBranding);
+        map = CoreApplication.getInstance().getToolsSettings();
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

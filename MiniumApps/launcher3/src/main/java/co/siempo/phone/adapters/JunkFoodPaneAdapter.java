@@ -38,11 +38,18 @@ public class JunkFoodPaneAdapter extends RecyclerView.Adapter<JunkFoodPaneAdapte
     private boolean isHideIconBranding = false;
     private DrawableProvider mProvider;
 
+
     public JunkFoodPaneAdapter(Context context, ArrayList<String> mainListItemList, boolean isHideIconBranding) {
         this.context = context;
         this.mainListItemList = mainListItemList;
         this.isHideIconBranding = isHideIconBranding;
         mProvider = new DrawableProvider(context);
+    }
+
+    public void setMainListItemList(List<String> mainListItemList, boolean isHideIconBranding) {
+        this.mainListItemList = mainListItemList;
+        this.isHideIconBranding = isHideIconBranding;
+        notifyDataSetChanged();
     }
 
     @Override
