@@ -383,8 +383,8 @@ public class PaneFragment extends CoreFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (router != null && searchLayout != null && searchLayout.getTxtSearchBox() != null) {
-                    imageClear.performClick();
                     mediator.listItemClicked(router, position, searchLayout.getTxtSearchBox().getStrText());
+                    imageClear.performClick();
                 }
             }
         });
