@@ -225,6 +225,18 @@ public abstract class CoreApplication extends MultiDexApplication {
             String facebookPackage = Constants.FACEBOOK_PACKAGE;
             String snapPackage = Constants.SNAP_PACKAGE;
             String instaPackage = Constants.INSTAGRAM_PACKAGE;
+            String twitterPackage = Constants.TWITTER_PACKAGE;
+            String linkedInPackage = Constants.LINKEDIN_PACKAGE;
+            String clashRoyale = Constants.CLASH_ROYAL_PACKAGE;
+            String coffeemeetsBagel = Constants.COFFEE_MEETS_PACKAGE;
+            String hingePackage = Constants.HINGE_PACKAGE;
+            String netflixPackage = Constants.NETFLIX_PACKAGE;
+            String redditPackage = Constants.REDDIT_PACKAGE;
+            String tinderPackage = Constants.TINDER_PACKAGE;
+            String candyCrush = Constants.CANDY_SAGA_PACKAGE;
+            String grindrPackage = Constants.GRINDR_PACKAGE;
+            String youTubePackage = Constants.YOUTUBE_PACKAGE;
+            String bumblePackage = Constants.BUMBLE_PACKAGE;
 
             if (UIUtils.isAppInstalledAndEnabled(getApplicationContext(), facebookPackage)) {
                 junkfoodList.add(facebookPackage);
@@ -235,6 +247,48 @@ public abstract class CoreApplication extends MultiDexApplication {
             if (UIUtils.isAppInstalledAndEnabled(getApplicationContext(), instaPackage)) {
                 junkfoodList.add(instaPackage);
             }
+
+            if (UIUtils.isAppInstalledAndEnabled(getApplicationContext(), twitterPackage)) {
+                junkfoodList.add(twitterPackage);
+            }
+
+            if (UIUtils.isAppInstalledAndEnabled(getApplicationContext(), linkedInPackage)) {
+                junkfoodList.add(linkedInPackage);
+            }
+            if (UIUtils.isAppInstalledAndEnabled(getApplicationContext(), clashRoyale)) {
+                junkfoodList.add(clashRoyale);
+            }
+            if (UIUtils.isAppInstalledAndEnabled(getApplicationContext(), coffeemeetsBagel)) {
+                junkfoodList.add(coffeemeetsBagel);
+            }
+            if (UIUtils.isAppInstalledAndEnabled(getApplicationContext(), hingePackage)) {
+                junkfoodList.add(hingePackage);
+            }
+
+            if (UIUtils.isAppInstalledAndEnabled(getApplicationContext(), netflixPackage)) {
+                junkfoodList.add(netflixPackage);
+            }
+
+            if (UIUtils.isAppInstalledAndEnabled(getApplicationContext(), redditPackage)) {
+                junkfoodList.add(redditPackage);
+            }
+            if (UIUtils.isAppInstalledAndEnabled(getApplicationContext(), tinderPackage)) {
+                junkfoodList.add(tinderPackage);
+            }
+            if (UIUtils.isAppInstalledAndEnabled(getApplicationContext(), candyCrush)) {
+                junkfoodList.add(candyCrush);
+            }
+            if (UIUtils.isAppInstalledAndEnabled(getApplicationContext(), grindrPackage)) {
+                junkfoodList.add(grindrPackage);
+            }
+
+            if (UIUtils.isAppInstalledAndEnabled(getApplicationContext(), youTubePackage)) {
+                junkfoodList.add(youTubePackage);
+            }
+            if (UIUtils.isAppInstalledAndEnabled(getApplicationContext(), bumblePackage)) {
+                junkfoodList.add(bumblePackage);
+            }
+
             PrefSiempo.getInstance(this).write(PrefSiempo.JUNKFOOD_APPS, junkfoodList);
         }
     }

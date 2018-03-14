@@ -11,9 +11,31 @@ public class Constants {
 
     public static final String WHATSAPP_PACKAGE = "com.whatsapp";
     public static final String GOOGLE_CALENDAR_PACKAGES = "com.google.android.calendar";
+    //Packages to be added by default in junk food app
     public static final String FACEBOOK_PACKAGE = "com.facebook.katana";
     public static final String SNAP_PACKAGE = "com.snapchat.android";
     public static final String INSTAGRAM_PACKAGE = "com.instagram.android";
+    public static final String TWITTER_PACKAGE = "com.twitter.android";
+    public static final String LINKEDIN_PACKAGE = "com.linkedin.android";
+    public static final String CLASH_ROYAL_PACKAGE = "com.supercell.clashroyale";
+    public static final String COFFEE_MEETS_PACKAGE = "com.coffeemeetsbagel";
+    public static final String HINGE_PACKAGE = "co.hinge.app";
+    public static final String NETFLIX_PACKAGE = "com.netflix.mediaclient";
+    public static final String REDDIT_PACKAGE = "com.reddit.frontpage";
+    public static final String TINDER_PACKAGE = "com.tinder";
+    public static final String CANDY_SAGA_PACKAGE = "com.king.candycrushsaga";
+    public static final String GRINDR_PACKAGE = "com.grindrapp.android";
+    public static final String YOUTUBE_PACKAGE = "com.google.android.youtube";
+    public static final String BUMBLE_PACKAGE = "com.bumble.app";
+
+
+
+
+
+
+
+
+
     public static final String FACEBOOK_MESSENGER_PACKAGE = "com.facebook.orca";
     public static final String FACEBOOK_LITE_PACKAGE = "com.facebook.mlite";
     public static final String GOOGLE_HANGOUTS_PACKAGES = "com.google.android.talk";
