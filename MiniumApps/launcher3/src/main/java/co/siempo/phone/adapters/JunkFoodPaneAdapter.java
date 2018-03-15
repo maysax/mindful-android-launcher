@@ -116,7 +116,6 @@ public class JunkFoodPaneAdapter extends RecyclerView.Adapter<JunkFoodPaneAdapte
             @Override
             public void onClick(View v) {
                 FirebaseHelper.getInstance().logSiempoMenuUsage(2, "", CoreApplication.getInstance().getApplicationNameFromPackageName(item));
-//                EventBus.getDefault().post(new HomePress(1, 2));
                 new ActivityHelper(context).openAppWithPackageName(item);
             }
         });

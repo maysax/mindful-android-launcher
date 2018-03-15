@@ -15,10 +15,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:paddingBottom="18dp"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
-        android:paddingTop="18dp"
-        android:paddingBottom="18dp">
+        android:paddingTop="18dp">
 
         <ImageView
             android:id="@+id/imv_appicon"

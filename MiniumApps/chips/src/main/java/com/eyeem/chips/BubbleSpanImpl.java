@@ -27,6 +27,10 @@ public class BubbleSpanImpl extends ReplacementSpan implements BubbleSpan {
         this._et = new WeakReference<>(et);
     }
 
+    public static float lineCorrectionLogic(AwesomeBubble bubble) {
+        return (bubble.getHeight() - bubble.style.bubblePadding - bubble.baselineHeight());
+    }
+
     @Override
     public void draw(Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, Paint paint) {
         this.start = start;
@@ -98,9 +102,5 @@ public class BubbleSpanImpl extends ReplacementSpan implements BubbleSpan {
     @Override
     public Object data() {
         return data;
-    }
-
-    public static float lineCorrectionLogic(AwesomeBubble bubble) {
-        return (bubble.getHeight() - bubble.style.bubblePadding - bubble.baselineHeight());
     }
 }

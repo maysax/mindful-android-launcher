@@ -45,6 +45,7 @@ import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
 import co.siempo.phone.customviews.SearchLayout;
 import co.siempo.phone.event.AppInstalledEvent;
+import co.siempo.phone.event.HomePress;
 import co.siempo.phone.event.NotifyBottomView;
 import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
@@ -691,6 +692,13 @@ public class PaneFragment extends CoreFragment {
     }
 
     @Subscribe
+    public void homePress(HomePress event) {
+        if (event != null) {
+            pagerPane.setCurrentItem(event.getCurrentIndexPaneFragment(), true);
+        }
+    }
+
+    @Subscribe
     public void tokenManagerEvent(TokenUpdateEvent event) {
         try {
             final TokenItem current = TokenManager.getInstance().getCurrent();
@@ -804,5 +812,6 @@ public class PaneFragment extends CoreFragment {
 
         }
     }
+
 
 }

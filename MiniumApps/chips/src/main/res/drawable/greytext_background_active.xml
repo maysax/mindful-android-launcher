@@ -4,8 +4,8 @@
     <corners android:radius="3dp" />
 
     <gradient
-        android:startColor="@color/actionbar_title"
+        android:angle="270"
         android:endColor="@color/text_settings_inactive"
-        android:angle="270" />
+        android:startColor="@color/actionbar_title" />
 
 </shape>

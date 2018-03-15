@@ -20,13 +20,11 @@ public class DefaultBubbles {
     public static int GREY_EDIT = 3;
     public static int GREEN = 4;
     public static int CITY_COUNTRY = 5;
-
-    @SuppressLint("UseSparseArrays")
-    private static HashMap<Integer, BubbleStyle[]> defaults = new HashMap<Integer, BubbleStyle[]>();
-
     public static int v_spacing;
     public static int h_spacing;
     public static int long_bubble_workaround;
+    @SuppressLint("UseSparseArrays")
+    private static HashMap<Integer, BubbleStyle[]> defaults = new HashMap<Integer, BubbleStyle[]>();
 
     @Deprecated
     public static BubbleStyle get(int type, Context context) {

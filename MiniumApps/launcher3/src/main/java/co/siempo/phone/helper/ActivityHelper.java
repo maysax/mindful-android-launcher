@@ -151,8 +151,6 @@ public class ActivityHelper {
     }
 
 
-
-
     public void openSiempoSuppressNotificationsSettings() {
         try {
             Intent i = new Intent(context, SuppressNotificationActivity.class);

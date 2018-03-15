@@ -27,6 +27,7 @@ import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.DashboardPagerAdapter;
 import co.siempo.phone.event.CheckVersionEvent;
+import co.siempo.phone.event.HomePress;
 import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.fragments.FavoritePaneFragment;
 import co.siempo.phone.fragments.IntentionFragment;
@@ -133,6 +134,8 @@ public class DashboardActivity extends CoreActivity {
             @Override
             public void run() {
                 mPager.setCurrentItem(currentIndexDashboard, true);
+                EventBus.getDefault().post(new HomePress(1, 2));
+
             }
         }, 1000);
 
@@ -408,10 +411,5 @@ public class DashboardActivity extends CoreActivity {
         currentIndexPaneFragment = 1;
     }
 
-//    @Subscribe
-//    public void homePress(HomePress event) {
-//        if (event != null) {
-//            mPager.setCurrentItem(event.getCurrentIndexDashboard(),true);
-//        }
-//    }
+
 }

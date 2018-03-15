@@ -28,6 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:padding="16dp">
+
             <TextView
                 android:id="@+id/txtFaq"
                 android:layout_width="match_parent"
@@ -37,7 +38,6 @@
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/text.size.large" />
         </RelativeLayout>
-
 
 
         <RelativeLayout
@@ -59,7 +59,6 @@
         </RelativeLayout>
 
 
-
         <RelativeLayout
             android:id="@+id/relFeedback"
             android:layout_width="match_parent"
@@ -77,7 +76,7 @@
                 android:textSize="@dimen/text.size.large" />
         </RelativeLayout>
 
-        
+
         <RelativeLayout
             android:id="@+id/relVersion"
             android:layout_width="match_parent"
@@ -96,7 +95,6 @@
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/text.size.large" />
         </RelativeLayout>
-
 
 
         <RelativeLayout
