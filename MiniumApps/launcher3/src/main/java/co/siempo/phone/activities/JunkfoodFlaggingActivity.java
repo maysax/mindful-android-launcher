@@ -196,10 +196,17 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+
+        //Added this code as part of SSA-1333, to save the list on backpress
+        favoriteList.removeAll(list);
+        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
+        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.JUNKFOOD_APPS, list);
         if (list.size() == 0 && !DashboardActivity.isJunkFoodOpen) {
             DashboardActivity.isJunkFoodOpen = true;
         }
+        new LoadJunkFoodPane(JunkfoodFlaggingActivity.this).execute();
+        super.onBackPressed();
+
     }
 
 

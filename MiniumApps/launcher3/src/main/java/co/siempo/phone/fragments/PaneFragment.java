@@ -723,7 +723,6 @@ public class PaneFragment extends CoreFragment {
                         });
 
                     } else {
-                        mediator.resetData();
                         if (current.getTitle().trim().isEmpty()) {
                             if (adapter != null) {
                                 mediator.loadDefaultData();

@@ -13,7 +13,7 @@ public class TokenParser {
 
 
     public void parse(String str) {
-        String searchValue = str;
+
         if (str.isEmpty()) {
             TokenManager.getInstance().clear();
         } else if (str.equals("@") && !TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT)) {
