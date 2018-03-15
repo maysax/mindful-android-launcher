@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -51,54 +52,18 @@ public class MainFragmentMediator {
     }
 
     public void loadData() {
-//        new AsyncTask<String, String, List<MainListItem>>() {
-//
-//            @Override
-//            protected void onPreExecute() {
-//                super.onPreExecute();
-        items = new ArrayList<>();
-        contactItems = new ArrayList<>();
-//            }
-//
-//            @Override
-//            protected void onPostExecute(List<MainListItem> s) {
-//                super.onPostExecute(s);
-//                items = s;
-//                if (getAdapter() != null) {
-//                    getAdapter().loadData(items);
-//                    getAdapter().notifyDataSetChanged();
-//                }
-//            }
-
-//            @Override
-//            protected List<MainListItem> doInBackground(String... strings) {
-        loadActions();
-        loadContacts();
-        loadDefaults();
-        items = PackageUtil.getListWithMostRecentData(items, context);
-//            }
-//        }.execute();
-
-    }
-
-    public void resetData() {
-
         new AsyncTask<String, String, List<MainListItem>>() {
-
-            @Override
-            protected List<MainListItem> doInBackground(String... strings) {
-                items = new ArrayList<>();
-                contactItems = new ArrayList<>();
-                loadActions();
-//                loadContacts();
-                loadDefaults();
-                items = PackageUtil.getListWithMostRecentData(items, context);
-                return items;
-            }
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
+        items = new ArrayList<>();
+        contactItems = new ArrayList<>();
+            }
+            @Override
+            protected void onPostExecute(List<MainListItem> s) {
+                super.onPostExecute(s);
+                items = s;
                 if (getAdapter() != null) {
                     getAdapter().loadData(items);
                     getAdapter().notifyDataSetChanged();
@@ -106,14 +71,28 @@ public class MainFragmentMediator {
             }
 
             @Override
-            protected void onPostExecute(List<MainListItem> mainListItems) {
-                super.onPostExecute(mainListItems);
-                if (getAdapter() != null) {
-                    getAdapter().loadData(mainListItems);
-                    getAdapter().notifyDataSetChanged();
-                }
+            protected List<MainListItem> doInBackground(String... strings) {
+        loadActions();
+        loadContacts();
+        loadDefaults();
+        items = PackageUtil.getListWithMostRecentData(items, context);
+        return items;
             }
         }.execute();
+
+    }
+
+    public void resetData() {
+        items = new ArrayList<>();
+        contactItems = new ArrayList<>();
+        loadActions();
+        loadContacts();
+        loadDefaults();
+        items = PackageUtil.getListWithMostRecentData(items, context);
+        if (getAdapter() != null) {
+                    getAdapter().loadData(items);
+                    getAdapter().notifyDataSetChanged();
+                }
 
 
     }
@@ -307,11 +286,13 @@ public class MainFragmentMediator {
         loadContacts();
         loadDefaults();
         items = PackageUtil.getListWithMostRecentData(items, context);
+
         for (MainListItem cItems : items) {
             if (cItems.getItemType() == MainListItemType.CONTACT || cItems.getItemType() == MainListItemType.DEFAULT) {
                 newList.add(cItems);
             }
         }
+
         contactItems = newList;
         if (getAdapter() != null) {
             getAdapter().loadData(newList);
