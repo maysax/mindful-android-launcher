@@ -74,7 +74,9 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
             String packageName = item.activityInfo.packageName;
             if (PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>()).contains(packageName)) {
                 holder.btnHideApps.setVisibility(View.VISIBLE);
-                Drawable drawable = mProvider.getRound("" + item.loadLabel(context.getPackageManager()).charAt(0), R.color.app_assignment_junkfood);
+                Drawable drawable = mProvider.getRound("" + item.loadLabel
+                        (context.getPackageManager()).charAt(0), R.color
+                        .app_assignment_junkfood, 30);
                 holder.imgIcon.setImageDrawable(drawable);
                 holder.btnHideApps.setOnClickListener(new View.OnClickListener() {
                     @Override

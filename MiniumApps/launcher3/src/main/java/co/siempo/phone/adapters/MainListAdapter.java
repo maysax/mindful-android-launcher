@@ -49,6 +49,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
     private static final int HIGHLIGHT_COLOR = 0x999be6ff;
     private final Context context;
+    private boolean isHideIconBranding;
     private List<MainListItem> originalData = null;
     private List<MainListItem> filteredData = null;
     private ItemFilter filter = new ItemFilter();
@@ -56,7 +57,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
     private DrawableProvider mProvider;
     private TextDrawable.IBuilder mDrawableBuilder;
     private PopupMenu popup;
-//    private HashMap<String, Bitmap> iconList;
+    //    private HashMap<String, Bitmap> iconList;
 
     public MainListAdapter(Context context, List<MainListItem> items) {
         super(context, 0);
@@ -64,6 +65,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         mDrawableBuilder = TextDrawable.builder()
                 .round();
         mProvider = new DrawableProvider(context);
+
         loadData(items);
 
     }
@@ -164,7 +166,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                 if (!TextUtils.isEmpty(item.getContactName())) {
                     Drawable drawable = mProvider.getRound("" + item
                             .getContactName().charAt(0), context.getResources
-                            ().getColor(R.color.appland_contact_black));
+                            ().getColor(R.color.appland_contact_black), 24);
                     holder.icon.setImageDrawable(drawable);
                 }
             }
@@ -181,7 +183,8 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
     private View getActionItemView(int position, View view, ViewGroup parent) {
         ActionViewHolder holder;
-
+        isHideIconBranding = CoreApplication.getInstance()
+                .isHideIconBranding();
 
         if (view == null) {
             holder = new ActionViewHolder();
@@ -210,27 +213,42 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
         if (item != null) {
 
+            String titleApp = item
+                    .getTitle();
             if (item.getId() == -1) {
                 final String packageName = item.getPackageName();
                 if (!TextUtils.isEmpty(packageName)) {
-                    Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(packageName);
-                    if (bitmap != null) {
-                        holder.icon.setImageBitmap(bitmap);
-                    } else {
-                        BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, packageName);
-                        CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
-                        Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(packageName);
+                    if (isHideIconBranding) {
+                        String upperCaseTitle;
+                        if (TextUtils.isEmpty(titleApp)) {
+                            upperCaseTitle = "";
+                        } else {
+                            upperCaseTitle = String.valueOf(titleApp.toUpperCase().charAt(0));
+                        }
+                        Drawable drawable = mProvider.getRound(upperCaseTitle,
+                                context.getResources().getColor(R.color
+                                        .appland_contact_black), 24);
                         holder.icon.setImageDrawable(drawable);
+                    } else {
+                        Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(packageName);
+                        if (bitmap != null) {
+                            holder.icon.setImageBitmap(bitmap);
+                        } else {
+                            BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, packageName);
+                            CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                            Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(packageName);
+                            holder.icon.setImageDrawable(drawable);
+                        }
                     }
                 }
-                holder.text.setText(item.getTitle());
+                holder.text.setText(titleApp);
                 holder.imgChevron.setVisibility(View.VISIBLE);
             } else {
                 if (item.getDrawable() != 0) {
 
                     holder.icon.setImageResource(item.getDrawable());
                 }
-                holder.text.setText(item.getTitle());
+                holder.text.setText(titleApp);
                 holder.imgChevron.setVisibility(View.GONE);
             }
 

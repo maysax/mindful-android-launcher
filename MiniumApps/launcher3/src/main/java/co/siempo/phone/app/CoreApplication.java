@@ -243,6 +243,8 @@ public abstract class CoreApplication extends MultiDexApplication {
                         case Constants.TINDER_PACKAGE:
                         case Constants.GRINDR_PACKAGE:
                         case Constants.YOUTUBE_PACKAGE:
+                        case Constants.COFFEE_MEETS_PACKAGE:
+                        case Constants.TWITTER_PACKAGE:
                         case Constants.BUMBLE_PACKAGE:
                             if (UIUtils.isAppInstalledAndEnabled(getApplicationContext(), packageName)) {
                                 junkfoodList.add(packageName);
