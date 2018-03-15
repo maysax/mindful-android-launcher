@@ -38,6 +38,7 @@ import co.siempo.phone.event.HomePressEvent;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.AppListInfo;
+import co.siempo.phone.service.LoadFavoritePane;
 import co.siempo.phone.service.LoadJunkFoodPane;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
@@ -163,6 +164,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
                             DashboardActivity.isJunkFoodOpen = true;
                         }
                         new LoadJunkFoodPane(JunkfoodFlaggingActivity.this).execute();
+                        new LoadFavoritePane(JunkfoodFlaggingActivity.this).execute();
                         finish();
                     }
                 });

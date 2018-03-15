@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -128,6 +129,7 @@ public class SiempoPermissionActivity extends CoreActivity {
 
     @AfterViews
     void afterViews() {
+        Log.d("Test", "P4");
         permissionUtil = new PermissionUtil(this);
         setSupportActionBar(toolbar);
         switchSmsPermission.setOnClickListener(onClickListener);
@@ -149,7 +151,7 @@ public class SiempoPermissionActivity extends CoreActivity {
     protected void onResume() {
         super.onResume();
 
-
+        Log.d("Test", "P5");
         if (permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)) {
             switchContactPermission.setChecked(true);
         } else {
@@ -224,7 +226,7 @@ public class SiempoPermissionActivity extends CoreActivity {
             }
             txtPermissionLabel.setText(getString(R.string.permission_siempo_alpha_title));
         }
-
+        Log.d("Test", "P5");
         if (isFromHome && permissionUtil.hasGiven(PermissionUtil
                 .CONTACT_PERMISSION) &&
                 permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
@@ -232,6 +234,7 @@ public class SiempoPermissionActivity extends CoreActivity {
                 permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION) && permissionUtil
                 .hasGiven(PermissionUtil.SEND_SMS_PERMISSION) &&
                 permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) && permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
+            Log.d("Test", "P5");
             finish();
         }
     }

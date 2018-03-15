@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
@@ -63,6 +64,7 @@ public class NotificationActivity extends CoreActivity {
     private List<String> systemAppList = new ArrayList<>();
 
     private PackageManager packageManager;
+    private ProgressBar loading_progress;
 
     @Override
     protected void onResume() {
@@ -80,21 +82,6 @@ public class NotificationActivity extends CoreActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tempo_list_notification);
-        initView();
-    }
-
-    public void initView() {
-
-        pref_messengerList = new ArrayList<>();
-        pref_helpfulRobots = new ArrayList<>();
-        pref_blockedList = new HashSet<>();
-
-        blockedList = new ArrayList<>();
-        messengerList = new ArrayList<>();
-        helpfulRobot_List = new ArrayList<>();
-        headerSectionList = new ArrayList<>();
-
-        // Initialize components
         toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
         toolbar.setTitle(R.string.select_apps_title);
@@ -105,11 +92,33 @@ public class NotificationActivity extends CoreActivity {
                 finish();
             }
         });
-
+        loading_progress = findViewById(R.id.loading_progress);
+        loading_progress.setVisibility(View.VISIBLE);
         lst_appList = findViewById(R.id.lst_appList);
-        packageManager = getPackageManager();
-        systemAppList = Arrays.asList(getResources().getStringArray(R.array.systemAppList));
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                bindView();
+            }
+        }).start();
+
+    }
+
+    public void bindView() {
+        // Initialize components
+        packageManager = getPackageManager();
+
+        pref_messengerList = new ArrayList<>();
+        pref_helpfulRobots = new ArrayList<>();
+        pref_blockedList = new HashSet<>();
+
+        blockedList = new ArrayList<>();
+        messengerList = new ArrayList<>();
+        helpfulRobot_List = new ArrayList<>();
+        headerSectionList = new ArrayList<>();
+
+        systemAppList = Arrays.asList(getResources().getStringArray(R.array.systemAppList));
         /*
           Load all preference list based on share preference
           Constants.HELPFUL_ROBOTS
@@ -158,9 +167,10 @@ public class NotificationActivity extends CoreActivity {
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
         if (event.isAppInstalledSuccessfully()) {
-            initView();
+            bindView();
         }
     }
+
 
     /**
      * Prepare List for display based on preference list
@@ -213,9 +223,6 @@ public class NotificationActivity extends CoreActivity {
 
         checkAppListEmpty(this, helpfulRobot_List, messengerList, blockedList);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        lst_appList.setLayoutManager(linearLayoutManager);
-        lst_appList.setHasFixedSize(true);
 
         if (helpfulRobot_List.size() > 0) {
             helpfulRobot_List = Sorting.sortApplication(helpfulRobot_List);
@@ -227,9 +234,22 @@ public class NotificationActivity extends CoreActivity {
             blockedList = Sorting.sortApplication(blockedList);
         }
 
-        TempoNotificationSectionAdapter adapter = new TempoNotificationSectionAdapter(this, helpfulRobot_List, messengerList, blockedList, headerSectionList);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setData();
+            }
+        });
 
+    }
+
+    private void setData() {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(NotificationActivity.this);
+        lst_appList.setLayoutManager(linearLayoutManager);
+        lst_appList.setHasFixedSize(true);
+        TempoNotificationSectionAdapter adapter = new TempoNotificationSectionAdapter(NotificationActivity.this, helpfulRobot_List, messengerList, blockedList, headerSectionList);
         lst_appList.setAdapter(adapter);
+        loading_progress.setVisibility(View.GONE);
     }
 
     public void checkAppListEmpty(Context context, List<AppListInfo> appList, List<AppListInfo> messengerList, List<AppListInfo> blockedAppList) {

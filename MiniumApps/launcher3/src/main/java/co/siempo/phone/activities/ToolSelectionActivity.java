@@ -28,6 +28,7 @@ import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.service.LoadToolPane;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.Sorting;
 import co.siempo.phone.utils.UIUtils;
@@ -95,6 +96,12 @@ public class ToolSelectionActivity extends CoreActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        if (mAdapter != null) {
+            PrefSiempo.getInstance(ToolSelectionActivity.this).write(PrefSiempo.TOOLS_SETTING, new Gson().toJson(mAdapter.getMap()));
+            EventBus.getDefault().postSticky(new NotifyBottomView(true));
+            EventBus.getDefault().postSticky(new NotifyToolView(true));
+        }
+        new LoadToolPane(this).execute();
         FirebaseHelper.getInstance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
     }
 

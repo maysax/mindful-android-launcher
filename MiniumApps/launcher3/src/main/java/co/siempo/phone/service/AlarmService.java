@@ -70,7 +70,7 @@ public class AlarmService extends IntentService {
             Tracer.d("Tracking createNotification");
             if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_VIBRATE
                     || audioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
-                int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
+                int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM) / 2;
                 audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, sound, 0);
             }
 

@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -102,6 +101,8 @@ public class DashboardActivity extends CoreActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             intent.putExtra(IS_FROM_HOME, true);
             startActivity(intent);
+        } else {
+
         }
     }
 
@@ -110,9 +111,9 @@ public class DashboardActivity extends CoreActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        mPager = findViewById(R.id.pager);
-        loadViews();
 
+        loadViews();
+        Log.d("Test", "P1");
         if (startTime == 0) {
             startTime = System.currentTimeMillis();
         }
@@ -123,6 +124,7 @@ public class DashboardActivity extends CoreActivity {
         // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
         mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         defaultStatusBarColor = mWindow.getStatusBarColor();
+        Log.d("Test", "P2");
     }
 
     @Override
@@ -130,19 +132,12 @@ public class DashboardActivity extends CoreActivity {
         super.onNewIntent(intent);
         currentIndexDashboard = 1;
         currentIndexPaneFragment = 2;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mPager.setCurrentItem(currentIndexDashboard, true);
-                EventBus.getDefault().post(new HomePress(1, 2));
-
-            }
-        }, 1000);
-
-
+        mPager.setCurrentItem(currentIndexDashboard, true);
+        EventBus.getDefault().post(new HomePress(1, 2));
     }
 
     public void loadViews() {
+        mPager = findViewById(R.id.pager);
         mPagerAdapter = new DashboardPagerAdapter(getFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(currentIndexDashboard);
@@ -157,7 +152,13 @@ public class DashboardActivity extends CoreActivity {
                 if (currentIndexDashboard == 1 && i == 0) {
                     Log.d("Firebase", "Intention End");
                     FirebaseHelper.getInstance().logScreenUsageTime(IntentionFragment.class.getSimpleName(), startTime);
-                    if (DashboardActivity.currentIndexPaneFragment == 0) {
+                    if (currentIndexDashboard == 1 && PrefSiempo.getInstance(DashboardActivity.this).read(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, true)) {
+                        PrefSiempo.getInstance(DashboardActivity.this).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, false);
+                        Intent intent = new Intent(DashboardActivity.this, JunkfoodFlaggingActivity.class);
+                        startActivity(intent);
+                        overridePendingTransition(R
+                                .anim.fade_in_junk, R.anim.fade_out_junk);
+                    } else if (DashboardActivity.currentIndexPaneFragment == 0) {
                         Log.d("Firebase", "Junkfood Start");
                         startTime = System.currentTimeMillis();
                     } else if (DashboardActivity.currentIndexPaneFragment == 1) {
@@ -167,6 +168,7 @@ public class DashboardActivity extends CoreActivity {
                         Log.d("Firebase", "Tools Start");
                         startTime = System.currentTimeMillis();
                     }
+
                 } else if (currentIndexDashboard == 0 && i == 1) {
                     if (DashboardActivity.currentIndexPaneFragment == 0) {
                         Log.d("Firebase", "Junkfood End");
@@ -196,17 +198,9 @@ public class DashboardActivity extends CoreActivity {
 
             @Override
             public void onPageScrollStateChanged(int i) {
-                if (currentIndexDashboard == 1 && PrefSiempo.getInstance(DashboardActivity.this).read(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, true)) {
-                    PrefSiempo.getInstance(DashboardActivity.this).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, false);
-                    Intent intent = new Intent(DashboardActivity.this, JunkfoodFlaggingActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R
-                            .anim.fade_in_junk, R.anim.fade_out_junk);
-                }
+
             }
         });
-
-
         new LoadToolPane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         new LoadFavoritePane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         new LoadJunkFoodPane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -215,7 +209,6 @@ public class DashboardActivity extends CoreActivity {
             Log.d(TAG, "Display upgrade dialog.");
             checkUpgradeVersion();
         }
-
     }
 
 

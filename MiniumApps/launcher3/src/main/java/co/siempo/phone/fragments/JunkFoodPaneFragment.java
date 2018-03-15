@@ -61,7 +61,7 @@ public class JunkFoodPaneFragment extends CoreFragment {
     @Override
     public void setMenuVisibility(boolean menuVisible) {
         super.setMenuVisibility(menuVisible);
-        if (CoreApplication.getInstance().isIsrandomize()) {
+        if (CoreApplication.getInstance().isRandomize()) {
             Collections.shuffle(CoreApplication.getInstance().getJunkFoodList());
             items = CoreApplication.getInstance().getJunkFoodList();
             if (mAdapter != null) {
@@ -89,7 +89,7 @@ public class JunkFoodPaneFragment extends CoreFragment {
             recyclerView = view.findViewById(R.id.recyclerView);
             junkFoodList = new HashSet<>();
             items = new ArrayList<>(junkFoodList);
-//            if (CoreApplication.getInstance().isIsrandomize()) {
+//            if (CoreApplication.getInstance().isRandomize()) {
 //                Collections.shuffle(items);
 //            } else {
 //                items = Sorting.sortJunkAppAssignment(items);

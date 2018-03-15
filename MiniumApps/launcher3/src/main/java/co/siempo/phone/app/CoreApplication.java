@@ -72,7 +72,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     private ArrayList<MainListItem> toolBottomItemsList = new ArrayList<>();
     private ArrayList<MainListItem> favoriteItemsList = new ArrayList<>();
     private boolean isHideIconBranding = true;
-    private boolean israndomize = true;
+    private boolean isRandomize = true;
 
     public static synchronized CoreApplication getInstance() {
         return sInstance;
@@ -86,12 +86,12 @@ public abstract class CoreApplication extends MultiDexApplication {
         isHideIconBranding = hideIconBranding;
     }
 
-    public boolean isIsrandomize() {
-        return israndomize;
+    public boolean isRandomize() {
+        return isRandomize;
     }
 
-    public void setIsrandomize(boolean israndomize) {
-        this.israndomize = israndomize;
+    public void setRandomize(boolean randomize) {
+        this.isRandomize = randomize;
     }
 
     public ArrayList<String> getJunkFoodList() {
@@ -160,7 +160,7 @@ public abstract class CoreApplication extends MultiDexApplication {
         configureNetworking();
         configureToolsPane();
         setHideIconBranding(PrefSiempo.getInstance(sInstance).read(PrefSiempo.IS_ICON_BRANDING, true));
-        setIsrandomize(PrefSiempo.getInstance(sInstance).read(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, true));
+        setRandomize(PrefSiempo.getInstance(sInstance).read(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, true));
     }
 
 

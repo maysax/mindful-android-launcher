@@ -87,27 +87,14 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
         mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         defaultStatusBarColor = mWindow.getStatusBarColor();
-        if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME_SHOW_TOOLTIP, true)) {
-            if (!UIUtils.isMyLauncherDefault(getActivity())) {
-                android.os.Handler handler = new android.os.Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            if (Settings.canDrawOverlays(getActivity())) {
-                                new ActivityHelper(getActivity()).handleDefaultLauncher(getActivity());
-                                ((CoreActivity) getActivity()).loadDialog();
-                                PrefSiempo.getInstance(getActivity()).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME_SHOW_TOOLTIP, false);
-                            }
-                        } else {
-                            new ActivityHelper(getActivity()).handleDefaultLauncher(getActivity());
-                            ((CoreActivity) getActivity()).loadDialog();
-                            PrefSiempo.getInstance(getActivity()).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME_SHOW_TOOLTIP, false);
-                        }
 
-                    }
-                }, 500);
-            }
+    }
+
+    @Override
+    public void setMenuVisibility(boolean menuVisible) {
+        super.setMenuVisibility(menuVisible);
+        if (menuVisible) {
+
         }
     }
 
@@ -120,6 +107,30 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
             linIF.setVisibility(View.VISIBLE);
         }
         txtIntention.setText(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_INTENTION, ""));
+        if (getActivity() != null) {
+            if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME_SHOW_TOOLTIP, true)) {
+                if (!UIUtils.isMyLauncherDefault(getActivity())) {
+                    android.os.Handler handler = new android.os.Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (Settings.canDrawOverlays(getActivity())) {
+                                    new ActivityHelper(getActivity()).handleDefaultLauncher(getActivity());
+                                    ((CoreActivity) getActivity()).loadDialog();
+                                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME_SHOW_TOOLTIP, false);
+                                }
+                            } else {
+                                new ActivityHelper(getActivity()).handleDefaultLauncher(getActivity());
+                                ((CoreActivity) getActivity()).loadDialog();
+                                PrefSiempo.getInstance(getActivity()).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME_SHOW_TOOLTIP, false);
+                            }
+
+                        }
+                    }, 500);
+                }
+            }
+        }
     }
 
 

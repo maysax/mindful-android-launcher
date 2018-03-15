@@ -74,7 +74,7 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
         switchHideIcon.setChecked(CoreApplication.getInstance().isHideIconBranding());
 
         switchJunkFoodmize = view.findViewById(R.id.switchJunkFoodmize);
-        switchJunkFoodmize.setChecked(CoreApplication.getInstance().isIsrandomize());
+        switchJunkFoodmize.setChecked(CoreApplication.getInstance().isRandomize());
 
         relJunkFoodmize = view.findViewById(R.id.relJunkFoodmize);
         relJunkFoodmize.setOnClickListener(this);
@@ -94,11 +94,11 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
                 if (switchJunkFoodmize.isChecked()) {
                     switchJunkFoodmize.setChecked(false);
                     PrefSiempo.getInstance(context).write(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, false);
-                    CoreApplication.getInstance().setIsrandomize(false);
+                    CoreApplication.getInstance().setRandomize(false);
                 } else {
                     switchJunkFoodmize.setChecked(true);
                     PrefSiempo.getInstance(context).write(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, true);
-                    CoreApplication.getInstance().setIsrandomize(true);
+                    CoreApplication.getInstance().setRandomize(true);
                 }
                 EventBus.getDefault().postSticky(new NotifyJunkFoodView(true));
                 break;

@@ -100,6 +100,18 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
         }
     }
 
+    public List<AppListInfo> getHelpfulRobot_List() {
+        return helpfulRobot_List;
+    }
+
+    public List<AppListInfo> getBlockedList() {
+        return blockedList;
+    }
+
+    public List<AppListInfo> getMessengerList() {
+        return messengerList;
+    }
+
     @Override
     protected int getItemCountForSection(int section) {
         int size = 0;
