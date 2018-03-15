@@ -93,7 +93,6 @@ public class PaneFragment extends CoreFragment {
     private TextView txtIntentionLabelJunkPane;
     private TextView txtIntention;
     private Window mWindow;
-    private int defaultStatusBarColor;
     private MainFragmentMediator mediator;
     private TokenRouter router;
     private MainListAdapter adapter;
@@ -115,6 +114,7 @@ public class PaneFragment extends CoreFragment {
     public static PaneFragment newInstance() {
         return new PaneFragment();
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -169,7 +169,7 @@ public class PaneFragment extends CoreFragment {
                     .appland_blue_bright));
         } else {
             if (null != mWindow) {
-                mWindow.setStatusBarColor(defaultStatusBarColor);
+                mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
             }
         }
         if (!isVisibleToUser && null != imageClear && linSearchList
@@ -200,12 +200,12 @@ public class PaneFragment extends CoreFragment {
     }
 
     private void changeColorOfStatusBar() {
-        if (pagerPane != null && pagerPane.getCurrentItem() == 0
-                && DashboardActivity.currentIndexDashboard == 0) {
+        if (pagerPane != null && pagerPane.getCurrentItem() == 0 && isVisible
+                () && DashboardActivity.currentIndexDashboard == 0) {
             mWindow.setStatusBarColor(getResources().getColor(R.color
                     .appland_blue_bright));
         } else {
-            mWindow.setStatusBarColor(defaultStatusBarColor);
+            mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
         }
     }
 
@@ -319,6 +319,9 @@ public class PaneFragment extends CoreFragment {
                     }
 
                     junkFoodAppPane();
+                    mWindow.setStatusBarColor(getResources().getColor(R.color
+                            .appland_blue_bright));
+
                 } else {
                     /* Tools and Favourite Pane */
                     linTopDoc.setBackground(getResources().getDrawable(R
@@ -329,11 +332,7 @@ public class PaneFragment extends CoreFragment {
                     txtIntentionLabelJunkPane.setVisibility(View.GONE);
 
                     // finally change the color
-                    mWindow.setStatusBarColor(defaultStatusBarColor);
-//                    if (CoreApplication.getInstance().isIsrandomize()) {
-//                        Collections.shuffle(CoreApplication.getInstance().getJunkFoodList());
-//                        EventBus.getDefault().postSticky(new NotifyJunkFoodView(true));
-//                    }
+                    mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
                 }
 
                 //Indicator to be set here so that when coming from another
@@ -409,10 +408,12 @@ public class PaneFragment extends CoreFragment {
     private void getColorOfStatusBar() {
         mWindow = getActivity().getWindow();
         // clear FLAG_TRANSLUCENT_STATUS flag:
-        mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-        mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        defaultStatusBarColor = mWindow.getStatusBarColor();
+        if (null != mWindow) {
+            mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+            mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+        }
     }
 
     public MainListAdapter getAdapter() {
@@ -428,8 +429,9 @@ public class PaneFragment extends CoreFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (router != null && searchLayout != null && searchLayout.getTxtSearchBox() != null) {
-                    imageClear.performClick();
                     mediator.listItemClicked(router, position, searchLayout.getTxtSearchBox().getStrText());
+                    mediator.resetData();
+                    imageClear.performClick();
                 }
             }
         });
@@ -500,13 +502,11 @@ public class PaneFragment extends CoreFragment {
             txtIntentionLabelJunkPane.setVisibility(View.VISIBLE);
 
         } else {
-            txtIntention.setText("You chose to hide these apps.");
+            txtIntention.setText("You flagged these apps to use them less.");
             txtIntentionLabelJunkPane.setVisibility(View.INVISIBLE);
         }
 
-        // finally change the color
-        mWindow.setStatusBarColor(getResources().getColor(R.color
-                .appland_blue_bright));
+
     }
 
     /**

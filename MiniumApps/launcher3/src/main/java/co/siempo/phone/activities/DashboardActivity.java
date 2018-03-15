@@ -16,6 +16,8 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.github.javiersantos.appupdater.AppUpdaterUtils;
@@ -27,7 +29,7 @@ import co.siempo.phone.event.CheckVersionEvent;
 import co.siempo.phone.event.HomePress;
 import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.fragments.FavoritePaneFragment;
-import co.siempo.phone.fragments.IntentionFieldFragment;
+import co.siempo.phone.fragments.IntentionFragment;
 import co.siempo.phone.fragments.JunkFoodPaneFragment;
 import co.siempo.phone.fragments.PaneFragment;
 import co.siempo.phone.fragments.ToolsPaneFragment;
@@ -58,6 +60,8 @@ public class DashboardActivity extends CoreActivity {
     AppUpdaterUtils appUpdaterUtils;
     boolean isApplicationLaunch = false;
     NotificationManager notificationManager;
+    private Window mWindow;
+    public static int defaultStatusBarColor;
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
      * and next wizard steps.
@@ -97,10 +101,6 @@ public class DashboardActivity extends CoreActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             intent.putExtra(IS_FROM_HOME, true);
             startActivity(intent);
-
-        } else {
-            System.out.println("Rajesh onResume");
-//            loadViews();
         }
     }
 
@@ -109,19 +109,24 @@ public class DashboardActivity extends CoreActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        System.out.println("Rajesh onNewIntent");
         mPager = findViewById(R.id.pager);
         loadViews();
 
         if (startTime == 0) {
             startTime = System.currentTimeMillis();
         }
+        mWindow = getWindow();
+        // clear FLAG_TRANSLUCENT_STATUS flag:
+        mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        defaultStatusBarColor = mWindow.getStatusBarColor();
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        System.out.println("Rajesh onNewIntent");
         currentIndexDashboard = 1;
         currentIndexPaneFragment = 2;
         mPager.setCurrentItem(currentIndexDashboard);
@@ -131,7 +136,7 @@ public class DashboardActivity extends CoreActivity {
         mPagerAdapter = new DashboardPagerAdapter(getFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(currentIndexDashboard);
-//        mPager.setOffscreenPageLimit(2);
+        mPager.setOffscreenPageLimit(2);
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
@@ -141,7 +146,7 @@ public class DashboardActivity extends CoreActivity {
             public void onPageSelected(int i) {
                 if (currentIndexDashboard == 1 && i == 0) {
                     Log.d("Firebase", "Intention End");
-                    FirebaseHelper.getInstance().logScreenUsageTime(IntentionFieldFragment.class.getSimpleName(), startTime);
+                    FirebaseHelper.getInstance().logScreenUsageTime(IntentionFragment.class.getSimpleName(), startTime);
                     if (DashboardActivity.currentIndexPaneFragment == 0) {
                         Log.d("Firebase", "Junkfood Start");
                         startTime = System.currentTimeMillis();
@@ -209,7 +214,7 @@ public class DashboardActivity extends CoreActivity {
         super.onPause();
         if (currentIndexDashboard == 1) {
             Log.d("Firebase", "Intention End");
-            FirebaseHelper.getInstance().logScreenUsageTime(IntentionFieldFragment.class.getSimpleName(), startTime);
+            FirebaseHelper.getInstance().logScreenUsageTime(IntentionFragment.class.getSimpleName(), startTime);
         } else if (currentIndexDashboard == 0) {
             if (DashboardActivity.currentIndexPaneFragment == 0) {
                 Log.d("Firebase", "Junkfood End");

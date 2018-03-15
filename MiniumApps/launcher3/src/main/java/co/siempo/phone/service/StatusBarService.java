@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -57,17 +58,6 @@ public class StatusBarService extends Service {
     public StatusBarService() {
     }
 
-    public static String getTimeFormat(Context context) {
-        String format;
-        boolean is24hourformat = android.text.format.DateFormat.is24HourFormat(context);
-
-        if (is24hourformat) {
-            format = "HH:mm";
-        } else {
-            format = "hh:mm a";
-        }
-        return format;
-    }
 
     @Override
     public void onCreate() {
@@ -313,6 +303,7 @@ public class StatusBarService extends Service {
                             addAppFromBlockedList(installPackageName);
                             Log.d("Testing with device.", "Added" + installPackageName);
                             CoreApplication.getInstance().addOrRemoveApplicationInfo(true, installPackageName);
+                            reloadData();
                         }
 
                     } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
@@ -327,6 +318,7 @@ public class StatusBarService extends Service {
                                     removeAppFromPreference(context, uninstallPackageName);
                                     removeAppFromBlockedList(uninstallPackageName);
                                     CoreApplication.getInstance().addOrRemoveApplicationInfo(false, uninstallPackageName);
+                                    reloadData();
                                 }
                             }
                         }
@@ -340,8 +332,8 @@ public class StatusBarService extends Service {
                             } else {
                                 removeAppFromPreference(context, packageName);
                                 removeAppFromBlockedList(packageName);
-
                             }
+                            reloadData();
                         }
                     }
                     PrefSiempo.getInstance(context).write
@@ -356,5 +348,10 @@ public class StatusBarService extends Service {
         }
     }
 
+    private void reloadData() {
+        new LoadToolPane(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadFavoritePane(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadJunkFoodPane(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
 }
