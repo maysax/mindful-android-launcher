@@ -48,6 +48,7 @@ import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.NotifyBottomView;
 import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
+import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainFragmentMediator;
@@ -144,6 +145,12 @@ public class PaneFragment extends CoreFragment {
     @Override
     public void onResume() {
         super.onResume();
+        pagerPane.setAlpha(1);
+        if (DashboardActivity.currentIndexPaneFragment == 0 && DashboardActivity.isJunkFoodOpen) {
+            DashboardActivity.currentIndexPaneFragment = 1;
+            DashboardActivity.isJunkFoodOpen = false;
+            pagerPane.setCurrentItem(DashboardActivity.currentIndexPaneFragment, true);
+        }
         if (DashboardActivity.currentIndexDashboard == 1) {
             if (DashboardActivity.currentIndexPaneFragment == 0) {
                 Log.d("Firebase", "Junkfood Start");
@@ -400,7 +407,7 @@ public class PaneFragment extends CoreFragment {
         }
         itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_10);
         recyclerViewBottomDoc.addItemDecoration(itemDecoration);
-        items = new ArrayList<>();
+        items = CoreApplication.getInstance().getToolBottomItemsList();
         mAdapter = new ToolsMenuAdapter(getActivity(), CoreApplication.getInstance().isHideIconBranding(), true, items);
         recyclerViewBottomDoc.setAdapter(mAdapter);
     }
@@ -430,8 +437,7 @@ public class PaneFragment extends CoreFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (router != null && searchLayout != null && searchLayout.getTxtSearchBox() != null) {
                     mediator.listItemClicked(router, position, searchLayout.getTxtSearchBox().getStrText());
-                    mediator.resetData();
-                    imageClear.performClick();
+//                    imageClear.performClick();
                 }
             }
         });
@@ -676,6 +682,13 @@ public class PaneFragment extends CoreFragment {
         }
     }
 
+    @Subscribe
+    public void sendSmsEvent(SendSmsEvent event) {
+        if (event.isClearList()) {
+            mediator.resetData();
+            imageClear.performClick();
+        }
+    }
 
     @Subscribe
     public void tokenManagerEvent(TokenUpdateEvent event) {

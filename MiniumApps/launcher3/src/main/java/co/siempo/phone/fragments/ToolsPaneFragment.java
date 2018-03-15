@@ -77,7 +77,7 @@ public class ToolsPaneFragment extends CoreFragment {
 
     private void initView() {
         if (getActivity() != null && recyclerView != null) {
-            items = new ArrayList<>();
+            items = CoreApplication.getInstance().getToolItemsList();
 //            new MainListItemLoader(getActivity()).loadItemsDefaultApp(items);
 //            items = PackageUtil.getToolsMenuData(getActivity(), items);
             mLayoutManager = new GridLayoutManager(getActivity(), 4);

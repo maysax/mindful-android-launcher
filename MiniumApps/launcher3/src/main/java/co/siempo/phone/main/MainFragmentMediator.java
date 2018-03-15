@@ -203,6 +203,7 @@ public class MainFragmentMediator {
                         PackageUtil.addRecentItemList(getAdapter().getItem(position), context);
                         position = getAdapter().getItem(position).getId();
                         new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
+                        EventBus.getDefault().post(new SendSmsEvent(true));
                     } else {
                         if (fragment != null) {
 
@@ -211,8 +212,8 @@ public class MainFragmentMediator {
                             boolean status = new ActivityHelper(fragment.getActivity()).openAppWithPackageName(getAdapter().getItem(position).getPackageName());
                             FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_APPLICATION_PICK, getAdapter().getItem(position).getPackageName(), "");
                             if (status) {
-
                                 PackageUtil.addRecentItemList(getAdapter().getItem(position), context);
+                                EventBus.getDefault().post(new SendSmsEvent(true));
                             }
                         }
                     }
@@ -232,11 +233,11 @@ public class MainFragmentMediator {
                                 router.createNote(fragment.getActivity());
                                 FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_SAVE_NOTE, "", data);
                                 new ActivityHelper(context).openNotesApp(true);
+                                EventBus.getDefault().post(new SendSmsEvent(true));
                             }
                             break;
                         //Write code for Junk Food Pane on this code
                         case 3:
-
                             if (router != null && fragment != null) {
                                 fragment.setCurrentPage(0);
                             }

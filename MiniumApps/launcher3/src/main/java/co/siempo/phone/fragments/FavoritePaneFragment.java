@@ -76,7 +76,7 @@ public class FavoritePaneFragment extends CoreFragment {
 
     private void initView() {
         if (getActivity() != null && view != null) {
-            items = new ArrayList<>();
+            items = CoreApplication.getInstance().getFavoriteItemsList();
 //            items = PackageUtil.getFavoriteList(getActivity());
             recyclerView = view.findViewById(R.id.recyclerView);
             btnSelect = view.findViewById(R.id.btnSelect);

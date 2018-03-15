@@ -736,7 +736,7 @@ public class PackageUtil {
     }
 
 
-    public static void addRecentItemList(MainListItem item, Context context) {
+    public synchronized static void addRecentItemList(MainListItem item, Context context) {
 
         if (item != null) {
             // Load RecentItem List from Storage
@@ -784,7 +784,7 @@ public class PackageUtil {
         }
     }
 
-    public static List<MainListItem> getListWithMostRecentData(List<MainListItem> allItems, Context context) {
+    public synchronized static List<MainListItem> getListWithMostRecentData(List<MainListItem> allItems, Context context) {
 
         List<MainListItem> recentItemList;
         recentItemList = loadRecentItemsFromStore(context);

@@ -133,7 +133,7 @@ public class TokenRouter {
                         intent.setPackage(defaultSmsPackageName);
                     }
                     context.startActivity(intent);
-                    EventBus.getDefault().post(new SendSmsEvent(true, strNumber, strMessage));
+                    EventBus.getDefault().post(new SendSmsEvent(true));
                 } else {
                     UIUtils.toast(context, "Please enter message.");
                 }

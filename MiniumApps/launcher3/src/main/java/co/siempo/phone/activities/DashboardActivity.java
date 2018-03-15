@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -128,7 +129,13 @@ public class DashboardActivity extends CoreActivity {
         super.onNewIntent(intent);
         currentIndexDashboard = 1;
         currentIndexPaneFragment = 2;
-        mPager.setCurrentItem(currentIndexDashboard, true);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mPager.setCurrentItem(currentIndexDashboard, true);
+            }
+        }, 1000);
+
 
     }
 
