@@ -144,7 +144,7 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
     @Override
     protected TempoNotificationItemViewHolder onCreateItemViewHolder(ViewGroup parent, int viewType) {
         View view = getLayoutInflater().inflate(R.layout.tempo_installed_app_list_row, parent, false);
-        return new TempoNotificationItemViewHolder(view,context);
+        return new TempoNotificationItemViewHolder(view, context);
     }
 
     @Override

@@ -112,7 +112,7 @@ public class FavoritePositioningAdapter extends RecyclerView.Adapter<FavoritePos
                 if (!TextUtils.isEmpty(item.getTitle())) {
                     String fontPath = "fonts/robotocondensedregular.ttf";
                     holder.txtAppTextImage.setText("" + item
-                            .getTitle().charAt(0));
+                            .getTitle().toUpperCase().charAt(0));
 
                     // Loading Font Face
                     Typeface tf = Typeface.createFromAsset(context.getAssets(), fontPath);

@@ -77,7 +77,7 @@ public class JunkFoodPaneAdapter extends RecyclerView.Adapter<JunkFoodPaneAdapte
             holder.imgUnderLine.setVisibility(View.VISIBLE);
             String fontPath = "fonts/robotocondensedregular.ttf";
             if (!TextUtils.isEmpty(applicationName)) {
-                holder.txtAppTextImage.setText("" + applicationName.charAt(0));
+                holder.txtAppTextImage.setText("" + applicationName.toUpperCase().charAt(0));
             }
             // Loading Font Face
             Typeface tf = Typeface.createFromAsset(context.getAssets(), fontPath);
@@ -116,6 +116,7 @@ public class JunkFoodPaneAdapter extends RecyclerView.Adapter<JunkFoodPaneAdapte
             @Override
             public void onClick(View v) {
                 FirebaseHelper.getInstance().logSiempoMenuUsage(2, "", CoreApplication.getInstance().getApplicationNameFromPackageName(item));
+//                EventBus.getDefault().post(new HomePress(1, 2));
                 new ActivityHelper(context).openAppWithPackageName(item);
             }
         });

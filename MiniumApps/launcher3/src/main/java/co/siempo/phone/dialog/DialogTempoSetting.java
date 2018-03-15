@@ -75,7 +75,8 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
         everyFourHoursList.addAll(Arrays.asList(0, 4, 8, 12, 16, 20));
 
         enableRadioOnPosition(PrefSiempo.getInstance(context).read(PrefSiempo
-                .TEMPO_TYPE, 0));
+                .TEMPO_TYPE, 0), false);
+
         bindOnlyAt();
 
         new Handler().postDelayed(new Runnable() {
@@ -135,41 +136,41 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
     }
 
     private void radioIndividual() {
-        enableRadioOnPosition(0);
+        enableRadioOnPosition(0, true);
         FirebaseHelper.getInstance().logTempoIntervalTime(0, 0, "");
     }
 
     private void radioBatched() {
-        enableRadioOnPosition(1);
+        enableRadioOnPosition(1, true);
         FirebaseHelper.getInstance().logTempoIntervalTime(1, PrefSiempo.getInstance(context).read(PrefSiempo
                 .BATCH_TIME, 15), "");
     }
 
     private void radioOnlyAt() {
-        enableRadioOnPosition(2);
+        enableRadioOnPosition(2, true);
         FirebaseHelper.getInstance().logTempoIntervalTime(2, 0, PrefSiempo.getInstance(context).read(PrefSiempo
                 .ONLY_AT, "12:01"));
     }
 
     private void relIndividual() {
-        enableRadioOnPosition(0);
+        enableRadioOnPosition(0, true);
         FirebaseHelper.getInstance().logTempoIntervalTime(0, 0, "");
     }
 
     private void relBatched() {
-        enableRadioOnPosition(1);
+        enableRadioOnPosition(1, true);
         FirebaseHelper.getInstance().logTempoIntervalTime(1, PrefSiempo.getInstance(context).read(PrefSiempo
                 .BATCH_TIME, 15), "");
     }
 
     private void relOnlyAt() {
-        enableRadioOnPosition(2);
+        enableRadioOnPosition(2, true);
         FirebaseHelper.getInstance().logTempoIntervalTime(2, 0, PrefSiempo.getInstance(context).read(PrefSiempo
                 .ONLY_AT, "12:01"));
     }
 
     private void txtAdd() {
-        enableRadioOnPosition(2);
+        enableRadioOnPosition(2, true);
         FirebaseHelper.getInstance().logTempoIntervalTime(2, 0, PrefSiempo.getInstance(context).read(PrefSiempo
                 .ONLY_AT, "12:01"));
         Calendar now = Calendar.getInstance();
@@ -222,7 +223,7 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
                                 Collections.sort(listdata);
                                 PrefSiempo.getInstance(context).write(PrefSiempo
                                         .ONLY_AT, TextUtils.join(",", listdata));
-                                enableRadioOnPosition(2);
+                                enableRadioOnPosition(2, true);
                                 FirebaseHelper.getInstance().logTempoIntervalTime(2, 0, PrefSiempo.getInstance(context).read(PrefSiempo
                                         .ONLY_AT, "12:01"));
                             } else {
@@ -233,7 +234,7 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
                             Collections.sort(listdata);
                             PrefSiempo.getInstance(context).write(PrefSiempo
                                     .ONLY_AT, TextUtils.join(",", listdata));
-                            enableRadioOnPosition(2);
+                            enableRadioOnPosition(2, true);
                             FirebaseHelper.getInstance().logTempoIntervalTime(2, 0, PrefSiempo.getInstance(context).read(PrefSiempo
                                     .ONLY_AT, "12:01"));
                         }
@@ -256,7 +257,7 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
                                             PrefSiempo.getInstance(context).write(PrefSiempo
                                                     .ONLY_AT, "");
                                         }
-                                        enableRadioOnPosition(2);
+                                        enableRadioOnPosition(2, true);
                                         FirebaseHelper.getInstance().logTempoIntervalTime(2, 0, PrefSiempo.getInstance(context).read(PrefSiempo
                                                 .ONLY_AT, "12:01"));
                                     }
@@ -292,7 +293,7 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
                         .BATCH_TIME, 15);
             }
         }
-        enableRadioOnPosition(1);
+        enableRadioOnPosition(1, true);
         FirebaseHelper.getInstance().logTempoIntervalTime(1, PrefSiempo.getInstance(context).read(PrefSiempo
                 .BATCH_TIME, 15), "");
     }
@@ -324,7 +325,7 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
                         .BATCH_TIME, 15);
             }
         }
-        enableRadioOnPosition(1);
+        enableRadioOnPosition(1, true);
         FirebaseHelper.getInstance().logTempoIntervalTime(1, PrefSiempo.getInstance(context).read(PrefSiempo
                 .BATCH_TIME, 15), "");
     }
@@ -370,7 +371,7 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
     }
 
     private void txtOnlyAtTime1() {
-        enableRadioOnPosition(2);
+        enableRadioOnPosition(2, true);
         if (radioOnlyAt.isChecked()) {
             Calendar calendar1 = Calendar.getInstance();
             String str1 = PrefSiempo.getInstance(context).read(PrefSiempo
@@ -383,7 +384,7 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
     }
 
     private void txtOnlyAtTime2() {
-        enableRadioOnPosition(2);
+        enableRadioOnPosition(2, true);
         if (radioOnlyAt.isChecked()) {
             Calendar calendar1 = Calendar.getInstance();
             String str1 = PrefSiempo.getInstance(context).read(PrefSiempo
@@ -396,7 +397,7 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
     }
 
     private void txtOnlyAtTime3() {
-        enableRadioOnPosition(2);
+        enableRadioOnPosition(2, true);
         if (radioOnlyAt.isChecked()) {
             Calendar calendar1 = Calendar.getInstance();
             String str1 = PrefSiempo.getInstance(context).read(PrefSiempo
@@ -408,15 +409,22 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
 
     }
 
-    private void enableRadioOnPosition(int pos) {
-        if (pos == 0) {
-            int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
-            audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, sound, 0);
-            Tracer.d("VolumeInTempo", audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
-        } else {
-            Tracer.d("VolumeInTempo Before", audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
-            audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
-            Tracer.d("VolumeInTempo after", audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+    private void enableRadioOnPosition(int pos, boolean isDialogLoaded) {
+        if (isDialogLoaded) {
+            if (pos == 0) {
+                if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL
+                        || audioManager.getRingerMode() != AudioManager.RINGER_MODE_VIBRATE) {
+                    int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
+                    audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, sound, 0);
+                    Tracer.d("VolumeInTempo", audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+                }
+            } else {
+                if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                    Tracer.d("VolumeInTempo Before", audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+                    audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+                    Tracer.d("VolumeInTempo after", audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+                }
+            }
         }
 
         String timeString;

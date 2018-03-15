@@ -43,7 +43,6 @@ import co.siempo.phone.db.DaoSession;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.NewNotificationEvent;
-import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.utils.NotificationUtility;
@@ -60,7 +59,6 @@ import de.greenrobot.event.EventBus;
 public class SiempoNotificationListener extends NotificationListenerService {
 
     public static final String TAG = SiempoNotificationListener.class.getName();
-
 
 
     @SystemService
@@ -176,16 +174,17 @@ public class SiempoNotificationListener extends NotificationListenerService {
 
             if (null != blockedAppList && blockedAppList.size() > 0 && blockedAppList.contains(notification.getPackageName())) {
 
+                int tempoType = PrefSiempo.getInstance(context).read(PrefSiempo.TEMPO_TYPE, 0);
 
-                if (!notification.getPackageName().equalsIgnoreCase(getPackageName()) && PrefSiempo.getInstance(context).read(PrefSiempo
-                        .TEMPO_TYPE, 0) != 0) {
+                if (!notification.getPackageName().equalsIgnoreCase(getPackageName()) && tempoType != 0) {
                     SiempoNotificationListener.this.cancelNotification(notification.getKey());
-                    if (PrefSiempo.getInstance(context).read(PrefSiempo
-                            .TEMPO_TYPE, 0) == 1 && PrefSiempo.getInstance(context).read(PrefSiempo
-                            .TEMPO_TYPE, 0) == 2) {
-                        int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
-                        if (sound != 1) {
-                            audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+                    if (tempoType == 1 && tempoType == 2) {
+                        if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_VIBRATE ||
+                                audioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
+                            int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
+                            if (sound != 1) {
+                                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+                            }
                         }
                     }
                     filterByCategory(notification);
@@ -586,9 +585,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 notificationSms.set_contact_title(strTitle);
                 smsDao.update(notificationSms);
                 EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
-            }
-            if (statusBarNotification.getNotification().category != null && statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_CALL)) {
-                EventBus.getDefault().post(new NotificationTrayEvent(true));
             }
         } catch (Exception e) {
             e.printStackTrace();

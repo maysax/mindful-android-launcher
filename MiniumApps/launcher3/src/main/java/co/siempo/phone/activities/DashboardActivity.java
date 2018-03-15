@@ -26,7 +26,6 @@ import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.DashboardPagerAdapter;
 import co.siempo.phone.event.CheckVersionEvent;
-import co.siempo.phone.event.HomePress;
 import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.fragments.FavoritePaneFragment;
 import co.siempo.phone.fragments.IntentionFragment;
@@ -55,13 +54,13 @@ public class DashboardActivity extends CoreActivity {
     public static int currentIndexDashboard = 1;
     public static int currentIndexPaneFragment = -1;
     public static long startTime = 0;
+    public static int defaultStatusBarColor;
     PermissionUtil permissionUtil;
     ConnectivityManager connectivityManager;
     AppUpdaterUtils appUpdaterUtils;
     boolean isApplicationLaunch = false;
     NotificationManager notificationManager;
     private Window mWindow;
-    public static int defaultStatusBarColor;
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
      * and next wizard steps.
@@ -129,7 +128,8 @@ public class DashboardActivity extends CoreActivity {
         super.onNewIntent(intent);
         currentIndexDashboard = 1;
         currentIndexPaneFragment = 2;
-        mPager.setCurrentItem(currentIndexDashboard);
+        mPager.setCurrentItem(currentIndexDashboard, true);
+
     }
 
     public void loadViews() {
@@ -401,10 +401,10 @@ public class DashboardActivity extends CoreActivity {
         currentIndexPaneFragment = 1;
     }
 
-    @Subscribe
-    public void homePress(HomePress event) {
+//    @Subscribe
+//    public void homePress(HomePress event) {
 //        if (event != null) {
-//            mPager.setCurrentItem(event.getCurrentIndexDashboard());
+//            mPager.setCurrentItem(event.getCurrentIndexDashboard(),true);
 //        }
-    }
+//    }
 }

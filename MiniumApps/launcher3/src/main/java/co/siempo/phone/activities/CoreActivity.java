@@ -39,7 +39,6 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.Config;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.DownloadApkEvent;
-import co.siempo.phone.event.HomePress;
 import co.siempo.phone.helper.Validate;
 import co.siempo.phone.interfaces.NFCInterface;
 import co.siempo.phone.log.Tracer;
@@ -407,7 +406,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                     if (!state.equalsIgnoreCase(SYSTEM_DIALOG_REASON_RECENT_APPS) && reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
                         DashboardActivity.currentIndexDashboard = 1;
                         DashboardActivity.currentIndexPaneFragment = 2;
-                        EventBus.getDefault().post(new HomePress(1, 2));
+//                        EventBus.getDefault().post(new HomePress(1, 2));
                     }
                     state = reason;
                 }

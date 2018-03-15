@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Build;
-import android.os.Vibrator;
 import android.service.notification.StatusBarNotification;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -34,7 +33,6 @@ public class AlarmService extends IntentService {
 
     Context context;
     private AudioManager audioManager;
-    private Vibrator vibrator;
     private ArrayList<Integer> everyHourList = new ArrayList<>();
     private ArrayList<Integer> everyTwoHourList = new ArrayList<>();
     private ArrayList<Integer> everyFourHoursList = new ArrayList<>();
@@ -59,7 +57,6 @@ public class AlarmService extends IntentService {
         context = this;
         Tracer.d("-1");
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         everyHourList.addAll(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24));
         everyTwoHourList.addAll(Arrays.asList(1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23));
         everyFourHoursList.addAll(Arrays.asList(1, 4, 8, 12, 16, 20, 24));
@@ -71,24 +68,22 @@ public class AlarmService extends IntentService {
     public void createNotification(List<TableNotificationSms> notificationList, Context context) {
         try {
             Tracer.d("Tracking createNotification");
-            int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
-            audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, sound, 0);
+            if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_VIBRATE
+                    || audioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
+                int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
+                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, sound, 0);
+            }
 
-                for (int i = 0; i < notificationList.size(); i++) {
-                    TableNotificationSms notification = notificationList.get(i);
-                    if (notification.getPackageName() != null && !notification.getPackageName().equalsIgnoreCase("android")) {
-                        Tracer.d("Tracking notification.getPackageName()");
-                        PackageUtil.recreateNotification(notification, context, notification.getApp_icon());
-                    }
+            for (int i = 0; i < notificationList.size(); i++) {
+                TableNotificationSms notification = notificationList.get(i);
+                if (notification.getPackageName() != null && !notification.getPackageName().equalsIgnoreCase("android")) {
+                    Tracer.d("Tracking notification.getPackageName()");
+                    PackageUtil.recreateNotification(notification, context, notification.getApp_icon());
                 }
-                if (notificationList.size() >= 1) {
-//                    PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-//                    PowerManager.WakeLock wl = pm != null ? pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG") : null;
-//                    if (wl != null) {
-//                        wl.acquire(2000);
-//                    }
-                    DBUtility.getNotificationDao().deleteAll();
-                }
+            }
+            if (notificationList.size() >= 1) {
+                DBUtility.getNotificationDao().deleteAll();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -126,10 +121,10 @@ public class AlarmService extends IntentService {
             int tempoType = PrefSiempo.getInstance(context).read(PrefSiempo
                     .TEMPO_TYPE, 0);
             Tracer.d("3");
-              if (tempoType == 1) {
+            if (tempoType == 1) {
                 Tracer.d("4");
-                  int batchTime = PrefSiempo.getInstance(context).read(PrefSiempo
-                          .BATCH_TIME, 15);
+                int batchTime = PrefSiempo.getInstance(context).read(PrefSiempo
+                        .BATCH_TIME, 15);
                 if (batchTime == 15) {
                     if (systemMinutes == 0 || systemMinutes == 15 || systemMinutes == 30 || systemMinutes == 45) {
                         Tracer.d("Tracking Batch");
@@ -166,8 +161,8 @@ public class AlarmService extends IntentService {
 
             } else if (tempoType == 2) {
                 Tracer.d("5");
-                  String strTimeData = PrefSiempo.getInstance(context).read(PrefSiempo
-                          .ONLY_AT, "12:01");
+                String strTimeData = PrefSiempo.getInstance(context).read(PrefSiempo
+                        .ONLY_AT, "12:01");
                 if (!strTimeData.equalsIgnoreCase("")) {
                     Tracer.d("6");
                     String strTime[] = strTimeData.split(",");
