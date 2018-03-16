@@ -355,7 +355,10 @@ public class PackageUtil {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 // Wakes up the device in Doze Mode
                 if (alarmManager != null) {
-                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, alarmIntent);
+                    alarmManager.setAlarmClock(new AlarmManager
+                            .AlarmClockInfo(time,alarmIntent),
+                            alarmIntent);
+//                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, alarmIntent);
                 }
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 // Wakes up the device in Idle Mode
