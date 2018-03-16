@@ -75,8 +75,11 @@ public class JunkFoodPaneAdapter extends RecyclerView.Adapter<JunkFoodPaneAdapte
             holder.txtAppTextImage.setVisibility(View.VISIBLE);
             holder.imgAppIcon.setVisibility(View.GONE);
             holder.imgUnderLine.setVisibility(View.VISIBLE);
+            holder.imgUnderLine.setImageResource(R.drawable.letter_bottom_border_junkfood);
             String fontPath = "fonts/robotocondensedregular.ttf";
             if (!TextUtils.isEmpty(applicationName)) {
+                holder.text.setTextColor(ContextCompat.getColor(context, R.color.junkfood_text_and_underlinecolor));
+                holder.txtAppTextImage.setTextColor(ContextCompat.getColor(context, R.color.junkfood_text_and_underlinecolor));
                 holder.txtAppTextImage.setText("" + applicationName.toUpperCase().charAt(0));
             }
             // Loading Font Face
