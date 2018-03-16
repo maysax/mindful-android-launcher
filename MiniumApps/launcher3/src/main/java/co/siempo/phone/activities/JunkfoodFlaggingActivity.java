@@ -513,17 +513,20 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         protected void onPostExecute(ArrayList<AppListInfo> s) {
             super.onPostExecute(s);
             try {
-                junkfoodFlaggingAdapter = new JunkfoodFlaggingAdapter(JunkfoodFlaggingActivity.this, bindingList, list);
-                listAllApps.setAdapter(junkfoodFlaggingAdapter);
-                if (isNotify) {
-                    junkfoodFlaggingAdapter.notifyDataSetChanged();
-                    listAllApps.setSelection(firstPosition);
+                if (listAllApps != null) {
+                    junkfoodFlaggingAdapter = new JunkfoodFlaggingAdapter(JunkfoodFlaggingActivity.this, bindingList, list);
+                    listAllApps.setAdapter(junkfoodFlaggingAdapter);
+                    listAllApps.setOnItemClickListener(JunkfoodFlaggingActivity.this);
+                    if (isNotify) {
+                        junkfoodFlaggingAdapter.notifyDataSetChanged();
+                        listAllApps.setSelection(firstPosition);
+                    }
+                    isClickOnView = true;
                 }
-                isClickOnView = true;
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            listAllApps.setOnItemClickListener(JunkfoodFlaggingActivity.this);
+
         }
     }
 }
