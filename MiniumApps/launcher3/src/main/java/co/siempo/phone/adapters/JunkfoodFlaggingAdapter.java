@@ -110,7 +110,14 @@ public class JunkfoodFlaggingAdapter extends BaseAdapter {
                 holder.txtNoAppsMessage.setVisibility(View.GONE);
                 holder.txtHeader.setVisibility(View.GONE);
                 try {
-                    holder.txtAppName.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(resolveInfo.packageName));
+                    if (CoreApplication.getInstance().getListApplicationName().get(resolveInfo.packageName) != null) {
+                        String strData = CoreApplication.getInstance().getListApplicationName().get(resolveInfo.packageName);
+                        holder.txtAppName.setText(strData);
+                    } else {
+                        String strData = CoreApplication.getInstance().getApplicationNameFromPackageName(resolveInfo.packageName);
+                        holder.txtAppName.setText(strData);
+                    }
+
                     Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(resolveInfo.packageName);
                     if (bitmap != null) {
                         holder.imgAppIcon.setImageBitmap(bitmap);

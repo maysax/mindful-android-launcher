@@ -111,7 +111,6 @@ public class DashboardActivity extends CoreActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-
         loadViews();
         Log.d("Test", "P1");
         if (startTime == 0) {

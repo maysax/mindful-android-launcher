@@ -1,7 +1,6 @@
 package co.siempo.phone.activities;
 
 import android.content.Intent;
-import android.content.pm.ResolveInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
@@ -9,7 +8,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
-import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.Menu;
@@ -51,7 +49,7 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
     Set<String> junkFoodList = new HashSet<>();
     FavoriteFlaggingAdapter junkfoodFlaggingAdapter;
     int firstPosition;
-    List<ResolveInfo> installedPackageList;
+    List<String> installedPackageList;
     private Toolbar toolbar;
     private ListView listAllApps;
     private PopupMenu popup;
@@ -77,7 +75,7 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
         list = PrefSiempo.getInstance(this).read(PrefSiempo.FAVORITE_APPS, new HashSet<String>());
         junkFoodList = PrefSiempo.getInstance(this).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
         list.removeAll(junkFoodList);
-        loadApps();
+
     }
 
     @Override
@@ -105,20 +103,11 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
      * load system apps and filter the application for junkfood and normal.
      */
     private void loadApps() {
-        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-        installedPackageList = getPackageManager().queryIntentActivities(mainIntent, 0);
-        List<ResolveInfo> appList = new ArrayList<>();
-        for (int i = 0; i < installedPackageList.size(); i++) {
-            boolean isAdded = false;
-            for (int j = 0; j < appList.size(); j++) {
-                if (!TextUtils.isEmpty(installedPackageList.get(i).activityInfo.packageName) && appList.get(j).activityInfo.packageName.equalsIgnoreCase(installedPackageList.get(i).activityInfo.packageName)) {
-                    isAdded = true;
-                }
-            }
-            if (!isAdded) {
-                appList.add(installedPackageList.get(i));
-            }
+        List<String> installedPackageListLocal = CoreApplication.getInstance().getPackagesList();
+        List<String> appList = new ArrayList<>();
+
+        for (int i = 0; i < installedPackageListLocal.size(); i++) {
+            appList.add(installedPackageListLocal.get(i));
         }
         installedPackageList = appList;
         bindData(false);
@@ -166,16 +155,16 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
             unfavoriteList = new ArrayList<>();
             bindingList = new ArrayList<>();
 
-            for (ResolveInfo resolveInfo : installedPackageList) {
-                if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
-                    boolean isEnable = UIUtils.isAppInstalledAndEnabled(this, resolveInfo.activityInfo.packageName);
+            for (String resolveInfo : installedPackageList) {
+                if (!resolveInfo.equalsIgnoreCase(getPackageName())) {
+                    boolean isEnable = UIUtils.isAppInstalledAndEnabled(this, resolveInfo);
                     if (isEnable) {
-                        if (list.contains(resolveInfo.activityInfo.packageName)) {
-                            favoriteList.add(new AppListInfo(resolveInfo.activityInfo.packageName, false, false, true));
+                        if (list.contains(resolveInfo)) {
+                            favoriteList.add(new AppListInfo(resolveInfo, false, false, true));
                         } else {
                             if (null != junkFoodList && !junkFoodList
-                                    .contains(resolveInfo.activityInfo.packageName)) {
-                                unfavoriteList.add(new AppListInfo(resolveInfo.activityInfo.packageName, false, false, false));
+                                    .contains(resolveInfo)) {
+                                unfavoriteList.add(new AppListInfo(resolveInfo, false, false, false));
                             }
                         }
                     }
@@ -365,16 +354,16 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
 
         @Override
         protected ArrayList<AppListInfo> doInBackground(String... strings) {
-            for (ResolveInfo resolveInfo : installedPackageList) {
-                if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
-                    boolean isEnable = UIUtils.isAppInstalledAndEnabled(FavoritesSelectionActivity.this, resolveInfo.activityInfo.packageName);
+            for (String resolveInfo : installedPackageList) {
+                if (!resolveInfo.equalsIgnoreCase(getPackageName())) {
+                    boolean isEnable = UIUtils.isAppInstalledAndEnabled(FavoritesSelectionActivity.this, resolveInfo);
                     if (isEnable) {
-                        if (list.contains(resolveInfo.activityInfo.packageName)) {
-                            favoriteList.add(new AppListInfo(resolveInfo.activityInfo.packageName, false, false, true));
+                        if (list.contains(resolveInfo)) {
+                            favoriteList.add(new AppListInfo(resolveInfo, false, false, true));
                         } else {
                             if (null != junkFoodList && !junkFoodList
-                                    .contains(resolveInfo.activityInfo.packageName)) {
-                                unfavoriteList.add(new AppListInfo(resolveInfo.activityInfo.packageName, false, false, false));
+                                    .contains(resolveInfo)) {
+                                unfavoriteList.add(new AppListInfo(resolveInfo, false, false, false));
                             }
                         }
                     }

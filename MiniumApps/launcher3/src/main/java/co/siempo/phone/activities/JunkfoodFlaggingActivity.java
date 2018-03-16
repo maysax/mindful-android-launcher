@@ -3,7 +3,6 @@ package co.siempo.phone.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ResolveInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
@@ -11,13 +10,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
-import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -51,7 +49,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
     Set<String> favoriteList = new HashSet<>();
     JunkfoodFlaggingAdapter junkfoodFlaggingAdapter;
     int firstPosition;
-    List<ResolveInfo> installedPackageList;
+    List<String> installedPackageList;
     boolean isClickOnView = true;
     private Toolbar toolbar;
     private ListView listAllApps;
@@ -61,8 +59,6 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
     private List<AppListInfo> unflageAppList = new ArrayList<>();
     private ArrayList<AppListInfo> bindingList = new ArrayList<>();
     private long startTime = 0;
-    private Window mWindow;
-    private int defaultStatusBarColor;
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
@@ -75,6 +71,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_junkfood_flagging);
+
         initView();
         list = PrefSiempo.getInstance(this).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
         favoriteList = PrefSiempo.getInstance(this).read(PrefSiempo.FAVORITE_APPS, new HashSet<String>());
@@ -102,21 +99,12 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
      * load system apps and filter the application for junkfood and normal.
      */
     private void loadApps() {
-        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-        installedPackageList = getPackageManager().queryIntentActivities(mainIntent, 0);
-
-        List<ResolveInfo> appList = new ArrayList<>();
-        for (int i = 0; i < installedPackageList.size(); i++) {
-            boolean isAdded = false;
-            for (int j = 0; j < appList.size(); j++) {
-                if (!TextUtils.isEmpty(installedPackageList.get(i).activityInfo.packageName) && appList.get(j).activityInfo.packageName.equalsIgnoreCase(installedPackageList.get(i).activityInfo.packageName)) {
-                    isAdded = true;
-                }
-            }
-            if (!isAdded) {
-                appList.add(installedPackageList.get(i));
-            }
+        List<String> installedPackageListLocal = CoreApplication.getInstance().getPackagesList();
+        Log.d("Rajesh21", "" + installedPackageListLocal.size());
+        List<String> appList = new ArrayList<>();
+        installedPackageList = new ArrayList<>();
+        for (int i = 0; i < installedPackageListLocal.size(); i++) {
+            appList.add(installedPackageListLocal.get(i));
         }
 
         installedPackageList = appList;
@@ -240,12 +228,12 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
             flagAppList = new ArrayList<>();
             unflageAppList = new ArrayList<>();
             bindingList = new ArrayList<>();
-            for (ResolveInfo resolveInfo : installedPackageList) {
-                if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
-                    if (list.contains(resolveInfo.activityInfo.packageName)) {
-                        flagAppList.add(new AppListInfo(resolveInfo.activityInfo.packageName, false, false, true));
+            for (String resolveInfo : installedPackageList) {
+                if (!resolveInfo.equalsIgnoreCase(getPackageName())) {
+                    if (list.contains(resolveInfo)) {
+                        flagAppList.add(new AppListInfo(resolveInfo, false, false, true));
                     } else {
-                        unflageAppList.add(new AppListInfo(resolveInfo.activityInfo.packageName, false, false, false));
+                        unflageAppList.add(new AppListInfo(resolveInfo, false, false, false));
                     }
                 }
             }
@@ -478,12 +466,12 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
 
         @Override
         protected ArrayList<AppListInfo> doInBackground(String... strings) {
-            for (ResolveInfo resolveInfo : installedPackageList) {
-                if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
-                    if (list.contains(resolveInfo.activityInfo.packageName)) {
-                        flagAppList.add(new AppListInfo(resolveInfo.activityInfo.packageName, false, false, true));
+            for (String resolveInfo : installedPackageList) {
+                if (!resolveInfo.equalsIgnoreCase(getPackageName())) {
+                    if (list.contains(resolveInfo)) {
+                        flagAppList.add(new AppListInfo(resolveInfo, false, false, true));
                     } else {
-                        unflageAppList.add(new AppListInfo(resolveInfo.activityInfo.packageName, false, false, false));
+                        unflageAppList.add(new AppListInfo(resolveInfo, false, false, false));
                     }
                 }
             }

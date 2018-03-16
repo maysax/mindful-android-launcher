@@ -16,6 +16,7 @@ import android.provider.AlarmClock;
 import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
+import android.util.ArrayMap;
 import android.util.LruCache;
 
 import com.androidnetworking.AndroidNetworking;
@@ -63,6 +64,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     private static CoreApplication sInstance;
     UserManager userManager;
     LauncherApps launcherApps;
+    private ArrayMap<String, String> listApplicationName = new ArrayMap<>();
     private List<String> packagesList = new ArrayList<>();
     private ArrayList<String> disableNotificationApps = new ArrayList<>();
     private Set<String> blockedApps = new HashSet<>();
@@ -124,6 +126,14 @@ public abstract class CoreApplication extends MultiDexApplication {
 
     public void setToolBottomItemsList(ArrayList<MainListItem> toolBottomItemsList) {
         this.toolBottomItemsList = toolBottomItemsList;
+    }
+
+    public ArrayMap<String, String> getListApplicationName() {
+        return listApplicationName;
+    }
+
+    public void setListApplicationName(ArrayMap<String, String> listApplicationName) {
+        this.listApplicationName = listApplicationName;
     }
 
     @Override
@@ -484,9 +494,11 @@ public abstract class CoreApplication extends MultiDexApplication {
             if (addingOrDelete) {
                 ApplicationInfo appInfo = getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA);
                 getPackagesList().add(appInfo.packageName);
+                getListApplicationName().put(packageName, "" + getPackageManager().getApplicationLabel(appInfo));
             } else {
                 if (getPackagesList().contains(packageName)) {
                     getPackagesList().remove(packageName);
+                    getListApplicationName().remove(packageName);
                 }
             }
             EventBus.getDefault().post(new AppInstalledEvent(true));
@@ -549,6 +561,15 @@ public abstract class CoreApplication extends MultiDexApplication {
                             addBitmapToMemoryCache(packageName, bitmap);
                         }
                         applist.add(packageName);
+                        PackageManager packageManager = getPackageManager();
+                        ApplicationInfo applicationInfo = null;
+                        try {
+                            applicationInfo = packageManager.getApplicationInfo(packageName, 0);
+                        } catch (final PackageManager.NameNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        String applicationName = (String) (applicationInfo != null ? packageManager.getApplicationLabel(applicationInfo) : "");
+                        getListApplicationName().put(packageName, applicationName);
                     }
 
                 } catch (Exception e) {
