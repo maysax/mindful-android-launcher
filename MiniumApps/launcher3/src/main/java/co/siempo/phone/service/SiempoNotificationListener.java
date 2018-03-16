@@ -178,7 +178,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
 
                 if (!notification.getPackageName().equalsIgnoreCase(getPackageName()) && tempoType != 0) {
                     SiempoNotificationListener.this.cancelNotification(notification.getKey());
-                    if (tempoType == 1 && tempoType == 2) {
+                    if (tempoType == 1 || tempoType == 2) {
                         if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_VIBRATE ||
                                 audioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
                             int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
@@ -188,10 +188,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         }
                     }
                     filterByCategory(notification);
-                    return;
                 }
-            } else {
-                return;
             }
         }
 

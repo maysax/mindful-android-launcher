@@ -101,7 +101,7 @@
         <item>3</item>
     </string-array>
 
-    <string-array name="multi_select_list_preference_default_value" tools:ignore="UnusedResources" />
+    <string-array name="multi_select_list_preference_default_value" tools:ignore="UnusedResources"/>
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
@@ -227,7 +227,7 @@
     <string name="location_permission">Location</string>
     <string name="notificationAccess">Notification access</string>
     <string name="draw_overlay">Draw over other Apps</string>
-    <string name="permission_title">"Please enable the following permission(s) to allow the app to work correctly:"</string>
+    <string name="permission_title">"Please enable the following permission(s) to allow the Siempo to work correctly:"</string>
     <string name="permission_siempo_alpha_title">"Siempo is using following permissions\n"</string>
     <string name="grant_all_to_proceed_text">Please grant all the permissions to proceed</string>
     <string name="runtime_permission_text">Please consider turn on permissions at Setting > Permission</string>

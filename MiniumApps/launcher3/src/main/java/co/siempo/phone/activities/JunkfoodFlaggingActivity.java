@@ -193,6 +193,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
             DashboardActivity.isJunkFoodOpen = true;
         }
         new LoadJunkFoodPane(JunkfoodFlaggingActivity.this).execute();
+        new LoadFavoritePane(JunkfoodFlaggingActivity.this).execute();
         super.onBackPressed();
 
     }
