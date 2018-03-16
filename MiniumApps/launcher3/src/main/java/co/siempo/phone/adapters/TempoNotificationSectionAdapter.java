@@ -32,6 +32,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.adapters.viewholder.NoticationFooterViewHolder;
 import co.siempo.phone.adapters.viewholder.TempoNotificationHeaderViewHolder;
 import co.siempo.phone.adapters.viewholder.TempoNotificationItemViewHolder;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.AppListInfo;
 import co.siempo.phone.utils.PrefSiempo;
@@ -185,7 +186,7 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
 
             final AppListInfo otherAppsItems = blockedList.get(position);
             holder.enableViews();
-            String appName = getAppNameFromPackage(otherAppsItems.packageName);
+            String appName = CoreApplication.getInstance().getListApplicationName().get(otherAppsItems.packageName);
             holder.render(appName);
 
 
@@ -333,7 +334,7 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
 
 
             final AppListInfo messengerAppsItem = messengerList.get(position);
-            String appName = getAppNameFromPackage(messengerAppsItem
+            String appName = CoreApplication.getInstance().getListApplicationName().get(messengerAppsItem
                     .packageName);
             holder.render(appName);
             holder.enableViews();
@@ -390,7 +391,7 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
         if (headerList.get(section).headerName.equals("Helpful robots")) {
             final AppListInfo appListItem = helpfulRobot_List.get(position);
             holder.enableViews();
-            String appName = getAppNameFromPackage(appListItem.packageName);
+            String appName = CoreApplication.getInstance().getListApplicationName().get(appListItem.packageName);
             holder.render(appName);
 
             holder.displayImage(appListItem.packageName, packageManager, appListItem.errorMessage);
