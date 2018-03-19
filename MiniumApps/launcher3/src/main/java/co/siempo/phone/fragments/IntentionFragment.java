@@ -21,7 +21,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import co.siempo.phone.R;
-import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.activities.HelpActivity;
 import co.siempo.phone.activities.IntentionEditActivity;
 import co.siempo.phone.activities.SettingsActivity_;
@@ -117,12 +116,20 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                 if (Settings.canDrawOverlays(getActivity())) {
                                     new ActivityHelper(getActivity()).handleDefaultLauncher(getActivity());
-                                    ((CoreActivity) getActivity()).loadDialog();
+                                    /*
+                                     * commented in order to remove overlay
+                                     * permission
+                                     */
+                                    //((CoreActivity) getActivity()).loadDialog();
                                     PrefSiempo.getInstance(getActivity()).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME_SHOW_TOOLTIP, false);
                                 }
                             } else {
                                 new ActivityHelper(getActivity()).handleDefaultLauncher(getActivity());
-                                ((CoreActivity) getActivity()).loadDialog();
+                                    /*
+                                     * commented in order to remove overlay
+                                     * permission
+                                     */
+                                //((CoreActivity) getActivity()).loadDialog();
                                 PrefSiempo.getInstance(getActivity()).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME_SHOW_TOOLTIP, false);
                             }
 

@@ -178,11 +178,11 @@ public class SiempoPermissionActivity extends CoreActivity {
             switchNotificationAccess.setChecked(false);
         }
         //Added for bug solve SSA-1324
-        if (permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
-            switchOverlayAccess.setChecked(true);
-        } else {
-            switchOverlayAccess.setChecked(false);
-        }
+//        if (permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
+//            switchOverlayAccess.setChecked(true);
+//        } else {
+//            switchOverlayAccess.setChecked(false);
+//        }
 
 
         if (isFromHome) {
@@ -199,7 +199,7 @@ public class SiempoPermissionActivity extends CoreActivity {
             if (Build.VERSION.SDK_INT >= 23) {
                 tblContact.setVisibility(View.VISIBLE);
                 tblCalls.setVisibility(View.VISIBLE);
-                tblDrawOverlay.setVisibility(View.VISIBLE);
+                tblDrawOverlay.setVisibility(View.GONE);
                 tblStorage.setVisibility(View.VISIBLE);
                 tblNotification.setVisibility(View.VISIBLE);
                 tblSMS.setVisibility(View.VISIBLE);
@@ -233,7 +233,7 @@ public class SiempoPermissionActivity extends CoreActivity {
                 &&
                 permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION) && permissionUtil
                 .hasGiven(PermissionUtil.SEND_SMS_PERMISSION) &&
-                permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) && permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
+                permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) ) {
             Log.d("Test", "P5");
             finish();
         }
@@ -251,28 +251,28 @@ public class SiempoPermissionActivity extends CoreActivity {
         }
     }
 
-    @TargetApi(23)
-    @CheckedChange
-    void switchOverlayAccess(CompoundButton btn, boolean isChecked) {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (isChecked) {
-                if (!Settings.canDrawOverlays(SiempoPermissionActivity.this)) {
-                    Toast.makeText(SiempoPermissionActivity.this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-                    startActivityForResult(intent, PermissionUtil.DRAWING_OVER_OTHER_APPS);
-                }
-            } else {
-                startActivityForResult(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName())), PermissionUtil.DRAWING_OVER_OTHER_APPS);
-            }
-        }
-    }
+//    @TargetApi(23)
+//    @CheckedChange
+//    void switchOverlayAccess(CompoundButton btn, boolean isChecked) {
+//        if (Build.VERSION.SDK_INT >= 23) {
+//            if (isChecked) {
+//                if (!Settings.canDrawOverlays(SiempoPermissionActivity.this)) {
+//                    Toast.makeText(SiempoPermissionActivity.this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
+//                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+//                    startActivityForResult(intent, PermissionUtil.DRAWING_OVER_OTHER_APPS);
+//                }
+//            } else {
+//                startActivityForResult(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName())), PermissionUtil.DRAWING_OVER_OTHER_APPS);
+//            }
+//        }
+//    }
 
     @Click(R.id.btnContinue)
     void myButtonWasClicked() {
         if (permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION) &&
                 permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION) &&
                 permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION) &&
-                permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) && permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
+                permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) {
 //            launcher3Prefs.isPermissionGivenAndContinued().put(true);
             finish();
         } else {
@@ -290,32 +290,32 @@ public class SiempoPermissionActivity extends CoreActivity {
         }
     }
 
-    @OnActivityResult(PermissionUtil.DRAWING_OVER_OTHER_APPS)
-    void onResultDrawingAccess(int resultCode) {
-
-        try {
-            pd.setMessage("Please wait...");
-            pd.show();
-
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (pd != null && pd.isShowing() && !isFinishing()) {
-                        pd.dismiss();
-                    }
-                    if (!new PermissionUtil(SiempoPermissionActivity.this).hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
-                        switchOverlayAccess.setChecked(false);
-                    } else {
-                        switchOverlayAccess.setChecked(true);
-                    }
-                }
-            }, 5000);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
+//    @OnActivityResult(PermissionUtil.DRAWING_OVER_OTHER_APPS)
+//    void onResultDrawingAccess(int resultCode) {
+//
+//        try {
+//            pd.setMessage("Please wait...");
+//            pd.show();
+//
+//            Handler handler = new Handler();
+//            handler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if (pd != null && pd.isShowing() && !isFinishing()) {
+//                        pd.dismiss();
+//                    }
+//                    if (!new PermissionUtil(SiempoPermissionActivity.this).hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
+//                        switchOverlayAccess.setChecked(false);
+//                    } else {
+//                        switchOverlayAccess.setChecked(true);
+//                    }
+//                }
+//            }, 5000);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 
     @Override
     public void onBackPressed() {

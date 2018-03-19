@@ -141,6 +141,7 @@
 
             <TableRow
                 android:id="@+id/tblDrawOverlay"
+                android:visibility="gone"
                 android:layout_marginTop="16dp">
 
                 <TextView
