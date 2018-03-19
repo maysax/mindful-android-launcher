@@ -62,34 +62,6 @@ public class MainFragmentMediator {
             getAdapter().notifyDataSetChanged();
         }
 
-//        new AsyncTask<String, String, List<MainListItem>>() {
-//
-//            @Override
-//            protected void onPreExecute() {
-//                super.onPreExecute();
-//        items = new ArrayList<>();
-//        contactItems = new ArrayList<>();
-//            }
-//            @Override
-//            protected void onPostExecute(List<MainListItem> s) {
-//                super.onPostExecute(s);
-//                items = s;
-//                if (getAdapter() != null) {
-//                    getAdapter().loadData(items);
-//                    getAdapter().notifyDataSetChanged();
-//                }
-//            }
-//
-//            @Override
-//            protected List<MainListItem> doInBackground(String... strings) {
-//        loadActions();
-//        loadContacts();
-//        loadDefaults();
-//        items = PackageUtil.getListWithMostRecentData(items, context);
-//        return items;
-//            }
-//        }.execute();
-
     }
 
     public void resetData() {
@@ -100,9 +72,9 @@ public class MainFragmentMediator {
         loadDefaults();
         items = PackageUtil.getListWithMostRecentData(items, context);
         if (getAdapter() != null) {
-                    getAdapter().loadData(items);
-                    getAdapter().notifyDataSetChanged();
-                }
+            getAdapter().loadData(items);
+            getAdapter().notifyDataSetChanged();
+        }
 
 
     }
