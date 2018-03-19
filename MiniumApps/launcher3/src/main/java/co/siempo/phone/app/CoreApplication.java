@@ -477,6 +477,81 @@ public abstract class CoreApplication extends MultiDexApplication {
                         list.add(resolveInfoSimpleNote.get(0));
                     }
                 }
+                if (UIUtils.isAppInstalledAndEnabled(this, "com.socialnmobile.dictapps.notepad.color.note")) {
+                    Intent colorNote = new Intent();
+                    colorNote.setPackage("com.socialnmobile.dictapps.notepad.color.note");
+                    List<ResolveInfo> resolveInfoSimpleNote =
+                            getPackageManager()
+                                    .queryIntentActivities(colorNote, 0);
+                    if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
+                            () > 0 && !list.contains(resolveInfoSimpleNote.get
+                            (0))) {
+                        list.add(resolveInfoSimpleNote.get(0));
+                    }
+                }
+
+                if (UIUtils.isAppInstalledAndEnabled(this, "com.task.notes")) {
+                    Intent colorNote = new Intent();
+                    colorNote.setPackage("com.task.notes");
+                    List<ResolveInfo> resolveInfoSimpleNote =
+                            getPackageManager()
+                                    .queryIntentActivities(colorNote, 0);
+                    if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
+                            () > 0 && !list.contains(resolveInfoSimpleNote.get
+                            (0))) {
+                        list.add(resolveInfoSimpleNote.get(0));
+                    }
+                }
+
+                if (UIUtils.isAppInstalledAndEnabled(this, "com.edi.masaki.mymemoapp")) {
+                    Intent colorNote = new Intent();
+                    colorNote.setPackage("com.edi.masaki.mymemoapp");
+                    List<ResolveInfo> resolveInfoSimpleNote =
+                            getPackageManager()
+                                    .queryIntentActivities(colorNote, 0);
+                    if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
+                            () > 0 && !list.contains(resolveInfoSimpleNote.get
+                            (0))) {
+                        list.add(resolveInfoSimpleNote.get(0));
+                    }
+                }
+
+                if (UIUtils.isAppInstalledAndEnabled(this, "com.dencreak.esmemo")) {
+                    Intent colorNote = new Intent();
+                    colorNote.setPackage("com.dencreak.esmemo");
+                    List<ResolveInfo> resolveInfoSimpleNote =
+                            getPackageManager()
+                                    .queryIntentActivities(colorNote, 0);
+                    if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
+                            () > 0 && !list.contains(resolveInfoSimpleNote.get
+                            (0))) {
+                        list.add(resolveInfoSimpleNote.get(0));
+                    }
+                }
+                if (UIUtils.isAppInstalledAndEnabled(this, "com.samsung.android.snote")) {
+                    Intent colorNote = new Intent();
+                    colorNote.setPackage("com.samsung.android.snote");
+                    List<ResolveInfo> resolveInfoSimpleNote =
+                            getPackageManager()
+                                    .queryIntentActivities(colorNote, 0);
+                    if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
+                            () > 0 && !list.contains(resolveInfoSimpleNote.get
+                            (0))) {
+                        list.add(resolveInfoSimpleNote.get(0));
+                    }
+                }
+                if (UIUtils.isAppInstalledAndEnabled(this, "com.samsung.android.app.notes")) {
+                    Intent colorNote = new Intent();
+                    colorNote.setPackage("com.samsung.android.app.notes");
+                    List<ResolveInfo> resolveInfoSimpleNote =
+                            getPackageManager()
+                                    .queryIntentActivities(colorNote, 0);
+                    if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
+                            () > 0 && !list.contains(resolveInfoSimpleNote.get
+                            (0))) {
+                        list.add(resolveInfoSimpleNote.get(0));
+                    }
+                }
 
 
                 break;
