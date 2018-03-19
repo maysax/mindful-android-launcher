@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -52,33 +50,45 @@ public class MainFragmentMediator {
     }
 
     public void loadData() {
-        new AsyncTask<String, String, List<MainListItem>>() {
 
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
         items = new ArrayList<>();
         contactItems = new ArrayList<>();
-            }
-            @Override
-            protected void onPostExecute(List<MainListItem> s) {
-                super.onPostExecute(s);
-                items = s;
-                if (getAdapter() != null) {
-                    getAdapter().loadData(items);
-                    getAdapter().notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            protected List<MainListItem> doInBackground(String... strings) {
         loadActions();
         loadContacts();
         loadDefaults();
         items = PackageUtil.getListWithMostRecentData(items, context);
-        return items;
-            }
-        }.execute();
+        if (getAdapter() != null) {
+            getAdapter().loadData(items);
+            getAdapter().notifyDataSetChanged();
+        }
+
+//        new AsyncTask<String, String, List<MainListItem>>() {
+//
+//            @Override
+//            protected void onPreExecute() {
+//                super.onPreExecute();
+//        items = new ArrayList<>();
+//        contactItems = new ArrayList<>();
+//            }
+//            @Override
+//            protected void onPostExecute(List<MainListItem> s) {
+//                super.onPostExecute(s);
+//                items = s;
+//                if (getAdapter() != null) {
+//                    getAdapter().loadData(items);
+//                    getAdapter().notifyDataSetChanged();
+//                }
+//            }
+//
+//            @Override
+//            protected List<MainListItem> doInBackground(String... strings) {
+//        loadActions();
+//        loadContacts();
+//        loadDefaults();
+//        items = PackageUtil.getListWithMostRecentData(items, context);
+//        return items;
+//            }
+//        }.execute();
 
     }
 
