@@ -1,12 +1,12 @@
 package co.siempo.phone.fragments;
 
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +43,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
     private RelativeLayout relRootLayout;
     private Window mWindow;
     private int defaultStatusBarColor;
+    private CoreActivity mActivity;
 
     public IntentionFragment() {
         // Required empty public constructor
@@ -115,14 +116,14 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                         @Override
                         public void run() {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                if (Settings.canDrawOverlays(getActivity())) {
-                                    new ActivityHelper(getActivity()).handleDefaultLauncher(getActivity());
-                                    ((CoreActivity) getActivity()).loadDialog();
-                                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME_SHOW_TOOLTIP, false);
-                                }
+//                                if (Settings.canDrawOverlays(getActivity())) {
+                                new ActivityHelper(getActivity()).handleDefaultLauncher(getActivity());
+                                //((CoreActivity) getActivity()).loadDialog();
+                                PrefSiempo.getInstance(getActivity()).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME_SHOW_TOOLTIP, false);
+//                                }
                             } else {
                                 new ActivityHelper(getActivity()).handleDefaultLauncher(getActivity());
-                                ((CoreActivity) getActivity()).loadDialog();
+                                //((CoreActivity) getActivity()).loadDialog();
                                 PrefSiempo.getInstance(getActivity()).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME_SHOW_TOOLTIP, false);
                             }
 
@@ -238,6 +239,13 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                 });
             }
         }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.mActivity = (CoreActivity) activity;
+
     }
 
 

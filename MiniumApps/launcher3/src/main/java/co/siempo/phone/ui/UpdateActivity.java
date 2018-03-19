@@ -61,6 +61,6 @@ public class UpdateActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        PackageUtil.checkPermission(this);
+//        PackageUtil.checkPermission(this);
     }
 }

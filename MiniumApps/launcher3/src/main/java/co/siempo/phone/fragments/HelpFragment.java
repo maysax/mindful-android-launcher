@@ -13,13 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.github.javiersantos.appupdater.AppUpdater;
-import com.github.javiersantos.appupdater.AppUpdaterUtils;
-import com.github.javiersantos.appupdater.enums.AppUpdaterError;
-import com.github.javiersantos.appupdater.enums.Display;
-import com.github.javiersantos.appupdater.enums.UpdateFrom;
-import com.github.javiersantos.appupdater.objects.Update;
-
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.activities.CoreActivity;
@@ -126,55 +119,23 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
 
 
     public void checkUpgradeVersion() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context
-                .CONNECTIVITY_SERVICE);
-
+        Log.d(TAG, "Active network..");
+        ConnectivityManager connectivityManager = (ConnectivityManager)
+                getActivity().getSystemService(Context
+                        .CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
         if (activeNetwork != null) {
-            AppUpdaterUtils appUpdaterUtils = new AppUpdaterUtils(getActivity())
-                    .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
-                    .withListener(new AppUpdaterUtils.UpdateListener() {
-                        @Override
-                        public void onSuccess(Update update, Boolean isUpdateAvailable) {
-
-                            if (update.getLatestVersionCode() != null) {
-                                checkVersionFromAppUpdater();
-                            } else {
-                                if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
-                                    ApiClient_.getInstance_(getActivity())
-                                            .checkAppVersion(CheckVersionEvent.ALPHA);
-                                } else if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.beta))) {
-                                    ApiClient_.getInstance_(getActivity())
-                                            .checkAppVersion(CheckVersionEvent.BETA);
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onFailed(AppUpdaterError error) {
-                            if (BuildConfig.DEBUG) {
-                            }
-                        }
-                    });
-
-            appUpdaterUtils.start();
+            if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
+                ApiClient_.getInstance_(getActivity())
+                        .checkAppVersion(CheckVersionEvent.ALPHA);
+            } else if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.beta))) {
+                ApiClient_.getInstance_(getActivity())
+                        .checkAppVersion(CheckVersionEvent.BETA);
+            }
         } else {
             Log.d(TAG, getString(R.string.nointernetconnection));
         }
-    }
 
-    public void checkVersionFromAppUpdater() {
-        new AppUpdater(getActivity())
-                .setDisplay(Display.DIALOG)
-                .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
-                .showEvery(5)
-                .setTitleOnUpdateAvailable("Update available")
-                .setContentOnUpdateAvailable("New version found! Would you like to update Siempo?")
-                .setTitleOnUpdateNotAvailable("Update not available")
-                .setContentOnUpdateNotAvailable("No update available. Check for updates again later!")
-                .setButtonUpdate("Update")
-                .setButtonDismiss("Maybe later")
-                .start();
     }
 
 }
