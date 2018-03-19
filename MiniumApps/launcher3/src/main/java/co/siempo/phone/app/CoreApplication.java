@@ -235,7 +235,7 @@ public abstract class CoreApplication extends MultiDexApplication {
                 String packageName = !TextUtils.isEmpty(resolveInfo.activityInfo
                         .packageName) ? resolveInfo.activityInfo
                         .packageName : "";
-                if (packageName.contains("com.facebook") || packageName
+                if (packageName.contains("com.facebook.katana") || packageName.contains("com.facebook.lite") || packageName
                         .contains("com.king")) {
                     if (UIUtils.isAppInstalledAndEnabled(getApplicationContext(), packageName)) {
                         junkfoodList.add(packageName);
