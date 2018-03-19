@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.NotificationManagerCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,7 @@ import co.siempo.phone.utils.UIUtils;
 
 public class IntentionFragment extends CoreFragment implements View.OnClickListener {
 
+    TextView getTxtIntention;
     private View view;
     private ImageView imgTempo;
     private ImageView imgOverFlow, imgPullTab;
@@ -52,6 +54,10 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         return new IntentionFragment();
     }
 
+    private static boolean isNotificationListenerServiceEnabled(Context context) {
+        return NotificationManagerCompat.from(context).areNotificationsEnabled();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +73,6 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         initView(view);
         return view;
     }
-
 
     private void initView(View view) {
         relRootLayout = view.findViewById(R.id.relRootLayout);
@@ -89,6 +94,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         defaultStatusBarColor = mWindow.getStatusBarColor();
 
     }
+
 
     @Override
     public void setMenuVisibility(boolean menuVisible) {

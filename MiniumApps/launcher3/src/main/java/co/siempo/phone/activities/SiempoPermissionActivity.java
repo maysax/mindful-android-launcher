@@ -30,12 +30,8 @@ import org.androidannotations.annotations.ViewById;
 import java.util.ArrayList;
 
 import co.siempo.phone.R;
-import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.event.HomePressEvent;
-import co.siempo.phone.log.Tracer;
 import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.UIUtils;
-import de.greenrobot.event.Subscribe;
 
 @EActivity(R.layout.activity_permission)
 public class SiempoPermissionActivity extends CoreActivity {
@@ -326,21 +322,5 @@ public class SiempoPermissionActivity extends CoreActivity {
         }
 
     }
-
-    @Subscribe
-    public void homePressEvent(HomePressEvent event) {
-        try {
-            if (event.isVisible() && UIUtils.isMyLauncherDefault(this)) {
-                Intent startMain = new Intent(Intent.ACTION_MAIN);
-                startMain.addCategory(Intent.CATEGORY_HOME);
-                startActivity(startMain);
-            }
-
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            Tracer.e(e, e.getMessage());
-        }
-    }
-
 
 }

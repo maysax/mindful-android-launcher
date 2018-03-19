@@ -4,13 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import co.siempo.phone.R;
-import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.event.HomePressEvent;
 import co.siempo.phone.fragments.HelpFragment;
 import co.siempo.phone.helper.FirebaseHelper;
-import co.siempo.phone.log.Tracer;
-import co.siempo.phone.utils.UIUtils;
-import de.greenrobot.event.Subscribe;
 
 
 public class HelpActivity extends CoreActivity {
@@ -34,20 +29,6 @@ public class HelpActivity extends CoreActivity {
     protected void onPause() {
         super.onPause();
         FirebaseHelper.getInstance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
-    }
-
-
-    @Subscribe
-    public void homePressEvent(HomePressEvent event) {
-        try {
-            if (event.isVisible() && UIUtils.isMyLauncherDefault(this)) {
-                finish();
-            }
-
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            Tracer.e(e, e.getMessage());
-        }
     }
 
 }

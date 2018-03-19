@@ -19,7 +19,7 @@ public class Tracer {
 
     public static void i(String message, Object... args) {
         Logger.i(message, args);
-        writeLog(null, message, args);
+//        writeLog(null, message, args);
     }
 
     public static void w(String message, Object... args) {
@@ -59,7 +59,7 @@ public class Tracer {
         Logger
                 .init(LogConfig.LOG_TAG)
                 .setMethodCount(1)
-                .setMethodOffset(1)
+                .setMethodOffset(5)
                 .hideThreadInfo()
                 // RELEASE: Use LogLevel.NONE for the release version
                 .setLogLevel(LogLevel.FULL);

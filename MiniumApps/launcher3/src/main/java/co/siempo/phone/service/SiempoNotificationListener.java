@@ -3,6 +3,7 @@ package co.siempo.phone.service;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -97,23 +98,44 @@ public class SiempoNotificationListener extends NotificationListenerService {
     }
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+        startForeground(11, new Notification());
+        Tracer.d("SiempoNotificationListener: onCreate");
+    }
+
+    @Override
     public void onListenerConnected() {
         super.onListenerConnected();
-        Tracer.d("Notification connected");
+        Tracer.d("SiempoNotificationListener: connected");
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_STICKY;
     }
 
     @Override
     public void onListenerDisconnected() {
         super.onListenerDisconnected();
-        Tracer.d("Notification Disconnected");
+        Tracer.d("SiempoNotificationListener: onListenerDisconnected");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            // Notification listener disconnected - requesting rebind
+            try {
+                requestRebind(new ComponentName(this, SiempoNotificationListener_.class));
+                Tracer.d("SiempoNotificationListener: requestRebind");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
+        }
     }
 
     @Override
     public void onNotificationChannelModified(String pkg, UserHandle user, NotificationChannel channel, int modificationType) {
         super.onNotificationChannelModified(pkg, user, channel, modificationType);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Tracer.d("Notification onNotificationChannelModified" + "pkg:" + pkg + "user: " + user + " channel: " + channel.toString() + "modificationType: " + modificationType);
+            Tracer.d("SiempoNotificationListener: onNotificationChannelModified");
         }
     }
 
@@ -126,72 +148,75 @@ public class SiempoNotificationListener extends NotificationListenerService {
     public void onNotificationPosted(StatusBarNotification notification) {
         super.onNotificationPosted(notification);
         context = this;
-        Notification notification1 = notification.getNotification();
 
-        printLog(notification);
-        if (PackageUtil.isSiempoLauncher(context)) {
-
-            try {
-                if (notification1 != null) {
-                    if ((notification1.flags & Notification.FLAG_ONGOING_EVENT) == Notification.FLAG_ONGOING_EVENT) {
-                        Tracer.d("Not forwarding notification, FLAG_ONGOING_EVENT is set. Notification flags: " + notification1.flags);
-                        return;
+        int tempoType = PrefSiempo.getInstance(context).read(PrefSiempo.TEMPO_TYPE, 0);
+        if (tempoType == 1 || tempoType == 2) {
+            Tracer.d("SiempoNotificationListener: tempoType" + tempoType);
+            Notification notification1 = notification.getNotification();
+            printLog(notification);
+            if (PackageUtil.isSiempoLauncher(context)) {
+                try {
+                    if (notification1 != null) {
+                        if ((notification1.flags & Notification.FLAG_ONGOING_EVENT) == Notification.FLAG_ONGOING_EVENT) {
+                            Tracer.d("SiempoNotificationListener: Not forwarding notification, FLAG_ONGOING_EVENT is set. Notification flags: " + notification1.flags);
+                            return;
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
 
             /* do not display messages from "android"
             * This includes keyboard selection message, usb connection messages, etc
              * Hope it does not filter out too much, we will see...
             */
-            try {
-                if (notification != null) {
-                    if (notification.getPackageName().equals("android") ||
-                            notification.equals("com.android.systemui") ||
-                            notification.equals("com.cyanogenmod.eleven")) {
-                        Tracer.d("Not forwarding notification, is a system event");
-                        return;
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            String strEnableApps = PrefSiempo.getInstance(context).read(PrefSiempo.HELPFUL_ROBOTS, "");
-
-            if (!TextUtils.isEmpty(strEnableApps)) {
-                Type type = new TypeToken<ArrayList<String>>() {
-                }.getType();
-                enableNotificationList = new Gson().fromJson(strEnableApps, type);
-            }
-
-
-            blockedAppList = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST,
-                    new HashSet<String>());
-
-            if (null != blockedAppList && blockedAppList.size() > 0 && blockedAppList.contains(notification.getPackageName())) {
-
-                int tempoType = PrefSiempo.getInstance(context).read(PrefSiempo.TEMPO_TYPE, 0);
-
-                if (!notification.getPackageName().equalsIgnoreCase(getPackageName()) && tempoType != 0) {
-                    SiempoNotificationListener.this.cancelNotification(notification.getKey());
-                    if (tempoType == 1 || tempoType == 2) {
-                        if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_VIBRATE ||
-                                audioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
-                            int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
-                            if (sound != 1) {
-                                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
-                            }
+                try {
+                    if (notification != null) {
+                        if (notification.getPackageName().equals("android") ||
+                                notification.equals("com.android.systemui") ||
+                                notification.equals("com.cyanogenmod.eleven")) {
+                            Tracer.d("SiempoNotificationListener: Not forwarding notification, is a system event");
+                            return;
                         }
                     }
-                    filterByCategory(notification);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                String strEnableApps = PrefSiempo.getInstance(context).read(PrefSiempo.HELPFUL_ROBOTS, "");
+
+                if (!TextUtils.isEmpty(strEnableApps)) {
+                    Type type = new TypeToken<ArrayList<String>>() {
+                    }.getType();
+                    enableNotificationList = new Gson().fromJson(strEnableApps, type);
+                }
+                Tracer.d("SiempoNotificationListener:enableNotificationList.size" + enableNotificationList.size());
+
+                blockedAppList = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST,
+                        new HashSet<String>());
+                Tracer.d("SiempoNotificationListener:blockedAppList.size" + blockedAppList.size());
+                if (null != blockedAppList && blockedAppList.size() > 0 && blockedAppList.contains(notification.getPackageName())) {
+
+
+                    if (!notification.getPackageName().equalsIgnoreCase(getPackageName()) && tempoType != 0) {
+                        SiempoNotificationListener.this.cancelNotification(notification.getKey());
+                        Tracer.d("SiempoNotificationListener:cancelNotification");
+                        if (tempoType == 1 || tempoType == 2) {
+                            if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_VIBRATE ||
+                                    audioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
+                                int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
+                                if (sound != 1) {
+                                    Tracer.d("SiempoNotificationListener:audioManager");
+                                    audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+                                }
+                            }
+                        }
+                        filterByCategory(notification);
+                    }
                 }
             }
         }
-
     }
 
     private void printLog(StatusBarNotification notification) {
@@ -219,7 +244,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
 
             }
         }
-        Tracer.d("NotificationPosted : " + " Package: " + notification.getPackageName()
+        Tracer.d("SiempoNotificationListener : " + " Package: " + notification.getPackageName()
                 + "\n" + " Id: " + notification.getId()
                 + "\n" + " Post time: " + SimpleDateFormat.getDateTimeInstance().format(new Date(notification.getPostTime()))
                 + "\n" + " Details: " + notification.getNotification().toString()
@@ -337,25 +362,32 @@ public class SiempoNotificationListener extends NotificationListenerService {
 
         //Parse the Whats App messages.
         if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.WHATSAPP_PACKAGE)) {
+            Tracer.d("SiempoNotificationListener:parseWhatsappMessage");
             parseWhatsappMessage(statusBarNotification, strPackageName, date, data, icon, largeIcon);
 
         }
         //Parse the Google Calendar
-        else if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.GOOGLE_CALENDAR_PACKAGES))
+        else if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.GOOGLE_CALENDAR_PACKAGES)) {
+            Tracer.d("SiempoNotificationListener:parseGoogleCalender");
             parseGoogleCalender(statusBarNotification, strPackageName, strTitle, strText, date, strBigText, icon, largeIcon);
             // Facebook
-        else if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.FACEBOOK_PACKAGE))
+        } else if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.FACEBOOK_PACKAGE)) {
+            Tracer.d("SiempoNotificationListener:parseFacebook");
             parseFacebook(statusBarNotification, strPackageName, strTitle, strText, date, icon, largeIcon);
             // Facebook Messenger
-        else if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.FACEBOOK_MESSENGER_PACKAGE))
+        } else if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.FACEBOOK_MESSENGER_PACKAGE)) {
+            Tracer.d("SiempoNotificationListener:parseFacebookMessenger");
             parseFacebookMessenger(statusBarNotification, strPackageName, strTitle, strText, date, icon, largeIcon);
             // Facebook Lite Messenger
-        else if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.FACEBOOK_LITE_PACKAGE))
+        } else if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.FACEBOOK_LITE_PACKAGE)) {
+            Tracer.d("SiempoNotificationListener:parseFacebookLite");
             parseFacebookLite(statusBarNotification, strPackageName, strTitle, strText, date, data, icon, largeIcon);
             //Parse HangOut message
-        else if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.GOOGLE_HANGOUTS_PACKAGES))
+        } else if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.GOOGLE_HANGOUTS_PACKAGES)) {
+            Tracer.d("SiempoNotificationListener:parseHangOutMessage");
             parseHangOutMessage(statusBarNotification, strPackageName, strTitle, strText, date, tickerText, icon, largeIcon);
-        else {
+        } else {
+            Tracer.d("SiempoNotificationListener:parseOtherMessages");
             parseOtherMessages(statusBarNotification, strPackageName, strTitle, strText, date, strBigText, icon, largeIcon, strCount);
             try {
                 if (strCount == null || !Character.isDigit(strCount.charAt(0))) {
@@ -369,10 +401,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
             } catch (Exception e) {
                 CoreApplication.getInstance().logException(e);
             }
-
         }
-
-
     }
 
     private void parseOtherMessages(StatusBarNotification statusBarNotification, String strPackageName, String strTitle, String strText, Date date, String strBigText, int icon, byte[] largeIcon, String strCount) {
@@ -432,6 +461,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                Tracer.d("SiempoNotificationListener:parseOtherMessages" + e.getMessage());
                 CoreApplication.getInstance().logException(e);
             }
         }
@@ -542,6 +572,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
             }
             logFirebaseCount(strPackageName, count);
         } catch (Exception e) {
+            Tracer.d("SiempoNotificationListener:parseHangOutMessage" + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -585,6 +616,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Tracer.d("SiempoNotificationListener:parseFacebookLite" + e.getMessage());
             CoreApplication.getInstance().logException(e);
         }
     }
@@ -624,6 +656,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Tracer.d("SiempoNotificationListener:parseFacebookMessenger" + e.getMessage());
             CoreApplication.getInstance().logException(e);
         }
     }
@@ -645,6 +678,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
             long id = smsDao.insert(notificationSms);
             notificationSms.setId(id);
         } catch (Exception e) {
+            Tracer.d("SiempoNotificationListener:parseFacebook" + e.getMessage());
             CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
@@ -686,6 +720,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
             }
 
         } catch (Exception e) {
+            Tracer.d("SiempoNotificationListener:parseGoogleCalender" + e.getMessage());
             CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
@@ -824,6 +859,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 }
             }
         } catch (Exception e) {
+            Tracer.d("SiempoNotificationListener:parseWhatsappMessage" + e.getMessage());
             CoreApplication.getInstance().logException(e);
         }
     }

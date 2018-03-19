@@ -171,17 +171,17 @@ public class PackageUtil {
                 NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 String applicationNameFromPackageName = CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName());
                 if (Build.VERSION.SDK_INT >= 26) {
-                    Tracer.d("Tracking notification greater");
+                    Tracer.i("Tracking notification greater");
                     NotificationChannel notificationChannel = createChannel(context,
                             applicationNameFromPackageName);
                     if (notificationManager != null) {
                         notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
                         notificationManager.createNotificationChannel(notificationChannel);
-                        Tracer.d("Tracking createNotificationChannel");
+                        Tracer.i("Tracking createNotificationChannel");
                     }
                     if (notificationManager != null) {
                         notificationManager.createNotificationChannelGroup(new NotificationChannelGroup(applicationNameFromPackageName, applicationNameFromPackageName));
-                        Tracer.d("Tracking createNotificationChannelGroup");
+                        Tracer.i("Tracking createNotificationChannelGroup");
                     }
                 }
                 NotificationCompat.Builder groupBuilder = createGroupNotification(context, notification, applicationNameFromPackageName);
@@ -213,22 +213,22 @@ public class PackageUtil {
      */
     private static NotificationCompat.Builder getNotification(Context context, TableNotificationSms notification) {
 
-        Tracer.d("Tracking getNotification1");
+        Tracer.i("Tracking getNotification1");
         String applicationNameFromPackageName = CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName());
-        Tracer.d("Tracking getNotification2");
+        Tracer.i("Tracking getNotification2");
         int priority = !PrefSiempo.getInstance(context).read(PrefSiempo.ALLOW_PEAKING, true) ? Notification.PRIORITY_DEFAULT : Notification.PRIORITY_HIGH;
-        Tracer.d("Tracking getNotification3");
+        Tracer.i("Tracking getNotification3");
         NotificationCompat.Builder b
                 = new NotificationCompat.Builder(context, applicationNameFromPackageName);
         b.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         b.setDefaults(Notification.DEFAULT_LIGHTS);
         PendingIntent contentIntent = getPendingIntent(context, notification);
-        Tracer.d("Tracking getNotification4");
+        Tracer.i("Tracking getNotification4");
         Bitmap bitmap = notification.getUser_icon() != null ? UIUtils.convertBytetoBitmap(notification.getUser_icon()) : null;
-        Tracer.d("Tracking getNotification5");
+        Tracer.i("Tracking getNotification5");
         DateFormat sdf = new SimpleDateFormat(getTimeFormat(context), Locale.getDefault());
         String time = sdf.format(notification.get_date());
-        Tracer.d("Tracking getNotification6");
+        Tracer.i("Tracking getNotification6");
         String title = getNotificationTitle(notification.get_contact_title(), notification.getPackageName(), context);
 
         RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.custom_notification_card);
@@ -237,7 +237,7 @@ public class PackageUtil {
             contentView.setImageViewBitmap(R.id.imgAppIcon, drawableToBitmap(drawable));
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
-            Tracer.d("Tracking getNotification load exception");
+            Tracer.i("Tracking getNotification load exception");
         }
 
         contentView.setImageViewBitmap(R.id.imgUserImage, bitmap);
@@ -290,12 +290,12 @@ public class PackageUtil {
      */
     private static NotificationCompat.Builder createGroupNotification(Context context, TableNotificationSms notification, String strChannelName) {
 
-        Tracer.d("Tracking createGroupNotification1");
+        Tracer.i("Tracking createGroupNotification1");
         Bitmap bitmap = notification.getUser_icon() != null ? UIUtils.convertBytetoBitmap(notification.getUser_icon()) : null;
-        Tracer.d("Tracking createGroupNotification2");
+        Tracer.i("Tracking createGroupNotification2");
         List<TableNotificationSms> notificationSms = DBUtility.getNotificationDao().queryBuilder()
                 .where(TableNotificationSmsDao.Properties.PackageName.eq(notification.getPackageName())).list();
-        Tracer.d("Tracking createGroupNotification3");
+        Tracer.i("Tracking createGroupNotification3");
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 
         for (int i = 0; i < notificationSms.size(); i++) {
@@ -320,11 +320,11 @@ public class PackageUtil {
                         .setContentIntent(pendingIntent);
         groupBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Tracer.d("Tracking createGroupNotification4");
+            Tracer.i("Tracking createGroupNotification4");
             groupBuilder.setStyle(new NotificationCompat.BigTextStyle());
         } else {
             groupBuilder.setStyle(inboxStyle);
-            Tracer.d("Tracking createGroupNotification5");
+            Tracer.i("Tracking createGroupNotification5");
         }
         return groupBuilder;
     }

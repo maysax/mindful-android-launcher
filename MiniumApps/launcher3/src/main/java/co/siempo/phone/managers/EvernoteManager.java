@@ -71,7 +71,7 @@ public class EvernoteManager {
         noteStoreClient.createNoteAsync(note, new EvernoteCallback<Note>() {
             @Override
             public void onSuccess(Note result) {
-                Tracer.d("Note || Siempo note successfully created: " + result);
+                Tracer.i("Note || Siempo note successfully created: " + result);
                 //Toast.makeText(getApplicationContext(), result.getTitle() + " has been created", Toast.LENGTH_LONG).show();
             }
 

@@ -78,7 +78,7 @@ public class FirebaseHelper {
             Bundle bundle = new Bundle();
             bundle.putString(SCREEN_NAME, screenName);
             bundle.putLong(TIME_SPENT, longDifference);
-            Tracer.d("Firebase:" + SCREEN_USAGE + ": " + bundle.toString());
+            Tracer.i("Firebase:" + SCREEN_USAGE + ": " + bundle.toString());
             getFirebaseAnalytics().logEvent(SCREEN_USAGE, bundle);
         }
 
@@ -94,7 +94,7 @@ public class FirebaseHelper {
         Bundle bundle = new Bundle();
         bundle.putLong(SUPPRESSED_COUNT, count);
         bundle.putString(APPLICATION_NAME, applicationName);
-        Tracer.d("Firebase:" + SUPPRESSED_NOTIFICATION + ": " + bundle.toString());
+        Tracer.i("Firebase:" + SUPPRESSED_NOTIFICATION + ": " + bundle.toString());
         getFirebaseAnalytics().logEvent(SUPPRESSED_NOTIFICATION, bundle);
     }
 
@@ -126,7 +126,7 @@ public class FirebaseHelper {
             bundle.putString(TOOL_NAME, toolname);
             bundle.putString(APPLICATION_NAME, applicationName);
         }
-        Tracer.d("Firebase:" + SIEMPO_MENU + ": " + bundle.toString());
+        Tracer.i("Firebase:" + SIEMPO_MENU + ": " + bundle.toString());
         getFirebaseAnalytics().logEvent(SIEMPO_MENU, bundle);
     }
 
@@ -144,7 +144,7 @@ public class FirebaseHelper {
         } else {
             bundle.putString(IF_DATA, data);
         }
-        Tracer.d(IF_ACTION + ": " + bundle.toString());
+        Tracer.i(IF_ACTION + ": " + bundle.toString());
         getFirebaseAnalytics().logEvent(IF_ACTION, bundle);
     }
 
@@ -162,11 +162,11 @@ public class FirebaseHelper {
             long longDifference = getTime(startTime, System.currentTimeMillis());
             if (longDifference != 0) {
                 bundle.putLong(TIME_SPENT, longDifference);
-                Tracer.d("Firebase:" + SIEMPO_DEFAULT + ": " + bundle.toString());
+                Tracer.i("Firebase:" + SIEMPO_DEFAULT + ": " + bundle.toString());
                 getFirebaseAnalytics().logEvent(SIEMPO_DEFAULT, bundle);
             }
         } else {
-            Tracer.d("Firebase:" + SIEMPO_DEFAULT + ": " + bundle.toString());
+            Tracer.i("Firebase:" + SIEMPO_DEFAULT + ": " + bundle.toString());
             getFirebaseAnalytics().logEvent(SIEMPO_DEFAULT, bundle);
         }
     }
@@ -197,7 +197,7 @@ public class FirebaseHelper {
         } else {
             bundle.putInt(TEMPO_INTERVAL, tempo_interval);
         }
-        Tracer.d("Firebase:" + TEMPO + ": " + bundle.toString());
+        Tracer.i("Firebase:" + TEMPO + ": " + bundle.toString());
         getFirebaseAnalytics().logEvent(TEMPO, bundle);
     }
 
