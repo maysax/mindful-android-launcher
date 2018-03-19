@@ -133,6 +133,7 @@ public class DashboardActivity extends CoreActivity {
         currentIndexPaneFragment = 2;
         mPager.setCurrentItem(currentIndexDashboard, true);
         EventBus.getDefault().post(new HomePress(1, 2));
+        loadPane();
     }
 
     public void loadViews() {
@@ -200,14 +201,18 @@ public class DashboardActivity extends CoreActivity {
 
             }
         });
-        new LoadToolPane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        new LoadFavoritePane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        new LoadJunkFoodPane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        loadPane();
         if (PrefSiempo.getInstance(this).read(PrefSiempo
                 .IS_APP_INSTALLED_FIRSTTIME, true)) {
             Log.d(TAG, "Display upgrade dialog.");
             checkUpgradeVersion();
         }
+    }
+
+    private void loadPane() {
+        new LoadToolPane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadFavoritePane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadJunkFoodPane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 
