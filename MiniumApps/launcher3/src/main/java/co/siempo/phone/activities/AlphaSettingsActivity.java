@@ -126,7 +126,7 @@ public class AlphaSettingsActivity extends CoreActivity {
     protected void onResume() {
         super.onResume();
         startTime = System.currentTimeMillis();
-        PackageUtil.checkPermission(this);
+//        PackageUtil.checkPermission(this);
     }
 
     @Subscribe
