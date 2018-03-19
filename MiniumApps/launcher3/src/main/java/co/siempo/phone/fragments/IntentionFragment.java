@@ -1,7 +1,6 @@
 package co.siempo.phone.fragments;
 
 import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -21,7 +20,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import co.siempo.phone.R;
-import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.activities.HelpActivity;
 import co.siempo.phone.activities.IntentionEditActivity;
 import co.siempo.phone.activities.SettingsActivity_;
@@ -43,7 +41,6 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
     private RelativeLayout relRootLayout;
     private Window mWindow;
     private int defaultStatusBarColor;
-    private CoreActivity mActivity;
 
     public IntentionFragment() {
         // Required empty public constructor
@@ -139,10 +136,12 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.imgTempo:
-                DialogTempoSetting dialogTempo = new DialogTempoSetting(getActivity());
-                if (dialogTempo.getWindow() != null)
-                    dialogTempo.getWindow().setGravity(Gravity.TOP);
-                dialogTempo.show();
+                if (null != getActivity()) {
+                    DialogTempoSetting dialogTempo = new DialogTempoSetting(getActivity());
+                    if (dialogTempo.getWindow() != null)
+                        dialogTempo.getWindow().setGravity(Gravity.TOP);
+                    dialogTempo.show();
+                }
                 break;
             case R.id.imgPullTab:
                 ObjectAnimator animY = ObjectAnimator.ofFloat(relRootLayout, "translationX", 100f, 0f);
@@ -156,9 +155,11 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                 showOverflowDialog();
                 break;
             case R.id.txtIntention:
-                Intent intent = new Intent(getActivity(), IntentionEditActivity.class);
-                startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                if (null != getActivity()) {
+                    Intent intent = new Intent(getActivity(), IntentionEditActivity.class);
+                    startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                }
                 break;
             default:
                 break;
@@ -209,19 +210,23 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                     @Override
                     public void onClick(View view) {
                         //Code for opening Tempo Settings
-                        Intent intent = new Intent(getActivity(), SettingsActivity_.class);
-                        startActivity(intent);
-                        UIUtils.clearDim(root);
-                        mPopupWindow.dismiss();
+                        if (getActivity() != null) {
+                            Intent intent = new Intent(getActivity(), SettingsActivity_.class);
+                            startActivity(intent);
+                            UIUtils.clearDim(root);
+                            mPopupWindow.dismiss();
+                        }
                     }
                 });
                 linHelp.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        UIUtils.clearDim(root);
-                        mPopupWindow.dismiss();
-                        Intent intent = new Intent(getActivity(), HelpActivity.class);
-                        startActivity(intent);
+                        if (getActivity() != null) {
+                            UIUtils.clearDim(root);
+                            mPopupWindow.dismiss();
+                            Intent intent = new Intent(getActivity(), HelpActivity.class);
+                            startActivity(intent);
+                        }
                     }
                 });
                 mPopupWindow.setOutsideTouchable(true);
@@ -229,7 +234,9 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                 mPopupWindow.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 mPopupWindow.showAsDropDown(imgOverFlow, 0, (int) -imgOverFlow.getX() - 10);
                 UIUtils.applyDim(root, 0.6f);
-                UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
+                if (null != getActivity()) {
+                    UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
+                }
                 mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
@@ -239,13 +246,6 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                 });
             }
         }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.mActivity = (CoreActivity) activity;
-
     }
 
 
