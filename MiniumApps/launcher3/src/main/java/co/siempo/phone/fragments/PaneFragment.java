@@ -128,6 +128,8 @@ public class PaneFragment extends CoreFragment {
         initView(rootView);
         changeColorOfStatusBar();
 
+
+
         mediator = new MainFragmentMediator(PaneFragment.this);
         mediator.loadData();
 
@@ -470,7 +472,8 @@ public class PaneFragment extends CoreFragment {
                     cardViewEdtSearch.setVisibility(View.VISIBLE);
                     relSearchTools.setVisibility(View.GONE);
                     UIUtils.showKeyboard(chipsEditText);
-
+                    mediator = new MainFragmentMediator(PaneFragment.this);
+                    mediator.loadData();
                 } else {
                     UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
                     showPaneAndBottomView(context);
