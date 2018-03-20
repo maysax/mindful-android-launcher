@@ -474,6 +474,10 @@ public class PaneFragment extends CoreFragment {
                     UIUtils.showKeyboard(chipsEditText);
                     mediator = new MainFragmentMediator(PaneFragment.this);
                     mediator.loadData();
+                    if (adapter != null) {
+                        adapter.getFilter().filter("");
+                    }
+
                 } else {
                     UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
                     showPaneAndBottomView(context);
