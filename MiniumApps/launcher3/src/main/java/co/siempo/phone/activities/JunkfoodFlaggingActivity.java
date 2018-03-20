@@ -3,6 +3,7 @@ package co.siempo.phone.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
@@ -219,7 +220,8 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         if (bindingList != null && bindingList.get(position) != null) {
             AppListInfo appListInfo = bindingList.get(position);
             if (!appListInfo.packageName.equalsIgnoreCase("")) {
-                showPopUp(view, position, appListInfo.isFlagApp);
+                showPopUp(view, position, appListInfo
+                        .isFlagApp);
             }
         }
     }
@@ -432,6 +434,11 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
     @Override
     protected void onStop() {
         super.onStop();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            if (popup != null) {
+                popup.dismiss();
+            }
+        }
     }
 
     class FilterApps extends AsyncTask<String, String, ArrayList<AppListInfo>> {
