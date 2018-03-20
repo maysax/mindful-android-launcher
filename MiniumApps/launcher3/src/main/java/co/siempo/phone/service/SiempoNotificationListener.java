@@ -35,10 +35,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.app.Launcher3App;
-import co.siempo.phone.db.DBClient;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.DaoSession;
 import co.siempo.phone.db.TableNotificationSms;
@@ -51,6 +51,8 @@ import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
+
+import static co.siempo.phone.utils.NotificationUtils.ANDROID_CHANNEL_ID;
 
 /**
  * Created by Shahab on 5/16/2017.
@@ -100,8 +102,15 @@ public class SiempoNotificationListener extends NotificationListenerService {
     @Override
     public void onCreate() {
         super.onCreate();
-        startForeground(11, new Notification());
-        Tracer.d("SiempoNotificationListener: onCreate");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Notification.Builder builder = new Notification.Builder(this, ANDROID_CHANNEL_ID)
+                    .setContentTitle(getString(R.string.app_name))
+                    .setContentText("")
+                    .setPriority(Notification.PRIORITY_LOW)
+                    .setAutoCancel(true);
+            Notification notification = builder.build();
+            startForeground(Constants.NOTIFICIONLISTENER_SERVICE_ID, notification);
+        }
     }
 
     @Override
@@ -200,10 +209,11 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 if (null != blockedAppList && blockedAppList.size() > 0 && blockedAppList.contains(notification.getPackageName())) {
 
 
-                    if (!notification.getPackageName().equalsIgnoreCase(getPackageName()) && tempoType != 0) {
+                    if (!notification.getPackageName().equalsIgnoreCase(getPackageName())) {
                         SiempoNotificationListener.this.cancelNotification(notification.getKey());
                         Tracer.d("SiempoNotificationListener:cancelNotification");
-                        if (tempoType == 1 || tempoType == 2) {
+                        if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                            Tracer.d("SiempoNotificationListener:cancelNotification");
                             if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_VIBRATE ||
                                     audioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
                                 int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
@@ -902,23 +912,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
     public void onNotificationRemoved(StatusBarNotification notification) {
         super.onNotificationRemoved(notification);
         Tracer.d("Notification removed: " + getNotificationToString(notification));
-
-        if (!PackageUtil.isSiempoLauncher(this)
-                && !PrefSiempo.getInstance(context).read(PrefSiempo
-                .IS_APP_DEFAULT_OR_FRONT, false)) {
-            if (PackageUtil.isMsgPackage(notification.getPackageName())) {
-                new DBClient().deleteMsgByType(NotificationUtility.NOTIFICATION_TYPE_SMS);
-            } else if (PackageUtil.isCallPackage(notification.getPackageName())) {
-                new DBClient().deleteMsgByType(NotificationUtility.NOTIFICATION_TYPE_CALL);
-            } else {
-                new DBClient().deleteMsgByPackageName(notification.getPackageName());
-            }
-        }
-        if (PackageUtil.isSiempoLauncher(this)) {
-            if (notification.getPackageName().equalsIgnoreCase(getPackageName())) {
-                new DBClient().deleteMsgById(notification.getId());
-            }
-        }
     }
 
     private String getNotificationToString(StatusBarNotification notification) {

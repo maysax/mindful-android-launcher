@@ -19,7 +19,7 @@ public class AlarmBroadcast extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Tracer.i("Tracking Time", "" + Calendar.getInstance().getTime());
+        Tracer.d("Tracking Time", "" + Calendar.getInstance().getTime());
         PackageUtil.enableAlarm(context);
         Intent intent1 = new Intent(context, AlarmService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

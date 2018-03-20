@@ -12,7 +12,6 @@ import org.androidannotations.annotations.ViewById;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.CoreActivity;
-import co.siempo.phone.utils.PackageUtil;
 
 import static android.view.View.GONE;
 
