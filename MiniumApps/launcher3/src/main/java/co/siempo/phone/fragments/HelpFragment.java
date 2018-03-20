@@ -249,7 +249,11 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        mActivity = (HelpActivity) activity;
+        try {
+            mActivity = (HelpActivity) activity;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         EventBus.getDefault().register(this);
 
 
