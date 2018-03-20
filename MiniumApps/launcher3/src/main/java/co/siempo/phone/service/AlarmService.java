@@ -117,37 +117,37 @@ public class AlarmService extends IntentService {
                 Tracer.d("AlarmService: batchTime" + batchTime);
                 if (batchTime == 15) {
                     if (systemMinutes == 0 || systemMinutes == 15 || systemMinutes == 30 || systemMinutes == 45) {
-                        Tracer.i("AlarmService: batchTime 15 minute interval");
+                        Tracer.d("AlarmService: batchTime 15 minute interval");
                         List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                        Tracer.i("AlarmService: notificationList.size" + notificationList.size());
+                        Tracer.d("AlarmService: notificationList.size" + notificationList.size());
                         createNotification(notificationList, context);
                     }
                 } else if (batchTime == 30) {
                     if (systemMinutes == 0 || systemMinutes == 30) {
-                        Tracer.i("AlarmService: batch Time 30 minute interval");
+                        Tracer.d("AlarmService: batch Time 30 minute interval");
                         List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                        Tracer.i("AlarmService: notificationList.size" + notificationList.size());
+                        Tracer.d("AlarmService: notificationList.size" + notificationList.size());
                         createNotification(notificationList, context);
                     }
                 } else if (batchTime == 1) {
                     if (everyHourList.contains(systemHours) && systemMinutes == 0) {
-                        Tracer.i("AlarmService: batch Every Hour interval");
+                        Tracer.d("AlarmService: batch Every Hour interval");
                         List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                        Tracer.i("AlarmService: notificationList.size" + notificationList.size());
+                        Tracer.d("AlarmService: notificationList.size" + notificationList.size());
                         createNotification(notificationList, context);
                     }
                 } else if (batchTime == 2) {
                     if (systemHours % 2 == 0 && systemMinutes == 0) {
-                        Tracer.i("AlarmService: batch Every 2 Hour interval");
+                        Tracer.d("AlarmService: batch Every 2 Hour interval");
                         List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                        Tracer.i("AlarmService: notificationList.size" + notificationList.size());
+                        Tracer.d("AlarmService: notificationList.size" + notificationList.size());
                         createNotification(notificationList, context);
                     }
                 } else if (batchTime == 4) {
                     if (systemHours % 4 == 0 && systemMinutes == 0) {
-                        Tracer.i("AlarmService: batch Every 4 Hour interval");
+                        Tracer.d("AlarmService: batch Every 4 Hour interval");
                         List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                        Tracer.i("AlarmService: notificationList.size" + notificationList.size());
+                        Tracer.d("AlarmService: notificationList.size" + notificationList.size());
                         createNotification(notificationList, context);
                     }
                 }
@@ -156,18 +156,18 @@ public class AlarmService extends IntentService {
                 Tracer.d("AlarmService: TempoType::OnlyAt");
                 String strTimeData = PrefSiempo.getInstance(context).read(PrefSiempo
                         .ONLY_AT, "12:01");
-                Tracer.i("AlarmService: onlyAt start");
+                Tracer.d("AlarmService: onlyAt start");
                 if (!strTimeData.equalsIgnoreCase("")) {
                     String strTime[] = strTimeData.split(",");
-                    Tracer.i("AlarmService: onlyAt strTime.length" + strTime.length);
+                    Tracer.d("AlarmService: onlyAt strTime.length" + strTime.length);
                     for (String str : strTime) {
                         int hours = Integer.parseInt(str.split(":")[0]);
                         int minutes = Integer.parseInt(str.split(":")[1]);
-                        Tracer.i("AlarmService: Time " + "User" + hours + ":" + minutes + "System:" + systemHours + ":" + systemMinutes);
+                        Tracer.d("AlarmService: Time " + "User" + hours + ":" + minutes + "System:" + systemHours + ":" + systemMinutes);
                         if (hours == systemHours && minutes == systemMinutes) {
-                            Tracer.i("AlarmService: onlyAt match condition" + str);
+                            Tracer.d("AlarmService: onlyAt match condition" + str);
                             List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                            Tracer.i("AlarmService: notificationList.size" + notificationList.size());
+                            Tracer.d("AlarmService: notificationList.size" + notificationList.size());
                             createNotification(notificationList, context);
                         }
                     }
