@@ -2,6 +2,7 @@ package co.siempo.phone.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -27,6 +28,7 @@ import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.utils.PrefSiempo;
@@ -136,18 +138,35 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                             }
                         }
                     } else {
-                        if (CoreApplication.getInstance().getApplicationByCategory(id).size() == 0) {
+                        if (CoreApplication.getInstance()
+                                .getApplicationByCategory(id).size() == 0 ||
+                                (CoreApplication.getInstance()
+                                        .getApplicationByCategory(id).size() == 1 &&
+                                        null == CoreApplication.getInstance()
+                                                .getApplicationByCategory(id).get(0))) {
                             openAppAssignmentScreen(item);
                         } else if (CoreApplication.getInstance().getApplicationByCategory(id).size() == 1
                                 && !PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS,
                                 new HashSet<String>()).contains(appMenu.getApplicationName().trim())) {
 //                                if a 3rd party app is already assigned to this tool
-                            String strPackageName = CoreApplication.getInstance().getApplicationByCategory(id).get(0).activityInfo.packageName;
-                            if (UIUtils.isAppEnabled(context, strPackageName) && strPackageName.equalsIgnoreCase(appMenu.getApplicationName())) {
-                                new ActivityHelper(context).openAppWithPackageName(strPackageName);
-                                FirebaseHelper.getInstance().logSiempoMenuUsage(0, item.getTitle(), CoreApplication.getInstance().getApplicationNameFromPackageName(appMenu.getApplicationName()));
-                            } else {
-                                openAppAssignmentScreen(item);
+                            ResolveInfo resolveInfo = CoreApplication.getInstance().getApplicationByCategory(id).get(0);
+                            if(null!=resolveInfo) {
+                                String strPackageName = resolveInfo.activityInfo.packageName;
+                                if (UIUtils.isAppEnabled(context, strPackageName) && strPackageName.equalsIgnoreCase(appMenu.getApplicationName())) {
+                                    new ActivityHelper(context).openAppWithPackageName(strPackageName);
+                                    FirebaseHelper.getInstance().logSiempoMenuUsage(0, item.getTitle(), CoreApplication.getInstance().getApplicationNameFromPackageName(appMenu.getApplicationName()));
+                                } else {
+                                    openAppAssignmentScreen(item);
+                                }
+                            }
+                            else
+                            {
+                                //Notes
+                                if(id==5)
+                                {
+                                    openAppAssignmentScreen(item);
+                                }
+
                             }
 
                         } else {
