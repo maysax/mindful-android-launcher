@@ -164,6 +164,7 @@ public class PaneFragment extends CoreFragment {
                 DashboardActivity.startTime = System.currentTimeMillis();
             }
         }
+        setToolsPaneDate();
 
     }
 
@@ -188,7 +189,6 @@ public class PaneFragment extends CoreFragment {
             linSearchList.setVisibility(View.GONE);
             linPane.setAlpha(1);
         }
-        setToolsPaneDate();
 
     }
 
@@ -260,7 +260,6 @@ public class PaneFragment extends CoreFragment {
 
         bindBottomDock();
 
-        setToolsPaneDate();
 
         bindSearchView();
     }
