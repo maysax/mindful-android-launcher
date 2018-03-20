@@ -173,18 +173,18 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
                     int soundMax = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
                     Tracer.i("VolumeCheck Call Coming + user sound", sound);
                     Tracer.i("VolumeCheck Call Coming + max sound", soundMax);
-                    if (sound == 1
-                            && (audioManager.getRingerMode() != AudioManager.RINGER_MODE_VIBRATE || audioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT)) {
+                    if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL && sound == 1) {
                         audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, soundMax, 0);
                         Tracer.i("VolumeCheck Call Coming Update Sound");
                     }
                 }
             } else {
                 Tracer.i("VolumeCheck Call Coming When call disconnected or miscall");
-                if ((tempoType == 1 || tempoType == 2)
-                        && (audioManager.getRingerMode() != AudioManager.RINGER_MODE_VIBRATE || audioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT)) {
-                    audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
-                    Tracer.i("VolumeCheck Call Coming Update Sound");
+                if ((tempoType == 1 || tempoType == 2)) {
+                    if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                        audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+                        Tracer.i("VolumeCheck Call Coming Update Sound");
+                    }
                 }
             }
         }

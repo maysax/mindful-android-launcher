@@ -83,4 +83,8 @@ public class Constants {
     public static String HEADER_APPLIST = "HEADER_APPLIST";
     public static String CALL_RUNNING = "CALLRUNNING";
     public static String INTENT_MAINLISTITEM = "MainListItem";
+
+    public static int STATUSBAR_SERVICE_ID = 1000;
+    public static int NOTIFICIONLISTENER_SERVICE_ID = 1001;
+    public static int ALARM_SERVICE_ID = 1002;
 }

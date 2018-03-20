@@ -5,6 +5,7 @@ import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
+import android.os.Build;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -12,6 +13,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
+import co.siempo.phone.R;
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
@@ -19,6 +22,8 @@ import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
+
+import static co.siempo.phone.utils.NotificationUtils.ANDROID_CHANNEL_ID;
 
 /**
  * Created by rajeshjadi on 8/1/18.
@@ -45,7 +50,15 @@ public class AlarmService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        startForeground(1, new Notification());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Notification.Builder builder = new Notification.Builder(this, ANDROID_CHANNEL_ID)
+                    .setContentTitle(getString(R.string.app_name))
+                    .setContentText("")
+                    .setPriority(Notification.PRIORITY_LOW)
+                    .setAutoCancel(true);
+            Notification notification = builder.build();
+            startForeground(Constants.ALARM_SERVICE_ID, notification);
+        }
     }
 
     @Override
@@ -63,8 +76,7 @@ public class AlarmService extends IntentService {
     public void createNotification(List<TableNotificationSms> notificationList, Context context) {
         try {
             Tracer.d("AlarmService: createNotification");
-            if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_VIBRATE
-                    || audioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
+            if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
                 int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM) / 2;
                 audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, sound, 0);
                 Tracer.d("AlarmService: audioManager");
@@ -97,7 +109,9 @@ public class AlarmService extends IntentService {
             int systemMinutes = calendar.get(Calendar.MINUTE);
             int tempoType = PrefSiempo.getInstance(context).read(PrefSiempo
                     .TEMPO_TYPE, 0);
+            Tracer.d("AlarmService: TempoType::" + tempoType);
             if (tempoType == 1) {
+                Tracer.d("AlarmService: TempoType::Batch");
                 int batchTime = PrefSiempo.getInstance(context).read(PrefSiempo
                         .BATCH_TIME, 15);
                 Tracer.d("AlarmService: batchTime" + batchTime);
@@ -139,6 +153,7 @@ public class AlarmService extends IntentService {
                 }
 
             } else if (tempoType == 2) {
+                Tracer.d("AlarmService: TempoType::OnlyAt");
                 String strTimeData = PrefSiempo.getInstance(context).read(PrefSiempo
                         .ONLY_AT, "12:01");
                 Tracer.i("AlarmService: onlyAt start");

@@ -3,6 +3,7 @@ package co.siempo.phone.msg;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.provider.Telephony;
 import android.telephony.SmsMessage;
@@ -37,10 +38,12 @@ public class SmsReceiver extends BroadcastReceiver {
     private String mAddress;
     private String mBody;
     private Date mDate;
+    private AudioManager audioManager;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Tracer.d("SmsReceiver: onReceive");
+        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         if (intent != null && intent.getAction() != null && intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
@@ -68,6 +71,7 @@ public class SmsReceiver extends BroadcastReceiver {
 
 
                 if (PackageUtil.isSiempoLauncher(context)) {
+                    int tempoType = PrefSiempo.getInstance(context).read(PrefSiempo.TEMPO_TYPE, 0);
                     blockedApps = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST,
                             new HashSet<String>());
                     Tracer.d("SmsReceiver: onReceive blockedApps" + blockedApps.size());
@@ -78,6 +82,15 @@ public class SmsReceiver extends BroadcastReceiver {
                                 if (PrefSiempo.getInstance(context).read(PrefSiempo
                                         .TEMPO_TYPE, 0) != 0) {
                                     Tracer.d("SmsReceiver: onReceive saveMessage");
+                                    if (tempoType == 1 || tempoType == 2) {
+                                        if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                                            int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
+                                            if (sound != 1) {
+                                                Tracer.d("SiempoNotificationListener:audioManager");
+                                                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+                                            }
+                                        }
+                                    }
                                     saveMessage(mAddress, mBody, mDate, context);
                                 }
                             }
