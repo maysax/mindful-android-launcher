@@ -220,8 +220,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         if (bindingList != null && bindingList.get(position) != null) {
             AppListInfo appListInfo = bindingList.get(position);
             if (!appListInfo.packageName.equalsIgnoreCase("")) {
-                showPopUp(view, position, appListInfo
-                        .isFlagApp);
+                showPopUp(view, position, appListInfo.isFlagApp);
             }
         }
     }
