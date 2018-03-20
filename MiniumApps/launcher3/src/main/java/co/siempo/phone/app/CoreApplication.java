@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.UserManager;
 import android.provider.AlarmClock;
+import android.provider.CalendarContract;
 import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
@@ -409,8 +410,17 @@ public abstract class CoreApplication extends MultiDexApplication {
                 break;
             case 2:// Transport
                 break;
+//            case 3://Calender
+//                Intent calenderIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("content://com.android.calendar/time/"));
+//                list.addAll(getPackageManager().queryIntentActivities(calenderIntent, 0));
+//                break;
             case 3://Calender
-                Intent calenderIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("content://com.android.calendar/time/"));
+                Uri.Builder builder =
+                        CalendarContract.CONTENT_URI.buildUpon();
+                builder.appendPath("time");
+                Intent calenderIntent =
+                        new Intent(Intent.ACTION_VIEW, builder.build());
+//                Intent calenderIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("content://com.android.calendar/time/"));
                 list.addAll(getPackageManager().queryIntentActivities(calenderIntent, 0));
                 break;
             case 4://Weather

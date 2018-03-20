@@ -1,6 +1,5 @@
 package co.siempo.phone.activities;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
@@ -29,9 +28,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.adapters.FavoriteFlaggingAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.AppInstalledEvent;
-import co.siempo.phone.event.HomePressEvent;
 import co.siempo.phone.helper.FirebaseHelper;
-import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.AppListInfo;
 import co.siempo.phone.service.LoadFavoritePane;
 import co.siempo.phone.service.LoadJunkFoodPane;
@@ -316,21 +313,6 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
     public void setToolBarText(int count) {
         int remainapps = 12 - count;
         toolbar.setTitle("Select up to " + remainapps + " more apps");
-    }
-
-    @Subscribe
-    public void homePressEvent(HomePressEvent event) {
-        try {
-            if (event.isVisible() && UIUtils.isMyLauncherDefault(this)) {
-                Intent startMain = new Intent(Intent.ACTION_MAIN);
-                startMain.addCategory(Intent.CATEGORY_HOME);
-                startActivity(startMain);
-            }
-
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            Tracer.e(e, e.getMessage());
-        }
     }
 
 

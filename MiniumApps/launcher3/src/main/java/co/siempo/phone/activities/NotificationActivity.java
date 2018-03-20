@@ -29,13 +29,10 @@ import co.siempo.phone.R;
 import co.siempo.phone.adapters.TempoNotificationSectionAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.AppInstalledEvent;
-import co.siempo.phone.event.HomePressEvent;
 import co.siempo.phone.helper.FirebaseHelper;
-import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.AppListInfo;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.Sorting;
-import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.Subscribe;
 
 /**
@@ -294,22 +291,4 @@ public class NotificationActivity extends CoreActivity {
         }
 
     }
-
-
-    @Subscribe
-    public void homePressEvent(HomePressEvent event) {
-        try {
-            if (event.isVisible() && UIUtils.isMyLauncherDefault(this)) {
-                Intent startMain = new Intent(Intent.ACTION_MAIN);
-                startMain.addCategory(Intent.CATEGORY_HOME);
-                startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(startMain);
-            }
-
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            Tracer.e(e, e.getMessage());
-        }
-    }
-
 }

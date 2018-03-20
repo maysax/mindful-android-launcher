@@ -313,7 +313,7 @@ public class DataUtils {
         if (tempNotes != null)
             notes = tempNotes;
 
-        Tracer.d("All notes: ", notes);
+        Tracer.i("All notes: ", notes);
 
         try {
             // Add new note to array
@@ -329,7 +329,7 @@ public class DataUtils {
 
             notes.put(newNoteObject);
 
-            Tracer.d("New note: " + newNoteObject);
+            Tracer.i("New note: " + newNoteObject);
 
         } catch (JSONException e) {
             CoreApplication.getInstance().logException(e);

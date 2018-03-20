@@ -48,11 +48,11 @@ public class ActivityHelper {
     public void handleDefaultLauncher(Activity activity) {
         if (activity != null) {
             if (UIUtils.isMyLauncherDefault(activity)) {
-                Tracer.d("Launcher3 is the default launcher");
+                Tracer.i("Launcher3 is the default launcher");
                 activity.getPackageManager().clearPackagePreferredActivities(activity.getPackageName());
                 openChooser(activity);
             } else {
-                Tracer.d("Launcher3 is not the default launcher: " + UIUtils.getLauncherPackageName(activity));
+                Tracer.i("Launcher3 is not the default launcher: " + UIUtils.getLauncherPackageName(activity));
                 if (UIUtils.getLauncherPackageName(activity).equals("android")) {
                     openChooser(activity);
                 } else

@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v4.app.NotificationManagerCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,7 +68,6 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         return view;
     }
 
-
     private void initView(View view) {
         relRootLayout = view.findViewById(R.id.relRootLayout);
         imgTempo = view.findViewById(R.id.imgTempo);
@@ -87,6 +88,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         defaultStatusBarColor = mWindow.getStatusBarColor();
 
     }
+
 
     @Override
     public void setMenuVisibility(boolean menuVisible) {

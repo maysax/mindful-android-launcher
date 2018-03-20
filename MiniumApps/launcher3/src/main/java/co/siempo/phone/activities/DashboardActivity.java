@@ -300,7 +300,7 @@ public class DashboardActivity extends CoreActivity {
         Log.d(TAG, "Check Version event...");
         if (event.getVersionName() != null && event.getVersionName().equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
             if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
-                Tracer.d("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
+                Tracer.i("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
                 showUpdateDialog(CheckVersionEvent.ALPHA);
                 appUpdaterUtils = null;
             } else {
@@ -308,11 +308,11 @@ public class DashboardActivity extends CoreActivity {
             }
         } else {
             if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
-                Tracer.d("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
+                Tracer.i("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
                 showUpdateDialog(CheckVersionEvent.BETA);
                 appUpdaterUtils = null;
             } else {
-                Tracer.d("Installed version: " + "Up to date.");
+                Tracer.i("Installed version: " + "Up to date.");
             }
         }
     }

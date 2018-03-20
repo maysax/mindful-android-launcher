@@ -141,7 +141,7 @@ public class SiempoPermissionActivity extends CoreActivity {
                                     "you can not use Siempo\nPlease turn on" +
                                     " " +
                                     "permissions at [Setting] > [Permission]")
-                            .setPermissions(Manifest.permission.READ_SMS)
+                            .setPermissions(Manifest.permission.SEND_SMS)
                             .check();
                     break;
                 case R.id.tblStorage:

@@ -29,7 +29,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.colorpicker.ColorPickerDialog;
 import co.siempo.phone.colorpicker.ColorPickerSwatch;
-import co.siempo.phone.event.HomePressEvent;
+import co.siempo.phone.event.HomePress;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.managers.EvernoteManager;
@@ -137,7 +137,7 @@ public class NotesEditActivity extends CoreActivity implements Toolbar.OnMenuIte
 
         if (bundle != null) {
             // If current note is not new -> initialize colour, font, hideBody and EditTexts
-            Tracer.d("Notes Edit" + bundle.getInt(NOTE_REQUEST_CODE));
+            Tracer.i("Notes Edit" + bundle.getInt(NOTE_REQUEST_CODE));
             if (bundle.getInt(NOTE_REQUEST_CODE) != NEW_NOTE_REQUEST) {
                 colour = bundle.getString(NOTE_COLOUR);
                 if (TextUtils.isEmpty(colour)) {
@@ -464,7 +464,7 @@ public class NotesEditActivity extends CoreActivity implements Toolbar.OnMenuIte
 
 
     @Subscribe
-    public void homePressEvent(HomePressEvent event) {
+    public void homePress(HomePress event) {
         try {
             if (UIUtils.isMyLauncherDefault(this)) {
                 // onBackPressed();
@@ -498,7 +498,7 @@ public class NotesEditActivity extends CoreActivity implements Toolbar.OnMenuIte
 
     private void saveChanges1() {
         if (bundle != null) {
-            Tracer.d("Notes Edit  1" + bundle.getInt(NOTE_REQUEST_CODE));
+            Tracer.i("Notes Edit  1" + bundle.getInt(NOTE_REQUEST_CODE));
             JSONArray notes = new JSONArray();
             JSONArray tempNotes = retrieveData(localPath);
             // If not null -> equal main notes to retrieved notes
