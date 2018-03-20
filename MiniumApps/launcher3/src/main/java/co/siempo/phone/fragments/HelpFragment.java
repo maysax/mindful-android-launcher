@@ -1,7 +1,10 @@
 package co.siempo.phone.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -12,12 +15,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.activities.CoreActivity;
+import co.siempo.phone.activities.HelpActivity;
 import co.siempo.phone.event.CheckVersionEvent;
+import co.siempo.phone.helper.ActivityHelper;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.service.ApiClient_;
+import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.UIUtils;
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
 
 /**
  * Created by hardik on 5/1/18.
@@ -33,6 +44,8 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
     private TextView txtVersionValue;
     private View view;
     private String TAG = "HelpFragment";
+    private HelpActivity mActivity;
+    private ProgressDialog progressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,6 +56,13 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initView() {
+        if (null != mActivity) {
+            progressDialog = new ProgressDialog(mActivity);
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.setCancelable(false);
+        }
+
+
         toolbar = view.findViewById(R.id.toolbar);
 
         txtSendFeedback = view.findViewById(R.id.txtSendFeedback);
@@ -85,6 +105,7 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
 
     }
 
+
     void txtSendFeedback() {
         ((CoreActivity) getActivity()).loadChildFragment(FeedbackFragment_.builder()
                 .build(), R.id.helpView);
@@ -125,6 +146,11 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
                         .CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
         if (activeNetwork != null) {
+
+            if (null != progressDialog) {
+                progressDialog.setMessage("Loading...");
+                progressDialog.show();
+            }
             if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
                 ApiClient_.getInstance_(getActivity())
                         .checkAppVersion(CheckVersionEvent.ALPHA);
@@ -138,4 +164,104 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
 
     }
 
+
+    @Subscribe
+    public void checkVersionEvent(CheckVersionEvent event) {
+        Log.d(TAG, "Check Version event...");
+        if (null != mActivity) {
+
+
+            if (event.getVersionName() != null && event.getVersionName().equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
+
+                if (event.getVersion() > UIUtils.getCurrentVersionCode(mActivity)) {
+                    Tracer.d("Installed version: " + UIUtils
+                            .getCurrentVersionCode(mActivity) + " Found: " + event
+                            .getVersion());
+                    if (null != progressDialog && progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
+                    showUpdateDialog(CheckVersionEvent.ALPHA);
+
+                } else {
+                    ApiClient_.getInstance_(mActivity).checkAppVersion(CheckVersionEvent
+                            .BETA);
+                }
+
+            } else {
+                if (event.getVersion() > UIUtils.getCurrentVersionCode(mActivity)) {
+                    Tracer.d("Installed version: " + UIUtils
+                            .getCurrentVersionCode(mActivity) + " Found: " + event
+                            .getVersion());
+                    if (null != progressDialog && progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
+                    showUpdateDialog(CheckVersionEvent.BETA);
+                } else {
+                    if (null != progressDialog && progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
+                    Tracer.d("Installed version: " + "Up to date.");
+                    if (null != mActivity) {
+                        Toast.makeText(mActivity, "App is up to date", Toast
+                                .LENGTH_SHORT).show();
+                    }
+                }
+            }
+        }
+    }
+
+    private void showUpdateDialog(String str) {
+
+        if (null != mActivity) {
+            PrefSiempo.getInstance(mActivity).write(PrefSiempo
+                    .IS_APP_INSTALLED_FIRSTTIME, false);
+            ConnectivityManager connectivityManager = (ConnectivityManager)
+                    mActivity.
+                            getSystemService(Context
+                                    .CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = connectivityManager
+                    .getActiveNetworkInfo();
+            if (activeNetwork != null) {
+                UIUtils.confirmWithCancel(mActivity, "", str.equalsIgnoreCase(CheckVersionEvent.ALPHA) ? "New alpha version found! Would you like to update Siempo?" : "New beta version found! Would you like to update Siempo?", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == DialogInterface.BUTTON_POSITIVE) {
+                            PrefSiempo.getInstance(mActivity).write
+                                    (PrefSiempo
+                                            .UPDATE_PROMPT, false);
+                            new ActivityHelper(mActivity).openBecomeATester();
+                        }
+                    }
+                }, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+
+            } else {
+                Log.d(TAG, getString(R.string.nointernetconnection));
+            }
+
+        }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            mActivity = (HelpActivity) activity;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        EventBus.getDefault().register(this);
+
+
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        EventBus.getDefault().unregister(this);
+    }
 }

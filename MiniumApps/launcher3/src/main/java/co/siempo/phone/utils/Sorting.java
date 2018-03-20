@@ -31,7 +31,10 @@ public class Sorting {
             @Override
             public int compare(final ResolveInfo object1, final ResolveInfo object2) {
                 if (object1 != null && object2 != null) {
-                    int sortValue = object1.loadLabel(context.getPackageManager()).toString().compareTo(object2.loadLabel(context.getPackageManager()).toString());
+                    int sortValue = object1.loadLabel(context
+                            .getPackageManager()).toString().toLowerCase().compareTo
+                            (object2.loadLabel(context.getPackageManager())
+                                    .toString().toLowerCase());
                     return sortValue;
                 } else {
                     return 1;
