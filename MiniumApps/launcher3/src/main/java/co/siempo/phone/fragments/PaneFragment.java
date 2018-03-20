@@ -175,7 +175,7 @@ public class PaneFragment extends CoreFragment {
         super.setUserVisibleHint(isVisibleToUser);
         //Changing the status bar default value on page change from dashboard
         // to direct Junk Food pane
-        if (isVisibleToUser && null != mWindow && pagerPane.getCurrentItem() == 0) {
+        if (isVisibleToUser && null != mWindow && pagerPane!=null && pagerPane.getCurrentItem() == 0) {
             mWindow.setStatusBarColor(getResources().getColor(R.color
                     .appland_blue_bright));
         } else {
