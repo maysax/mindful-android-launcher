@@ -122,8 +122,9 @@ public class SiempoNotificationListener extends NotificationListenerService {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             // Notification listener disconnected - requesting rebind
             try {
+                Tracer.d("SiempoNotificationListener: requestRebind1");
                 requestRebind(new ComponentName(this, SiempoNotificationListener_.class));
-                Tracer.d("SiempoNotificationListener: requestRebind");
+                Tracer.d("SiempoNotificationListener: requestRebind2");
             } catch (Exception e) {
                 e.printStackTrace();
             }
