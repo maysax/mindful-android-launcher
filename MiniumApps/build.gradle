@@ -16,6 +16,8 @@ buildscript {
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
         classpath "org.greenrobot:greendao-gradle-plugin:3.2.0"
         classpath 'com.google.gms:google-services:3.2.0'
+        classpath 'com.google.firebase:firebase-plugins:1.1.1'
+
 
     }
 }
@@ -43,7 +45,7 @@ project.ext {
     baseRecyclerViewAdapterHelperVersion = "2.2.0"
     sugarOrmVersion = "1.5"
     greenDaoVersion = "3.2.0"
-    tedPermissionVersion = "1.0.2"
+    tedPermissionVersion = "2.1.0"
     fastAndroidNetworkingVersion = "0.3.0"
     espressoVersion = "2.2.2"
     multidexVersion = "1.0.1"

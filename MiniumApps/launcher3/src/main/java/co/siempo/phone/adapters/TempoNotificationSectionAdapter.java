@@ -493,7 +493,7 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
                     }
             }
         } catch (Exception e) {
-            Tracer.d("Exception in remove error message");
+            Tracer.i("Exception in remove error message");
         }
 
 

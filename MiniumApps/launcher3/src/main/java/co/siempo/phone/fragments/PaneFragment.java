@@ -188,7 +188,7 @@ public class PaneFragment extends CoreFragment {
             linSearchList.setVisibility(View.GONE);
             linPane.setAlpha(1);
         }
-
+        setToolsPaneDate();
 
     }
 
@@ -220,15 +220,16 @@ public class PaneFragment extends CoreFragment {
     @Subscribe(sticky = true, threadMode = ThreadMode.MainThread)
     public void onEvent(NotifyBottomView notifyBottomView) {
         if (notifyBottomView != null) {
-            items = CoreApplication.getInstance().getToolBottomItemsList();
-            Log.d("Test:", "" + CoreApplication.getInstance().isHideIconBranding());
-//            mAdapter.setMainListItemList(items, true, CoreApplication.getInstance().isHideIconBranding());
-            mAdapter = new ToolsMenuAdapter(getActivity(), CoreApplication.getInstance().isHideIconBranding(), true, items);
-            recyclerViewBottomDoc.setAdapter(mAdapter);
-            mAdapter.notifyDataSetChanged();
-            EventBus.getDefault().removeStickyEvent(notifyBottomView);
+            if (notifyBottomView.isNotify()) {
+                items = CoreApplication.getInstance().getToolBottomItemsList();
+                mAdapter = new ToolsMenuAdapter(getActivity(), CoreApplication.getInstance().isHideIconBranding(), true, items);
+                recyclerViewBottomDoc.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
+                EventBus.getDefault().removeStickyEvent(notifyBottomView);
+            }
         }
     }
+
 
     private void initView(View view) {
         linTopDoc = view.findViewById(R.id.linTopDoc);
@@ -523,17 +524,19 @@ public class PaneFragment extends CoreFragment {
         Calendar c = Calendar.getInstance();
         DateFormat df = getDateInstanceWithoutYears(Locale
                 .getDefault());
-        txtTopDockDate.setText(df.format(c.getTime()));
-        txtTopDockDate.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (null != imageClear && imageClear.getVisibility() == View
-                        .VISIBLE && searchLayout.getVisibility() == View.VISIBLE) {
-                    imageClear.performClick();
+        if (getActivity() != null && txtTopDockDate != null) {
+            txtTopDockDate.setText(df.format(c.getTime()));
+            txtTopDockDate.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (null != imageClear && imageClear.getVisibility() == View
+                            .VISIBLE && searchLayout.getVisibility() == View.VISIBLE) {
+                        imageClear.performClick();
+                    }
+                    return true;
                 }
-                return true;
-            }
-        });
+            });
+        }
 
     }
 

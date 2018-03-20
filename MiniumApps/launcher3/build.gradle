@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 //apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'io.fabric'
 apply plugin: 'org.greenrobot.greendao'
+apply plugin: 'com.google.firebase.firebase-perf'
 
 
 android {
@@ -49,7 +50,7 @@ android {
     productFlavors {
         alpha {
             dimension "Siempo"
-            versionCode 11401
+            versionCode 11402
             versionName "${0}.${0}.${11}.${4}-${buildTime}"
         }
         beta {
@@ -103,6 +104,7 @@ dependencies {
     debugCompile "com.amitshekhar.android:debug-db:$debugDBVersion"
     implementation 'com.google.firebase:firebase-core:11.8.0'
     implementation 'com.google.firebase:firebase-database:11.8.0'
+    implementation 'com.google.firebase:firebase-perf:11.8.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.github.javiersantos:AppUpdater:2.6.4'
     implementation 'com.github.clans:fab:1.6.4'
@@ -111,7 +113,8 @@ dependencies {
     implementation files('libs/activation.jar')
     implementation files('libs/additionnal.jar')
     implementation files('libs/mail.jar')
-    implementation 'me.relex:circleindicator:1.2.2@aar'// indicator for view pager
+    implementation 'me.relex:circleindicator:1.2.2@aar'
+// indicator for view pager
     implementation 'com.evernote:android-sdk:2.0.0-RC4'
 
     androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2') {

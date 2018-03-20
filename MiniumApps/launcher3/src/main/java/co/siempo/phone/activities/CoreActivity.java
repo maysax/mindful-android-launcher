@@ -278,7 +278,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             t.commitAllowingStateLoss();
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
-            Tracer.e(e, e.getMessage());
         }
     }
 

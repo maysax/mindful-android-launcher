@@ -2,7 +2,6 @@ package co.siempo.phone.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
@@ -17,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
@@ -32,16 +32,13 @@ import co.siempo.phone.R;
 import co.siempo.phone.adapters.JunkfoodFlaggingAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.AppInstalledEvent;
-import co.siempo.phone.event.HomePressEvent;
 import co.siempo.phone.helper.FirebaseHelper;
-import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.AppListInfo;
 import co.siempo.phone.service.LoadFavoritePane;
 import co.siempo.phone.service.LoadJunkFoodPane;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.Sorting;
-import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.Subscribe;
 
 public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterView.OnItemClickListener {
@@ -59,6 +56,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
     private List<AppListInfo> unflageAppList = new ArrayList<>();
     private ArrayList<AppListInfo> bindingList = new ArrayList<>();
     private long startTime = 0;
+    private EditText getTxtIntention;
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
@@ -71,7 +69,12 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_junkfood_flagging);
-
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                getTxtIntention.setText("lknksdklnskldnkfsndklfn");
+//            }
+//        }, 10000);
         initView();
         list = PrefSiempo.getInstance(this).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
         favoriteList = PrefSiempo.getInstance(this).read(PrefSiempo.FAVORITE_APPS, new HashSet<String>());
@@ -424,23 +427,6 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
     protected void onPause() {
         super.onPause();
         FirebaseHelper.getInstance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
-    }
-
-    @Subscribe
-    public void homePressEvent(HomePressEvent event) {
-        try {
-            if (event.isVisible() && UIUtils.isMyLauncherDefault(this)) {
-                onBackPressed();
-                Intent startMain = new Intent(Intent.ACTION_MAIN);
-                startMain.addCategory(Intent.CATEGORY_HOME);
-                startActivity(startMain);
-
-            }
-
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            Tracer.e(e, e.getMessage());
-        }
     }
 
     @Override

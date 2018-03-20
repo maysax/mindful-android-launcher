@@ -108,4 +108,62 @@ public class HelpActivity extends CoreActivity {
         }
     }
 
+    @Subscribe
+    public void checkVersionEvent(CheckVersionEvent event) {
+        Log.d(TAG, "Check Version event...");
+
+        if (event.getVersionName() != null && event.getVersionName().equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
+            if (event.getVersion() > UIUtils.getCurrentVersionCode(HelpActivity.this)) {
+                Tracer.d("Installed version: " + UIUtils
+                        .getCurrentVersionCode(HelpActivity.this) + " Found: " + event
+                        .getVersion());
+                showUpdateDialog(CheckVersionEvent.ALPHA);
+
+            } else {
+                ApiClient_.getInstance_(HelpActivity.this).checkAppVersion(CheckVersionEvent
+                        .BETA);
+            }
+        } else {
+            if (event.getVersion() > UIUtils.getCurrentVersionCode(HelpActivity.this)) {
+                Tracer.d("Installed version: " + UIUtils
+                        .getCurrentVersionCode(HelpActivity.this) + " Found: " + event
+                        .getVersion());
+                showUpdateDialog(CheckVersionEvent.BETA);
+            } else {
+                Tracer.d("Installed version: " + "Up to date.");
+            }
+        }
+    }
+
+    private void showUpdateDialog(String str) {
+
+        PrefSiempo.getInstance(HelpActivity.this).write(PrefSiempo
+                .IS_APP_INSTALLED_FIRSTTIME, false);
+        ConnectivityManager connectivityManager = (ConnectivityManager)
+                getSystemService(Context
+                        .CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager
+                .getActiveNetworkInfo();
+        if (activeNetwork != null) {
+            UIUtils.confirmWithCancel(this, "", str.equalsIgnoreCase(CheckVersionEvent.ALPHA) ? "New alpha version found! Would you like to update Siempo?" : "New beta version found! Would you like to update Siempo?", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (which == DialogInterface.BUTTON_POSITIVE) {
+                        PrefSiempo.getInstance(HelpActivity.this).write
+                                (PrefSiempo
+                                        .UPDATE_PROMPT, false);
+                        new ActivityHelper(HelpActivity.this).openBecomeATester();
+                    }
+                }
+            }, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
+
+        } else {
+            Log.d(TAG, getString(R.string.nointernetconnection));
+        }
+    }
+
 }

@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.github.javiersantos.appupdater.AppUpdaterUtils;
 
@@ -93,7 +91,7 @@ public class DashboardActivity extends CoreActivity {
         if (!permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)
                 || !permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) || !permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)
                 || !permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)
-                || !permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) || !permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)
+                || !permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
                 ) {
             Intent intent = new Intent(DashboardActivity.this, SiempoPermissionActivity_
                     .class);
@@ -302,7 +300,7 @@ public class DashboardActivity extends CoreActivity {
         Log.d(TAG, "Check Version event...");
         if (event.getVersionName() != null && event.getVersionName().equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
             if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
-                Tracer.d("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
+                Tracer.i("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
                 showUpdateDialog(CheckVersionEvent.ALPHA);
                 appUpdaterUtils = null;
             } else {
@@ -310,11 +308,11 @@ public class DashboardActivity extends CoreActivity {
             }
         } else {
             if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
-                Tracer.d("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
+                Tracer.i("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
                 showUpdateDialog(CheckVersionEvent.BETA);
                 appUpdaterUtils = null;
             } else {
-                Tracer.d("Installed version: " + "Up to date.");
+                Tracer.i("Installed version: " + "Up to date.");
             }
         }
     }
@@ -352,19 +350,19 @@ public class DashboardActivity extends CoreActivity {
         if (requestCode == 100) {
             if (isEnabled(DashboardActivity.this)) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (!Settings.canDrawOverlays(DashboardActivity.this)) {
-                        Toast.makeText(this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-                        startActivityForResult(intent, 102);
-                    } else {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                                && !notificationManager.isNotificationPolicyAccessGranted()) {
-                            Intent intent = new Intent(
-                                    android.provider.Settings
-                                            .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-                            startActivityForResult(intent, 103);
-                        }
+//                    if (!Settings.canDrawOverlays(DashboardActivity.this)) {
+//                        Toast.makeText(this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
+//                        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+//                        startActivityForResult(intent, 102);
+//                    } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                            && !notificationManager.isNotificationPolicyAccessGranted()) {
+                        Intent intent = new Intent(
+                                android.provider.Settings
+                                        .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                        startActivityForResult(intent, 103);
                     }
+//                    }
                 }
 
             } else {
@@ -373,20 +371,20 @@ public class DashboardActivity extends CoreActivity {
         }
         if (requestCode == 102) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (!Settings.canDrawOverlays(DashboardActivity.this)) {
-                    Toast.makeText(this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-                    startActivityForResult(intent, 102);
-                } else {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                            && !notificationManager.isNotificationPolicyAccessGranted()) {
-                        Intent intent = new Intent(
-                                android.provider.Settings
-                                        .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-                        startActivityForResult(intent, 103);
-                    }
+//                if (!Settings.canDrawOverlays(DashboardActivity.this)) {
+//                    Toast.makeText(this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
+//                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+//                    startActivityForResult(intent, 102);
+//                } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                        && !notificationManager.isNotificationPolicyAccessGranted()) {
+                    Intent intent = new Intent(
+                            android.provider.Settings
+                                    .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                    startActivityForResult(intent, 103);
                 }
             }
+//            }
         }
 
         if (requestCode == 103) {

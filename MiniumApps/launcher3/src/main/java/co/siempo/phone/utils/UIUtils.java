@@ -128,12 +128,15 @@ public class UIUtils {
 
     public static void confirmWithCancel(Context context, String title, String msg, DialogInterface.OnClickListener listener, DialogInterface.OnClickListener listenerNo) {
 
+
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(msg)
                 .setCancelable(false)
                 .setPositiveButton(android.R.string.ok, listener)
                 .setNegativeButton(android.R.string.cancel, listenerNo);
+
+        alertDialog = alertDialogBuilder.create();
         if (alertDialog != null) {
             if (!alertDialog.isShowing()) {
                 alertDialog.show();

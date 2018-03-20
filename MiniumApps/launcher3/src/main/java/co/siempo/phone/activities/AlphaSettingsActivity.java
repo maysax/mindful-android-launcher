@@ -21,6 +21,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.utils.PackageUtil;
 
 import static co.siempo.phone.activities.DashboardActivity.IS_FROM_HOME;
 

@@ -11,6 +11,9 @@ public class NotifyBottomView {
         this.isNotify = isNotify;
     }
 
+    public NotifyBottomView() {
+    }
+
     public boolean isNotify() {
         return isNotify;
     }

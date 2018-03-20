@@ -33,12 +33,12 @@ public class NoteEventReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (intent != null && intent.getAction() != null) {
             if (intent.getAction().equals("minium.co.notes.CREATE_NOTES")) {
-                Tracer.d("minium.co.notes.CREATE_NOTES received");
+                Tracer.i("minium.co.notes.CREATE_NOTES received");
 
                 saveNotes(context, intent);
 
             } else if (intent.getAction().equals("minium.co.notes.EDIT_NOTES")) {
-                Tracer.d("minium.co.notes.EDIT_NOTES received");
+                Tracer.i("minium.co.notes.EDIT_NOTES received");
             }
         }
     }
@@ -58,7 +58,7 @@ public class NoteEventReceiver extends BroadcastReceiver {
         if (tempNotes != null)
             notes = tempNotes;
 
-        Tracer.d("All notes: ", notes);
+        Tracer.i("All notes: ", notes);
 
         try {
             // Add new note to array
@@ -74,7 +74,7 @@ public class NoteEventReceiver extends BroadcastReceiver {
 
             notes.put(newNoteObject);
 
-            Tracer.d("New note: " + newNoteObject);
+            Tracer.i("New note: " + newNoteObject);
 
         } catch (JSONException e) {
             CoreApplication.getInstance().logException(e);
