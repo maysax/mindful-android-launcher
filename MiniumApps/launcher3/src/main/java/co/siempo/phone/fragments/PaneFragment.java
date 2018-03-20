@@ -190,6 +190,21 @@ public class PaneFragment extends CoreFragment {
             linPane.setAlpha(1);
         }
 
+        //Added as part of SSA-1332 , when user clicks home button on empty
+        // junk food app and swipes back from Intention , empty screen was
+        // showing , but now flagging screen will open
+        if (isVisibleToUser && pagerPane.getCurrentItem() == 0) {
+            if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>()).size() == 0) {
+                //Applied for smooth transition
+                Intent intent = new Intent(getActivity(), JunkfoodFlaggingActivity.class);
+                startActivity(intent);
+                getActivity().overridePendingTransition(R
+                        .anim.fade_in_junk, R.anim.fade_out_junk);
+                DashboardActivity.currentIndexPaneFragment = 0;
+            }
+        }
+
+
     }
 
     public void loadView() {
