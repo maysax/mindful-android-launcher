@@ -60,6 +60,22 @@
 
 
         <RelativeLayout
+            android:id="@+id/relTermsOfCondition"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/txtTermsOfCondition"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:text="@string/terms_services"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text.size.large" />
+        </RelativeLayout>
+ <RelativeLayout
             android:id="@+id/relFeedback"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

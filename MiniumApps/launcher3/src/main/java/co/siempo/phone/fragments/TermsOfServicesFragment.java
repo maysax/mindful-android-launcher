@@ -16,11 +16,11 @@ import co.siempo.phone.R;
 /**
  * This screen is use to display privacy policy which is load from assets folder.
  */
-@EFragment(R.layout.fragment_privacy_policy)
-public class PrivacyPolicyFragment extends CoreFragment {
+@EFragment(R.layout.fragment_terms_services)
+public class TermsOfServicesFragment extends CoreFragment {
 
     @ViewById
-    WebView web_PrivacyPolicy;
+    WebView web_Services;
 
     @ViewById
     Toolbar toolbar;
@@ -30,7 +30,7 @@ public class PrivacyPolicyFragment extends CoreFragment {
     void afterViews() {
 
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
-        toolbar.setTitle(R.string.privacypolicy);
+        toolbar.setTitle(R.string.terms_and_services);
         toolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color
                 .colorAccent));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -41,14 +41,11 @@ public class PrivacyPolicyFragment extends CoreFragment {
         });
 
         try {
-            web_PrivacyPolicy.setHorizontalScrollBarEnabled(false);
+            web_Services.setHorizontalScrollBarEnabled(false);
+            web_Services.getSettings().setJavaScriptEnabled(true);
+            web_Services.loadUrl("http://www.siempo.co/app/tos.html");
 
-            web_PrivacyPolicy.getSettings().setJavaScriptEnabled(true);
-//            web_PrivacyPolicy.loadUrl("file:///android_asset/privacypolicy.htm");
-            web_PrivacyPolicy.loadUrl("http://www.siempo.co/app/pp.html");
-
-
-            web_PrivacyPolicy.setWebViewClient(new WebViewClient() {
+            web_Services.setWebViewClient(new WebViewClient() {
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
                     // do your handling codes here, which url is the requested url
                     // probably you need to open that url rather than redirect:
@@ -56,7 +53,7 @@ public class PrivacyPolicyFragment extends CoreFragment {
                     return false; // then it is not handled by default action
                 }
             });
-            web_PrivacyPolicy.setBackgroundColor(Color.TRANSPARENT);
+            web_Services.setBackgroundColor(Color.TRANSPARENT);
         } catch (Exception e) {
             e.printStackTrace();
         }

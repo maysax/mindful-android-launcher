@@ -48,6 +48,7 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
     private HelpActivity mActivity;
     private ProgressDialog progressDialog;
     private LinearLayout lnrVersion;
+    private View txtTermsOfCondition;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,7 +69,9 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
         toolbar = view.findViewById(R.id.toolbar);
 
         txtSendFeedback = view.findViewById(R.id.txtSendFeedback);
+        txtTermsOfCondition = view.findViewById(R.id.txtTermsOfCondition);
         txtSendFeedback.setOnClickListener(this);
+        txtTermsOfCondition.setOnClickListener(this);
 
         txtPrivacyPolicy = view.findViewById(R.id.txtPrivacyPolicy);
         txtPrivacyPolicy.setOnClickListener(this);
@@ -124,6 +127,11 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
                 .build(), R.id.helpView);
     }
 
+    void termsOfServices() {
+        ((CoreActivity) getActivity()).loadChildFragment(TermsOfServicesFragment_.builder()
+                .build(), R.id.helpView);
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -135,6 +143,10 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.txtPrivacyPolicy:
                 txtPrivacyPolicy();
+                break;
+
+            case R.id.txtTermsOfCondition:
+                termsOfServices();
                 break;
             default:
                 break;
