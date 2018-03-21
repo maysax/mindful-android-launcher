@@ -472,11 +472,9 @@ public class PaneFragment extends CoreFragment {
                     cardViewEdtSearch.setVisibility(View.VISIBLE);
                     relSearchTools.setVisibility(View.GONE);
                     UIUtils.showKeyboard(chipsEditText);
-//                    mediator = new MainFragmentMediator(PaneFragment.this);
-//                    mediator.loadData();
-//                    if (adapter != null) {
-//                        adapter.getFilter().filter("");
-//                    }
+                    if (adapter != null) {
+                        adapter.getFilter().filter("");
+                    }
 
                 } else {
                     UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
@@ -853,5 +851,18 @@ public class PaneFragment extends CoreFragment {
         }
     }
 
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MainThread)
+    public void onEvent(NotifySearchRefresh notifySearchRefresh) {
+        if (notifySearchRefresh != null && notifySearchRefresh.isNotify()) {
+            mediator = new MainFragmentMediator(PaneFragment.this);
+            mediator.loadData();
+            if (adapter != null) {
+                adapter.getFilter().filter("");
+            }
+            EventBus.getDefault().removeStickyEvent(notifySearchRefresh);
+        }
+
+    }
 
 }
