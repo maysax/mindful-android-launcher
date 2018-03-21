@@ -55,15 +55,20 @@ public class PermissionUtil {
             case APP_PERMISSION:
                 return hasAppPermissions();
             case CONTACT_PERMISSION:
-                return hasAppPermissions(Manifest.permission.READ_CONTACTS);
+                return hasAppPermissions(Manifest.permission.READ_CONTACTS)
+                        && hasAppPermissions(Manifest.permission.WRITE_CONTACTS);
             case CALL_PHONE_PERMISSION:
                 return hasAppPermissions(Manifest.permission.CALL_PHONE);
             case SEND_SMS_PERMISSION:
-                return hasAppPermissions(Manifest.permission.SEND_SMS);
+                return hasAppPermissions(Manifest.permission.RECEIVE_SMS) &&
+                        hasAppPermissions(Manifest.permission.SEND_SMS)
+                        &&hasAppPermissions(Manifest.permission.READ_SMS)  ;
             case CAMERA_PERMISSION:
                 return hasAppPermissions(Manifest.permission.CAMERA);
             case WRITE_EXTERNAL_STORAGE_PERMISSION:
-                return hasAppPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                return hasAppPermissions(Manifest.permission
+                        .WRITE_EXTERNAL_STORAGE) && hasAppPermissions
+                        (Manifest.permission.READ_EXTERNAL_STORAGE) ;
             case LOCATION_PERMISSION:
                 return hasAppPermissions(Manifest.permission.ACCESS_FINE_LOCATION);
 

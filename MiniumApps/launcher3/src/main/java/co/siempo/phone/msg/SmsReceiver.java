@@ -31,7 +31,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Created by Shahab on 7/29/2016.
  */
-@EReceiver
+
 public class SmsReceiver extends BroadcastReceiver {
 
     Set<String> blockedApps = new HashSet<>();
