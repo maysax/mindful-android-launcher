@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +47,7 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
     private String TAG = "HelpFragment";
     private HelpActivity mActivity;
     private ProgressDialog progressDialog;
+    private LinearLayout lnrVersion;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,6 +77,7 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
         txtFaq.setOnClickListener(this);
 
         txtVersionValue = view.findViewById(R.id.txtVersionValue);
+        lnrVersion = view.findViewById(R.id.lnrVersion);
 
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
         toolbar.setTitle(R.string.help);
@@ -96,7 +99,7 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
         txtVersionValue.setText("" + version);
 
 
-        txtVersionValue.setOnClickListener(new View.OnClickListener() {
+        lnrVersion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkUpgradeVersion();
