@@ -130,7 +130,9 @@ public class SiempoPermissionActivity extends CoreActivity {
                                     "you can not use Siempo\nPlease turn on" +
                                     " " +
                                     "permissions at [Setting] > [Permission]")
-                            .setPermissions(Manifest.permission.READ_CONTACTS)
+                            .setPermissions(Manifest.permission
+                                    .READ_CONTACTS, Manifest.permission
+                                    .WRITE_CONTACTS)
                             .check();
                     break;
                 case R.id.tblSMS:
@@ -141,7 +143,9 @@ public class SiempoPermissionActivity extends CoreActivity {
                                     "you can not use Siempo\nPlease turn on" +
                                     " " +
                                     "permissions at [Setting] > [Permission]")
-                            .setPermissions(Manifest.permission.SEND_SMS)
+                            .setPermissions(Manifest.permission.RECEIVE_SMS,
+                                    Manifest.permission.SEND_SMS, Manifest
+                                            .permission.READ_SMS)
                             .check();
                     break;
                 case R.id.tblStorage:
@@ -151,7 +155,9 @@ public class SiempoPermissionActivity extends CoreActivity {
                                     "you can not use Siempo\nPlease turn on" +
                                     " " +
                                     "permissions at [Setting] > [Permission]")
-                            .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            .setPermissions(Manifest.permission
+                                    .WRITE_EXTERNAL_STORAGE, Manifest
+                                    .permission.READ_EXTERNAL_STORAGE)
                             .check();
                     break;
 
