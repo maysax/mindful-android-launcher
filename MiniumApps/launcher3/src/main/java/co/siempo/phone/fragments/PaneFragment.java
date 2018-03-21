@@ -48,6 +48,7 @@ import co.siempo.phone.customviews.SearchLayout;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.HomePress;
 import co.siempo.phone.event.NotifyBottomView;
+import co.siempo.phone.event.NotifySearchRefresh;
 import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
 import co.siempo.phone.event.SendSmsEvent;
@@ -702,7 +703,7 @@ public class PaneFragment extends CoreFragment {
                                 adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());
                             }
                         }
-                    }, 50);
+                    }, 40);
 
                 } else {
                     getActivity().runOnUiThread(new Runnable() {
@@ -783,6 +784,19 @@ public class PaneFragment extends CoreFragment {
         }
     }
 
+    @Subscribe(sticky = true, threadMode = ThreadMode.MainThread)
+    public void onEvent(NotifySearchRefresh notifySearchRefresh) {
+        if (notifySearchRefresh != null && notifySearchRefresh.isNotify()) {
+            mediator = new MainFragmentMediator(PaneFragment.this);
+            mediator.loadData();
+            if (adapter != null) {
+                adapter.getFilter().filter("");
+            }
+            EventBus.getDefault().removeStickyEvent(notifySearchRefresh);
+        }
+
+    }
+
     private class OnSwipeTouchListener implements View.OnTouchListener {
 
         ListView list;
@@ -849,20 +863,6 @@ public class PaneFragment extends CoreFragment {
             }
 
         }
-    }
-
-
-    @Subscribe(sticky = true, threadMode = ThreadMode.MainThread)
-    public void onEvent(NotifySearchRefresh notifySearchRefresh) {
-        if (notifySearchRefresh != null && notifySearchRefresh.isNotify()) {
-            mediator = new MainFragmentMediator(PaneFragment.this);
-            mediator.loadData();
-            if (adapter != null) {
-                adapter.getFilter().filter("");
-            }
-            EventBus.getDefault().removeStickyEvent(notifySearchRefresh);
-        }
-
     }
 
 }
