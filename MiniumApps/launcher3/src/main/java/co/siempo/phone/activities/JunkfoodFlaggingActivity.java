@@ -33,6 +33,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.adapters.JunkfoodFlaggingAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.AppInstalledEvent;
+import co.siempo.phone.event.NotifySearchRefresh;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.models.AppListInfo;
 import co.siempo.phone.service.LoadFavoritePane;
@@ -40,6 +41,7 @@ import co.siempo.phone.service.LoadJunkFoodPane;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.Sorting;
+import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
 public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterView.OnItemClickListener {
@@ -157,6 +159,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
                         }
                         new LoadJunkFoodPane(JunkfoodFlaggingActivity.this).execute();
                         new LoadFavoritePane(JunkfoodFlaggingActivity.this).execute();
+                        EventBus.getDefault().postSticky(new NotifySearchRefresh(true));
                         finish();
                     }
                 });

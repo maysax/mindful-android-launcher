@@ -47,6 +47,8 @@ import co.siempo.phone.customviews.SearchLayout;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.HomePress;
 import co.siempo.phone.event.NotifyBottomView;
+import co.siempo.phone.event.NotifySearchRefresh;
+import co.siempo.phone.event.NotifyToolView;
 import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
 import co.siempo.phone.event.SendSmsEvent;
@@ -472,8 +474,6 @@ public class PaneFragment extends CoreFragment {
                     cardViewEdtSearch.setVisibility(View.VISIBLE);
                     relSearchTools.setVisibility(View.GONE);
                     UIUtils.showKeyboard(chipsEditText);
-                    mediator = new MainFragmentMediator(PaneFragment.this);
-                    mediator.loadData();
                     if (adapter != null) {
                         adapter.getFilter().filter("");
                     }
@@ -836,5 +836,18 @@ public class PaneFragment extends CoreFragment {
         }
     }
 
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MainThread)
+    public void onEvent(NotifySearchRefresh notifySearchRefresh) {
+        if (notifySearchRefresh != null && notifySearchRefresh.isNotify()) {
+            mediator = new MainFragmentMediator(PaneFragment.this);
+            mediator.loadData();
+            if (adapter != null) {
+                adapter.getFilter().filter("");
+            }
+            EventBus.getDefault().removeStickyEvent(notifySearchRefresh);
+        }
+
+    }
 
 }
