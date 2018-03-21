@@ -3,6 +3,7 @@ package co.siempo.phone.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
@@ -129,7 +130,6 @@ public class PaneFragment extends CoreFragment {
         changeColorOfStatusBar();
 
 
-
         mediator = new MainFragmentMediator(PaneFragment.this);
         mediator.loadData();
 
@@ -175,7 +175,7 @@ public class PaneFragment extends CoreFragment {
         super.setUserVisibleHint(isVisibleToUser);
         //Changing the status bar default value on page change from dashboard
         // to direct Junk Food pane
-        if (isVisibleToUser && null != mWindow && pagerPane!=null && pagerPane.getCurrentItem() == 0) {
+        if (isVisibleToUser && null != mWindow && pagerPane != null && pagerPane.getCurrentItem() == 0) {
             mWindow.setStatusBarColor(getResources().getColor(R.color
                     .appland_blue_bright));
         } else {
@@ -472,11 +472,11 @@ public class PaneFragment extends CoreFragment {
                     cardViewEdtSearch.setVisibility(View.VISIBLE);
                     relSearchTools.setVisibility(View.GONE);
                     UIUtils.showKeyboard(chipsEditText);
-                    mediator = new MainFragmentMediator(PaneFragment.this);
-                    mediator.loadData();
-                    if (adapter != null) {
-                        adapter.getFilter().filter("");
-                    }
+//                    mediator = new MainFragmentMediator(PaneFragment.this);
+//                    mediator.loadData();
+//                    if (adapter != null) {
+//                        adapter.getFilter().filter("");
+//                    }
 
                 } else {
                     UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
@@ -691,15 +691,32 @@ public class PaneFragment extends CoreFragment {
     public void searchLayoutEvent(final SearchLayoutEvent event) {
         try {
             if (getActivity() != null) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        parser.parse(event.getString());
-                        if (adapter != null) {
-                            adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());
+
+                if (event.getString().equalsIgnoreCase("") && searchLayout
+                        .getVisibility() == View.GONE) {
+
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            parser.parse(event.getString());
+                            if (adapter != null) {
+                                adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());
+                            }
                         }
-                    }
-                });
+                    }, 50);
+
+                } else {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            parser.parse(event.getString());
+                            if (adapter != null) {
+                                adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());
+                            }
+                        }
+                    });
+                }
             }
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
