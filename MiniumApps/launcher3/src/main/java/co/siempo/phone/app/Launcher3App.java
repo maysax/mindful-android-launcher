@@ -83,7 +83,7 @@ public class Launcher3App extends CoreApplication {
         //setAllDefaultMenusApplication();
         AppLifecycleTracker handler = new AppLifecycleTracker();
         registerActivityLifecycleCallbacks(handler);
-        PackageUtil.enableAlarm(this);
+//        PackageUtil.enableAlarm(this);
 
     }
 

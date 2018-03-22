@@ -3,10 +3,13 @@ package co.siempo.phone.dialog;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,12 +36,15 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Locale;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
+import co.siempo.phone.service.AlarmBroadcast;
+import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 
 public class DialogTempoSetting extends Dialog implements View.OnClickListener {
@@ -506,6 +512,93 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
             PrefSiempo.getInstance(context).write(PrefSiempo
                     .TEMPO_TYPE, 2);
             bindOnlyAt();
+        }
+        int currentTempoMode = PrefSiempo.getInstance(context).read(PrefSiempo
+                .TEMPO_TYPE, 0);
+        if (currentTempoMode != 0) {
+            if (PackageUtil.isAlarmEnable(context)) {
+                Tracer.d("DialogTempo:Alarm is already running");
+            } else {
+                PackageUtil.enableAlarm(context);
+                Tracer.d("DialogTempo:Alarm is not enable by Tempo");
+            }
+            if (currentTempoMode == 1) {
+                int batch = PrefSiempo.getInstance(context).read(PrefSiempo.BATCH_TIME, 15);
+                Calendar rightNow = Calendar.getInstance(Locale.getDefault());
+                int currentMinute = rightNow.get(Calendar.MINUTE);
+                int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+                long time = 0;
+                if (batch == 15) {
+                    if (currentMinute >= 0 && currentMinute <= 15) {
+                        rightNow.set(Calendar.MINUTE, 00);
+                        rightNow.set(Calendar.SECOND, 00);
+                    } else if (currentMinute >= 16 && currentMinute <= 30) {
+                        rightNow.set(Calendar.MINUTE, 15);
+                        rightNow.set(Calendar.SECOND, 00);
+                    } else if (currentMinute >= 31 && currentMinute <= 45) {
+                        rightNow.set(Calendar.MINUTE, 30);
+                        rightNow.set(Calendar.SECOND, 00);
+                    } else if (currentMinute >= 46) {
+                        rightNow.set(Calendar.MINUTE, 45);
+                        rightNow.set(Calendar.SECOND, 00);
+                    }
+                    time = rightNow.getTimeInMillis();
+                    time = time + (15 * 60000);
+                } else if (batch == 30) {
+                    if (currentMinute >= 0 && currentMinute <= 30) {
+                        rightNow.set(Calendar.MINUTE, 00);
+                        rightNow.set(Calendar.SECOND, 00);
+                    } else if (currentMinute >= 31) {
+                        rightNow.set(Calendar.MINUTE, 30);
+                        rightNow.set(Calendar.SECOND, 00);
+                    }
+                    time = rightNow.getTimeInMillis();
+                    time = time + (30 * 60000);
+                } else if (batch == 1) {
+                    rightNow.set(Calendar.MINUTE, 00);
+                    rightNow.set(Calendar.SECOND, 00);
+                    time = rightNow.getTimeInMillis();
+                    time = time + (60 * 60000);
+                } else if (batch == 2) {
+                    ArrayList<Integer> intList = new ArrayList<>();
+                    intList.addAll(Arrays.asList(0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22));
+                    if (currentHour % 2 == 0) {
+                        rightNow.set(Calendar.MINUTE, 00);
+                        rightNow.set(Calendar.SECOND, 00);
+                    } else {
+//                       int value;
+//                       for (int i=0; i <intList.size(); i++){
+//                           if(currentHour>intList.get(i)){
+//                               value = intList.get()
+//                               break;
+//                           }
+//                       }
+                    }
+                    time = rightNow.getTimeInMillis();
+                    time = time + ((60 * 2) * 60000);
+                } else if (batch == 4) {
+                    ArrayList<Integer> intList = new ArrayList<>();
+                    intList.addAll(Arrays.asList(0, 4, 8, 12, 16, 20));
+                    rightNow.set(Calendar.MINUTE, 00);
+                    rightNow.set(Calendar.SECOND, 00);
+                    time = rightNow.getTimeInMillis();
+                    time = time + ((60 * 4) * 60000);
+                }
+                Tracer.d("DialogTempo:Next Occurring alarm: " + new Date(time));
+            } else if (currentTempoMode == 2) {
+
+            }
+        } else {
+            if (PackageUtil.isAlarmEnable(context)) {
+                Tracer.d("DialogTempo:If Alarm running it's canceled");
+                Intent intentToFire = new Intent(context, AlarmBroadcast.class);
+                intentToFire.setAction(AlarmBroadcast.ACTION_ALARM);
+                PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 1234, intentToFire, PendingIntent.FLAG_UPDATE_CURRENT);
+                AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                alarmManager.cancel(alarmIntent);
+            } else {
+                Tracer.d("DialogTempo:Alarm is not running");
+            }
         }
     }
 

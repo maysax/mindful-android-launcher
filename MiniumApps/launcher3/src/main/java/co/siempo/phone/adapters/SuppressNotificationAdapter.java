@@ -132,7 +132,7 @@ public class SuppressNotificationAdapter extends RecyclerView.Adapter<SuppressNo
 
         } else {
             NotificationContactModel notificationContactModel = notification.getNotificationContactModel();
-            if(null!=notificationContactModel) {
+            if (null != notificationContactModel) {
                 holder.txtUserName.setText(notificationContactModel.getName());
             }
             if (notification.get_text().equalsIgnoreCase(mContext.getString(R.string.missed_call))) {

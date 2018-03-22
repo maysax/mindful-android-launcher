@@ -75,7 +75,8 @@
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/text.size.large" />
         </RelativeLayout>
- <RelativeLayout
+
+        <RelativeLayout
             android:id="@+id/relFeedback"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -115,7 +116,7 @@
                     android:layout_marginLeft="50dp"
                     android:text="@string/version"
                     android:textColor="@android:color/black"
-                    android:textSize="@dimen/text.size.large"/>
+                    android:textSize="@dimen/text.size.large" />
 
                 <TextView
                     android:id="@+id/txtVersionValue"
@@ -124,7 +125,7 @@
                     android:layout_marginLeft="50dp"
                     android:layout_marginTop="5dp"
                     android:text=""
-                    android:textSize="@dimen/text.size.regular"/>
+                    android:textSize="@dimen/text.size.regular" />
             </LinearLayout>
         </RelativeLayout>
 

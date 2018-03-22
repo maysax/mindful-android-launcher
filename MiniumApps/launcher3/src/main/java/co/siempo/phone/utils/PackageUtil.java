@@ -342,6 +342,15 @@ public class PackageUtil {
         return format;
     }
 
+    public static boolean isAlarmEnable(Context context) {
+        Intent intentToFire = new Intent(context, AlarmBroadcast.class);
+        intentToFire.setAction(AlarmBroadcast.ACTION_ALARM);
+        boolean alarmExists =
+                (PendingIntent.getBroadcast(context, 1234, intentToFire, PendingIntent.FLAG_NO_CREATE) != null);
+        return alarmExists;
+    }
+
+
     public static void enableAlarm(Context context) {
         try {
             Intent intentToFire = new Intent(context, AlarmBroadcast.class);
@@ -356,7 +365,7 @@ public class PackageUtil {
                 // Wakes up the device in Doze Mode
                 if (alarmManager != null) {
                     alarmManager.setAlarmClock(new AlarmManager
-                            .AlarmClockInfo(time,alarmIntent),
+                                    .AlarmClockInfo(time, alarmIntent),
                             alarmIntent);
 //                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, alarmIntent);
                 }
