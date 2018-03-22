@@ -3,6 +3,7 @@ package co.siempo.phone.msg;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.provider.Telephony;
 import android.telephony.SmsMessage;
@@ -23,27 +24,30 @@ import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.NewNotificationEvent;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.utils.NotificationUtility;
+import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.EventBus;
 
 /**
  * Created by Shahab on 7/29/2016.
  */
-@EReceiver
+
 public class SmsReceiver extends BroadcastReceiver {
 
     Set<String> blockedApps = new HashSet<>();
     private String mAddress;
     private String mBody;
     private Date mDate;
+    private AudioManager audioManager;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Tracer.d("Messages: onReceive in Launcher3");
+        Tracer.d("SmsReceiver: onReceive");
+        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         if (intent != null && intent.getAction() != null && intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
-                Tracer.d("Notification posted: " + bundle.toString());
+                Tracer.d("SmsReceiver: onReceive" + bundle.toString());
                 Object messages[] = (Object[]) bundle.get("pdus");
                 SmsMessage smsMessage[] = new SmsMessage[messages.length];
 
@@ -66,19 +70,27 @@ public class SmsReceiver extends BroadcastReceiver {
                 mDate = new Date(sms.getTimestampMillis());
 
 
-                if (PrefSiempo.getInstance(context).read(PrefSiempo
-                        .IS_APP_DEFAULT_OR_FRONT, false)) {
-
-
+                if (PackageUtil.isSiempoLauncher(context)) {
+                    int tempoType = PrefSiempo.getInstance(context).read(PrefSiempo.TEMPO_TYPE, 0);
                     blockedApps = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST,
                             new HashSet<String>());
-
+                    Tracer.d("SmsReceiver: onReceive blockedApps" + blockedApps.size());
                     String messagingAppPackage = Telephony.Sms.getDefaultSmsPackage(context);
                     if (null != blockedApps && blockedApps.size() > 0 && !TextUtils.isEmpty(messagingAppPackage)) {
                         for (String blockedApp : blockedApps) {
                             if (blockedApp.equalsIgnoreCase(messagingAppPackage)) {
                                 if (PrefSiempo.getInstance(context).read(PrefSiempo
                                         .TEMPO_TYPE, 0) != 0) {
+                                    Tracer.d("SmsReceiver: onReceive saveMessage");
+                                    if (tempoType == 1 || tempoType == 2) {
+                                        if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                                            int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
+                                            if (sound != 1) {
+                                                Tracer.d("SiempoNotificationListener:audioManager");
+                                                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+                                            }
+                                        }
+                                    }
                                     saveMessage(mAddress, mBody, mDate, context);
                                 }
                             }
@@ -118,6 +130,7 @@ public class SmsReceiver extends BroadcastReceiver {
                 EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
             }
         } catch (Exception e) {
+            Tracer.d("SmsReceiver: onReceive saveMessage" + e.getMessage());
             e.printStackTrace();
             CoreApplication.getInstance().logException(e);
         }

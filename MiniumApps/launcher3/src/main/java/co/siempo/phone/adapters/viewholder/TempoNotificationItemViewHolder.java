@@ -3,6 +3,7 @@ package co.siempo.phone.adapters.viewholder;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,7 @@ import java.util.Set;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import co.siempo.phone.R;
+import co.siempo.phone.app.BitmapWorkerTask;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.utils.PrefSiempo;
 
@@ -37,15 +39,16 @@ public class TempoNotificationItemViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.linearList)
     LinearLayout linearList;
+    Context context;
 
-
-    public TempoNotificationItemViewHolder(View itemView) {
+    public TempoNotificationItemViewHolder(View itemView, Context context) {
         super(itemView);
 
         img_block_unblock = itemView.findViewById(R.id.img_block_unblock);
         txt_app_name = itemView.findViewById(R.id.txt_app_name);
         imv_appicon = itemView.findViewById(R.id.imv_appicon);
         linearList = itemView.findViewById(R.id.linearList);
+        this.context = context;
         ButterKnife.bind(this, itemView);
     }
 
@@ -67,13 +70,21 @@ public class TempoNotificationItemViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-    public void displayImage(String applicationInfo, PackageManager packageManager, String errormessage) {
+    public void displayImage(String packageName, PackageManager packageManager, String errormessage) {
         if (TextUtils.isEmpty(errormessage)) {
-            Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(applicationInfo);
-            if (drawable != null) {
-                imv_appicon.setImageDrawable(drawable);
+
+            Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(packageName);
+            if (bitmap != null) {
+                imv_appicon.setImageBitmap(bitmap);
             } else {
-                imv_appicon.setImageBitmap(null);
+                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, packageName);
+                CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(packageName);
+                if (drawable != null) {
+                    imv_appicon.setImageDrawable(drawable);
+                } else {
+                    imv_appicon.setImageBitmap(null);
+                }
             }
         } else {
             imv_appicon.setImageBitmap(null);

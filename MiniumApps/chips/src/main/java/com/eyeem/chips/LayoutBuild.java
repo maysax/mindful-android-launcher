@@ -23,26 +23,23 @@ import java.util.HashMap;
 public class LayoutBuild implements ILayoutCallback {
     // TODO some test http://alvinalexander.com/java/jwarehouse/android/core/tests/coretests/src/android/text/StaticLayoutTest.java.shtml
 
+    final Spannable text;
+    final Spannable moreText;
     BubbleSpan selectedSpan;
     ArrayList<BubbleSpan> spans = new ArrayList<BubbleSpan>();
     HashMap<BubbleSpan, ArrayList<Rect>> positions = new HashMap<BubbleSpan, ArrayList<Rect>>();
-
-    final Spannable text;
-    final Spannable moreText;
-
     TextPaint textPaint;
-    private StaticLayout truncatedLayout;
-    private StaticLayout expandedLayout;
-    private boolean truncated;
     float lineSpacing = 1.25f;
     int maxLines = 0;
     boolean debug;
     boolean spansPositioned;
-
     /**
      * Represents the value request via build() method
      */
     int buildWidth;
+    private StaticLayout truncatedLayout;
+    private StaticLayout expandedLayout;
+    private boolean truncated;
 
     public LayoutBuild(Spannable text, Config config) {
         this.text = text;
@@ -278,14 +275,14 @@ public class LayoutBuild implements ILayoutCallback {
         canvas.drawLine(line.left, height, line.right, height, paint);
     }
 
+    public boolean isTruncated() {
+        return truncated;
+    }
+
     public void setTruncated(boolean truncated) {
         if (this.truncated == truncated) return;
         this.truncated = truncated;
         positionSpans();
-    }
-
-    public boolean isTruncated() {
-        return truncated;
     }
 
     public static class Config {

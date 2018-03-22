@@ -10,11 +10,9 @@ import android.util.Log;
 
 import java.util.Date;
 
-import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
-import de.greenrobot.event.EventBus;
 
 
 public abstract class PhoneCallReceiver extends BroadcastReceiver {
@@ -42,7 +40,7 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
         if (audioManager != null) {
             sound = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM);
         }
-        Tracer.d("VolumeCheck Call Coming", sound);
+        Tracer.i("VolumeCheck Call Coming", sound);
         changeSoundProfile(true);
         if (intent != null) {
             Log.d(TAG, "Phone Call Receiver :: " + intent.getAction() + currentProfile);
@@ -52,10 +50,8 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
                     PrefSiempo.getInstance(context).write(PrefSiempo
                             .CALL_RUNNING, true);
                     isCallRunning = true;
-                    EventBus.getDefault().post(new NotificationTrayEvent(true));
                 }
             } else {
-                EventBus.getDefault().post(new NotificationTrayEvent(true));
                 String stateStr = "", number = "";
                 int state = 0;
                 if (intent.getExtras() != null && intent.getExtras().containsKey(TelephonyManager.EXTRA_STATE)) {
@@ -171,23 +167,24 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
         if (PackageUtil.isSiempoLauncher(mContext)) {
             tempoType = PrefSiempo.getInstance(mContext).read(PrefSiempo.TEMPO_TYPE, 0);
             if (isIncreaseSound) {
-                Tracer.d("VolumeCheck Call Coming When call comes");
+                Tracer.i("VolumeCheck Call Coming When call comes");
                 if (tempoType == 1 || tempoType == 2) {
                     int sound = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM);
                     int soundMax = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
-                    Tracer.d("VolumeCheck Call Coming + user sound", sound);
-                    Tracer.d("VolumeCheck Call Coming + max sound", soundMax);
-                    if (sound == 1
-                            && (audioManager.getRingerMode() != AudioManager.RINGER_MODE_VIBRATE || audioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT)) {
+                    Tracer.i("VolumeCheck Call Coming + user sound", sound);
+                    Tracer.i("VolumeCheck Call Coming + max sound", soundMax);
+                    if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL && sound == 1) {
                         audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, soundMax, 0);
-                        Tracer.d("VolumeCheck Call Coming Update Sound");
+                        Tracer.i("VolumeCheck Call Coming Update Sound");
                     }
                 }
             } else {
-                Tracer.d("VolumeCheck Call Coming When call disconnected or miscall");
-                if (tempoType == 1 || tempoType == 2) {
-                    audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
-                    Tracer.d("VolumeCheck Call Coming Update Sound");
+                Tracer.i("VolumeCheck Call Coming When call disconnected or miscall");
+                if ((tempoType == 1 || tempoType == 2)) {
+                    if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                        audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+                        Tracer.i("VolumeCheck Call Coming Update Sound");
+                    }
                 }
             }
         }

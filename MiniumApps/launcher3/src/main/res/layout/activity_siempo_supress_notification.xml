@@ -33,28 +33,28 @@
                 android:text="@string/suppressed_notifications"
                 android:textSize="20dp"
                 android:textStyle="bold" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp"
-            android:visibility="gone">
 
-
-
-            <EditText
-                android:id="@+id/edt_search"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:completionThreshold="1"
-                android:hint="@string/search_app"
-                android:maxLines="1"
-                android:minLines="1"
-
-                />
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:visibility="gone">
 
 
-        </LinearLayout>
+                <EditText
+                    android:id="@+id/edt_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:completionThreshold="1"
+                    android:hint="@string/search_app"
+                    android:maxLines="1"
+                    android:minLines="1"
+
+                    />
+
+
+            </LinearLayout>
 
 
             <android.support.v7.widget.RecyclerView
@@ -65,8 +65,8 @@
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
                 android:background="@color/white"
-                android:clipToPadding="false"
-                />
+                android:clipToPadding="false" />
+
             <LinearLayout
                 android:id="@+id/linearClearAll"
                 android:layout_width="match_parent"
@@ -114,7 +114,6 @@
                 android:visibility="gone" />
 
         </LinearLayout>
-
 
 
     </android.support.v7.widget.CardView>

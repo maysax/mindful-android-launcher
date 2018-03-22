@@ -10,22 +10,20 @@ import de.greenrobot.event.EventBus;
  */
 public class TokenManager {
     private static TokenManager tokenManager;
+    private List<TokenItem> items = new ArrayList<>();
+    private String patternString;
 
-    public static TokenManager getInstance(){
-        if(tokenManager==null){
-            tokenManager=new TokenManager();
-        }
-        return tokenManager;
-    }
 
-    public TokenManager(){
+    public TokenManager() {
         init();
     }
 
-
-    private List<TokenItem> items = new ArrayList<>();
-
-    private String patternString;
+    public static TokenManager getInstance() {
+        if (tokenManager == null) {
+            tokenManager = new TokenManager();
+        }
+        return tokenManager;
+    }
 
     public void init() {
         items.clear();
@@ -42,7 +40,7 @@ public class TokenManager {
     }
 
     public TokenItem get(TokenItemType type) {
-        for (TokenItem token: items) {
+        for (TokenItem token : items) {
             if (token.getItemType() == type) return token;
         }
         return null;
@@ -71,15 +69,16 @@ public class TokenManager {
     }
 
     public boolean has(TokenItemType type) {
-        for (TokenItem token: items) {
+        for (TokenItem token : items) {
             if (token.getItemType() == type) return true;
         }
         return false;
     }
 
     public boolean hasCompleted(TokenItemType type) {
-        for (TokenItem token: items) {
-            if (token.getItemType() == type && token.getCompleteType() == TokenCompleteType.FULL) return true;
+        for (TokenItem token : items) {
+            if (token.getItemType() == type && token.getCompleteType() == TokenCompleteType.FULL)
+                return true;
         }
         return false;
     }

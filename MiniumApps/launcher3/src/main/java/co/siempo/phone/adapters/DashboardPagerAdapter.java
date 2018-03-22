@@ -3,7 +3,7 @@ package co.siempo.phone.adapters;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v13.app.FragmentPagerAdapter;
 
 import co.siempo.phone.fragments.IntentionFragment;
 import co.siempo.phone.fragments.PaneFragment;
@@ -14,7 +14,7 @@ import co.siempo.phone.fragments.PaneFragment;
  * Created by rajeshjadi on 2/2/18.
  */
 
-public class DashboardPagerAdapter extends FragmentStatePagerAdapter {
+public class DashboardPagerAdapter extends FragmentPagerAdapter {
     public DashboardPagerAdapter(FragmentManager fm) {
         super(fm);
     }

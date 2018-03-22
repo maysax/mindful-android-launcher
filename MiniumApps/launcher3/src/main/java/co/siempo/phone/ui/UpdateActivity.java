@@ -12,7 +12,6 @@ import org.androidannotations.annotations.ViewById;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.CoreActivity;
-import co.siempo.phone.utils.PackageUtil;
 
 import static android.view.View.GONE;
 
@@ -61,6 +60,6 @@ public class UpdateActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        PackageUtil.checkPermission(this);
+//        PackageUtil.checkPermission(this);
     }
 }

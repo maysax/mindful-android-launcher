@@ -32,11 +32,11 @@
         android:id="@+id/icon"
         android:layout_width="36dp"
         android:layout_height="36dp"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="@dimen/dp_15"
         android:layout_marginLeft="@dimen/dp_20"
         android:layout_marginRight="@dimen/dp_15"
         android:layout_marginTop="@dimen/dp_15"
-        android:layout_marginBottom="@dimen/dp_15"
-        android:layout_centerVertical="true"
         tools:src="@mipmap/ic_launcher" />
 
     <TextView
@@ -44,10 +44,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:lines="1"
         android:layout_marginStart="76dp"
         android:ellipsize="end"
         android:fontFamily="sans-serif"
+        android:lines="1"
         android:textColor="#de000000"
         android:textSize="@dimen/text.size.large"
         tools:text="John Doe" />

@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -31,6 +32,7 @@ import java.util.Map;
 import java.util.Set;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBClient;
 import co.siempo.phone.event.AppInstalledEvent;
@@ -57,17 +59,6 @@ public class StatusBarService extends Service {
     public StatusBarService() {
     }
 
-    public static String getTimeFormat(Context context) {
-        String format;
-        boolean is24hourformat = android.text.format.DateFormat.is24HourFormat(context);
-
-        if (is24hourformat) {
-            format = "HH:mm";
-        } else {
-            format = "hh:mm a";
-        }
-        return format;
-    }
 
     @Override
     public void onCreate() {
@@ -85,9 +76,10 @@ public class StatusBarService extends Service {
             Notification.Builder builder = new Notification.Builder(this, ANDROID_CHANNEL_ID)
                     .setContentTitle(getString(R.string.app_name))
                     .setContentText("")
+                    .setPriority(Notification.PRIORITY_LOW)
                     .setAutoCancel(true);
             Notification notification = builder.build();
-            startForeground(1, notification);
+            startForeground(Constants.STATUSBAR_SERVICE_ID, notification);
         }
 
         return START_STICKY;
@@ -152,7 +144,7 @@ public class StatusBarService extends Service {
      * @param uninstallPackageName
      */
     public void removeAppFromBlockedList(String uninstallPackageName) {
-        Set<String> blockedApps = new HashSet<>();
+        Set<String> blockedApps;
         Set<String> removeApps = new HashSet<>();
         blockedApps = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST,
                 new HashSet<String>());
@@ -166,7 +158,7 @@ public class StatusBarService extends Service {
                     blockedApps);
 
 
-            ArrayList<String> disableApps = new ArrayList<>();
+            ArrayList<String> disableApps;
             String disable_AppList = PrefSiempo.getInstance(context).read
                     (PrefSiempo.HELPFUL_ROBOTS, "");
             if (!TextUtils.isEmpty(disable_AppList)) {
@@ -197,7 +189,7 @@ public class StatusBarService extends Service {
      * @param installPackageName
      */
     public void addAppFromBlockedList(String installPackageName) {
-        Set<String> blockedApps = new HashSet<>();
+        Set<String> blockedApps;
         blockedApps = PrefSiempo.getInstance(context).read(PrefSiempo.BLOCKED_APPLIST, new HashSet<String>());
         try {
             boolean isAppExist = false;
@@ -283,6 +275,12 @@ public class StatusBarService extends Service {
         PrefSiempo.getInstance(context).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
     }
 
+    private void reloadData() {
+        new LoadToolPane(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadFavoritePane(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadJunkFoodPane(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     private class MyObserver extends ContentObserver {
         MyObserver(Handler handler) {
             super(handler);
@@ -311,7 +309,9 @@ public class StatusBarService extends Service {
                         if (intent.getData().getEncodedSchemeSpecificPart() != null) {
                             installPackageName = intent.getData().getEncodedSchemeSpecificPart();
                             addAppFromBlockedList(installPackageName);
+                            Log.d("Testing with device.", "Added" + installPackageName);
                             CoreApplication.getInstance().addOrRemoveApplicationInfo(true, installPackageName);
+                            reloadData();
                         }
 
                     } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
@@ -320,12 +320,13 @@ public class StatusBarService extends Service {
                             if (!(intent.getExtras().containsKey(Intent.EXTRA_REPLACING) &&
                                     intent.getExtras().getBoolean(Intent.EXTRA_REPLACING, false))) {
                                 uninstallPackageName = intent.getData().getSchemeSpecificPart();
-
+                                Log.d("Testing with device.", "Removed" + uninstallPackageName);
                                 if (!TextUtils.isEmpty(uninstallPackageName)) {
                                     new DBClient().deleteMsgByPackageName(uninstallPackageName);
                                     removeAppFromPreference(context, uninstallPackageName);
                                     removeAppFromBlockedList(uninstallPackageName);
                                     CoreApplication.getInstance().addOrRemoveApplicationInfo(false, uninstallPackageName);
+                                    reloadData();
                                 }
                             }
                         }
@@ -339,8 +340,8 @@ public class StatusBarService extends Service {
                             } else {
                                 removeAppFromPreference(context, packageName);
                                 removeAppFromBlockedList(packageName);
-
                             }
+                            reloadData();
                         }
                     }
                     PrefSiempo.getInstance(context).write
@@ -354,6 +355,5 @@ public class StatusBarService extends Service {
 
         }
     }
-
 
 }

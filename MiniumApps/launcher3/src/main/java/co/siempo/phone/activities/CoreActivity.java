@@ -1,6 +1,5 @@
 package co.siempo.phone.activities;
 
-import android.app.ActivityManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -18,10 +17,10 @@ import android.nfc.NdefRecord;
 import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -30,7 +29,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.SystemService;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -38,14 +36,11 @@ import java.io.UnsupportedEncodingException;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Config;
 import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.app.HomeWatcher;
 import co.siempo.phone.event.DownloadApkEvent;
-import co.siempo.phone.event.HomePressEvent;
 import co.siempo.phone.helper.Validate;
 import co.siempo.phone.interfaces.NFCInterface;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.utils.PrefSiempo;
-import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
@@ -62,15 +57,16 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 
     public static File localPath, backupPath;
     public int currentIndex = 0;
-    public HomeWatcher mHomeWatcher;
     public View mTestView = null;
     public WindowManager windowManager = null;
     public boolean isOnStopCalled = false;
-    @SystemService
-    protected ActivityManager activityManager;
     int onStartCount = 0;
     SharedPreferences launcherPrefs;
     UserPresentBroadcastReceiver userPresentBroadcastReceiver;
+    private IntentFilter mFilter;
+    private InnerRecevier mRecevier;
+    private String state = "";
+    private String TAG = "CoreActivity";
 
     // Static method to return File at localPath
     public static File getLocalPath() {
@@ -101,6 +97,8 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         //onCreateAnimation(savedInstanceState);
         windowManager = (WindowManager) getBaseContext().getSystemService(Context.WINDOW_SERVICE);
 
+        mRecevier = new InnerRecevier();
+        mFilter = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_USER_PRESENT);
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
@@ -111,44 +109,18 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         if (PrefSiempo.getInstance(this).read(PrefSiempo.SELECTED_THEME_ID, 0) != 0) {
             setTheme(PrefSiempo.getInstance(this).read(PrefSiempo.SELECTED_THEME_ID, 0));
         }
-        mHomeWatcher = new HomeWatcher(this);
-        mHomeWatcher.setOnHomePressedListener(new HomeWatcher.OnHomePressedListener() {
-            @Override
-            public void onHomePressed() {
-                UIUtils.hideSoftKeyboard(CoreActivity.this, getWindow().getDecorView().getWindowToken());
-                DashboardActivity.currentIndexDashboard = 1;
-                EventBus.getDefault().post(new HomePressEvent(true));
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                            if (!isOnStopCalled && !UIUtils.isMyLauncherDefault(CoreActivity.this))
-                                loadDialog();
-                        } else {
-                            if (!isOnStopCalled && !UIUtils.isMyLauncherDefault(CoreActivity.this))
-                                if (Settings.canDrawOverlays(CoreActivity.this)) {
-                                    loadDialog();
-                                }
-                        }
-                    }
-                }, 1000);
-            }
-
-            @Override
-            public void onHomeLongPressed() {
-            }
-        });
-        mHomeWatcher.startWatch();
-
+        try {
+            registerReceiver(mRecevier, mFilter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (mHomeWatcher != null) mHomeWatcher.startWatch();
         isOnStopCalled = false;
-//        CoreApplication.getInstance().restoreDefaultApplication();
     }
 
     public void loadDialog() {
@@ -267,11 +239,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     @Override
     protected void onPause() {
         super.onPause();
-
-        if (!UIUtils.isMyLauncherDefault(this)) {
-            if (mHomeWatcher != null) mHomeWatcher.stopWatch();
-
-        }
     }
 
     @Override
@@ -279,6 +246,13 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         super.onDestroy();
         if (userPresentBroadcastReceiver != null) {
             unregisterReceiver(userPresentBroadcastReceiver);
+        }
+        if (mRecevier != null) {
+            try {
+                unregisterReceiver(mRecevier);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -300,7 +274,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             t.commitAllowingStateLoss();
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
-            Tracer.e(e, e.getMessage());
         }
     }
 
@@ -410,5 +383,29 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             }
         }
 
+    }
+
+
+    class InnerRecevier extends BroadcastReceiver {
+        final String SYSTEM_DIALOG_REASON_KEY = "reason";
+        final String SYSTEM_DIALOG_REASON_RECENT_APPS = "recentapps";
+        final String SYSTEM_DIALOG_REASON_HOME_KEY = "homekey";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action != null && action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
+                String reason = intent.getStringExtra(SYSTEM_DIALOG_REASON_KEY);
+                if (reason != null) {
+                    Log.e(TAG, "action:" + action + ",reason:" + reason);
+                    if (!state.equalsIgnoreCase(SYSTEM_DIALOG_REASON_RECENT_APPS) && reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
+                        DashboardActivity.currentIndexDashboard = 1;
+                        DashboardActivity.currentIndexPaneFragment = 2;
+//                        EventBus.getDefault().post(new HomePress(1, 2));
+                    }
+                    state = reason;
+                }
+            }
+        }
     }
 }

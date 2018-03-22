@@ -12,8 +12,14 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.event.NotifyBottomView;
+import co.siempo.phone.event.NotifyFavortieView;
+import co.siempo.phone.event.NotifyJunkFoodView;
+import co.siempo.phone.event.NotifyToolView;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.utils.PrefSiempo;
+import de.greenrobot.event.EventBus;
 
 
 public class AppMenuFragment extends CoreFragment implements View.OnClickListener {
@@ -65,10 +71,10 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
         });
 
         switchHideIcon = view.findViewById(R.id.switchHideIcon);
-        switchHideIcon.setChecked(PrefSiempo.getInstance(context).read(PrefSiempo.IS_ICON_BRANDING, true));
+        switchHideIcon.setChecked(CoreApplication.getInstance().isHideIconBranding());
 
         switchJunkFoodmize = view.findViewById(R.id.switchJunkFoodmize);
-        switchJunkFoodmize.setChecked(PrefSiempo.getInstance(context).read(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, true));
+        switchJunkFoodmize.setChecked(CoreApplication.getInstance().isRandomize());
 
         relJunkFoodmize = view.findViewById(R.id.relJunkFoodmize);
         relJunkFoodmize.setOnClickListener(this);
@@ -88,20 +94,28 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
                 if (switchJunkFoodmize.isChecked()) {
                     switchJunkFoodmize.setChecked(false);
                     PrefSiempo.getInstance(context).write(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, false);
+                    CoreApplication.getInstance().setRandomize(false);
                 } else {
                     switchJunkFoodmize.setChecked(true);
                     PrefSiempo.getInstance(context).write(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, true);
+                    CoreApplication.getInstance().setRandomize(true);
                 }
-
+                EventBus.getDefault().postSticky(new NotifyJunkFoodView(true));
                 break;
             case R.id.relHideIconBranding:
                 if (switchHideIcon.isChecked()) {
                     switchHideIcon.setChecked(false);
                     PrefSiempo.getInstance(context).write(PrefSiempo.IS_ICON_BRANDING, false);
+                    CoreApplication.getInstance().setHideIconBranding(false);
                 } else {
                     switchHideIcon.setChecked(true);
                     PrefSiempo.getInstance(context).write(PrefSiempo.IS_ICON_BRANDING, true);
+                    CoreApplication.getInstance().setHideIconBranding(true);
                 }
+                EventBus.getDefault().postSticky(new NotifyJunkFoodView(true));
+                EventBus.getDefault().postSticky(new NotifyFavortieView(true));
+                EventBus.getDefault().postSticky(new NotifyToolView(true));
+                EventBus.getDefault().postSticky(new NotifyBottomView(true));
                 break;
         }
     }

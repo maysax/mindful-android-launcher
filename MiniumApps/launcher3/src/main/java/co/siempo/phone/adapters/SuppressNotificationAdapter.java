@@ -47,6 +47,7 @@ import co.siempo.phone.interfaces.ItemTouchHelperAdapter;
 import co.siempo.phone.interfaces.ItemTouchHelperViewHolder;
 import co.siempo.phone.models.DeleteItem;
 import co.siempo.phone.models.Notification;
+import co.siempo.phone.models.NotificationContactModel;
 import co.siempo.phone.utils.NotificationUtility;
 import co.siempo.phone.utils.UIUtils;
 
@@ -130,7 +131,10 @@ public class SuppressNotificationAdapter extends RecyclerView.Adapter<SuppressNo
             }
 
         } else {
-            holder.txtUserName.setText(notification.getNotificationContactModel().getName());
+            NotificationContactModel notificationContactModel = notification.getNotificationContactModel();
+            if(null!=notificationContactModel) {
+                holder.txtUserName.setText(notificationContactModel.getName());
+            }
             if (notification.get_text().equalsIgnoreCase(mContext.getString(R.string.missed_call))) {
                 holder.imgAppIcon.setBackground(null);
                 holder.imgAppIcon.setImageDrawable(mContext.getResources().getDrawable(android.R.drawable.sym_call_missed, null));
@@ -151,9 +155,9 @@ public class SuppressNotificationAdapter extends RecyclerView.Adapter<SuppressNo
             holder.txtMessage.setText(notification.get_text());
             holder.txtTime.setText(notification.get_time());
             try {
-                if (notification.getNotificationContactModel().getImage() != null && !notification.getNotificationContactModel().getImage().equals("")) {
+                if (notificationContactModel.getImage() != null && !notificationContactModel.getImage().equals("")) {
                     Glide.with(mContext)
-                            .load(Uri.parse(notification.getNotificationContactModel().getImage()))
+                            .load(Uri.parse(notificationContactModel.getImage()))
                             .placeholder(R.drawable.ic_person_black_24dp)
                             .into(holder.imgUserImage);
                 } else {

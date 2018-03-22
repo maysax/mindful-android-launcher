@@ -28,6 +28,7 @@ import co.siempo.phone.activities.JunkfoodFlaggingActivity;
 import co.siempo.phone.app.BitmapWorkerTask;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.AppMenu;
+import co.siempo.phone.service.LoadToolPane;
 import co.siempo.phone.utils.DrawableProvider;
 import co.siempo.phone.utils.PrefSiempo;
 
@@ -73,7 +74,9 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
             String packageName = item.activityInfo.packageName;
             if (PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>()).contains(packageName)) {
                 holder.btnHideApps.setVisibility(View.VISIBLE);
-                Drawable drawable = mProvider.getRound("" + item.loadLabel(context.getPackageManager()).charAt(0), R.color.app_assignment_junkfood);
+                Drawable drawable = mProvider.getRound("" + item.loadLabel
+                        (context.getPackageManager()).charAt(0), R.color
+                        .app_assignment_junkfood, 30);
                 holder.imgIcon.setImageDrawable(drawable);
                 holder.btnHideApps.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -118,10 +121,12 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
                             map.get(id).setApplicationName(item.activityInfo.packageName);
                         }
                     }
+
                     String hashMapToolSettings = new Gson().toJson(map);
                     PrefSiempo.getInstance(context).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
                     Intent returnIntent = new Intent();
                     ((AppAssignmentActivity) context).setResult(isSameApp ? Activity.RESULT_CANCELED : Activity.RESULT_OK, returnIntent);
+                    new LoadToolPane(context).execute();
                     ((AppAssignmentActivity) context).finish();
                 }
             }

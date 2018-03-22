@@ -2,11 +2,13 @@ package co.siempo.phone.utils;
 
 import android.Manifest;
 import android.app.AppOpsManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.provider.Settings;
+import android.text.TextUtils;
 
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.service.SiempoNotificationListener_;
@@ -53,15 +55,20 @@ public class PermissionUtil {
             case APP_PERMISSION:
                 return hasAppPermissions();
             case CONTACT_PERMISSION:
-                return hasAppPermissions(Manifest.permission.READ_CONTACTS);
+                return hasAppPermissions(Manifest.permission.READ_CONTACTS)
+                        && hasAppPermissions(Manifest.permission.WRITE_CONTACTS);
             case CALL_PHONE_PERMISSION:
                 return hasAppPermissions(Manifest.permission.CALL_PHONE);
             case SEND_SMS_PERMISSION:
-                return hasAppPermissions(Manifest.permission.SEND_SMS);
+                return hasAppPermissions(Manifest.permission.RECEIVE_SMS) &&
+                        hasAppPermissions(Manifest.permission.SEND_SMS)
+                        &&hasAppPermissions(Manifest.permission.READ_SMS)  ;
             case CAMERA_PERMISSION:
                 return hasAppPermissions(Manifest.permission.CAMERA);
             case WRITE_EXTERNAL_STORAGE_PERMISSION:
-                return hasAppPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                return hasAppPermissions(Manifest.permission
+                        .WRITE_EXTERNAL_STORAGE) && hasAppPermissions
+                        (Manifest.permission.READ_EXTERNAL_STORAGE) ;
             case LOCATION_PERMISSION:
                 return hasAppPermissions(Manifest.permission.ACCESS_FINE_LOCATION);
 
@@ -106,7 +113,22 @@ public class PermissionUtil {
      * @return True if {@link SiempoNotificationListener_} is enabled.
      */
     private boolean isEnabled() {
-        return ServiceUtils.isNotificationListenerServiceRunning(context, SiempoNotificationListener_.class);
+        String pkgName = context.getPackageName();
+        final String flat = Settings.Secure.getString(context.getContentResolver(),
+                "enabled_notification_listeners");
+        if (!TextUtils.isEmpty(flat)) {
+            final String[] names = flat.split(":");
+            for (int i = 0; i < names.length; i++) {
+                final ComponentName cn = ComponentName.unflattenFromString(names[i]);
+                if (cn != null) {
+                    if (TextUtils.equals(pkgName, cn.getPackageName())) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+//        return ServiceUtils.isNotificationListenerServiceRunning(context, SiempoNotificationListener_.class);
     }
 
     private boolean checkUserStatPermission() {
@@ -115,11 +137,11 @@ public class PermissionUtil {
             ApplicationInfo applicationInfo = packageManager.getApplicationInfo(context.getPackageName(), 0);
             AppOpsManager appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
             int mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, applicationInfo.uid, applicationInfo.packageName);
-            Tracer.d("Usage stat permission: " + mode);
+            Tracer.i("Usage stat permission: " + mode);
             return (mode == AppOpsManager.MODE_ALLOWED);
 
         } catch (PackageManager.NameNotFoundException e) {
-            Tracer.d("Usage stat permission: " + e.getMessage());
+            Tracer.i("Usage stat permission: " + e.getMessage());
             return false;
         }
     }
