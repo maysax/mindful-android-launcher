@@ -14,6 +14,7 @@
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
         <item name="popupMenuStyle">@style/interrupt_popup_menu</item>
         <item name="actionMenuTextColor">@color/colorAccent</item>
+        <item name="android:windowDisablePreview">true</item>
     </style>
 
     <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">

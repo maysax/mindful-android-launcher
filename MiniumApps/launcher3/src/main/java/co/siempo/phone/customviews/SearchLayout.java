@@ -15,13 +15,11 @@ import com.eyeem.chips.ChipsEditText;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.DashboardActivity;
-import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.SearchLayoutEvent;
 import co.siempo.phone.token.TokenCompleteType;
 import co.siempo.phone.token.TokenItem;
 import co.siempo.phone.token.TokenManager;
 import co.siempo.phone.token.TokenUpdateEvent;
-import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
@@ -38,19 +36,6 @@ public class SearchLayout extends CardView {
     private String formattedTxt;
     private boolean isWatching = true;
     private Handler handler;
-    private Runnable showKeyboardRunnable = new Runnable() {
-        @Override
-        public void run() {
-            try {
-                if (launcherPrefs.getBoolean("isKeyBoardDisplay", false) && txtSearchBox != null) {
-                    UIUtils.showKeyboard(txtSearchBox);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                CoreApplication.getInstance().logException(e);
-            }
-        }
-    };
 
     public SearchLayout(Context context) {
         super(context);
@@ -145,7 +130,6 @@ public class SearchLayout extends CardView {
                 txtSearchBox.setText("");
         }
 
-        handler.postDelayed(showKeyboardRunnable, 500);
     }
 
     private void handleAfterTextChanged(String s) {
@@ -161,11 +145,7 @@ public class SearchLayout extends CardView {
         updateSearchField();
     }
 
-//    @Subscribe
-//    public void notificationHideEvent(NotificationTrayEvent event) {
-//        if (!event.isVisible())
-//            askFocus();
-//    }
+
 
     private void updateSearchField() {
         String[] splits = formattedTxt.split("\\|");

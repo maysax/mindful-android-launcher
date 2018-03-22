@@ -32,6 +32,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.adapters.viewholder.NoticationFooterViewHolder;
 import co.siempo.phone.adapters.viewholder.TempoNotificationHeaderViewHolder;
 import co.siempo.phone.adapters.viewholder.TempoNotificationItemViewHolder;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.AppListInfo;
 import co.siempo.phone.utils.PrefSiempo;
@@ -100,6 +101,18 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
         }
     }
 
+    public List<AppListInfo> getHelpfulRobot_List() {
+        return helpfulRobot_List;
+    }
+
+    public List<AppListInfo> getBlockedList() {
+        return blockedList;
+    }
+
+    public List<AppListInfo> getMessengerList() {
+        return messengerList;
+    }
+
     @Override
     protected int getItemCountForSection(int section) {
         int size = 0;
@@ -144,7 +157,7 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
     @Override
     protected TempoNotificationItemViewHolder onCreateItemViewHolder(ViewGroup parent, int viewType) {
         View view = getLayoutInflater().inflate(R.layout.tempo_installed_app_list_row, parent, false);
-        return new TempoNotificationItemViewHolder(view);
+        return new TempoNotificationItemViewHolder(view, context);
     }
 
     @Override
@@ -173,7 +186,7 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
 
             final AppListInfo otherAppsItems = blockedList.get(position);
             holder.enableViews();
-            String appName = getAppNameFromPackage(otherAppsItems.packageName);
+            String appName = CoreApplication.getInstance().getListApplicationName().get(otherAppsItems.packageName);
             holder.render(appName);
 
 
@@ -321,7 +334,7 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
 
 
             final AppListInfo messengerAppsItem = messengerList.get(position);
-            String appName = getAppNameFromPackage(messengerAppsItem
+            String appName = CoreApplication.getInstance().getListApplicationName().get(messengerAppsItem
                     .packageName);
             holder.render(appName);
             holder.enableViews();
@@ -378,7 +391,7 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
         if (headerList.get(section).headerName.equals("Helpful robots")) {
             final AppListInfo appListItem = helpfulRobot_List.get(position);
             holder.enableViews();
-            String appName = getAppNameFromPackage(appListItem.packageName);
+            String appName = CoreApplication.getInstance().getListApplicationName().get(appListItem.packageName);
             holder.render(appName);
 
             holder.displayImage(appListItem.packageName, packageManager, appListItem.errorMessage);
@@ -480,7 +493,7 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
                     }
             }
         } catch (Exception e) {
-            Tracer.d("Exception in remove error message");
+            Tracer.i("Exception in remove error message");
         }
 
 

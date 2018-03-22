@@ -50,11 +50,11 @@ public class DrawableProvider {
                 .buildRect(text, mGenerator.getColor(text));
     }
 
-    public TextDrawable getRound(String text, int color) {
+    public TextDrawable getRound(String text, int color,int fontSize) {
         return TextDrawable.builder()
                 .beginConfig()
                 .useFont(Typeface.DEFAULT)
-                .fontSize(toPx(30))
+                .fontSize(toPx(fontSize))
                 .textColor(color)
                 .bold()
                 .endConfig()

@@ -12,6 +12,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Utils {
+    public final static String TEXT_ONLY = "text_only";
+    public final static String TAGS_ONLY = "tags_only";
+    public final static String MIXED = "mixed";
+    public final static String TEXT_FIRST = "text_first";
+    public final static String TAGS_FIRST = "tags_first";
+    public final static String NONE = "none";
+
     public static String flatten(EditText editor, HashMap<Class<?>, FlatteningFactory> factories) {
         try {
             return flatten(editor.getText(), factories);
@@ -55,12 +62,6 @@ public class Utils {
         return out.toString();
     }
 
-    public interface FlatteningFactory {
-        public String out(String in, Object span);
-
-        public void afterReplaced(int start, int end, String replacementText, Object span);
-    }
-
     public static void bubblify(Editable editable, String text, int start, int end,
                                 int maxWidth, BubbleStyle bubbleStyle, ChipsEditText et, Object data) {
         if (text == null) {
@@ -91,13 +92,6 @@ public class Utils {
         editable.setSpan(span, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         span.setPressed(false, editable);
     }
-
-    public final static String TEXT_ONLY = "text_only";
-    public final static String TAGS_ONLY = "tags_only";
-    public final static String MIXED = "mixed";
-    public final static String TEXT_FIRST = "text_first";
-    public final static String TAGS_FIRST = "tags_first";
-    public final static String NONE = "none";
 
     /**
      * Calculates what kind of text setup this is
@@ -146,5 +140,11 @@ public class Utils {
             return TAGS_ONLY;
         }
         return assumption;
+    }
+
+    public interface FlatteningFactory {
+        String out(String in, Object span);
+
+        void afterReplaced(int start, int end, String replacementText, Object span);
     }
 }

@@ -412,17 +412,16 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
     private void enableRadioOnPosition(int pos, boolean isDialogLoaded) {
         if (isDialogLoaded) {
             if (pos == 0) {
-                if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL
-                        || audioManager.getRingerMode() != AudioManager.RINGER_MODE_VIBRATE) {
+                if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
                     int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
                     audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, sound, 0);
-                    Tracer.d("VolumeInTempo", audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+                    Tracer.i("VolumeInTempo", audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
                 }
             } else {
                 if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-                    Tracer.d("VolumeInTempo Before", audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+                    Tracer.i("VolumeInTempo Before", audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
                     audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
-                    Tracer.d("VolumeInTempo after", audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+                    Tracer.i("VolumeInTempo after", audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
                 }
             }
         }

@@ -5,6 +5,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
@@ -41,8 +42,19 @@ public class PrivacyPolicyFragment extends CoreFragment {
 
         try {
             web_PrivacyPolicy.setHorizontalScrollBarEnabled(false);
+
             web_PrivacyPolicy.getSettings().setJavaScriptEnabled(true);
-            web_PrivacyPolicy.loadUrl("file:///android_asset/privacypolicy.htm");
+            web_PrivacyPolicy.loadUrl("http://www.getsiempo.com/app/pp.html");
+
+
+            web_PrivacyPolicy.setWebViewClient(new WebViewClient() {
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    // do your handling codes here, which url is the requested url
+                    // probably you need to open that url rather than redirect:
+                    view.loadUrl(url);
+                    return false; // then it is not handled by default action
+                }
+            });
             web_PrivacyPolicy.setBackgroundColor(Color.TRANSPARENT);
         } catch (Exception e) {
             e.printStackTrace();

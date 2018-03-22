@@ -33,6 +33,9 @@ public class ChipsTextView extends View {
     boolean dynamicTextWidth;
     boolean consumeAllTouchEvents;
     LayoutBuild.Config _defaultConfig;
+    int maxAvailableWidth = 0;
+    Subscription lastSubscription;
+    private LayoutBuild _layoutBuild;
 
     public ChipsTextView(Context context) {
         super(context);
@@ -106,8 +109,6 @@ public class ChipsTextView extends View {
         layout.draw(canvas);
     }
 
-    int maxAvailableWidth = 0;
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
@@ -134,10 +135,6 @@ public class ChipsTextView extends View {
         }
 
         this.setMeasuredDimension(width, height);
-    }
-
-    public interface OnBubbleClickedListener {
-        public void onBubbleClicked(View view, BubbleSpan bubbleSpan);
     }
 
     public void setOnBubbleClickedListener(OnBubbleClickedListener listener) {
@@ -180,57 +177,9 @@ public class ChipsTextView extends View {
         startAnimation(expandAnimation);
     }
 
-    public class ResizeAnimation extends Animation {
-
-        final int startHeight;
-
-        final int targetHeight;
-
-        public ResizeAnimation(int targetHeight) {
-            this.targetHeight = targetHeight;
-            startHeight = getHeight();
-        }
-
-        @Override
-        protected void applyTransformation(float interpolatedTime, Transformation t) {
-            int newHeight = (int) (startHeight + (targetHeight - startHeight) * interpolatedTime);
-            getLayoutParams().height = newHeight;
-            requestLayout();
-        }
-
-        @Override
-        public void initialize(int width, int height, int parentWidth, int parentHeight) {
-            super.initialize(width, height, parentWidth, parentHeight);
-        }
-
-        @Override
-        public boolean willChangeBounds() {
-            return true;
-        }
-
-    }
-
-    private LayoutBuild _layoutBuild;
-
     public LayoutBuild getLayoutBuild() {
         return _layoutBuild;
     }
-
-    public void setLayoutBuild(LayoutBuild layoutBuild) {
-        this._layoutBuild = layoutBuild;
-        //StaticLayout sl = layoutBuild != null ? layoutBuild.layout() : null;
-
-        int currentW = getWidth() - getPaddingLeft() - getPaddingRight();
-        int currentH = getHeight() - getPaddingTop() - getPaddingBottom();
-
-        if (layoutBuild != null && layoutBuild.getBuildWidth() == currentW && layoutBuild.layoutHeight() == currentH) { // if size hasn't changed just invalidate
-            invalidate();
-        } else {
-            requestLayout();
-        }
-    }
-
-    Subscription lastSubscription;
 
     public void setLayoutBuild(Observable<LayoutBuild> layoutBuildObservable) {
 
@@ -248,6 +197,20 @@ public class ChipsTextView extends View {
         lastSubscription = layoutBuildObservable
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new LayoutSubscription(this));
+    }
+
+    public void setLayoutBuild(LayoutBuild layoutBuild) {
+        this._layoutBuild = layoutBuild;
+        //StaticLayout sl = layoutBuild != null ? layoutBuild.layout() : null;
+
+        int currentW = getWidth() - getPaddingLeft() - getPaddingRight();
+        int currentH = getHeight() - getPaddingTop() - getPaddingBottom();
+
+        if (layoutBuild != null && layoutBuild.getBuildWidth() == currentW && layoutBuild.layoutHeight() == currentH) { // if size hasn't changed just invalidate
+            invalidate();
+        } else {
+            requestLayout();
+        }
     }
 
     private void processAttributes(Context context, AttributeSet attrs) {
@@ -335,6 +298,10 @@ public class ChipsTextView extends View {
         defaultConfig().clickable = clickable;
     }
 
+    public interface OnBubbleClickedListener {
+        void onBubbleClicked(View view, BubbleSpan bubbleSpan);
+    }
+
     private static class LayoutSubscription implements Action1<LayoutBuild> {
 
         final WeakReference<ChipsTextView> _tv;
@@ -355,5 +322,35 @@ public class ChipsTextView extends View {
      * Marker class. Marks a truncation bubble/area
      */
     public static class Truncation {
+    }
+
+    public class ResizeAnimation extends Animation {
+
+        final int startHeight;
+
+        final int targetHeight;
+
+        public ResizeAnimation(int targetHeight) {
+            this.targetHeight = targetHeight;
+            startHeight = getHeight();
+        }
+
+        @Override
+        protected void applyTransformation(float interpolatedTime, Transformation t) {
+            int newHeight = (int) (startHeight + (targetHeight - startHeight) * interpolatedTime);
+            getLayoutParams().height = newHeight;
+            requestLayout();
+        }
+
+        @Override
+        public void initialize(int width, int height, int parentWidth, int parentHeight) {
+            super.initialize(width, height, parentWidth, parentHeight);
+        }
+
+        @Override
+        public boolean willChangeBounds() {
+            return true;
+        }
+
     }
 }

@@ -7,7 +7,6 @@
     tools:ignore="UnusedResources">
 
 
-
     <FrameLayout
         android:id="@+id/fragment"
         android:layout_width="match_parent"

@@ -41,8 +41,8 @@
                 android:id="@+id/activity_grid_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="2dp"
                 android:layout_below="@+id/btnListOrGrid"
+                android:layout_marginBottom="2dp"
                 android:scrollbars="vertical" />
 
 

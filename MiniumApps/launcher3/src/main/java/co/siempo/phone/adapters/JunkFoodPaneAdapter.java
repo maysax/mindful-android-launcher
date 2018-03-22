@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -38,11 +39,18 @@ public class JunkFoodPaneAdapter extends RecyclerView.Adapter<JunkFoodPaneAdapte
     private boolean isHideIconBranding = false;
     private DrawableProvider mProvider;
 
+
     public JunkFoodPaneAdapter(Context context, ArrayList<String> mainListItemList, boolean isHideIconBranding) {
         this.context = context;
         this.mainListItemList = mainListItemList;
         this.isHideIconBranding = isHideIconBranding;
         mProvider = new DrawableProvider(context);
+    }
+
+    public void setMainListItemList(List<String> mainListItemList, boolean isHideIconBranding) {
+        this.mainListItemList = mainListItemList;
+        this.isHideIconBranding = isHideIconBranding;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -68,9 +76,12 @@ public class JunkFoodPaneAdapter extends RecyclerView.Adapter<JunkFoodPaneAdapte
             holder.txtAppTextImage.setVisibility(View.VISIBLE);
             holder.imgAppIcon.setVisibility(View.GONE);
             holder.imgUnderLine.setVisibility(View.VISIBLE);
+            holder.imgUnderLine.setImageResource(R.drawable.letter_bottom_border_junkfood);
             String fontPath = "fonts/robotocondensedregular.ttf";
             if (!TextUtils.isEmpty(applicationName)) {
-                holder.txtAppTextImage.setText("" + applicationName.charAt(0));
+                holder.text.setTextColor(ContextCompat.getColor(context, R.color.junkfood_text_and_underlinecolor));
+                holder.txtAppTextImage.setTextColor(ContextCompat.getColor(context, R.color.junkfood_text_and_underlinecolor));
+                holder.txtAppTextImage.setText("" + applicationName.toUpperCase().charAt(0));
             }
             // Loading Font Face
             Typeface tf = Typeface.createFromAsset(context.getAssets(), fontPath);

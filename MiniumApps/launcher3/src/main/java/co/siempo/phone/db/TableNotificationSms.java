@@ -30,15 +30,6 @@ public class TableNotificationSms implements Serializable {
     private String packageName;
     private int content_type;
     private int notification_id;
-
-    public long getNotification_date() {
-        return notification_date;
-    }
-
-    public void setNotification_date(long notification_date) {
-        this.notification_date = notification_date;
-    }
-
     private long notification_date;
 
     @Generated(hash = 920815365)
@@ -51,7 +42,7 @@ public class TableNotificationSms implements Serializable {
 
     @Generated(hash = 584408565)
     public TableNotificationSms(Long id, String _contact_title, String _message, java.util.Date _date, Integer _contact_id, Integer _sms_id, Long _snooze_time, Boolean _is_read,
-            int app_icon, byte[] user_icon, Integer notification_type, String packageName, int content_type, int notification_id, long notification_date) {
+                                int app_icon, byte[] user_icon, Integer notification_type, String packageName, int content_type, int notification_id, long notification_date) {
         this.id = id;
         this._contact_title = _contact_title;
         this._message = _message;
@@ -66,6 +57,14 @@ public class TableNotificationSms implements Serializable {
         this.packageName = packageName;
         this.content_type = content_type;
         this.notification_id = notification_id;
+        this.notification_date = notification_date;
+    }
+
+    public long getNotification_date() {
+        return notification_date;
+    }
+
+    public void setNotification_date(long notification_date) {
         this.notification_date = notification_date;
     }
 

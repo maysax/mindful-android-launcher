@@ -300,10 +300,10 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
     protected void onResume() {
         super.onResume();
         startTime = System.currentTimeMillis();
-        Tracer.d("Notes onResume called");
+        Tracer.i("Notes onResume called");
         // Retrieve from local path
         JSONArray tempNotes = retrieveData(localPath);
-        Tracer.d("All notes: " + tempNotes);
+        Tracer.i("All notes: " + tempNotes);
 
         // If not null -> equal main notes to retrieved notes
         if (tempNotes != null) {
@@ -996,7 +996,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
                 if (mBundle != null && mBundle.getString("request").equals("HOME")) {
                     JSONArray tempNotes = retrieveData(localPath);
 
-                    Tracer.d("All notes: " + tempNotes);
+                    Tracer.i("All notes: " + tempNotes);
 
                     // If not null -> equal main notes to retrieved notes
                     if (tempNotes != null) {

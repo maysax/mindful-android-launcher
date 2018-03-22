@@ -1,14 +1,13 @@
 package co.siempo.phone.activities;
 
-import android.content.Intent;
-import android.content.pm.ResolveInfo;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
-import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.Menu;
@@ -30,17 +29,17 @@ import co.siempo.phone.R;
 import co.siempo.phone.adapters.FavoriteFlaggingAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.AppInstalledEvent;
-import co.siempo.phone.event.HomePressEvent;
 import co.siempo.phone.helper.FirebaseHelper;
-import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.AppListInfo;
+import co.siempo.phone.service.LoadFavoritePane;
+import co.siempo.phone.service.LoadJunkFoodPane;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.Sorting;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.Subscribe;
 
-public class FavoritesSelectionActivity extends CoreActivity {
+public class FavoritesSelectionActivity extends CoreActivity implements AdapterView.OnItemClickListener {
 
     Set<String> list = new HashSet<>();
     //Junk list removal will be needed here as we need to remove the
@@ -48,7 +47,7 @@ public class FavoritesSelectionActivity extends CoreActivity {
     Set<String> junkFoodList = new HashSet<>();
     FavoriteFlaggingAdapter junkfoodFlaggingAdapter;
     int firstPosition;
-    List<ResolveInfo> installedPackageList;
+    List<String> installedPackageList;
     private Toolbar toolbar;
     private ListView listAllApps;
     private PopupMenu popup;
@@ -57,6 +56,7 @@ public class FavoritesSelectionActivity extends CoreActivity {
     private List<AppListInfo> unfavoriteList = new ArrayList<>();
     private ArrayList<AppListInfo> bindingList = new ArrayList<>();
     private long startTime = 0;
+    private boolean isClickOnView;
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
@@ -73,7 +73,15 @@ public class FavoritesSelectionActivity extends CoreActivity {
         list = PrefSiempo.getInstance(this).read(PrefSiempo.FAVORITE_APPS, new HashSet<String>());
         junkFoodList = PrefSiempo.getInstance(this).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
         list.removeAll(junkFoodList);
-        loadApps();
+
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (bindingList != null && bindingList.get(position) != null
+                && !bindingList.get(position).packageName.equalsIgnoreCase("")) {
+            showPopUp(view, bindingList.get(position).isFlagApp, position);
+        }
     }
 
     /**
@@ -93,20 +101,11 @@ public class FavoritesSelectionActivity extends CoreActivity {
      * load system apps and filter the application for junkfood and normal.
      */
     private void loadApps() {
-        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-        installedPackageList = getPackageManager().queryIntentActivities(mainIntent, 0);
-        List<ResolveInfo> appList = new ArrayList<>();
-        for (int i = 0; i < installedPackageList.size(); i++) {
-            boolean isAdded = false;
-            for (int j = 0; j < appList.size(); j++) {
-                if (!TextUtils.isEmpty(installedPackageList.get(i).activityInfo.packageName) && appList.get(j).activityInfo.packageName.equalsIgnoreCase(installedPackageList.get(i).activityInfo.packageName)) {
-                    isAdded = true;
-                }
-            }
-            if (!isAdded) {
-                appList.add(installedPackageList.get(i));
-            }
+        List<String> installedPackageListLocal = CoreApplication.getInstance().getPackagesList();
+        List<String> appList = new ArrayList<>();
+
+        for (int i = 0; i < installedPackageListLocal.size(); i++) {
+            appList.add(installedPackageListLocal.get(i));
         }
         installedPackageList = appList;
         bindData(false);
@@ -123,6 +122,8 @@ public class FavoritesSelectionActivity extends CoreActivity {
                 junkFoodList.removeAll(list);
                 PrefSiempo.getInstance(FavoritesSelectionActivity.this).write(PrefSiempo.FAVORITE_APPS, list);
                 PrefSiempo.getInstance(FavoritesSelectionActivity.this).write(PrefSiempo.JUNKFOOD_APPS, junkFoodList);
+                new LoadJunkFoodPane(FavoritesSelectionActivity.this).execute();
+                new LoadFavoritePane(FavoritesSelectionActivity.this).execute();
                 finish();
                 return false;
             }
@@ -152,16 +153,16 @@ public class FavoritesSelectionActivity extends CoreActivity {
             unfavoriteList = new ArrayList<>();
             bindingList = new ArrayList<>();
 
-            for (ResolveInfo resolveInfo : installedPackageList) {
-                if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
-                    boolean isEnable = UIUtils.isAppInstalledAndEnabled(this, resolveInfo.activityInfo.packageName);
+            for (String resolveInfo : installedPackageList) {
+                if (!resolveInfo.equalsIgnoreCase(getPackageName())) {
+                    boolean isEnable = UIUtils.isAppInstalledAndEnabled(this, resolveInfo);
                     if (isEnable) {
-                        if (list.contains(resolveInfo.activityInfo.packageName)) {
-                            favoriteList.add(new AppListInfo(resolveInfo.activityInfo.packageName, false, false, true));
+                        if (list.contains(resolveInfo)) {
+                            favoriteList.add(new AppListInfo(resolveInfo, false, false, true));
                         } else {
                             if (null != junkFoodList && !junkFoodList
-                                    .contains(resolveInfo.activityInfo.packageName)) {
-                                unfavoriteList.add(new AppListInfo(resolveInfo.activityInfo.packageName, false, false, false));
+                                    .contains(resolveInfo)) {
+                                unfavoriteList.add(new AppListInfo(resolveInfo, false, false, false));
                             }
                         }
                     }
@@ -185,19 +186,11 @@ public class FavoritesSelectionActivity extends CoreActivity {
             bindingList.addAll(unfavoriteList);
             junkfoodFlaggingAdapter = new FavoriteFlaggingAdapter(this, bindingList, list);
             listAllApps.setAdapter(junkfoodFlaggingAdapter);
+            listAllApps.setOnItemClickListener(this);
             if (isNotify) {
                 junkfoodFlaggingAdapter.notifyDataSetChanged();
                 listAllApps.setSelection(firstPosition);
             }
-
-            listAllApps.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (!bindingList.get(position).packageName.equalsIgnoreCase("")) {
-                        showPopUp(view, bindingList.get(position).isFlagApp, position);
-                    }
-                }
-            });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -266,17 +259,18 @@ public class FavoritesSelectionActivity extends CoreActivity {
                                     String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
                                     PrefSiempo.getInstance(FavoritesSelectionActivity.this).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
                                     isLoadFirstTime = false;
-                                    setToolBarText(favoriteList.size());
+                                    //setToolBarText(favoriteList.size());
                                 } else {
 
                                     if (favoriteList != null && favoriteList.size() < 13) {
                                         list.add(bindingList.get(position).packageName);
                                         isLoadFirstTime = false;
                                     }
-                                    setToolBarText(favoriteList.size());
+                                    // setToolBarText(favoriteList.size());
                                 }
                                 firstPosition = listAllApps.getFirstVisiblePosition();
-                                bindData(true);
+//                                bindData(true);
+                                new FilterApps(true).execute();
                             }
                         });
                     } catch (Exception e) {
@@ -322,18 +316,90 @@ public class FavoritesSelectionActivity extends CoreActivity {
         toolbar.setTitle("Select up to " + remainapps + " more apps");
     }
 
-    @Subscribe
-    public void homePressEvent(HomePressEvent event) {
-        try {
-            if (event.isVisible() && UIUtils.isMyLauncherDefault(this)) {
-                Intent startMain = new Intent(Intent.ACTION_MAIN);
-                startMain.addCategory(Intent.CATEGORY_HOME);
-                startActivity(startMain);
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            if (popup != null) {
+                popup.dismiss();
+            }
+        }
+    }
+
+    class FilterApps extends AsyncTask<String, String, ArrayList<AppListInfo>> {
+        boolean isNotify;
+        int size;
+
+        FilterApps(boolean isNotify) {
+            this.isNotify = isNotify;
+            listAllApps.setOnItemClickListener(null);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            isClickOnView = false;
+            favoriteList = new ArrayList<>();
+            unfavoriteList = new ArrayList<>();
+            bindingList = new ArrayList<>();
+        }
+
+        @Override
+        protected ArrayList<AppListInfo> doInBackground(String... strings) {
+            for (String resolveInfo : installedPackageList) {
+                if (!resolveInfo.equalsIgnoreCase(getPackageName())) {
+                    boolean isEnable = UIUtils.isAppInstalledAndEnabled(FavoritesSelectionActivity.this, resolveInfo);
+                    if (isEnable) {
+                        if (list.contains(resolveInfo)) {
+                            favoriteList.add(new AppListInfo(resolveInfo, false, false, true));
+                        } else {
+                            if (null != junkFoodList && !junkFoodList
+                                    .contains(resolveInfo)) {
+                                unfavoriteList.add(new AppListInfo(resolveInfo, false, false, false));
+                            }
+                        }
+                    }
+                }
+            }
+            size = favoriteList.size();
+
+            if (favoriteList.size() == 0) {
+                favoriteList.add(new AppListInfo("", true, true, true));
+            } else {
+                favoriteList.add(0, new AppListInfo("", true, false, true));
+            }
+            favoriteList = Sorting.sortApplication(favoriteList);
+            bindingList.addAll(favoriteList);
+
+            if (unfavoriteList.size() == 0) {
+                unfavoriteList.add(new AppListInfo("", true, true, false));
+            } else {
+                unfavoriteList.add(0, new AppListInfo("", true, false, false));
+            }
+            unfavoriteList = Sorting.sortApplication(unfavoriteList);
+            bindingList.addAll(unfavoriteList);
+            return bindingList;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<AppListInfo> s) {
+            super.onPostExecute(s);
+            try {
+                if (toolbar != null) {
+                    setToolBarText(size);
+                    junkfoodFlaggingAdapter = new FavoriteFlaggingAdapter(FavoritesSelectionActivity.this, bindingList, list);
+                    listAllApps.setAdapter(junkfoodFlaggingAdapter);
+                    listAllApps.setOnItemClickListener(FavoritesSelectionActivity.this);
+                    if (isNotify) {
+                        junkfoodFlaggingAdapter.notifyDataSetChanged();
+                        listAllApps.setSelection(firstPosition);
+                    }
+                }
+                isClickOnView = true;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            Tracer.e(e, e.getMessage());
         }
     }
 }

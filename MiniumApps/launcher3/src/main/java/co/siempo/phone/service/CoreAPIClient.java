@@ -32,7 +32,7 @@ public abstract class CoreAPIClient {
     protected AnalyticsListener analyticsListener = new AnalyticsListener() {
         @Override
         public void onReceived(long timeTakenInMillis, long bytesSent, long bytesReceived, boolean isFromCache) {
-            Tracer.d("timeTakenInMillis: " + timeTakenInMillis
+            Tracer.i("timeTakenInMillis: " + timeTakenInMillis
                     + " bytesSent: " + bytesSent
                     + " bytesReceived: " + bytesReceived
                     + " isFromCache: " + isFromCache);
@@ -131,7 +131,7 @@ public abstract class CoreAPIClient {
 
         if (!externalFilesDir.exists()) {
             boolean mkdirs = externalFilesDir.mkdirs();
-            Tracer.d("Creating " + externalFilesDir.getAbsolutePath() + ": " + mkdirs);
+            Tracer.i("Creating " + externalFilesDir.getAbsolutePath() + ": " + mkdirs);
         }
 
         AndroidNetworking.download(String.format(Locale.US, "%s/%s/app/%s.apk", AWS_HOST, getAppName(), getAppName()), externalFilesDir.getAbsolutePath(), getAppName() + ".apk")
@@ -143,7 +143,7 @@ public abstract class CoreAPIClient {
                 .setDownloadProgressListener(new DownloadProgressListener() {
                     @Override
                     public void onProgress(long bytesDownloaded, long totalBytes) {
-                        Tracer.d("Download apk " + bytesDownloaded + "/" + totalBytes);
+                        Tracer.i("Download apk " + bytesDownloaded + "/" + totalBytes);
                     }
                 })
                 .startDownload(new DownloadListener() {

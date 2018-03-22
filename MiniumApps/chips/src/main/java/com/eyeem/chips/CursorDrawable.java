@@ -10,11 +10,11 @@ import android.text.TextPaint;
 public class CursorDrawable {
 
     private final Paint paint;
+    public int color;
     ChipsEditText editText;
     float textSize;
     float cursorWidth;
     AwesomeBubble bubble;
-    public int color;
 
     public CursorDrawable(ChipsEditText editText, float textSize, float cursorWidth, Context context) {
         this.editText = editText;

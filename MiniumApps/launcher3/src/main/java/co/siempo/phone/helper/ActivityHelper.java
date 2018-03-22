@@ -1,5 +1,6 @@
 package co.siempo.phone.helper;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +13,6 @@ import java.util.List;
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.activities.AlphaSettingsActivity_;
-import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.activities.NoteListActivity;
 import co.siempo.phone.activities.SuppressNotificationActivity;
 import co.siempo.phone.app.CoreApplication;
@@ -45,14 +45,14 @@ public class ActivityHelper {
     }
 
 
-    public void handleDefaultLauncher(CoreActivity activity) {
+    public void handleDefaultLauncher(Activity activity) {
         if (activity != null) {
             if (UIUtils.isMyLauncherDefault(activity)) {
-                Tracer.d("Launcher3 is the default launcher");
+                Tracer.i("Launcher3 is the default launcher");
                 activity.getPackageManager().clearPackagePreferredActivities(activity.getPackageName());
                 openChooser(activity);
             } else {
-                Tracer.d("Launcher3 is not the default launcher: " + UIUtils.getLauncherPackageName(activity));
+                Tracer.i("Launcher3 is not the default launcher: " + UIUtils.getLauncherPackageName(activity));
                 if (UIUtils.getLauncherPackageName(activity).equals("android")) {
                     openChooser(activity);
                 } else
@@ -61,7 +61,7 @@ public class ActivityHelper {
         }
     }
 
-    private void resetPreferredLauncherAndOpenChooser(CoreActivity activity) {
+    private void resetPreferredLauncherAndOpenChooser(Activity activity) {
         if (activity != null) {
             PackageManager packageManager = activity.getPackageManager();
             ComponentName componentName = new ComponentName(activity, FakeLauncherActivity.class);
@@ -73,7 +73,7 @@ public class ActivityHelper {
         }
     }
 
-    private void openChooser(CoreActivity activity) {
+    private void openChooser(Activity activity) {
         if (activity != null) {
             Intent startMain = new Intent(Intent.ACTION_MAIN);
             startMain.addCategory(Intent.CATEGORY_HOME);
@@ -149,8 +149,6 @@ public class ActivityHelper {
             return false;
         }
     }
-
-
 
 
     public void openSiempoSuppressNotificationsSettings() {
