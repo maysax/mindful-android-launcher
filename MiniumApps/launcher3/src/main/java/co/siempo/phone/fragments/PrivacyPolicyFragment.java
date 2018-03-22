@@ -44,8 +44,7 @@ public class PrivacyPolicyFragment extends CoreFragment {
             web_PrivacyPolicy.setHorizontalScrollBarEnabled(false);
 
             web_PrivacyPolicy.getSettings().setJavaScriptEnabled(true);
-//            web_PrivacyPolicy.loadUrl("file:///android_asset/privacypolicy.htm");
-            web_PrivacyPolicy.loadUrl("http://www.siempo.co/app/pp.html");
+            web_PrivacyPolicy.loadUrl("http://www.getsiempo.com/app/pp.html");
 
 
             web_PrivacyPolicy.setWebViewClient(new WebViewClient() {

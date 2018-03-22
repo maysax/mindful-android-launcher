@@ -6,9 +6,9 @@
     "apkInfo": {
       "type": "MAIN",
       "splits": [],
-      "versionCode": 11501
+      "versionCode": 11513
     },
-    "path": "launcher3-alpha-release.apk",
+    "path": "launcher3-beta-release.apk",
     "properties": {
       "packageId": "co.siempo.phone",
       "split": "",
