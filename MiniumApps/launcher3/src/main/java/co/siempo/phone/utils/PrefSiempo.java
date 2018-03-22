@@ -22,6 +22,10 @@ public class PrefSiempo {
 
     // This field is used to store check application installed first time or not.
     public static final String IS_APP_INSTALLED_FIRSTTIME = "is_app_installed_firsttime";
+
+    // This field is used to store check application installed first time or not.
+    public static final String IS_APP_INSTALLED_FIRSTTIME_SHOW_TOOLTIP = "is_app_installed_firsttime_show_tooltip";
+
     // This field is used to store check application installed first time or not.
     public static final String IS_JUNKFOOD_FIRSTTIME = "is_junkfood_firsttime";
 
@@ -56,14 +60,13 @@ public class PrefSiempo {
     public static final String UPDATE_PROMPT = "updatePrompt";
     public static final String CALL_RUNNING = "CALLRUNNING";
     public static final String IS_APP_DEFAULT_OR_FRONT = "isAppDefaultOrFront";
-    public static final String GET_CURRENT_VERSION = "getCurrentVersion";
+    //DroidPrefs
     public static final String SELECTED_THEME_ID = "selectedThemeId";
     public static final String FLOW_MAX_TIME_LIMIT_MILLIS =
             "flowMaxTimeLimitMillis";
     public static final String FLOW_SEGMENT_DURATION_MILLIS =
             "flowSegmentDurationMillis";
     public static final String IS_APP_UPDATED = "isAppUpdated";
-
     public static final String IS_ALPHA_SETTING_ENABLE = "isAlphaSettingEnable";
     public static final String IS_FIREBASE_ANALYTICS_ENABLE =
             "isFireBaseAnalyticsEnable";
@@ -82,7 +85,6 @@ public class PrefSiempo {
     public static String HEADER_APPLIST = "HEADER_APPLIST";
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
-
 
     private PrefSiempo() {
         //prevent creating multiple instances by making the constructor private

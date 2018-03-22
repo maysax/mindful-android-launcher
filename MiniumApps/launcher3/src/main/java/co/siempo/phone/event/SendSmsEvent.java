@@ -8,11 +8,24 @@ public class SendSmsEvent {
     private boolean isSendSms = false;
     private String strNumber;
     private String strMessage;
+    private boolean isClearList = false;
 
-    public SendSmsEvent(boolean sendSms,String strNumber,String strMessage) {
+    public SendSmsEvent(boolean isClearList) {
+        this.isClearList = isClearList;
+    }
+
+    public SendSmsEvent(boolean sendSms, String strNumber, String strMessage) {
         this.isSendSms = sendSms;
         this.strNumber = strNumber;
         this.strMessage = strMessage;
+    }
+
+    public boolean isClearList() {
+        return isClearList;
+    }
+
+    public void setClearList(boolean clearList) {
+        isClearList = clearList;
     }
 
     public boolean isSendSms() {

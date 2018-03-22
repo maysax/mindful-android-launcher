@@ -19,13 +19,9 @@ import org.androidannotations.annotations.ViewById;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.event.HomePressEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
-import co.siempo.phone.log.Tracer;
 import co.siempo.phone.utils.PackageUtil;
-import co.siempo.phone.utils.UIUtils;
-import de.greenrobot.event.Subscribe;
 
 import static co.siempo.phone.activities.DashboardActivity.IS_FROM_HOME;
 
@@ -126,22 +122,7 @@ public class AlphaSettingsActivity extends CoreActivity {
     protected void onResume() {
         super.onResume();
         startTime = System.currentTimeMillis();
-        PackageUtil.checkPermission(this);
-    }
-
-    @Subscribe
-    public void homePressEvent(HomePressEvent event) {
-        try {
-            if (event.isVisible() && UIUtils.isMyLauncherDefault(this)) {
-                Intent startMain = new Intent(Intent.ACTION_MAIN);
-                startMain.addCategory(Intent.CATEGORY_HOME);
-                startActivity(startMain);
-            }
-
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            Tracer.e(e, e.getMessage());
-        }
+//        PackageUtil.checkPermission(this);
     }
 
 

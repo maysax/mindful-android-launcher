@@ -37,7 +37,6 @@ import java.io.ByteArrayOutputStream;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
-import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.app.CoreApplication;
 
 
@@ -129,12 +128,15 @@ public class UIUtils {
 
     public static void confirmWithCancel(Context context, String title, String msg, DialogInterface.OnClickListener listener, DialogInterface.OnClickListener listenerNo) {
 
+
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(msg)
                 .setCancelable(false)
                 .setPositiveButton(android.R.string.ok, listener)
                 .setNegativeButton(android.R.string.cancel, listenerNo);
+
+        alertDialog = alertDialogBuilder.create();
         if (alertDialog != null) {
             if (!alertDialog.isShowing()) {
                 alertDialog.show();
@@ -229,7 +231,7 @@ public class UIUtils {
      * @param activity
      * @return
      */
-    public static boolean isMyLauncherDefault(CoreActivity activity) {
+    public static boolean isMyLauncherDefault(Activity activity) {
         return getLauncherPackageName(activity).equals(activity.getPackageName());
     }
 
@@ -239,7 +241,7 @@ public class UIUtils {
      * @param activity
      * @return
      */
-    public static String getLauncherPackageName(CoreActivity activity) {
+    public static String getLauncherPackageName(Activity activity) {
         PackageManager localPackageManager = activity.getPackageManager();
         Intent intent = new Intent("android.intent.action.MAIN");
         intent.addCategory("android.intent.category.HOME");

@@ -8,12 +8,12 @@ import android.text.TextPaint;
 
 public class AwesomeBubble {
     String text;
-    private Rect rect;
     StaticLayout textLayout;
     boolean isPressed;
     BubbleStyle style;
     TextPaint text_paint;
     int containerWidth = 0;
+    private Rect rect;
 
     public AwesomeBubble(String text, int containerWidth, BubbleStyle style, TextPaint text_paint) {
         this.style = style;

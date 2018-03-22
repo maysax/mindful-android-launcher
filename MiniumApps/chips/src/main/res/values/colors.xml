@@ -152,4 +152,5 @@
     <color name="person_row_selected_bg">#66000000</color>
     <color name="app_assignment_normal">#61000000</color>
     <color name="app_assignment_junkfood">#DE000000</color>
+    <color name="junkfood_text_and_underlinecolor">#61000000</color>
 </resources>

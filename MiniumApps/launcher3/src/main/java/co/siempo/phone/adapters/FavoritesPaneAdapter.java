@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -79,7 +80,7 @@ public class FavoritesPaneAdapter extends RecyclerView.Adapter<FavoritesPaneAdap
                 } else {
                     String fontPath = "fonts/robotocondensedregular.ttf";
                     holder.txtAppTextImage.setText("" + item
-                            .getTitle().charAt(0));
+                            .getTitle().toUpperCase().charAt(0));
 
                     // Loading Font Face
                     Typeface tf = Typeface.createFromAsset(context.getAssets(), fontPath);
@@ -149,6 +150,12 @@ public class FavoritesPaneAdapter extends RecyclerView.Adapter<FavoritesPaneAdap
             drawable = ContextCompat.getDrawable(context, R.mipmap.ic_launcher);
         }
         return drawable;
+    }
+
+    public void setMainListItemList(ArrayList<MainListItem> mainListItemList, boolean hideIconBranding) {
+        this.mainListItemList = mainListItemList;
+        this.isHideIconBranding = hideIconBranding;
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

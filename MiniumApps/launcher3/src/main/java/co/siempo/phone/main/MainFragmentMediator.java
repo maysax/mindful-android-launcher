@@ -16,7 +16,6 @@ import co.siempo.phone.R;
 import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.adapters.MainListAdapter;
 import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.event.CreateNoteEvent;
 import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.fragments.PaneFragment;
 import co.siempo.phone.helper.ActivityHelper;
@@ -58,6 +57,10 @@ public class MainFragmentMediator {
         loadContacts();
         loadDefaults();
         items = PackageUtil.getListWithMostRecentData(items, context);
+        if (getAdapter() != null) {
+            getAdapter().loadData(items);
+            getAdapter().notifyDataSetChanged();
+        }
 
     }
 
@@ -68,11 +71,11 @@ public class MainFragmentMediator {
         loadContacts();
         loadDefaults();
         items = PackageUtil.getListWithMostRecentData(items, context);
-
         if (getAdapter() != null) {
             getAdapter().loadData(items);
             getAdapter().notifyDataSetChanged();
         }
+
 
     }
 
@@ -161,14 +164,17 @@ public class MainFragmentMediator {
                         PackageUtil.addRecentItemList(getAdapter().getItem(position), context);
                         position = getAdapter().getItem(position).getId();
                         new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
+                        EventBus.getDefault().post(new SendSmsEvent(true));
                     } else {
                         if (fragment != null) {
+
                             DashboardActivity.isTextLenghGreater = "";
                             UIUtils.hideSoftKeyboard(fragment.getActivity(), fragment.getActivity().getWindow().getDecorView().getWindowToken());
                             boolean status = new ActivityHelper(fragment.getActivity()).openAppWithPackageName(getAdapter().getItem(position).getPackageName());
                             FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_APPLICATION_PICK, getAdapter().getItem(position).getPackageName(), "");
                             if (status) {
                                 PackageUtil.addRecentItemList(getAdapter().getItem(position), context);
+                                EventBus.getDefault().post(new SendSmsEvent(true));
                             }
                         }
                     }
@@ -187,13 +193,12 @@ public class MainFragmentMediator {
                             if (router != null && fragment != null) {
                                 router.createNote(fragment.getActivity());
                                 FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_SAVE_NOTE, "", data);
-                                EventBus.getDefault().post(new CreateNoteEvent());
                                 new ActivityHelper(context).openNotesApp(true);
+                                EventBus.getDefault().post(new SendSmsEvent(true));
                             }
                             break;
                         //Write code for Junk Food Pane on this code
                         case 3:
-
                             if (router != null && fragment != null) {
                                 fragment.setCurrentPage(0);
                             }
@@ -263,11 +268,13 @@ public class MainFragmentMediator {
         loadContacts();
         loadDefaults();
         items = PackageUtil.getListWithMostRecentData(items, context);
+
         for (MainListItem cItems : items) {
             if (cItems.getItemType() == MainListItemType.CONTACT || cItems.getItemType() == MainListItemType.DEFAULT) {
                 newList.add(cItems);
             }
         }
+
         contactItems = newList;
         if (getAdapter() != null) {
             getAdapter().loadData(newList);

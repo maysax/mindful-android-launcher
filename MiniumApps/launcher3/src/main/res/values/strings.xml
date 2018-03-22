@@ -101,7 +101,7 @@
         <item>3</item>
     </string-array>
 
-    <string-array name="multi_select_list_preference_default_value" tools:ignore="UnusedResources" />
+    <string-array name="multi_select_list_preference_default_value" tools:ignore="UnusedResources"/>
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
@@ -219,6 +219,7 @@
     <string name="settings">Settings</string>
     <string name="help">Help</string>
     <string name="privacypolicy">Privacy Policy</string>
+    <string name="terms_and_services">Terms of Service</string>
     <string name="faq_section">FAQ</string>
     <string name="contact_permission">Contacts</string>
     <string name="call_permission">Calls</string>
@@ -227,7 +228,7 @@
     <string name="location_permission">Location</string>
     <string name="notificationAccess">Notification access</string>
     <string name="draw_overlay">Draw over other Apps</string>
-    <string name="permission_title">"Please enable the following permission(s) to allow the app to work correctly:"</string>
+    <string name="permission_title">"Please enable the following permission(s) to allow the Siempo to work correctly:"</string>
     <string name="permission_siempo_alpha_title">"Siempo is using following permissions\n"</string>
     <string name="grant_all_to_proceed_text">Please grant all the permissions to proceed</string>
     <string name="runtime_permission_text">Please consider turn on permissions at Setting > Permission</string>
@@ -271,6 +272,7 @@
     <string name="faq">View FAQ</string>
     <string name="privacy_policyy">View Privacy Policy</string>
     <string name="feedback">Send Feedback</string>
+    <string name="terms_services">Terms of Service</string>
     <string name="version">Version</string>
     <string name="feedback_email">feedback@siempo.co</string>
     <string name="error_email">Please enter a valid email address</string>
@@ -310,7 +312,7 @@
     <string name="msg_no_apps">You haven\'t moved any apps into this category.</string>
     <string name="search_hint">Find app, send message, or save note</string>
     <string name="notification_interrupt_title">Select apps that may interrupt you</string>
-    <string name="notification_interrupt_description">Normally, when you schedule your notifications to arrive at certain times of day or at a certain interval, then all apps will be blocked until the that scheduled arrival times. \n \nHowever, you can use this setting to choose to allow some apps to interrupt you immediately.</string>
+    <string name="notification_interrupt_description">Normally, when you schedule your notifications to arrive at certain times of day or at a certain interval, then all apps will be blocked until the scheduled arrival times. \n \nHowever, you can use this setting to choose to allow some apps to interrupt you immediately.</string>
     <string name="allow_interrupt_msg">Allow this app to interrupt you</string>
     <string name="info_or_uninstall">Get info or uninstall app</string>
     <string name="stop_interrupt_msg">Stop allowing interruptions</string>
@@ -401,7 +403,7 @@
     <string name="title.messages">Messages</string>
     <string name="title.email">Email</string>
     <string name="hide_icon_branding">Hide icon branding</string>
-    <string name="randomize_junkfood">Randomize junk-food icons</string>
+    <string name="randomize_junkfood">"Randomize flagged app icons"</string>
     <string name="junkfood_description_setting">App icons will have a different position each time you open the junk-food menu.</string>
     <string name="iconbranding_description_setting">App icon logos are replaced with less enticing images and patterns.</string>
     <string name="assign_an_app">Assign an app to </string>
@@ -411,7 +413,7 @@
     <string name="tap_apps_above_to_move_them_into_this_section">Tap apps above to move them into this section.</string>
     <string name="str_frequently_used_apps">Frequently used apps</string>
     <string name="msg_congratulations">Congratulations!</string>
-    <string name="flag_app">Flag this app to use it less</string>
+    <string name="flag_app">Apps you want to use less</string>
     <string name="flag_app_first_time">Flag apps to use them less</string>
     <string name="unflagapp">Un-flag this app</string>
     <string name="favorite_menu_unselect">Unselect as frequently used</string>

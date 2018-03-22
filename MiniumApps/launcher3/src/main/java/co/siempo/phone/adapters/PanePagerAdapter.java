@@ -3,7 +3,7 @@ package co.siempo.phone.adapters;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v13.app.FragmentPagerAdapter;
 
 import co.siempo.phone.fragments.FavoritePaneFragment;
 import co.siempo.phone.fragments.JunkFoodPaneFragment;
@@ -15,7 +15,7 @@ import co.siempo.phone.fragments.ToolsPaneFragment;
  * Created by rajeshjadi on 2/2/18.
  */
 
-public class PanePagerAdapter extends FragmentStatePagerAdapter {
+public class PanePagerAdapter extends FragmentPagerAdapter {
     public PanePagerAdapter(FragmentManager fm) {
         super(fm);
     }

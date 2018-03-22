@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +13,13 @@ import java.util.ArrayList;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.ToolsMenuAdapter;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
-import co.siempo.phone.main.MainListItemLoader;
+import co.siempo.phone.event.NotifyToolView;
 import co.siempo.phone.models.MainListItem;
-import co.siempo.phone.utils.PackageUtil;
-import co.siempo.phone.utils.PrefSiempo;
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 
 
 public class ToolsPaneFragment extends CoreFragment {
@@ -46,6 +49,10 @@ public class ToolsPaneFragment extends CoreFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_tools_pane, container, false);
+        Log.d("Test", "T1");
+        recyclerView = view.findViewById(R.id.recyclerView);
+        initView();
+        Log.d("Test", "T2");
         return view;
 
     }
@@ -53,25 +60,35 @@ public class ToolsPaneFragment extends CoreFragment {
     @Override
     public void onResume() {
         super.onResume();
-        initView();
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MainThread)
+    public void onEvent(NotifyToolView notifyToolView) {
+        if (notifyToolView != null && notifyToolView.isNotify()) {
+            items = CoreApplication.getInstance().getToolItemsList();
+//            mAdapter.setMainListItemList(items, false, CoreApplication.getInstance().isHideIconBranding());
+            mAdapter = new ToolsMenuAdapter(getActivity(), CoreApplication.getInstance().isHideIconBranding(), false, items);
+            recyclerView.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
+            EventBus.getDefault().removeStickyEvent(notifyToolView);
+        }
+
     }
 
     private void initView() {
-        items = new ArrayList<>();
-        new MainListItemLoader(getActivity()).loadItemsDefaultApp(items);
-        items = PackageUtil.getToolsMenuData(getActivity(), items);
-        recyclerView = view.findViewById(R.id.recyclerView);
-        mLayoutManager = new GridLayoutManager(getActivity(), 4);
-        recyclerView.setLayoutManager(mLayoutManager);
-        if (itemDecoration != null) {
-            recyclerView.removeItemDecoration(itemDecoration);
+        if (getActivity() != null && recyclerView != null) {
+            items = CoreApplication.getInstance().getToolItemsList();
+//            new MainListItemLoader(getActivity()).loadItemsDefaultApp(items);
+//            items = PackageUtil.getToolsMenuData(getActivity(), items);
+            mLayoutManager = new GridLayoutManager(getActivity(), 4);
+            recyclerView.setLayoutManager(mLayoutManager);
+            if (itemDecoration != null) {
+                recyclerView.removeItemDecoration(itemDecoration);
+            }
+            itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_10);
+            recyclerView.addItemDecoration(itemDecoration);
+            mAdapter = new ToolsMenuAdapter(getActivity(), CoreApplication.getInstance().isHideIconBranding(), false, items);
+            recyclerView.setAdapter(mAdapter);
         }
-        itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_10);
-        recyclerView.addItemDecoration(itemDecoration);
-        boolean isHideIconBranding = PrefSiempo.getInstance(context).read(PrefSiempo.IS_ICON_BRANDING, true);
-        mAdapter = new ToolsMenuAdapter(getActivity(), isHideIconBranding, false, items);
-        recyclerView.setAdapter(mAdapter);
     }
-
-
 }

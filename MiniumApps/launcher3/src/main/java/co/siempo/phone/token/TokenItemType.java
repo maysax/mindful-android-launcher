@@ -6,5 +6,5 @@ package co.siempo.phone.token;
 
 
 public enum TokenItemType {
-    CONTACT, DATA, END_OP,APPS
+    CONTACT, DATA, END_OP, APPS
 }

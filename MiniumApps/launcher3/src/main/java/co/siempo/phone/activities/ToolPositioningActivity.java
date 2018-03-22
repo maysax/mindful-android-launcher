@@ -23,19 +23,16 @@ import co.siempo.phone.R;
 import co.siempo.phone.adapters.ToolPositioningAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
-import co.siempo.phone.event.HomePressEvent;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.interfaces.OnToolItemListChangedListener;
-import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.main.OnStartDragListener;
 import co.siempo.phone.main.SimpleItemTouchHelperCallback;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.service.LoadToolPane;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
-import co.siempo.phone.utils.UIUtils;
-import de.greenrobot.event.Subscribe;
 
 public class ToolPositioningActivity extends CoreActivity implements OnToolItemListChangedListener,
         OnStartDragListener {
@@ -81,7 +78,9 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         }
         String hashMapToolSettings = new Gson().toJson(map);
         PrefSiempo.getInstance(this).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
+        new LoadToolPane(this).execute();
         FirebaseHelper.getInstance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
+
     }
 
     @Override
@@ -110,8 +109,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         }
         itemDecoration = new ItemOffsetDecoration(this, R.dimen.dp_10);
         recyclerView.addItemDecoration(itemDecoration);
-        boolean is_icon_branding = PrefSiempo.getInstance(this).read(PrefSiempo.IS_ICON_BRANDING, true);
-        mAdapter = new ToolPositioningAdapter(this, items, this, this, is_icon_branding);
+        mAdapter = new ToolPositioningAdapter(this, items, this, this, CoreApplication.getInstance().isHideIconBranding());
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mAdapter, this);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
@@ -168,18 +166,4 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         mItemTouchHelper.startDrag(viewHolder);
     }
 
-    @Subscribe
-    public void homePressEvent(HomePressEvent event) {
-        try {
-            if (event.isVisible() && UIUtils.isMyLauncherDefault(this)) {
-                Intent startMain = new Intent(Intent.ACTION_MAIN);
-                startMain.addCategory(Intent.CATEGORY_HOME);
-                startActivity(startMain);
-            }
-
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            Tracer.e(e, e.getMessage());
-        }
-    }
 }

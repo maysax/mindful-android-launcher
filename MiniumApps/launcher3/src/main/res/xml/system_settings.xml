@@ -24,7 +24,7 @@
     </Preference>
 
     <!--<Preference android:title="@string/pref_developer_option">-->
-        <!--<intent android:action="android.settings.APPLICATION_DEVELOPMENT_SETTINGS" />-->
+    <!--<intent android:action="android.settings.APPLICATION_DEVELOPMENT_SETTINGS" />-->
     <!--</Preference>-->
 
     <Preference

@@ -26,6 +26,6 @@
         <ignore path="src/main/res/drawable-xxxhdpi/hibernate_50.png" />
     </issue>
     <issue id="InvalidPackage">
-        <ignore regexp=".*rhino.*"/>
+        <ignore regexp=".*rhino.*" />
     </issue>
 </lint>

@@ -4,7 +4,7 @@
     tools:ignore="UnusedResources">
 
     <alpha
-        android:duration="700"
+        android:duration="50"
         android:fromAlpha="1.0"
         android:interpolator="@android:anim/decelerate_interpolator"
         android:toAlpha="0.0" />

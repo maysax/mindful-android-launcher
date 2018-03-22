@@ -17,8 +17,6 @@ import android.transition.Transition;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -59,10 +57,6 @@ public class IntentionEditActivity extends CoreActivity implements View.OnClickL
 
         Transition returnTrans = new Slide();
         getWindow().setReturnTransition(returnTrans);
-        // inside your activity (if you did not enable transitions in your theme)
-        Window window = getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorAccent));
         setContentView(R.layout.activity_intention_edit);
         initView();
         bindView();

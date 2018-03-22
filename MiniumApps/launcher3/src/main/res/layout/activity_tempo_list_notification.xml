@@ -10,9 +10,7 @@
         android:layout_height="wrap_content">
 
     </Toolbar>
-    <!--<include-->
-    <!--android:id="@+id/includeLayout"-->
-    <!--layout="@layout/tempo_toolbar" />-->
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/lst_appList"
@@ -21,5 +19,10 @@
         android:layout_below="@id/toolbar"
         android:background="#ffffff" />
 
+    <ProgressBar
+        android:id="@+id/loading_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>

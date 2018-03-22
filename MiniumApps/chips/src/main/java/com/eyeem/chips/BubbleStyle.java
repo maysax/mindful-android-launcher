@@ -7,6 +7,14 @@ import android.graphics.drawable.Drawable;
 import android.view.ContextThemeWrapper;
 
 public class BubbleStyle {
+    private static final int[] ATTRS = {
+            R.attr.bubble_stateActive,
+            R.attr.bubble_statePressed,
+            R.attr.bubble_textSize,
+            R.attr.bubble_textColor,
+            R.attr.bubble_textColorActive,
+            R.attr.bubble_textPadding,
+    };
     Drawable active;
     Drawable pressed;
     int textSize;
@@ -30,15 +38,6 @@ public class BubbleStyle {
         this.bubblePadding = bubblePadding;
         this.nextNeedsSpacing = nextNeedsSpacing;
     }
-
-    private static final int[] ATTRS = {
-            R.attr.bubble_stateActive,
-            R.attr.bubble_statePressed,
-            R.attr.bubble_textSize,
-            R.attr.bubble_textColor,
-            R.attr.bubble_textColorActive,
-            R.attr.bubble_textPadding,
-    };
 
     public static BubbleStyle buildDefault(Context context) {
         return build(context, R.style.default_bubble_style);
