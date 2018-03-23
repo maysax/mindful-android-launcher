@@ -314,11 +314,11 @@ public class StatusBarService extends Service {
                             reloadData();
                         }
 
+
+
                     } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
                         String uninstallPackageName;
                         if (intent.getData().getEncodedSchemeSpecificPart() != null) {
-                            if (!(intent.getExtras().containsKey(Intent.EXTRA_REPLACING) &&
-                                    intent.getExtras().getBoolean(Intent.EXTRA_REPLACING, false))) {
                                 uninstallPackageName = intent.getData().getSchemeSpecificPart();
                                 Log.d("Testing with device.", "Removed" + uninstallPackageName);
                                 if (!TextUtils.isEmpty(uninstallPackageName)) {
@@ -328,7 +328,6 @@ public class StatusBarService extends Service {
                                     CoreApplication.getInstance().addOrRemoveApplicationInfo(false, uninstallPackageName);
                                     reloadData();
                                 }
-                            }
                         }
                     } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED)) {
                         String packageName;
@@ -337,9 +336,11 @@ public class StatusBarService extends Service {
                             boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, packageName);
                             if (isEnable) {
                                 addAppFromBlockedList(packageName);
+                                CoreApplication.getInstance().addOrRemoveApplicationInfo(true, packageName);
                             } else {
                                 removeAppFromPreference(context, packageName);
                                 removeAppFromBlockedList(packageName);
+                                CoreApplication.getInstance().addOrRemoveApplicationInfo(false, packageName);
                             }
                             reloadData();
                         }
