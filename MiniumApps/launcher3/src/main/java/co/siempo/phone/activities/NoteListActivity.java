@@ -143,7 +143,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
 
                     // Equal main notes array with new sorted array and reset adapter
                     notes = newArray;
-                    adapter = new NoteAdapter(context, notes);
+                    adapter = new NoteAdapter(NoteListActivity.this, notes);
                     listView.setAdapter(adapter);
 
                     // Smooth scroll to top
@@ -235,7 +235,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
         newNoteButtonBaseYCoordinate = newNote.getY();
 
         // Initialize NoteAdapter with notes array
-        adapter = new NoteAdapter(getApplicationContext(), notes);
+        adapter = new NoteAdapter(NoteListActivity.this, notes);
         listView.setAdapter(adapter);
 
         // Set item click, multi choice and scroll listeners
@@ -460,7 +460,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
                             if (restoreSuccessful) {
                                 notes = tempNotes;
 
-                                adapter = new NoteAdapter(getApplicationContext(), notes);
+                                adapter = new NoteAdapter(NoteListActivity.this, notes);
                                 listView.setAdapter(adapter);
 
                                 Toast toast = Toast.makeText(getApplicationContext(),
@@ -711,7 +711,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
                             notes = deleteNotes(notes, checkedArray);
 
                             // Create and set new adapter with new notes array
-                            adapter = new NoteAdapter(getApplicationContext(), notes);
+                            adapter = new NoteAdapter(NoteListActivity.this, notes);
                             listView.setAdapter(adapter);
 
                             // Attempt to save notes to local file
@@ -844,7 +844,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
             }
 
             // Create and set adapter with notesFound to refresh ListView
-            NoteAdapter searchAdapter = new NoteAdapter(getApplicationContext(), notesFound);
+            NoteAdapter searchAdapter = new NoteAdapter(NoteListActivity.this, notesFound);
             listView.setAdapter(searchAdapter);
         }
 
@@ -854,7 +854,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
             for (int i = 0; i < notes.length(); i++)
                 realIndexesOfSearchResults.add(i);
 
-            adapter = new NoteAdapter(getApplicationContext(), notes);
+            adapter = new NoteAdapter(NoteListActivity.this, notes);
             listView.setAdapter(adapter);
         }
 
@@ -873,7 +873,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
      */
     protected void searchEnded() {
         searchActive = false;
-        adapter = new NoteAdapter(getApplicationContext(), notes);
+        adapter = new NoteAdapter(NoteListActivity.this, notes);
         listView.setAdapter(adapter);
         listView.setLongClickable(true);
         newNoteButtonVisibility(true);
@@ -987,13 +987,15 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
                 mBundle = data.getExtras();
 
                 // If new note discarded -> toast empty note discarded
-                if (mBundle != null && mBundle.getString("request").equals("discard")) {
+                if (mBundle != null && mBundle.getString("request") != null
+                        && mBundle.getString("request").equals("discard")) {
                     Toast toast = Toast.makeText(getApplicationContext(),
                             getResources().getString(R.string.msg_emptyNoteDiscarded),
                             Toast.LENGTH_SHORT);
                     toast.show();
                 }
-                if (mBundle != null && mBundle.getString("request").equals("HOME")) {
+                if (mBundle != null && mBundle.getString("request") != null
+                        && mBundle.getString("request").equals("HOME")) {
                     JSONArray tempNotes = retrieveData(localPath);
 
                     Tracer.i("All notes: " + tempNotes);
