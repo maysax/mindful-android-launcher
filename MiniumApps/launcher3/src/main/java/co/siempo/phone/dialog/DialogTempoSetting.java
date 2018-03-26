@@ -36,7 +36,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.Locale;
 
 import co.siempo.phone.R;
@@ -67,6 +66,63 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
         this.context = context;
     }
 
+    public static int findClosest(int[] arr, int target) {
+
+
+        int n = arr.length;
+        // Corner cases
+        if (target <= arr[0])
+            return arr[0];
+        if (target >= arr[n - 1])
+            return arr[n - 1];
+
+        // Doing binary search
+        int i = 0, j = n, mid = 0;
+        while (i < j) {
+            mid = (i + j) / 2;
+
+            if (arr[mid] == target)
+                return arr[mid];
+
+            /* If target is less than array element,
+               then search in left */
+            if (target < arr[mid]) {
+
+                // If target is greater than previous
+                // to mid, return closest of two
+                if (mid > 0 && target > arr[mid - 1])
+                    return getClosest(arr[mid - 1],
+                            arr[mid], target);
+
+                /* Repeat for left half */
+                j = mid;
+            }
+
+            // If target is greater than mid
+            else {
+                if (mid < n - 1 && target < arr[mid + 1])
+                    return getClosest(arr[mid],
+                            arr[mid + 1], target);
+                i = mid + 1; // update i
+            }
+        }
+
+        // Only single element left after search
+        return arr[mid];
+    }
+
+    // Method to compare which one is the more close
+    // We find the closest by taking the difference
+    //  between the target and both values. It assumes
+    // that val2 is greater than val1 and target lies
+    // between these two.
+    public static int getClosest(int val1, int val2,
+                                 int target) {
+        if (target - val1 >= val2 - target)
+            return val2;
+        else
+            return val2;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -376,6 +432,58 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
 
     }
 
+    private long twoHoursTime() {
+        Calendar rightNow = Calendar.getInstance();
+//            for (int j = 0; j < 24; j++) {
+//            int currentHour = j;
+
+        int currentHour = rightNow.get(Calendar.HOUR_OF_DAY);
+        ArrayList<Integer> intList = new ArrayList<>();
+        intList.addAll(Arrays.asList(0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22));
+        int value = 0;
+        Tracer.d("Rajesh : " + "currentHour :" + currentHour);
+        if (currentHour % 2 == 0) {
+            value = currentHour;
+        } else {
+            value = currentHour - 1;
+
+        }
+        Tracer.d("Rajesh : " + "value :" + value);
+        rightNow.set(Calendar.HOUR_OF_DAY, value);
+        rightNow.set(Calendar.MINUTE, 0);
+        rightNow.set(Calendar.SECOND, 00);
+        long time = rightNow.getTimeInMillis();
+        return time + ((60 * 4) * 60000);
+//    }
+    }
+
+    private long fourHoursTime() {
+        Calendar rightNow = Calendar.getInstance();
+        int currentHour = rightNow.get(Calendar.HOUR_OF_DAY);
+
+        ArrayList<Integer> intList = new ArrayList<>();
+        int arr[] = {0, 4, 8, 12, 16, 20};
+        intList.addAll(Arrays.asList(0, 4, 8, 12, 16, 20));
+
+        int value = 0;
+        Tracer.d("Rajesh : " + "currentHour :" + currentHour);
+        if (currentHour >= 20) {
+            value = 0;
+        } else {
+            if (intList.contains(currentHour)) {
+                value = currentHour + 4;
+            } else {
+                value = findClosest(arr, currentHour);
+
+            }
+        }
+        Tracer.d("Rajesh : " + "value :" + value);
+        rightNow.set(Calendar.HOUR_OF_DAY, value);
+        rightNow.set(Calendar.MINUTE, 0);
+        rightNow.set(Calendar.SECOND, 00);
+        return rightNow.getTimeInMillis();
+    }
+
     private void txtOnlyAtTime1() {
         enableRadioOnPosition(2, true);
         if (radioOnlyAt.isChecked()) {
@@ -451,6 +559,16 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
                     .TEMPO_TYPE, 0);
             strMessage = context.getString(R.string.msg_individual);
             txtMessage.setText(strMessage);
+            if (PackageUtil.isAlarmEnable(context)) {
+                Tracer.d("DialogTempo:If Alarm running it's canceled");
+                Intent intentToFire = new Intent(context, AlarmBroadcast.class);
+                intentToFire.setAction(AlarmBroadcast.ACTION_ALARM);
+                PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 1234, intentToFire, PendingIntent.FLAG_UPDATE_CURRENT);
+                AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                alarmManager.cancel(alarmIntent);
+            } else {
+                Tracer.d("DialogTempo:Alarm is not running");
+            }
         } else if (pos == 1) {
             radioIndividual.setChecked(false);
             radioBatched.setChecked(true);
@@ -491,7 +609,7 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
                 strMessage = strMessage + "\n" + context.getString(R.string.msg_2hour) + "\n";
                 calendar = Calendar.getInstance();
                 hour = calendar.get(Calendar.HOUR_OF_DAY);
-                int intHour = forTwoHours(hour);
+                int intHour = PackageUtil.forTwoHours(hour);
                 calendar.set(Calendar.HOUR_OF_DAY, intHour);
                 calendar.set(Calendar.MINUTE, 0);
             } else if (batchTime == 4) {
@@ -499,9 +617,15 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
                 strMessage = strMessage + "\n" + context.getString(R.string.msg_4hour) + "\n";
                 calendar = Calendar.getInstance();
                 hour = calendar.get(Calendar.HOUR_OF_DAY);
-                int intHour = forFourHours(hour);
+                int intHour = PackageUtil.forFourHours(hour);
                 calendar.set(Calendar.HOUR_OF_DAY, intHour);
                 calendar.set(Calendar.MINUTE, 0);
+            }
+            if (PackageUtil.isAlarmEnable(context)) {
+                Tracer.d("DialogTempo:Alarm is already running");
+            } else {
+                PackageUtil.enableAlarm(context, calendar);
+                Tracer.d("DialogTempo:Alarm is not enable by Tempo");
             }
             strMessage = strMessage + context.getString(R.string.msg_next_delivery) + df.format(calendar.getTime());
             txtMessage.setText(strMessage);
@@ -513,124 +637,9 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
                     .TEMPO_TYPE, 2);
             bindOnlyAt();
         }
-        int currentTempoMode = PrefSiempo.getInstance(context).read(PrefSiempo
-                .TEMPO_TYPE, 0);
-        if (currentTempoMode != 0) {
-            if (PackageUtil.isAlarmEnable(context)) {
-                Tracer.d("DialogTempo:Alarm is already running");
-            } else {
-                PackageUtil.enableAlarm(context);
-                Tracer.d("DialogTempo:Alarm is not enable by Tempo");
-            }
-            if (currentTempoMode == 1) {
-                int batch = PrefSiempo.getInstance(context).read(PrefSiempo.BATCH_TIME, 15);
-                Calendar rightNow = Calendar.getInstance(Locale.getDefault());
-                int currentMinute = rightNow.get(Calendar.MINUTE);
-                int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-                long time = 0;
-                if (batch == 15) {
-                    if (currentMinute >= 0 && currentMinute <= 15) {
-                        rightNow.set(Calendar.MINUTE, 00);
-                        rightNow.set(Calendar.SECOND, 00);
-                    } else if (currentMinute >= 16 && currentMinute <= 30) {
-                        rightNow.set(Calendar.MINUTE, 15);
-                        rightNow.set(Calendar.SECOND, 00);
-                    } else if (currentMinute >= 31 && currentMinute <= 45) {
-                        rightNow.set(Calendar.MINUTE, 30);
-                        rightNow.set(Calendar.SECOND, 00);
-                    } else if (currentMinute >= 46) {
-                        rightNow.set(Calendar.MINUTE, 45);
-                        rightNow.set(Calendar.SECOND, 00);
-                    }
-                    time = rightNow.getTimeInMillis();
-                    time = time + (15 * 60000);
-                } else if (batch == 30) {
-                    if (currentMinute >= 0 && currentMinute <= 30) {
-                        rightNow.set(Calendar.MINUTE, 00);
-                        rightNow.set(Calendar.SECOND, 00);
-                    } else if (currentMinute >= 31) {
-                        rightNow.set(Calendar.MINUTE, 30);
-                        rightNow.set(Calendar.SECOND, 00);
-                    }
-                    time = rightNow.getTimeInMillis();
-                    time = time + (30 * 60000);
-                } else if (batch == 1) {
-                    rightNow.set(Calendar.MINUTE, 00);
-                    rightNow.set(Calendar.SECOND, 00);
-                    time = rightNow.getTimeInMillis();
-                    time = time + (60 * 60000);
-                } else if (batch == 2) {
-                    ArrayList<Integer> intList = new ArrayList<>();
-                    intList.addAll(Arrays.asList(0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22));
-                    if (currentHour % 2 == 0) {
-                        rightNow.set(Calendar.MINUTE, 00);
-                        rightNow.set(Calendar.SECOND, 00);
-                    } else {
-//                       int value;
-//                       for (int i=0; i <intList.size(); i++){
-//                           if(currentHour>intList.get(i)){
-//                               value = intList.get()
-//                               break;
-//                           }
-//                       }
-                    }
-                    time = rightNow.getTimeInMillis();
-                    time = time + ((60 * 2) * 60000);
-                } else if (batch == 4) {
-                    ArrayList<Integer> intList = new ArrayList<>();
-                    intList.addAll(Arrays.asList(0, 4, 8, 12, 16, 20));
-                    rightNow.set(Calendar.MINUTE, 00);
-                    rightNow.set(Calendar.SECOND, 00);
-                    time = rightNow.getTimeInMillis();
-                    time = time + ((60 * 4) * 60000);
-                }
-                Tracer.d("DialogTempo:Next Occurring alarm: " + new Date(time));
-            } else if (currentTempoMode == 2) {
-
-            }
-        } else {
-            if (PackageUtil.isAlarmEnable(context)) {
-                Tracer.d("DialogTempo:If Alarm running it's canceled");
-                Intent intentToFire = new Intent(context, AlarmBroadcast.class);
-                intentToFire.setAction(AlarmBroadcast.ACTION_ALARM);
-                PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 1234, intentToFire, PendingIntent.FLAG_UPDATE_CURRENT);
-                AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                alarmManager.cancel(alarmIntent);
-            } else {
-                Tracer.d("DialogTempo:Alarm is not running");
-            }
-        }
-    }
-
-    private int forTwoHours(int hour) {
-        if (hour >= 22) {
-            return 0;
-        } else {
-            for (Integer integer : everyTwoHourList) {
-                if (integer > hour) {
-                    return integer;
-                }
-            }
-        }
-        return 0;
-    }
-
-    private int forFourHours(int hour) {
-        if (hour >= 20) {
-            return 0;
-        } else {
-            for (Integer integer : everyFourHoursList) {
-                if (integer > hour) {
-                    return integer;
-                }
-            }
-        }
-        return 0;
     }
 
     private void bindOnlyAt() {
-
-
         String timeString;
         if (android.text.format.DateFormat.is24HourFormat(context)) {
             timeString = "HH:mm";

@@ -41,6 +41,8 @@ import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -351,16 +353,19 @@ public class PackageUtil {
     }
 
 
-    public static void enableAlarm(Context context) {
+    public static void enableAlarm(Context context, Calendar calendar) {
         try {
             Intent intentToFire = new Intent(context, AlarmBroadcast.class);
             intentToFire.setAction(AlarmBroadcast.ACTION_ALARM);
             PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 1234, intentToFire, PendingIntent.FLAG_UPDATE_CURRENT);
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-            long delay = 30000;
-            long time = System.currentTimeMillis() + delay;
-
+            long time;
+            if (calendar == null) {
+                long delay = 30000;
+                time = System.currentTimeMillis() + delay;
+            } else {
+                time = calendar.getTimeInMillis();
+            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 // Wakes up the device in Doze Mode
                 if (alarmManager != null) {
@@ -892,5 +897,77 @@ public class PackageUtil {
         }
 
         return junkListItems;
+    }
+
+    public static Calendar batchMode(Context context) {
+        int batchTime = PrefSiempo.getInstance(context).read(PrefSiempo
+                .BATCH_TIME, 15);
+        Calendar calendar = Calendar.getInstance();
+        int hour;
+        int minute = calendar.get(Calendar.MINUTE);
+        if (batchTime == 15) {
+            if (minute >= 0 && minute < 15) {
+                calendar.set(Calendar.MINUTE, 15);
+            } else if (minute >= 15 && minute < 30) {
+                calendar.set(Calendar.MINUTE, 30);
+            } else if (minute >= 30 && minute < 45) {
+                calendar.set(Calendar.MINUTE, 45);
+            } else if (minute >= 45 && minute < 60) {
+                calendar.set(Calendar.MINUTE, 60);
+            }
+        } else if (batchTime == 30) {
+            if (minute >= 0 && minute < 30) {
+                calendar.set(Calendar.MINUTE, 30);
+            } else if (minute >= 30 && minute < 60) {
+                calendar.add(Calendar.HOUR_OF_DAY, 1);
+                calendar.set(Calendar.MINUTE, 0);
+            }
+        } else if (batchTime == 1) {
+            calendar.add(Calendar.HOUR_OF_DAY, 1);
+            calendar.set(Calendar.MINUTE, 0);
+        } else if (batchTime == 2) {
+            calendar = Calendar.getInstance();
+            hour = calendar.get(Calendar.HOUR_OF_DAY);
+            int intHour = forTwoHours(hour);
+            calendar.set(Calendar.HOUR_OF_DAY, intHour);
+            calendar.set(Calendar.MINUTE, 0);
+        } else if (batchTime == 4) {
+            calendar = Calendar.getInstance();
+            hour = calendar.get(Calendar.HOUR_OF_DAY);
+            int intHour = forFourHours(hour);
+            calendar.set(Calendar.HOUR_OF_DAY, intHour);
+            calendar.set(Calendar.MINUTE, 0);
+        }
+        return calendar;
+    }
+
+    public static int forTwoHours(int hour) {
+        ArrayList<Integer> everyTwoHourList = new ArrayList<>();
+        everyTwoHourList.addAll(Arrays.asList(0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22));
+        if (hour >= 22) {
+            return 0;
+        } else {
+            for (Integer integer : everyTwoHourList) {
+                if (integer > hour) {
+                    return integer;
+                }
+            }
+        }
+        return 0;
+    }
+
+    public static int forFourHours(int hour) {
+        ArrayList<Integer> everyFourHoursList = new ArrayList<>();
+        everyFourHoursList.addAll(Arrays.asList(0, 4, 8, 12, 16, 20));
+        if (hour >= 20) {
+            return 0;
+        } else {
+            for (Integer integer : everyFourHoursList) {
+                if (integer > hour) {
+                    return integer;
+                }
+            }
+        }
+        return 0;
     }
 }
