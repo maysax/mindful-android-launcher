@@ -31,6 +31,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -543,8 +544,7 @@ public class PaneFragment extends CoreFragment {
      */
     private void setToolsPaneDate() {
         Calendar c = Calendar.getInstance();
-        DateFormat df = getDateInstanceWithoutYears(Locale
-                .getDefault());
+        DateFormat df = getDateInstanceWithoutYears(Locale.getDefault());
         if (getActivity() != null && txtTopDockDate != null) {
             txtTopDockDate.setText(df.format(c.getTime()));
             txtTopDockDate.setOnTouchListener(new View.OnTouchListener() {
@@ -562,9 +562,8 @@ public class PaneFragment extends CoreFragment {
     }
 
     public DateFormat getDateInstanceWithoutYears(Locale locale) {
-        SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance
-                (DateFormat.FULL, locale);
-        sdf.applyPattern(sdf.toPattern().replaceAll("[^\\p{Alpha}]*y+[^\\p{Alpha}]*", ""));
+
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMM",Locale.getDefault());
         return sdf;
     }
 
