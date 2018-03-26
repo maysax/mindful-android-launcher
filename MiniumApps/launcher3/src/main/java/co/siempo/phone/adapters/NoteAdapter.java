@@ -157,14 +157,18 @@ public class NoteAdapter extends BaseAdapter implements ListAdapter {
 
             // If current note is selected for deletion -> highlight
             if (NoteListActivity.checkedArray.contains(position)) {
-                ((GradientDrawable) roundedCard.findDrawableByLayerId(R.id.card))
-                        .setColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                if (roundedCard != null) {
+                    ((GradientDrawable) roundedCard.findDrawableByLayerId(R.id.card))
+                            .setColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                }
             }
 
             // If current note is not selected -> set background colour to normal
             else {
-                ((GradientDrawable) roundedCard.findDrawableByLayerId(R.id.card))
-                        .setColor(Color.parseColor(colour));
+                if (roundedCard != null) {
+                    ((GradientDrawable) roundedCard.findDrawableByLayerId(R.id.card))
+                            .setColor(Color.parseColor(colour));
+                }
             }
 
             // Set note background style to rounded card
@@ -175,7 +179,13 @@ public class NoteAdapter extends BaseAdapter implements ListAdapter {
                 // If favourite button was clicked -> change that note to favourite or un-favourite
                 @Override
                 public void onClick(View v) {
-                    ((NoteListActivity) context).setFavourite(context, !finalFavoured, position);
+                    try {
+                        if (context != null) {
+                            ((NoteListActivity) context).setFavourite(context, !finalFavoured, position);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         }
