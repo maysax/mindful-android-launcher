@@ -185,19 +185,19 @@ public class PaneFragment extends CoreFragment {
                 mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
             }
         }
-        if (!isVisibleToUser && null != imageClear && linSearchList
-                .getVisibility() == View.VISIBLE) {
+        if (!isVisibleToUser && null != imageClear && linSearchList != null &&
+                linSearchList.getVisibility() == View.VISIBLE) {
             //Perform click in order to set it when user moves from search
             // pane to DashboardActivity and comes back so as to hide the list
-            imageClear.performClick();
+            if (imageClear != null) imageClear.performClick();
             linSearchList.setVisibility(View.GONE);
-            linPane.setAlpha(1);
+            if (linPane != null) linPane.setAlpha(1);
         }
 
         //Added as part of SSA-1332 , when user clicks home button on empty
         // junk food app and swipes back from Intention , empty screen was
         // showing , but now flagging screen will open
-        if (isVisibleToUser && pagerPane.getCurrentItem() == 0) {
+        if (isVisibleToUser && pagerPane != null && pagerPane.getCurrentItem() == 0) {
             if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>()).size() == 0) {
                 //Applied for smooth transition
                 Intent intent = new Intent(getActivity(), JunkfoodFlaggingActivity.class);
