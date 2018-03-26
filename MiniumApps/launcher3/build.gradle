@@ -50,7 +50,7 @@ android {
     productFlavors {
         alpha {
             dimension "Siempo"
-            versionCode 11501
+            versionCode 11502
             versionName "${0}.${0}.${11}.${5}-${buildTime}"
         }
         beta {
@@ -102,9 +102,9 @@ dependencies {
     implementation "com.github.yuweiguocn:GreenDaoUpgradeHelper:$greenDaoUpgradeHelperVersion"
     implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
     debugCompile "com.amitshekhar.android:debug-db:$debugDBVersion"
-    implementation 'com.google.firebase:firebase-core:11.8.0'
-    implementation 'com.google.firebase:firebase-database:11.8.0'
-    implementation 'com.google.firebase:firebase-perf:11.8.0'
+    implementation 'com.google.firebase:firebase-core:12.0.0'
+    implementation 'com.google.firebase:firebase-database:12.0.0'
+    implementation 'com.google.firebase:firebase-perf:12.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.github.javiersantos:AppUpdater:2.6.4'
     implementation 'com.github.clans:fab:1.6.4'
