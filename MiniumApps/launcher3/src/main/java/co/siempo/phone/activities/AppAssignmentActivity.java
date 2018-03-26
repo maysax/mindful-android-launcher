@@ -78,7 +78,6 @@ public class AppAssignmentActivity extends CoreActivity {
         super.onResume();
         startTime = System.currentTimeMillis();
         set = PrefSiempo.getInstance(this).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
-
         filterList();
         initView();
     }
@@ -97,34 +96,36 @@ public class AppAssignmentActivity extends CoreActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable("MainListItem", mainListItem);
         super.onSaveInstanceState(outState);
+        outState.putSerializable("MainListItem", mainListItem);
 
     }
 
     private void filterList() {
         appList = new ArrayList<>();
-        if (idList.contains(mainListItem.getId())) {
-            Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-            mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-            List<ResolveInfo> installedPackageList = getPackageManager().queryIntentActivities(mainIntent, 0);
-            for (Map.Entry<Integer, AppMenu> app : CoreApplication.getInstance().getToolsSettings().entrySet()) {
-                if (app.getKey() != mainListItem.getId()) {
-                    AppMenu appMenu = app.getValue();
-                    if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
-                        connectedAppsList.add(appMenu.getApplicationName());
+        if (mainListItem != null) {
+            if (idList.contains(mainListItem.getId())) {
+                Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+                mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+                List<ResolveInfo> installedPackageList = getPackageManager().queryIntentActivities(mainIntent, 0);
+                for (Map.Entry<Integer, AppMenu> app : CoreApplication.getInstance().getToolsSettings().entrySet()) {
+                    if (app.getKey() != mainListItem.getId()) {
+                        AppMenu appMenu = app.getValue();
+                        if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
+                            connectedAppsList.add(appMenu.getApplicationName());
+                        }
                     }
                 }
-            }
-            for (ResolveInfo resolveInfo : installedPackageList) {
-                if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
-                    if (!connectedAppsList.contains(resolveInfo.activityInfo.packageName)) {
-                        appList.add(resolveInfo);
+                for (ResolveInfo resolveInfo : installedPackageList) {
+                    if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
+                        if (!connectedAppsList.contains(resolveInfo.activityInfo.packageName)) {
+                            appList.add(resolveInfo);
+                        }
                     }
                 }
+            } else {
+                appList = CoreApplication.getInstance().getApplicationByCategory(mainListItem.getId());
             }
-        } else {
-            appList = CoreApplication.getInstance().getApplicationByCategory(mainListItem.getId());
         }
     }
 
@@ -151,12 +152,16 @@ public class AppAssignmentActivity extends CoreActivity {
             recyclerView.setLayoutManager(mLayoutManager);
             recyclerView.addItemDecoration(
                     new DividerItemDecoration(this, mLayoutManager.getOrientation()));
-            appAssignmentAdapter = new AppAssignmentAdapter(this, mainListItem.getId(), appList);
-            recyclerView.setAdapter(appAssignmentAdapter);
+            if (mainListItem != null) {
+                appAssignmentAdapter = new AppAssignmentAdapter(this, mainListItem.getId(), appList);
+                recyclerView.setAdapter(appAssignmentAdapter);
+            }
         } else {
             recyclerView.setVisibility(View.INVISIBLE);
             txtErrorMessage.setVisibility(View.VISIBLE);
-            txtErrorMessage.setText("No " + mainListItem.getTitle() + " apps are installed.");
+            if (mainListItem != null) {
+                txtErrorMessage.setText("No " + mainListItem.getTitle() + " apps are installed.");
+            }
         }
 
     }
