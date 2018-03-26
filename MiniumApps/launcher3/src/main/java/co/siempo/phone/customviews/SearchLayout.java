@@ -15,7 +15,6 @@ import com.eyeem.chips.ChipsEditText;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.DashboardActivity;
-import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
 import co.siempo.phone.token.TokenCompleteType;
 import co.siempo.phone.token.TokenItem;
@@ -146,11 +145,7 @@ public class SearchLayout extends CardView {
         updateSearchField();
     }
 
-    @Subscribe
-    public void notificationHideEvent(NotificationTrayEvent event) {
-        if (!event.isVisible())
-            askFocus();
-    }
+
 
     private void updateSearchField() {
         String[] splits = formattedTxt.split("\\|");

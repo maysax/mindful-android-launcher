@@ -1,6 +1,5 @@
 package co.siempo.phone.activities;
 
-import android.app.ActivityManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -30,7 +29,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.SystemService;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -62,8 +60,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     public View mTestView = null;
     public WindowManager windowManager = null;
     public boolean isOnStopCalled = false;
-    @SystemService
-    protected ActivityManager activityManager;
     int onStartCount = 0;
     SharedPreferences launcherPrefs;
     UserPresentBroadcastReceiver userPresentBroadcastReceiver;

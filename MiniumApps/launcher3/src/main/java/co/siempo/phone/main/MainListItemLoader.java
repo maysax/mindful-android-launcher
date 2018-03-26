@@ -100,9 +100,9 @@ public class MainListItemLoader {
                     .getApplicationName().contains(".")) {
                 toolsItems.add(new MainListItem(TOOLS_WEATHER, context.getResources().getString(R.string.title_weather), R.drawable.ic_menu_weather));
             }
+
             if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_NOTES)
-                    .getApplicationName()) && toolsSettings.get(TOOLS_NOTES)
-                    .getApplicationName().contains(".")) {
+                    .getApplicationName())) {
                 toolsItems.add(new MainListItem(TOOLS_NOTES, context.getResources().getString(R.string.title_note), R.drawable.ic_menu_notes, MainListItemType.ACTION));
             }
 
@@ -249,7 +249,7 @@ public class MainListItemLoader {
                     break;
                 case TOOLS_NOTES:// Notes
                     packageName = CoreApplication.getInstance().getToolsSettings().get
-                            (TOOLS_WEATHER).getApplicationName().trim();
+                            (TOOLS_NOTES).getApplicationName().trim();
                     if (packageName.equalsIgnoreCase("Notes")) {
                         FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_note), context.getResources().getString(R.string.title_note));
                         new ActivityHelper(context).openNotesApp(false);
