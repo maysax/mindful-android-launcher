@@ -563,7 +563,20 @@ public class PaneFragment extends CoreFragment {
 
     public DateFormat getDateInstanceWithoutYears(Locale locale) {
 
-        SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMM",Locale.getDefault());
+
+
+
+        SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance
+                (DateFormat.FULL, locale);
+        try {
+            sdf.applyPattern(sdf.toPattern().replaceAll(
+                    "([^\\p{Alpha}']|('[\\p{Alpha}]+'))*y+([^\\p{Alpha}']|('[\\p{Alpha}]+'))*",
+                    ""));
+        }
+        catch (Exception e){
+            Tracer.d("Exception  :: "+e.toString());
+        }
+
         return sdf;
     }
 
