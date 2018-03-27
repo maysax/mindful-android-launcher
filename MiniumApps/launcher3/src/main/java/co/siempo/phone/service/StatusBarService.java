@@ -307,20 +307,20 @@ public class StatusBarService extends Service {
                     if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) {
                         String installPackageName;
                         if (intent.getData().getEncodedSchemeSpecificPart() != null) {
-                            installPackageName = intent.getData().getEncodedSchemeSpecificPart();
-                            addAppFromBlockedList(installPackageName);
-                            Log.d("Testing with device.", "Added" + installPackageName);
-                            CoreApplication.getInstance().addOrRemoveApplicationInfo(true, installPackageName);
-                            reloadData();
+                            if (!(intent.getExtras().containsKey(Intent.EXTRA_REPLACING) &&
+                                    intent.getExtras().getBoolean(Intent.EXTRA_REPLACING, false))) {
+                                installPackageName = intent.getData().getEncodedSchemeSpecificPart();
+                                addAppFromBlockedList(installPackageName);
+                                CoreApplication.getInstance().addOrRemoveApplicationInfo(true, installPackageName);
+                                reloadData();
+                            }
                         }
-
-
-
                     } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
                         String uninstallPackageName;
                         if (intent.getData().getEncodedSchemeSpecificPart() != null) {
+                            if (!(intent.getExtras().containsKey(Intent.EXTRA_REPLACING) &&
+                                    intent.getExtras().getBoolean(Intent.EXTRA_REPLACING, false))) {
                                 uninstallPackageName = intent.getData().getSchemeSpecificPart();
-                                Log.d("Testing with device.", "Removed" + uninstallPackageName);
                                 if (!TextUtils.isEmpty(uninstallPackageName)) {
                                     new DBClient().deleteMsgByPackageName(uninstallPackageName);
                                     removeAppFromPreference(context, uninstallPackageName);
@@ -328,6 +328,7 @@ public class StatusBarService extends Service {
                                     CoreApplication.getInstance().addOrRemoveApplicationInfo(false, uninstallPackageName);
                                     reloadData();
                                 }
+                            }
                         }
                     } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED)) {
                         String packageName;
@@ -335,8 +336,10 @@ public class StatusBarService extends Service {
                             packageName = intent.getData().getSchemeSpecificPart();
                             boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, packageName);
                             if (isEnable) {
-                                addAppFromBlockedList(packageName);
-                                CoreApplication.getInstance().addOrRemoveApplicationInfo(true, packageName);
+                                if(!CoreApplication.getInstance().getPackagesList().contains(packageName)) {
+                                    addAppFromBlockedList(packageName);
+                                    CoreApplication.getInstance().addOrRemoveApplicationInfo(true, packageName);
+                                }
                             } else {
                                 removeAppFromPreference(context, packageName);
                                 removeAppFromBlockedList(packageName);
