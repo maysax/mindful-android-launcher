@@ -29,12 +29,8 @@ import java.util.ArrayList;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
-import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.event.HomePressEvent;
-import co.siempo.phone.log.Tracer;
 import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.UIUtils;
-import de.greenrobot.event.Subscribe;
 
 @EActivity(R.layout.activity_permission)
 public class SiempoPermissionActivity extends CoreActivity {
@@ -47,7 +43,6 @@ public class SiempoPermissionActivity extends CoreActivity {
     Switch switchCallPermission;
     @ViewById
     Switch switchSmsPermission;
-
     @ViewById
     Switch switchFilePermission;
     @ViewById
@@ -58,7 +53,6 @@ public class SiempoPermissionActivity extends CoreActivity {
     Button btnContinue;
     @ViewById
     TextView txtPermissionLabel;
-
     @ViewById
     TableRow tblLocation;
     @ViewById
@@ -83,97 +77,56 @@ public class SiempoPermissionActivity extends CoreActivity {
         @Override
         public void onPermissionDenied(ArrayList<String> deniedPermissions) {
             UIUtils.toast(SiempoPermissionActivity.this, "Permission denied");
-
-            TedPermission.with(SiempoPermissionActivity.this)
-                    .setPermissionListener(permissionlistener)
-                    .setDeniedMessage("If you reject this permission," +
-                            "you can not use Siempo\nPlease turn on" +
-                            " " +
-                            "permissions at [Setting] > [Permission]")
-                    .setPermissions(Constants.PERMISSIONS)
-                    .check();
+            askForPermission(Constants.PERMISSIONS);
         }
     };
-    //    @Pref
-//    Launcher3Prefs_ launcher3Prefs;
-    CompoundButton.OnClickListener onClickListener = new CompoundButton.OnClickListener()
-
-    {
+    CompoundButton.OnClickListener onClickListener = new CompoundButton.OnClickListener() {
         @Override
         public void onClick(View v) {
 
-//            Switch aSwitch = (Switch) v;
-//            if (aSwitch.isChecked()) {
-//                UIUtils.toastShort(SiempoPermissionActivity.this, R.string.runtime_permission_text);
-//
-//            }
-//            startActivityForResult(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getPackageName())), PermissionUtil.APP_PERMISSION);
-
-
             switch (v.getId()) {
                 case R.id.tblCalls:
-                    TedPermission.with(SiempoPermissionActivity.this)
-                            .setPermissionListener(permissionlistener)
-                            .setDeniedMessage("If you reject this permission," +
-                                    "you can not use Siempo\nPlease turn on" +
-                                    " " +
-                                    "permissions at [Setting] > [Permission]")
-                            .setPermissions(Manifest.permission.CALL_PHONE)
-                            .check();
-
+                    askForPermission(new String[]{
+                            Manifest.permission.CALL_PHONE});
                     break;
-
                 case R.id.tblContact:
-                    TedPermission.with(SiempoPermissionActivity.this)
-                            .setPermissionListener(permissionlistener)
-                            .setDeniedMessage("If you reject this permission," +
-                                    "you can not use Siempo\nPlease turn on" +
-                                    " " +
-                                    "permissions at [Setting] > [Permission]")
-                            .setPermissions(Manifest.permission
-                                    .READ_CONTACTS, Manifest.permission
-                                    .WRITE_CONTACTS)
-                            .check();
+                    askForPermission(new String[]{
+                            Manifest.permission.READ_CONTACTS,
+                            Manifest.permission.WRITE_CONTACTS});
                     break;
                 case R.id.tblSMS:
-
-                    TedPermission.with(SiempoPermissionActivity.this)
-                            .setPermissionListener(permissionlistener)
-                            .setDeniedMessage("If you reject this permission," +
-                                    "you can not use Siempo\nPlease turn on" +
-                                    " " +
-                                    "permissions at [Setting] > [Permission]")
-                            .setPermissions(Manifest.permission.RECEIVE_SMS,
-                                    Manifest.permission.SEND_SMS, Manifest
-                                            .permission.READ_SMS)
-                            .check();
+                    askForPermission(new String[]{
+                            Manifest.permission.RECEIVE_SMS,
+                            Manifest.permission.SEND_SMS,
+                            Manifest.permission.READ_SMS});
                     break;
                 case R.id.tblStorage:
-                    TedPermission.with(SiempoPermissionActivity.this)
-                            .setPermissionListener(permissionlistener)
-                            .setDeniedMessage("If you reject this permission," +
-                                    "you can not use Siempo\nPlease turn on" +
-                                    " " +
-                                    "permissions at [Setting] > [Permission]")
-                            .setPermissions(Manifest.permission
-                                    .WRITE_EXTERNAL_STORAGE, Manifest
-                                    .permission.READ_EXTERNAL_STORAGE)
-                            .check();
+                    askForPermission(new String[]{
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE});
                     break;
-
-
             }
-
-
         }
     };
     private PermissionUtil permissionUtil;
     private boolean isFromHome;
     private ProgressDialog pd;
 
+    private void askForPermission(String[] PERMISSIONS) {
+        try {
+            TedPermission.with(SiempoPermissionActivity.this)
+                    .setPermissionListener(permissionlistener)
+                    .setDeniedMessage(R.string.msg_permission_denied)
+                    .setPermissions(PERMISSIONS)
+                    .check();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     @AfterViews
     void afterViews() {
-        Log.d("Test", "P4");
         permissionUtil = new PermissionUtil(this);
         setSupportActionBar(toolbar);
 
@@ -218,7 +171,6 @@ public class SiempoPermissionActivity extends CoreActivity {
     protected void onResume() {
         super.onResume();
 
-        Log.d("Test", "P5");
         if (permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)) {
             switchContactPermission.setChecked(true);
         } else {
@@ -244,13 +196,6 @@ public class SiempoPermissionActivity extends CoreActivity {
         } else {
             switchNotificationAccess.setChecked(false);
         }
-        //Added for bug solve SSA-1324
-//        if (permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
-//            switchOverlayAccess.setChecked(true);
-//        } else {
-//            switchOverlayAccess.setChecked(false);
-//        }
-
 
         if (isFromHome) {
             switchContactPermission.setVisibility(View.VISIBLE);
@@ -293,7 +238,6 @@ public class SiempoPermissionActivity extends CoreActivity {
             }
             txtPermissionLabel.setText(getString(R.string.permission_siempo_alpha_title));
         }
-        Log.d("Test", "P5");
         if (isFromHome && permissionUtil.hasGiven(PermissionUtil
                 .CONTACT_PERMISSION) &&
                 permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
@@ -301,26 +245,9 @@ public class SiempoPermissionActivity extends CoreActivity {
                 permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION) && permissionUtil
                 .hasGiven(PermissionUtil.SEND_SMS_PERMISSION) &&
                 permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) {
-            Log.d("Test", "P5");
             finish();
         }
     }
-
-//    @TargetApi(23)
-//    @CheckedChange
-//    void switchOverlayAccess(CompoundButton btn, boolean isChecked) {
-//        if (Build.VERSION.SDK_INT >= 23) {
-//            if (isChecked) {
-//                if (!Settings.canDrawOverlays(SiempoPermissionActivity.this)) {
-//                    Toast.makeText(SiempoPermissionActivity.this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
-//                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-//                    startActivityForResult(intent, PermissionUtil.DRAWING_OVER_OTHER_APPS);
-//                }
-//            } else {
-//                startActivityForResult(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName())), PermissionUtil.DRAWING_OVER_OTHER_APPS);
-//            }
-//        }
-//    }
 
     @TargetApi(22)
     @CheckedChange
@@ -348,33 +275,6 @@ public class SiempoPermissionActivity extends CoreActivity {
 
     }
 
-//    @OnActivityResult(PermissionUtil.DRAWING_OVER_OTHER_APPS)
-//    void onResultDrawingAccess(int resultCode) {
-//
-//        try {
-//            pd.setMessage("Please wait...");
-//            pd.show();
-//
-//            Handler handler = new Handler();
-//            handler.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    if (pd != null && pd.isShowing() && !isFinishing()) {
-//                        pd.dismiss();
-//                    }
-//                    if (!new PermissionUtil(SiempoPermissionActivity.this).hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
-//                        switchOverlayAccess.setChecked(false);
-//                    } else {
-//                        switchOverlayAccess.setChecked(true);
-//                    }
-//                }
-//            }, 5000);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
-
     @OnActivityResult(PermissionUtil.NOTIFICATION_ACCESS)
     void onResultNotificationAccess(int resultCode) {
         if (!new PermissionUtil(this).hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) {
@@ -391,23 +291,5 @@ public class SiempoPermissionActivity extends CoreActivity {
         } else {
             super.onBackPressed();
         }
-
     }
-
-    @Subscribe
-    public void homePressEvent(HomePressEvent event) {
-        try {
-            if (event.isVisible() && UIUtils.isMyLauncherDefault(this)) {
-                Intent startMain = new Intent(Intent.ACTION_MAIN);
-                startMain.addCategory(Intent.CATEGORY_HOME);
-                startActivity(startMain);
-            }
-
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            Tracer.e(e, e.getMessage());
-        }
-    }
-
-
 }
