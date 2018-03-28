@@ -131,7 +131,6 @@ public class PaneFragment extends CoreFragment {
         initView(rootView);
         changeColorOfStatusBar();
 
-
         mediator = new MainFragmentMediator(PaneFragment.this);
         mediator.loadData();
 
@@ -245,7 +244,6 @@ public class PaneFragment extends CoreFragment {
                 recyclerViewBottomDoc.setAdapter(mAdapter);
                 mAdapter.notifyDataSetChanged();
                 EventBus.getDefault().removeStickyEvent(notifyBottomView);
-                EventBus.getDefault().postSticky(new NotifySearchRefresh(true));
             }
         }
     }

@@ -142,15 +142,6 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        favoriteList.removeAll(list);
-                        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
-                        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.JUNKFOOD_APPS, list);
-                        if (list.size() == 0 && !DashboardActivity.isJunkFoodOpen) {
-                            DashboardActivity.isJunkFoodOpen = true;
-                        }
-                        new LoadJunkFoodPane(JunkfoodFlaggingActivity.this).execute();
-                        new LoadFavoritePane(JunkfoodFlaggingActivity.this).execute();
-                        EventBus.getDefault().postSticky(new NotifySearchRefresh(true));
                         finish();
                     }
                 });
@@ -429,7 +420,9 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         new LoadJunkFoodPane(JunkfoodFlaggingActivity.this).execute();
         new LoadFavoritePane(JunkfoodFlaggingActivity.this).execute();
 
+        EventBus.getDefault().postSticky(new NotifySearchRefresh(true));
         FirebaseHelper.getInstance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
+
     }
 
     @Override
