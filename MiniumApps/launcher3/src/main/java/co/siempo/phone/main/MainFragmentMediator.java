@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -49,11 +50,12 @@ public class MainFragmentMediator {
         context = this.fragment.getActivity();
     }
 
-    public void loadData() {
+    public synchronized void loadData() {
 
         items = new ArrayList<>();
         contactItems = new ArrayList<>();
         loadActions();
+
         loadContacts();
         loadDefaults();
         items = PackageUtil.getListWithMostRecentData(items, context);
@@ -68,6 +70,7 @@ public class MainFragmentMediator {
         items = new ArrayList<>();
         contactItems = new ArrayList<>();
         loadActions();
+
         loadContacts();
         loadDefaults();
         items = PackageUtil.getListWithMostRecentData(items, context);
@@ -245,6 +248,7 @@ public class MainFragmentMediator {
         items = new ArrayList<>();
         contactItems = new ArrayList<>();
         loadActions();
+
         loadContacts();
         loadDefaults();
         items = PackageUtil.getListWithMostRecentData(items, context);
@@ -306,6 +310,7 @@ public class MainFragmentMediator {
         items = new ArrayList<>();
         contactItems = new ArrayList<>();
         loadActions();
+
         loadContacts();
         loadDefaults();
         items = PackageUtil.getListWithMostRecentData(items, context);
