@@ -51,7 +51,6 @@ public class MainFragmentMediator {
     }
 
     public synchronized void loadData() {
-
         items = new ArrayList<>();
         contactItems = new ArrayList<>();
         loadActions();
@@ -66,7 +65,8 @@ public class MainFragmentMediator {
 
     }
 
-    public void resetData() {
+    public synchronized void resetData() {
+
         items = new ArrayList<>();
         contactItems = new ArrayList<>();
         loadActions();

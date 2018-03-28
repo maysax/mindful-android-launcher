@@ -36,6 +36,7 @@ import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBClient;
 import co.siempo.phone.event.AppInstalledEvent;
+import co.siempo.phone.event.NotifySearchRefresh;
 import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.utils.PrefSiempo;
@@ -279,6 +280,7 @@ public class StatusBarService extends Service {
         new LoadToolPane(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         new LoadFavoritePane(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         new LoadJunkFoodPane(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        EventBus.getDefault().postSticky(new NotifySearchRefresh(true));
     }
 
     private class MyObserver extends ContentObserver {

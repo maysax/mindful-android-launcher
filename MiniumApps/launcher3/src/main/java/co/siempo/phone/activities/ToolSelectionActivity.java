@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -21,6 +22,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.adapters.ToolsListAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.NotifyBottomView;
+import co.siempo.phone.event.NotifySearchRefresh;
 import co.siempo.phone.event.NotifyToolView;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.main.MainListItemLoader;
@@ -98,6 +100,7 @@ public class ToolSelectionActivity extends CoreActivity {
             EventBus.getDefault().postSticky(new NotifyToolView(true));
         }
         new LoadToolPane(this).execute();
+        EventBus.getDefault().postSticky(new NotifySearchRefresh(true));
         FirebaseHelper.getInstance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
     }
 

@@ -173,6 +173,7 @@ public class NotificationActivity extends CoreActivity {
      * Prepare List for display based on preference list
      */
     public void loadAndDisplayAppList() {
+
         for (int i = 0; i < CoreApplication.getInstance().getPackagesList().size(); i++) {
             if (pref_blockedList.contains(CoreApplication.getInstance().getPackagesList().get(i))) {
                 AppListInfo d = new AppListInfo();
