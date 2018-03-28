@@ -127,9 +127,20 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                                             new HashSet<String>()).contains(appMenu.getApplicationName().trim())) {
                                         openAppAssignmentScreen(item);
                                     } else {
-//                                if a 3rd party app is already assigned to this tool
-                                        new ActivityHelper(context).openAppWithPackageName(appMenu.getApplicationName().trim());
+//                                If a 3rd party app is already assigned to this tool
                                         FirebaseHelper.getInstance().logSiempoMenuUsage(0, item.getTitle(), CoreApplication.getInstance().getApplicationNameFromPackageName(appMenu.getApplicationName()));
+                                        if (id == 13) {
+                                            try {
+                                                Intent intent = new Intent(Intent.ACTION_DIAL);
+                                                intent.setPackage(appMenu.getApplicationName().trim());
+                                                context.startActivity(intent);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                                new ActivityHelper(context).openAppWithPackageName(appMenu.getApplicationName().trim());
+                                            }
+                                        } else {
+                                            new ActivityHelper(context).openAppWithPackageName(appMenu.getApplicationName().trim());
+                                        }
                                     }
                                 } else {
                                     openAppAssignmentScreen(item);
@@ -143,12 +154,24 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                         } else if (CoreApplication.getInstance().getApplicationByCategory(id).size() == 1
                                 && !PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS,
                                 new HashSet<String>()).contains(appMenu.getApplicationName().trim())) {
-//                                if a 3rd party app is already assigned to this tool
+//                            If a 3 rd party app is already assigned to this tool
                             ResolveInfo resolveInfo = CoreApplication.getInstance().getApplicationByCategory(id).get(0);
                             if (null != resolveInfo) {
                                 String strPackageName = resolveInfo.activityInfo.packageName;
                                 if (UIUtils.isAppEnabled(context, strPackageName) && strPackageName.equalsIgnoreCase(appMenu.getApplicationName())) {
-                                    new ActivityHelper(context).openAppWithPackageName(strPackageName);
+
+                                    if (id == 13) {
+                                        try {
+                                            Intent intent = new Intent(Intent.ACTION_DIAL);
+                                            intent.setPackage(strPackageName);
+                                            context.startActivity(intent);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                            new ActivityHelper(context).openAppWithPackageName(strPackageName);
+                                        }
+                                    } else {
+                                        new ActivityHelper(context).openAppWithPackageName(strPackageName);
+                                    }
                                     FirebaseHelper.getInstance().logSiempoMenuUsage(0, item.getTitle(), CoreApplication.getInstance().getApplicationNameFromPackageName(appMenu.getApplicationName()));
                                 } else {
                                     openAppAssignmentScreen(item);

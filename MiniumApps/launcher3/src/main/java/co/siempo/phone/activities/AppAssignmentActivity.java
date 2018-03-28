@@ -25,11 +25,13 @@ import co.siempo.phone.adapters.viewholder.AppAssignmentAdapter;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.AppInstalledEvent;
+import co.siempo.phone.event.NotifySearchRefresh;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.Sorting;
+import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
 public class AppAssignmentActivity extends CoreActivity {
@@ -85,6 +87,7 @@ public class AppAssignmentActivity extends CoreActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        EventBus.getDefault().postSticky(new NotifySearchRefresh(true));
         FirebaseHelper.getInstance().logScreenUsageTime(AppAssignmentActivity.this.getClass().getSimpleName(), startTime);
     }
 
