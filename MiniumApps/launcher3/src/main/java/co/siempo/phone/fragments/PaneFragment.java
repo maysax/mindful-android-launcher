@@ -347,9 +347,11 @@ public class PaneFragment extends CoreFragment {
                     junkFoodAppPane();
                     mWindow.setStatusBarColor(getResources().getColor(R.color
                             .appland_blue_bright));
+                    linTopDoc.setElevation(20);
 
                 } else {
                     /* Tools and Favourite Pane */
+                    linTopDoc.setElevation(0);
                     linTopDoc.setBackground(getResources().getDrawable(R
                             .drawable.top_bar_bg));
                     txtTopDockDate.setVisibility(View.VISIBLE);
