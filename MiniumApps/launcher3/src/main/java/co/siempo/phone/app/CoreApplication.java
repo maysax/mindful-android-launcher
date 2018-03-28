@@ -18,6 +18,7 @@ import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import android.util.ArrayMap;
+import android.util.Log;
 import android.util.LruCache;
 
 import com.androidnetworking.AndroidNetworking;
@@ -611,15 +612,15 @@ public abstract class CoreApplication extends MultiDexApplication {
         try {
             if (addingOrDelete) {
                 ApplicationInfo appInfo = getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA);
-                if(!getPackagesList().contains(appInfo.packageName)) {
-                    getPackagesList().add(appInfo.packageName);
+                if(!packagesList.contains(appInfo.packageName)) {
+                    packagesList.add(appInfo.packageName);
                     getListApplicationName().put(packageName, "" + getPackageManager().getApplicationLabel(appInfo));
                     EventBus.getDefault().post(new AppInstalledEvent(true));
                 }
 
             } else {
-                if (getPackagesList().contains(packageName)) {
-                    getPackagesList().remove(packageName);
+                if (packagesList.contains(packageName)) {
+                    packagesList.remove(packageName);
                     getListApplicationName().remove(packageName);
                     EventBus.getDefault().post(new AppInstalledEvent(true));
                 }
