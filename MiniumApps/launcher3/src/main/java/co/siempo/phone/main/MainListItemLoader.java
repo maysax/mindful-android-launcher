@@ -314,8 +314,15 @@ public class MainListItemLoader {
                             (TOOLS_CALL).getApplicationName().trim();
                     applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
                     FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_call), applicationName);
-                    new ActivityHelper(context).openAppWithPackageName
-                            (packageName);
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_DIAL);
+                        intent.setPackage(packageName);
+                        context.startActivity(intent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        new ActivityHelper(context).openAppWithPackageName
+                                (packageName);
+                    }
                     break;
                 case TOOLS_CLOCK://Clock
                     packageName = CoreApplication.getInstance().getToolsSettings().get
