@@ -129,7 +129,7 @@ public class DashboardActivity extends CoreActivity {
         super.onNewIntent(intent);
         currentIndexDashboard = 1;
         currentIndexPaneFragment = 2;
-        mPager.setCurrentItem(currentIndexDashboard, true);
+        mPager.setCurrentItem(currentIndexDashboard, false);
         EventBus.getDefault().post(new HomePress(1, 2));
         loadPane();
     }
