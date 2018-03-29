@@ -107,4 +107,15 @@ public class JunkFoodPaneFragment extends CoreFragment {
         }
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+            if (!isVisibleToUser) {
+                // do something when visible.
+                if(recyclerView!=null){
+                recyclerView.scrollToPosition(0);
+            }
+        }
+    }
+
 }
