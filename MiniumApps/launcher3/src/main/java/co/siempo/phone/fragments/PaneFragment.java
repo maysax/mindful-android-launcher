@@ -31,7 +31,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -564,17 +563,14 @@ public class PaneFragment extends CoreFragment {
     public DateFormat getDateInstanceWithoutYears(Locale locale) {
 
 
-
-
         SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance
                 (DateFormat.FULL, locale);
         try {
             sdf.applyPattern(sdf.toPattern().replaceAll(
                     "([^\\p{Alpha}']|('[\\p{Alpha}]+'))*y+([^\\p{Alpha}']|('[\\p{Alpha}]+'))*",
                     ""));
-        }
-        catch (Exception e){
-            Tracer.d("Exception  :: "+e.toString());
+        } catch (Exception e) {
+            Tracer.d("Exception  :: " + e.toString());
         }
 
         return sdf;
@@ -722,9 +718,15 @@ public class PaneFragment extends CoreFragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+
+//
                             parser.parse(event.getString());
                             if (adapter != null) {
                                 adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());
+                            }
+
+                            if (!event.getString().equalsIgnoreCase("")) {
+                                mediator.cancelAsync();
                             }
                         }
                     });
@@ -802,6 +804,9 @@ public class PaneFragment extends CoreFragment {
         if (notifySearchRefresh != null && notifySearchRefresh.isNotify()) {
             mediator = new MainFragmentMediator(PaneFragment.this);
             mediator.loadData();
+
+            //Is this code needed? We are already updating it inside loadData
+            // method
             if (adapter != null) {
                 adapter.getFilter().filter("");
             }

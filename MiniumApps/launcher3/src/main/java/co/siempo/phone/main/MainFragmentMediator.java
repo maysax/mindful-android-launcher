@@ -54,6 +54,8 @@ public class MainFragmentMediator {
     private List<MainListItem> items ;
     private List<MainListItem> contactItems;
 
+    private resetData resetData;
+
     public MainFragmentMediator(PaneFragment paneFragment) {
         this.fragment = paneFragment;
         context = this.fragment.getActivity();
@@ -68,6 +70,12 @@ public class MainFragmentMediator {
         new resetData(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+
+    public synchronized void cancelAsync()
+    {
+        resetData.cancel(true);
+    }
+
     public class resetData extends AsyncTask<String, String, List<MainListItem>> {
 
         Context context;
@@ -76,6 +84,7 @@ public class MainFragmentMediator {
             this.context = context;
             items = new ArrayList<>();
             contactItems = new ArrayList<>();
+            resetData=this;
         }
 
         @Override
