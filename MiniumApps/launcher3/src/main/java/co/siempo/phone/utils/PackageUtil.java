@@ -298,6 +298,8 @@ public class PackageUtil {
         Tracer.i("Tracking createGroupNotification3");
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 
+        //In case of more than one notification, instead of showing contact
+        // image bitmap the app icon will be used
         if (notificationSms.size() > 1) {
             if (notification.getPackageName() != null) {
                 bitmap = CoreApplication.getInstance().getBitmapFromMemCache
