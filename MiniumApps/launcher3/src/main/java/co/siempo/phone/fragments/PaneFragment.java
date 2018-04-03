@@ -31,7 +31,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -564,17 +563,14 @@ public class PaneFragment extends CoreFragment {
     public DateFormat getDateInstanceWithoutYears(Locale locale) {
 
 
-
-
         SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance
                 (DateFormat.FULL, locale);
         try {
             sdf.applyPattern(sdf.toPattern().replaceAll(
                     "([^\\p{Alpha}']|('[\\p{Alpha}]+'))*y+([^\\p{Alpha}']|('[\\p{Alpha}]+'))*",
                     ""));
-        }
-        catch (Exception e){
-            Tracer.d("Exception  :: "+e.toString());
+        } catch (Exception e) {
+            Tracer.d("Exception  :: " + e.toString());
         }
 
         return sdf;
@@ -828,7 +824,17 @@ public class PaneFragment extends CoreFragment {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            return gestureDetector.onTouchEvent(event);
+
+            //Added as a part of SSA-1475, in case if GestureDetector is not
+            // initialised and null, it will be assigned and then its event
+            // will be captured
+            if (null != gestureDetector) {
+                return gestureDetector.onTouchEvent(event);
+            } else {
+                gestureDetector = new GestureDetector(context, new GestureListener
+                        ());
+                return gestureDetector.onTouchEvent(event);
+            }
         }
 
         void onSwipeRight(int pos) {
