@@ -5,34 +5,25 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.adapters.MainListAdapter;
 import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.event.NotifyBottomView;
-import co.siempo.phone.event.NotifyToolView;
 import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.fragments.PaneFragment;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
-import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.models.MainListItemType;
-import co.siempo.phone.service.LoadToolPane;
 import co.siempo.phone.token.TokenItemType;
 import co.siempo.phone.token.TokenManager;
 import co.siempo.phone.token.TokenRouter;
@@ -51,7 +42,7 @@ public class MainFragmentMediator {
     private SharedPreferences launcher3Prefs;
     private Context context;
     private PaneFragment fragment;
-    private List<MainListItem> items ;
+    private List<MainListItem> items;
     private List<MainListItem> contactItems;
 
     public MainFragmentMediator(PaneFragment paneFragment) {
@@ -68,43 +59,9 @@ public class MainFragmentMediator {
         new resetData(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public class resetData extends AsyncTask<String, String, List<MainListItem>> {
-
-        Context context;
-
-        public resetData(Context context) {
-            this.context = context;
-            items = new ArrayList<>();
-            contactItems = new ArrayList<>();
-        }
-
-        @Override
-        protected List<MainListItem> doInBackground(String... strings) {
-            loadActions();
-            loadContacts();
-            loadDefaults();
-            items = PackageUtil.getListWithMostRecentData(items, context);
-            return items;
-        }
-
-        @Override
-        protected void onPostExecute(List<MainListItem> s) {
-            super.onPostExecute(s);
-            if (getAdapter() != null) {
-                getAdapter().loadData(items);
-                getAdapter().getFilter().filter("");
-                getAdapter().notifyDataSetChanged();
-            }
-        }
-    }
-
-
-
-
     private void loadActions() {
         new MainListItemLoader(fragment.getActivity()).loadItems(items, fragment);
     }
-
 
     private void loadContacts() {
         try {
@@ -261,7 +218,6 @@ public class MainFragmentMediator {
             }
     }
 
-
     public void loadDefaultData() {
         List<MainListItem> defaultItems = new ArrayList<>();
         items = new ArrayList<>();
@@ -342,6 +298,36 @@ public class MainFragmentMediator {
         if (getAdapter() != null) {
             getAdapter().loadData(defaultItems);
             getAdapter().notifyDataSetChanged();
+        }
+    }
+
+    public class resetData extends AsyncTask<String, String, List<MainListItem>> {
+
+        Context context;
+
+        public resetData(Context context) {
+            this.context = context;
+            items = new ArrayList<>();
+            contactItems = new ArrayList<>();
+        }
+
+        @Override
+        protected List<MainListItem> doInBackground(String... strings) {
+            loadActions();
+            loadContacts();
+            loadDefaults();
+            items = PackageUtil.getListWithMostRecentData(items, context);
+            return items;
+        }
+
+        @Override
+        protected void onPostExecute(List<MainListItem> s) {
+            super.onPostExecute(s);
+            if (getAdapter() != null) {
+                getAdapter().loadData(items);
+                getAdapter().getFilter().filter("");
+                getAdapter().notifyDataSetChanged();
+            }
         }
     }
 
