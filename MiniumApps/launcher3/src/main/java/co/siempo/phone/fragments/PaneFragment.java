@@ -719,12 +719,14 @@ public class PaneFragment extends CoreFragment {
                         @Override
                         public void run() {
 
-//
                             parser.parse(event.getString());
                             if (adapter != null) {
                                 adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());
                             }
 
+                            //Cancelling the result of previous async task
+                            // for empty token in case of Edit Text string
+                            // not being empty
                             if (!event.getString().equalsIgnoreCase("")) {
                                 mediator.cancelAsync();
                             }
@@ -805,8 +807,6 @@ public class PaneFragment extends CoreFragment {
             mediator = new MainFragmentMediator(PaneFragment.this);
             mediator.loadData();
 
-            //Is this code needed? We are already updating it inside loadData
-            // method
             if (adapter != null) {
                 adapter.getFilter().filter("");
             }
