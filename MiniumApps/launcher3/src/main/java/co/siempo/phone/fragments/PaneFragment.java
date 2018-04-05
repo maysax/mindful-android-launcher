@@ -31,7 +31,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -46,7 +45,6 @@ import co.siempo.phone.adapters.ToolsMenuAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
 import co.siempo.phone.customviews.SearchLayout;
-import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.HomePress;
 import co.siempo.phone.event.NotifyBottomView;
 import co.siempo.phone.event.NotifySearchRefresh;
@@ -564,17 +562,14 @@ public class PaneFragment extends CoreFragment {
     public DateFormat getDateInstanceWithoutYears(Locale locale) {
 
 
-
-
         SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance
                 (DateFormat.FULL, locale);
         try {
             sdf.applyPattern(sdf.toPattern().replaceAll(
                     "([^\\p{Alpha}']|('[\\p{Alpha}]+'))*y+([^\\p{Alpha}']|('[\\p{Alpha}]+'))*",
                     ""));
-        }
-        catch (Exception e){
-            Tracer.d("Exception  :: "+e.toString());
+        } catch (Exception e) {
+            Tracer.d("Exception  :: " + e.toString());
         }
 
         return sdf;
@@ -651,14 +646,6 @@ public class PaneFragment extends CoreFragment {
         }
     }
 
-    @Subscribe
-    public void appInstalledEvent(AppInstalledEvent appInstalledEvent) {
-        if (appInstalledEvent.isAppInstalledSuccessfully()) {
-            if (mediator != null) {
-                mediator.loadData();
-            }
-        }
-    }
 
     @Subscribe
     public void onBackPressedEvent(OnBackPressedEvent onBackPressedEvent) {
@@ -722,9 +709,17 @@ public class PaneFragment extends CoreFragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+
                             parser.parse(event.getString());
                             if (adapter != null) {
                                 adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());
+                            }
+
+                            //Cancelling the result of previous async task
+                            // for empty token in case of Edit Text string
+                            // not being empty
+                            if (!event.getString().equalsIgnoreCase("")) {
+                                mediator.cancelAsync();
                             }
                         }
                     });
@@ -769,7 +764,18 @@ public class PaneFragment extends CoreFragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                mediator.resetData();
+                                //If the task of async is running, then no
+                                // need to run its another instance. This
+                                // will happen in case of list item click
+                                // where already the data is being reset and
+                                // after it the empty token ("") is being
+                                // called. Hence in order to prevent this,
+                                // empty token will be called only in case if
+                                // no previous async task of similar type is
+                                // running.
+                                if (!mediator.getRunningStatus()) {
+                                    mediator.resetData();
+                                }
                                 if (adapter != null)
                                     adapter.getFilter().filter(current.getTitle());
                             }
@@ -802,6 +808,7 @@ public class PaneFragment extends CoreFragment {
         if (notifySearchRefresh != null && notifySearchRefresh.isNotify()) {
             mediator = new MainFragmentMediator(PaneFragment.this);
             mediator.loadData();
+
             if (adapter != null) {
                 adapter.getFilter().filter("");
             }
@@ -828,7 +835,17 @@ public class PaneFragment extends CoreFragment {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            return gestureDetector.onTouchEvent(event);
+
+            //Added as a part of SSA-1475, in case if GestureDetector is not
+            // initialised and null, it will be assigned and then its event
+            // will be captured
+            if (null != gestureDetector) {
+                return gestureDetector.onTouchEvent(event);
+            } else {
+                gestureDetector = new GestureDetector(context, new GestureListener
+                        ());
+                return gestureDetector.onTouchEvent(event);
+            }
         }
 
         void onSwipeRight(int pos) {

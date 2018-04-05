@@ -13,7 +13,7 @@
         android:background="@drawable/auto_text_rectangle"
         android:ellipsize="end"
         android:hint="@string/search_hint"
-        android:inputType="textCapSentences|textMultiLine|textAutoCorrect"
+        android:inputType="textNoSuggestions|textCapSentences|textMultiLine|textAutoCorrect"
         android:lineSpacingMultiplier="1.5"
         android:lines="3"
         android:maxLines="3"
