@@ -18,6 +18,7 @@ import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import android.util.ArrayMap;
+import android.util.Log;
 import android.util.LruCache;
 
 import com.androidnetworking.AndroidNetworking;
@@ -66,7 +67,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     UserManager userManager;
     LauncherApps launcherApps;
     private ArrayMap<String, String> listApplicationName = new ArrayMap<>();
-    private List<String> packagesList = new ArrayList<>();
+    private Set<String> packagesList = new HashSet<>();
     private ArrayList<String> disableNotificationApps = new ArrayList<>();
     private Set<String> blockedApps = new HashSet<>();
     private LruCache<String, Bitmap> mMemoryCache;
@@ -325,20 +326,13 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     public List<String> getPackagesList() {
-        return packagesList;
+        List<String> pList = new ArrayList<>(packagesList);
+        return pList;
     }
 
-    public void setPackagesList(List<String> packagesList) {
+    public void setPackagesList(Set<String> packagesList) {
         try {
-            Collections.sort(packagesList, new Comparator<String>() {
-                public int compare(String v1, String v2) {
-
-                    return v1.toLowerCase().compareTo(v2.toLowerCase());
-                }
-            });
             this.packagesList = packagesList;
-
-
             blockedApps = PrefSiempo.getInstance(this).read(PrefSiempo
                     .BLOCKED_APPLIST, new HashSet<String>());
             boolean isAppInstallFirstTime = PrefSiempo.getInstance(this).read(PrefSiempo
@@ -355,6 +349,7 @@ public abstract class CoreApplication extends MultiDexApplication {
             PrefSiempo.getInstance(this).write(PrefSiempo
                     .BLOCKED_APPLIST, blockedApps);
         } catch (Exception e) {
+            Tracer.d("Exception e ::"+e.toString());
         }
     }
 
@@ -617,15 +612,20 @@ public abstract class CoreApplication extends MultiDexApplication {
         try {
             if (addingOrDelete) {
                 ApplicationInfo appInfo = getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA);
-                getPackagesList().add(appInfo.packageName);
-                getListApplicationName().put(packageName, "" + getPackageManager().getApplicationLabel(appInfo));
+                if(!packagesList.contains(appInfo.packageName)) {
+                    packagesList.add(appInfo.packageName);
+                    getListApplicationName().put(packageName, "" + getPackageManager().getApplicationLabel(appInfo));
+                    EventBus.getDefault().post(new AppInstalledEvent(true));
+                }
+
             } else {
-                if (getPackagesList().contains(packageName)) {
-                    getPackagesList().remove(packageName);
+                if (packagesList.contains(packageName)) {
+                    packagesList.remove(packageName);
                     getListApplicationName().remove(packageName);
+                    EventBus.getDefault().post(new AppInstalledEvent(true));
                 }
             }
-            EventBus.getDefault().post(new AppInstalledEvent(true));
+
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -708,9 +708,7 @@ public abstract class CoreApplication extends MultiDexApplication {
         @Override
         protected void onPostExecute(Set<String> applicationInfos) {
             super.onPostExecute(applicationInfos);
-//            packagesList.clear();
-            List<String> apps = new ArrayList<String>(applicationInfos);
-            setPackagesList(apps);
+            setPackagesList(applicationInfos);
             EventBus.getDefault().post(new AppInstalledEvent(true));
         }
     }

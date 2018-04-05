@@ -45,7 +45,6 @@ import co.siempo.phone.adapters.ToolsMenuAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
 import co.siempo.phone.customviews.SearchLayout;
-import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.HomePress;
 import co.siempo.phone.event.NotifyBottomView;
 import co.siempo.phone.event.NotifySearchRefresh;
@@ -130,7 +129,6 @@ public class PaneFragment extends CoreFragment {
         initView(rootView);
         changeColorOfStatusBar();
 
-
         mediator = new MainFragmentMediator(PaneFragment.this);
         mediator.loadData();
 
@@ -184,19 +182,19 @@ public class PaneFragment extends CoreFragment {
                 mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
             }
         }
-        if (!isVisibleToUser && null != imageClear && linSearchList
-                .getVisibility() == View.VISIBLE) {
+        if (!isVisibleToUser && null != imageClear && linSearchList != null &&
+                linSearchList.getVisibility() == View.VISIBLE) {
             //Perform click in order to set it when user moves from search
             // pane to DashboardActivity and comes back so as to hide the list
-            imageClear.performClick();
+            if (imageClear != null) imageClear.performClick();
             linSearchList.setVisibility(View.GONE);
-            linPane.setAlpha(1);
+            if (linPane != null) linPane.setAlpha(1);
         }
 
         //Added as part of SSA-1332 , when user clicks home button on empty
         // junk food app and swipes back from Intention , empty screen was
         // showing , but now flagging screen will open
-        if (isVisibleToUser && pagerPane.getCurrentItem() == 0) {
+        if (isVisibleToUser && pagerPane != null && pagerPane.getCurrentItem() == 0) {
             if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>()).size() == 0) {
                 //Applied for smooth transition
                 Intent intent = new Intent(getActivity(), JunkfoodFlaggingActivity.class);
@@ -347,9 +345,11 @@ public class PaneFragment extends CoreFragment {
                     junkFoodAppPane();
                     mWindow.setStatusBarColor(getResources().getColor(R.color
                             .appland_blue_bright));
+                    linTopDoc.setElevation(20);
 
                 } else {
                     /* Tools and Favourite Pane */
+                    linTopDoc.setElevation(0);
                     linTopDoc.setBackground(getResources().getDrawable(R
                             .drawable.top_bar_bg));
                     txtTopDockDate.setVisibility(View.VISIBLE);
@@ -542,8 +542,7 @@ public class PaneFragment extends CoreFragment {
      */
     private void setToolsPaneDate() {
         Calendar c = Calendar.getInstance();
-        DateFormat df = getDateInstanceWithoutYears(Locale
-                .getDefault());
+        DateFormat df = getDateInstanceWithoutYears(Locale.getDefault());
         if (getActivity() != null && txtTopDockDate != null) {
             txtTopDockDate.setText(df.format(c.getTime()));
             txtTopDockDate.setOnTouchListener(new View.OnTouchListener() {
@@ -561,9 +560,18 @@ public class PaneFragment extends CoreFragment {
     }
 
     public DateFormat getDateInstanceWithoutYears(Locale locale) {
+
+
         SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance
                 (DateFormat.FULL, locale);
-        sdf.applyPattern(sdf.toPattern().replaceAll("[^\\p{Alpha}]*y+[^\\p{Alpha}]*", ""));
+        try {
+            sdf.applyPattern(sdf.toPattern().replaceAll(
+                    "([^\\p{Alpha}']|('[\\p{Alpha}]+'))*y+([^\\p{Alpha}']|('[\\p{Alpha}]+'))*",
+                    ""));
+        } catch (Exception e) {
+            Tracer.d("Exception  :: " + e.toString());
+        }
+
         return sdf;
     }
 
@@ -638,14 +646,6 @@ public class PaneFragment extends CoreFragment {
         }
     }
 
-    @Subscribe
-    public void appInstalledEvent(AppInstalledEvent appInstalledEvent) {
-        if (appInstalledEvent.isAppInstalledSuccessfully()) {
-            if (mediator != null) {
-                mediator.loadData();
-            }
-        }
-    }
 
     @Subscribe
     public void onBackPressedEvent(OnBackPressedEvent onBackPressedEvent) {
@@ -709,9 +709,17 @@ public class PaneFragment extends CoreFragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+
                             parser.parse(event.getString());
                             if (adapter != null) {
                                 adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());
+                            }
+
+                            //Cancelling the result of previous async task
+                            // for empty token in case of Edit Text string
+                            // not being empty
+                            if (!event.getString().equalsIgnoreCase("")) {
+                                mediator.cancelAsync();
                             }
                         }
                     });
@@ -756,7 +764,18 @@ public class PaneFragment extends CoreFragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                mediator.resetData();
+                                //If the task of async is running, then no
+                                // need to run its another instance. This
+                                // will happen in case of list item click
+                                // where already the data is being reset and
+                                // after it the empty token ("") is being
+                                // called. Hence in order to prevent this,
+                                // empty token will be called only in case if
+                                // no previous async task of similar type is
+                                // running.
+                                if (!mediator.getRunningStatus()) {
+                                    mediator.resetData();
+                                }
                                 if (adapter != null)
                                     adapter.getFilter().filter(current.getTitle());
                             }
@@ -789,6 +808,7 @@ public class PaneFragment extends CoreFragment {
         if (notifySearchRefresh != null && notifySearchRefresh.isNotify()) {
             mediator = new MainFragmentMediator(PaneFragment.this);
             mediator.loadData();
+
             if (adapter != null) {
                 adapter.getFilter().filter("");
             }
@@ -815,7 +835,17 @@ public class PaneFragment extends CoreFragment {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            return gestureDetector.onTouchEvent(event);
+
+            //Added as a part of SSA-1475, in case if GestureDetector is not
+            // initialised and null, it will be assigned and then its event
+            // will be captured
+            if (null != gestureDetector) {
+                return gestureDetector.onTouchEvent(event);
+            } else {
+                gestureDetector = new GestureDetector(context, new GestureListener
+                        ());
+                return gestureDetector.onTouchEvent(event);
+            }
         }
 
         void onSwipeRight(int pos) {

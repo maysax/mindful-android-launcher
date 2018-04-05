@@ -36,6 +36,7 @@ import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBClient;
 import co.siempo.phone.event.AppInstalledEvent;
+import co.siempo.phone.event.NotifySearchRefresh;
 import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.utils.PrefSiempo;
@@ -279,6 +280,7 @@ public class StatusBarService extends Service {
         new LoadToolPane(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         new LoadFavoritePane(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         new LoadJunkFoodPane(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        EventBus.getDefault().postSticky(new NotifySearchRefresh(true));
     }
 
     private class MyObserver extends ContentObserver {
@@ -307,20 +309,20 @@ public class StatusBarService extends Service {
                     if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) {
                         String installPackageName;
                         if (intent.getData().getEncodedSchemeSpecificPart() != null) {
-                            installPackageName = intent.getData().getEncodedSchemeSpecificPart();
-                            addAppFromBlockedList(installPackageName);
-                            Log.d("Testing with device.", "Added" + installPackageName);
-                            CoreApplication.getInstance().addOrRemoveApplicationInfo(true, installPackageName);
-                            reloadData();
+                            if (!(intent.getExtras().containsKey(Intent.EXTRA_REPLACING) &&
+                                    intent.getExtras().getBoolean(Intent.EXTRA_REPLACING, false))) {
+                                installPackageName = intent.getData().getEncodedSchemeSpecificPart();
+                                addAppFromBlockedList(installPackageName);
+                                CoreApplication.getInstance().addOrRemoveApplicationInfo(true, installPackageName);
+                                reloadData();
+                            }
                         }
-
                     } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
                         String uninstallPackageName;
                         if (intent.getData().getEncodedSchemeSpecificPart() != null) {
                             if (!(intent.getExtras().containsKey(Intent.EXTRA_REPLACING) &&
                                     intent.getExtras().getBoolean(Intent.EXTRA_REPLACING, false))) {
                                 uninstallPackageName = intent.getData().getSchemeSpecificPart();
-                                Log.d("Testing with device.", "Removed" + uninstallPackageName);
                                 if (!TextUtils.isEmpty(uninstallPackageName)) {
                                     new DBClient().deleteMsgByPackageName(uninstallPackageName);
                                     removeAppFromPreference(context, uninstallPackageName);
@@ -336,10 +338,14 @@ public class StatusBarService extends Service {
                             packageName = intent.getData().getSchemeSpecificPart();
                             boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, packageName);
                             if (isEnable) {
-                                addAppFromBlockedList(packageName);
+                                if(!CoreApplication.getInstance().getPackagesList().contains(packageName)) {
+                                    addAppFromBlockedList(packageName);
+                                    CoreApplication.getInstance().addOrRemoveApplicationInfo(true, packageName);
+                                }
                             } else {
                                 removeAppFromPreference(context, packageName);
                                 removeAppFromBlockedList(packageName);
+                                CoreApplication.getInstance().addOrRemoveApplicationInfo(false, packageName);
                             }
                             reloadData();
                         }

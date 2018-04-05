@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.text.TextUtils;
 
 import java.text.DateFormat;
@@ -44,45 +45,36 @@ public class MainFragmentMediator {
     private List<MainListItem> items;
     private List<MainListItem> contactItems;
 
+    private resetData resetData;
+
     public MainFragmentMediator(PaneFragment paneFragment) {
         this.fragment = paneFragment;
         context = this.fragment.getActivity();
     }
 
-    public void loadData() {
-
-        items = new ArrayList<>();
-        contactItems = new ArrayList<>();
-        loadActions();
-        loadContacts();
-        loadDefaults();
-        items = PackageUtil.getListWithMostRecentData(items, context);
-        if (getAdapter() != null) {
-            getAdapter().loadData(items);
-            getAdapter().notifyDataSetChanged();
-        }
+    public synchronized void loadData() {
+        new resetData(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 
-    public void resetData() {
-        items = new ArrayList<>();
-        contactItems = new ArrayList<>();
-        loadActions();
-        loadContacts();
-        loadDefaults();
-        items = PackageUtil.getListWithMostRecentData(items, context);
-        if (getAdapter() != null) {
-            getAdapter().loadData(items);
-            getAdapter().notifyDataSetChanged();
-        }
+    public synchronized void resetData() {
+        new resetData(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
+
+
+    public synchronized void cancelAsync() {
+        resetData.cancel(true);
+    }
+
+    public synchronized boolean getRunningStatus() {
+        return null != resetData && resetData.getStatus() == AsyncTask.Status.RUNNING;
 
     }
 
     private void loadActions() {
         new MainListItemLoader(fragment.getActivity()).loadItems(items, fragment);
     }
-
 
     private void loadContacts() {
         try {
@@ -239,12 +231,12 @@ public class MainFragmentMediator {
             }
     }
 
-
     public void loadDefaultData() {
         List<MainListItem> defaultItems = new ArrayList<>();
         items = new ArrayList<>();
         contactItems = new ArrayList<>();
         loadActions();
+
         loadContacts();
         loadDefaults();
         items = PackageUtil.getListWithMostRecentData(items, context);
@@ -319,6 +311,37 @@ public class MainFragmentMediator {
         if (getAdapter() != null) {
             getAdapter().loadData(defaultItems);
             getAdapter().notifyDataSetChanged();
+        }
+    }
+
+    public class resetData extends AsyncTask<String, String, List<MainListItem>> {
+
+        Context context;
+
+        public resetData(Context context) {
+            this.context = context;
+            items = new ArrayList<>();
+            contactItems = new ArrayList<>();
+            resetData = this;
+        }
+
+        @Override
+        protected List<MainListItem> doInBackground(String... strings) {
+            loadActions();
+            loadContacts();
+            loadDefaults();
+            items = PackageUtil.getListWithMostRecentData(items, context);
+            return items;
+        }
+
+        @Override
+        protected void onPostExecute(List<MainListItem> s) {
+            super.onPostExecute(s);
+            if (getAdapter() != null) {
+                getAdapter().loadData(items);
+                getAdapter().getFilter().filter("");
+                getAdapter().notifyDataSetChanged();
+            }
         }
     }
 

@@ -255,9 +255,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             MainListItemType itemType = item.getItemType();
 
             // Call item in Tools has id=13 , while as a default type has id=4
-            if ((null != itemType) && (itemType == MainListItemType.DEFAULT ||
-                    item.getId()
-                            == 4)) {
+            if ((null != itemType) && (itemType == MainListItemType.DEFAULT )) {
                 holder.text.setTextColor(context.getResources().getColor(R
                         .color.appland_blue_bright));
             } else {
@@ -366,26 +364,8 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                 for (int i = 0; i < count; i++) {
                     String filterableString;
                     String[] splits;
-                    if (searchString.startsWith("/")) {
-                        if (searchString.length() == 1 && searchString.equalsIgnoreCase("/")) {
-                            buildData.clear();
-                            for (MainListItem menuMainListItem : originalData) {
-                                if (!(menuMainListItem instanceof MainListItem)) {
-                                    isValidNumber = true;
-                                    buildData.add(menuMainListItem);
-                                }
-                            }
-                        } else {
-                            String strSearch = searchString.substring(1).toLowerCase();
-                            if (originalData.get(i).getItemType() == MainListItemType.ACTION
-                                    && originalData.get(i).getTitle().toLowerCase().contains(strSearch)) {
-                                if (checkDuplicate(buildData, strSearch)) {
-                                    isValidNumber = true;
-                                    buildData.add(originalData.get(i));
-                                }
-                            }
-                        }
-                    } else {
+
+
                         switch (originalData.get(i).getItemType()) {
                             case CONTACT:
                                 if (searchString.startsWith("@")) {
@@ -490,7 +470,6 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                                 break;
 
                         }
-                    }
                 }
             } else {
                 for (MainListItem menuMainListItem : originalData) {

@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.eyeem.chips.Utils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -41,6 +42,7 @@ import co.siempo.phone.service.LoadJunkFoodPane;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.Sorting;
+import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
@@ -72,17 +74,8 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_junkfood_flagging);
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                getTxtIntention.setText("lknksdklnskldnkfsndklfn");
-//            }
-//        }, 10000);
         initView();
-        list = PrefSiempo.getInstance(this).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
-        favoriteList = PrefSiempo.getInstance(this).read(PrefSiempo.FAVORITE_APPS, new HashSet<String>());
-        favoriteList.removeAll(list);
-        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
+
 
     }
 
@@ -106,16 +99,14 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
      */
     private void loadApps() {
         List<String> installedPackageListLocal = CoreApplication.getInstance().getPackagesList();
-        Log.d("Rajesh21", "" + installedPackageListLocal.size());
+        Log.d("Junkfood", "" + installedPackageListLocal.size());
         List<String> appList = new ArrayList<>();
         installedPackageList = new ArrayList<>();
-        for (int i = 0; i < installedPackageListLocal.size(); i++) {
-            appList.add(installedPackageListLocal.get(i));
-        }
+        appList.addAll(installedPackageListLocal);
 
         installedPackageList = appList;
 //        new FilterApps(false).execute();
-        bindData(false);
+        bindData();
         if (PrefSiempo.getInstance(this).read(PrefSiempo.IS_JUNKFOOD_FIRSTTIME, true)) {
             PrefSiempo.getInstance(this).write(PrefSiempo.IS_JUNKFOOD_FIRSTTIME, false);
             showFirstTimeDialog();
@@ -151,15 +142,6 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        favoriteList.removeAll(list);
-                        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
-                        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.JUNKFOOD_APPS, list);
-                        if (list.size() == 0 && !DashboardActivity.isJunkFoodOpen) {
-                            DashboardActivity.isJunkFoodOpen = true;
-                        }
-                        new LoadJunkFoodPane(JunkfoodFlaggingActivity.this).execute();
-                        new LoadFavoritePane(JunkfoodFlaggingActivity.this).execute();
-                        EventBus.getDefault().postSticky(new NotifySearchRefresh(true));
                         finish();
                     }
                 });
@@ -191,20 +173,15 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
 
     @Override
     public void onBackPressed() {
-
         //Added this code as part of SSA-1333, to save the list on backpress
-        favoriteList.removeAll(list);
-        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
-        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.JUNKFOOD_APPS, list);
-        if (list.size() == 0 && !DashboardActivity.isJunkFoodOpen) {
-            DashboardActivity.isJunkFoodOpen = true;
-        }
-        new LoadJunkFoodPane(JunkfoodFlaggingActivity.this).execute();
-        new LoadFavoritePane(JunkfoodFlaggingActivity.this).execute();
         super.onBackPressed();
 
     }
 
+
+    void updateFavoriteSortedMenu() {
+
+    }
 
     /**
      * change text color of menuitem
@@ -231,7 +208,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
     /**
      * bind the list view of flag app and all apps.
      */
-    private void bindData(boolean isNotify) {
+    private void bindData() {
         try {
             flagAppList = new ArrayList<>();
             unflageAppList = new ArrayList<>();
@@ -266,7 +243,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
             bindingList.addAll(unflageAppList);
             junkfoodFlaggingAdapter = new JunkfoodFlaggingAdapter(this, bindingList, list);
             listAllApps.setAdapter(junkfoodFlaggingAdapter);
-            if (isNotify) {
+            if (false) {
                 junkfoodFlaggingAdapter.notifyDataSetChanged();
                 listAllApps.setSelection(firstPosition);
             }
@@ -424,13 +401,28 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
     protected void onResume() {
         super.onResume();
         startTime = System.currentTimeMillis();
+        list = PrefSiempo.getInstance(this).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
+        favoriteList = PrefSiempo.getInstance(this).read(PrefSiempo.FAVORITE_APPS, new HashSet<String>());
+        favoriteList.removeAll(list);
+        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
         loadApps();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        favoriteList.removeAll(list);
+        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
+        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.JUNKFOOD_APPS, list);
+        if (list.size() == 0 && !DashboardActivity.isJunkFoodOpen) {
+            DashboardActivity.isJunkFoodOpen = true;
+        }
+        new LoadJunkFoodPane(JunkfoodFlaggingActivity.this).execute();
+        new LoadFavoritePane(JunkfoodFlaggingActivity.this).execute();
+
+        EventBus.getDefault().postSticky(new NotifySearchRefresh(true));
         FirebaseHelper.getInstance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
+
     }
 
     @Override

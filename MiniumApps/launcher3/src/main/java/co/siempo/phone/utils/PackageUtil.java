@@ -304,9 +304,21 @@ public class PackageUtil {
         Tracer.i("Tracking createGroupNotification3");
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 
+        //In case of more than one notification, instead of showing contact
+        // image bitmap the app icon will be used
+        if (notificationSms.size() > 1) {
+            if (notification.getPackageName() != null) {
+                bitmap = CoreApplication.getInstance().getBitmapFromMemCache
+                        (notification.getPackageName());
+            }
+        }
+
+
         for (int i = 0; i < notificationSms.size(); i++) {
 
-            String title = getNotificationTitle(notification.get_contact_title(), notification.getPackageName(), context);
+            String title = getNotificationTitle
+                    (notificationSms.get(i).get_contact_title(), notification
+                            .getPackageName(), context);
 
             inboxStyle.addLine(title + ": " + notificationSms.get(i).get_message());
         }
@@ -712,26 +724,23 @@ public class PackageUtil {
 
 
     public static ArrayList<MainListItem> getFavoriteList(Context context) {
-
-
-        ArrayList<MainListItem> appList = getAppList(context);
-
-        ArrayList<MainListItem> sortedFavoriteList;
-
-        if (appList.size() > 0) {
-
-            String jsonListOfSortedFavorites = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
-            List<String> listOfSortFavoritesApps;
-            if (!TextUtils.isEmpty(jsonListOfSortedFavorites)) {
-
-
-                listOfSortFavoritesApps = syncFavoriteList(jsonListOfSortedFavorites, context);
-                sortedFavoriteList = sortFavoriteAppsByPosition(listOfSortFavoritesApps, appList, context);
+        ArrayList<MainListItem> sortedFavoriteList = new ArrayList<>();
+        try {
+            ArrayList<MainListItem> appList = getAppList(context);
+            if (appList.size() > 0) {
+                String jsonListOfSortedFavorites = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
+                List<String> listOfSortFavoritesApps;
+                if (!TextUtils.isEmpty(jsonListOfSortedFavorites)) {
+                    listOfSortFavoritesApps = syncFavoriteList(jsonListOfSortedFavorites, context);
+                    sortedFavoriteList = sortFavoriteAppsByPosition(listOfSortFavoritesApps, appList, context);
+                } else {
+                    sortedFavoriteList = addDefaultFavoriteApps(context, appList);
+                }
             } else {
                 sortedFavoriteList = addDefaultFavoriteApps(context, appList);
             }
-        } else {
-            sortedFavoriteList = addDefaultFavoriteApps(context, appList);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return sortedFavoriteList;
@@ -739,20 +748,26 @@ public class PackageUtil {
 
 
     private static ArrayList<MainListItem> getAppList(Context context) {
-
         ArrayList<MainListItem> appList = new ArrayList<>();
-        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-        List<ResolveInfo> installedPackageList = context.getPackageManager().queryIntentActivities(mainIntent, 0);
+        try {
+            List<String> installedPackageList = CoreApplication.getInstance().getPackagesList();
+            for (String resolveInfo : installedPackageList) {
+                if (!resolveInfo.equalsIgnoreCase(context.getPackageName())) {
+                    if (!TextUtils.isEmpty(resolveInfo)) {
+                        String strAppName = CoreApplication.getInstance().getListApplicationName().get(resolveInfo);
+                        if (strAppName == null) {
+                            strAppName = CoreApplication.getInstance().getApplicationNameFromPackageName(resolveInfo);
+                        }
+                        if (!TextUtils.isEmpty(strAppName)) {
+                            appList.add(new MainListItem(-1, "" + strAppName, resolveInfo));
+                        }
+                    }
 
-        for (ResolveInfo resolveInfo : installedPackageList) {
-            if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(context.getPackageName())) {
-                if (!TextUtils.isEmpty(resolveInfo.activityInfo.packageName) && !TextUtils.isEmpty(resolveInfo.loadLabel(context.getPackageManager()))) {
-
-                    appList.add(new MainListItem(-1, "" + resolveInfo.loadLabel(context.getPackageManager()), resolveInfo.activityInfo.packageName));
                 }
-            }
 
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return appList;
     }

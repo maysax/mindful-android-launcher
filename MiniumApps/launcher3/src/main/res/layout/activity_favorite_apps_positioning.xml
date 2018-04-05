@@ -34,19 +34,23 @@
                 android:layout_height="match_parent"
                 android:visibility="visible">
 
-                <TextView
-                    android:id="@+id/txtSelectTools"
+                <android.support.v7.widget.CardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/dp_5"
-                    android:background="@drawable/select_tools"
-                    android:gravity="center"
-                    android:padding="@dimen/dp_10"
-                    android:text="@string/select_apps"
-                    android:textAllCaps="true"
-                    android:textColor="@color/dialog_blue" />
+                    android:layout_marginRight="@dimen/dp_5">
+
+                    <TextView
+                        android:id="@+id/txtSelectTools"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:padding="@dimen/dp_10"
+                        android:text="@string/select_tools"
+                        android:textAllCaps="true"
+                        android:textColor="@color/dialog_blue" />
+                </android.support.v7.widget.CardView>
             </RelativeLayout>
 
         </LinearLayout>
@@ -60,14 +64,23 @@
             android:layout_weight="2.4"
             android:orientation="vertical">
 
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerView"
+            <android.support.v7.widget.CardView
+                android:id="@+id/linPane"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@android:color/white"
-                android:clipToPadding="false" />
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginRight="@dimen/dp_5"
+                android:elevation="@dimen/dp_3"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@android:color/white"
+                    android:clipToPadding="false" />
+            </android.support.v7.widget.CardView>
         </RelativeLayout>
 
 

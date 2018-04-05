@@ -17,8 +17,6 @@
 package co.siempo.phone.adapters;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -141,29 +139,35 @@ public class SuppressNotificationAdapter extends RecyclerView.Adapter<SuppressNo
                 holder.txtAppName.setText(R.string.phone);
             } else {
                 holder.imgAppIcon.setBackground(null);
-                holder.txtAppName.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(defSMSApp));
-                ApplicationInfo applicationInfo = null;
-                try {
-                    applicationInfo = mContext.getPackageManager().getApplicationInfo(defSMSApp, PackageManager.GET_META_DATA);
-                    Drawable drawable = applicationInfo.loadIcon(mContext.getPackageManager());
-                    holder.imgAppIcon.setImageDrawable(drawable);
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
+                String strAppName = CoreApplication.getInstance().getListApplicationName().get(defSMSApp);
+                if (strAppName == null) {
+                    strAppName = CoreApplication.getInstance().getApplicationNameFromPackageName(defSMSApp);
                 }
-
+                holder.txtAppName.setText(strAppName);
+                Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(defSMSApp);
+                if (bitmap != null) {
+                    holder.imgAppIcon.setImageBitmap(bitmap);
+                } else {
+                    BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(mContext, defSMSApp);
+                    CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                    Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(defSMSApp);
+                    holder.imgAppIcon.setImageDrawable(drawable);
+                }
             }
             holder.txtMessage.setText(notification.get_text());
             holder.txtTime.setText(notification.get_time());
             try {
-                if (notificationContactModel.getImage() != null && !notificationContactModel.getImage().equals("")) {
-                    Glide.with(mContext)
-                            .load(Uri.parse(notificationContactModel.getImage()))
-                            .placeholder(R.drawable.ic_person_black_24dp)
-                            .into(holder.imgUserImage);
-                } else {
-                    holder.imgUserImage.setBackground(null);
-                    holder.imgUserImage.setImageBitmap(null);
-                    holder.imgUserImage.setImageResource(R.drawable.ic_person_black_24dp);
+                if (notificationContactModel != null) {
+                    if (notificationContactModel.getImage() != null && !notificationContactModel.getImage().equals("")) {
+                        Glide.with(mContext)
+                                .load(Uri.parse(notificationContactModel.getImage()))
+                                .placeholder(R.drawable.ic_person_black_24dp)
+                                .into(holder.imgUserImage);
+                    } else {
+                        holder.imgUserImage.setBackground(null);
+                        holder.imgUserImage.setImageBitmap(null);
+                        holder.imgUserImage.setImageResource(R.drawable.ic_person_black_24dp);
+                    }
                 }
 
             } catch (Exception e) {
