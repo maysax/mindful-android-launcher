@@ -62,13 +62,13 @@ public class PermissionUtil {
             case SEND_SMS_PERMISSION:
                 return hasAppPermissions(Manifest.permission.RECEIVE_SMS) &&
                         hasAppPermissions(Manifest.permission.SEND_SMS)
-                        &&hasAppPermissions(Manifest.permission.READ_SMS)  ;
+                        && hasAppPermissions(Manifest.permission.READ_SMS);
             case CAMERA_PERMISSION:
                 return hasAppPermissions(Manifest.permission.CAMERA);
             case WRITE_EXTERNAL_STORAGE_PERMISSION:
                 return hasAppPermissions(Manifest.permission
                         .WRITE_EXTERNAL_STORAGE) && hasAppPermissions
-                        (Manifest.permission.READ_EXTERNAL_STORAGE) ;
+                        (Manifest.permission.READ_EXTERNAL_STORAGE);
             case LOCATION_PERMISSION:
                 return hasAppPermissions(Manifest.permission.ACCESS_FINE_LOCATION);
 
