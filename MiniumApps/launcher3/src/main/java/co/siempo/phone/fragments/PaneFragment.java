@@ -647,19 +647,6 @@ public class PaneFragment extends CoreFragment {
     }
 
 
-    //Commented this as part of SSA-1476, as app update was getting called
-    // multiple times creating the issue of recent apps being deleted and
-    // added many times. Moreover, app update is being captured in this class
-    // by NotifySearchRefresh Event hence removing the below logic
-//    @Subscribe
-//    public void appInstalledEvent(AppInstalledEvent appInstalledEvent) {
-//        if (appInstalledEvent.isAppInstalledSuccessfully()) {
-//            if (mediator != null) {
-//                mediator.loadData();
-//            }
-//        }
-//    }
-
     @Subscribe
     public void onBackPressedEvent(OnBackPressedEvent onBackPressedEvent) {
         if (onBackPressedEvent.isBackPressed()) {
@@ -722,9 +709,17 @@ public class PaneFragment extends CoreFragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+
                             parser.parse(event.getString());
                             if (adapter != null) {
                                 adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());
+                            }
+
+                            //Cancelling the result of previous async task
+                            // for empty token in case of Edit Text string
+                            // not being empty
+                            if (!event.getString().equalsIgnoreCase("")) {
+                                mediator.cancelAsync();
                             }
                         }
                     });
@@ -813,6 +808,7 @@ public class PaneFragment extends CoreFragment {
         if (notifySearchRefresh != null && notifySearchRefresh.isNotify()) {
             mediator = new MainFragmentMediator(PaneFragment.this);
             mediator.loadData();
+
             if (adapter != null) {
                 adapter.getFilter().filter("");
             }
