@@ -364,26 +364,29 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                 for (int i = 0; i < count; i++) {
                     String filterableString;
                     String[] splits;
-                    if (searchString.startsWith("/")) {
-                        if (searchString.length() == 1 && searchString.equalsIgnoreCase("/")) {
-                            buildData.clear();
-                            for (MainListItem menuMainListItem : originalData) {
-                                if (!(menuMainListItem instanceof MainListItem)) {
-                                    isValidNumber = true;
-                                    buildData.add(menuMainListItem);
-                                }
-                            }
-                        } else {
-                            String strSearch = searchString.substring(1).toLowerCase();
-                            if (originalData.get(i).getItemType() == MainListItemType.ACTION
-                                    && originalData.get(i).getTitle().toLowerCase().contains(strSearch)) {
-                                if (checkDuplicate(buildData, strSearch)) {
-                                    isValidNumber = true;
-                                    buildData.add(originalData.get(i));
-                                }
-                            }
-                        }
-                    } else {
+
+                    //Commented it as a part of SSA-1409, for showing default
+                    // items on press of "/"
+//                    if (searchString.startsWith("/")) {
+//                        if (searchString.length() == 1 && searchString.equalsIgnoreCase("/")) {
+//                            buildData.clear();
+//                            for (MainListItem menuMainListItem : originalData) {
+//                                if (!(menuMainListItem instanceof MainListItem)) {
+//                                    isValidNumber = true;
+//                                    buildData.add(menuMainListItem);
+//                                }
+//                            }
+//                        } else {
+//                            String strSearch = searchString.substring(1).toLowerCase();
+//                            if (originalData.get(i).getItemType() == MainListItemType.ACTION
+//                                    && originalData.get(i).getTitle().toLowerCase().contains(strSearch)) {
+//                                if (checkDuplicate(buildData, strSearch)) {
+//                                    isValidNumber = true;
+//                                    buildData.add(originalData.get(i));
+//                                }
+//                            }
+//                        }
+//                    } else {
                         switch (originalData.get(i).getItemType()) {
                             case CONTACT:
                                 if (searchString.startsWith("@")) {
@@ -488,7 +491,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                                 break;
 
                         }
-                    }
+//                    }
                 }
             } else {
                 for (MainListItem menuMainListItem : originalData) {
