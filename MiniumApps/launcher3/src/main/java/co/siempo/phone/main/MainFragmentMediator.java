@@ -62,10 +62,14 @@ public class MainFragmentMediator {
     }
 
 
+
     public synchronized void cancelAsync() {
-        if (null != resetData) {
-            resetData.cancel(true);
-        }
+        resetData.cancel(true);
+    }
+
+    public synchronized boolean getRunningStatus() {
+        return null != resetData && resetData.getStatus() == AsyncTask.Status.RUNNING;
+
     }
 
     private void loadActions() {
