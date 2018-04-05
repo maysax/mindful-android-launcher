@@ -277,8 +277,8 @@ public class StatusBarService extends Service {
     }
 
     private void reloadData() {
-        new LoadToolPane(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         new LoadFavoritePane(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadToolPane(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         new LoadJunkFoodPane(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         EventBus.getDefault().postSticky(new NotifySearchRefresh(true));
     }
@@ -338,7 +338,7 @@ public class StatusBarService extends Service {
                             packageName = intent.getData().getSchemeSpecificPart();
                             boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, packageName);
                             if (isEnable) {
-                                if(!CoreApplication.getInstance().getPackagesList().contains(packageName)) {
+                                if (!CoreApplication.getInstance().getPackagesList().contains(packageName)) {
                                     addAppFromBlockedList(packageName);
                                     CoreApplication.getInstance().addOrRemoveApplicationInfo(true, packageName);
                                 }

@@ -417,9 +417,8 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         if (list.size() == 0 && !DashboardActivity.isJunkFoodOpen) {
             DashboardActivity.isJunkFoodOpen = true;
         }
-        new LoadJunkFoodPane(JunkfoodFlaggingActivity.this).execute();
         new LoadFavoritePane(JunkfoodFlaggingActivity.this).execute();
-
+        new LoadJunkFoodPane(JunkfoodFlaggingActivity.this).execute();
         EventBus.getDefault().postSticky(new NotifySearchRefresh(true));
         FirebaseHelper.getInstance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
 
