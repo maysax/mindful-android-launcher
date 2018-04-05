@@ -124,11 +124,11 @@ public class FeedbackFragment extends CoreFragment {
                             String body = "User Email :" + PrefSiempo.getInstance(context).read(PrefSiempo
                                     .USER_EMAILID, "") + "\nFeedBack Type : " + selectedItemText + "\n" +
                                     "Message :" + txtMessage.getText().toString().trim() + "\n" +
-                                    "Phone Data : Manufacturer - " + android.os.Build.MANUFACTURER +
+                                    "Phone AlarmData : Manufacturer - " + android.os.Build.MANUFACTURER +
                                     ", Model - " + android.os.Build.MODEL +
                                     ", OS Version - " + android.os.Build.VERSION.SDK_INT +
                                     ", Display - " + getScreenResolution(getActivity()) + "\n" +
-                                    "App Data : UserID - " + CoreApplication.getInstance().getDeviceId() +
+                                    "App AlarmData : UserID - " + CoreApplication.getInstance().getDeviceId() +
                                     ", Version - " + version;
 
 

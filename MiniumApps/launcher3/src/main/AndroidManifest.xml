@@ -150,6 +150,7 @@
 
         <receiver android:name=".service.AlarmBroadcast">
             <intent-filter>
+                <action android:name="co.siempo.phone.ACTION_ALARM" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>

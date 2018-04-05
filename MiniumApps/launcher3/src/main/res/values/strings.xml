@@ -68,7 +68,7 @@
         <item>-1</item>
     </string-array>
 
-    <!-- Example settings for Data & Sync -->
+    <!-- Example settings for AlarmData & Sync -->
     <string name="pref_header_data_sync" tools:ignore="UnusedResources">Data &amp; sync</string>
 
     <string name="pref_title_sync_frequency">Sync frequency</string>
