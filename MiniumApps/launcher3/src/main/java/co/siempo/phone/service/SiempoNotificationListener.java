@@ -261,7 +261,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 + "\n" + " Details: " + notification.getNotification().toString()
                 + "\n" + " Category: " + notification.getNotification().category
                 + "\n" + " Ticker: " + notification.getNotification().tickerText
-                + "\n" + " Bundle Data:" + finalString);
+                + "\n" + " Bundle AlarmData:" + finalString);
     }
 
     /**

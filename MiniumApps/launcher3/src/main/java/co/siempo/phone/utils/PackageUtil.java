@@ -30,6 +30,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -41,6 +42,10 @@ import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -55,6 +60,7 @@ import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.log.Tracer;
+import co.siempo.phone.models.AlarmData;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.models.MainListItemType;
@@ -354,40 +360,261 @@ public class PackageUtil {
         return format;
     }
 
-    public static void enableAlarm(Context context) {
+
+    /**
+     * this method cancel the alarm.
+     *
+     * @param id
+     */
+    public static void cancelAlarm(int id) {
         try {
-            Intent intentToFire = new Intent(context, AlarmBroadcast.class);
-            intentToFire.setAction(AlarmBroadcast.ACTION_ALARM);
-            PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 1234, intentToFire, PendingIntent.FLAG_UPDATE_CURRENT);
-            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            if (isAlarmEnable(id)) {
+                Log.d("Alarm", "Cancel Enabled Alarm :" + id);
+                Intent intentToFire = new Intent(CoreApplication.getInstance(), AlarmBroadcast.class);
+                PendingIntent alarmIntent = PendingIntent.getBroadcast(CoreApplication.getInstance(), id, intentToFire, 0);
+                AlarmManager alarmManager = (AlarmManager) CoreApplication.getInstance().getSystemService(Context.ALARM_SERVICE);
+                alarmManager.cancel(alarmIntent);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-            long delay = 30000;
-            long time = System.currentTimeMillis() + delay;
+    public static boolean isAlarmEnable(int id) {
+        if (CoreApplication.getInstance() != null) {
+            Intent intentToFire = new Intent(CoreApplication.getInstance(), AlarmBroadcast.class);
+            boolean alarmExists =
+                    (PendingIntent.getBroadcast(CoreApplication.getInstance(), id, intentToFire, PendingIntent.FLAG_NO_CREATE) != null);
+            return alarmExists;
+        }
+        return false;
+    }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                // Wakes up the device in Doze Mode
-                if (alarmManager != null) {
-                    alarmManager.setAlarmClock(new AlarmManager
-                                    .AlarmClockInfo(time, alarmIntent),
-                            alarmIntent);
-//                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, alarmIntent);
-                }
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                // Wakes up the device in Idle Mode
-                if (alarmManager != null) {
-                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, alarmIntent);
-                }
-            } else {
-                if (alarmManager != null) {
-                    alarmManager.set(AlarmManager.RTC_WAKEUP, time, alarmIntent);
+    public static void enableDisableAlarm(Calendar calendar, int id) {
+        try {
+            if (id == -1) {
+                PackageUtil.cancelAlarm(0);
+            }
+            if (id != -1 && CoreApplication.getInstance() != null) {
+
+                Intent intentToFire = new Intent(CoreApplication.getInstance(), AlarmBroadcast.class);
+                PendingIntent alarmIntent = PendingIntent.getBroadcast(CoreApplication.getInstance(), id, intentToFire, 0);
+                AlarmManager alarmManager = (AlarmManager) CoreApplication.getInstance().getSystemService(Context.ALARM_SERVICE);
+                long time = calendar.getTimeInMillis();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    // Wakes up the device in Doze Mode
+                    if (alarmManager != null) {
+                        Log.d("Alarm", "Time:" + calendar.getTime());
+                        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, alarmIntent);
+                    }
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    // Wakes up the device in Idle Mode
+                    if (alarmManager != null) {
+                        Log.d("Alarm", "Time:" + calendar.getTime());
+                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, alarmIntent);
+                    }
+                } else {
+                    if (alarmManager != null) {
+                        Log.d("Alarm", "Time:" + calendar.getTime());
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, time, alarmIntent);
+                    }
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
             CoreApplication.getInstance().logException(e);
         }
     }
+
+    public static Calendar getOnlyAt(Context context) {
+        String timeString;
+        if (android.text.format.DateFormat.is24HourFormat(context)) {
+            timeString = "HH:mm";
+        } else {
+            timeString = "hh:mm a";
+        }
+        SimpleDateFormat df = new SimpleDateFormat(timeString, Locale.getDefault());
+        String strTimeData = PrefSiempo.getInstance(context).read(PrefSiempo
+                .ONLY_AT, "12:01");
+        String strTime[] = strTimeData.split(",");
+
+        Calendar calendar1 = Calendar.getInstance();
+        if (strTime.length == 1) {
+            String str1 = strTime[0];
+            int setMinute, setHours;
+
+            setHours = Integer.parseInt(str1.split(":")[0]);
+            setMinute = Integer.parseInt(str1.split(":")[1]);
+
+            calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+            calendar1.set(Calendar.MINUTE, setMinute);
+        } else if (strTime.length == 2) {
+            Calendar currentTime = Calendar.getInstance();
+
+            int systemMinute, setMinute, systemHours, setHours;
+
+            ArrayList<AlarmData> hourList = new ArrayList<>();
+
+            systemHours = currentTime.get(Calendar.HOUR_OF_DAY);
+            systemMinute = currentTime.get(Calendar.MINUTE);
+
+            String str1 = strTime[0];
+            setHours = Integer.parseInt(str1.split(":")[0]);
+            setMinute = Integer.parseInt(str1.split(":")[1]);
+            calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+            calendar1.set(Calendar.MINUTE, setMinute);
+            hourList.add(new AlarmData(setHours, setMinute, df.format(calendar1.getTime())));
+            String str2 = strTime[1];
+            setHours = Integer.parseInt(str2.split(":")[0]);
+            setMinute = Integer.parseInt(str2.split(":")[1]);
+            calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+            calendar1.set(Calendar.MINUTE, setMinute);
+            hourList.add(new AlarmData(setHours, setMinute, df.format(calendar1.getTime())));
+            try {
+                Collections.sort(hourList, new PackageUtil.HoursComparator());
+                for (int i = 0; i < hourList.size(); i++) {
+                    if (hourList.get(i).getHours() == systemHours) {
+                        if (hourList.get(i).getMinute() > systemMinute) {
+                            String str4 = strTime[i];
+                            setHours = Integer.parseInt(str4.split(":")[0]);
+                            setMinute = Integer.parseInt(str4.split(":")[1]);
+                            calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+                            calendar1.set(Calendar.MINUTE, setMinute);
+                            break;
+                        } else {
+                            calendar1.set(Calendar.HOUR_OF_DAY, hourList.get(0).getHours());
+                            calendar1.set(Calendar.MINUTE, hourList.get(0).getMinute());
+                        }
+                    } else if (hourList.get(i).getHours() > systemHours) {
+                        String str4 = strTime[i];
+                        setHours = Integer.parseInt(str4.split(":")[0]);
+                        setMinute = Integer.parseInt(str4.split(":")[1]);
+                        calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+                        calendar1.set(Calendar.MINUTE, setMinute);
+                        break;
+                    } else {
+                        calendar1.set(Calendar.HOUR_OF_DAY, hourList.get(0).getHours());
+                        calendar1.set(Calendar.MINUTE, hourList.get(0).getMinute());
+                    }
+                }
+            } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
+            }
+
+        } else if (strTime.length == 3) {
+            Calendar currentTime = Calendar.getInstance();
+
+            ArrayList<AlarmData> hourList = new ArrayList<>();
+
+            int systemMinute, setMinute, systemHours, setHours;
+            systemHours = currentTime.get(Calendar.HOUR_OF_DAY);
+            systemMinute = currentTime.get(Calendar.MINUTE);
+
+
+            String str1 = strTime[0];
+            setHours = Integer.parseInt(str1.split(":")[0]);
+            setMinute = Integer.parseInt(str1.split(":")[1]);
+            calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+            calendar1.set(Calendar.MINUTE, setMinute);
+            hourList.add(new AlarmData(setHours, setMinute, df.format(calendar1.getTime())));
+
+            String str2 = strTime[1];
+            setHours = Integer.parseInt(str2.split(":")[0]);
+            setMinute = Integer.parseInt(str2.split(":")[1]);
+            calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+            calendar1.set(Calendar.MINUTE, setMinute);
+            hourList.add(new AlarmData(setHours, setMinute, df.format(calendar1.getTime())));
+
+            String str3 = strTime[2];
+            setHours = Integer.parseInt(str3.split(":")[0]);
+            setMinute = Integer.parseInt(str3.split(":")[1]);
+            calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+            calendar1.set(Calendar.MINUTE, setMinute);
+            hourList.add(new AlarmData(setHours, setMinute, df.format(calendar1.getTime())));
+            try {
+                Collections.sort(hourList, new PackageUtil.HoursComparator());
+                for (int i = 0; i < hourList.size(); i++) {
+                    if (hourList.get(i).getHours() == systemHours) {
+                        if (hourList.get(i).getMinute() > systemMinute) {
+                            String str4 = strTime[i];
+                            setHours = Integer.parseInt(str4.split(":")[0]);
+                            setMinute = Integer.parseInt(str4.split(":")[1]);
+                            calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+                            calendar1.set(Calendar.MINUTE, setMinute);
+                            break;
+                        } else {
+                            calendar1.set(Calendar.HOUR_OF_DAY, hourList.get(0).getHours());
+                            calendar1.set(Calendar.MINUTE, hourList.get(0).getMinute());
+                        }
+                    } else if (hourList.get(i).getHours() > systemHours) {
+                        String str4 = strTime[i];
+                        setHours = Integer.parseInt(str4.split(":")[0]);
+                        setMinute = Integer.parseInt(str4.split(":")[1]);
+                        calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+                        calendar1.set(Calendar.MINUTE, setMinute);
+                        break;
+                    } else {
+                        calendar1.set(Calendar.HOUR_OF_DAY, hourList.get(0).getHours());
+                        calendar1.set(Calendar.MINUTE, hourList.get(0).getMinute());
+                    }
+                }
+            } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
+            }
+        }
+        calendar1.set(Calendar.SECOND, 0);
+        // If the time being set is past time, android system will keep on creating alarms
+        // Hence in order to prevent this, check with current system time, and if the time is past
+        // then add 24 hours to it.
+        if (calendar1.getTimeInMillis() < System.currentTimeMillis()) {
+            calendar1.add(Calendar.DATE, 1);
+        }
+        return calendar1;
+    }
+
+    public static Calendar batchMode(Context context) {
+        int batchTime = PrefSiempo.getInstance(context).read(PrefSiempo
+                .BATCH_TIME, 15);
+        Calendar calendar = Calendar.getInstance();
+        int hour;
+        int minute = calendar.get(Calendar.MINUTE);
+        if (batchTime == 15) {
+            if (minute >= 0 && minute < 15) {
+                calendar.set(Calendar.MINUTE, 15);
+            } else if (minute >= 15 && minute < 30) {
+                calendar.set(Calendar.MINUTE, 30);
+            } else if (minute >= 30 && minute < 45) {
+                calendar.set(Calendar.MINUTE, 45);
+            } else if (minute >= 45 && minute < 60) {
+                calendar.set(Calendar.MINUTE, 60);
+            }
+        } else if (batchTime == 30) {
+            if (minute >= 0 && minute < 30) {
+                calendar.set(Calendar.MINUTE, 30);
+            } else if (minute >= 30 && minute < 60) {
+                calendar.add(Calendar.HOUR_OF_DAY, 1);
+                calendar.set(Calendar.MINUTE, 0);
+            }
+        } else if (batchTime == 1) {
+            calendar.add(Calendar.HOUR_OF_DAY, 1);
+            calendar.set(Calendar.MINUTE, 0);
+        } else if (batchTime == 2) {
+            calendar = Calendar.getInstance();
+            hour = calendar.get(Calendar.HOUR_OF_DAY);
+            int intHour = forTwoHours(hour);
+            calendar.set(Calendar.HOUR_OF_DAY, intHour);
+            calendar.set(Calendar.MINUTE, 0);
+        } else if (batchTime == 4) {
+            calendar = Calendar.getInstance();
+            hour = calendar.get(Calendar.HOUR_OF_DAY);
+            int intHour = forFourHours(hour);
+            calendar.set(Calendar.HOUR_OF_DAY, intHour);
+            calendar.set(Calendar.MINUTE, 0);
+        }
+        calendar.set(Calendar.SECOND, 0);
+        return calendar;
+    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private static NotificationChannel createChannel(Context context, String channelName) {
@@ -401,6 +628,7 @@ public class PackageUtil {
         chan.setVibrationPattern(new long[]{1000});
         return chan;
     }
+
 
     /**
      * Below function is used to get contact name from contact number store in contact list
@@ -514,6 +742,7 @@ public class PackageUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return sortedFavoriteList;
     }
 
@@ -897,5 +1126,45 @@ public class PackageUtil {
         }
 
         return junkListItems;
+    }
+
+    public static class HoursComparator implements Comparator<AlarmData> {
+        @Override
+        public int compare(AlarmData o1, AlarmData o2) {
+            if (o1.getHours() == o2.getHours()) {
+                return o1.getMinute() - o2.getMinute();
+            }
+            return o1.getHours() - o2.getHours();
+        }
+    }
+
+    public static int forTwoHours(int hour) {
+        ArrayList<Integer> everyTwoHourList = new ArrayList<>();
+        everyTwoHourList.addAll(Arrays.asList(0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22));
+        if (hour >= 22) {
+            return 0;
+        } else {
+            for (Integer integer : everyTwoHourList) {
+                if (integer > hour) {
+                    return integer;
+                }
+            }
+        }
+        return 0;
+    }
+
+    public static int forFourHours(int hour) {
+        ArrayList<Integer> everyFourHoursList = new ArrayList<>();
+        everyFourHoursList.addAll(Arrays.asList(0, 4, 8, 12, 16, 20));
+        if (hour >= 20) {
+            return 0;
+        } else {
+            for (Integer integer : everyFourHoursList) {
+                if (integer > hour) {
+                    return integer;
+                }
+            }
+        }
+        return 0;
     }
 }

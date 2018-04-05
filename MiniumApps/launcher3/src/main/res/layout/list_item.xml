@@ -18,10 +18,10 @@
             android:id="@+id/icon"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:gravity="center_vertical"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="18dp"
             android:contentDescription="@null"
+            android:gravity="center_vertical"
             android:padding="6dp" />
 
         <RelativeLayout

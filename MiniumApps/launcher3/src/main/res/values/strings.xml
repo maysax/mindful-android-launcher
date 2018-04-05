@@ -68,7 +68,7 @@
         <item>-1</item>
     </string-array>
 
-    <!-- Example settings for Data & Sync -->
+    <!-- Example settings for AlarmData & Sync -->
     <string name="pref_header_data_sync" tools:ignore="UnusedResources">Data &amp; sync</string>
 
     <string name="pref_title_sync_frequency">Sync frequency</string>
@@ -101,7 +101,7 @@
         <item>3</item>
     </string-array>
 
-    <string-array name="multi_select_list_preference_default_value" tools:ignore="UnusedResources"/>
+    <string-array name="multi_select_list_preference_default_value" tools:ignore="UnusedResources" />
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
@@ -291,7 +291,7 @@
     <string name="msg_half">Batches will arrive on the half-hour.</string>
     <string name="msg_1hour">Batches will arrive on the hour.</string>
     <string name="msg_2hour">Batches will arrive 12 times per day.</string>
-    <string name="msg_4hour">Batches will arrive 8 times per day.</string>
+    <string name="msg_4hour">Batches will arrive 6 times per day.</string>
     <string name="msg_next_delivery">Next Delivery: </string>
     <string name="message1">For the next day, week, or month, what do you want to remind yourself about whenever you unlock your phone?</string>
     <string name="message2">An intention is a goal or an idea that you want to focus on. Unlike a task, it might never be \"complete\", but your top priority may change.</string>

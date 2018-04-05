@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.ResolveInfo;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -107,4 +108,14 @@ public class Sorting {
         return list;
     }
 
+
+    public static ArrayList<Calendar> sortDate(final ArrayList<Calendar> appList) {
+        sort(appList, new Comparator<Calendar>() {
+            @Override
+            public int compare(final Calendar object1, final Calendar object2) {
+                return object1.getTime().compareTo(object2.getTime());
+            }
+        });
+        return appList;
+    }
 }

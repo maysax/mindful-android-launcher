@@ -32,13 +32,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Locale;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
+import co.siempo.phone.models.AlarmData;
+import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 
 public class DialogTempoSetting extends Dialog implements View.OnClickListener {
@@ -60,7 +61,6 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
         super(context, R.style.FullScreenDialogStyle);
         this.context = context;
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -445,6 +445,7 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
                     .TEMPO_TYPE, 0);
             strMessage = context.getString(R.string.msg_individual);
             txtMessage.setText(strMessage);
+            PackageUtil.enableDisableAlarm(null, -1);
         } else if (pos == 1) {
             radioIndividual.setChecked(false);
             radioBatched.setChecked(true);
@@ -485,7 +486,7 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
                 strMessage = strMessage + "\n" + context.getString(R.string.msg_2hour) + "\n";
                 calendar = Calendar.getInstance();
                 hour = calendar.get(Calendar.HOUR_OF_DAY);
-                int intHour = forTwoHours(hour);
+                int intHour = PackageUtil.forTwoHours(hour);
                 calendar.set(Calendar.HOUR_OF_DAY, intHour);
                 calendar.set(Calendar.MINUTE, 0);
             } else if (batchTime == 4) {
@@ -493,12 +494,14 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
                 strMessage = strMessage + "\n" + context.getString(R.string.msg_4hour) + "\n";
                 calendar = Calendar.getInstance();
                 hour = calendar.get(Calendar.HOUR_OF_DAY);
-                int intHour = forFourHours(hour);
+                int intHour = PackageUtil.forFourHours(hour);
                 calendar.set(Calendar.HOUR_OF_DAY, intHour);
                 calendar.set(Calendar.MINUTE, 0);
             }
             strMessage = strMessage + context.getString(R.string.msg_next_delivery) + df.format(calendar.getTime());
             txtMessage.setText(strMessage);
+            calendar.set(Calendar.SECOND, 0);
+            if (CoreApplication.getInstance() != null) PackageUtil.enableDisableAlarm(calendar, 0);
         } else if (pos == 2) {
             radioIndividual.setChecked(false);
             radioBatched.setChecked(false);
@@ -506,38 +509,11 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
             PrefSiempo.getInstance(context).write(PrefSiempo
                     .TEMPO_TYPE, 2);
             bindOnlyAt();
+            PackageUtil.enableDisableAlarm(PackageUtil.getOnlyAt(context), 0);
         }
-    }
-
-    private int forTwoHours(int hour) {
-        if (hour >= 22) {
-            return 0;
-        } else {
-            for (Integer integer : everyTwoHourList) {
-                if (integer > hour) {
-                    return integer;
-                }
-            }
-        }
-        return 0;
-    }
-
-    private int forFourHours(int hour) {
-        if (hour >= 20) {
-            return 0;
-        } else {
-            for (Integer integer : everyFourHoursList) {
-                if (integer > hour) {
-                    return integer;
-                }
-            }
-        }
-        return 0;
     }
 
     private void bindOnlyAt() {
-
-
         String timeString;
         if (android.text.format.DateFormat.is24HourFormat(context)) {
             timeString = "HH:mm";
@@ -548,7 +524,6 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
         String strTimeData = PrefSiempo.getInstance(context).read(PrefSiempo
                 .ONLY_AT, "12:01");
         String strTime[] = strTimeData.split(",");
-
 
         if (strTime.length == 1) {
             txtSign1.setVisibility(View.GONE);
@@ -574,6 +549,7 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
                 strMessage = strMessage + "\n" + context.getString(R.string.msg_next_delivery) + df.format(calendar1.getTime());
                 txtMessage.setText(strMessage);
             }
+
         } else if (strTime.length == 2) {
             txtSign2.setVisibility(View.GONE);
             txtSign1.setVisibility(View.VISIBLE);
@@ -587,7 +563,7 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
 
             int systemMinute, setMinute, systemHours, setHours;
 
-            ArrayList<Data> hourList = new ArrayList<>();
+            ArrayList<AlarmData> hourList = new ArrayList<>();
 
             systemHours = currentTime.get(Calendar.HOUR_OF_DAY);
             systemMinute = currentTime.get(Calendar.MINUTE);
@@ -598,7 +574,7 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
             calendar1.set(Calendar.HOUR_OF_DAY, setHours);
             calendar1.set(Calendar.MINUTE, setMinute);
             txtOnlyAtTime1.setText("" + df.format(calendar1.getTime()));
-            hourList.add(new Data(setHours, setMinute, df.format(calendar1.getTime())));
+            hourList.add(new AlarmData(setHours, setMinute, df.format(calendar1.getTime())));
 
 
             String str2 = strTime[1];
@@ -607,9 +583,9 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
             calendar1.set(Calendar.HOUR_OF_DAY, setHours);
             calendar1.set(Calendar.MINUTE, setMinute);
             txtOnlyAtTime2.setText("" + df.format(calendar1.getTime()));
-            hourList.add(new Data(setHours, setMinute, df.format(calendar1.getTime())));
+            hourList.add(new AlarmData(setHours, setMinute, df.format(calendar1.getTime())));
             try {
-                Collections.sort(hourList, new HoursComparator());
+                Collections.sort(hourList, new PackageUtil.HoursComparator());
                 for (int i = 0; i < hourList.size(); i++) {
                     if (hourList.get(i).getHours() == systemHours) {
                         if (hourList.get(i).getMinute() > systemMinute) {
@@ -669,7 +645,7 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
             Calendar calendar1 = Calendar.getInstance();
             Calendar currentTime = Calendar.getInstance();
 
-            ArrayList<Data> hourList = new ArrayList<>();
+            ArrayList<AlarmData> hourList = new ArrayList<>();
 
             int systemMinute, setMinute, systemHours, setHours;
             systemHours = currentTime.get(Calendar.HOUR_OF_DAY);
@@ -682,7 +658,7 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
             calendar1.set(Calendar.HOUR_OF_DAY, setHours);
             calendar1.set(Calendar.MINUTE, setMinute);
             txtOnlyAtTime1.setText("" + df.format(calendar1.getTime()));
-            hourList.add(new Data(setHours, setMinute, df.format(calendar1.getTime())));
+            hourList.add(new AlarmData(setHours, setMinute, df.format(calendar1.getTime())));
 
             String str2 = strTime[1];
             setHours = Integer.parseInt(str2.split(":")[0]);
@@ -690,7 +666,7 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
             calendar1.set(Calendar.HOUR_OF_DAY, setHours);
             calendar1.set(Calendar.MINUTE, setMinute);
             txtOnlyAtTime2.setText("" + df.format(calendar1.getTime()));
-            hourList.add(new Data(setHours, setMinute, df.format(calendar1.getTime())));
+            hourList.add(new AlarmData(setHours, setMinute, df.format(calendar1.getTime())));
 
             String str3 = strTime[2];
             setHours = Integer.parseInt(str3.split(":")[0]);
@@ -698,9 +674,9 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
             calendar1.set(Calendar.HOUR_OF_DAY, setHours);
             calendar1.set(Calendar.MINUTE, setMinute);
             txtOnlyAtTime3.setText("" + df.format(calendar1.getTime()));
-            hourList.add(new Data(setHours, setMinute, df.format(calendar1.getTime())));
+            hourList.add(new AlarmData(setHours, setMinute, df.format(calendar1.getTime())));
             try {
-                Collections.sort(hourList, new HoursComparator());
+                Collections.sort(hourList, new PackageUtil.HoursComparator());
                 for (int i = 0; i < hourList.size(); i++) {
                     if (hourList.get(i).getHours() == systemHours) {
                         if (hourList.get(i).getMinute() > systemMinute) {
@@ -745,8 +721,6 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
             } catch (Exception e) {
                 CoreApplication.getInstance().logException(e);
             }
-
-
         }
     }
 
@@ -797,50 +771,5 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
         }
     }
 
-    class Data {
-        private int hours;
-        private int minute;
-        private String index;
-
-        public Data(int hours, int minute, String index) {
-            this.hours = hours;
-            this.minute = minute;
-            this.index = index;
-        }
-
-        public int getHours() {
-            return hours;
-        }
-
-        public void setHours(int hours) {
-            this.hours = hours;
-        }
-
-        public int getMinute() {
-            return minute;
-        }
-
-        public void setMinute(int minute) {
-            this.minute = minute;
-        }
-
-        public String getIndex() {
-            return index;
-        }
-
-        public void setIndex(String index) {
-            this.index = index;
-        }
-    }
-
-    public class HoursComparator implements Comparator<Data> {
-        @Override
-        public int compare(Data o1, Data o2) {
-            if (o1.getHours() == o2.getHours()) {
-                return o1.getMinute() - o2.getMinute();
-            }
-            return o1.getHours() - o2.getHours();
-        }
-    }
 
 }

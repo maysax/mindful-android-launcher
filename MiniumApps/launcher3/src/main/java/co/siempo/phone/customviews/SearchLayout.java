@@ -146,7 +146,6 @@ public class SearchLayout extends CardView {
     }
 
 
-
     private void updateSearchField() {
         String[] splits = formattedTxt.split("\\|");
 
