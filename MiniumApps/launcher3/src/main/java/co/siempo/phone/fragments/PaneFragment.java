@@ -45,7 +45,6 @@ import co.siempo.phone.adapters.ToolsMenuAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
 import co.siempo.phone.customviews.SearchLayout;
-import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.HomePress;
 import co.siempo.phone.event.NotifyBottomView;
 import co.siempo.phone.event.NotifySearchRefresh;
@@ -647,14 +646,19 @@ public class PaneFragment extends CoreFragment {
         }
     }
 
-    @Subscribe
-    public void appInstalledEvent(AppInstalledEvent appInstalledEvent) {
-        if (appInstalledEvent.isAppInstalledSuccessfully()) {
-            if (mediator != null) {
-                mediator.loadData();
-            }
-        }
-    }
+
+    //Commented this as part of SSA-1476, as app update was getting called
+    // multiple times creating the issue of recent apps being deleted and
+    // added many times. Moreover, app update is being captured in this class
+    // by NotifySearchRefresh Event hence removing the below logic
+//    @Subscribe
+//    public void appInstalledEvent(AppInstalledEvent appInstalledEvent) {
+//        if (appInstalledEvent.isAppInstalledSuccessfully()) {
+//            if (mediator != null) {
+//                mediator.loadData();
+//            }
+//        }
+//    }
 
     @Subscribe
     public void onBackPressedEvent(OnBackPressedEvent onBackPressedEvent) {
@@ -765,7 +769,18 @@ public class PaneFragment extends CoreFragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                mediator.resetData();
+                                //If the task of async is running, then no
+                                // need to run its another instance. This
+                                // will happen in case of list item click
+                                // where already the data is being reset and
+                                // after it the empty token ("") is being
+                                // called. Hence in order to prevent this,
+                                // empty token will be called only in case if
+                                // no previous async task of similar type is
+                                // running.
+                                if (!mediator.getRunningStatus()) {
+                                    mediator.resetData();
+                                }
                                 if (adapter != null)
                                     adapter.getFilter().filter(current.getTitle());
                             }
