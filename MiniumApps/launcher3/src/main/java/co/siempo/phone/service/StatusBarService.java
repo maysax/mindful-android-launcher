@@ -338,7 +338,7 @@ public class StatusBarService extends Service {
                             packageName = intent.getData().getSchemeSpecificPart();
                             boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, packageName);
                             if (isEnable) {
-                                if(!CoreApplication.getInstance().getPackagesList().contains(packageName)) {
+                                if (!CoreApplication.getInstance().getPackagesList().contains(packageName)) {
                                     addAppFromBlockedList(packageName);
                                     CoreApplication.getInstance().addOrRemoveApplicationInfo(true, packageName);
                                 }
