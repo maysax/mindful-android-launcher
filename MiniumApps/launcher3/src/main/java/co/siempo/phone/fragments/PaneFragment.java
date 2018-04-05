@@ -647,19 +647,6 @@ public class PaneFragment extends CoreFragment {
     }
 
 
-    //Commented this as part of SSA-1476, as app update was getting called
-    // multiple times creating the issue of recent apps being deleted and
-    // added many times. Moreover, app update is being captured in this class
-    // by NotifySearchRefresh Event hence removing the below logic
-//    @Subscribe
-//    public void appInstalledEvent(AppInstalledEvent appInstalledEvent) {
-//        if (appInstalledEvent.isAppInstalledSuccessfully()) {
-//            if (mediator != null) {
-//                mediator.loadData();
-//            }
-//        }
-//    }
-
     @Subscribe
     public void onBackPressedEvent(OnBackPressedEvent onBackPressedEvent) {
         if (onBackPressedEvent.isBackPressed()) {
