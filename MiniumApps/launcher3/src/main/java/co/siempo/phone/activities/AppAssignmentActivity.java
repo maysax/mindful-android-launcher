@@ -73,15 +73,20 @@ public class AppAssignmentActivity extends CoreActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_assignement);
         mainListItem = (MainListItem) getIntent().getSerializableExtra(Constants.INTENT_MAINLISTITEM);
+        if (mainListItem != null) {
+            set = PrefSiempo.getInstance(this).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
+            filterList();
+            initView();
+        } else {
+            finish();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         startTime = System.currentTimeMillis();
-        set = PrefSiempo.getInstance(this).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
-        filterList();
-        initView();
+
     }
 
     @Override
@@ -135,7 +140,9 @@ public class AppAssignmentActivity extends CoreActivity {
     private void initView() {
         toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
-        toolbar.setTitle(getString(R.string.assign_an_app) + " " + mainListItem.getTitle());
+        if (mainListItem != null) {
+            toolbar.setTitle(getString(R.string.assign_an_app) + " " + mainListItem.getTitle());
+        }
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
                 .colorAccent));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
