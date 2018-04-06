@@ -1038,33 +1038,33 @@ public class PackageUtil {
         List<MainListItem> removeList = new ArrayList<>();
         List<MainListItem> listWithMostRecentdata = new ArrayList<>();
 
+        if (recentItemList != null) {
+            for (int j = 0; j < recentItemList.size(); j++) {
+                String recentItemTitle = recentItemList.get(j).getTitle();
+                String recentItemPackageName = recentItemList.get(j).getPackageName();
 
-        for (int j = 0; j < recentItemList.size(); j++) {
-            String recentItemTitle = recentItemList.get(j).getTitle();
-            String recentItemPackageName = recentItemList.get(j).getPackageName();
+                for (int i = 0; i < allItems.size(); i++) {
+                    MainListItem item = allItems.get(i);
+                    String title = allItems.get(i).getTitle();
+                    String packageName = allItems.get(i).getPackageName();
 
-            for (int i = 0; i < allItems.size(); i++) {
-                MainListItem item = allItems.get(i);
-                String title = allItems.get(i).getTitle();
-                String packageName = allItems.get(i).getPackageName();
-
-                if (TextUtils.isEmpty(packageName) && TextUtils.isEmpty(recentItemPackageName) && !TextUtils.isEmpty(title) && !TextUtils.isEmpty(recentItemTitle) && title.toLowerCase().trim().equalsIgnoreCase(recentItemTitle.toLowerCase().trim())) {
-                    removeList.add(item);
-                } else if (!TextUtils.isEmpty(packageName) && !TextUtils.isEmpty(recentItemPackageName) && packageName.trim().equalsIgnoreCase(recentItemPackageName.trim())) {
-                    removeList.add(item);
+                    if (TextUtils.isEmpty(packageName) && TextUtils.isEmpty(recentItemPackageName) && !TextUtils.isEmpty(title) && !TextUtils.isEmpty(recentItemTitle) && title.toLowerCase().trim().equalsIgnoreCase(recentItemTitle.toLowerCase().trim())) {
+                        removeList.add(item);
+                    } else if (!TextUtils.isEmpty(packageName) && !TextUtils.isEmpty(recentItemPackageName) && packageName.trim().equalsIgnoreCase(recentItemPackageName.trim())) {
+                        removeList.add(item);
+                    }
                 }
+
             }
 
+            allItems.removeAll(removeList);
+
+            listWithMostRecentdata.addAll(removeList);
+            listWithMostRecentdata.addAll(allItems);
+
+            List<MainListItem> junkListItems = getJunkListItems(listWithMostRecentdata, context);
+            listWithMostRecentdata.removeAll(junkListItems);
         }
-
-        allItems.removeAll(removeList);
-
-        listWithMostRecentdata.addAll(removeList);
-        listWithMostRecentdata.addAll(allItems);
-
-        List<MainListItem> junkListItems = getJunkListItems(listWithMostRecentdata, context);
-        listWithMostRecentdata.removeAll(junkListItems);
-
         return listWithMostRecentdata;
     }
 
