@@ -62,7 +62,6 @@ public class MainFragmentMediator {
     }
 
 
-
     public synchronized void cancelAsync() {
         resetData.cancel(true);
     }
@@ -139,96 +138,98 @@ public class MainFragmentMediator {
 
     public void listItemClicked(TokenRouter router, int position, String data) {
         MainListItemType type;
-        type = getAdapter().getItem(position).getItemType();
-        if (type != null)
-            switch (type) {
-                case CONTACT:
-                    if (router != null) {
-                        router.contactPicked(getAdapter().getItem(position));
-                        FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_CONTACT_PICK, "", data);
-                    }
-                    break;
-                case ACTION:
-                    if (getAdapter() != null && TextUtils.isEmpty(getAdapter().getItem(position).getPackageName())) {
-                        SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance
-                                (DateFormat.FULL, Locale
-                                        .getDefault());
-                        PackageUtil.addRecentItemList(getAdapter().getItem(position), context);
-                        position = getAdapter().getItem(position).getId();
-                        new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
-                        EventBus.getDefault().post(new SendSmsEvent(true));
-                    } else {
-                        if (fragment != null) {
+        if (getAdapter() != null) {
+            type = getAdapter().getItem(position).getItemType();
+            if (type != null)
+                switch (type) {
+                    case CONTACT:
+                        if (router != null) {
+                            router.contactPicked(getAdapter().getItem(position));
+                            FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_CONTACT_PICK, "", data);
+                        }
+                        break;
+                    case ACTION:
+                        if (getAdapter() != null && TextUtils.isEmpty(getAdapter().getItem(position).getPackageName())) {
+                            SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance
+                                    (DateFormat.FULL, Locale
+                                            .getDefault());
+                            PackageUtil.addRecentItemList(getAdapter().getItem(position), context);
+                            position = getAdapter().getItem(position).getId();
+                            new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
+                            EventBus.getDefault().post(new SendSmsEvent(true));
+                        } else {
+                            if (fragment != null) {
 
-                            DashboardActivity.isTextLenghGreater = "";
-                            UIUtils.hideSoftKeyboard(fragment.getActivity(), fragment.getActivity().getWindow().getDecorView().getWindowToken());
-                            boolean status = new ActivityHelper(fragment.getActivity()).openAppWithPackageName(getAdapter().getItem(position).getPackageName());
-                            FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_APPLICATION_PICK, getAdapter().getItem(position).getPackageName(), "");
-                            if (status) {
-                                PackageUtil.addRecentItemList(getAdapter().getItem(position), context);
-                                EventBus.getDefault().post(new SendSmsEvent(true));
+                                DashboardActivity.isTextLenghGreater = "";
+                                UIUtils.hideSoftKeyboard(fragment.getActivity(), fragment.getActivity().getWindow().getDecorView().getWindowToken());
+                                boolean status = new ActivityHelper(fragment.getActivity()).openAppWithPackageName(getAdapter().getItem(position).getPackageName());
+                                FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_APPLICATION_PICK, getAdapter().getItem(position).getPackageName(), "");
+                                if (status) {
+                                    PackageUtil.addRecentItemList(getAdapter().getItem(position), context);
+                                    EventBus.getDefault().post(new SendSmsEvent(true));
+                                }
                             }
                         }
-                    }
-                    break;
-                case DEFAULT:
-                    position = getAdapter().getItem(position).getId();
-                    switch (position) {
-                        case 1:
-                            if (router != null && fragment != null) {
-                                router.sendText(fragment.getActivity());
-                                FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_SMS, "", data);
-                            }
-                            break;
-                        //Notes
-                        case 2:
-                            if (router != null && fragment != null) {
-                                router.createNote(fragment.getActivity());
-                                FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_SAVE_NOTE, "", data);
-                                new ActivityHelper(context).openNotesApp(true);
-                                EventBus.getDefault().post(new SendSmsEvent(true));
-                            }
-                            break;
-                        //Write code for Junk Food Pane on this code
-                        case 3:
-                            if (router != null && fragment != null) {
-                                fragment.setCurrentPage(0);
-                            }
-                            break;
-                        case 4:
-                            if (router != null && fragment != null) {
-                                router.call(fragment.getActivity());
+                        break;
+                    case DEFAULT:
+                        position = getAdapter().getItem(position).getId();
+                        switch (position) {
+                            case 1:
+                                if (router != null && fragment != null) {
+                                    router.sendText(fragment.getActivity());
+                                    FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_SMS, "", data);
+                                }
+                                break;
+                            //Notes
+                            case 2:
+                                if (router != null && fragment != null) {
+                                    router.createNote(fragment.getActivity());
+                                    FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_SAVE_NOTE, "", data);
+                                    new ActivityHelper(context).openNotesApp(true);
+                                    EventBus.getDefault().post(new SendSmsEvent(true));
+                                }
+                                break;
+                            //Write code for Junk Food Pane on this code
+                            case 3:
+                                if (router != null && fragment != null) {
+                                    fragment.setCurrentPage(0);
+                                }
+                                break;
+                            case 4:
+                                if (router != null && fragment != null) {
+                                    router.call(fragment.getActivity());
+                                    DashboardActivity.isTextLenghGreater = "";
+                                    FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_CALL, "", data);
+                                    EventBus.getDefault().post(new SendSmsEvent(true, "", ""));
+                                }
+                                break;
+                            default:
+                                UIUtils.alert(fragment.getActivity(), fragment.getString(R.string.msg_not_yet_implemented));
+                                break;
+                        }
+                        break;
+                    case NUMBERS:
+                        if (getAdapter().getItem(position).getTitle().trim().equalsIgnoreCase("call") && getAdapter().getItem(position).getId() == 4) {
+                            try {
+                                fragment.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + TokenManager.getInstance().getCurrent().getExtra2())));
                                 DashboardActivity.isTextLenghGreater = "";
                                 FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_CALL, "", data);
                                 EventBus.getDefault().post(new SendSmsEvent(true, "", ""));
+                            } catch (Exception e) {
+                                CoreApplication.getInstance().logException(e);
+                                e.printStackTrace();
                             }
-                            break;
-                        default:
-                            UIUtils.alert(fragment.getActivity(), fragment.getString(R.string.msg_not_yet_implemented));
-                            break;
-                    }
-                    break;
-                case NUMBERS:
-                    if (getAdapter().getItem(position).getTitle().trim().equalsIgnoreCase("call") && getAdapter().getItem(position).getId() == 4) {
-                        try {
-                            fragment.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + TokenManager.getInstance().getCurrent().getExtra2())));
-                            DashboardActivity.isTextLenghGreater = "";
-                            FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_CALL, "", data);
-                            EventBus.getDefault().post(new SendSmsEvent(true, "", ""));
-                        } catch (Exception e) {
-                            CoreApplication.getInstance().logException(e);
-                            e.printStackTrace();
+                        } else {
+                            if (router != null) {
+                                router.contactNumberPicked(getAdapter().getItem(position));
+                                FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_CONTACT_PICK, "", data);
+                            }
                         }
-                    } else {
-                        if (router != null) {
-                            router.contactNumberPicked(getAdapter().getItem(position));
-                            FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_CONTACT_PICK, "", data);
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
+                        break;
+                    default:
+                        break;
+                }
+        }
     }
 
     public void loadDefaultData() {
@@ -245,10 +246,16 @@ public class MainFragmentMediator {
                 defaultItems.add(cItems);
             }
         }
-        if (getAdapter() != null) {
-            getAdapter().loadData(defaultItems);
-            getAdapter().notifyDataSetChanged();
+        try {
+            if (getAdapter() != null) {
+                getAdapter().loadData(defaultItems);
+                getAdapter().notifyDataSetChanged();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+
     }
 
     public void contactPicker() {
@@ -268,11 +275,16 @@ public class MainFragmentMediator {
         }
 
         contactItems = newList;
-        if (getAdapter() != null) {
-            getAdapter().loadData(newList);
-            getAdapter().getFilter().filter("@");
-            getAdapter().notifyDataSetChanged();
+        try {
+            if (getAdapter() != null) {
+                getAdapter().loadData(newList);
+                getAdapter().getFilter().filter("@");
+                getAdapter().notifyDataSetChanged();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     public void contactNumberPicker(int selectedContactId) {
@@ -287,8 +299,15 @@ public class MainFragmentMediator {
                     }
                 }
             }
-            getAdapter().loadData(items);
-            getAdapter().notifyDataSetChanged();
+            try {
+                if (getAdapter() != null) {
+                    getAdapter().loadData(items);
+                    getAdapter().notifyDataSetChanged();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
 
     }
@@ -308,10 +327,16 @@ public class MainFragmentMediator {
                 defaultItems.add(cItems);
             }
         }
-        if (getAdapter() != null) {
-            getAdapter().loadData(defaultItems);
-            getAdapter().notifyDataSetChanged();
+        try {
+            if (getAdapter() != null) {
+                getAdapter().loadData(defaultItems);
+                getAdapter().notifyDataSetChanged();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+
     }
 
     public class resetData extends AsyncTask<String, String, List<MainListItem>> {
@@ -337,11 +362,17 @@ public class MainFragmentMediator {
         @Override
         protected void onPostExecute(List<MainListItem> s) {
             super.onPostExecute(s);
-            if (getAdapter() != null) {
-                getAdapter().loadData(items);
-                getAdapter().getFilter().filter("");
-                getAdapter().notifyDataSetChanged();
+            try {
+                if (getAdapter() != null) {
+                    getAdapter().loadData(items);
+                    getAdapter().getFilter().filter("");
+                    getAdapter().notifyDataSetChanged();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
+
         }
     }
 
