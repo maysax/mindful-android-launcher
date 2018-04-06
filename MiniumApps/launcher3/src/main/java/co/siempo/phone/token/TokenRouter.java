@@ -2,6 +2,7 @@ package co.siempo.phone.token;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,6 +15,8 @@ import android.telephony.SmsManager;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.EBean;
+
+import java.util.ArrayList;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
@@ -32,6 +35,9 @@ import de.greenrobot.event.EventBus;
 
 @EBean
 public class TokenRouter {
+
+    String SMS_SENT = "SMS_SENT";
+    String SMS_DELIVERED = "SMS_DELIVERED";
 
 
     void route() {
@@ -122,7 +128,31 @@ public class TokenRouter {
                 if (!strMessage.trim().equalsIgnoreCase("")) {
                     new SmsObserver(context, strNumber, strMessage).start();
                     SmsManager smsManager = SmsManager.getDefault();
-                    smsManager.sendTextMessage(strNumber, null, strMessage, null, null);
+
+                    //Added as a part of SSA-1479, in case of long text
+                    // messages, splitting the text and sending the message
+                    // in multi-part
+                    PendingIntent sentPendingIntent = PendingIntent
+                            .getBroadcast(context, 0, new Intent(SMS_SENT),
+                                    0);
+                    PendingIntent deliveredPendingIntent = PendingIntent
+                            .getBroadcast(context, 0, new Intent
+                                    (SMS_DELIVERED), 0);
+                    ArrayList<String> smsBodyParts = smsManager
+                            .divideMessage(strMessage);
+                    ArrayList<PendingIntent> sentPendingIntents = new ArrayList<PendingIntent>();
+                    ArrayList<PendingIntent> deliveredPendingIntents = new ArrayList<PendingIntent>();
+
+                    for (int i = 0; i < smsBodyParts.size(); i++) {
+                        sentPendingIntents.add(sentPendingIntent);
+                        deliveredPendingIntents.add(deliveredPendingIntent);
+                    }
+
+                    smsManager.sendMultipartTextMessage(strNumber, null,
+                            smsBodyParts, sentPendingIntents,
+                            deliveredPendingIntents);
+
+
                     Toast.makeText(context, "Sending Message...", Toast.LENGTH_LONG).show();
                     String defaultSmsPackageName = Telephony.Sms.getDefaultSmsPackage(context);
 
