@@ -751,6 +751,20 @@ public class PackageUtil {
         ArrayList<MainListItem> appList = new ArrayList<>();
         try {
             List<String> installedPackageList = CoreApplication.getInstance().getPackagesList();
+
+            //Added as a part of SSA-1483, in case of installed package
+            if (installedPackageList.isEmpty()) {
+                Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+                mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+                List<ResolveInfo> pkgAppsList = context.getPackageManager().queryIntentActivities(mainIntent, 0);
+
+                for (ResolveInfo resolveInfo : pkgAppsList) {
+                    installedPackageList.add(resolveInfo.activityInfo
+                            .packageName);
+                }
+
+
+            }
             for (String resolveInfo : installedPackageList) {
                 if (!resolveInfo.equalsIgnoreCase(context.getPackageName())) {
                     if (!TextUtils.isEmpty(resolveInfo)) {
