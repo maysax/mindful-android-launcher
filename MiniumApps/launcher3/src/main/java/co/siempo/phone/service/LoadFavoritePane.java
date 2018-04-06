@@ -25,7 +25,7 @@ public class LoadFavoritePane extends AsyncTask<String, String, ArrayList<MainLi
 
     @Override
     protected ArrayList<MainListItem> doInBackground(String... strings) {
-        ArrayList<MainListItem> items = new ArrayList<>();
+        ArrayList<MainListItem> items;
         items = PackageUtil.getFavoriteList(context);
         return items;
     }

@@ -44,13 +44,17 @@ public class AlarmService extends IntentService {
     public void onCreate() {
         super.onCreate();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Notification.Builder builder = new Notification.Builder(this, ANDROID_CHANNEL_ID)
-                    .setContentTitle(getString(R.string.app_name))
-                    .setContentText("")
-                    .setPriority(Notification.PRIORITY_LOW)
-                    .setAutoCancel(true);
-            Notification notification = builder.build();
-            startForeground(Constants.ALARM_SERVICE_ID, notification);
+            try {
+                Notification.Builder builder = new Notification.Builder(this, ANDROID_CHANNEL_ID)
+                        .setContentTitle(getString(R.string.app_name))
+                        .setContentText("")
+                        .setPriority(Notification.PRIORITY_LOW)
+                        .setAutoCancel(true);
+                Notification notification = builder.build();
+                startForeground(Constants.ALARM_SERVICE_ID, notification);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

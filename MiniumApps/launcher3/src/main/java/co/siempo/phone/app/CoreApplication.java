@@ -18,7 +18,6 @@ import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import android.util.ArrayMap;
-import android.util.Log;
 import android.util.LruCache;
 
 import com.androidnetworking.AndroidNetworking;
@@ -31,8 +30,6 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -349,7 +346,7 @@ public abstract class CoreApplication extends MultiDexApplication {
             PrefSiempo.getInstance(this).write(PrefSiempo
                     .BLOCKED_APPLIST, blockedApps);
         } catch (Exception e) {
-            Tracer.d("Exception e ::"+e.toString());
+            Tracer.d("Exception e ::" + e.toString());
         }
     }
 
@@ -612,7 +609,7 @@ public abstract class CoreApplication extends MultiDexApplication {
         try {
             if (addingOrDelete) {
                 ApplicationInfo appInfo = getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA);
-                if(!packagesList.contains(appInfo.packageName)) {
+                if (!packagesList.contains(appInfo.packageName)) {
                     packagesList.add(appInfo.packageName);
                     getListApplicationName().put(packageName, "" + getPackageManager().getApplicationLabel(appInfo));
                     EventBus.getDefault().post(new AppInstalledEvent(true));

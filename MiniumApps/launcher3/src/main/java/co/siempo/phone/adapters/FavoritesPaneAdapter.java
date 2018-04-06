@@ -69,7 +69,17 @@ public class FavoritesPaneAdapter extends RecyclerView.Adapter<FavoritesPaneAdap
         final MainListItem item = mainListItemList.get(position);
         holder.linearLayout.setVisibility(View.VISIBLE);
         if (!TextUtils.isEmpty(item.getTitle())) {
-            holder.text.setText(item.getTitle());
+
+            //Done as a part of SSA-1454, in order to change the app name
+            // based on user selected language, and in case of package nme
+            // not available showing the default item name
+            if (!TextUtils.isEmpty(item.getPackageName())) {
+                String applicationName = CoreApplication.getInstance()
+                        .getApplicationNameFromPackageName(item.getPackageName());
+                holder.text.setText(applicationName);
+            } else {
+                holder.text.setText(item.getTitle());
+            }
         }
         if (!TextUtils.isEmpty(item.getPackageName())) {
             if (isHideIconBranding) {

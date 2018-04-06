@@ -2,7 +2,6 @@ package co.siempo.phone.service;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashSet;
