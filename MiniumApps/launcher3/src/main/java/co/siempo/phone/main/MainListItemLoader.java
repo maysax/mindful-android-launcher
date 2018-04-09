@@ -201,9 +201,12 @@ public class MainListItemLoader {
 
             appItems = Sorting.SortApplications(appItems);
 
-
-            items.addAll(toolsItems);
-            items.addAll(appItems);
+            try {
+                items.addAll(toolsItems);
+                items.addAll(appItems);
+            } catch (Exception ae) {
+                ae.printStackTrace();
+            }
         }
     }
 
