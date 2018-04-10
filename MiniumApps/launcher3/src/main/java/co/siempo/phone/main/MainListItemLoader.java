@@ -234,15 +234,15 @@ public class MainListItemLoader {
 
             appItems = Sorting.SortApplications(appItems);
 
-
-            items.addAll(toolsItems);
-            items.addAll(appItems);
+            try {
+                items.addAll(toolsItems);
+                items.addAll(appItems);
+            } catch (Exception ae) {
+                ae.printStackTrace();
+            }
         }
     }
 
-//    private String getString(@StringRes int resId, Object... formatArgs) {
-//        return context.getString(resId, formatArgs);
-//    }
 
     public void listItemClicked(int id) {
         String packageName, applicationName;
