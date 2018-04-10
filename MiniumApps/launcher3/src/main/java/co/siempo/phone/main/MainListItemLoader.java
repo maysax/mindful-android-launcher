@@ -210,9 +210,6 @@ public class MainListItemLoader {
         }
     }
 
-//    private String getString(@StringRes int resId, Object... formatArgs) {
-//        return context.getString(resId, formatArgs);
-//    }
 
     public void listItemClicked(int id) {
         String packageName, applicationName;
