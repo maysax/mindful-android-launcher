@@ -436,7 +436,7 @@
     <string name="assign_app">ASSIGN APP</string>
     <string name="msg_allowpeakingon">On. When new notifications arrive, they may pop up over the current app. The status bar will also show when you have new notifications.</string>
     <string name="msg_allowpeaking">Off.The status bar will show you when you have new notifications in your tray, but your tray won\'t pop up automatically.</string>
-    <string name="allow_peaking">Allow peaking</string>
+    <string name="allow_peaking">Allow peeking</string>
     <string name="you_have_t_selected_any_junkfood_app_nselect_junkfood">"You haven\'t selected any Junkfood app."</string>
     <string name="select_junkfood">Select Junkfood</string>
     <string name="you_have_t_selected_any_favourite_app">"You haven\'t selected any Favorite app."</string>

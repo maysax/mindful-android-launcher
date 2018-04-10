@@ -77,6 +77,8 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
             }
             if (isHideIconBranding) {
                 Log.d("Test", "hideIcon branding true tooolll");
+                holder.icon.setVisibility(View.VISIBLE);
+                holder.imgAppIcon.setVisibility(View.GONE);
                 holder.icon.setImageResource(item.getDrawable());
                 holder.text.setText(item.getTitle());
             } else {
@@ -85,13 +87,17 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                 Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(appMenu.getApplicationName());
                 if (bitmap != null) {
                     Log.d("Test", "bitmap  null");
-                    holder.icon.setImageBitmap(bitmap);
+                    holder.icon.setVisibility(View.GONE);
+                    holder.imgAppIcon.setVisibility(View.VISIBLE);
+                    holder.imgAppIcon.setImageBitmap(bitmap);
                 } else {
                     Log.d("Test", "bitmap  not null");
                     if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
                         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, appMenu.getApplicationName());
                         CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
                     }
+                    holder.icon.setVisibility(View.VISIBLE);
+                    holder.imgAppIcon.setVisibility(View.GONE);
                     holder.icon.setImageResource(item.getDrawable());
                     holder.text.setText(item.getTitle());
                 }
@@ -232,6 +238,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
         public View layout;
         // each data item is just a string in this case
         ImageView icon, imgView;
+        ImageView imgAppIcon;
         TextView text;
         TextView textDefaultApp;
         RelativeLayout relMenu;
@@ -246,6 +253,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
             textDefaultApp = v.findViewById(R.id.textDefaultApp);
             icon = v.findViewById(R.id.icon);
             imgView = v.findViewById(R.id.imgView);
+            imgAppIcon = v.findViewById(R.id.imgAppIcon);
         }
     }
 }
