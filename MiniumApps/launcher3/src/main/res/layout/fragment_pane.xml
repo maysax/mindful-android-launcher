@@ -1,10 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:weightSum="3"
-    tools:context="co.siempo.phone.fragments.PaneFragment">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:weightSum="3"
+                tools:context="co.siempo.phone.fragments.PaneFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
             android:background="@drawable/top_dock_bg"
             android:orientation="vertical">
 
-            <include layout="@layout/layout_top_dock" />
+            <include layout="@layout/layout_top_dock"/>
 
         </LinearLayout>
 
@@ -28,7 +28,7 @@
             android:id="@+id/blueLineView"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="#3342A4FF" />
+            android:background="#3342A4FF"/>
 
         <LinearLayout
             android:id="@+id/linPane"
@@ -39,10 +39,10 @@
             android:orientation="vertical"
             android:visibility="visible">
 
-            <android.support.v4.view.ViewPager
+            <co.siempo.phone.ui.SiempoViewPager
                 android:id="@+id/pagerPane"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"/>
 
         </LinearLayout>
 
@@ -61,14 +61,14 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 app:ci_drawable="@drawable/indicator_active"
-                app:ci_drawable_unselected="@drawable/indicator_inactive" />
+                app:ci_drawable_unselected="@drawable/indicator_inactive"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerViewBottomDoc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:clipToPadding="false" />
+                android:clipToPadding="false"/>
         </LinearLayout>
 
         <LinearLayout
@@ -87,7 +87,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:divider="@android:color/transparent"
-                android:dividerHeight="0dp" />
+                android:dividerHeight="0dp"/>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

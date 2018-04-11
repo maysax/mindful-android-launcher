@@ -39,6 +39,7 @@ import co.siempo.phone.service.LoadFavoritePane;
 import co.siempo.phone.service.LoadJunkFoodPane;
 import co.siempo.phone.service.LoadToolPane;
 import co.siempo.phone.service.SiempoNotificationListener_;
+import co.siempo.phone.ui.SiempoViewPager;
 import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
@@ -64,7 +65,7 @@ public class DashboardActivity extends CoreActivity {
      * The pager widget, which handles animation and allows swiping horizontally to access previous
      * and next wizard steps.
      */
-    private ViewPager mPager;
+    private SiempoViewPager mPager;
     private String TAG = "DashboardActivity";
     /**
      * The pager adapter, which provides the pages to the view pager widget.
