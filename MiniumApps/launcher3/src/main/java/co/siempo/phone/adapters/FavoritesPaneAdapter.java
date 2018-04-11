@@ -106,14 +106,16 @@ public class FavoritesPaneAdapter extends RecyclerView.Adapter<FavoritesPaneAdap
                 if (drawable != null) {
                     holder.imgAppIcon.setImageDrawable(drawable);
                 } else {
-                    holder.linearLayout.setVisibility(View.INVISIBLE);
+                    holder.imgAppIcon.setImageDrawable(null);
+//                    holder.linearLayout.setVisibility(View.INVISIBLE);
                 }
             }
 
 
         } else {
-
-            holder.linearLayout.setVisibility(View.INVISIBLE);
+            holder.imgAppIcon.setImageDrawable(null);
+            holder.text.setText("");
+//            holder.linearLayout.setVisibility(View.INVISIBLE);
         }
 
         holder.linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
