@@ -208,8 +208,8 @@ public class DashboardActivity extends CoreActivity {
     }
 
     private void loadPane() {
-        new LoadToolPane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         new LoadFavoritePane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadToolPane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         new LoadJunkFoodPane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

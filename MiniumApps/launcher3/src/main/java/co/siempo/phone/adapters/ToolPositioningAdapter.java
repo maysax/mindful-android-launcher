@@ -105,16 +105,22 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
                 holder.text.setText(item.getTitle());
             }
             if (isHideIconBranding) {
+                holder.icon.setVisibility(View.VISIBLE);
+                holder.imgAppIcon.setVisibility(View.GONE);
                 holder.icon.setImageResource(item.getDrawable());
                 holder.text.setText(item.getTitle());
             } else {
                 holder.text.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(appMenu.getApplicationName()));
                 Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(appMenu.getApplicationName());
                 if (bitmap != null) {
-                    holder.icon.setImageBitmap(bitmap);
+                    holder.icon.setVisibility(View.GONE);
+                    holder.imgAppIcon.setVisibility(View.VISIBLE);
+                    holder.imgAppIcon.setImageBitmap(bitmap);
                 } else {
                     BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, appMenu.getApplicationName());
                     CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                    holder.icon.setVisibility(View.VISIBLE);
+                    holder.imgAppIcon.setVisibility(View.GONE);
                     holder.icon.setImageResource(item.getDrawable());
                     holder.text.setText(item.getTitle());
                 }
@@ -154,6 +160,7 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
         public View layout;
         // each data item is just a string in this case
         ImageView icon, imgView, temp;
+        ImageView imgAppIcon;
         TextView text, textDefaultApp;
         RelativeLayout relMenu;
         private LinearLayout linearLayout;
@@ -168,6 +175,7 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
             icon = v.findViewById(R.id.icon);
             imgView = v.findViewById(R.id.imgView);
             temp = v.findViewById(R.id.temp);
+            imgAppIcon = v.findViewById(R.id.imgAppIcon);
         }
 
         @Override

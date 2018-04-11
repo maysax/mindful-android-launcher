@@ -21,7 +21,7 @@
             android:gravity="center"
             android:lineSpacingExtra="@dimen/dp_1"
             android:padding="@dimen/dp_1"
-            android:text="@string/you_have_t_selected_any_favourite_app" />
+            android:text="@string/you_have_t_selected_any_favourite_app"/>
 
         <Button
             android:id="@+id/btnSelect"

@@ -51,22 +51,46 @@ public class MainListItemLoader {
 
     public void loadItemsDefaultApp(List<MainListItem> items) {
         if (context != null) {
-            items.add(new MainListItem(TOOLS_MAP, context.getResources().getString(R.string.title_map), R.drawable.ic_menu_map));
-            items.add(new MainListItem(TOOLS_TRANSPORT, context.getResources().getString(R.string.title_transport), R.drawable.ic_menu_tranport));
-            items.add(new MainListItem(TOOLS_CALENDAR, context.getResources().getString(R.string.title_calendar), R.drawable.ic_menu_calender));
-            items.add(new MainListItem(TOOLS_WEATHER, context.getResources().getString(R.string.title_weather), R.drawable.ic_menu_weather));
-            items.add(new MainListItem(TOOLS_NOTES, context.getResources().getString(R.string.title_note), R.drawable.ic_menu_notes, MainListItemType.ACTION));
-            items.add(new MainListItem(TOOLS_RECORDER, context.getResources().getString(R.string.title_recorder), R.drawable.ic_menu_recorder));
-            items.add(new MainListItem(TOOLS_CAMERA, context.getResources().getString(R.string.title_camera), R.drawable.ic_menu_camera));
-            items.add(new MainListItem(TOOLS_PHOTOS, context.getResources().getString(R.string.title_photos), R.drawable.ic_menu_photos));
-            items.add(new MainListItem(TOOLS_PAYMENT, context.getResources().getString(R.string.title_payment), R.drawable.ic_menu_payment));
-            items.add(new MainListItem(TOOLS_WELLNESS, context.getResources().getString(R.string.title_wellness), R.drawable.ic_menu_wellness));
-            items.add(new MainListItem(TOOLS_BROWSER, context.getResources().getString(R.string.title_browser), R.drawable.ic_menu_browser));
+            items.add(new MainListItem(TOOLS_MAP, context.getResources()
+                    .getString(R.string.title_map), R.drawable.ic_vector_map));
+            items.add(new MainListItem(TOOLS_TRANSPORT, context.getResources
+                    ().getString(R.string.title_transport), R.drawable
+                    .ic_vector_transport));
+            items.add(new MainListItem(TOOLS_CALENDAR, context.getResources()
+                    .getString(R.string.title_calendar), R.drawable.ic_vector_calendar));
+            items.add(new MainListItem(TOOLS_WEATHER, context.getResources()
+                    .getString(R.string.title_weather), R.drawable.ic_vector_cloud));
+            items.add(new MainListItem(TOOLS_NOTES, context.getResources()
+                    .getString(R.string.title_note), R.drawable.ic_vector_note,
+                    MainListItemType.ACTION));
+            items.add(new MainListItem(TOOLS_RECORDER, context.getResources()
+                    .getString(R.string.title_recorder), R.drawable
+                    .ic_vector_recorder));
+            items.add(new MainListItem(TOOLS_CAMERA, context.getResources()
+                    .getString(R.string.title_camera), R.drawable.ic_vector_camera));
+            items.add(new MainListItem(TOOLS_PHOTOS, context.getResources()
+                    .getString(R.string.title_photos), R.drawable.ic_vector_photo));
+            items.add(new MainListItem(TOOLS_PAYMENT, context.getResources()
+                    .getString(R.string.title_payment), R.drawable
+                    .ic_vector_payment));
+            items.add(new MainListItem(TOOLS_WELLNESS, context.getResources()
+                    .getString(R.string.title_wellness), R.drawable
+                    .ic_vector_wellness));
+            items.add(new MainListItem(TOOLS_BROWSER, context.getResources()
+                    .getString(R.string.title_browser), R.drawable
+                    .ic_vector_browser));
             items.add(new MainListItem(12, "", 0));
-            items.add(new MainListItem(TOOLS_CALL, context.getResources().getString(R.string.title_call), R.drawable.ic_menu_call, MainListItemType.ACTION));
-            items.add(new MainListItem(TOOLS_CLOCK, context.getResources().getString(R.string.title_clock), R.drawable.ic_menu_clock));
-            items.add(new MainListItem(TOOLS_MESSAGE, context.getResources().getString(R.string.title_messages), R.drawable.ic_menu_msg, MainListItemType.ACTION));
-            items.add(new MainListItem(TOOLS_EMAIL, context.getResources().getString(R.string.title_email), R.drawable.ic_menu_mail));
+            items.add(new MainListItem(TOOLS_CALL, context.getResources()
+                    .getString(R.string.title_call), R.drawable.ic_vector_call,
+                    MainListItemType.ACTION));
+            items.add(new MainListItem(TOOLS_CLOCK, context.getResources()
+                    .getString(R.string.title_clock), R.drawable
+                    .ic_vector_clock));
+            items.add(new MainListItem(TOOLS_MESSAGE, context.getResources()
+                    .getString(R.string.title_messages), R.drawable
+                    .ic_vector_messages, MainListItemType.ACTION));
+            items.add(new MainListItem(TOOLS_EMAIL, context.getResources()
+                    .getString(R.string.title_email), R.drawable.ic_vector_email));
         }
     }
 
@@ -86,62 +110,68 @@ public class MainListItemLoader {
             if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_TRANSPORT)
                     .getApplicationName()) && toolsSettings.get(TOOLS_TRANSPORT)
                     .getApplicationName().contains(".")) {
-                toolsItems.add(new MainListItem(TOOLS_TRANSPORT, context.getResources().getString(R.string.title_transport), R.drawable.ic_menu_tranport));
+                toolsItems.add(new MainListItem(TOOLS_TRANSPORT, context
+                        .getResources().getString(R.string.title_transport),
+                        R.drawable.ic_vector_transport));
             }
 
             if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_CALENDAR)
                     .getApplicationName()) && toolsSettings.get(TOOLS_CALENDAR)
                     .getApplicationName().contains(".")) {
-                toolsItems.add(new MainListItem(TOOLS_CALENDAR, context.getResources().getString(R.string.title_calendar), R.drawable.ic_menu_calender));
+                toolsItems.add(new MainListItem(TOOLS_CALENDAR, context
+                        .getResources().getString(R.string.title_calendar), R
+                        .drawable.ic_vector_calendar));
 
             }
             if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_WEATHER)
                     .getApplicationName()) && toolsSettings.get(TOOLS_WEATHER)
                     .getApplicationName().contains(".")) {
-                toolsItems.add(new MainListItem(TOOLS_WEATHER, context.getResources().getString(R.string.title_weather), R.drawable.ic_menu_weather));
+                toolsItems.add(new MainListItem(TOOLS_WEATHER, context
+                        .getResources().getString(R.string.title_weather), R
+                        .drawable.ic_vector_cloud));
             }
 
             if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_NOTES)
                     .getApplicationName())) {
-                toolsItems.add(new MainListItem(TOOLS_NOTES, context.getResources().getString(R.string.title_note), R.drawable.ic_menu_notes, MainListItemType.ACTION));
+                toolsItems.add(new MainListItem(TOOLS_NOTES, context.getResources().getString(R.string.title_note), R.drawable.ic_vector_note, MainListItemType.ACTION));
             }
 
             if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_RECORDER)
                     .getApplicationName()) && toolsSettings.get(TOOLS_RECORDER)
                     .getApplicationName().contains(".")) {
-                toolsItems.add(new MainListItem(TOOLS_RECORDER, context.getResources().getString(R.string.title_recorder), R.drawable.ic_menu_recorder));
+                toolsItems.add(new MainListItem(TOOLS_RECORDER, context.getResources().getString(R.string.title_recorder), R.drawable.ic_vector_recorder));
             }
 
             if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_CAMERA)
                     .getApplicationName()) && toolsSettings.get(TOOLS_CAMERA)
                     .getApplicationName().contains(".")) {
-                toolsItems.add(new MainListItem(TOOLS_CAMERA, context.getResources().getString(R.string.title_camera), R.drawable.ic_menu_camera));
+                toolsItems.add(new MainListItem(TOOLS_CAMERA, context.getResources().getString(R.string.title_camera), R.drawable.ic_vector_camera));
             }
 
             if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_PHOTOS)
                     .getApplicationName()) && toolsSettings.get(TOOLS_PHOTOS)
                     .getApplicationName().contains(".")) {
-                toolsItems.add(new MainListItem(TOOLS_PHOTOS, context.getResources().getString(R.string.title_photos), R.drawable.ic_menu_photos));
+                toolsItems.add(new MainListItem(TOOLS_PHOTOS, context.getResources().getString(R.string.title_photos), R.drawable.ic_vector_photo));
             }
 
 
             if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_PAYMENT)
                     .getApplicationName()) && toolsSettings.get(TOOLS_PAYMENT)
                     .getApplicationName().contains(".")) {
-                toolsItems.add(new MainListItem(TOOLS_PAYMENT, context.getResources().getString(R.string.title_payment), R.drawable.ic_menu_payment));
+                toolsItems.add(new MainListItem(TOOLS_PAYMENT, context.getResources().getString(R.string.title_payment), R.drawable.ic_vector_payment));
             }
 
 
             if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_WELLNESS)
                     .getApplicationName()) && toolsSettings.get(TOOLS_WELLNESS)
                     .getApplicationName().contains(".")) {
-                toolsItems.add(new MainListItem(TOOLS_WELLNESS, context.getResources().getString(R.string.title_wellness), R.drawable.ic_menu_wellness));
+                toolsItems.add(new MainListItem(TOOLS_WELLNESS, context.getResources().getString(R.string.title_wellness), R.drawable.ic_vector_wellness));
             }
 
             if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_BROWSER)
                     .getApplicationName()) && toolsSettings.get(TOOLS_BROWSER)
                     .getApplicationName().contains(".")) {
-                toolsItems.add(new MainListItem(TOOLS_BROWSER, context.getResources().getString(R.string.title_browser), R.drawable.ic_menu_browser));
+                toolsItems.add(new MainListItem(TOOLS_BROWSER, context.getResources().getString(R.string.title_browser), R.drawable.ic_vector_browser));
             }
             if (!TextUtils.isEmpty(toolsSettings.get(12)
                     .getApplicationName())) {
@@ -151,25 +181,28 @@ public class MainListItemLoader {
             if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_CALL)
                     .getApplicationName()) && toolsSettings.get(TOOLS_CALL)
                     .getApplicationName().contains(".")) {
-                toolsItems.add(new MainListItem(TOOLS_CALL, context.getResources().getString(R.string.title_call), R.drawable.ic_menu_call, MainListItemType.ACTION));
+                toolsItems.add(new MainListItem(TOOLS_CALL, context.getResources().getString(R.string.title_call), R.drawable.ic_vector_call, MainListItemType.ACTION));
             }
 
             if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_CLOCK)
                     .getApplicationName()) && toolsSettings.get(TOOLS_CLOCK)
                     .getApplicationName().contains(".")) {
-                toolsItems.add(new MainListItem(TOOLS_CLOCK, context.getResources().getString(R.string.title_clock), R.drawable.ic_menu_clock));
+                toolsItems.add(new MainListItem(TOOLS_CLOCK, context.getResources().getString(R.string.title_clock), R.drawable.ic_vector_clock));
             }
 
             if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_MESSAGE)
                     .getApplicationName()) && toolsSettings.get(TOOLS_MESSAGE)
                     .getApplicationName().contains(".")) {
-                toolsItems.add(new MainListItem(TOOLS_MESSAGE, context.getResources().getString(R.string.title_messages), R.drawable.ic_menu_msg, MainListItemType.ACTION));
+                toolsItems.add(new MainListItem(TOOLS_MESSAGE, context
+                        .getResources().getString(R.string.title_messages), R
+                        .drawable.ic_vector_messages, MainListItemType.ACTION));
             }
 
             if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_EMAIL)
                     .getApplicationName()) && toolsSettings.get(TOOLS_EMAIL)
                     .getApplicationName().contains(".")) {
-                toolsItems.add(new MainListItem(TOOLS_EMAIL, context.getResources().getString(R.string.title_email), R.drawable.ic_menu_mail));
+                toolsItems.add(new MainListItem(TOOLS_EMAIL, context
+                        .getResources().getString(R.string.title_email), R.drawable.ic_vector_email));
             }
 
             toolsItems = Sorting.sortToolAppAssignment(context, toolsItems);
@@ -201,15 +234,15 @@ public class MainListItemLoader {
 
             appItems = Sorting.SortApplications(appItems);
 
-
-            items.addAll(toolsItems);
-            items.addAll(appItems);
+            try {
+                items.addAll(toolsItems);
+                items.addAll(appItems);
+            } catch (Exception ae) {
+                ae.printStackTrace();
+            }
         }
     }
 
-//    private String getString(@StringRes int resId, Object... formatArgs) {
-//        return context.getString(resId, formatArgs);
-//    }
 
     public void listItemClicked(int id) {
         String packageName, applicationName;

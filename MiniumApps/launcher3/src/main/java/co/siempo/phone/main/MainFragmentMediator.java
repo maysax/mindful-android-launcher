@@ -71,7 +71,7 @@ public class MainFragmentMediator {
 
     }
 
-    private void loadActions() {
+    private synchronized void loadActions() {
         new MainListItemLoader(fragment.getActivity()).loadItems(items, fragment);
     }
 
