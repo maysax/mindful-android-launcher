@@ -4,13 +4,14 @@ import android.content.Context;
 import android.content.pm.ResolveInfo;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.models.AppListInfo;
+import co.siempo.phone.models.CustomNotification;
 import co.siempo.phone.models.MainListItem;
 
 import static java.util.Collections.sort;
@@ -109,11 +110,21 @@ public class Sorting {
     }
 
 
-    public static ArrayList<Calendar> sortDate(final ArrayList<Calendar> appList) {
-        sort(appList, new Comparator<Calendar>() {
+    public static ArrayList<TableNotificationSms> sortNotificationByDate(final ArrayList<TableNotificationSms> appList) {
+        sort(appList, new Comparator<TableNotificationSms>() {
             @Override
-            public int compare(final Calendar object1, final Calendar object2) {
-                return object1.getTime().compareTo(object2.getTime());
+            public int compare(final TableNotificationSms object1, final TableNotificationSms object2) {
+                return object2.get_date().compareTo(object1.get_date());
+            }
+        });
+        return appList;
+    }
+
+    public static ArrayList<CustomNotification> sortNotificationByDate1(final ArrayList<CustomNotification> appList) {
+        sort(appList, new Comparator<CustomNotification>() {
+            @Override
+            public int compare(final CustomNotification object1, final CustomNotification object2) {
+                return object2.getDate().compareTo(object1.getDate());
             }
         });
         return appList;
