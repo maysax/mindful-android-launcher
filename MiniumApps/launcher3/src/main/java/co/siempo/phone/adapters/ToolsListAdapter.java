@@ -364,6 +364,24 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                     holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.dialog_title));
                 }
                 break;
+
+            case 17:
+                if (isVisible) {
+                    holder.txtAssignApp.setVisibility(View.VISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+                    holder.checkbox.setChecked(true);
+                    holder.imgAppIcon.setBackground(ContextCompat.getDrawable
+                            (context, R.drawable.ic_white_todo));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
+                } else {
+                    holder.txtAssignApp.setVisibility(View.INVISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+                    holder.checkbox.setChecked(false);
+                    holder.imgAppIcon.setBackground(ContextCompat.getDrawable
+                            (context, R.drawable.ic_vector_todo));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.dialog_title));
+                }
+                break;
             default:
                 break;
         }

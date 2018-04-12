@@ -390,9 +390,10 @@
 
     <!--name tools menu-->
     <string name="title.map">Maps</string>
-    <string name="title.transport">Transport</string>
+    <string name="title.transport">Rides</string>
     <string name="title.weather">Weather</string>
     <string name="title.recorder">Recorder</string>
+    <string name="title.todo">To-do</string>
     <string name="title.camera">Camera</string>
     <string name="title.photos">Photos</string>
     <string name="title.payment">Payment</string>

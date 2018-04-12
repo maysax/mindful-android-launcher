@@ -28,21 +28,26 @@ import co.siempo.phone.utils.UIUtils;
  */
 public class MainListItemLoader {
 
-    private static final int TOOLS_MAP = 1;
-    private static final int TOOLS_TRANSPORT = 2;
-    private static final int TOOLS_CALENDAR = 3;
-    private static final int TOOLS_WEATHER = 4;
-    private static final int TOOLS_NOTES = 5;
-    private static final int TOOLS_RECORDER = 6;
-    private static final int TOOLS_CAMERA = 7;
-    private static final int TOOLS_PHOTOS = 8;
-    private static final int TOOLS_PAYMENT = 9;
-    private static final int TOOLS_WELLNESS = 10;
-    private static final int TOOLS_BROWSER = 11;
-    private static final int TOOLS_CALL = 13;
-    private static final int TOOLS_CLOCK = 14;
-    private static final int TOOLS_MESSAGE = 15;
-    private static final int TOOLS_EMAIL = 16;
+    public static final int TOOLS_MAP = 1;
+    public static final int TOOLS_TRANSPORT = 2;
+    public static final int TOOLS_CALENDAR = 3;
+    public static final int TOOLS_WEATHER = 4;
+    public static final int TOOLS_NOTES = 5;
+    public static final int TOOLS_RECORDER = 6;
+    public static final int TOOLS_CAMERA = 7;
+    public static final int TOOLS_PHOTOS = 8;
+    public static final int TOOLS_PAYMENT = 9;
+    public static final int TOOLS_WELLNESS = 10;
+    public static final int TOOLS_BROWSER = 11;
+    public static final int TOOLS_CALL = 13;
+    public static final int TOOLS_CLOCK = 14;
+    public static final int TOOLS_MESSAGE = 15;
+    public static final int TOOLS_EMAIL = 16;
+    public static final int TOOLS_TODO = 17;
+    public static final int TOOLS_PODCAST = 18;
+    public static final int TOOLS_FOOD = 19;
+    public static final int TOOLS_FITNESS = 20;
+    public static final int TOOLS_MUSIC = 12;
     private Context context;
 
     public MainListItemLoader(Context context) {
@@ -66,6 +71,10 @@ public class MainListItemLoader {
             items.add(new MainListItem(TOOLS_RECORDER, context.getResources()
                     .getString(R.string.title_recorder), R.drawable
                     .ic_vector_recorder));
+
+//            items.add(new MainListItem(TOOLS_TODO, context.getResources()
+//                    .getString(R.string.title_recorder), R.drawable
+//                    .ic_vector_todo));
             items.add(new MainListItem(TOOLS_CAMERA, context.getResources()
                     .getString(R.string.title_camera), R.drawable.ic_vector_camera));
             items.add(new MainListItem(TOOLS_PHOTOS, context.getResources()
@@ -141,6 +150,14 @@ public class MainListItemLoader {
                     .getApplicationName().contains(".")) {
                 toolsItems.add(new MainListItem(TOOLS_RECORDER, context.getResources().getString(R.string.title_recorder), R.drawable.ic_vector_recorder));
             }
+
+//            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_TODO)
+//                    .getApplicationName()) && toolsSettings.get(TOOLS_TODO)
+//                    .getApplicationName().contains(".")) {
+//                toolsItems.add(new MainListItem(TOOLS_TODO, context
+//                        .getResources().getString(R.string.title_todo), R
+//                        .drawable.ic_vector_todo));
+//            }
 
             if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_CAMERA)
                     .getApplicationName()) && toolsSettings.get(TOOLS_CAMERA)
@@ -301,6 +318,17 @@ public class MainListItemLoader {
                     new ActivityHelper(context).openAppWithPackageName
                             (packageName);
                     break;
+
+//                    case TOOLS_TODO://TODO
+//                    packageName = CoreApplication.getInstance().getToolsSettings().get
+//                            (TOOLS_TODO).getApplicationName().trim();
+//                    applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+//                    FirebaseHelper.getInstance().logSiempoMenuUsage(3,
+//                            context.getResources().getString(R.string
+//                                    .title_todo), applicationName);
+//                    new ActivityHelper(context).openAppWithPackageName
+//                            (packageName);
+//                    break;
                 case TOOLS_CAMERA:// Camera
                     packageName = CoreApplication.getInstance().getToolsSettings().get
                             (TOOLS_CAMERA).getApplicationName().trim();
