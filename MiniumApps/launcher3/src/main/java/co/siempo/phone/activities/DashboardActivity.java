@@ -166,7 +166,11 @@ public class DashboardActivity extends CoreActivity {
                         Log.d("Firebase", "Tools Start");
                         startTime = System.currentTimeMillis();
                     }
-
+                    int count = PrefSiempo.getInstance(DashboardActivity.this).read(PrefSiempo.TOGGLE_LEFTMENU, 0);
+                    if (count >= 0 && count < 3) {
+                        count = count + 1;
+                        PrefSiempo.getInstance(DashboardActivity.this).write(PrefSiempo.TOGGLE_LEFTMENU, count);
+                    }
                 } else if (currentIndexDashboard == 0 && i == 1) {
                     if (DashboardActivity.currentIndexPaneFragment == 0) {
                         Log.d("Firebase", "Junkfood End");
