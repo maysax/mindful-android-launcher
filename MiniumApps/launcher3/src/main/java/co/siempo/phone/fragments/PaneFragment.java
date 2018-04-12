@@ -63,6 +63,7 @@ import co.siempo.phone.token.TokenManager;
 import co.siempo.phone.token.TokenParser;
 import co.siempo.phone.token.TokenRouter;
 import co.siempo.phone.token.TokenUpdateEvent;
+import co.siempo.phone.ui.SiempoViewPager;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
@@ -80,7 +81,7 @@ import me.relex.circleindicator.CircleIndicator;
 public class PaneFragment extends CoreFragment {
 
     public static boolean isSearchVisable = false;
-    public ViewPager pagerPane;
+    public SiempoViewPager pagerPane;
     public View linSearchList;
     PanePagerAdapter mPagerAdapter;
     private LinearLayout linTopDoc;
