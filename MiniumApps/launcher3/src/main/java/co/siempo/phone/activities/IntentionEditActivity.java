@@ -180,6 +180,13 @@ public class IntentionEditActivity extends CoreActivity implements View.OnClickL
                 getWindow().setNavigationBarColor((Integer) animator.getAnimatedValue());
             }
         });
+
+        colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                getWindow().setStatusBarColor((Integer) animator.getAnimatedValue());
+            }
+        });
         colorAnimation.setDuration(500);
         colorAnimation.start();
 

@@ -39,6 +39,7 @@ import co.siempo.phone.service.LoadFavoritePane;
 import co.siempo.phone.service.LoadJunkFoodPane;
 import co.siempo.phone.service.LoadToolPane;
 import co.siempo.phone.service.SiempoNotificationListener_;
+import co.siempo.phone.ui.SiempoViewPager;
 import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
@@ -64,7 +65,7 @@ public class DashboardActivity extends CoreActivity {
      * The pager widget, which handles animation and allows swiping horizontally to access previous
      * and next wizard steps.
      */
-    private ViewPager mPager;
+    private SiempoViewPager mPager;
     private String TAG = "DashboardActivity";
     /**
      * The pager adapter, which provides the pages to the view pager widget.
@@ -166,7 +167,11 @@ public class DashboardActivity extends CoreActivity {
                         Log.d("Firebase", "Tools Start");
                         startTime = System.currentTimeMillis();
                     }
-
+                    int count = PrefSiempo.getInstance(DashboardActivity.this).read(PrefSiempo.TOGGLE_LEFTMENU, 0);
+                    if (count >= 0 && count < 3) {
+                        count = count + 1;
+                        PrefSiempo.getInstance(DashboardActivity.this).write(PrefSiempo.TOGGLE_LEFTMENU, count);
+                    }
                 } else if (currentIndexDashboard == 0 && i == 1) {
                     if (DashboardActivity.currentIndexPaneFragment == 0) {
                         Log.d("Firebase", "Junkfood End");
