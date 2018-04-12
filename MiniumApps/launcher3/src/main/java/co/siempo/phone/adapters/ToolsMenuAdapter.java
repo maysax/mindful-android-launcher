@@ -123,7 +123,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
             @Override
             public void onClick(View v) {
                 int id = item.getId();
-                if (holder.linearLayout.getVisibility() == View.VISIBLE && id != 12) {
+                if (!holder.text.getText().toString().equalsIgnoreCase("") && id != 12) {
                     if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
                         if (appMenu.getApplicationName().equalsIgnoreCase("Notes")) {
                             new ActivityHelper(context).openNotesApp(false);
