@@ -138,16 +138,13 @@ public class FavoritePositioningAdapter extends RecyclerView.Adapter<FavoritePos
                 if (drawable != null) {
                     holder.imgAppIcon.setImageDrawable(drawable);
                 } else {
-//                    holder.linearLayout.setVisibility(View.INVISIBLE);
+                    holder.linearLayout.setVisibility(View.INVISIBLE);
                 }
             }
 
 
         } else {
-//            holder.linearLayout.setVisibility(View.INVISIBLE);
-            holder.imgAppIcon.setImageDrawable(null);
-            holder.imgAppIcon.setVisibility(View.VISIBLE);
-            holder.text.setText("");
+            holder.linearLayout.setVisibility(View.INVISIBLE);
         }
 
 

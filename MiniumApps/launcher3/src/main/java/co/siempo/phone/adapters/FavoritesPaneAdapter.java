@@ -106,8 +106,7 @@ public class FavoritesPaneAdapter extends RecyclerView.Adapter<FavoritesPaneAdap
                 if (drawable != null) {
                     holder.imgAppIcon.setImageDrawable(drawable);
                 } else {
-                    holder.imgAppIcon.setImageDrawable(null);
-//                    holder.linearLayout.setVisibility(View.INVISIBLE);
+                    holder.linearLayout.setVisibility(View.INVISIBLE);
                 }
             }
 
@@ -115,7 +114,8 @@ public class FavoritesPaneAdapter extends RecyclerView.Adapter<FavoritesPaneAdap
         } else {
             holder.imgAppIcon.setImageDrawable(null);
             holder.text.setText("");
-//            holder.linearLayout.setVisibility(View.INVISIBLE);
+            holder.txtAppTextImage.setText("");
+            holder.imgUnderLine.setVisibility(View.GONE);
         }
 
         holder.linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
