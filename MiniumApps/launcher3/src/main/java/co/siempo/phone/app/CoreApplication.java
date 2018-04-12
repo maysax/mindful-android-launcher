@@ -207,7 +207,7 @@ public abstract class CoreApplication extends MultiDexApplication {
                     .getInstance().getApplicationByCategory(10).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(10).get(0).activityInfo.packageName : ""));
             map.put(11, new AppMenu(false, false, CoreApplication
                     .getInstance().getApplicationByCategory(11).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(11).get(0).activityInfo.packageName : ""));
-            map.put(12, new AppMenu(true, false, CoreApplication
+            map.put(12, new AppMenu(false, false, CoreApplication
                     .getInstance().getApplicationByCategory(12).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(12).get(0).activityInfo.packageName : ""));
             map.put(13, new AppMenu(true, true, CoreApplication.getInstance
                     ().getApplicationByCategory(13).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(13).get(0).activityInfo.packageName : ""));
