@@ -62,6 +62,7 @@ import static co.siempo.phone.main.MainListItemLoader.TOOLS_NOTES;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_PAYMENT;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_PHOTOS;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_RECORDER;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_TODO;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_TRANSPORT;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_WEATHER;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_WELLNESS;
@@ -183,7 +184,12 @@ public abstract class CoreApplication extends MultiDexApplication {
         configIconify();
         configureLifecycle();
         configureNetworking();
-        configureToolsPane();
+        if (null != getToolsSettings() && getToolsSettings().size() < 16) {
+            configureToolsPane();
+            PrefSiempo.getInstance(this).write(PrefSiempo.SORTED_MENU, "");
+        } else {
+            configureToolsPane();
+        }
         setHideIconBranding(PrefSiempo.getInstance(sInstance).read(PrefSiempo.IS_ICON_BRANDING, true));
         setRandomize(PrefSiempo.getInstance(sInstance).read(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, true));
     }
@@ -233,7 +239,7 @@ public abstract class CoreApplication extends MultiDexApplication {
                     ().getApplicationByCategory(15).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(15).get(0).activityInfo.packageName : ""));
             map.put(TOOLS_EMAIL, new AppMenu(true, true, CoreApplication.getInstance
                     ().getApplicationByCategory(16).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(16).get(0).activityInfo.packageName : ""));
-//            map.put(17, new AppMenu(false, false, CoreApplication
+//            map.put(TOOLS_TODO, new AppMenu(false, false, CoreApplication
 //                    .getInstance().getApplicationByCategory(17).size() == 1 ?
 //                    CoreApplication.getInstance().getApplicationByCategory
 //                            (17).get(0).activityInfo.packageName : ""));
