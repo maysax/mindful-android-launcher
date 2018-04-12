@@ -167,7 +167,7 @@ public class DashboardActivity extends CoreActivity {
                         startTime = System.currentTimeMillis();
                     }
                     int count = PrefSiempo.getInstance(DashboardActivity.this).read(PrefSiempo.TOGGLE_LEFTMENU, 0);
-                    if (count >= 0 && count < 3) {
+                    if (count >= 0 && count < 2) {
                         count = count + 1;
                         PrefSiempo.getInstance(DashboardActivity.this).write(PrefSiempo.TOGGLE_LEFTMENU, count);
                     }
