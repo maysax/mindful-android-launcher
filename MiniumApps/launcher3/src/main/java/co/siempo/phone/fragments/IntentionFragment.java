@@ -66,6 +66,14 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         return view;
     }
 
+    public void hideView() {
+        if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.TOGGLE_LEFTMENU, 0) >= 3) {
+            if (imgPullTab != null) imgPullTab.setVisibility(View.GONE);
+        } else {
+            if (imgPullTab != null) imgPullTab.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void initView(View view) {
         relRootLayout = view.findViewById(R.id.relRootLayout);
         imgTempo = view.findViewById(R.id.imgTempo);
@@ -84,7 +92,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
         mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         defaultStatusBarColor = mWindow.getStatusBarColor();
-
+        hideView();
     }
 
 
@@ -92,7 +100,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
     public void setMenuVisibility(boolean menuVisible) {
         super.setMenuVisibility(menuVisible);
         if (menuVisible) {
-
+            hideView();
         }
     }
 
