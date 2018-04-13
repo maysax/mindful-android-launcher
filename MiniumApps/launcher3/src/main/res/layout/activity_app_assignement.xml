@@ -22,14 +22,14 @@
         android:layout_below="@+id/toolbar"
         app:titleTextAppearance="@style/Toolbar.TitleText" />
 
-    <TextView
+    <co.siempo.phone.customviews.RobotoCondensedTextView
         android:id="@+id/txtErrorMessage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
         android:layout_centerVertical="true"
         android:gravity="center"
-        android:text="No app  found or no relevant app"
+        android:text="@string/no_app_found_or_no_relevant_app"
         android:textColor="@color/black_80"
         android:textSize="@dimen/dp_20"
         android:visibility="invisible" />

@@ -3,6 +3,7 @@ package co.siempo.phone.fragments;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
@@ -111,7 +112,12 @@ public class TempoUpdateEmailFragment extends CoreFragment {
                 fm.popBackStack();
             }
         });
-
+        try {
+            Typeface myTypeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/robotocondensedregular.ttf");
+            edt_email.setTypeface(myTypeface);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (!TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.USER_EMAILID, ""))) {
             edt_email.setText(PrefSiempo.getInstance(context).read(PrefSiempo.USER_EMAILID, ""));
             edt_email.setSelection(edt_email.getText().length());

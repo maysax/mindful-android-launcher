@@ -39,7 +39,7 @@
         android:orientation="vertical"
         android:paddingLeft="6dp">
 
-        <TextView
+        <co.siempo.phone.customviews.RobotoMediumTextView
             android:id="@+id/content_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/dim_foreground_dark_inverse" />
 
-        <TextView
+        <co.siempo.phone.customviews.RobotoRegularTextView
             android:id="@+id/content_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

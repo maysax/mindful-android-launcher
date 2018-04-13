@@ -42,7 +42,7 @@
                     android:layout_marginRight="@dimen/dp_5"
                     android:elevation="@dimen/dp_5">
 
-                    <TextView
+                    <co.siempo.phone.customviews.RobotoRegularTextView
                         android:id="@+id/txtSelectTools"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

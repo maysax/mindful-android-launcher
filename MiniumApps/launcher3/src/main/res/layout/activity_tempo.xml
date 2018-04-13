@@ -37,7 +37,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <TextView
+                    <co.siempo.phone.customviews.RobotoMediumTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
@@ -62,7 +62,7 @@
                         android:layout_height="wrap_content"
                         android:checked="false" />
 
-                    <TextView
+                    <co.siempo.phone.customviews.RobotoMediumTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignBottom="@+id/radioIndividual"
@@ -99,7 +99,7 @@
                             android:layout_height="match_parent"
                             android:checked="false" />
 
-                        <TextView
+                        <co.siempo.phone.customviews.RobotoMediumTextView
                             android:id="@+id/txtBatch"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
@@ -161,7 +161,7 @@
                         android:layout_centerVertical="true"
                         android:checked="false" />
 
-                    <TextView
+                    <co.siempo.phone.customviews.RobotoMediumTextView
                         android:id="@+id/txtOnly"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -187,7 +187,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
-                            <TextView
+                            <co.siempo.phone.customviews.RobotoMediumTextView
                                 android:id="@+id/txtOnlyAtTime1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -196,14 +196,14 @@
                                 android:textSize="15sp"
                                 tools:text="09:15am" />
 
-                            <TextView
+                            <co.siempo.phone.customviews.RobotoMediumTextView
                                 android:id="@+id/txtSign1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text=", "
                                 android:textColor="#202020" />
 
-                            <TextView
+                            <co.siempo.phone.customviews.RobotoMediumTextView
                                 android:id="@+id/txtOnlyAtTime2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -212,14 +212,14 @@
                                 android:textSize="15sp"
                                 tools:text="05:32pm" />
 
-                            <TextView
+                            <co.siempo.phone.customviews.RobotoMediumTextView
                                 android:id="@+id/txtSign2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text=" &amp; "
                                 android:textColor="#202020" />
 
-                            <TextView
+                            <co.siempo.phone.customviews.RobotoMediumTextView
                                 android:id="@+id/txtOnlyAtTime3"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -231,7 +231,7 @@
 
                     </LinearLayout>
 
-                    <TextView
+                    <co.siempo.phone.customviews.RobotoMediumTextView
                         android:id="@+id/txtAdd"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -255,7 +255,7 @@
                 </RelativeLayout>
             </LinearLayout>
 
-            <TextView
+            <co.siempo.phone.customviews.RobotoRegularTextView
                 android:id="@+id/txtMessage"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"

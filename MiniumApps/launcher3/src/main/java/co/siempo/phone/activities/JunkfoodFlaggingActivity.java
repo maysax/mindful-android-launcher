@@ -17,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
@@ -59,7 +58,6 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
     private List<AppListInfo> unflageAppList = new ArrayList<>();
     private ArrayList<AppListInfo> bindingList = new ArrayList<>();
     private long startTime = 0;
-    private EditText getTxtIntention;
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {

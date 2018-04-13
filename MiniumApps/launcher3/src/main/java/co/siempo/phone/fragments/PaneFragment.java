@@ -2,6 +2,7 @@ package co.siempo.phone.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
@@ -86,7 +87,7 @@ public class PaneFragment extends CoreFragment {
     PanePagerAdapter mPagerAdapter;
     private LinearLayout linTopDoc;
     private LinearLayout linPane;
-    private LinearLayout linBottomDoc;
+    private RelativeLayout linBottomDoc;
     private EditText edtSearchToolsRounded;
     private TextView txtTopDockDate;
     private SearchLayout searchLayout;
@@ -253,6 +254,12 @@ public class PaneFragment extends CoreFragment {
         linPane = view.findViewById(R.id.linPane);
         recyclerViewBottomDoc = rootView.findViewById(R.id.recyclerViewBottomDoc);
         edtSearchToolsRounded = view.findViewById(R.id.edtSearchTools);
+        try {
+            Typeface myTypeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/robotocondensedregular.ttf");
+            edtSearchToolsRounded.setTypeface(myTypeface);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         blueLineDivider = view.findViewById(R.id.blueLineView);
         cardViewEdtSearch = view.findViewById(R.id.cardViewEdtSearch);
         searchLayout = view.findViewById(R.id.edtSearchListView);

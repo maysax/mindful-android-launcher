@@ -10,7 +10,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context="co.siempo.phone.pause.PauseActivity">
+        tools:context="co.siempo.phone.pause.PauseActivity"
+        tools:ignore="UselessParent">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -52,7 +53,7 @@
                             android:src="@drawable/ic_tempo_dailog" />
 
 
-                        <TextView
+                        <co.siempo.phone.customviews.RobotoRegularTextView
                             android:id="@+id/txtAllowApps"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -64,7 +65,7 @@
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
-                        <TextView
+                        <co.siempo.phone.customviews.RobotoRegularTextView
                             android:id="@+id/txtAllowAppsText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -83,9 +84,10 @@
                     android:id="@+id/relAllowPicking"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="50dp">
+                    android:paddingLeft="50dp"
+                    tools:ignore="RtlSymmetry">
 
-                    <TextView
+                    <co.siempo.phone.customviews.RobotoRegularTextView
                         android:id="@+id/txtAllowPicking"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -114,7 +116,7 @@
                             android:clickable="false" />
                     </LinearLayout>
 
-                    <TextView
+                    <co.siempo.phone.customviews.RobotoRegularTextView
                         android:id="@+id/txtAllowPickingtxt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

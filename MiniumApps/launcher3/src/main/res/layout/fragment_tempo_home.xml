@@ -26,7 +26,7 @@
             android:clickable="true"
             android:paddingLeft="50dp">
 
-            <TextView
+            <co.siempo.phone.customviews.RobotoRegularTextView
                 android:id="@+id/txtDisableNotificationControls"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
                 android:layout_marginRight="8dp" />
 
 
-            <TextView
+            <co.siempo.phone.customviews.RobotoRegularTextView
                 android:id="@+id/txtDisableIntentions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
