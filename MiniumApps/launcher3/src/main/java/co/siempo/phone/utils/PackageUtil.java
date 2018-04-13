@@ -1177,18 +1177,22 @@ public class PackageUtil {
 
         if (recentItemList != null) {
             for (int j = 0; j < recentItemList.size(); j++) {
-                String recentItemTitle = recentItemList.get(j).getTitle();
-                String recentItemPackageName = recentItemList.get(j).getPackageName();
+                MainListItem mainListItem = recentItemList.get(j);
 
-                for (int i = 0; i < allItems.size(); i++) {
-                    MainListItem item = allItems.get(i);
-                    String title = allItems.get(i).getTitle();
-                    String packageName = allItems.get(i).getPackageName();
+                if(null!=mainListItem) {
+                    String recentItemTitle = mainListItem.getTitle();
+                    String recentItemPackageName = mainListItem.getPackageName();
 
-                    if (TextUtils.isEmpty(packageName) && TextUtils.isEmpty(recentItemPackageName) && !TextUtils.isEmpty(title) && !TextUtils.isEmpty(recentItemTitle) && title.toLowerCase().trim().equalsIgnoreCase(recentItemTitle.toLowerCase().trim())) {
-                        removeList.add(item);
-                    } else if (!TextUtils.isEmpty(packageName) && !TextUtils.isEmpty(recentItemPackageName) && packageName.trim().equalsIgnoreCase(recentItemPackageName.trim())) {
-                        removeList.add(item);
+                    for (int i = 0; i < allItems.size(); i++) {
+                        MainListItem item = allItems.get(i);
+                        String title = allItems.get(i).getTitle();
+                        String packageName = allItems.get(i).getPackageName();
+
+                        if (TextUtils.isEmpty(packageName) && TextUtils.isEmpty(recentItemPackageName) && !TextUtils.isEmpty(title) && !TextUtils.isEmpty(recentItemTitle) && title.toLowerCase().trim().equalsIgnoreCase(recentItemTitle.toLowerCase().trim())) {
+                            removeList.add(item);
+                        } else if (!TextUtils.isEmpty(packageName) && !TextUtils.isEmpty(recentItemPackageName) && packageName.trim().equalsIgnoreCase(recentItemPackageName.trim())) {
+                            removeList.add(item);
+                        }
                     }
                 }
 
