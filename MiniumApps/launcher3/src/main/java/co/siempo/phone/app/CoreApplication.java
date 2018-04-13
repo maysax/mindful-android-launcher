@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.UserManager;
 import android.provider.AlarmClock;
 import android.provider.CalendarContract;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
@@ -49,6 +50,27 @@ import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.BuildConfig;
 import io.fabric.sdk.android.Fabric;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_BROWSER;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_CALENDAR;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_CALL;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_CAMERA;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_CLOCK;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_EMAIL;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_FITNESS;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_FOOD;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_MAP;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_MESSAGE;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_MUSIC;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_NOTES;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_PAYMENT;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_PHOTOS;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_PODCAST;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_RECORDER;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_TODO;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_TRANSPORT;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_WEATHER;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_WELLNESS;
 
 /**
  * Each application should contain an {@link Application} class instance
@@ -167,7 +189,12 @@ public abstract class CoreApplication extends MultiDexApplication {
         configIconify();
         configureLifecycle();
         configureNetworking();
-        configureToolsPane();
+        if (null != getToolsSettings() && getToolsSettings().size() < 16) {
+            configureToolsPane();
+            PrefSiempo.getInstance(this).write(PrefSiempo.SORTED_MENU, "");
+        } else {
+            configureToolsPane();
+        }
         setHideIconBranding(PrefSiempo.getInstance(sInstance).read(PrefSiempo.IS_ICON_BRANDING, true));
         setRandomize(PrefSiempo.getInstance(sInstance).read(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, true));
     }
@@ -181,42 +208,68 @@ public abstract class CoreApplication extends MultiDexApplication {
             HashMap<Integer, AppMenu> map = new HashMap<>();
             //by default on install, the "Recorder", "Payment", and "Browser" tools are hidden
             // (they may be revealed via the tool-selection screen (see tool-selection below)).
-            map.put(1, new AppMenu(true, false, CoreApplication.getInstance
+            map.put(TOOLS_MAP, new AppMenu(true, false, CoreApplication.getInstance
                     ().getApplicationByCategory(1).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(1).get(0).activityInfo.packageName : ""));
-            map.put(2, new AppMenu(true, false, CoreApplication.getInstance
+            map.put(TOOLS_TRANSPORT, new AppMenu(true, false, CoreApplication.getInstance
                     ().getApplicationByCategory(2).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(2).get(0).activityInfo.packageName : ""));
-            map.put(3, new AppMenu(true, false, CoreApplication.getInstance
+            map.put(TOOLS_CALENDAR, new AppMenu(true, false, CoreApplication.getInstance
                     ().getApplicationByCategory(3).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(3).get(0).activityInfo.packageName : ""));
-            map.put(4, new AppMenu(true, false, CoreApplication.getInstance
+            map.put(TOOLS_WEATHER, new AppMenu(true, false, CoreApplication.getInstance
                     ().getApplicationByCategory(4).size() == 1 ?
                     CoreApplication.getInstance().getApplicationByCategory(4).get(0).activityInfo.packageName : ""));
 //            map.put(5, new AppMenu(true, false, getString(R.string.notes)));
-            map.put(5, new AppMenu(true, false, CoreApplication.getInstance
+            map.put(TOOLS_NOTES, new AppMenu(true, false, CoreApplication.getInstance
                     ().getApplicationByCategory(5).size() == 1 ?
                     getString(R.string.notes) : ""));
-            map.put(6, new AppMenu(false, false, CoreApplication
+            map.put(TOOLS_RECORDER, new AppMenu(false, false, CoreApplication
                     .getInstance().getApplicationByCategory(6).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(6).get(0).activityInfo.packageName : ""));
-            map.put(7, new AppMenu(true, false, CoreApplication.getInstance
+            map.put(TOOLS_CAMERA, new AppMenu(true, false, CoreApplication.getInstance
                     ().getApplicationByCategory(7).size() == 1 ?
                     CoreApplication.getInstance().getApplicationByCategory(7).get(0).activityInfo.packageName : ""));
-            map.put(8, new AppMenu(true, false, CoreApplication.getInstance
+            map.put(TOOLS_PHOTOS, new AppMenu(true, false, CoreApplication.getInstance
                     ().getApplicationByCategory(8).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(8).get(0).activityInfo.packageName : ""));
-            map.put(9, new AppMenu(false, false, CoreApplication
+            map.put(TOOLS_PAYMENT, new AppMenu(false, false, CoreApplication
                     .getInstance().getApplicationByCategory(9).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(9).get(0).activityInfo.packageName : ""));
-            map.put(10, new AppMenu(true, false, CoreApplication
+            map.put(TOOLS_WELLNESS, new AppMenu(true, false, CoreApplication
                     .getInstance().getApplicationByCategory(10).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(10).get(0).activityInfo.packageName : ""));
-            map.put(11, new AppMenu(false, false, CoreApplication
-                    .getInstance().getApplicationByCategory(11).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(11).get(0).activityInfo.packageName : ""));
-            map.put(12, new AppMenu(false, false, CoreApplication
-                    .getInstance().getApplicationByCategory(12).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(12).get(0).activityInfo.packageName : ""));
-            map.put(13, new AppMenu(true, true, CoreApplication.getInstance
+
+            map.put(TOOLS_TODO, new AppMenu(false, false, CoreApplication
+                    .getInstance().getApplicationByCategory(11).size() == 1 ?
+                    CoreApplication.getInstance().getApplicationByCategory
+                            (11).get(0).activityInfo.packageName : ""));
+            map.put(TOOLS_BROWSER, new AppMenu(false, false, CoreApplication
+                    .getInstance().getApplicationByCategory(12).size() == 1
+                    ? CoreApplication.getInstance().getApplicationByCategory(12).get(0).activityInfo.packageName : ""));
+
+            map.put(TOOLS_CALL, new AppMenu(true, true, CoreApplication.getInstance
                     ().getApplicationByCategory(13).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(13).get(0).activityInfo.packageName : ""));
-            map.put(14, new AppMenu(true, true, CoreApplication.getInstance
+            map.put(TOOLS_CLOCK, new AppMenu(true, true, CoreApplication.getInstance
                     ().getApplicationByCategory(14).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(14).get(0).activityInfo.packageName : ""));
-            map.put(15, new AppMenu(true, true, CoreApplication.getInstance
+            map.put(TOOLS_MESSAGE, new AppMenu(true, true, CoreApplication.getInstance
                     ().getApplicationByCategory(15).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(15).get(0).activityInfo.packageName : ""));
-            map.put(16, new AppMenu(true, true, CoreApplication.getInstance
+            map.put(TOOLS_EMAIL, new AppMenu(true, true, CoreApplication.getInstance
                     ().getApplicationByCategory(16).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(16).get(0).activityInfo.packageName : ""));
+
+            map.put(TOOLS_MUSIC, new AppMenu(false, false, CoreApplication
+                    .getInstance().getApplicationByCategory(17).size() == 1 ?
+                    CoreApplication.getInstance().getApplicationByCategory
+                            (17).get(0).activityInfo.packageName : ""));
+            map.put(TOOLS_PODCAST, new AppMenu(false, false, CoreApplication
+                    .getInstance().getApplicationByCategory(18).size() == 1 ?
+                    CoreApplication.getInstance().getApplicationByCategory
+                            (18).get(0).activityInfo.packageName : ""));
+
+            map.put(TOOLS_FOOD, new AppMenu(false, false, CoreApplication
+                    .getInstance().getApplicationByCategory(19).size() == 1 ?
+                    CoreApplication.getInstance().getApplicationByCategory
+                            (19).get(0).activityInfo.packageName : ""));
+
+            map.put(TOOLS_FITNESS, new AppMenu(false, false, CoreApplication
+                    .getInstance().getApplicationByCategory(20).size() == 1 ?
+                    CoreApplication.getInstance().getApplicationByCategory
+                            (20).get(0).activityInfo.packageName : ""));
+
+
             String hashMapToolSettings = new Gson().toJson(map);
             PrefSiempo.getInstance(this).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
 
@@ -392,7 +445,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     public ArrayList<ResolveInfo> getApplicationByCategory(int id) {
         ArrayList<ResolveInfo> list = new ArrayList<>();
         switch (id) {
-            case 1:// Map
+            case TOOLS_MAP:// Map
                 Double myLatitude = 44.433106;
                 Double myLongitude = 26.103687;
                 String labelLocation = "Jorgesys @ Bucharest";
@@ -400,24 +453,19 @@ public abstract class CoreApplication extends MultiDexApplication {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlAddress));
                 list.addAll(getPackageManager().queryIntentActivities(intent, 0));
                 break;
-            case 2:// Transport
+            case TOOLS_TRANSPORT:// Transport
                 break;
-//            case 3://Calender
-//                Intent calenderIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("content://com.android.calendar/time/"));
-//                list.addAll(getPackageManager().queryIntentActivities(calenderIntent, 0));
-//                break;
-            case 3://Calender
+            case TOOLS_CALENDAR://Calender
                 Uri.Builder builder =
                         CalendarContract.CONTENT_URI.buildUpon();
                 builder.appendPath("time");
                 Intent calenderIntent =
                         new Intent(Intent.ACTION_VIEW, builder.build());
-//                Intent calenderIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("content://com.android.calendar/time/"));
                 list.addAll(getPackageManager().queryIntentActivities(calenderIntent, 0));
                 break;
-            case 4://Weather
+            case TOOLS_WEATHER://Weather
                 break;
-            case 5://Notes
+            case TOOLS_NOTES://Notes
                 String filepath = "mnt/sdcard/doc.txt";
                 File file = new File(filepath);
                 if (!file.exists()) {
@@ -557,46 +605,64 @@ public abstract class CoreApplication extends MultiDexApplication {
 
 
                 break;
-            case 6://Recorder
+            case TOOLS_RECORDER://Recorder
                 break;
-            case 7://Camera
+            case TOOLS_CAMERA://Camera
                 Intent intentCamera = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 list.addAll(getPackageManager().queryIntentActivities(intentCamera, 0));
                 break;
-            case 8://Photos
+            case TOOLS_PHOTOS://Photos
                 Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 pickIntent.setType("image/* video/*");
                 list.addAll(getPackageManager().queryIntentActivities(pickIntent, 0));
                 break;
-            case 9://Payment
+            case TOOLS_PAYMENT://Payment
                 break;
-            case 10://Wellness
+            case TOOLS_WELLNESS://Wellness
                 break;
-            case 11://Browser
+            case TOOLS_BROWSER://Browser
                 Intent intentBrowser = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/"));
                 list.addAll(getPackageManager().queryIntentActivities(intentBrowser, 0));
                 break;
-            case 12:// blank
-                break;
-            case 13://Call
+
+            case TOOLS_CALL://Call
                 Uri number = Uri.parse("tel:");
                 Intent dial = new Intent(Intent.ACTION_DIAL, number);
                 list.addAll(getPackageManager().queryIntentActivities(dial, 0));
                 break;
-            case 14://Clock
+            case TOOLS_CLOCK://Clock
                 Intent intentClock = new Intent(AlarmClock.ACTION_SET_ALARM);
                 list.addAll(getPackageManager().queryIntentActivities(intentClock, 0));
                 break;
-            case 15://message
+            case TOOLS_MESSAGE://message
                 Intent message = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + ""));
                 message.putExtra("sms_body", "Test text...");
                 list.addAll(getPackageManager().queryIntentActivities(message, 0));
                 break;
-            case 16://email
+            case TOOLS_EMAIL://email
                 Intent intentEmail = new Intent(Intent.ACTION_VIEW);
                 Uri data = Uri.parse("mailto:recipient@example.com?subject=" + "" + "&body=" + "");
                 intentEmail.setData(data);
                 list.addAll(getPackageManager().queryIntentActivities(intentEmail, 0));
+                break;
+
+            case TOOLS_MUSIC:// Music
+
+                Intent intentMusic = new Intent(MediaStore
+                        .INTENT_ACTION_MUSIC_PLAYER);
+                list.addAll(getPackageManager().queryIntentActivities(intentMusic, 0));
+                break;
+
+            case TOOLS_PODCAST://PODCAST
+                break;
+
+            case TOOLS_FOOD://Food
+                break;
+
+            case TOOLS_FITNESS://Fitness
+                break;
+
+            case TOOLS_TODO://
                 break;
             default:
                 break;
