@@ -757,21 +757,22 @@ public class PaneFragment extends CoreFragment {
     @Subscribe
     public void tokenManagerEvent(TokenUpdateEvent event) {
         try {
-            final TokenItem current = TokenManager.getInstance().getCurrent();
-            if (current != null) {
-                if (current.getItemType() == TokenItemType.END_OP) {
-                    mediator.defaultData();
-                } else if (current.getItemType() == TokenItemType.CONTACT) {
-                    if (current.getCompleteType() == TokenCompleteType.HALF) {
-                        mediator.contactNumberPicker(Integer.parseInt(current.getExtra1()));
-                    } else {
-                        mediator.contactPicker();
-                    }
-                } else if (current.getItemType() == TokenItemType.DATA) {
-                    if (TokenManager.getInstance().get(0).getItemType() == TokenItemType.DATA) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    final TokenItem current = TokenManager.getInstance().getCurrent();
+                    if (current != null) {
+                        if (current.getItemType() == TokenItemType.END_OP) {
+                            mediator.defaultData();
+                        } else if (current.getItemType() == TokenItemType.CONTACT) {
+                            if (current.getCompleteType() == TokenCompleteType.HALF) {
+                                mediator.contactNumberPicker(Integer.parseInt(current.getExtra1()));
+                            } else {
+                                mediator.contactPicker();
+                            }
+                        } else if (current.getItemType() == TokenItemType.DATA) {
+                            if (TokenManager.getInstance().get(0).getItemType() == TokenItemType.DATA) {
+
                                 //If the task of async is running, then no
                                 // need to run its another instance. This
                                 // will happen in case of list item click
@@ -786,25 +787,26 @@ public class PaneFragment extends CoreFragment {
                                 }
                                 if (adapter != null)
                                     adapter.getFilter().filter(current.getTitle());
-                            }
-                        });
 
-                    } else {
-                        if (current.getTitle().trim().isEmpty()) {
-                            if (adapter != null) {
-                                mediator.loadDefaultData();
-                                adapter.getFilter().filter("^");
-                            }
-                        } else {
-                            if (adapter != null) {
-                                mediator.loadDefaultData();
-                                adapter.getFilter().filter(current.getTitle());
+
+                            } else {
+                                if (current.getTitle().trim().isEmpty()) {
+                                    if (adapter != null) {
+                                        mediator.loadDefaultData();
+                                        adapter.getFilter().filter("^");
+                                    }
+                                } else {
+                                    if (adapter != null) {
+                                        mediator.loadDefaultData();
+                                        adapter.getFilter().filter(current.getTitle());
+                                    }
+                                }
+
                             }
                         }
-
                     }
                 }
-            }
+            });
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
