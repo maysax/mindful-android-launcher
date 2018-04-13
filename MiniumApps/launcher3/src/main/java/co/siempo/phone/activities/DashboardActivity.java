@@ -104,11 +104,13 @@ public class DashboardActivity extends CoreActivity {
         }
     }
 
+    int swipeCount;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+        swipeCount = PrefSiempo.getInstance(DashboardActivity.this).read(PrefSiempo.TOGGLE_LEFTMENU, 0);
         loadViews();
         Log.d("Test", "P1");
         if (startTime == 0) {
@@ -149,6 +151,11 @@ public class DashboardActivity extends CoreActivity {
             public void onPageSelected(int i) {
                 if (currentIndexDashboard == 1 && i == 0) {
                     Log.d("Firebase", "Intention End");
+                    if (swipeCount >= 0 && swipeCount < 3) {
+                        swipeCount = PrefSiempo.getInstance(DashboardActivity.this).read(PrefSiempo.TOGGLE_LEFTMENU, 0);
+                        swipeCount = swipeCount + 1;
+                        PrefSiempo.getInstance(DashboardActivity.this).write(PrefSiempo.TOGGLE_LEFTMENU, swipeCount);
+                    }
                     FirebaseHelper.getInstance().logScreenUsageTime(IntentionFragment.class.getSimpleName(), startTime);
                     if (currentIndexDashboard == 1 && PrefSiempo.getInstance(DashboardActivity.this).read(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, true)) {
                         PrefSiempo.getInstance(DashboardActivity.this).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, false);
@@ -166,11 +173,7 @@ public class DashboardActivity extends CoreActivity {
                         Log.d("Firebase", "Tools Start");
                         startTime = System.currentTimeMillis();
                     }
-                    int count = PrefSiempo.getInstance(DashboardActivity.this).read(PrefSiempo.TOGGLE_LEFTMENU, 0);
-                    if (count >= 0 && count < 2) {
-                        count = count + 1;
-                        PrefSiempo.getInstance(DashboardActivity.this).write(PrefSiempo.TOGGLE_LEFTMENU, count);
-                    }
+
                 } else if (currentIndexDashboard == 0 && i == 1) {
                     if (DashboardActivity.currentIndexPaneFragment == 0) {
                         Log.d("Firebase", "Junkfood End");
