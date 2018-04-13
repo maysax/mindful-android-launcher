@@ -28,7 +28,7 @@
             android:clickable="true"
             android:paddingLeft="50dp">
 
-            <TextView
+            <co.siempo.phone.customviews.RobotoRegularTextView
                 android:id="@+id/txtHome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
             android:paddingLeft="50dp">
 
 
-            <TextView
+            <co.siempo.phone.customviews.RobotoRegularTextView
                 android:id="@+id/txtAppMenus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
             android:clickable="true"
             android:paddingLeft="50dp">
 
-            <TextView
+            <co.siempo.phone.customviews.RobotoRegularTextView
                 android:id="@+id/txtNotification"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -93,7 +93,7 @@
             android:paddingLeft="50dp">
 
 
-            <TextView
+            <co.siempo.phone.customviews.RobotoRegularTextView
                 android:id="@+id/txtAccount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -116,7 +116,7 @@
             android:clickable="true"
             android:paddingLeft="50dp">
 
-            <TextView
+            <co.siempo.phone.customviews.RobotoRegularTextView
                 android:id="@+id/txtAlphaSettings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

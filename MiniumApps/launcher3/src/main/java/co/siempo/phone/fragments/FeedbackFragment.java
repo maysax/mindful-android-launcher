@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
@@ -237,7 +238,13 @@ public class FeedbackFragment extends CoreFragment {
 
             }
         });
-
+        try {
+            Typeface myTypeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/robotocondensedregular.ttf");
+            edt_email.setTypeface(myTypeface);
+            txtMessage.setTypeface(myTypeface);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @AfterTextChange

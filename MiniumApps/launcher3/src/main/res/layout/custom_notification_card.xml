@@ -30,7 +30,7 @@
                 android:scaleType="fitCenter"
                 tools:ignore="ContentDescription" />
 
-            <TextView
+            <co.siempo.phone.customviews.RobotoMediumTextView
                 android:id="@+id/txtAppName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
                 android:background="@drawable/notification_dot"
                 android:gravity="center_vertical" />
 
-            <TextView
+            <co.siempo.phone.customviews.RobotoRegularTextView
                 android:id="@+id/txtTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
                 android:layout_toLeftOf="@+id/imgUserImage"
                 android:orientation="vertical">
 
-                <TextView
+                <co.siempo.phone.customviews.RobotoMediumTextView
                     android:id="@+id/txtUserName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -80,7 +80,7 @@
                     android:textColor="@color/dim_foreground_dark_inverse"
                     android:textSize="@dimen/sp_16" />
 
-                <TextView
+                <co.siempo.phone.customviews.RobotoRegularTextView
                     android:id="@+id/txtMessage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

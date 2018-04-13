@@ -14,7 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="@dimen/dp_10">
+        android:padding="@dimen/dp_10"
+        tools:ignore="UselessParent">
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -37,15 +38,12 @@
 
         </RelativeLayout>
 
-        <TextView
+        <co.siempo.phone.customviews.RobotoCondensedTextView
             android:id="@+id/txtAppName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:layout_marginLeft="@dimen/dp_10"
-            android:layout_toLeftOf="@+id/txtAssignApp"
-            android:layout_toRightOf="@+id/imgAppIcon"
             android:layout_weight="1"
             android:ellipsize="end"
             android:fontFamily="sans-serif"
@@ -58,16 +56,14 @@
             android:text="Sound"
             android:textColor="#000000"
             android:textSize="16sp"
-            tools:ignore="HardcodedText"/>
+            tools:ignore="HardcodedText,InefficientWeight" />
 
-        <TextView
+        <co.siempo.phone.customviews.RobotoCondensedTextView
             android:id="@+id/txtAssignApp"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:layout_marginRight="@dimen/dp_10"
-            android:layout_toLeftOf="@+id/checkbox"
             android:background="@drawable/select_tools"
             android:gravity="center"
             android:paddingLeft="@dimen/dp_5"
@@ -79,8 +75,6 @@
             android:id="@+id/checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:background="@null"
             android:button="@drawable/checkbox_selector"

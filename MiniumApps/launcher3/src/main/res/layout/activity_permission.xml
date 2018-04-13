@@ -26,7 +26,7 @@
         android:orientation="vertical"
         android:padding="@dimen/margin.4">
 
-        <TextView
+        <co.siempo.phone.customviews.RobotoCondensedTextView
             android:id="@+id/txtPermissionLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
 
             <TableRow android:id="@+id/tblContact">
 
-                <TextView
+                <co.siempo.phone.customviews.RobotoCondensedTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/contact_permission"
@@ -59,7 +59,7 @@
                 android:id="@+id/tblCalls"
                 android:layout_marginTop="16dp">
 
-                <TextView
+                <co.siempo.phone.customviews.RobotoCondensedTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/call_permission"
@@ -76,7 +76,7 @@
                 android:id="@+id/tblSMS"
                 android:layout_marginTop="16dp">
 
-                <TextView
+                <co.siempo.phone.customviews.RobotoCondensedTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/sms_permission"
@@ -93,7 +93,7 @@
                 android:id="@+id/tblStorage"
                 android:layout_marginTop="16dp">
 
-                <TextView
+                <co.siempo.phone.customviews.RobotoCondensedTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/storage_permission"
@@ -111,7 +111,7 @@
                 android:layout_marginTop="16dp"
                 android:visibility="gone">
 
-                <TextView
+                <co.siempo.phone.customviews.RobotoCondensedTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/location_permission"
@@ -125,7 +125,7 @@
                 android:id="@+id/tblNotification"
                 android:layout_marginTop="16dp">
 
-                <TextView
+                <co.siempo.phone.customviews.RobotoCondensedTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/notificationAccess"
@@ -144,7 +144,7 @@
                 android:layout_marginTop="16dp"
                 android:visibility="gone">
 
-                <TextView
+                <co.siempo.phone.customviews.RobotoCondensedTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/draw_overlay"

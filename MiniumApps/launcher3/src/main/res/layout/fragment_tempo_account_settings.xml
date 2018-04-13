@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_account_setting"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,7 +8,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        tools:ignore="UselessParent">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -26,10 +28,11 @@
                 android:id="@+id/relUpdateEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="50dp">
+                android:paddingLeft="50dp"
+                tools:ignore="RtlSymmetry">
 
 
-                <TextView
+                <co.siempo.phone.customviews.RobotoRegularTextView
                     android:id="@+id/txtUpdateEmailAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -44,7 +47,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
-                <TextView
+                <co.siempo.phone.customviews.RobotoRegularTextView
                     android:id="@+id/txtUpdateEmailDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -65,10 +68,11 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/relUpdateEmail"
                 android:layout_marginTop="8dp"
-                android:paddingLeft="50dp">
+                android:paddingLeft="50dp"
+                tools:ignore="RtlSymmetry">
 
 
-                <TextView
+                <co.siempo.phone.customviews.RobotoRegularTextView
                     android:id="@+id/txtExitSiempoService"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -83,7 +87,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
-                <TextView
+                <co.siempo.phone.customviews.RobotoRegularTextView
                     android:id="@+id/txtExitSiempoServiceDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -105,9 +109,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/relChangeHome"
                 android:layout_marginTop="16dp"
-                android:paddingLeft="50dp">
+                android:paddingLeft="50dp"
+                tools:ignore="RtlSymmetry">
 
-                <TextView
+                <co.siempo.phone.customviews.RobotoRegularTextView
                     android:id="@+id/txtShareAnalytics"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -131,7 +136,7 @@
                     android:orientation="horizontal">
 
 
-                    <TextView
+                    <co.siempo.phone.customviews.RobotoRegularTextView
                         android:id="@+id/txt_analytics_description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -162,14 +167,15 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/relAnalytics"
                 android:orientation="horizontal"
-                android:paddingLeft="50dp">
+                android:paddingLeft="50dp"
+                tools:ignore="RtlSymmetry">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
+                    <co.siempo.phone.customviews.RobotoRegularTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
@@ -180,9 +186,10 @@
                         android:paddingRight="8dp"
                         android:paddingTop="2dp"
                         android:text="@string/lbl_analytics_description2"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        tools:ignore="InefficientWeight" />
 
-                    <TextView
+                    <co.siempo.phone.customviews.RobotoRegularTextView
                         android:id="@+id/txt_privacyPolicy"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

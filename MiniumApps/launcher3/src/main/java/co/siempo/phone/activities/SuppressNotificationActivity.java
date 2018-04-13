@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -89,6 +90,12 @@ public class SuppressNotificationActivity extends CoreActivity {
         notificationList = new ArrayList<>();
         suggetionList = new ArrayList<>();
         edt_search = findViewById(R.id.edt_search);
+        try {
+            Typeface myTypeface = Typeface.createFromAsset(getAssets(), "fonts/robotocondensedregular.ttf");
+            edt_search.setTypeface(myTypeface);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         edt_search.addTextChangedListener(new TextWatcher() {
 
             @Override
