@@ -104,13 +104,13 @@ public class SearchLayout extends CardView {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                handleAfterTextChanged(s.toString());
-                DashboardActivity.isTextLenghGreater = s.toString();
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                handleAfterTextChanged(s.toString());
+                DashboardActivity.isTextLenghGreater = s.toString();
             }
         });
     }
