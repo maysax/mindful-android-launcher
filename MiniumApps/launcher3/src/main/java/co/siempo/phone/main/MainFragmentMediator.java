@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.text.TextUtils;
 
 import java.text.DateFormat;
@@ -27,8 +28,10 @@ import co.siempo.phone.models.MainListItemType;
 import co.siempo.phone.token.TokenItemType;
 import co.siempo.phone.token.TokenManager;
 import co.siempo.phone.token.TokenRouter;
+import co.siempo.phone.util.ContactSmsPermissionHelper;
 import co.siempo.phone.utils.ContactsLoader;
 import co.siempo.phone.utils.PackageUtil;
+import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 
@@ -46,10 +49,12 @@ public class MainFragmentMediator {
     private List<MainListItem> contactItems;
 
     private resetData resetData;
+    private PermissionUtil permissionUtil;
 
     public MainFragmentMediator(PaneFragment paneFragment) {
         this.fragment = paneFragment;
         context = this.fragment.getActivity();
+        permissionUtil = new PermissionUtil(context);
     }
 
     public synchronized void loadData() {
@@ -75,24 +80,28 @@ public class MainFragmentMediator {
         new MainListItemLoader(fragment.getActivity()).loadItems(items, fragment);
     }
 
-    private void loadContacts() {
-        try {
-            List<MainListItem> localList = null;
-            if (fragment != null && fragment.getManager() != null && fragment.getManager().hasCompleted(TokenItemType.CONTACT)) {
-                return;
-            }
-            if (fragment != null && contactItems.size() == 0) {
+    public void loadContacts() {
 
-                localList = new ContactsLoader().loadContacts(fragment.getActivity());
-                contactItems = localList;
+        if (permissionUtil.hasGiven(PermissionUtil
+                .CONTACT_PERMISSION)) {
+            try {
+                List<MainListItem> localList = null;
+                if (fragment != null && fragment.getManager() != null && fragment.getManager().hasCompleted(TokenItemType.CONTACT)) {
+                    return;
+                }
+                if (fragment != null && contactItems.size() == 0) {
 
+                    localList = new ContactsLoader().loadContacts(fragment.getActivity());
+                    contactItems = localList;
+
+                }
+                if (localList != null) {
+                    items.addAll(localList);
+                }
+            } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
+                Tracer.e(e, e.getMessage());
             }
-            if (localList != null) {
-                items.addAll(localList);
-            }
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            Tracer.e(e, e.getMessage());
         }
 
     }
@@ -136,7 +145,7 @@ public class MainFragmentMediator {
         return fragment.getAdapter();
     }
 
-    public void listItemClicked(TokenRouter router, int position, String data) {
+    public void listItemClicked(final TokenRouter router, int position, final String data) {
         MainListItemType type;
         if (getAdapter() != null) {
             type = getAdapter().getItem(position).getItemType();
@@ -175,10 +184,23 @@ public class MainFragmentMediator {
                         position = getAdapter().getItem(position).getId();
                         switch (position) {
                             case 1:
-                                if (router != null && fragment != null) {
-                                    router.sendText(fragment.getActivity());
-                                    FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_SMS, "", data);
+
+
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    ContactSmsPermissionHelper
+                                            contactSmsPermissionHelper = new
+                                            ContactSmsPermissionHelper(router,
+                                            context, this, false, data);
+                                    contactSmsPermissionHelper.checkForContactAndSMSPermission();
+                                } else {
+                                    loadContacts();
+                                    if (router != null && fragment != null) {
+                                        router.sendText(fragment.getActivity());
+                                        FirebaseHelper.getInstance().logIFAction(FirebaseHelper
+                                                .ACTION_SMS, "", data);
+                                    }
                                 }
+
                                 break;
                             //Notes
                             case 2:
@@ -263,7 +285,7 @@ public class MainFragmentMediator {
         List<MainListItem> newList = new ArrayList<>();
         contactItems = new ArrayList<>();
 
-       // loadActions();
+        // loadActions();
         loadContacts();
         loadDefaults();
         items = PackageUtil.getListWithMostRecentData(items, context);

@@ -44,7 +44,7 @@ public class TokenRouter {
         EventBus.getDefault().post(new TokenUpdateEvent());
     }
 
-    void setCurrent(TokenItem tokenItem) {
+    public void setCurrent(TokenItem tokenItem) {
         TokenManager.getInstance().setCurrent(tokenItem);
         route();
     }
