@@ -125,6 +125,8 @@ public class ToolSelectionActivity extends CoreActivity {
     private void filterListData() {
         items = new ArrayList<>();
         new MainListItemLoader(this).loadItemsDefaultApp(items);
+        //Remove below line once adding new tools
+        items.remove(11);
         for (int i = 0; i < items.size(); i++) {
             items.get(i).setVisable(map.get(items.get(i).getId()).isVisible());
         }

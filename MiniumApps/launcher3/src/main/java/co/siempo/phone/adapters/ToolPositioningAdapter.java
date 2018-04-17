@@ -147,13 +147,7 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
 
     @Override
     public int getItemCount() {
-        //Returning only 16 elements in case of size greater than 16
-        if (arrayList.size() >= 16) {
-            return 16;
-        } else {
-            return arrayList.size();
-        }
-
+        return arrayList.size();
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder implements

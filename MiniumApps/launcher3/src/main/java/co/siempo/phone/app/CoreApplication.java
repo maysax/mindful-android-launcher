@@ -233,14 +233,15 @@ public abstract class CoreApplication extends MultiDexApplication {
             map.put(TOOLS_WELLNESS, new AppMenu(true, false, CoreApplication
                     .getInstance().getApplicationByCategory(10).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(10).get(0).activityInfo.packageName : ""));
 
-            map.put(TOOLS_TODO, new AppMenu(false, false, CoreApplication
-                    .getInstance().getApplicationByCategory(11).size() == 1 ?
-                    CoreApplication.getInstance().getApplicationByCategory
-                            (11).get(0).activityInfo.packageName : ""));
+//            map.put(TOOLS_TODO, new AppMenu(false, false, CoreApplication
+//                    .getInstance().getApplicationByCategory(11).size() == 1 ?
+//                    CoreApplication.getInstance().getApplicationByCategory
+//                            (11).get(0).activityInfo.packageName : ""));
             map.put(TOOLS_BROWSER, new AppMenu(false, false, CoreApplication
                     .getInstance().getApplicationByCategory(12).size() == 1
                     ? CoreApplication.getInstance().getApplicationByCategory(12).get(0).activityInfo.packageName : ""));
-
+            map.put(12, new AppMenu(true, false, CoreApplication
+                    .getInstance().getApplicationByCategory(12).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(12).get(0).activityInfo.packageName : ""));
             map.put(TOOLS_CALL, new AppMenu(true, true, CoreApplication.getInstance
                     ().getApplicationByCategory(13).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(13).get(0).activityInfo.packageName : ""));
             map.put(TOOLS_CLOCK, new AppMenu(true, true, CoreApplication.getInstance
@@ -250,24 +251,24 @@ public abstract class CoreApplication extends MultiDexApplication {
             map.put(TOOLS_EMAIL, new AppMenu(true, true, CoreApplication.getInstance
                     ().getApplicationByCategory(16).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(16).get(0).activityInfo.packageName : ""));
 
-            map.put(TOOLS_MUSIC, new AppMenu(false, false, CoreApplication
-                    .getInstance().getApplicationByCategory(17).size() == 1 ?
-                    CoreApplication.getInstance().getApplicationByCategory
-                            (17).get(0).activityInfo.packageName : ""));
-            map.put(TOOLS_PODCAST, new AppMenu(false, false, CoreApplication
-                    .getInstance().getApplicationByCategory(18).size() == 1 ?
-                    CoreApplication.getInstance().getApplicationByCategory
-                            (18).get(0).activityInfo.packageName : ""));
-
-            map.put(TOOLS_FOOD, new AppMenu(false, false, CoreApplication
-                    .getInstance().getApplicationByCategory(19).size() == 1 ?
-                    CoreApplication.getInstance().getApplicationByCategory
-                            (19).get(0).activityInfo.packageName : ""));
-
-            map.put(TOOLS_FITNESS, new AppMenu(false, false, CoreApplication
-                    .getInstance().getApplicationByCategory(20).size() == 1 ?
-                    CoreApplication.getInstance().getApplicationByCategory
-                            (20).get(0).activityInfo.packageName : ""));
+//            map.put(TOOLS_MUSIC, new AppMenu(false, false, CoreApplication
+//                    .getInstance().getApplicationByCategory(17).size() == 1 ?
+//                    CoreApplication.getInstance().getApplicationByCategory
+//                            (17).get(0).activityInfo.packageName : ""));
+//            map.put(TOOLS_PODCAST, new AppMenu(false, false, CoreApplication
+//                    .getInstance().getApplicationByCategory(18).size() == 1 ?
+//                    CoreApplication.getInstance().getApplicationByCategory
+//                            (18).get(0).activityInfo.packageName : ""));
+//
+//            map.put(TOOLS_FOOD, new AppMenu(false, false, CoreApplication
+//                    .getInstance().getApplicationByCategory(19).size() == 1 ?
+//                    CoreApplication.getInstance().getApplicationByCategory
+//                            (19).get(0).activityInfo.packageName : ""));
+//
+//            map.put(TOOLS_FITNESS, new AppMenu(false, false, CoreApplication
+//                    .getInstance().getApplicationByCategory(20).size() == 1 ?
+//                    CoreApplication.getInstance().getApplicationByCategory
+//                            (20).get(0).activityInfo.packageName : ""));
 
 
             String hashMapToolSettings = new Gson().toJson(map);
