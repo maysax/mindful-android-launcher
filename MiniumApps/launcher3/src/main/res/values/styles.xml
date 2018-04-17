@@ -21,7 +21,9 @@
         <item name="android:textSize">20sp</item>
     </style>
 
-
+    <style name="TextLabel" parent="TextAppearance.Design.Hint">
+        <item name="android:textSize">12sp</item>
+    </style>
     <style name="FullScreenDialogStyle" parent="SiempoAppTheme">
         <item name="android:windowNoTitle">true</item>
         <item name="android:layout_width">match_parent</item>

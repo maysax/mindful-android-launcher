@@ -20,7 +20,9 @@ import android.support.annotation.StringRes;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Patterns;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
@@ -314,7 +316,7 @@ public class UIUtils {
             applicationInfo = packageManager.getApplicationInfo(packageName, 0);
         } catch (PackageManager.NameNotFoundException e) {
             CoreApplication.getInstance().logException(e);
-            e.printStackTrace();
+            //  e.printStackTrace();
         }
         return applicationInfo != null && applicationInfo.enabled;
 // Installed
@@ -434,6 +436,10 @@ public class UIUtils {
                 listView.requestLayout();
             }
         });
+    }
+
+    public static boolean isValidEmail(CharSequence target) {
+        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
 
     public static class FadePageTransformer implements ViewPager
