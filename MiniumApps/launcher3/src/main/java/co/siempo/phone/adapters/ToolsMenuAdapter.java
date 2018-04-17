@@ -223,7 +223,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
         if (mainListItemList.size() == 0) {
             return 0;
         } else {
-            return mainListItemList.size();
+            return isBottomDoc ? 4 : 12;
         }
     }
 
