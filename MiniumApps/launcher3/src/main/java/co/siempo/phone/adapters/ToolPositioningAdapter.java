@@ -99,6 +99,7 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
         final MainListItem item = arrayList.get(position);
         final AppMenu appMenu = map.get(item.getId());
 
+
         if (appMenu.isVisible()) {
             holder.linearLayout.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(item.getTitle())) {
@@ -141,14 +142,6 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
                 return false;
             }
         });
-
-//            holder.linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
-//                @Override
-//                public boolean onLongClick(View view) {
-//                    mDragStartListener.onStartDrag(holder);
-//                    return true;
-//                }
-//            });
 
     }
 

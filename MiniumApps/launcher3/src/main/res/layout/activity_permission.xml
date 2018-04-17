@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="false">
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 android:fitsSystemWindows="false">
 
     <!--<android.support.design.widget.AppBarLayout-->
     <!--android:layout_width="match_parent"-->
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/permission_title"
-            android:textSize="18sp" />
+            android:textSize="18sp"/>
 
         <TableLayout
             android:layout_width="match_parent"
@@ -40,18 +40,20 @@
             android:padding="@dimen/margin.3"
             android:stretchColumns="0">
 
-            <TableRow android:id="@+id/tblContact">
+            <TableRow
+                android:id="@+id/tblContact"
+                android:visibility="gone">
 
                 <co.siempo.phone.customviews.RobotoCondensedTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/contact_permission"
-                    android:textSize="@dimen/text.size.large" />
+                    android:textSize="@dimen/text.size.large"/>
 
                 <Switch
                     android:id="@+id/switchContactPermission"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"/>
 
             </TableRow>
 
@@ -63,29 +65,30 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/call_permission"
-                    android:textSize="@dimen/text.size.large" />
+                    android:textSize="@dimen/text.size.large"/>
 
                 <Switch
                     android:id="@+id/switchCallPermission"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"/>
 
             </TableRow>
 
             <TableRow
                 android:id="@+id/tblSMS"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="16dp"
+                android:visibility="gone">
 
                 <co.siempo.phone.customviews.RobotoCondensedTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/sms_permission"
-                    android:textSize="@dimen/text.size.large" />
+                    android:textSize="@dimen/text.size.large"/>
 
                 <Switch
                     android:id="@+id/switchSmsPermission"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"/>
 
             </TableRow>
 
@@ -97,12 +100,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/storage_permission"
-                    android:textSize="@dimen/text.size.large" />
+                    android:textSize="@dimen/text.size.large"/>
 
                 <Switch
                     android:id="@+id/switchFilePermission"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"/>
 
             </TableRow>
 
@@ -115,7 +118,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/location_permission"
-                    android:textSize="@dimen/text.size.large" />
+                    android:textSize="@dimen/text.size.large"/>
 
 
             </TableRow>
@@ -129,12 +132,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/notificationAccess"
-                    android:textSize="@dimen/text.size.large" />
+                    android:textSize="@dimen/text.size.large"/>
 
                 <Switch
                     android:id="@+id/switchNotificationAccess"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"/>
 
             </TableRow>
 
@@ -148,12 +151,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/draw_overlay"
-                    android:textSize="@dimen/text.size.large" />
+                    android:textSize="@dimen/text.size.large"/>
 
                 <Switch
                     android:id="@+id/switchOverlayAccess"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"/>
 
             </TableRow>
 
@@ -167,7 +170,7 @@
             android:layout_gravity="center"
             android:layout_margin="8dp"
             android:padding="16dp"
-            android:text="@string/btn_continue" />
+            android:text="@string/btn_continue"/>
 
 
     </LinearLayout>

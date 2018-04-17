@@ -54,7 +54,7 @@
                         android:padding="@dimen/dp_10"
                         android:text="@string/select_tools"
                         android:textAllCaps="true"
-                        android:textColor="@color/dialog_blue" />
+                        android:textColor="@color/dialog_blue"/>
                 </android.support.v7.widget.CardView>
             </RelativeLayout>
 

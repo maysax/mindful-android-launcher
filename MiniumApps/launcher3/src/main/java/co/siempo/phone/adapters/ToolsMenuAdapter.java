@@ -69,8 +69,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final MainListItem item = mainListItemList.get(position);
         final AppMenu appMenu = map.get(item.getId());
-//        if (appMenu.isVisible() && item.getId() != 12) {
-        if (appMenu.isVisible()) {
+        if (appMenu.isVisible() && item.getId() != 12) {
             holder.linearLayout.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(item.getTitle())) {
                 Log.d("Test", "Title is ::" + item.getTitle());
@@ -124,7 +123,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
             @Override
             public void onClick(View v) {
                 int id = item.getId();
-                if (!holder.text.getText().toString().equalsIgnoreCase("")) {
+                if (holder.linearLayout.getVisibility() == View.VISIBLE && id != 12) {
                     if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
                         if (appMenu.getApplicationName().equalsIgnoreCase("Notes")) {
                             new ActivityHelper(context).openNotesApp(false);
@@ -223,7 +222,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
         if (mainListItemList.size() == 0) {
             return 0;
         } else {
-            return mainListItemList.size();
+            return isBottomDoc ? 4 : 12;
         }
     }
 

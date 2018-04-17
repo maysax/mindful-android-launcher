@@ -409,23 +409,6 @@ public class PaneFragment extends CoreFragment {
     }
 
     private void bindBottomDock() {
-//        ArrayList<MainListItem> itemsLocal = new ArrayList<>();
-//        new MainListItemLoader(getActivity()).loadItemsDefaultApp(itemsLocal);
-//        itemsLocal = PackageUtil.getToolsMenuData(getActivity(), itemsLocal);
-//        Set<Integer> list = new HashSet<>();
-//
-//        for (Map.Entry<Integer, AppMenu> entry : CoreApplication.getInstance().getToolsSettings().entrySet()) {
-//            if (entry.getValue().isBottomDoc()) {
-//                list.add(entry.getKey());
-//            }
-//        }
-//
-//        for (MainListItem mainListItem : itemsLocal) {
-//            if (list.contains(mainListItem.getId())) {
-//                items.add(mainListItem);
-//            }
-//        }
-
 
         mLayoutManager = new GridLayoutManager(getActivity(), 4);
         recyclerViewBottomDoc.setLayoutManager(mLayoutManager);
@@ -457,7 +440,7 @@ public class PaneFragment extends CoreFragment {
     private void bindSearchView() {
 //        //Circular Edit Text
         router = new TokenRouter();
-        parser = new TokenParser(router);
+        parser = new TokenParser(router, context, mediator);
         loadView();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
