@@ -10,6 +10,12 @@ public class Constants {
 
 
     public static final String WHATSAPP_PACKAGE = "com.whatsapp";
+    public static final String VIBER_PACKAGE = "com.viber.voip";
+    public static final String SKYPE_PACKAGE = "com.skype.raider";
+    public static final String WECHAT_PACKAGE = "com.tencent.mm";
+    public static final String LINE_PACKAGE = "jp.naver.line.android";
+
+
     public static final String GOOGLE_CALENDAR_PACKAGES = "com.google.android.calendar";
     //Packages to be added by default in junk food app
     public static final String FACEBOOK_PACKAGE = "com.facebook.katana";
