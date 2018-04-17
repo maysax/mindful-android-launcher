@@ -14,7 +14,6 @@ import android.os.AsyncTask;
 import android.os.UserManager;
 import android.provider.AlarmClock;
 import android.provider.CalendarContract;
-import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
@@ -57,17 +56,12 @@ import static co.siempo.phone.main.MainListItemLoader.TOOLS_CALL;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_CAMERA;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_CLOCK;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_EMAIL;
-import static co.siempo.phone.main.MainListItemLoader.TOOLS_FITNESS;
-import static co.siempo.phone.main.MainListItemLoader.TOOLS_FOOD;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_MAP;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_MESSAGE;
-import static co.siempo.phone.main.MainListItemLoader.TOOLS_MUSIC;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_NOTES;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_PAYMENT;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_PHOTOS;
-import static co.siempo.phone.main.MainListItemLoader.TOOLS_PODCAST;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_RECORDER;
-import static co.siempo.phone.main.MainListItemLoader.TOOLS_TODO;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_TRANSPORT;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_WEATHER;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_WELLNESS;
@@ -483,125 +477,130 @@ public abstract class CoreApplication extends MultiDexApplication {
                 list.add(null);
                 list.addAll(getPackageManager().queryIntentActivities(intentNotes, 0));
 
-                if (UIUtils.isAppInstalledAndEnabled(this, "com.google.android.keep")) {
-                    Intent keepIntent = new Intent();
-                    keepIntent.setPackage("com.google.android.keep");
-                    List<ResolveInfo> resolveInfo = getPackageManager().queryIntentActivities(keepIntent, 0);
-                    if (resolveInfo != null && resolveInfo.size() > 0 && !list
-                            .contains(resolveInfo.get(0))) {
-                        list.add(resolveInfo.get(0));
-                    }
-                }
+                try {
 
-                if (UIUtils.isAppInstalledAndEnabled(this, "com.evernote")) {
-                    Intent evernote = new Intent();
-                    evernote.setPackage("com.evernote");
-                    List<ResolveInfo> resolveInfoEverNote = getPackageManager()
-                            .queryIntentActivities(evernote, 0);
-                    if (resolveInfoEverNote != null && resolveInfoEverNote
-                            .size() > 0 && !list
-                            .contains(resolveInfoEverNote.get(0))) {
-                        list.add(resolveInfoEverNote.get(0));
+                    if (UIUtils.isAppInstalledAndEnabled(this, "com.google.android.keep")) {
+                        Intent keepIntent = new Intent();
+                        keepIntent.setPackage("com.google.android.keep");
+                        List<ResolveInfo> resolveInfo = getPackageManager().queryIntentActivities(keepIntent, 0);
+                        if (resolveInfo != null && resolveInfo.size() > 0 && !list
+                                .contains(resolveInfo.get(0))) {
+                            list.add(resolveInfo.get(0));
+                        }
                     }
-                }
 
-                if (UIUtils.isAppInstalledAndEnabled(this, "com.microsoft.office.onenote")) {
-                    Intent oneNote = new Intent();
-                    oneNote.setPackage("com.microsoft.office.onenote");
-                    List<ResolveInfo> resolveInfoOneNote = getPackageManager()
-                            .queryIntentActivities(oneNote, 0);
-                    if (resolveInfoOneNote != null && resolveInfoOneNote.size
-                            () > 0 && !list.contains(resolveInfoOneNote.get
-                            (0))) {
-                        list.add(resolveInfoOneNote.get(0));
+                    if (UIUtils.isAppInstalledAndEnabled(this, "com.evernote")) {
+                        Intent evernote = new Intent();
+                        evernote.setPackage("com.evernote");
+                        List<ResolveInfo> resolveInfoEverNote = getPackageManager()
+                                .queryIntentActivities(evernote, 0);
+                        if (resolveInfoEverNote != null && resolveInfoEverNote
+                                .size() > 0 && !list
+                                .contains(resolveInfoEverNote.get(0))) {
+                            list.add(resolveInfoEverNote.get(0));
+                        }
                     }
-                }
-                if (UIUtils.isAppInstalledAndEnabled(this, "com.automattic.simplenote")) {
-                    Intent simpleNote = new Intent();
-                    simpleNote.setPackage("com.automattic.simplenote");
-                    List<ResolveInfo> resolveInfoSimpleNote =
-                            getPackageManager()
-                                    .queryIntentActivities(simpleNote, 0);
-                    if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
-                            () > 0 && !list.contains(resolveInfoSimpleNote.get
-                            (0))) {
-                        list.add(resolveInfoSimpleNote.get(0));
-                    }
-                }
-                if (UIUtils.isAppInstalledAndEnabled(this, "com.socialnmobile.dictapps.notepad.color.note")) {
-                    Intent colorNote = new Intent();
-                    colorNote.setPackage("com.socialnmobile.dictapps.notepad.color.note");
-                    List<ResolveInfo> resolveInfoSimpleNote =
-                            getPackageManager()
-                                    .queryIntentActivities(colorNote, 0);
-                    if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
-                            () > 0 && !list.contains(resolveInfoSimpleNote.get
-                            (0))) {
-                        list.add(resolveInfoSimpleNote.get(0));
-                    }
-                }
 
-                if (UIUtils.isAppInstalledAndEnabled(this, "com.task.notes")) {
-                    Intent colorNote = new Intent();
-                    colorNote.setPackage("com.task.notes");
-                    List<ResolveInfo> resolveInfoSimpleNote =
-                            getPackageManager()
-                                    .queryIntentActivities(colorNote, 0);
-                    if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
-                            () > 0 && !list.contains(resolveInfoSimpleNote.get
-                            (0))) {
-                        list.add(resolveInfoSimpleNote.get(0));
+                    if (UIUtils.isAppInstalledAndEnabled(this, "com.microsoft.office.onenote")) {
+                        Intent oneNote = new Intent();
+                        oneNote.setPackage("com.microsoft.office.onenote");
+                        List<ResolveInfo> resolveInfoOneNote = getPackageManager()
+                                .queryIntentActivities(oneNote, 0);
+                        if (resolveInfoOneNote != null && resolveInfoOneNote.size
+                                () > 0 && !list.contains(resolveInfoOneNote.get
+                                (0))) {
+                            list.add(resolveInfoOneNote.get(0));
+                        }
                     }
-                }
+                    if (UIUtils.isAppInstalledAndEnabled(this, "com.automattic.simplenote")) {
+                        Intent simpleNote = new Intent();
+                        simpleNote.setPackage("com.automattic.simplenote");
+                        List<ResolveInfo> resolveInfoSimpleNote =
+                                getPackageManager()
+                                        .queryIntentActivities(simpleNote, 0);
+                        if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
+                                () > 0 && !list.contains(resolveInfoSimpleNote.get
+                                (0))) {
+                            list.add(resolveInfoSimpleNote.get(0));
+                        }
+                    }
+                    if (UIUtils.isAppInstalledAndEnabled(this, "com.socialnmobile.dictapps.notepad.color.note")) {
+                        Intent colorNote = new Intent();
+                        colorNote.setPackage("com.socialnmobile.dictapps.notepad.color.note");
+                        List<ResolveInfo> resolveInfoSimpleNote =
+                                getPackageManager()
+                                        .queryIntentActivities(colorNote, 0);
+                        if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
+                                () > 0 && !list.contains(resolveInfoSimpleNote.get
+                                (0))) {
+                            list.add(resolveInfoSimpleNote.get(0));
+                        }
+                    }
 
-                if (UIUtils.isAppInstalledAndEnabled(this, "com.edi.masaki.mymemoapp")) {
-                    Intent colorNote = new Intent();
-                    colorNote.setPackage("com.edi.masaki.mymemoapp");
-                    List<ResolveInfo> resolveInfoSimpleNote =
-                            getPackageManager()
-                                    .queryIntentActivities(colorNote, 0);
-                    if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
-                            () > 0 && !list.contains(resolveInfoSimpleNote.get
-                            (0))) {
-                        list.add(resolveInfoSimpleNote.get(0));
+                    if (UIUtils.isAppInstalledAndEnabled(this, "com.task.notes")) {
+                        Intent colorNote = new Intent();
+                        colorNote.setPackage("com.task.notes");
+                        List<ResolveInfo> resolveInfoSimpleNote =
+                                getPackageManager()
+                                        .queryIntentActivities(colorNote, 0);
+                        if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
+                                () > 0 && !list.contains(resolveInfoSimpleNote.get
+                                (0))) {
+                            list.add(resolveInfoSimpleNote.get(0));
+                        }
                     }
-                }
 
-                if (UIUtils.isAppInstalledAndEnabled(this, "com.dencreak.esmemo")) {
-                    Intent colorNote = new Intent();
-                    colorNote.setPackage("com.dencreak.esmemo");
-                    List<ResolveInfo> resolveInfoSimpleNote =
-                            getPackageManager()
-                                    .queryIntentActivities(colorNote, 0);
-                    if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
-                            () > 0 && !list.contains(resolveInfoSimpleNote.get
-                            (0))) {
-                        list.add(resolveInfoSimpleNote.get(0));
+                    if (UIUtils.isAppInstalledAndEnabled(this, "com.edi.masaki.mymemoapp")) {
+                        Intent colorNote = new Intent();
+                        colorNote.setPackage("com.edi.masaki.mymemoapp");
+                        List<ResolveInfo> resolveInfoSimpleNote =
+                                getPackageManager()
+                                        .queryIntentActivities(colorNote, 0);
+                        if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
+                                () > 0 && !list.contains(resolveInfoSimpleNote.get
+                                (0))) {
+                            list.add(resolveInfoSimpleNote.get(0));
+                        }
                     }
-                }
-                if (UIUtils.isAppInstalledAndEnabled(this, "com.samsung.android.snote")) {
-                    Intent colorNote = new Intent();
-                    colorNote.setPackage("com.samsung.android.snote");
-                    List<ResolveInfo> resolveInfoSimpleNote =
-                            getPackageManager()
-                                    .queryIntentActivities(colorNote, 0);
-                    if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
-                            () > 0 && !list.contains(resolveInfoSimpleNote.get
-                            (0))) {
-                        list.add(resolveInfoSimpleNote.get(0));
+
+                    if (UIUtils.isAppInstalledAndEnabled(this, "com.dencreak.esmemo")) {
+                        Intent colorNote = new Intent();
+                        colorNote.setPackage("com.dencreak.esmemo");
+                        List<ResolveInfo> resolveInfoSimpleNote =
+                                getPackageManager()
+                                        .queryIntentActivities(colorNote, 0);
+                        if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
+                                () > 0 && !list.contains(resolveInfoSimpleNote.get
+                                (0))) {
+                            list.add(resolveInfoSimpleNote.get(0));
+                        }
                     }
-                }
-                if (UIUtils.isAppInstalledAndEnabled(this, "com.samsung.android.app.notes")) {
-                    Intent colorNote = new Intent();
-                    colorNote.setPackage("com.samsung.android.app.notes");
-                    List<ResolveInfo> resolveInfoSimpleNote =
-                            getPackageManager()
-                                    .queryIntentActivities(colorNote, 0);
-                    if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
-                            () > 0 && !list.contains(resolveInfoSimpleNote.get
-                            (0))) {
-                        list.add(resolveInfoSimpleNote.get(0));
+                    if (UIUtils.isAppInstalledAndEnabled(this, "com.samsung.android.snote")) {
+                        Intent colorNote = new Intent();
+                        colorNote.setPackage("com.samsung.android.snote");
+                        List<ResolveInfo> resolveInfoSimpleNote =
+                                getPackageManager()
+                                        .queryIntentActivities(colorNote, 0);
+                        if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
+                                () > 0 && !list.contains(resolveInfoSimpleNote.get
+                                (0))) {
+                            list.add(resolveInfoSimpleNote.get(0));
+                        }
                     }
+                    if (UIUtils.isAppInstalledAndEnabled(this, "com.samsung.android.app.notes")) {
+                        Intent colorNote = new Intent();
+                        colorNote.setPackage("com.samsung.android.app.notes");
+                        List<ResolveInfo> resolveInfoSimpleNote =
+                                getPackageManager()
+                                        .queryIntentActivities(colorNote, 0);
+                        if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
+                                () > 0 && !list.contains(resolveInfoSimpleNote.get
+                                (0))) {
+                            list.add(resolveInfoSimpleNote.get(0));
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
 
@@ -639,6 +638,81 @@ public abstract class CoreApplication extends MultiDexApplication {
                 Intent message = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + ""));
                 message.putExtra("sms_body", "Test text...");
                 list.addAll(getPackageManager().queryIntentActivities(message, 0));
+
+                try {
+                    if (UIUtils.isAppInstalledAndEnabled(this, Constants
+                            .WHATSAPP_PACKAGE)) {
+                        Intent keepIntent = new Intent();
+                        keepIntent.setPackage(Constants
+                                .WHATSAPP_PACKAGE);
+                        List<ResolveInfo> resolveInfo = getPackageManager().queryIntentActivities(keepIntent, 0);
+                        if (resolveInfo != null && resolveInfo.size() > 0 && !list
+                                .contains(resolveInfo.get(0))) {
+                            list.add(resolveInfo.get(0));
+                        }
+                    }
+
+                    if (UIUtils.isAppInstalledAndEnabled(this, Constants
+                            .LINE_PACKAGE)) {
+                        Intent evernote = new Intent();
+                        evernote.setPackage(Constants
+                                .LINE_PACKAGE);
+                        List<ResolveInfo> resolveInfoEverNote = getPackageManager()
+                                .queryIntentActivities(evernote, 0);
+                        if (resolveInfoEverNote != null && resolveInfoEverNote
+                                .size() > 0 && !list
+                                .contains(resolveInfoEverNote.get(0))) {
+                            list.add(resolveInfoEverNote.get(0));
+                        }
+                    }
+
+                    if (UIUtils.isAppInstalledAndEnabled(this, Constants
+                            .VIBER_PACKAGE)) {
+                        Intent evernote = new Intent();
+                        evernote.setPackage(Constants
+                                .VIBER_PACKAGE);
+                        List<ResolveInfo> resolveInfoEverNote = getPackageManager()
+                                .queryIntentActivities(evernote, 0);
+                        if (resolveInfoEverNote != null && resolveInfoEverNote
+                                .size() > 0 && !list
+                                .contains(resolveInfoEverNote.get(0))) {
+                            list.add(resolveInfoEverNote.get(0));
+                        }
+                    }
+
+                    if (UIUtils.isAppInstalledAndEnabled(this, Constants
+                            .SKYPE_PACKAGE)) {
+                        Intent evernote = new Intent();
+                        evernote.setPackage(Constants
+                                .SKYPE_PACKAGE);
+                        List<ResolveInfo> resolveInfoEverNote = getPackageManager()
+                                .queryIntentActivities(evernote, 0);
+                        if (resolveInfoEverNote != null && resolveInfoEverNote
+                                .size() > 0 && !list
+                                .contains(resolveInfoEverNote.get(0))) {
+                            list.add(resolveInfoEverNote.get(0));
+                        }
+                    }
+                    if (UIUtils.isAppInstalledAndEnabled(this, Constants
+                            .WECHAT_PACKAGE)) {
+                        Intent evernote = new Intent();
+                        evernote.setPackage(Constants
+                                .WECHAT_PACKAGE);
+                        List<ResolveInfo> resolveInfoEverNote = getPackageManager()
+                                .queryIntentActivities(evernote, 0);
+                        if (resolveInfoEverNote != null && resolveInfoEverNote
+                                .size() > 0 && !list
+                                .contains(resolveInfoEverNote.get(0))) {
+                            list.add(resolveInfoEverNote.get(0));
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
                 break;
             case TOOLS_EMAIL://email
                 Intent intentEmail = new Intent(Intent.ACTION_VIEW);
