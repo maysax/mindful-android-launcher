@@ -10,6 +10,7 @@
         android:smallScreens="true"
         android:xlargeScreens="true" />
 
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.PREVENT_POWER_KEY" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
@@ -227,9 +228,9 @@
         <activity
             android:name=".activities.AppAssignmentActivity"
             android:screenOrientation="portrait" />
-        <!--<activity-->
-        <!--android:name=".fragments.PaneFragment"-->
-        <!--android:screenOrientation="portrait" />-->
+        <!-- <activity -->
+        <!-- android:name=".fragments.PaneFragment" -->
+        <!-- android:screenOrientation="portrait" /> -->
         <activity
             android:name=".activities.JunkfoodFlaggingActivity"
             android:screenOrientation="portrait" />
@@ -244,7 +245,19 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.ToolSelectionActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.PrivacyPolicyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.EmailRequestActivity"
+            android:screenOrientation="portrait">
+            <!--<intent-filter>-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
+
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        </activity>
     </application>
 
 </manifest>

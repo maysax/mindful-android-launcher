@@ -84,6 +84,7 @@ public class PrefSiempo {
     public static String APP_DISABLE_COUNT = "APP_DISABLE_COUNT";
     public static String HEADER_APPLIST = "HEADER_APPLIST";
     public static String TOGGLE_LEFTMENU = "toggle_leftmenu";
+    public static String USER_SEEN_EMAIL_REQUEST = "user_seen_email_request";
 
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;

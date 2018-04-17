@@ -29,6 +29,7 @@ public class PermissionUtil {
     public static final int CAMERA_PERMISSION = 7;
     public static final int WRITE_EXTERNAL_STORAGE_PERMISSION = 8;
     public static final int LOCATION_PERMISSION = 9;
+    public static final int ACCOUNT_PERMISSION = 10;
 
     private Context context;
 
@@ -65,6 +66,8 @@ public class PermissionUtil {
                         && hasAppPermissions(Manifest.permission.READ_SMS);
             case CAMERA_PERMISSION:
                 return hasAppPermissions(Manifest.permission.CAMERA);
+            case ACCOUNT_PERMISSION:
+                return hasAppPermissions(Manifest.permission.GET_ACCOUNTS);
             case WRITE_EXTERNAL_STORAGE_PERMISSION:
                 return hasAppPermissions(Manifest.permission
                         .WRITE_EXTERNAL_STORAGE) && hasAppPermissions

@@ -12,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Patterns;
 import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
@@ -74,9 +73,7 @@ public class FeedbackFragment extends CoreFragment {
     @SystemService
     TelephonyManager telephonyManager;
 
-    public static boolean isValidEmail(CharSequence target) {
-        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
-    }
+
 
     public static boolean isValidMessage(String msg) {
         boolean statusMessage = false;
@@ -225,7 +222,7 @@ public class FeedbackFragment extends CoreFragment {
                 }
                 // Validate if fields email, Message & feedback type is filled by user or not
 
-                if (isValidEmail(email) && isValidMessage(txtMessage.getText().toString().trim())) {
+                if (UIUtils.isValidEmail(email) && isValidMessage(txtMessage.getText().toString().trim())) {
                     // Notify the selected item text
                     toolbar.getMenu().findItem(R.id.tick).setVisible(true);
                 } else {
@@ -251,7 +248,7 @@ public class FeedbackFragment extends CoreFragment {
     void edt_email() {
         if (!TextUtils.isEmpty(edt_email.getText().toString())) {
             String val_email = edt_email.getText().toString().trim();
-            boolean isValidEmail = isValidEmail(val_email);
+            boolean isValidEmail = UIUtils.isValidEmail(val_email);
             if (isValidEmail) {
                 layout_email.setErrorEnabled(false);
             } else {
@@ -286,7 +283,7 @@ public class FeedbackFragment extends CoreFragment {
                 email = edt_email.getText().toString().trim();
             }
             // Validate if fields email, Message & feedback type is filled by user or not
-            if (isValidEmail(email) && isValidMessage(txtMessage.getText().toString().trim())) {
+            if (UIUtils.isValidEmail(email) && isValidMessage(txtMessage.getText().toString().trim())) {
                 toolbar.getMenu().findItem(R.id.tick).setVisible(true);
             } else {
                 toolbar.getMenu().findItem(R.id.tick).setVisible(false);
