@@ -1,14 +1,26 @@
 package co.siempo.phone.token;
 
+import android.content.Context;
+import android.os.Build;
+
+import co.siempo.phone.main.MainFragmentMediator;
+import co.siempo.phone.util.ContactSmsPermissionHelper;
+
 /**
  * Created by shahab on 2/16/17.
  */
 public class TokenParser {
 
     private TokenRouter router;
+    private Context context;
+    private MainFragmentMediator mediator;
 
-    public TokenParser(TokenRouter router) {
+    public TokenParser(TokenRouter router, Context context,
+                       MainFragmentMediator mediator) {
         this.router = router;
+        this.context = context;
+        this.mediator = mediator;
+
     }
 
 
@@ -17,7 +29,18 @@ public class TokenParser {
         if (str.isEmpty()) {
             TokenManager.getInstance().clear();
         } else if (str.equals("@") && !TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT)) {
-            router.setCurrent(new TokenItem(TokenItemType.CONTACT));
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                ContactSmsPermissionHelper
+                        contactSmsPermissionHelper = new
+                        ContactSmsPermissionHelper(router,
+                        context, mediator, true, null);
+                contactSmsPermissionHelper.checkForContactAndSMSPermission();
+            } else {
+                router.setCurrent(new TokenItem(TokenItemType.CONTACT));
+            }
+
+
         } else {
             for (TokenItem item : TokenManager.getInstance().getItems()) {
                 if (item.getCompleteType() == TokenCompleteType.FULL) {
