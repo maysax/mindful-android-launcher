@@ -56,6 +56,7 @@ public class AlarmService extends IntentService {
     private ArrayList<Integer> everyHourList = new ArrayList<>();
     private ArrayList<Integer> everyTwoHourList = new ArrayList<>();
     private ArrayList<Integer> everyFourHoursList = new ArrayList<>();
+
     public AlarmService() {
         super("MyServerOrWhatever");
     }
@@ -230,25 +231,25 @@ public class AlarmService extends IntentService {
                         }
 //                        notificationManager.createNotificationChannelGroup(new NotificationChannelGroup("" + channelName, channelName));
                     }
-                    if (customNotification.getNotificationSms().size() == 1) {
+//                    if (customNotification.getNotificationSms().size() == 1) {
+//                        Notification notification =
+//                                createSingleNotification(customNotification.getNotificationSms().get(0), false);
+//                        if (notificationManager != null) {
+//                            notificationManager.notify(customNotification.getNotificationSms().get(0).getId().intValue(), notification);
+//                        }
+//                    } else {
+                    for (TableNotificationSms tableNotificationSms : customNotification.getNotificationSms()) {
                         Notification notification =
-                                createSingleNotification(customNotification.getNotificationSms().get(0), false);
+                                createSingleNotification(tableNotificationSms, true);
                         if (notificationManager != null) {
-                            notificationManager.notify(customNotification.getNotificationSms().get(0).getId().intValue(), notification);
-                        }
-                    } else {
-                        for (TableNotificationSms tableNotificationSms : customNotification.getNotificationSms()) {
-                            Notification notification =
-                                    createSingleNotification(tableNotificationSms, true);
-                            if (notificationManager != null) {
-                                notificationManager.notify(tableNotificationSms.getId().intValue(), notification);
-                            }
-                        }
-                        Notification summary = createGroupNotification(customNotification.getPackagename(), customNotification.getNotificationSms().size());
-                        if (notificationManager != null) {
-                            notificationManager.notify(customNotification.getNotificationSms().get(0).getApp_icon(), summary);
+                            notificationManager.notify(tableNotificationSms.getId().intValue(), notification);
                         }
                     }
+                    Notification summary = createGroupNotification(customNotification.getPackagename(), customNotification.getNotificationSms().size());
+                    if (notificationManager != null) {
+                        notificationManager.notify(customNotification.getNotificationSms().get(0).getApp_icon(), summary);
+                    }
+//                    }
                 }
             }
 
@@ -273,6 +274,7 @@ public class AlarmService extends IntentService {
                 .setContentText(size + " new messages")
                 .setLargeIcon(bitmap)
                 .setGroupSummary(true)
+                .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_SOUND)
                 .setGroup(applicationName)
                 .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
@@ -362,7 +364,7 @@ public class AlarmService extends IntentService {
             collapsedViews.setTextViewText(R.id.content_message, tableNotificationSms.get_message());
             collapsedViews.setImageViewBitmap(R.id.big_icon, bitmapApplication);
             collapsedViews.setTextViewText(R.id.timestamp, DateUtils.formatDateTime(this, notificationSms.get(0).get_date().getTime(), DateUtils.FORMAT_SHOW_TIME));
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "")
                     .setSmallIcon(R.drawable.siempo_notification_icon)
                     .setContentTitle("")
                     .setPriority(priority)

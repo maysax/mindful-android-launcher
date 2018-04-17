@@ -48,10 +48,14 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.FLASHLIGHT" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
 
     <!-- TODO: using it for flow, we might not need this -->
-    <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" />
+    <uses-permission
+        android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
     <uses-feature

@@ -86,7 +86,6 @@
                     android:layout_height="wrap_content"
                     android:maxLines="10"
                     android:paddingBottom="@dimen/dp_1"
-                    android:paddingLeft="@dimen/dp_3"
                     android:paddingRight="@dimen/dp_3"
                     android:paddingTop="@dimen/dp_1"
                     android:textColor="@color/actionbar_background_start"

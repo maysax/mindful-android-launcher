@@ -90,7 +90,7 @@
                     android:id="@+id/txtMessage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxLines="2"
+                    android:maxLines="1"
                     android:paddingBottom="@dimen/dp_2"
                     android:textColor="@color/actionbar_background_start"
                     android:textSize="@dimen/sp_12"
