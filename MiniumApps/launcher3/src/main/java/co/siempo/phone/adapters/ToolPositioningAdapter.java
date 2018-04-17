@@ -131,7 +131,7 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
         }
 
 
-        holder.imgAppIcon.setOnTouchListener(new View.OnTouchListener() {
+        holder.linearLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (holder.linearLayout.getVisibility() == View.VISIBLE) {
@@ -142,26 +142,26 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
                 return false;
             }
         });
-        holder.icon.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (holder.linearLayout.getVisibility() == View.VISIBLE) {
-                    if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                        mDragStartListener.onStartDrag(holder);
-                    }
-                }
-                return false;
-            }
-        });
+//        holder.icon.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                if (holder.linearLayout.getVisibility() == View.VISIBLE) {
+//                    if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+//                        mDragStartListener.onStartDrag(holder);
+//                    }
+//                }
+//                return false;
+//            }
+//        });
 
 
-        if (position + 4 >= arrayList.size()) {
-            holder.relMenu.setBackgroundColor(context.getResources().getColor
-                    (R.color.bottom_doc));
-        } else {
-            holder.relMenu.setBackgroundColor(context.getResources().getColor
-                    (R.color.transparent));
-        }
+//        if (position + 4 >= 16) {
+//            holder.relMenu.setBackgroundColor(context.getResources().getColor
+//                    (R.color.bottom_doc));
+//        } else {
+//            holder.relMenu.setBackgroundColor(context.getResources().getColor
+//                    (R.color.transparent));
+//        }
 
 //            holder.linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
 //                @Override
@@ -175,7 +175,12 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
 
     @Override
     public int getItemCount() {
-        return arrayList.size();
+        if (arrayList.size() >= 16) {
+            return 16;
+        } else {
+            return arrayList.size();
+        }
+
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder implements
