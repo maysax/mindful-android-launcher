@@ -647,24 +647,24 @@ public abstract class CoreApplication extends MultiDexApplication {
                 list.addAll(getPackageManager().queryIntentActivities(intentEmail, 0));
                 break;
 
-            case TOOLS_MUSIC:// Music
-
-                Intent intentMusic = new Intent(MediaStore
-                        .INTENT_ACTION_MUSIC_PLAYER);
-                list.addAll(getPackageManager().queryIntentActivities(intentMusic, 0));
-                break;
-
-            case TOOLS_PODCAST://PODCAST
-                break;
-
-            case TOOLS_FOOD://Food
-                break;
-
-            case TOOLS_FITNESS://Fitness
-                break;
-
-            case TOOLS_TODO://
-                break;
+//            case TOOLS_MUSIC:// Music
+//
+//                Intent intentMusic = new Intent(MediaStore
+//                        .INTENT_ACTION_MUSIC_PLAYER);
+//                list.addAll(getPackageManager().queryIntentActivities(intentMusic, 0));
+//                break;
+//
+//            case TOOLS_PODCAST://PODCAST
+//                break;
+//
+//            case TOOLS_FOOD://Food
+//                break;
+//
+//            case TOOLS_FITNESS://Fitness
+//                break;
+//
+//            case TOOLS_TODO://
+//                break;
             default:
                 break;
         }
