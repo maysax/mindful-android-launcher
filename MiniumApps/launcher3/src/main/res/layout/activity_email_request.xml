@@ -72,11 +72,13 @@
                         android:layout_height="wrap_content"
                         app:hintTextAppearance="@style/TextLabel">
 
-                        <AutoCompleteTextView
+                        <android.support.design.widget.TextInputEditText
                             android:id="@+id/auto_mail"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Your email address"
+                            android:autofillHints="em"
+                            android:inputType="textEmailAddress"
                             android:textColor="@color/dialog_title"
                             android:textSize="@dimen/sp_16" />
 

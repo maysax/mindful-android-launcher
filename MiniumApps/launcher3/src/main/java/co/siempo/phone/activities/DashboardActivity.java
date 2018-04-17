@@ -104,8 +104,6 @@ public class DashboardActivity extends CoreActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra(IS_FROM_HOME, true);
                 startActivity(intent);
-            } else {
-
             }
         }
 

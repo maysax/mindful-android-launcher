@@ -356,6 +356,7 @@ public class AlarmService extends IntentService {
             contentView.setViewVisibility(R.id.txtUserName, View.GONE);
             contentView.setTextViewText(R.id.txtAppName, title);
 
+
             RemoteViews collapsedViews = new RemoteViews(context.getPackageName(), R.layout.notification_blog3_collapsed);
             collapsedViews.setTextViewText(R.id.content_title, title);
             collapsedViews.setTextViewText(R.id.content_message, tableNotificationSms.get_message());

@@ -1,11 +1,10 @@
 package co.siempo.phone.activities;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -13,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -22,12 +20,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.EmailListAdapter;
@@ -41,7 +33,7 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
     EmailListAdapter arrayAdapter;
     private Button btnNotNow, btnContinue;
     private TextView txtPrivacy, txtErrorMessage;
-    private AutoCompleteTextView autoCompleteTextViewEmail;
+    private TextInputEditText autoCompleteTextViewEmail;
     private PermissionUtil permissionUtil;
 
     @Override
@@ -55,18 +47,21 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
         View decor = window.getDecorView();
         decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         initView();
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (!permissionUtil.hasGiven(PermissionUtil.ACCOUNT_PERMISSION)) {
-                askForPermission(new String[]{android.Manifest.permission.GET_ACCOUNTS});
-            }
-        }
+//        if (Build.VERSION.SDK_INT >= 23) {
+//            if (!permissionUtil.hasGiven(PermissionUtil.ACCOUNT_PERMISSION)) {
+//                askForPermission(new String[]{android.Manifest.permission.GET_ACCOUNTS});
+//            }
+//        }
     }
 
     private void initView() {
         btnNotNow = findViewById(R.id.btnNotNow);
         btnContinue = findViewById(R.id.btnContinue);
         autoCompleteTextViewEmail = findViewById(R.id.auto_mail);
-        addAdapterToViews();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            autoCompleteTextViewEmail.setAutofillHints(View.AUTOFILL_HINT_EMAIL_ADDRESS);
+        }
+//        addAdapterToViews();
         txtPrivacy = findViewById(R.id.txtPrivacy);
         txtErrorMessage = findViewById(R.id.txtErrorMessage);
         txtPrivacy.setOnClickListener(this);
@@ -93,8 +88,7 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!TextUtils.isEmpty(autoCompleteTextViewEmail.getText().toString())) {
                     String val_email = autoCompleteTextViewEmail.getText().toString().trim();
-                    arrayAdapter.getFilter().filter(val_email);
-                    Log.d("Rajesh", val_email);
+//                    arrayAdapter.getFilter().filter(val_email);
                     boolean isValidEmail = UIUtils.isValidEmail(val_email);
                     if (isValidEmail) {
                         txtErrorMessage.setVisibility(View.INVISIBLE);
@@ -112,23 +106,23 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
             }
         });
     }
-
-    private void addAdapterToViews() {
-
-        Account[] accounts = AccountManager.get(this).getAccounts();
-        Set<String> emailSet = new HashSet<String>();
-        for (Account account : accounts) {
-            if (UIUtils.isValidEmail(account.name)) {
-                emailSet.add(account.name);
-            }
-
-        }
-        autoCompleteTextViewEmail.setThreshold(0);
-        ArrayList<String> list = new ArrayList<String>(emailSet);
-        arrayAdapter = new EmailListAdapter(this, R.layout.email_row, list);
-        autoCompleteTextViewEmail.setAdapter(arrayAdapter);
-        arrayAdapter.notifyDataSetChanged();
-    }
+    // used if we load using permission.
+//    private void addAdapterToViews() {
+//
+//        Account[] accounts = AccountManager.get(this).getAccounts();
+//        Set<String> emailSet = new HashSet<String>();
+//        for (Account account : accounts) {
+//            if (UIUtils.isValidEmail(account.name)) {
+//                emailSet.add(account.name);
+//            }
+//
+//        }
+//        autoCompleteTextViewEmail.setThreshold(0);
+//        ArrayList<String> list = new ArrayList<String>(emailSet);
+//        arrayAdapter = new EmailListAdapter(this, R.layout.email_row, list);
+//        autoCompleteTextViewEmail.setAdapter(arrayAdapter);
+//        arrayAdapter.notifyDataSetChanged();
+//    }
 
     @Override
     public void onClick(View v) {
@@ -155,28 +149,6 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
             default:
                 break;
         }
-    }
-
-    private void askForPermission(String[] PERMISSIONS) {
-        try {
-            TedPermission.with(this)
-                    .setPermissionListener(new PermissionListener() {
-                        @Override
-                        public void onPermissionGranted() {
-                            addAdapterToViews();
-                        }
-
-                        @Override
-                        public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-
-                        }
-                    })
-                    .setPermissions(PERMISSIONS)
-                    .check();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 
     private void storeDataToFirebase(String userId, String emailId) {
