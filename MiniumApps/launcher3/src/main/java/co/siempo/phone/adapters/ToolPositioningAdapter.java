@@ -142,39 +142,12 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
                 return false;
             }
         });
-//        holder.icon.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                if (holder.linearLayout.getVisibility() == View.VISIBLE) {
-//                    if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-//                        mDragStartListener.onStartDrag(holder);
-//                    }
-//                }
-//                return false;
-//            }
-//        });
-
-
-//        if (position + 4 >= 16) {
-//            holder.relMenu.setBackgroundColor(context.getResources().getColor
-//                    (R.color.bottom_doc));
-//        } else {
-//            holder.relMenu.setBackgroundColor(context.getResources().getColor
-//                    (R.color.transparent));
-//        }
-
-//            holder.linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
-//                @Override
-//                public boolean onLongClick(View view) {
-//                    mDragStartListener.onStartDrag(holder);
-//                    return true;
-//                }
-//            });
 
     }
 
     @Override
     public int getItemCount() {
+        //Returning only 16 elements in case of size greater than 16
         if (arrayList.size() >= 16) {
             return 16;
         } else {
