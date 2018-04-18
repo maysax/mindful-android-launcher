@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                xmlns:tool="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.2"
+                android:background="@color/transparent">
+
+
+    <co.siempo.phone.customviews.RobotoCondensedTextView
+        android:id="@+id/txtTopDockDate"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_marginLeft="@dimen/dp_16"
+        android:layout_marginRight="@dimen/dp_16"
+        android:gravity="right|center"
+        android:textColor="@color/appland_date"
+        android:textSize="@dimen/sp_20"
+        tool:text="dshfkhdskfds"/>
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardViewEdtSearch"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_48"
+        android:layout_marginBottom="@dimen/dp_8"
+        android:layout_marginLeft="@dimen/dp_16"
+        android:layout_marginRight="@dimen/dp_16"
+        android:visibility="gone"
+        card_view:cardElevation="@dimen/dp_2"
+        >
+
+
+    </android.support.v7.widget.CardView>
+
+
+</RelativeLayout>

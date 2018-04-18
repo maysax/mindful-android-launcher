@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -13,7 +14,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,6 +38,11 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
     private TextView txtPrivacy, txtErrorMessage;
     private TextInputEditText autoCompleteTextViewEmail;
     private PermissionUtil permissionUtil;
+    private CardView cardCenter;
+    private RelativeLayout relPrivacyEmail;
+    private Button btnEnable;
+    private TextView txtStorageMessage;
+    private ViewFlipper viewFlipperEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +65,12 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
     private void initView() {
         btnNotNow = findViewById(R.id.btnNotNow);
         btnContinue = findViewById(R.id.btnContinue);
+        cardCenter = findViewById(R.id.cardCenter);
+        btnEnable = findViewById(R.id.btnEnable);
+        txtStorageMessage = findViewById(R.id.txtStorageMessage);
+        relPrivacyEmail = findViewById(R.id.relPrivacyEmail);
+        viewFlipperEmail = findViewById(R.id.viewFlipperEmail);
+
         autoCompleteTextViewEmail = findViewById(R.id.auto_mail);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             autoCompleteTextViewEmail.setAutofillHints(View.AUTOFILL_HINT_EMAIL_ADDRESS);
@@ -133,7 +147,12 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
                 break;
             case R.id.btnNotNow:
                 PrefSiempo.getInstance(this).write(PrefSiempo.USER_SEEN_EMAIL_REQUEST, true);
-                finish();
+                relPrivacyEmail.setVisibility(View.GONE);
+                viewFlipperEmail.setInAnimation(this, R.anim.in_from_right_email);
+                viewFlipperEmail.setOutAnimation(this, R.anim.out_to_left_email);
+                viewFlipperEmail.setFlipInterval(1000);
+                viewFlipperEmail.showNext();
+
                 break;
             case R.id.btnContinue:
                 String strEmail = autoCompleteTextViewEmail.getText().toString();
@@ -143,8 +162,16 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
                     PrefSiempo.getInstance(this).write(PrefSiempo
                             .USER_EMAILID, strEmail);
                     storeDataToFirebase(CoreApplication.getInstance().getDeviceId(), strEmail);
-                    finish();
+                    relPrivacyEmail.setVisibility(View.GONE);
+
+
+                    viewFlipperEmail.setInAnimation(this, R.anim
+                            .in_from_right_email);
+                    viewFlipperEmail.setOutAnimation(this, R.anim
+                            .out_to_left_email);
+                    viewFlipperEmail.showNext();
                 }
+
                 break;
             default:
                 break;
