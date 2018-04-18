@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -47,6 +48,7 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
     private RelativeLayout relPrivacyEmail;
     private Button btnEnable;
     private ViewFlipper viewFlipperEmail;
+    private TextInputLayout inputEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +77,9 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
         viewFlipperEmail = findViewById(R.id.viewFlipperEmail);
 
         autoCompleteTextViewEmail = findViewById(R.id.auto_mail);
+        inputEmail = findViewById(R.id.inputEmail);
+        autoCompleteTextViewEmail.clearFocus();
+        inputEmail.clearFocus();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             autoCompleteTextViewEmail.setAutofillHints(View.AUTOFILL_HINT_EMAIL_ADDRESS);
         }
@@ -120,10 +125,11 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
                     if (isValidEmail) {
                         txtErrorMessage.setVisibility(View.INVISIBLE);
                     } else {
+
                         txtErrorMessage.setVisibility(View.VISIBLE);
                     }
                 } else {
-                    txtErrorMessage.setVisibility(View.VISIBLE);
+                    txtErrorMessage.setVisibility(View.INVISIBLE);
                 }
             }
 
