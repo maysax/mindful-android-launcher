@@ -23,7 +23,6 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
     private static boolean isIncoming;
     private static String savedNumber = "";  //because the passed incoming is only valid in ringing
     private static boolean isCallRunning = false;
-    public TelephonyManager telephonyManager;
     private int tempoType;
     private Context mContext;
     private int currentProfile = -1;
@@ -35,7 +34,7 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
         //We listen to two intents.  The new outgoing call only tells us of an outgoing call.  We use it to get the number.
         mContext = context;
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+//        telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         int sound = 0;
         if (audioManager != null) {
             sound = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM);

@@ -36,8 +36,6 @@ public class AlphaSettingsActivity extends CoreActivity {
     ImageView icon_UserId;
     @ViewById
     TextView txt_UserId;
-    @SystemService
-    TelephonyManager telephonyManager;
     private Context context;
     private long startTime = 0;
     private LinearLayout ln_suppressedNotifications;

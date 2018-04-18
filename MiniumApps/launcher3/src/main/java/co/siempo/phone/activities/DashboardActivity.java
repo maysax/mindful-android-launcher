@@ -92,26 +92,27 @@ public class DashboardActivity extends CoreActivity {
         permissionUtil = new PermissionUtil(this);
         if (!PrefSiempo.getInstance(this).read(PrefSiempo
                 .USER_SEEN_EMAIL_REQUEST, false) || !permissionUtil.hasGiven
-                (PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)) {
+                (PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION) || !permissionUtil.hasGiven
+                (PermissionUtil.CALL_PHONE_PERMISSION) ) {
             Intent intent = new Intent(this, EmailRequestActivity.class);
             startActivity(intent);
         }
 
-
-        else {
-
-            if (!permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
-
-                    || !permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
-                    ){
-                Intent intent = new Intent(DashboardActivity.this, SiempoPermissionActivity_
-                        .class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                intent.putExtra(IS_FROM_HOME, true);
-                startActivity(intent);
-            }
-        }
+//
+//        else {
+//
+//            if (!permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
+//
+//                    || !permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
+//                    ){
+//                Intent intent = new Intent(DashboardActivity.this, SiempoPermissionActivity_
+//                        .class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                intent.putExtra(IS_FROM_HOME, true);
+//                startActivity(intent);
+//            }
+//        }
 
     }
 
