@@ -117,4 +117,7 @@
     <color name="unflageapp_header">#666666</color>
     <color name="bg_permissionscreenstatusbar">#E5E5E5</color>
     <color name="bg_permissionscreen">#F2F2F2</color>
+    <color name="bg_button">#33000000</color>
+
+
 </resources>

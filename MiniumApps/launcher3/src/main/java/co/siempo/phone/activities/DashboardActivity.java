@@ -95,7 +95,6 @@ public class DashboardActivity extends CoreActivity {
             permissionUtil = new PermissionUtil(this);
             if (!permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
                     || !permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)
-                    || !permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
                     ) {
                 Intent intent = new Intent(DashboardActivity.this, SiempoPermissionActivity_
                         .class);

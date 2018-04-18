@@ -453,5 +453,7 @@
     <string name="no_app_found_or_no_relevant_app">No app found or no relevant app</string>
     <string name="not_now">Not Now</string>
     <string name="let_s_get_started">Let\'s get started!</string>
+    <string name="tempo_lets_you_schedule_time_that_is_free_from_interruptions_it_batches_your_notifications_to_arrive_only_at_the_times_you_choose_follow_the_instructions_to_enable">Tempo lets you schedule time that is free from interruptions. It batches your notifications to arrive only at the times you choose. Follow the instructions to enable:</string>
+    <string name="on_the_next">On the next screen:\nTap the toggle, then tap the back arrow.</string>
 
 </resources>
