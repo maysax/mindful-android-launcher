@@ -1,5 +1,6 @@
 package co.siempo.phone.activities;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -23,6 +24,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
+
+import java.util.ArrayList;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.EmailListAdapter;
@@ -41,7 +46,6 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
     private CardView cardCenter;
     private RelativeLayout relPrivacyEmail;
     private Button btnEnable;
-    private TextView txtStorageMessage;
     private ViewFlipper viewFlipperEmail;
 
     @Override
@@ -67,7 +71,6 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
         btnContinue = findViewById(R.id.btnContinue);
         cardCenter = findViewById(R.id.cardCenter);
         btnEnable = findViewById(R.id.btnEnable);
-        txtStorageMessage = findViewById(R.id.txtStorageMessage);
         relPrivacyEmail = findViewById(R.id.relPrivacyEmail);
         viewFlipperEmail = findViewById(R.id.viewFlipperEmail);
 
@@ -81,6 +84,16 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
         txtPrivacy.setOnClickListener(this);
         btnNotNow.setOnClickListener(this);
         btnContinue.setOnClickListener(this);
+        btnEnable.setOnClickListener(this);
+        if (PrefSiempo.getInstance(this).read(PrefSiempo
+                .USER_SEEN_EMAIL_REQUEST, false)) {
+            viewFlipperEmail.setDisplayedChild(1);
+            relPrivacyEmail.setVisibility(View.GONE);
+
+        } else {
+            viewFlipperEmail.setDisplayedChild(0);
+            relPrivacyEmail.setVisibility(View.VISIBLE);
+        }
 
         try {
             Typeface myTypefaceregular = Typeface.createFromAsset(getAssets(), "fonts/robotocondensedregular.ttf");
@@ -172,6 +185,37 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
                     viewFlipperEmail.showNext();
                 }
 
+                break;
+
+            case R.id.btnEnable:
+                if (!permissionUtil.hasGiven(PermissionUtil
+                        .WRITE_EXTERNAL_STORAGE_PERMISSION)) {
+
+                    try {
+                        TedPermission.with(this)
+                                .setPermissionListener(new PermissionListener() {
+                                    @Override
+                                    public void onPermissionGranted() {
+                                        finish();
+                                    }
+
+                                    @Override
+                                    public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+
+                                    }
+                                })
+                                .setDeniedMessage(R.string.msg_permission_denied)
+                                .setPermissions(new String[]{
+                                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                        Manifest
+                                                .permission.READ_EXTERNAL_STORAGE})
+                                .check();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    finish();
+                }
                 break;
             default:
                 break;

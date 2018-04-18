@@ -60,6 +60,7 @@ public class DashboardActivity extends CoreActivity {
     AppUpdaterUtils appUpdaterUtils;
     boolean isApplicationLaunch = false;
     NotificationManager notificationManager;
+    int swipeCount;
     private Window mWindow;
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
@@ -88,15 +89,21 @@ public class DashboardActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!PrefSiempo.getInstance(this).read(PrefSiempo.USER_SEEN_EMAIL_REQUEST, false)) {
+        permissionUtil = new PermissionUtil(this);
+        if (!PrefSiempo.getInstance(this).read(PrefSiempo
+                .USER_SEEN_EMAIL_REQUEST, false) || !permissionUtil.hasGiven
+                (PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)) {
             Intent intent = new Intent(this, EmailRequestActivity.class);
             startActivity(intent);
-        } else {
-            permissionUtil = new PermissionUtil(this);
+        }
+
+
+        else {
+
             if (!permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
-                    || !permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)
+
                     || !permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
-                    ) {
+                    ){
                 Intent intent = new Intent(DashboardActivity.this, SiempoPermissionActivity_
                         .class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -107,8 +114,6 @@ public class DashboardActivity extends CoreActivity {
         }
 
     }
-
-    int swipeCount;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

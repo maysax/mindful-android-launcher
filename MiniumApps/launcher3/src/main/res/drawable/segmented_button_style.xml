@@ -7,23 +7,23 @@
 
     <item android:state_focused="false" android:state_pressed="true">
         <shape>
-            <stroke android:width="4dp" android:color="#1f000000" />
-            <corners android:radius="@dimen/margin.2" />
+            <stroke android:width="4dp" android:color="#1f000000"/>
+            <corners android:radius="@dimen/margin.2"/>
         </shape>
     </item>
 
     <item android:state_focused="true" android:state_pressed="false">
         <shape>
-            <stroke android:width="4dp" android:color="#1f000000" />
-            <corners android:radius="@dimen/margin.2" />
+            <stroke android:width="4dp" android:color="#1f000000"/>
+            <corners android:radius="@dimen/margin.2"/>
         </shape>
     </item>
 
     <item android:state_focused="false" android:state_pressed="false">
         <shape>
-            <solid android:color="@color/white" />
-            <stroke android:width="4dp" android:color="#1f000000" />
-            <corners android:radius="@dimen/margin.2" />
+            <solid android:color="@color/white"/>
+            <stroke android:width="4dp" android:color="#1f000000"/>
+            <corners android:radius="@dimen/margin.2"/>
         </shape>
     </item>
 </selector>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_pause"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/layout_bg"
-    android:orientation="vertical"
-    tools:ignore="UnusedIds">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/activity_pause"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/layout_bg"
+              android:orientation="vertical"
+              tools:ignore="UnusedIds">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:background="@color/layout_bg"
         android:elevation="@dimen/dp_5"
-        android:minHeight="?android:attr/actionBarSize" />
+        android:minHeight="?android:attr/actionBarSize"/>
 
 
     <android.support.design.widget.TextInputLayout
@@ -46,7 +46,7 @@
             android:text=""
             android:textColorHint="@color/colorAccent">
 
-            <requestFocus />
+            <requestFocus/>
         </EditText>
     </android.support.design.widget.TextInputLayout>
 
@@ -59,7 +59,7 @@
         android:layout_marginTop="20dp"
         android:text="Feedback Type"
         android:textColor="@color/colorAccent"
-        android:textSize="@dimen/sp_12" />
+        android:textSize="@dimen/sp_12"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -76,14 +76,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/layout_bg"
-            android:spinnerMode="dropdown" />
+            android:spinnerMode="dropdown"/>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/ic_arrow_drop_down_accent_24dp" />
+            android:background="@drawable/ic_arrow_drop_down_accent_24dp"/>
     </RelativeLayout>
 
     <TextView
@@ -91,7 +91,7 @@
         android:layout_height="1dp"
         android:layout_marginLeft="22dp"
         android:layout_marginRight="22dp"
-        android:background="@color/colorAccent" />
+        android:background="@color/colorAccent"/>
 
 
     <android.support.design.widget.TextInputLayout
@@ -119,7 +119,7 @@
             android:minLines="2"
             android:textColorHint="@color/colorAccent">
 
-            <requestFocus />
+            <requestFocus/>
         </EditText>
 
     </android.support.design.widget.TextInputLayout>
