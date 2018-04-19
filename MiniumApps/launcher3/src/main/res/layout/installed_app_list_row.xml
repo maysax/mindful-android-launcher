@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/linearList"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="?attr/selectableItemBackground"
-              android:gravity="center"
-              android:orientation="vertical"
-              android:showDividers="none"
-              tools:ignore="UseCompoundDrawables">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearList"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:showDividers="none"
+    tools:ignore="UseCompoundDrawables">
 
     <LinearLayout
 
@@ -21,7 +21,7 @@
             android:id="@+id/imv_appicon"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            tools:ignore="ContentDescription,PrivateResource"/>
+            tools:ignore="ContentDescription,PrivateResource" />
 
         <co.siempo.phone.customviews.RobotoRegularTextView
             android:id="@+id/txt_app_name"
@@ -42,7 +42,7 @@
             android:text="Sound"
             android:textColor="#000000"
             android:textSize="16sp"
-            tools:ignore="HardcodedText"/>
+            tools:ignore="HardcodedText" />
 
 
         <Switch
@@ -53,7 +53,7 @@
             android:gravity="center"
             android:textOff="@string/off"
             android:textOn="@string/on"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </LinearLayout>
 
     <View
@@ -62,5 +62,5 @@
         android:layout_height="1dp"
         android:layout_marginLeft="@dimen/dp_10"
         android:layout_marginRight="@dimen/dp_10"
-        android:background="@android:color/darker_gray"/>
+        android:background="@android:color/darker_gray" />
 </LinearLayout>
