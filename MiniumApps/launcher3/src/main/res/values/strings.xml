@@ -467,4 +467,8 @@
     <string name="enable_setting_c">Enable Setting C</string>
     <string name="tempo_enabled">TEMPO IS ENABLED!</string>
 
+    <string name="later_string">Later</string>
+    <string name="make_your_home_string">"\u2022  Make your homescreen distraction free\n\u2022  Schedule focus time without interuptions\n\u2022  Flag apps that you\'re prone to overuse\n\u2022  Tidy app menus and muted app icons"</string>
+    <string name="would_you_like_to">Would you like to make Siempo \nyour default Home app?
+</string>
 </resources>

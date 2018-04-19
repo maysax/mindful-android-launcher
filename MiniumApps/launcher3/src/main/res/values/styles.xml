@@ -118,4 +118,12 @@
     </style>
 
 
+    <style name="DialogStyleOverlay" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorPrimary">#A3A3A3</item>
+
+    </style>
+
+
 </resources>
