@@ -1,11 +1,14 @@
 package co.siempo.phone.activities;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -15,6 +18,7 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -111,6 +115,7 @@ public class DashboardActivity extends CoreActivity {
                 startActivity(intent);
             }
         }
+        showOverLay();
 
     }
 
@@ -419,6 +424,20 @@ public class DashboardActivity extends CoreActivity {
         DashboardActivity.isTextLenghGreater = "";
         currentIndexDashboard = 1;
         currentIndexPaneFragment = 1;
+    }
+
+    private void showOverLay() {
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        final Dialog dialog = new Dialog(this, 0);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        dialog.setContentView(R.layout.layout_default_launcher);
+
+
+        dialog.show();
+
     }
 
 
