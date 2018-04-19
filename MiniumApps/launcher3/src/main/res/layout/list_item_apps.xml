@@ -23,10 +23,10 @@
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:ignore="UnusedResources">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:ignore="UnusedResources">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/icon"
@@ -37,7 +37,7 @@
         android:layout_marginLeft="@dimen/dp_20"
         android:layout_marginRight="@dimen/dp_15"
         android:layout_marginTop="@dimen/dp_15"
-        tools:src="@mipmap/ic_launcher"/>
+        tools:src="@mipmap/ic_launcher" />
 
     <co.siempo.phone.customviews.RobotoCondensedTextView
         android:id="@+id/text"
@@ -50,5 +50,5 @@
         android:lines="1"
         android:textColor="#de000000"
         android:textSize="@dimen/text.size.large"
-        tools:text="John Doe"/>
+        tools:text="John Doe" />
 </RelativeLayout>

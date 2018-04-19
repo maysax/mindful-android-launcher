@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:animateLayoutChanges="true"
-                android:background="@color/white"
-                android:fitsSystemWindows="true"
-                tools:context=".activities.NoteListActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    tools:context=".activities.NoteListActivity">
 
     <include
         android:id="@+id/toolbarMain"
-        layout="@layout/toolbar"/>
+        layout="@layout/toolbar" />
 
     <ListView
         android:id="@+id/listView"
@@ -29,7 +29,7 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:scrollbarStyle="outsideOverlay"
-        tools:ignore="RtlHardcoded"/>
+        tools:ignore="RtlHardcoded" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -43,7 +43,7 @@
         android:layout_marginRight="30dp"
         android:src="@drawable/ic_add_circle_outline_black_24dp"
         android:tint="@color/white"
-        tools:ignore="RtlHardcoded"/>
+        tools:ignore="RtlHardcoded" />
 
     <TextView
         android:id="@+id/noNotes"
@@ -62,7 +62,7 @@
         android:textColor="@color/colorAccent"
         android:textStyle="bold"
         android:visibility="invisible"
-        tools:ignore="RtlHardcoded"/>
+        tools:ignore="RtlHardcoded" />
 
     <View
         android:layout_width="match_parent"
@@ -71,6 +71,6 @@
         android:layout_alignParentRight="true"
         android:layout_below="@id/toolbarMain"
         android:background="@drawable/drop_shadow"
-        tools:ignore="RtlHardcoded"/>
+        tools:ignore="RtlHardcoded" />
 
 </RelativeLayout>

@@ -23,15 +23,15 @@
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                style="@style/ListItem"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                tools:background="@color/material.core.red"
-                tools:ignore="UnusedResources">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/ListItem"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    tools:background="@color/material.core.red"
+    tools:ignore="UnusedResources">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/icon"
@@ -44,7 +44,7 @@
 
         android:src="@drawable/ic_person_black_24dp"
         app:civ_border_color="@color/black"
-        app:civ_border_width="2dp"/>
+        app:civ_border_width="2dp" />
 
     <co.siempo.phone.customviews.RobotoMediumTextView
         android:id="@+id/txtTitle"
@@ -57,7 +57,7 @@
         android:maxLines="1"
         android:textColor="@color/text.primary"
         android:textSize="@dimen/text.size.medium"
-        tools:text="John Doe"/>
+        tools:text="John Doe" />
 
     <co.siempo.phone.customviews.RobotoCondensedTextView
         android:id="@+id/txtSubTitle"
@@ -69,5 +69,5 @@
         android:textColor="@color/text.secondary"
         android:textSize="@dimen/text.size.medium"
         tools:ignore="UnusedIds"
-        tools:text="Mobile"/>
+        tools:text="Mobile" />
 </RelativeLayout>

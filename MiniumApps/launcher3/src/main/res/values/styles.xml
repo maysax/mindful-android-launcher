@@ -15,6 +15,7 @@
         <item name="popupMenuStyle">@style/interrupt_popup_menu</item>
         <item name="actionMenuTextColor">@color/colorAccent</item>
         <item name="android:windowDisablePreview">true</item>
+        <item name="colorControlNormal">@color/dialog_blue</item>
     </style>
 
     <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
@@ -115,6 +116,14 @@
         <item name="android:colorAccent">@color/colorAccent</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textColorPrimary">#A3A3A3</item>
+    </style>
+
+
+    <style name="DialogStyleOverlay" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorPrimary">#A3A3A3</item>
+
     </style>
 
 

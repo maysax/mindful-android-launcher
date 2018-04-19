@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@android:color/transparent"
-              android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
             android:text="@string/make_siempo_your_default_home_app"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@android:color/black"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <LinearLayout
             android:id="@+id/linSiempoApp"
@@ -47,7 +47,7 @@
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="#3333FF"
                 android:textSize="10sp"
-                tools:ignore="HardcodedText,SmallSp"/>
+                tools:ignore="HardcodedText,SmallSp" />
 
             <co.siempo.phone.customviews.RobotoRegularTextView
                 android:layout_width="wrap_content"
@@ -55,14 +55,14 @@
                 android:padding="@dimen/dp_10"
                 android:text="@string/select"
                 android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black" />
 
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center_vertical"
                 android:background="@drawable/ic_tooltip"
-                tools:ignore="ContentDescription"/>
+                tools:ignore="ContentDescription" />
 
             <co.siempo.phone.customviews.RobotoRegularTextView
                 android:layout_width="wrap_content"
@@ -70,7 +70,7 @@
                 android:padding="@dimen/dp_10"
                 android:text="@string/app_name"
                 android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black" />
         </LinearLayout>
 
         <LinearLayout
@@ -95,7 +95,7 @@
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="#3333FF"
                 android:textSize="10sp"
-                tools:ignore="HardcodedText,SmallSp"/>
+                tools:ignore="HardcodedText,SmallSp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -103,7 +103,7 @@
                 android:padding="@dimen/dp_10"
                 android:text="@string/select_your_prefered_home_app"
                 android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black" />
 
 
         </LinearLayout>
@@ -126,7 +126,7 @@
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="#3333FF"
                 android:textSize="10sp"
-                tools:ignore="HardcodedText,SmallSp"/>
+                tools:ignore="HardcodedText,SmallSp" />
 
             <co.siempo.phone.customviews.RobotoRegularTextView
                 android:layout_width="wrap_content"
@@ -134,7 +134,7 @@
                 android:padding="@dimen/dp_10"
                 android:text="@string/tap_always"
                 android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black" />
 
         </LinearLayout>
     </LinearLayout>

@@ -1,22 +1,28 @@
 package co.siempo.phone.activities;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 
 import com.github.javiersantos.appupdater.AppUpdaterUtils;
 
@@ -73,6 +79,7 @@ public class DashboardActivity extends CoreActivity {
      */
     private DashboardPagerAdapter mPagerAdapter;
     private AlertDialog notificationDialog;
+    private Dialog overlayDialog;
 
     /**
      * @return True if {@link android.service.notification.NotificationListenerService} is enabled.
@@ -91,22 +98,13 @@ public class DashboardActivity extends CoreActivity {
         super.onResume();
         permissionUtil = new PermissionUtil(this);
         if (!PrefSiempo.getInstance(this).read(PrefSiempo
-                .USER_SEEN_EMAIL_REQUEST, false) || !permissionUtil.hasGiven
-                (PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)) {
+                .USER_SEEN_EMAIL_REQUEST, false) || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && !permissionUtil.hasGiven
+                (PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION))) {
             Intent intent = new Intent(this, EmailRequestActivity.class);
             startActivity(intent);
-        } else {
-
-            if (!permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
-                    || !permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)) {
-                Intent intent = new Intent(DashboardActivity.this, SiempoPermissionActivity_
-                        .class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                intent.putExtra(IS_FROM_HOME, true);
-                startActivity(intent);
-            }
         }
+
 
     }
 
@@ -128,6 +126,22 @@ public class DashboardActivity extends CoreActivity {
         mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         defaultStatusBarColor = mWindow.getStatusBarColor();
         Log.d("Test", "P2");
+        overlayDialog = new Dialog(this, 0);
+        showOverlayOfDefaultLauncher();
+
+
+    }
+
+    private void showOverlayOfDefaultLauncher() {
+        if (!UIUtils.isMyLauncherDefault(this) && !overlayDialog.isShowing()) {
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showOverLay();
+                }
+            }, 1000);
+        }
     }
 
     @Override
@@ -138,6 +152,10 @@ public class DashboardActivity extends CoreActivity {
         mPager.setCurrentItem(currentIndexDashboard, false);
         EventBus.getDefault().post(new HomePress(1, 2));
         loadPane();
+        //In case of home press, when app is launched again we need to show
+        // this overlay of default launcher if siempo is not set as default
+        // launcher
+        showOverlayOfDefaultLauncher();
     }
 
     public void loadViews() {
@@ -213,7 +231,7 @@ public class DashboardActivity extends CoreActivity {
         loadPane();
         if (PrefSiempo.getInstance(this).read(PrefSiempo
                 .IS_APP_INSTALLED_FIRSTTIME, true)) {
-            Log.d(TAG, "Display upgrade dialog.");
+            Log.d(TAG, "Display upgrade overlayDialog.");
             checkUpgradeVersion();
         }
     }
@@ -415,6 +433,46 @@ public class DashboardActivity extends CoreActivity {
         DashboardActivity.isTextLenghGreater = "";
         currentIndexDashboard = 1;
         currentIndexPaneFragment = 1;
+    }
+
+    /**
+     * Method to show overlay for default launcher setting
+     */
+    private void showOverLay() {
+        try {
+            this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            overlayDialog = new Dialog(this, 0);
+            overlayDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            overlayDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            overlayDialog.setContentView(R.layout.layout_default_launcher);
+            overlayDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+
+            //overlayDialog.setCancelable(false);
+            overlayDialog.setCanceledOnTouchOutside(false);
+            overlayDialog.show();
+
+            Button btnEnable = (Button) overlayDialog.findViewById(R.id.btnEnable);
+            Button btnLater = (Button) overlayDialog.findViewById(R.id.btnLater);
+            btnEnable.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    overlayDialog.dismiss();
+                    Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+
+                }
+            });
+
+            btnLater.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    overlayDialog.dismiss();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

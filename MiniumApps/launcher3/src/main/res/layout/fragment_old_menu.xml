@@ -1,8 +1,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardView"
@@ -35,7 +35,7 @@
                 android:src="@drawable/icon_settings"
                 android:tag="0"
                 android:visibility="visible"
-                tools:ignore="DuplicateIncludedIds,UnusedIds"/>
+                tools:ignore="DuplicateIncludedIds,UnusedIds" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/activity_grid_view"
@@ -43,7 +43,7 @@
                 android:layout_height="match_parent"
                 android:layout_below="@+id/btnListOrGrid"
                 android:layout_marginBottom="2dp"
-                android:scrollbars="vertical"/>
+                android:scrollbars="vertical" />
 
 
         </RelativeLayout>

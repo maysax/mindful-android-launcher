@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#FAFAFA"
-                tools:context="co.siempo.phone.activities.AppAssignmentActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FAFAFA"
+    tools:context="co.siempo.phone.activities.AppAssignmentActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
-        app:titleTextAppearance="@style/Toolbar.TitleText"/>
+        app:titleTextAppearance="@style/Toolbar.TitleText" />
 
     <co.siempo.phone.customviews.RobotoCondensedTextView
         android:id="@+id/txtErrorMessage"
@@ -32,5 +32,5 @@
         android:text="@string/no_app_found_or_no_relevant_app"
         android:textColor="@color/black_80"
         android:textSize="@dimen/dp_20"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
 </RelativeLayout>
