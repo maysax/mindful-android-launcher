@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                tools:context="co.siempo.phone.activities.DashboardActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="co.siempo.phone.activities.DashboardActivity">
 
     <LinearLayout
         android:id="@+id/linSelectFavouriteFood"
@@ -30,7 +30,7 @@
             android:layout_gravity="center"
             android:background="@null"
             android:text="@string/select_favourite"
-            android:textColor="@color/colorAccent"/>
+            android:textColor="@color/colorAccent" />
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
@@ -40,5 +40,5 @@
         android:layout_centerInParent="true"
         android:layout_marginLeft="@dimen/dp_5"
         android:layout_marginRight="@dimen/dp_5"
-        android:clipToPadding="false"/>
+        android:clipToPadding="false" />
 </RelativeLayout>

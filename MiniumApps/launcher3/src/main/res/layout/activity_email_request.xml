@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:src="@drawable/siempo_logo"/>
+            android:src="@drawable/siempo_logo" />
 
         <co.siempo.phone.customviews.RobotoMediumTextView
             android:layout_width="wrap_content"
@@ -35,7 +35,7 @@
             android:text="@string/let_s_get_started"
             android:textColor="@color/dialog_blue"
             android:textSize="16sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
     </RelativeLayout>
 
     <ViewFlipper
@@ -81,12 +81,12 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autofillHints="em"
-                            android:focusedByDefault="false"
                             android:focusableInTouchMode="true"
+                            android:focusedByDefault="false"
                             android:hint="Your email address"
                             android:inputType="textEmailAddress"
                             android:textColor="@color/dialog_title"
-                            android:textSize="@dimen/sp_16"/>
+                            android:textSize="@dimen/sp_16" />
 
                     </android.support.design.widget.TextInputLayout>
 
@@ -99,11 +99,11 @@
                         android:layout_centerInParent="true"
                         android:layout_marginTop="@dimen/dp_1"
                         android:gravity="center"
-                        android:visibility="invisible"
+                        android:textSize="12sp"
                         android:paddingLeft="@dimen/dp_3"
                         android:text="@string/error_email"
                         android:textColor="#FF4291"
-                        android:textSize="12sp"/>
+                        android:visibility="invisible" />
 
 
                 </LinearLayout>
@@ -124,7 +124,7 @@
                         android:text="@string/not_now"
                         android:textAllCaps="true"
                         android:textColor="@color/dialog_blue"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp" />
 
                     <Button
                         android:id="@+id/btnContinue"
@@ -133,7 +133,7 @@
                         android:background="@drawable/rectagle_blue"
                         android:text="@string/btn_continue"
                         android:textColor="@color/white"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp" />
 
 
                 </LinearLayout>
@@ -176,7 +176,7 @@
                         android:paddingLeft="@dimen/dp_3"
                         android:text="@string/to_help_you_storage"
                         android:textSize="14sp"
-                        android:visibility="visible"/>
+                        android:visibility="visible" />
 
                 </LinearLayout>
 
@@ -196,7 +196,7 @@
                         android:text="@string/btn_enable"
                         android:textColor="@color/white"
                         android:textSize="14sp"
-                        android:visibility="visible"/>
+                        android:visibility="visible" />
 
 
                 </LinearLayout>
@@ -224,7 +224,7 @@
             android:lineSpacingExtra="5sp"
             android:text="We respect your privacy and do not tolerate spam.  Your email allows us to send occassional important announcements about your account.  We will never sell or give away your email to any third party."
             android:textColor="#8A000000"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -240,7 +240,7 @@
                 android:lineSpacingExtra="5sp"
                 android:text="Learn more on our "
                 android:textColor="#8A000000"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
             <co.siempo.phone.customviews.RobotoMediumTextView
                 android:id="@+id/txtPrivacy"
@@ -250,7 +250,7 @@
                 android:lineSpacingExtra="5sp"
                 android:text="@string/privacypolicy"
                 android:textColor="@color/dialog_blue"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

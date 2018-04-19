@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/linearList"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-              tools:ignore="UseCompoundDrawables,UselessParent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearList"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:ignore="UseCompoundDrawables,UselessParent">
 
 
     <LinearLayout
@@ -22,7 +22,7 @@
             android:layout_marginStart="18dp"
             android:contentDescription="@null"
             android:gravity="center_vertical"
-            android:padding="6dp"/>
+            android:padding="6dp" />
 
         <RelativeLayout
             android:layout_width="0dp"
@@ -50,7 +50,7 @@
                 android:textColor="#000000"
                 android:textSize="16sp"
                 tools:ignore="HardcodedText"
-                tools:text="Send as a message"/>
+                tools:text="Send as a message" />
 
             <co.siempo.phone.customviews.RobotoCondensedTextView
                 android:id="@+id/textDefaultApp"
@@ -59,7 +59,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:textSize="12sp"
                 android:visibility="gone"
-                tools:text="Default App"/>
+                tools:text="Default App" />
 
             <ImageView
                 android:id="@+id/imgChevron"
@@ -69,7 +69,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/dp_16"
                 android:padding="5dp"
-                android:src="@drawable/ic_chevron"/>
+                android:src="@drawable/ic_chevron" />
 
 
         </RelativeLayout>
@@ -82,7 +82,7 @@
         android:layout_height="4dp"
         android:layout_marginLeft="@dimen/dp_10"
         android:layout_marginRight="@dimen/dp_10"
-        android:background="@android:color/transparent"/>
+        android:background="@android:color/transparent" />
 
 
 </LinearLayout>

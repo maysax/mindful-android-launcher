@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="RowLayout">
-        <attr name="android:verticalSpacing"/>
-        <attr name="android:horizontalSpacing"/>
+        <attr name="android:verticalSpacing" />
+        <attr name="android:horizontalSpacing" />
     </declare-styleable>
 
     <!-- Below is the attributes to use for ChipsTextView XML declaration
@@ -17,16 +17,16 @@
     <color name="default_chips_more_text_color_active">#888</color>
 
     <declare-styleable name="ChipsTextView">
-        <attr name="ctvTextSize" format="dimension"/>
-        <attr name="ctvTextColor" format="color"/>
-        <attr name="lineSpacing" format="float"/>
-        <attr name="maxLines" format="integer"/>
-        <attr name="truncated" format="boolean"/>
-        <attr name="debug" format="boolean"/>
-        <attr name="moreText" format="string"/>
-        <attr name="moreTextColor" format="color"/>
-        <attr name="moreTextColorActive" format="color"/>
-        <attr name="clickable" format="boolean"/>
+        <attr name="ctvTextSize" format="dimension" />
+        <attr name="ctvTextColor" format="color" />
+        <attr name="lineSpacing" format="float" />
+        <attr name="maxLines" format="integer" />
+        <attr name="truncated" format="boolean" />
+        <attr name="debug" format="boolean" />
+        <attr name="moreText" format="string" />
+        <attr name="moreTextColor" format="color" />
+        <attr name="moreTextColorActive" format="color" />
+        <attr name="clickable" format="boolean" />
     </declare-styleable>
 
     <!-- default style for text -->
@@ -53,12 +53,12 @@
     <color name="default_bubble_text_color_active">#888</color>
 
     <!-- attributes -->
-    <attr name="bubble_stateActive" format="reference|color"/>
-    <attr name="bubble_statePressed" format="reference|color"/>
-    <attr name="bubble_textSize" format="dimension"/>
-    <attr name="bubble_textColor" format="color"/>
-    <attr name="bubble_textColorActive" format="color"/>
-    <attr name="bubble_textPadding" format="dimension"/>
+    <attr name="bubble_stateActive" format="reference|color" />
+    <attr name="bubble_statePressed" format="reference|color" />
+    <attr name="bubble_textSize" format="dimension" />
+    <attr name="bubble_textColor" format="color" />
+    <attr name="bubble_textColorActive" format="color" />
+    <attr name="bubble_textPadding" format="dimension" />
 
     <!-- default bubble style -->
     <style name="default_bubble_style">

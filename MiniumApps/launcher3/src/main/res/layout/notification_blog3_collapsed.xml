@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
 
     <RelativeLayout
         android:id="@+id/icon_container"
@@ -16,7 +16,7 @@
             android:paddingBottom="1dp"
             android:paddingLeft="4dp"
             android:paddingRight="6dp"
-            android:src="@drawable/ic_person_black_24dp"/>
+            android:src="@drawable/ic_person_black_24dp" />
 
         <ImageView
             android:id="@+id/small_icon"
@@ -24,7 +24,7 @@
             android:layout_height="18.2dp"
             android:layout_alignBottom="@id/big_icon"
             android:layout_alignRight="@id/big_icon"
-            android:src="@drawable/siempo_notification_icon"/>
+            android:src="@drawable/siempo_notification_icon" />
 
     </RelativeLayout>
 
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:text="Notification Sample App"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/dim_foreground_dark_inverse"/>
+            android:textColor="@color/dim_foreground_dark_inverse" />
 
         <TextView
             android:id="@+id/content_message"
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:text="Notification Sample App"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="@color/actionbar_background_start"/>
+            android:textColor="@color/actionbar_background_start" />
     </LinearLayout>
 
     <TextView
@@ -65,6 +65,6 @@
         android:paddingRight="3.5dp"
         android:paddingTop="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textColor="@color/actionbar_background_start"/>
+        android:textColor="@color/actionbar_background_start" />
 
 </RelativeLayout>
