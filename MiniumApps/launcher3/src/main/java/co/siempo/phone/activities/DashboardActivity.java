@@ -91,19 +91,8 @@ public class DashboardActivity extends CoreActivity {
         if (!PrefSiempo.getInstance(this).read(PrefSiempo.USER_SEEN_EMAIL_REQUEST, false)) {
             Intent intent = new Intent(this, EmailRequestActivity.class);
             startActivity(intent);
-        } else {
-            permissionUtil = new PermissionUtil(this);
-            if (!permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
-                    || !permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)
-                    ) {
-                Intent intent = new Intent(DashboardActivity.this, SiempoPermissionActivity_
-                        .class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                intent.putExtra(IS_FROM_HOME, true);
-                startActivity(intent);
-            }
         }
+
 
     }
 
@@ -267,7 +256,10 @@ public class DashboardActivity extends CoreActivity {
         Log.d(TAG, "Active network..");
         connectivityManager = (ConnectivityManager) getSystemService(Context
                 .CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        NetworkInfo activeNetwork = null;
+        if (connectivityManager != null) {
+            activeNetwork = connectivityManager.getActiveNetworkInfo();
+        }
         if (activeNetwork != null) {
             if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
                 ApiClient_.getInstance_(DashboardActivity.this)

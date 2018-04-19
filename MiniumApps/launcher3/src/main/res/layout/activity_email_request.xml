@@ -19,7 +19,8 @@
             android:layout_above="@+id/cardCenter"
             android:layout_centerVertical="true"
             android:orientation="vertical"
-            android:paddingLeft="16dp">
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
 
             <ImageView
                 android:id="@+id/imgLogo"
@@ -63,6 +64,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:paddingTop="16dp">
 
 
@@ -76,8 +79,7 @@
                             android:id="@+id/auto_mail"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Your email address"
-                            android:autofillHints="em"
+                            android:hint="@string/your_email_address"
                             android:inputType="textEmailAddress"
                             android:textColor="@color/dialog_title"
                             android:textSize="@dimen/sp_16" />
@@ -88,12 +90,10 @@
                         android:id="@+id/txtErrorMessage"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_alignParentBottom="true"
-                        android:layout_below="@+id/imgLogo"
-                        android:layout_centerInParent="true"
                         android:layout_marginTop="@dimen/dp_1"
                         android:gravity="center"
                         android:paddingLeft="@dimen/dp_3"
+                        android:paddingRight="@dimen/dp_3"
                         android:text="@string/error_email"
                         android:textColor="#FF4291"
                         android:textSize="12sp" />
@@ -143,7 +143,7 @@
                 android:layout_marginTop="@dimen/dp_16"
                 android:gravity="center_horizontal"
                 android:lineSpacingExtra="5sp"
-                android:text="We respect your privacy and do not tolerate spam.  Your email allows us to send occassional important announcements about your account.  We will never sell or give away your email to any third party."
+                android:text="@string/we_respect_your_privacy_and_do_not_tolerate_spam_your_email_allows_us_to_send_occassional_important_announcements_about_your_account_we_will_never_sell_or_give_away_your_email_to_any_third_party"
                 android:textColor="#8A000000"
                 android:textSize="14sp" />
 
@@ -159,7 +159,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:lineSpacingExtra="5sp"
-                    android:text="Learn more on our "
+                    android:text="@string/learn_more_on_our"
                     android:textColor="#8A000000"
                     android:textSize="14sp" />
 
@@ -167,7 +167,6 @@
                     android:id="@+id/txtPrivacy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
                     android:lineSpacingExtra="5sp"
                     android:text="@string/privacypolicy"
                     android:textColor="@color/dialog_blue"

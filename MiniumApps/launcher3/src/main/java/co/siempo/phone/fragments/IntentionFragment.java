@@ -154,6 +154,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
             case R.id.imgTempo:
                 if (null != getActivity()) {
                     if (permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
+                            && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
                             && PackageUtil.isSiempoLauncher(context)) {
                         DialogTempoSetting dialogTempo = new DialogTempoSetting(getActivity());
                         if (dialogTempo.getWindow() != null)
@@ -222,10 +223,17 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                         if (getActivity() != null) {
                             UIUtils.clearDim(root);
                             mPopupWindow.dismiss();
-                            DialogTempoSetting dialogTempo = new DialogTempoSetting(getActivity());
-                            if (dialogTempo.getWindow() != null)
-                                dialogTempo.getWindow().setGravity(Gravity.TOP);
-                            dialogTempo.show();
+                            if (permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
+                                    && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
+                                    && PackageUtil.isSiempoLauncher(context)) {
+                                DialogTempoSetting dialogTempo = new DialogTempoSetting(getActivity());
+                                if (dialogTempo.getWindow() != null)
+                                    dialogTempo.getWindow().setGravity(Gravity.TOP);
+                                dialogTempo.show();
+                            } else {
+                                Intent intent = new Intent(context, EnableTempoActivity.class);
+                                startActivityForResult(intent, 100);
+                            }
                         }
                     }
                 });

@@ -455,5 +455,10 @@
     <string name="let_s_get_started">Let\'s get started!</string>
     <string name="tempo_lets_you_schedule_time_that_is_free_from_interruptions_it_batches_your_notifications_to_arrive_only_at_the_times_you_choose_follow_the_instructions_to_enable">Tempo lets you schedule time that is free from interruptions. It batches your notifications to arrive only at the times you choose. Follow the instructions to enable:</string>
     <string name="on_the_next">On the next screen:\nTap the toggle, then tap the back arrow.</string>
+    <string name="enable_setting_a">Enable Setting A</string>
+    <string name="your_email_address">Your email address</string>
+    <string name="we_respect_your_privacy_and_do_not_tolerate_spam_your_email_allows_us_to_send_occassional_important_announcements_about_your_account_we_will_never_sell_or_give_away_your_email_to_any_third_party">We respect your privacy and do not tolerate spam. Your email allows us to send occassional important announcements about your account. We will never sell or give away your email to any third party.</string>
+    <string name="learn_more_on_our">Learn more on our</string>
+    <string name="enable_tempo">Enable Tempo</string>
 
 </resources>

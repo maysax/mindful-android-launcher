@@ -1,5 +1,6 @@
 package co.siempo.phone.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,9 +8,16 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toolbar;
+
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
+
+import java.util.ArrayList;
 
 import co.siempo.phone.R;
 import co.siempo.phone.utils.PackageUtil;
@@ -25,6 +33,12 @@ public class EnableTempoActivity extends CoreActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enable_tempo);
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(getResources().getColor(R.color.white));
+        View decor = window.getDecorView();
+        decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+
         permissionUtil = new PermissionUtil(this);
         toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_gray_24dp);
@@ -44,6 +58,9 @@ public class EnableTempoActivity extends CoreActivity {
                 if (btnSubmit.getText().toString().equalsIgnoreCase("Enable Setting A")) {
                     startActivityForResult(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS), PermissionUtil.NOTIFICATION_ACCESS);
                 } else if (btnSubmit.getText().toString().equalsIgnoreCase("Enable Setting B")) {
+                    askForPermission(new String[]{
+                            Manifest.permission.CALL_PHONE});
+                } else if (btnSubmit.getText().toString().equalsIgnoreCase("Enable Setting C")) {
                     Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
@@ -57,31 +74,56 @@ public class EnableTempoActivity extends CoreActivity {
         });
     }
 
+    private void askForPermission(String[] PERMISSIONS) {
+        try {
+            TedPermission.with(EnableTempoActivity.this)
+                    .setPermissionListener(new PermissionListener() {
+                        @Override
+                        public void onPermissionGranted() {
+                            onResume();
+                        }
+
+                        @Override
+                        public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+
+                        }
+                    })
+                    .setDeniedMessage(R.string.msg_permission_denied)
+                    .setPermissions(PERMISSIONS)
+                    .check();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
-        if (permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) {
-            if (!PackageUtil.isSiempoLauncher(this)) {
-                imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshottop1));
-                imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_meter_b));
-                btnSubmit.setText("Enable Setting B");
-            } else {
-                imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshottop1));
-                imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_meter_c));
-                btnSubmit.setBackground(ContextCompat.getDrawable(this, R.drawable.button_bg_enable));
-                btnSubmit.setText("TEMPO IS ENABLED!");
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        setResult(Activity.RESULT_OK, new Intent());
-                        finish();
-                    }
-                }, 1000);
-            }
-        } else {
+        if (!permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) {
             imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshottop));
-            imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_meter_a));
+            imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progressmeter_a));
             btnSubmit.setText("Enable Setting A");
+        } else if (!permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)) {
+            imgCenter.setBackground(null);
+            imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progressmeter_b));
+            btnSubmit.setText("Enable Setting B");
+        } else if (!PackageUtil.isSiempoLauncher(this)) {
+            imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshottop1));
+            imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progressmeter_c));
+            btnSubmit.setText("Enable Setting C");
+        } else {
+            imgCenter.setBackground(null);
+            imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progressmeter_d));
+            btnSubmit.setBackground(ContextCompat.getDrawable(this, R.drawable.button_bg_enable));
+            btnSubmit.setText("TEMPO IS ENABLED!");
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    setResult(Activity.RESULT_OK, new Intent());
+                    finish();
+                }
+            }, 1000);
         }
     }
 }

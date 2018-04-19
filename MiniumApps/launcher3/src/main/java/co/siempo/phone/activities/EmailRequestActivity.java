@@ -22,7 +22,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import co.siempo.phone.R;
-import co.siempo.phone.adapters.EmailListAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.UserModel;
 import co.siempo.phone.utils.PermissionUtil;
@@ -30,7 +29,6 @@ import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 
 public class EmailRequestActivity extends CoreActivity implements View.OnClickListener {
-    EmailListAdapter arrayAdapter;
     private Button btnNotNow, btnContinue;
     private TextView txtPrivacy, txtErrorMessage;
     private TextInputEditText autoCompleteTextViewEmail;
@@ -47,11 +45,6 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
         View decor = window.getDecorView();
         decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         initView();
-//        if (Build.VERSION.SDK_INT >= 23) {
-//            if (!permissionUtil.hasGiven(PermissionUtil.ACCOUNT_PERMISSION)) {
-//                askForPermission(new String[]{android.Manifest.permission.GET_ACCOUNTS});
-//            }
-//        }
     }
 
     private void initView() {
@@ -61,13 +54,12 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             autoCompleteTextViewEmail.setAutofillHints(View.AUTOFILL_HINT_EMAIL_ADDRESS);
         }
-//        addAdapterToViews();
         txtPrivacy = findViewById(R.id.txtPrivacy);
         txtErrorMessage = findViewById(R.id.txtErrorMessage);
         txtPrivacy.setOnClickListener(this);
         btnNotNow.setOnClickListener(this);
         btnContinue.setOnClickListener(this);
-
+        txtErrorMessage.setVisibility(View.INVISIBLE);
         try {
             Typeface myTypefaceregular = Typeface.createFromAsset(getAssets(), "fonts/robotocondensedregular.ttf");
             Typeface myTypefacemedium = Typeface.createFromAsset(getAssets(), "fonts/robotomedium.ttf");
@@ -88,7 +80,6 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!TextUtils.isEmpty(autoCompleteTextViewEmail.getText().toString())) {
                     String val_email = autoCompleteTextViewEmail.getText().toString().trim();
-//                    arrayAdapter.getFilter().filter(val_email);
                     boolean isValidEmail = UIUtils.isValidEmail(val_email);
                     if (isValidEmail) {
                         txtErrorMessage.setVisibility(View.INVISIBLE);
@@ -106,23 +97,6 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
             }
         });
     }
-    // used if we load using permission.
-//    private void addAdapterToViews() {
-//
-//        Account[] accounts = AccountManager.get(this).getAccounts();
-//        Set<String> emailSet = new HashSet<String>();
-//        for (Account account : accounts) {
-//            if (UIUtils.isValidEmail(account.name)) {
-//                emailSet.add(account.name);
-//            }
-//
-//        }
-//        autoCompleteTextViewEmail.setThreshold(0);
-//        ArrayList<String> list = new ArrayList<String>(emailSet);
-//        arrayAdapter = new EmailListAdapter(this, R.layout.email_row, list);
-//        autoCompleteTextViewEmail.setAdapter(arrayAdapter);
-//        arrayAdapter.notifyDataSetChanged();
-//    }
 
     @Override
     public void onClick(View v) {

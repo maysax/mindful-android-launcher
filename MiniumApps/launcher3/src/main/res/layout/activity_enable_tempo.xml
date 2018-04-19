@@ -16,7 +16,7 @@
         <co.siempo.phone.customviews.RobotoMediumTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Enable Tempo"
+            android:text="@string/enable_tempo"
             android:textColor="#99000000"
             android:textSize="@dimen/sp_20" />
     </Toolbar>
@@ -39,7 +39,7 @@
                 android:paddingBottom="10dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:paddingTop="10dp"
+                android:paddingTop="5dp"
                 android:text="@string/tempo_lets_you_schedule_time_that_is_free_from_interruptions_it_batches_your_notifications_to_arrive_only_at_the_times_you_choose_follow_the_instructions_to_enable"
                 android:textColor="#99000000"
                 android:textSize="14sp" />
@@ -62,7 +62,8 @@
                 android:gravity="center_horizontal"
                 android:lineSpacingExtra="2sp"
                 android:paddingBottom="@dimen/dp_5"
-                android:paddingTop="@dimen/dp_10"
+                android:paddingTop="@dimen/dp_5"
+                android:textStyle="bold"
                 android:text="@string/on_the_next"
                 android:textColor="#B2000000" />
 
@@ -106,8 +107,6 @@
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/btnSubmit"
-                    android:layout_centerHorizontal="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="@dimen/dp_10"
                     android:visibility="gone">
@@ -314,7 +313,7 @@
                     android:layout_gravity="center_horizontal"
                     android:background="@drawable/button_bg"
                     android:lineSpacingExtra="3sp"
-                    android:text="Enable Setting A"
+                    android:text="@string/enable_setting_a"
                     android:textColor="@color/white" />
 
             </LinearLayout>

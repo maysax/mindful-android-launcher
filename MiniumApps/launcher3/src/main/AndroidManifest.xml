@@ -254,6 +254,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.EmailRequestActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.EnableTempoActivity"
