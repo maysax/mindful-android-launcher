@@ -95,18 +95,8 @@ public class DashboardActivity extends CoreActivity {
                 (PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)) {
             Intent intent = new Intent(this, EmailRequestActivity.class);
             startActivity(intent);
-        } else {
-
-            if (!permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
-                    || !permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)) {
-                Intent intent = new Intent(DashboardActivity.this, SiempoPermissionActivity_
-                        .class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                intent.putExtra(IS_FROM_HOME, true);
-                startActivity(intent);
-            }
         }
+
 
     }
 

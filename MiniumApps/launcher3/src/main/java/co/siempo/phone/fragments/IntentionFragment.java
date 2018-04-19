@@ -1,6 +1,7 @@
 package co.siempo.phone.fragments;
 
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -20,12 +21,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import co.siempo.phone.R;
+import co.siempo.phone.activities.EnableTempoActivity;
 import co.siempo.phone.activities.HelpActivity;
 import co.siempo.phone.activities.IntentionEditActivity;
 import co.siempo.phone.activities.SettingsActivity_;
 import co.siempo.phone.dialog.DialogTempoSetting;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.service.StatusBarService;
+import co.siempo.phone.utils.PackageUtil;
+import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 
@@ -41,6 +45,8 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
     private RelativeLayout relRootLayout;
     private Window mWindow;
     private int defaultStatusBarColor;
+    Context context;
+    private PermissionUtil permissionUtil;
 
     public IntentionFragment() {
         // Required empty public constructor
@@ -60,6 +66,8 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_intention, container, false);
         mWindow = getActivity().getWindow();
+        context = getActivity();
+        permissionUtil = new PermissionUtil(context);
         Intent myService = new Intent(getActivity(), StatusBarService.class);
         getActivity().startService(myService);
         initView(view);
@@ -145,10 +153,18 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         switch (v.getId()) {
             case R.id.imgTempo:
                 if (null != getActivity()) {
-                    DialogTempoSetting dialogTempo = new DialogTempoSetting(getActivity());
-                    if (dialogTempo.getWindow() != null)
-                        dialogTempo.getWindow().setGravity(Gravity.TOP);
-                    dialogTempo.show();
+                    if (permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
+                            && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
+                            && PackageUtil.isSiempoLauncher(context)) {
+                        DialogTempoSetting dialogTempo = new DialogTempoSetting(getActivity());
+                        if (dialogTempo.getWindow() != null)
+                            dialogTempo.getWindow().setGravity(Gravity.TOP);
+                        dialogTempo.show();
+                    } else {
+                        Intent intent = new Intent(context, EnableTempoActivity.class);
+                        startActivityForResult(intent, 100);
+                    }
+
                 }
                 break;
             case R.id.imgPullTab:
@@ -207,10 +223,17 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                         if (getActivity() != null) {
                             UIUtils.clearDim(root);
                             mPopupWindow.dismiss();
-                            DialogTempoSetting dialogTempo = new DialogTempoSetting(getActivity());
-                            if (dialogTempo.getWindow() != null)
-                                dialogTempo.getWindow().setGravity(Gravity.TOP);
-                            dialogTempo.show();
+                            if (permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
+                                    && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
+                                    && PackageUtil.isSiempoLauncher(context)) {
+                                DialogTempoSetting dialogTempo = new DialogTempoSetting(getActivity());
+                                if (dialogTempo.getWindow() != null)
+                                    dialogTempo.getWindow().setGravity(Gravity.TOP);
+                                dialogTempo.show();
+                            } else {
+                                Intent intent = new Intent(context, EnableTempoActivity.class);
+                                startActivityForResult(intent, 100);
+                            }
                         }
                     }
                 });
@@ -257,4 +280,11 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
     }
 
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100 && resultCode == Activity.RESULT_OK) {
+            imgTempo.performClick();
+        }
+    }
 }
