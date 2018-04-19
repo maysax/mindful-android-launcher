@@ -195,8 +195,7 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
 
             case R.id.btnEnable:
                 if (!permissionUtil.hasGiven(PermissionUtil
-                        .WRITE_EXTERNAL_STORAGE_PERMISSION) || !permissionUtil.hasGiven(PermissionUtil
-                        .CALL_PHONE_PERMISSION)) {
+                        .WRITE_EXTERNAL_STORAGE_PERMISSION)) {
 
                     try {
                         TedPermission.with(this)
@@ -214,8 +213,7 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
                                 .setDeniedMessage(R.string.msg_permission_denied)
                                 .setPermissions(new String[]{
 
-                                        Manifest.permission.READ_PHONE_STATE,
-                                        Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
                                         Manifest
                                                 .permission
                                                 .READ_EXTERNAL_STORAGE,})

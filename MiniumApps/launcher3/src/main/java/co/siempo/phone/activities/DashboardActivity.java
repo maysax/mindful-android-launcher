@@ -96,17 +96,13 @@ public class DashboardActivity extends CoreActivity {
         permissionUtil = new PermissionUtil(this);
         if (!PrefSiempo.getInstance(this).read(PrefSiempo
                 .USER_SEEN_EMAIL_REQUEST, false) || !permissionUtil.hasGiven
-                (PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION) || !permissionUtil.hasGiven
-                (PermissionUtil.CALL_PHONE_PERMISSION)) {
+                (PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)) {
             Intent intent = new Intent(this, EmailRequestActivity.class);
             startActivity(intent);
-        }
-
-//
-        else {
+        } else {
 
             if (!permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
-                    ) {
+                    || !permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)) {
                 Intent intent = new Intent(DashboardActivity.this, SiempoPermissionActivity_
                         .class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
