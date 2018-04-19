@@ -450,8 +450,8 @@ public class DashboardActivity extends CoreActivity {
             overlayDialog.setCanceledOnTouchOutside(false);
             overlayDialog.show();
 
-            Button btnEnable = (Button) overlayDialog.findViewById(R.id.btnEnable);
-            Button btnLater = (Button) overlayDialog.findViewById(R.id.btnLater);
+            Button btnEnable = overlayDialog.findViewById(R.id.btnEnable);
+            Button btnLater = overlayDialog.findViewById(R.id.btnLater);
             btnEnable.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

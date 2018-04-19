@@ -114,7 +114,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/button_bg"
+                    android:background="@drawable/button_bg_vector"
                     android:lineSpacingExtra="3sp"
                     android:text="@string/enable_setting_a"
                     android:textColor="@color/white" />
