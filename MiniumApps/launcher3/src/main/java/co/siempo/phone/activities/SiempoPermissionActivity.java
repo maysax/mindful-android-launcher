@@ -186,11 +186,11 @@ public class SiempoPermissionActivity extends CoreActivity {
 //        } else {
 //            switchSmsPermission.setChecked(false);
 //        }
-        if (permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)) {
-            switchFilePermission.setChecked(true);
-        } else {
-            switchFilePermission.setChecked(false);
-        }
+//        if (permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)) {
+//            switchFilePermission.setChecked(true);
+//        } else {
+//            switchFilePermission.setChecked(false);
+//        }
         if (permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) {
             switchNotificationAccess.setChecked(true);
         } else {
@@ -212,7 +212,7 @@ public class SiempoPermissionActivity extends CoreActivity {
 //                tblContact.setVisibility(View.VISIBLE);
                 tblCalls.setVisibility(View.VISIBLE);
                 tblDrawOverlay.setVisibility(View.GONE);
-                tblStorage.setVisibility(View.VISIBLE);
+//                tblStorage.setVisibility(View.VISIBLE);
                 tblNotification.setVisibility(View.VISIBLE);
 //                tblSMS.setVisibility(View.VISIBLE);
             } else {
@@ -241,7 +241,6 @@ public class SiempoPermissionActivity extends CoreActivity {
         if (isFromHome &&
                 permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
                 &&
-                permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION) &&
                 permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) {
             finish();
         }
@@ -262,8 +261,7 @@ public class SiempoPermissionActivity extends CoreActivity {
     @Click(R.id.btnContinue)
     void myButtonWasClicked() {
         if (
-                permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION) &&
-                        permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) &&
+                permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) &&
                         permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) {
 //            launcher3Prefs.isPermissionGivenAndContinued().put(true);
             finish();

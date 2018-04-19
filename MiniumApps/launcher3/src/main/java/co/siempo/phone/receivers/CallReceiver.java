@@ -45,19 +45,19 @@ public class CallReceiver extends PhoneCallReceiver {
 
     }
 
-    private void rejectCalls() {
-        try {
-            Class c = Class.forName(telephonyManager.getClass().getName());
-            Method m = c.getDeclaredMethod("getITelephony");
-            m.setAccessible(true);
-            ITelephony telephonyService = (ITelephony) m.invoke(telephonyManager);
-
-            telephonyService.silenceRinger();
-            telephonyService.endCall();
-
-        } catch (Exception e) {
-            Tracer.e(e, e.getMessage());
-            CoreApplication.getInstance().logException(e);
-        }
-    }
+//    private void rejectCalls() {
+//        try {
+//            Class c = Class.forName(telephonyManager.getClass().getName());
+//            Method m = c.getDeclaredMethod("getITelephony");
+//            m.setAccessible(true);
+//            ITelephony telephonyService = (ITelephony) m.invoke(telephonyManager);
+//
+//            telephonyService.silenceRinger();
+//            telephonyService.endCall();
+//
+//        } catch (Exception e) {
+//            Tracer.e(e, e.getMessage());
+//            CoreApplication.getInstance().logException(e);
+//        }
+//    }
 }

@@ -4,5 +4,5 @@
     <!-- Notosans fonts -->
     <string name="fonts.noto.sans.regular" translatable="false">fonts/notosans-unhinted/NotoSans-Regular.ttf</string>
 
-    <item name="mainView" type="id" />
+    <item name="mainView" type="id"/>
 </resources>

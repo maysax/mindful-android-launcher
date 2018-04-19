@@ -4,7 +4,7 @@
     <item
         android:id="@+id/block"
         android:icon="@android:drawable/ic_menu_search"
-        android:title="Block and move to Other Apps" />
+        android:title="Block and move to Other Apps"/>
 
 
 </menu>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    android:key="@string/system_settings_key"
-    android:summary="@string/system_settings_summary"
-    android:title="@string/system_settings_title">
+                  android:key="@string/system_settings_key"
+                  android:summary="@string/system_settings_summary"
+                  android:title="@string/system_settings_title">
 
     <Preference
         android:key="@string/date_time_key"

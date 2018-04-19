@@ -15,14 +15,14 @@
 
 <!--suppress AndroidElementNotAllowed, AndroidElementNotAllowed -->
 <set xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="UnusedResources">
+     xmlns:tools="http://schemas.android.com/tools"
+     tools:ignore="UnusedResources">
     <translate
         android:duration="@android:integer/config_longAnimTime"
         android:fromYDelta="100%p"
-        android:toYDelta="0" />
+        android:toYDelta="0"/>
     <alpha
         android:duration="@android:integer/config_longAnimTime"
         android:fromAlpha="0.0"
-        android:toAlpha="1.0" />
+        android:toAlpha="1.0"/>
 </set>

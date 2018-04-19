@@ -1,10 +1,13 @@
 package co.siempo.phone.activities;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
+import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -13,13 +16,19 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
+
+import java.util.ArrayList;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.EmailListAdapter;
@@ -35,6 +44,11 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
     private TextView txtPrivacy, txtErrorMessage;
     private TextInputEditText autoCompleteTextViewEmail;
     private PermissionUtil permissionUtil;
+    private CardView cardCenter;
+    private RelativeLayout relPrivacyEmail;
+    private Button btnEnable;
+    private ViewFlipper viewFlipperEmail;
+    private TextInputLayout inputEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +71,15 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
     private void initView() {
         btnNotNow = findViewById(R.id.btnNotNow);
         btnContinue = findViewById(R.id.btnContinue);
+        cardCenter = findViewById(R.id.cardCenter);
+        btnEnable = findViewById(R.id.btnEnable);
+        relPrivacyEmail = findViewById(R.id.relPrivacyEmail);
+        viewFlipperEmail = findViewById(R.id.viewFlipperEmail);
+
         autoCompleteTextViewEmail = findViewById(R.id.auto_mail);
+        inputEmail = findViewById(R.id.inputEmail);
+        autoCompleteTextViewEmail.clearFocus();
+        inputEmail.clearFocus();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             autoCompleteTextViewEmail.setAutofillHints(View.AUTOFILL_HINT_EMAIL_ADDRESS);
         }
@@ -67,6 +89,16 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
         txtPrivacy.setOnClickListener(this);
         btnNotNow.setOnClickListener(this);
         btnContinue.setOnClickListener(this);
+        btnEnable.setOnClickListener(this);
+        if (PrefSiempo.getInstance(this).read(PrefSiempo
+                .USER_SEEN_EMAIL_REQUEST, false)) {
+            viewFlipperEmail.setDisplayedChild(1);
+            relPrivacyEmail.setVisibility(View.GONE);
+
+        } else {
+            viewFlipperEmail.setDisplayedChild(0);
+            relPrivacyEmail.setVisibility(View.VISIBLE);
+        }
 
         try {
             Typeface myTypefaceregular = Typeface.createFromAsset(getAssets(), "fonts/robotocondensedregular.ttf");
@@ -93,10 +125,11 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
                     if (isValidEmail) {
                         txtErrorMessage.setVisibility(View.INVISIBLE);
                     } else {
+
                         txtErrorMessage.setVisibility(View.VISIBLE);
                     }
                 } else {
-                    txtErrorMessage.setVisibility(View.VISIBLE);
+                    txtErrorMessage.setVisibility(View.INVISIBLE);
                 }
             }
 
@@ -133,7 +166,12 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
                 break;
             case R.id.btnNotNow:
                 PrefSiempo.getInstance(this).write(PrefSiempo.USER_SEEN_EMAIL_REQUEST, true);
-                finish();
+                relPrivacyEmail.setVisibility(View.GONE);
+                viewFlipperEmail.setInAnimation(this, R.anim.in_from_right_email);
+                viewFlipperEmail.setOutAnimation(this, R.anim.out_to_left_email);
+                viewFlipperEmail.setFlipInterval(1000);
+                viewFlipperEmail.showNext();
+
                 break;
             case R.id.btnContinue:
                 String strEmail = autoCompleteTextViewEmail.getText().toString();
@@ -143,6 +181,47 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
                     PrefSiempo.getInstance(this).write(PrefSiempo
                             .USER_EMAILID, strEmail);
                     storeDataToFirebase(CoreApplication.getInstance().getDeviceId(), strEmail);
+                    relPrivacyEmail.setVisibility(View.GONE);
+
+
+                    viewFlipperEmail.setInAnimation(this, R.anim
+                            .in_from_right_email);
+                    viewFlipperEmail.setOutAnimation(this, R.anim
+                            .out_to_left_email);
+                    viewFlipperEmail.showNext();
+                }
+
+                break;
+
+            case R.id.btnEnable:
+                if (!permissionUtil.hasGiven(PermissionUtil
+                        .WRITE_EXTERNAL_STORAGE_PERMISSION)) {
+
+                    try {
+                        TedPermission.with(this)
+                                .setPermissionListener(new PermissionListener() {
+                                    @Override
+                                    public void onPermissionGranted() {
+                                        finish();
+                                    }
+
+                                    @Override
+                                    public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+
+                                    }
+                                })
+                                .setDeniedMessage(R.string.msg_permission_denied)
+                                .setPermissions(new String[]{
+
+                                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                        Manifest
+                                                .permission
+                                                .READ_EXTERNAL_STORAGE,})
+                                .check();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
                     finish();
                 }
                 break;

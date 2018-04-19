@@ -70,8 +70,6 @@ public class FeedbackFragment extends CoreFragment {
     String selectedItemText = "";
 
 
-    @SystemService
-    TelephonyManager telephonyManager;
 
 
 
