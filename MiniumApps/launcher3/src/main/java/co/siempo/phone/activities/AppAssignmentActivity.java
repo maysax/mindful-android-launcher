@@ -77,8 +77,6 @@ public class AppAssignmentActivity extends CoreActivity {
         mainListItem = (MainListItem) getIntent().getSerializableExtra(Constants.INTENT_MAINLISTITEM);
         if (mainListItem != null) {
             set = PrefSiempo.getInstance(this).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
-            filterList();
-            initView();
         } else {
             finish();
         }
@@ -88,6 +86,10 @@ public class AppAssignmentActivity extends CoreActivity {
     protected void onResume() {
         super.onResume();
         startTime = System.currentTimeMillis();
+        //Added to refresh if app is marked as non-junk by navigating to Flag
+        // Junk Apps directly from this screen
+        filterList();
+        initView();
 
     }
 
