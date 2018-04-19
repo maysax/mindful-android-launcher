@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
 
     <co.siempo.phone.customviews.RobotoCondensedTextView
         android:id="@+id/title"
@@ -13,5 +13,5 @@
         android:paddingRight="55dp"
         android:text="@string/flag_app"
         android:textColor="@color/white"
-        android:textSize="20sp" />
+        android:textSize="20sp"/>
 </LinearLayout>

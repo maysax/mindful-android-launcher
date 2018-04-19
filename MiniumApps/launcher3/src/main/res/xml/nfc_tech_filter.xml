@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="UnusedResources">
+           tools:ignore="UnusedResources">
     <tech-list>
         <tech>android.nfc.tech.IsoDep</tech>
     </tech-list>

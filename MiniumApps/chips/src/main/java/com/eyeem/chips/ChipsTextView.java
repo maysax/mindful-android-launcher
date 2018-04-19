@@ -89,7 +89,8 @@ public class ChipsTextView extends View {
 
         final LayoutBuild currentLayout = getLayoutBuild();
 
-        if (currentLayout != null && text.equals(currentLayout.getSpannable())) return;
+        if (currentLayout != null && text.equals(currentLayout.getSpannable()))
+            return;
 
         doBuild(text);
     }

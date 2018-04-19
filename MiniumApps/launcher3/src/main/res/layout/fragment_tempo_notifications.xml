@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_pause"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/layout_bg"
-    android:orientation="vertical">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/activity_pause"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/layout_bg"
+              android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:background="@color/toolbar_bg"
             android:elevation="@dimen/dp_5"
-            android:minHeight="?android:attr/actionBarSize" />
+            android:minHeight="?android:attr/actionBarSize"/>
 
         <ScrollView
             android:layout_width="match_parent"
@@ -50,7 +50,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
                             android:layout_marginTop="3dp"
-                            android:src="@drawable/ic_tempo_dailog" />
+                            android:src="@drawable/ic_tempo_dailog"/>
 
 
                         <co.siempo.phone.customviews.RobotoRegularTextView
@@ -63,7 +63,7 @@
                             android:layout_toRightOf="@+id/img_tempo"
                             android:text="@string/notification_interrupt_title"
                             android:textSize="18sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"/>
 
                         <co.siempo.phone.customviews.RobotoRegularTextView
                             android:id="@+id/txtAllowAppsText"
@@ -75,7 +75,7 @@
                             android:layout_marginTop="5dp"
                             android:layout_toRightOf="@+id/img_tempo"
                             android:text="@string/notification_interrupt_description"
-                            android:textSize="16sp" />
+                            android:textSize="16sp"/>
 
                     </RelativeLayout>
                 </RelativeLayout>
@@ -97,7 +97,7 @@
                         android:padding="8dp"
                         android:text="@string/allow_peaking"
                         android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"/>
 
                     <LinearLayout
                         android:id="@+id/lin"
@@ -113,7 +113,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginRight="8dp"
-                            android:clickable="false" />
+                            android:clickable="false"/>
                     </LinearLayout>
 
                     <co.siempo.phone.customviews.RobotoRegularTextView
@@ -129,7 +129,7 @@
                         android:paddingRight="8dp"
                         android:paddingTop="0dp"
                         android:text="@string/msg_allowpeaking"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"/>
 
                 </RelativeLayout>
             </LinearLayout>

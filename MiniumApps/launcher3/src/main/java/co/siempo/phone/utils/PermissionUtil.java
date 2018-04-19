@@ -59,7 +59,8 @@ public class PermissionUtil {
                 return hasAppPermissions(Manifest.permission.READ_CONTACTS)
                         && hasAppPermissions(Manifest.permission.WRITE_CONTACTS);
             case CALL_PHONE_PERMISSION:
-                return hasAppPermissions(Manifest.permission.CALL_PHONE);
+                return hasAppPermissions(Manifest.permission.CALL_PHONE) &&
+                        hasAppPermissions(Manifest.permission.READ_PHONE_STATE);
             case SEND_SMS_PERMISSION:
                 return hasAppPermissions(Manifest.permission.RECEIVE_SMS) &&
                         hasAppPermissions(Manifest.permission.SEND_SMS)

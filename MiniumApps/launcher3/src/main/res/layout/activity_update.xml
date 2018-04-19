@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="co.siempo.phone.ui.UpdateActivity">
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             android:fitsSystemWindows="true"
+                                             tools:context="co.siempo.phone.ui.UpdateActivity">
 
     <WebView
         android:id="@+id/webView"
@@ -17,7 +17,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:background="@color/material.core.cyan"
-        tools:ignore="UnusedIds" />
+        tools:ignore="UnusedIds"/>
 
     <ProgressBar
         android:id="@+id/pBar"
@@ -31,6 +31,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="UnusedIds" />
+        tools:ignore="UnusedIds"/>
 
 </android.support.constraint.ConstraintLayout>

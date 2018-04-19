@@ -60,6 +60,7 @@ public class DashboardActivity extends CoreActivity {
     AppUpdaterUtils appUpdaterUtils;
     boolean isApplicationLaunch = false;
     NotificationManager notificationManager;
+    int swipeCount;
     private Window mWindow;
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
@@ -88,15 +89,16 @@ public class DashboardActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!PrefSiempo.getInstance(this).read(PrefSiempo.USER_SEEN_EMAIL_REQUEST, false)) {
+        permissionUtil = new PermissionUtil(this);
+        if (!PrefSiempo.getInstance(this).read(PrefSiempo
+                .USER_SEEN_EMAIL_REQUEST, false) || !permissionUtil.hasGiven
+                (PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)) {
             Intent intent = new Intent(this, EmailRequestActivity.class);
             startActivity(intent);
         }
 
 
     }
-
-    int swipeCount;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -256,10 +258,7 @@ public class DashboardActivity extends CoreActivity {
         Log.d(TAG, "Active network..");
         connectivityManager = (ConnectivityManager) getSystemService(Context
                 .CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = null;
-        if (connectivityManager != null) {
-            activeNetwork = connectivityManager.getActiveNetworkInfo();
-        }
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
         if (activeNetwork != null) {
             if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
                 ApiClient_.getInstance_(DashboardActivity.this)

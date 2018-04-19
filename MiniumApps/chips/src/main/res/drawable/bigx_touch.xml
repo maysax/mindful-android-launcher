@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraText">
     \
-    <item android:drawable="@drawable/bigxactive" android:state_pressed="true" /> <!-- pressed -->
-    <item android:drawable="@drawable/bigxactive" android:state_focused="true" /> <!-- focused -->
-    <item android:drawable="@drawable/bigx" /> <!-- default -->
+    <item android:drawable="@drawable/bigxactive" android:state_pressed="true"/> <!-- pressed -->
+    <item android:drawable="@drawable/bigxactive" android:state_focused="true"/> <!-- focused -->
+    <item android:drawable="@drawable/bigx"/> <!-- default -->
 </selector>

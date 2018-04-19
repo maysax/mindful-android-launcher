@@ -59,7 +59,7 @@ public class EnableTempoActivity extends CoreActivity {
                     startActivityForResult(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS), PermissionUtil.NOTIFICATION_ACCESS);
                 } else if (btnSubmit.getText().toString().equalsIgnoreCase("Enable Setting B")) {
                     askForPermission(new String[]{
-                            Manifest.permission.CALL_PHONE});
+                            Manifest.permission.CALL_PHONE, Manifest.permission.READ_PHONE_STATE});
                 } else if (btnSubmit.getText().toString().equalsIgnoreCase("Enable Setting C")) {
                     Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -80,7 +80,7 @@ public class EnableTempoActivity extends CoreActivity {
                     .setPermissionListener(new PermissionListener() {
                         @Override
                         public void onPermissionGranted() {
-                            onResume();
+                            bindUi();
                         }
 
                         @Override
@@ -100,21 +100,25 @@ public class EnableTempoActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        bindUi();
+    }
+
+    private void bindUi() {
         if (!permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) {
             imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshottop));
-            imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progressmeter_a));
+            imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_a));
             btnSubmit.setText("Enable Setting A");
         } else if (!permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)) {
             imgCenter.setBackground(null);
-            imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progressmeter_b));
+            imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_b));
             btnSubmit.setText("Enable Setting B");
         } else if (!PackageUtil.isSiempoLauncher(this)) {
             imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshottop1));
-            imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progressmeter_c));
+            imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_c));
             btnSubmit.setText("Enable Setting C");
         } else {
             imgCenter.setBackground(null);
-            imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progressmeter_d));
+            imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_d));
             btnSubmit.setBackground(ContextCompat.getDrawable(this, R.drawable.button_bg_enable));
             btnSubmit.setText("TEMPO IS ENABLED!");
             new Handler().postDelayed(new Runnable() {
