@@ -454,6 +454,10 @@
     <string name="msg_permission_denied">"If you reject this permission,you can not use Siempo\nPlease turn on permissions at [Setting] > [Permission]"</string>
     <string name="no_app_found_or_no_relevant_app">No app found or no relevant app</string>
     <string name="not_now">Not Now</string>
-    <string name="let_s_get_started">Let\'s get started!</string>
+    <string name="later_string">Later</string>
+    <string name="let_s_get_started">"Let\'s get started!"</string>
+    <string name="make_your_home_string">"\u2022  Make your homescreen distraction free\n\u2022  Schedule focus time without interuptions\n\u2022  Flag apps that you\'re prone to overuse\n\u2022  Tidy app menus and muted app icons"</string>
+    <string name="would_you_like_to">Would you like to make Siempo \nyour default Home app?
+</string>
 
 </resources>
