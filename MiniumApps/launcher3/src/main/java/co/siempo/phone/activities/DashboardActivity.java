@@ -79,7 +79,7 @@ public class DashboardActivity extends CoreActivity {
      */
     private DashboardPagerAdapter mPagerAdapter;
     private AlertDialog notificationDialog;
-    private Dialog dialog;
+    private Dialog overlayDialog;
 
     /**
      * @return True if {@link android.service.notification.NotificationListenerService} is enabled.
@@ -125,14 +125,14 @@ public class DashboardActivity extends CoreActivity {
         mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         defaultStatusBarColor = mWindow.getStatusBarColor();
         Log.d("Test", "P2");
-        dialog = new Dialog(this, 0);
+        overlayDialog = new Dialog(this, 0);
         showOverlayOfDefaultLauncher();
 
 
     }
 
     private void showOverlayOfDefaultLauncher() {
-        if (!UIUtils.isMyLauncherDefault(this) && !dialog.isShowing()) {
+        if (!UIUtils.isMyLauncherDefault(this) && !overlayDialog.isShowing()) {
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -230,7 +230,7 @@ public class DashboardActivity extends CoreActivity {
         loadPane();
         if (PrefSiempo.getInstance(this).read(PrefSiempo
                 .IS_APP_INSTALLED_FIRSTTIME, true)) {
-            Log.d(TAG, "Display upgrade dialog.");
+            Log.d(TAG, "Display upgrade overlayDialog.");
             checkUpgradeVersion();
         }
     }
@@ -440,22 +440,22 @@ public class DashboardActivity extends CoreActivity {
     private void showOverLay() {
         try {
             this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            dialog = new Dialog(this, 0);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.layout_default_launcher);
-            dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+            overlayDialog = new Dialog(this, 0);
+            overlayDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            overlayDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            overlayDialog.setContentView(R.layout.layout_default_launcher);
+            overlayDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
 
-            //dialog.setCancelable(false);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.show();
+            //overlayDialog.setCancelable(false);
+            overlayDialog.setCanceledOnTouchOutside(false);
+            overlayDialog.show();
 
-            Button btnEnable = (Button) dialog.findViewById(R.id.btnEnable);
-            Button btnLater = (Button) dialog.findViewById(R.id.btnLater);
+            Button btnEnable = (Button) overlayDialog.findViewById(R.id.btnEnable);
+            Button btnLater = (Button) overlayDialog.findViewById(R.id.btnLater);
             btnEnable.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    dialog.dismiss();
+                    overlayDialog.dismiss();
                     Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
@@ -466,7 +466,7 @@ public class DashboardActivity extends CoreActivity {
             btnLater.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    dialog.dismiss();
+                    overlayDialog.dismiss();
                 }
             });
         } catch (Exception e) {
