@@ -145,13 +145,12 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
                 startActivity(intent);
                 break;
             case R.id.btnNotNow:
-                UIUtils.hideSoftKeyboard(this, getWindow().getDecorView().getWindowToken());
                 PrefSiempo.getInstance(this).write(PrefSiempo.USER_SEEN_EMAIL_REQUEST, true);
-                relPrivacyEmail.setVisibility(View.GONE);
-                viewFlipperEmail.setInAnimation(this, R.anim.in_from_right_email);
-                viewFlipperEmail.setOutAnimation(this, R.anim.out_to_left_email);
-                viewFlipperEmail.setFlipInterval(1000);
-                viewFlipperEmail.showNext();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    flipView();
+                } else {
+                    finish();
+                }
                 break;
             case R.id.btnContinue:
                 String strEmail = autoCompleteTextViewEmail.getText().toString();
@@ -161,13 +160,16 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
                     PrefSiempo.getInstance(this).write(PrefSiempo
                             .USER_EMAILID, strEmail);
                     storeDataToFirebase(CoreApplication.getInstance().getDeviceId(), strEmail);
-                    relPrivacyEmail.setVisibility(View.GONE);
-                    viewFlipperEmail.setInAnimation(this, R.anim
-                            .in_from_right_email);
-                    viewFlipperEmail.setOutAnimation(this, R.anim
-                            .out_to_left_email);
-                    UIUtils.hideSoftKeyboard(this, getWindow().getDecorView().getWindowToken());
-                    viewFlipperEmail.showNext();
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        flipView();
+                    } else {
+                        finish();
+                    }
+                }
+                else
+                {
+                    txtErrorMessage.setVisibility(View.VISIBLE);
                 }
 
                 break;
@@ -207,6 +209,14 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
             default:
                 break;
         }
+    }
+
+    private void flipView() {
+        UIUtils.hideSoftKeyboard(this, getWindow().getDecorView().getWindowToken());
+        relPrivacyEmail.setVisibility(View.GONE);
+        viewFlipperEmail.setInAnimation(this, R.anim.in_from_right_email);
+        viewFlipperEmail.setOutAnimation(this, R.anim.out_to_left_email);
+        viewFlipperEmail.showNext();
     }
 
     private void storeDataToFirebase(String userId, String emailId) {
