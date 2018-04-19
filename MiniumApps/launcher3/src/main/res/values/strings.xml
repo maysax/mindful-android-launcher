@@ -462,5 +462,8 @@
     <string name="we_respect_your_privacy_and_do_not_tolerate_spam_your_email_allows_us_to_send_occassional_important_announcements_about_your_account_we_will_never_sell_or_give_away_your_email_to_any_third_party">We respect your privacy and do not tolerate spam. Your email allows us to send occassional important announcements about your account. We will never sell or give away your email to any third party.</string>
     <string name="learn_more_on_our">Learn more on our</string>
     <string name="enable_tempo">Enable Tempo</string>
-
+    <string name="later_string">Later</string>
+    <string name="make_your_home_string">"\u2022  Make your homescreen distraction free\n\u2022  Schedule focus time without interuptions\n\u2022  Flag apps that you\'re prone to overuse\n\u2022  Tidy app menus and muted app icons"</string>
+    <string name="would_you_like_to">Would you like to make Siempo \nyour default Home app?
+</string>
 </resources>
