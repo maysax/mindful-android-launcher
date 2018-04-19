@@ -31,7 +31,6 @@ import com.gun0912.tedpermission.TedPermission;
 import java.util.ArrayList;
 
 import co.siempo.phone.R;
-import co.siempo.phone.adapters.EmailListAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.UserModel;
 import co.siempo.phone.utils.PermissionUtil;
@@ -39,7 +38,6 @@ import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 
 public class EmailRequestActivity extends CoreActivity implements View.OnClickListener {
-    EmailListAdapter arrayAdapter;
     private Button btnNotNow, btnContinue;
     private TextView txtPrivacy, txtErrorMessage;
     private TextInputEditText autoCompleteTextViewEmail;
@@ -83,12 +81,12 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             autoCompleteTextViewEmail.setAutofillHints(View.AUTOFILL_HINT_EMAIL_ADDRESS);
         }
-//        addAdapterToViews();
         txtPrivacy = findViewById(R.id.txtPrivacy);
         txtErrorMessage = findViewById(R.id.txtErrorMessage);
         txtPrivacy.setOnClickListener(this);
         btnNotNow.setOnClickListener(this);
         btnContinue.setOnClickListener(this);
+        txtErrorMessage.setVisibility(View.INVISIBLE);
         btnEnable.setOnClickListener(this);
         if (PrefSiempo.getInstance(this).read(PrefSiempo
                 .USER_SEEN_EMAIL_REQUEST, false)) {
@@ -120,7 +118,6 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!TextUtils.isEmpty(autoCompleteTextViewEmail.getText().toString())) {
                     String val_email = autoCompleteTextViewEmail.getText().toString().trim();
-//                    arrayAdapter.getFilter().filter(val_email);
                     boolean isValidEmail = UIUtils.isValidEmail(val_email);
                     if (isValidEmail) {
                         txtErrorMessage.setVisibility(View.INVISIBLE);
@@ -139,23 +136,6 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
             }
         });
     }
-    // used if we load using permission.
-//    private void addAdapterToViews() {
-//
-//        Account[] accounts = AccountManager.get(this).getAccounts();
-//        Set<String> emailSet = new HashSet<String>();
-//        for (Account account : accounts) {
-//            if (UIUtils.isValidEmail(account.name)) {
-//                emailSet.add(account.name);
-//            }
-//
-//        }
-//        autoCompleteTextViewEmail.setThreshold(0);
-//        ArrayList<String> list = new ArrayList<String>(emailSet);
-//        arrayAdapter = new EmailListAdapter(this, R.layout.email_row, list);
-//        autoCompleteTextViewEmail.setAdapter(arrayAdapter);
-//        arrayAdapter.notifyDataSetChanged();
-//    }
 
     @Override
     public void onClick(View v) {
@@ -165,13 +145,13 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
                 startActivity(intent);
                 break;
             case R.id.btnNotNow:
+                UIUtils.hideSoftKeyboard(this, getWindow().getDecorView().getWindowToken());
                 PrefSiempo.getInstance(this).write(PrefSiempo.USER_SEEN_EMAIL_REQUEST, true);
                 relPrivacyEmail.setVisibility(View.GONE);
                 viewFlipperEmail.setInAnimation(this, R.anim.in_from_right_email);
                 viewFlipperEmail.setOutAnimation(this, R.anim.out_to_left_email);
                 viewFlipperEmail.setFlipInterval(1000);
                 viewFlipperEmail.showNext();
-
                 break;
             case R.id.btnContinue:
                 String strEmail = autoCompleteTextViewEmail.getText().toString();
@@ -182,12 +162,11 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
                             .USER_EMAILID, strEmail);
                     storeDataToFirebase(CoreApplication.getInstance().getDeviceId(), strEmail);
                     relPrivacyEmail.setVisibility(View.GONE);
-
-
                     viewFlipperEmail.setInAnimation(this, R.anim
                             .in_from_right_email);
                     viewFlipperEmail.setOutAnimation(this, R.anim
                             .out_to_left_email);
+                    UIUtils.hideSoftKeyboard(this, getWindow().getDecorView().getWindowToken());
                     viewFlipperEmail.showNext();
                 }
 

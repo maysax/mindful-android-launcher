@@ -27,7 +27,6 @@ public class RobotoMediumTextView extends AppCompatTextView {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
     }
 }
