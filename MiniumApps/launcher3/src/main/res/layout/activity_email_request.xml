@@ -2,14 +2,14 @@
 
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:focusableInTouchMode="true"
-    android:background="@color/bg_permissionscreen"
-    android:orientation="vertical"
-    tools:context=".activities.EmailRequestActivity">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/bg_permissionscreen"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical"
+                tools:context=".activities.EmailRequestActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -74,6 +74,7 @@
                         android:id="@+id/inputEmail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColorHint="@color/dialog_blue"
                         app:hintTextAppearance="@style/TextLabel">
 
                         <android.support.design.widget.TextInputEditText
@@ -81,11 +82,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autofillHints="em"
-                            android:focusedByDefault="false"
                             android:focusableInTouchMode="true"
+                            android:focusedByDefault="false"
                             android:hint="Your email address"
                             android:inputType="textEmailAddress"
-                            android:textColor="@color/dialog_title"
+                            android:textColorHint="@color/dialog_blue"
                             android:textSize="@dimen/sp_16"/>
 
                     </android.support.design.widget.TextInputLayout>
@@ -99,11 +100,11 @@
                         android:layout_centerInParent="true"
                         android:layout_marginTop="@dimen/dp_1"
                         android:gravity="center"
-                        android:visibility="invisible"
                         android:paddingLeft="@dimen/dp_3"
                         android:text="@string/error_email"
                         android:textColor="#FF4291"
-                        android:textSize="12sp"/>
+                        android:textSize="12sp"
+                        android:visibility="invisible"/>
 
 
                 </LinearLayout>

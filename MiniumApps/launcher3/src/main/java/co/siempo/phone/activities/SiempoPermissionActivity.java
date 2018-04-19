@@ -237,6 +237,25 @@ public class SiempoPermissionActivity extends CoreActivity {
                 tblLocation.setVisibility(View.GONE);
             }
             txtPermissionLabel.setText(getString(R.string.permission_siempo_alpha_title));
+
+
+            if (permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)) {
+                tblCalls.setVisibility(View.VISIBLE);
+            }
+            if (permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)) {
+                tblSMS.setVisibility(View.VISIBLE);
+            }
+            if (permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)) {
+                tblStorage.setVisibility(View.VISIBLE);
+            }
+            if (permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) {
+                tblNotification.setVisibility(View.VISIBLE);
+            }
+            if (permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)) {
+                tblContact.setVisibility(View.VISIBLE);
+            }
+
+
         }
         if (isFromHome &&
                 permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
