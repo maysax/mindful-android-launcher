@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/linearList"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="?attr/selectableItemBackground"
-              android:gravity="center"
-              android:orientation="vertical"
-              android:padding="5dp"
-              android:showDividers="none"
-              tools:ignore="UseCompoundDrawables">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearList"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="5dp"
+    android:showDividers="none"
+    tools:ignore="UseCompoundDrawables">
 
     <ImageView
         android:id="@+id/imv_appicon"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:src="@drawable/abc_btn_check_material"
-        tools:ignore="ContentDescription,PrivateResource"/>
+        tools:ignore="ContentDescription,PrivateResource" />
 
     <co.siempo.phone.customviews.RobotoCondensedTextView
         android:id="@+id/txt_app_name"
@@ -32,5 +32,5 @@
         android:text="Sound"
         android:textColor="#000000"
         android:textSize="14sp"
-        tools:ignore="HardcodedText"/>
+        tools:ignore="HardcodedText" />
 </LinearLayout>

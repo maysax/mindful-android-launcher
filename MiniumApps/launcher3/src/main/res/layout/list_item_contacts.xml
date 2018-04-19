@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/linearList"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-              tools:ignore="UseCompoundDrawables,UselessParent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearList"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:ignore="UseCompoundDrawables,UselessParent">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="18dp"
             android:layout_marginTop="9dp"
-            android:gravity="center_vertical"/>
+            android:gravity="center_vertical" />
 
         <co.siempo.phone.customviews.RobotoCondensedTextView
             android:id="@+id/text"
@@ -35,7 +35,7 @@
             android:lines="1"
             android:textColor="#DE000000"
             android:textSize="@dimen/sp_16"
-            tools:text="John Doe"/>
+            tools:text="John Doe" />
 
         <co.siempo.phone.customviews.RobotoRegularTextView
             android:id="@+id/txtNumber"
@@ -50,7 +50,7 @@
             android:textColor="#8b000000"
             android:textSize="@dimen/text.size.medium"
             android:visibility="gone"
-            tools:text="+1-555-12345"/>
+            tools:text="+1-555-12345" />
 
     </RelativeLayout>
 
@@ -60,5 +60,5 @@
         android:layout_height="4dp"
         android:layout_marginLeft="@dimen/dp_10"
         android:layout_marginRight="@dimen/dp_10"
-        android:background="@android:color/transparent"/>
+        android:background="@android:color/transparent" />
 </LinearLayout>

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
-import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,7 +13,6 @@ import com.joanzapata.iconify.IconDrawable;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.ViewById;
 
 import co.siempo.phone.R;

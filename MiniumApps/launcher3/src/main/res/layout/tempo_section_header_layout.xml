@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/headerList"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@color/find_friends_tw_bg"
-              android:gravity="center"
-              android:orientation="horizontal"
-              android:padding="16dp"
-              android:showDividers="none"
-              tools:ignore="UseCompoundDrawables">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/headerList"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/find_friends_tw_bg"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:showDividers="none"
+    tools:ignore="UseCompoundDrawables">
 
 
     <co.siempo.phone.customviews.RobotoRegularTextView
@@ -27,7 +27,7 @@
         android:textColor="#ffffff"
         android:textSize="18sp"
         android:textStyle="bold"
-        tools:ignore="HardcodedText"/>
+        tools:ignore="HardcodedText" />
 
 
     <TextView
@@ -39,7 +39,7 @@
         android:gravity="center_vertical"
         android:text="(OK)"
         android:textColor="#ffffff"
-        android:textSize="14sp"/>
+        android:textSize="14sp" />
 
 
 </LinearLayout>

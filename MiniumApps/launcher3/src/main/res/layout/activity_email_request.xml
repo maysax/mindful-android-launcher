@@ -86,7 +86,7 @@
                             android:focusedByDefault="false"
                             android:hint="Your email address"
                             android:inputType="textEmailAddress"
-                            android:textColorHint="@color/dialog_blue"
+                            android:textColor="@color/dialog_title"
                             android:textSize="@dimen/sp_16"/>
 
                     </android.support.design.widget.TextInputLayout>
@@ -100,11 +100,11 @@
                         android:layout_centerInParent="true"
                         android:layout_marginTop="@dimen/dp_1"
                         android:gravity="center"
+                        android:textSize="12sp"
                         android:paddingLeft="@dimen/dp_3"
                         android:text="@string/error_email"
                         android:textColor="#FF4291"
-                        android:textSize="12sp"
-                        android:visibility="invisible"/>
+                        android:visibility="invisible" />
 
 
                 </LinearLayout>

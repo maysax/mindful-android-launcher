@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/popup_window"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_gravity="bottom|center"
-              android:background="@android:color/white"
-              android:orientation="vertical"
-              android:padding="10dp">
+    android:id="@+id/popup_window"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|center"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:padding="10dp">
 
     <co.siempo.phone.customviews.RobotoRegularTextView
         android:id="@+id/txt_uninstall"
@@ -17,7 +17,7 @@
         android:gravity="center_vertical"
         android:padding="16dp"
         android:text="Uninstall"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <co.siempo.phone.customviews.RobotoRegularTextView
         android:id="@+id/txt_detail"
@@ -28,7 +28,7 @@
         android:gravity="center_vertical"
         android:padding="16dp"
         android:text="App Info"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 </LinearLayout>
 
 
