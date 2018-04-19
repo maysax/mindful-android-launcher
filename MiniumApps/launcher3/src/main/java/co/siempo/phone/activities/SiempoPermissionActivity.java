@@ -210,7 +210,7 @@ public class SiempoPermissionActivity extends CoreActivity {
 
             if (Build.VERSION.SDK_INT >= 23) {
 //                tblContact.setVisibility(View.VISIBLE);
-//                tblCalls.setVisibility(View.VISIBLE);
+                tblCalls.setVisibility(View.VISIBLE);
                 tblDrawOverlay.setVisibility(View.GONE);
 //                tblStorage.setVisibility(View.VISIBLE);
                 tblNotification.setVisibility(View.VISIBLE);
