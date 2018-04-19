@@ -98,8 +98,9 @@ public class DashboardActivity extends CoreActivity {
         super.onResume();
         permissionUtil = new PermissionUtil(this);
         if (!PrefSiempo.getInstance(this).read(PrefSiempo
-                .USER_SEEN_EMAIL_REQUEST, false) || !permissionUtil.hasGiven
-                (PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)) {
+                .USER_SEEN_EMAIL_REQUEST, false) || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && !permissionUtil.hasGiven
+                (PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION))) {
             Intent intent = new Intent(this, EmailRequestActivity.class);
             startActivity(intent);
         }

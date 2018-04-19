@@ -653,6 +653,10 @@ public class PaneFragment extends CoreFragment {
                 isSearchVisable = false;
                 linPane.setAlpha(1);
                 imageClear.setVisibility(View.VISIBLE);
+                //SSA-1458 to clear searchLayout.
+                if (searchLayout != null && chipsEditText != null && chipsEditText.getText().toString().length() > 0) {
+                    searchLayout.txtSearchBox.setText("");
+                }
             }
         }
     }
