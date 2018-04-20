@@ -96,20 +96,24 @@ public class SearchLayout extends CardView {
         EventBus.getDefault().unregister(this);
     }
 
+    private static final String TAG = "SearchLayout";
+
     void setupViews() {
-        txtSearchBox.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
+        txtSearchBox.addTextChangedListener(new TextWatcherExtended() {
             @Override
             public void afterTextChanged(Editable s) {
-                handleAfterTextChanged(s.toString());
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count, boolean backSpace) {
+                if (start <= 2 && s.toString().equals("@") && backSpace) {
+
+                } else if (s.toString().length() == 1 && s.toString().equals("@") && backSpace) {
+                    txtSearchBox.setText("");
+                } else {
+                    handleAfterTextChanged(s.toString());
+                }
                 DashboardActivity.isTextLenghGreater = s.toString();
             }
         });
@@ -205,5 +209,23 @@ public class SearchLayout extends CardView {
                 formattedTxt += item.getTitle();
             }
         }
+    }
+
+    public abstract class TextWatcherExtended implements TextWatcher {
+        private int lastLength;
+
+        public abstract void onTextChanged(CharSequence charSequence, int start, int before, int count, boolean backSpace);
+
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            lastLength = s.length();
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            onTextChanged(charSequence, i, i1, i2, lastLength > charSequence.length());
+        }
+
     }
 }
