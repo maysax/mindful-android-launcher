@@ -18,7 +18,8 @@ public class Utils {
     public final static String TEXT_FIRST = "text_first";
     public final static String TAGS_FIRST = "tags_first";
     public final static String NONE = "none";
-
+    public final static String KEYBOARD_ACTION = "keyboard_action";
+    public final static String ACTION = "action";
     public static String flatten(EditText editor, HashMap<Class<?>, FlatteningFactory> factories) {
         try {
             return flatten(editor.getText(), factories);

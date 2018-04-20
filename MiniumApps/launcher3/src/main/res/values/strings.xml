@@ -237,7 +237,7 @@
     <string name="btn_enable">Enable</string>
     <string name="to_help_you_storage">"To help you understand your current phone habits, Siempo needs permission to store information on this device.  We do not read your private files or collect information about files on your device."</string>
     <string name="userid">UserId:</string>
-    <string name="deliver_notifications">Deliver notifications:</string>
+    <string name="deliver_notifications">When do you want notifications?</string>
     <string name="individually_as_soon_as_they_arrive">Individually, as soon as they arrive</string>
     <string name="batched_every_15_minutes">Batched, every 15 minutes</string>
     <string name="batched_every_30_minutes">Batched, every 30 minutes</string>
