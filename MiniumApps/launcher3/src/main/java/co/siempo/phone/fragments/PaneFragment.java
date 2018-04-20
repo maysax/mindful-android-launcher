@@ -895,7 +895,6 @@ public class PaneFragment extends CoreFragment {
                                 overlayDialog.dismiss();
                                 //Start Flagging activity
                                 if (pagerPane != null && pagerPane.getCurrentItem() == 0) {
-//                                    if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>()).size() == 0) {
                                     //Applied for smooth transition
                                     Intent intent = new Intent(getActivity(), JunkfoodFlaggingActivity.class);
                                     startActivity(intent);
@@ -903,7 +902,6 @@ public class PaneFragment extends CoreFragment {
                                             .anim.in_from_left_tour, R.anim
                                             .out_to_right_tour);
                                     DashboardActivity.currentIndexPaneFragment = 0;
-//                                    }
                                 }
 
                                 break;
