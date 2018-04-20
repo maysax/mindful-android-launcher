@@ -327,19 +327,35 @@ public class PaneFragment extends CoreFragment {
             updateListViewLayout(false);
         }
 
-        if (PrefSiempo.getInstance(context).read(PrefSiempo
-                .APPLAND_TOUR_SEEN, false) && PrefSiempo.getInstance(context)
-                .read(PrefSiempo
-                        .IS_AUTOSCROLL, false) && pagerPane
-                .getCurrentItem() == 0) {
-            pagerPane.setCurrentItem(1);
-            //delay
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+
+        try {
+            if (PrefSiempo.getInstance(context).read(PrefSiempo
+                    .APPLAND_TOUR_SEEN, false) && PrefSiempo.getInstance(context).read(PrefSiempo
+                    .IS_AUTOSCROLL, true) && pagerPane
+                    .getCurrentItem() == 0) {
+
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        pagerPane.setCurrentItem(1);
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                pagerPane.setCurrentItem(2);
+                                PrefSiempo.getInstance(context).write(PrefSiempo
+                                        .IS_AUTOSCROLL, false);
+                            }
+                        }, 1000);
+                    }
+                }, 1000);
+
+                //delay
+
+
             }
-            pagerPane.setCurrentItem(2);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -853,9 +869,9 @@ public class PaneFragment extends CoreFragment {
                             case 0:
 
                                 viewFlipper.setInAnimation(context, R.anim
-                                        .out_to_right_tour);
+                                        .in_from_left_tour);
                                 viewFlipper.setOutAnimation(context, R.anim
-                                        .in_from_right_tour);
+                                        .out_to_right_tour);
                                 viewFlipper.setDisplayedChild(1);
                                 txtToolsTitle.setText(R.string.frequently_used_title);
                                 txtNext.setText("2 of 3");
@@ -864,9 +880,9 @@ public class PaneFragment extends CoreFragment {
                                 break;
                             case 1:
                                 viewFlipper.setInAnimation(context, R.anim
-                                        .out_to_right_tour);
+                                        .in_from_left_tour);
                                 viewFlipper.setOutAnimation(context, R.anim
-                                        .in_from_right_tour);
+                                        .out_to_right_tour);
                                 viewFlipper.setDisplayedChild(2);
                                 btnNext.setText(R.string.gotit);
                                 txtToolsTitle.setText(R.string.flagged_app_title);
@@ -884,7 +900,8 @@ public class PaneFragment extends CoreFragment {
                                     Intent intent = new Intent(getActivity(), JunkfoodFlaggingActivity.class);
                                     startActivity(intent);
                                     getActivity().overridePendingTransition(R
-                                            .anim.fade_in_junk, R.anim.fade_out_junk);
+                                            .anim.in_from_left_tour, R.anim
+                                            .out_to_right_tour);
                                     DashboardActivity.currentIndexPaneFragment = 0;
 //                                    }
                                 }

@@ -196,10 +196,7 @@ public class DashboardActivity extends CoreActivity {
 //                        startActivity(intent);
 //                        overridePendingTransition(R
 //                                .anim.fade_in_junk, R.anim.fade_out_junk);
-                    }
-
-
-                    else if (DashboardActivity.currentIndexPaneFragment == 0) {
+                    } else if (DashboardActivity.currentIndexPaneFragment == 0) {
                         Log.d("Firebase", "Junkfood Start");
                         startTime = System.currentTimeMillis();
                     } else if (DashboardActivity.currentIndexPaneFragment == 1) {
@@ -210,7 +207,10 @@ public class DashboardActivity extends CoreActivity {
                         startTime = System.currentTimeMillis();
                     }
 
+
                 } else if (currentIndexDashboard == 0 && i == 1) {
+
+
                     if (DashboardActivity.currentIndexPaneFragment == 0) {
                         Log.d("Firebase", "Junkfood End");
                         FirebaseHelper.getInstance().logScreenUsageTime(JunkFoodPaneFragment.class.getSimpleName(), startTime);
@@ -463,7 +463,9 @@ public class DashboardActivity extends CoreActivity {
 
             //overlayDialog.setCancelable(false);
             overlayDialog.setCanceledOnTouchOutside(false);
-            overlayDialog.show();
+            if (null != mPager && mPager.getCurrentItem() == 1) {
+                overlayDialog.show();
+            }
 
             Button btnEnable = overlayDialog.findViewById(R.id.btnEnable);
             Button btnLater = overlayDialog.findViewById(R.id.btnLater);
