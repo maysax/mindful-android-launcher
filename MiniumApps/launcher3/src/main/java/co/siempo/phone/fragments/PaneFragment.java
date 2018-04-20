@@ -305,7 +305,9 @@ public class PaneFragment extends CoreFragment {
             }
         }
         setToolsPaneDate();
-
+        if (searchLayout != null && searchLayout.getVisibility() == View.VISIBLE) {
+            updateListViewLayout(false);
+        }
     }
 
     private void bindBottomDock() {
@@ -918,14 +920,16 @@ public class PaneFragment extends CoreFragment {
             int val;
             if (b) {
                 val = Math.min(adapter.getCount() * 54, 54 * 4);
+                if (val != 0) val += 8;
+                // extra padding when there is something in listView
+                listView.getLayoutParams().height = UIUtils.dpToPx(getActivity(), val);
+                listView.requestLayout();
             } else {
-                val = Math.min(adapter.getCount() * 54, 54 * 9);
+                listView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                listView.requestLayout();
             }
 
-            if (val != 0) val += 8;
-            // extra padding when there is something in listView
-            listView.getLayoutParams().height = UIUtils.dpToPx(getActivity(), val);
-            listView.requestLayout();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
