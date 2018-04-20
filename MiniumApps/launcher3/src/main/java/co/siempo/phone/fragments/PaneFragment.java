@@ -6,13 +6,14 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -30,6 +31,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import com.eyeem.chips.ChipsEditText;
 
@@ -175,6 +177,23 @@ public class PaneFragment extends CoreFragment {
         }
         setToolsPaneDate();
 
+
+        if (PrefSiempo.getInstance(context).read(PrefSiempo
+                .APPLAND_TOUR_SEEN, false) && PrefSiempo.getInstance(context)
+                .read(PrefSiempo
+                        .IS_AUTOSCROLL, false) && pagerPane
+                .getCurrentItem() == 0) {
+            pagerPane.setCurrentItem(1);
+            //delay
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            pagerPane.setCurrentItem(2);
+        }
+
+
     }
 
     @Override
@@ -215,8 +234,12 @@ public class PaneFragment extends CoreFragment {
 
         //Add condition if got it is clicked
         if (isVisibleToUser && pagerPane != null && pagerPane.getCurrentItem
-                () == 2) {
+                () == 2 && !PrefSiempo.getInstance(context).read(PrefSiempo
+                .APPLAND_TOUR_SEEN, false)) {
             showOverLay();
+        } else if (!isVisibleToUser && null != overlayDialog && overlayDialog
+                .isShowing()) {
+            overlayDialog.dismiss();
         }
 
 
@@ -837,36 +860,92 @@ public class PaneFragment extends CoreFragment {
                 overlayDialog = new Dialog(getActivity(), 0);
                 overlayDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 overlayDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                overlayDialog.setContentView(R.layout.layout_default_launcher);
+                overlayDialog.setContentView(R.layout.layout_appland_tour);
                 overlayDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
 
-                //overlayDialog.setCancelable(false);
+                overlayDialog.setCancelable(false);
                 overlayDialog.setCanceledOnTouchOutside(false);
                 overlayDialog.show();
 
-                Button btnEnable = overlayDialog.findViewById(R.id.btnEnable);
-                Button btnLater = overlayDialog.findViewById(R.id.btnLater);
-                btnEnable.setOnClickListener(new View.OnClickListener() {
+                final ViewFlipper viewFlipper = overlayDialog.findViewById(R.id.viewFlipperTour);
+                final Button btnNext = overlayDialog.findViewById(R.id.btnNext);
+                final TextView txtNext = overlayDialog.findViewById(R.id.txtNext);
+                final TextView txtToolsMessage = overlayDialog.findViewById(R.id.txtToolsMessage);
+                final TextView txtToolsTitle = overlayDialog.findViewById(R.id
+                        .txtToolsTitle);
+                if (viewFlipper.getDisplayedChild() == 0) {
+                    String sourceString = "From this <b>Tools Screen</b>, you " +
+                            "can launch your most helpful apps.  Assign your preferred app to each tool.  Add, change, or rearrange tools as desired.";
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        txtToolsMessage.setText(Html.fromHtml(sourceString, Html
+                                .FROM_HTML_MODE_COMPACT));
+                    } else {
+                        txtToolsMessage.setText(Html.fromHtml(sourceString));
+                    }
+
+                }
+
+                btnNext.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        overlayDialog.dismiss();
-                        Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
+                        switch (viewFlipper.getDisplayedChild()) {
+                            case 0:
+
+                                viewFlipper.setInAnimation(context, R.anim
+                                        .out_to_right_tour);
+                                viewFlipper.setOutAnimation(context, R.anim
+                                        .in_from_right_tour);
+                                viewFlipper.setDisplayedChild(1);
+                                txtToolsTitle.setText(R.string.frequently_used_title);
+                                txtNext.setText("2 of 3");
+                                pagerPane.setCurrentItem(1);
+
+                                break;
+                            case 1:
+                                viewFlipper.setInAnimation(context, R.anim
+                                        .out_to_right_tour);
+                                viewFlipper.setOutAnimation(context, R.anim
+                                        .in_from_right_tour);
+                                viewFlipper.setDisplayedChild(2);
+                                btnNext.setText(R.string.gotit);
+                                txtToolsTitle.setText(R.string.flagged_app_title);
+                                txtNext.setText("3 of 3");
+                                pagerPane.setCurrentItem(0);
+                                break;
+                            case 2:
+                                PrefSiempo.getInstance(context).write(PrefSiempo
+                                        .APPLAND_TOUR_SEEN, true);
+                                overlayDialog.dismiss();
+                                //Start Flagging activity
+                                if (pagerPane != null && pagerPane.getCurrentItem() == 0) {
+//                                    if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>()).size() == 0) {
+                                    //Applied for smooth transition
+                                    Intent intent = new Intent(getActivity(), JunkfoodFlaggingActivity.class);
+                                    startActivity(intent);
+                                    getActivity().overridePendingTransition(R
+                                            .anim.fade_in_junk, R.anim.fade_out_junk);
+                                    DashboardActivity.currentIndexPaneFragment = 0;
+//                                    }
+                                }
+
+                                break;
+
+                        }
+
 
                     }
                 });
 
-                btnLater.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        overlayDialog.dismiss();
-                    }
-                });
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 
     private class OnSwipeTouchListener implements View.OnTouchListener {
@@ -946,5 +1025,4 @@ public class PaneFragment extends CoreFragment {
 
         }
     }
-
 }

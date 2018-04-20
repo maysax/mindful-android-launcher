@@ -24,6 +24,9 @@ public class PrefSiempo {
     public static final String IS_APP_INSTALLED_FIRSTTIME = "is_app_installed_firsttime";
 
     // This field is used to store check application installed first time or not.
+    public static final String IS_AUTOSCROLL = "is_autoscroll";
+
+    // This field is used to store check application installed first time or not.
     public static final String IS_APP_INSTALLED_FIRSTTIME_SHOW_TOOLTIP = "is_app_installed_firsttime_show_tooltip";
 
     // This field is used to store check application installed first time or not.
@@ -85,6 +88,7 @@ public class PrefSiempo {
     public static String HEADER_APPLIST = "HEADER_APPLIST";
     public static String TOGGLE_LEFTMENU = "toggle_leftmenu";
     public static String USER_SEEN_EMAIL_REQUEST = "user_seen_email_request";
+    public static String APPLAND_TOUR_SEEN = "appland_tour_seen";
 
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;

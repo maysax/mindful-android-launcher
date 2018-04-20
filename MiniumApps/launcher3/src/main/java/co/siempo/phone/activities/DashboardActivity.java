@@ -46,6 +46,7 @@ import co.siempo.phone.service.LoadJunkFoodPane;
 import co.siempo.phone.service.LoadToolPane;
 import co.siempo.phone.service.SiempoNotificationListener_;
 import co.siempo.phone.ui.SiempoViewPager;
+import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
@@ -96,7 +97,7 @@ public class DashboardActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        permissionUtil = new PermissionUtil(this);
+
         if (!PrefSiempo.getInstance(this).read(PrefSiempo
                 .USER_SEEN_EMAIL_REQUEST, false) || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && !permissionUtil.hasGiven
@@ -126,6 +127,7 @@ public class DashboardActivity extends CoreActivity {
         mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         defaultStatusBarColor = mWindow.getStatusBarColor();
         Log.d("Test", "P2");
+        permissionUtil = new PermissionUtil(this);
         overlayDialog = new Dialog(this, 0);
         showOverlayOfDefaultLauncher();
 
@@ -133,7 +135,7 @@ public class DashboardActivity extends CoreActivity {
     }
 
     private void showOverlayOfDefaultLauncher() {
-        if (!UIUtils.isMyLauncherDefault(this) && !overlayDialog.isShowing()) {
+        if (!PackageUtil.isSiempoLauncher(this) && !overlayDialog.isShowing()) {
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -141,6 +143,15 @@ public class DashboardActivity extends CoreActivity {
                     showOverLay();
                 }
             }, 1000);
+        }
+
+        //If already shown there is an overlay dialog and user sets siempo as
+        // default launcher from settings or home button then this overlay
+        // needs to be dismissed
+        if (PackageUtil.isSiempoLauncher(this) && null != overlayDialog &&
+                overlayDialog
+                        .isShowing()) {
+            overlayDialog.dismiss();
         }
     }
 
@@ -180,12 +191,15 @@ public class DashboardActivity extends CoreActivity {
                     }
                     FirebaseHelper.getInstance().logScreenUsageTime(IntentionFragment.class.getSimpleName(), startTime);
                     if (currentIndexDashboard == 1 && PrefSiempo.getInstance(DashboardActivity.this).read(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, true)) {
-                        PrefSiempo.getInstance(DashboardActivity.this).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, false);
-                        Intent intent = new Intent(DashboardActivity.this, JunkfoodFlaggingActivity.class);
-                        startActivity(intent);
-                        overridePendingTransition(R
-                                .anim.fade_in_junk, R.anim.fade_out_junk);
-                    } else if (DashboardActivity.currentIndexPaneFragment == 0) {
+//                        PrefSiempo.getInstance(DashboardActivity.this).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, false);
+//                        Intent intent = new Intent(DashboardActivity.this, JunkfoodFlaggingActivity.class);
+//                        startActivity(intent);
+//                        overridePendingTransition(R
+//                                .anim.fade_in_junk, R.anim.fade_out_junk);
+                    }
+
+
+                    else if (DashboardActivity.currentIndexPaneFragment == 0) {
                         Log.d("Firebase", "Junkfood Start");
                         startTime = System.currentTimeMillis();
                     } else if (DashboardActivity.currentIndexPaneFragment == 1) {
