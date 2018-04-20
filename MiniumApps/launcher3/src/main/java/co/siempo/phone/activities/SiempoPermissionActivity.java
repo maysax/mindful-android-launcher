@@ -181,11 +181,11 @@ public class SiempoPermissionActivity extends CoreActivity {
         } else {
             switchCallPermission.setChecked(false);
         }
-//        if (permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)) {
-//            switchSmsPermission.setChecked(true);
-//        } else {
-//            switchSmsPermission.setChecked(false);
-//        }
+        if (permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)) {
+            switchSmsPermission.setChecked(true);
+        } else {
+            switchSmsPermission.setChecked(false);
+        }
 //        if (permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)) {
 //            switchFilePermission.setChecked(true);
 //        } else {
