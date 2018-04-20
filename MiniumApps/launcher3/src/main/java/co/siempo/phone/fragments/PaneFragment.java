@@ -1,7 +1,9 @@
 package co.siempo.phone.fragments;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,6 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.eyeem.chips.ChipsEditText;
+import com.eyeem.chips.Utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -111,6 +114,7 @@ public class PaneFragment extends CoreFragment {
     private ImageView imageClear;
     private View rootView;
     private CircleIndicator indicator;
+    final int MIN_KEYBOARD_HEIGHT_PX = 150;
 
     public PaneFragment() {
         // Required empty public constructor
@@ -139,36 +143,25 @@ public class PaneFragment extends CoreFragment {
         return rootView;
     }
 
+    BroadcastReceiver mKeyBoardReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction() == Utils.KEYBOARD_ACTION) {
+                if (intent.getBooleanExtra(Utils.ACTION, false)) {
+                    updateListViewLayout(true);
+                } else {
+                    updateListViewLayout(false);
+
+                }
+            }
+        }
+    };
+
     @Override
     public void onPause() {
         super.onPause();
         UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        pagerPane.setAlpha(1);
-        if (DashboardActivity.currentIndexPaneFragment == 0 && DashboardActivity.isJunkFoodOpen) {
-            DashboardActivity.currentIndexPaneFragment = 1;
-            DashboardActivity.isJunkFoodOpen = false;
-            pagerPane.setCurrentItem(DashboardActivity.currentIndexPaneFragment, true);
-        }
-        if (DashboardActivity.currentIndexDashboard == 1) {
-            if (DashboardActivity.currentIndexPaneFragment == 0) {
-                Log.d("Firebase", "Junkfood Start");
-                DashboardActivity.startTime = System.currentTimeMillis();
-            } else if (DashboardActivity.currentIndexPaneFragment == 1) {
-                Log.d("Firebase", "Favorite Start");
-                DashboardActivity.startTime = System.currentTimeMillis();
-            } else if (DashboardActivity.currentIndexPaneFragment == 2) {
-                Log.d("Firebase", "Tools Start");
-                DashboardActivity.startTime = System.currentTimeMillis();
-            }
-        }
-        setToolsPaneDate();
-
+        getActivity().unregisterReceiver(mKeyBoardReceiver);
     }
 
     @Override
@@ -288,6 +281,64 @@ public class PaneFragment extends CoreFragment {
         bindSearchView();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().registerReceiver(mKeyBoardReceiver, new IntentFilter(Utils
+                .KEYBOARD_ACTION));
+        pagerPane.setAlpha(1);
+        if (DashboardActivity.currentIndexPaneFragment == 0 && DashboardActivity.isJunkFoodOpen) {
+            DashboardActivity.currentIndexPaneFragment = 1;
+            DashboardActivity.isJunkFoodOpen = false;
+            pagerPane.setCurrentItem(DashboardActivity.currentIndexPaneFragment, true);
+        }
+        if (DashboardActivity.currentIndexDashboard == 1) {
+            if (DashboardActivity.currentIndexPaneFragment == 0) {
+                Log.d("Firebase", "Junkfood Start");
+                DashboardActivity.startTime = System.currentTimeMillis();
+            } else if (DashboardActivity.currentIndexPaneFragment == 1) {
+                Log.d("Firebase", "Favorite Start");
+                DashboardActivity.startTime = System.currentTimeMillis();
+            } else if (DashboardActivity.currentIndexPaneFragment == 2) {
+                Log.d("Firebase", "Tools Start");
+                DashboardActivity.startTime = System.currentTimeMillis();
+            }
+        }
+        setToolsPaneDate();
+        if (searchLayout != null && searchLayout.getVisibility() == View.VISIBLE) {
+            updateListViewLayout(false);
+        }
+    }
+
+    private void bindBottomDock() {
+
+        mLayoutManager = new GridLayoutManager(getActivity(), 4);
+        recyclerViewBottomDoc.setLayoutManager(mLayoutManager);
+        if (itemDecoration != null) {
+            recyclerViewBottomDoc.removeItemDecoration(itemDecoration);
+        }
+        itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_10);
+        recyclerViewBottomDoc.addItemDecoration(itemDecoration);
+        items = CoreApplication.getInstance().getToolBottomItemsList();
+        mAdapter = new ToolsMenuAdapter(getActivity(), CoreApplication.getInstance().isHideIconBranding(), true, items);
+        recyclerViewBottomDoc.setAdapter(mAdapter);
+    }
+
+    private void getColorOfStatusBar() {
+        mWindow = getActivity().getWindow();
+        // clear FLAG_TRANSLUCENT_STATUS flag:
+        if (null != mWindow) {
+            mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+            mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+        }
+    }
+
+    public MainListAdapter getAdapter() {
+        return adapter;
+    }
+
     private void bindViewPager() {
         mPagerAdapter = new PanePagerAdapter(getChildFragmentManager());
         pagerPane.setAdapter(mPagerAdapter);
@@ -316,7 +367,7 @@ public class PaneFragment extends CoreFragment {
             public void onPageSelected(int i) {
 
                 if (i == 0) {
-                      /* Junkfood Pane */
+                    /* Junkfood Pane */
                     if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>()).size() == 0) {
                         //Applied for smooth transition
                         pagerPane.setAlpha(0);
@@ -406,94 +457,6 @@ public class PaneFragment extends CoreFragment {
         if (DashboardActivity.currentIndexPaneFragment == 0) {
             junkFoodAppPane();
         }
-    }
-
-    private void bindBottomDock() {
-
-        mLayoutManager = new GridLayoutManager(getActivity(), 4);
-        recyclerViewBottomDoc.setLayoutManager(mLayoutManager);
-        if (itemDecoration != null) {
-            recyclerViewBottomDoc.removeItemDecoration(itemDecoration);
-        }
-        itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_10);
-        recyclerViewBottomDoc.addItemDecoration(itemDecoration);
-        items = CoreApplication.getInstance().getToolBottomItemsList();
-        mAdapter = new ToolsMenuAdapter(getActivity(), CoreApplication.getInstance().isHideIconBranding(), true, items);
-        recyclerViewBottomDoc.setAdapter(mAdapter);
-    }
-
-    private void getColorOfStatusBar() {
-        mWindow = getActivity().getWindow();
-        // clear FLAG_TRANSLUCENT_STATUS flag:
-        if (null != mWindow) {
-            mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-            mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-        }
-    }
-
-    public MainListAdapter getAdapter() {
-        return adapter;
-    }
-
-    private void bindSearchView() {
-//        //Circular Edit Text
-        router = new TokenRouter();
-        parser = new TokenParser(router, context, mediator);
-        loadView();
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (router != null && searchLayout != null && searchLayout.getTxtSearchBox() != null) {
-                    mediator.listItemClicked(router, position, searchLayout.getTxtSearchBox().getStrText());
-//                    imageClear.performClick();
-                }
-            }
-        });
-        edtSearchToolsRounded.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (searchLayout.getVisibility() == View.GONE) {
-                    hidePaneAndBottomView(context);
-                    listView.setAdapter(adapter);
-                    imageClear.setVisibility(View.VISIBLE);
-                    blueLineDivider.setVisibility(View.GONE);
-                    searchLayout.setVisibility(View.VISIBLE);
-                    searchLayout.getTxtSearchBox().requestFocus();
-                    cardViewEdtSearch.setVisibility(View.VISIBLE);
-                    relSearchTools.setVisibility(View.GONE);
-                    UIUtils.showKeyboard(chipsEditText);
-                    if (adapter != null) {
-                        adapter.getFilter().filter("");
-                    }
-
-                } else {
-                    UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
-                    showPaneAndBottomView(context);
-                    blueLineDivider.setVisibility(View.VISIBLE);
-                    searchLayout.setVisibility(View.GONE);
-                    cardViewEdtSearch.setVisibility(View.GONE);
-                    relSearchTools.setVisibility(View.VISIBLE);
-                    imageClear.setVisibility(View.GONE);
-
-                }
-            }
-        });
-
-        imageClear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (edtSearchToolsRounded != null) {
-                    edtSearchToolsRounded.performClick();
-                }
-                if (searchLayout != null && chipsEditText != null && chipsEditText.getText().toString().length() > 0) {
-                    searchLayout.txtSearchBox.setText("");
-                }
-
-            }
-        });
-
     }
 
     private void junkFoodAppPane() {
@@ -653,6 +616,10 @@ public class PaneFragment extends CoreFragment {
                 isSearchVisable = false;
                 linPane.setAlpha(1);
                 imageClear.setVisibility(View.VISIBLE);
+                //SSA-1458 to clear searchLayout.
+                if (searchLayout != null && chipsEditText != null && chipsEditText.getText().toString().length() > 0) {
+                    searchLayout.txtSearchBox.setText("");
+                }
             }
         }
     }
@@ -888,4 +855,83 @@ public class PaneFragment extends CoreFragment {
         }
     }
 
+    private void bindSearchView() {
+//        //Circular Edit Text
+        router = new TokenRouter();
+        parser = new TokenParser(router, context, mediator);
+        loadView();
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (router != null && searchLayout != null && searchLayout.getTxtSearchBox() != null) {
+                    mediator.listItemClicked(router, position, searchLayout.getTxtSearchBox().getStrText());
+//                    imageClear.performClick();
+                }
+            }
+        });
+        edtSearchToolsRounded.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (searchLayout.getVisibility() == View.GONE) {
+                    hidePaneAndBottomView(context);
+                    listView.setAdapter(adapter);
+                    imageClear.setVisibility(View.VISIBLE);
+                    blueLineDivider.setVisibility(View.GONE);
+                    searchLayout.setVisibility(View.VISIBLE);
+                    searchLayout.getTxtSearchBox().requestFocus();
+                    cardViewEdtSearch.setVisibility(View.VISIBLE);
+                    relSearchTools.setVisibility(View.GONE);
+                    UIUtils.showKeyboard(chipsEditText);
+                    updateListViewLayout(true);
+                    if (adapter != null) {
+                        adapter.getFilter().filter("");
+                    }
+
+                } else {
+                    UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
+                    showPaneAndBottomView(context);
+                    blueLineDivider.setVisibility(View.VISIBLE);
+                    searchLayout.setVisibility(View.GONE);
+                    cardViewEdtSearch.setVisibility(View.GONE);
+                    relSearchTools.setVisibility(View.VISIBLE);
+                    imageClear.setVisibility(View.GONE);
+
+                }
+            }
+        });
+
+        imageClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (edtSearchToolsRounded != null) {
+                    edtSearchToolsRounded.performClick();
+                }
+                if (searchLayout != null && chipsEditText != null && chipsEditText.getText().toString().length() > 0) {
+                    searchLayout.txtSearchBox.setText("");
+                }
+
+            }
+        });
+
+    }
+
+    private void updateListViewLayout(boolean b) {
+        try {
+            int val;
+            if (b) {
+                val = Math.min(adapter.getCount() * 54, 54 * 4);
+                if (val != 0) val += 8;
+                // extra padding when there is something in listView
+                listView.getLayoutParams().height = UIUtils.dpToPx(getActivity(), val);
+                listView.requestLayout();
+            } else {
+                listView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                listView.requestLayout();
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -9,12 +9,13 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -116,23 +117,34 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!TextUtils.isEmpty(autoCompleteTextViewEmail.getText().toString())) {
-                    String val_email = autoCompleteTextViewEmail.getText().toString().trim();
-                    boolean isValidEmail = UIUtils.isValidEmail(val_email);
-                    if (isValidEmail) {
-                        txtErrorMessage.setVisibility(View.INVISIBLE);
-                    } else {
-
-                        txtErrorMessage.setVisibility(View.VISIBLE);
-                    }
-                } else {
-                    txtErrorMessage.setVisibility(View.INVISIBLE);
-                }
+//                if (!TextUtils.isEmpty(autoCompleteTextViewEmail.getText().toString())) {
+//                    String val_email = autoCompleteTextViewEmail.getText().toString().trim();
+//                    boolean isValidEmail = UIUtils.isValidEmail(val_email);
+//                    if (isValidEmail) {
+//                        txtErrorMessage.setVisibility(View.INVISIBLE);
+//                    } else {
+//
+//                        txtErrorMessage.setVisibility(View.VISIBLE);
+//                    }
+//                } else {
+//                    txtErrorMessage.setVisibility(View.INVISIBLE);
+//                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                txtErrorMessage.setVisibility(View.INVISIBLE);
+            }
+        });
 
+        autoCompleteTextViewEmail.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    sendEvent();
+                    return true;
+                }
+                return false;
             }
         });
     }
@@ -153,27 +165,8 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
                 }
                 break;
             case R.id.btnContinue:
-                String strEmail = autoCompleteTextViewEmail.getText().toString();
-                boolean isValidEmail = UIUtils.isValidEmail(strEmail);
-                if (isValidEmail) {
-                    PrefSiempo.getInstance(this).write(PrefSiempo.USER_SEEN_EMAIL_REQUEST, true);
-                    PrefSiempo.getInstance(this).write(PrefSiempo
-                            .USER_EMAILID, strEmail);
-                    storeDataToFirebase(CoreApplication.getInstance().getDeviceId(), strEmail);
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        flipView();
-                    } else {
-                        finish();
-                    }
-                }
-                else
-                {
-                    txtErrorMessage.setVisibility(View.VISIBLE);
-                }
-
+                sendEvent();
                 break;
-
             case R.id.btnEnable:
                 if (!permissionUtil.hasGiven(PermissionUtil
                         .WRITE_EXTERNAL_STORAGE_PERMISSION)) {
@@ -217,6 +210,27 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
         viewFlipperEmail.setInAnimation(this, R.anim.in_from_right_email);
         viewFlipperEmail.setOutAnimation(this, R.anim.out_to_left_email);
         viewFlipperEmail.showNext();
+    }
+
+    private void sendEvent() {
+        String strEmail = autoCompleteTextViewEmail.getText().toString();
+        boolean isValidEmail = UIUtils.isValidEmail(strEmail);
+        if (isValidEmail) {
+            PrefSiempo.getInstance(this).write(PrefSiempo.USER_SEEN_EMAIL_REQUEST, true);
+            PrefSiempo.getInstance(this).write(PrefSiempo
+                    .USER_EMAILID, strEmail);
+            storeDataToFirebase(CoreApplication.getInstance().getDeviceId(), strEmail);
+            relPrivacyEmail.setVisibility(View.GONE);
+            viewFlipperEmail.setInAnimation(this, R.anim
+                    .in_from_right_email);
+            viewFlipperEmail.setOutAnimation(this, R.anim
+                    .out_to_left_email);
+            UIUtils.hideSoftKeyboard(this, getWindow().getDecorView().getWindowToken());
+            viewFlipperEmail.showNext();
+        } else {
+            autoCompleteTextViewEmail.requestFocus();
+            txtErrorMessage.setVisibility(View.VISIBLE);
+        }
     }
 
     private void storeDataToFirebase(String userId, String emailId) {

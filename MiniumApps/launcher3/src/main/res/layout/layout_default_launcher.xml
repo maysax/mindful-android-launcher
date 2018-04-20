@@ -33,8 +33,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
 
                 <co.siempo.phone.customviews.RobotoRegularTextView
@@ -89,7 +88,7 @@
                     android:id="@+id/btnEnable"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
-                    android:background="@drawable/rectagle_blue"
+                    android:background="@drawable/button_background_blue"
                     android:text="@string/btn_enable"
                     android:textColor="@color/white"
                     android:textSize="14sp"/>

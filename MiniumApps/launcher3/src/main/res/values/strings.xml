@@ -237,7 +237,7 @@
     <string name="btn_enable">Enable</string>
     <string name="to_help_you_storage">"To help you understand your current phone habits, Siempo needs permission to store information on this device.  We do not read your private files or collect information about files on your device."</string>
     <string name="userid">UserId:</string>
-    <string name="deliver_notifications">Deliver notifications:</string>
+    <string name="deliver_notifications">When do you want notifications?</string>
     <string name="individually_as_soon_as_they_arrive">Individually, as soon as they arrive</string>
     <string name="batched_every_15_minutes">Batched, every 15 minutes</string>
     <string name="batched_every_30_minutes">Batched, every 30 minutes</string>
@@ -452,6 +452,7 @@
     <string name="not_more_than_twelve_fav_app">Please unselect any of the apps from Frequently used apps section</string>
     <string name="find_app_send_message_or_save_note">Find app, send message, or save note</string>
     <string name="msg_permission_denied">"If you reject this permission,you can not use Siempo\nPlease turn on permissions at [Setting] > [Permission]"</string>
+    <string name="msg_permission_denied1">"If you reject this permission,you can not use Tempo\nPlease turn on permissions at [Setting] > [Permission]"</string>
     <string name="no_app_found_or_no_relevant_app">No app found or no relevant app</string>
     <string name="not_now">Not Now</string>
     <string name="let_s_get_started">Let\'s get started!</string>
