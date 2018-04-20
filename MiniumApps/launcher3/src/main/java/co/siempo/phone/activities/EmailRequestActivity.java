@@ -9,7 +9,6 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -118,23 +117,23 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!TextUtils.isEmpty(autoCompleteTextViewEmail.getText().toString())) {
-                    String val_email = autoCompleteTextViewEmail.getText().toString().trim();
-                    boolean isValidEmail = UIUtils.isValidEmail(val_email);
-                    if (isValidEmail) {
-                        txtErrorMessage.setVisibility(View.INVISIBLE);
-                    } else {
-
-                        txtErrorMessage.setVisibility(View.VISIBLE);
-                    }
-                } else {
-                    txtErrorMessage.setVisibility(View.INVISIBLE);
-                }
+//                if (!TextUtils.isEmpty(autoCompleteTextViewEmail.getText().toString())) {
+//                    String val_email = autoCompleteTextViewEmail.getText().toString().trim();
+//                    boolean isValidEmail = UIUtils.isValidEmail(val_email);
+//                    if (isValidEmail) {
+//                        txtErrorMessage.setVisibility(View.INVISIBLE);
+//                    } else {
+//
+//                        txtErrorMessage.setVisibility(View.VISIBLE);
+//                    }
+//                } else {
+//                    txtErrorMessage.setVisibility(View.INVISIBLE);
+//                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                txtErrorMessage.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -158,13 +157,12 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
                 startActivity(intent);
                 break;
             case R.id.btnNotNow:
-                UIUtils.hideSoftKeyboard(this, getWindow().getDecorView().getWindowToken());
                 PrefSiempo.getInstance(this).write(PrefSiempo.USER_SEEN_EMAIL_REQUEST, true);
-                relPrivacyEmail.setVisibility(View.GONE);
-                viewFlipperEmail.setInAnimation(this, R.anim.in_from_right_email);
-                viewFlipperEmail.setOutAnimation(this, R.anim.out_to_left_email);
-                viewFlipperEmail.setFlipInterval(1000);
-                viewFlipperEmail.showNext();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    flipView();
+                } else {
+                    finish();
+                }
                 break;
             case R.id.btnContinue:
                 sendEvent();
@@ -204,6 +202,14 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
             default:
                 break;
         }
+    }
+
+    private void flipView() {
+        UIUtils.hideSoftKeyboard(this, getWindow().getDecorView().getWindowToken());
+        relPrivacyEmail.setVisibility(View.GONE);
+        viewFlipperEmail.setInAnimation(this, R.anim.in_from_right_email);
+        viewFlipperEmail.setOutAnimation(this, R.anim.out_to_left_email);
+        viewFlipperEmail.showNext();
     }
 
     private void sendEvent() {
