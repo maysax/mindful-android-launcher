@@ -4,8 +4,8 @@ import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -92,6 +92,7 @@ import me.relex.circleindicator.CircleIndicator;
 public class PaneFragment extends CoreFragment {
 
     public static boolean isSearchVisable = false;
+    final int MIN_KEYBOARD_HEIGHT_PX = 150;
     public SiempoViewPager pagerPane;
     public View linSearchList;
     PanePagerAdapter mPagerAdapter;
@@ -111,6 +112,19 @@ public class PaneFragment extends CoreFragment {
     private MainFragmentMediator mediator;
     private TokenRouter router;
     private MainListAdapter adapter;
+    BroadcastReceiver mKeyBoardReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction() == Utils.KEYBOARD_ACTION) {
+                if (intent.getBooleanExtra(Utils.ACTION, false)) {
+                    updateListViewLayout(true);
+                } else {
+                    updateListViewLayout(false);
+
+                }
+            }
+        }
+    };
     private TokenParser parser;
     private RecyclerView recyclerViewBottomDoc;
     private List<MainListItem> items = new ArrayList<>();
@@ -121,7 +135,6 @@ public class PaneFragment extends CoreFragment {
     private ImageView imageClear;
     private View rootView;
     private CircleIndicator indicator;
-    final int MIN_KEYBOARD_HEIGHT_PX = 150;
     private Dialog overlayDialog;
 
     public PaneFragment() {
@@ -131,7 +144,6 @@ public class PaneFragment extends CoreFragment {
     public static PaneFragment newInstance() {
         return new PaneFragment();
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -151,20 +163,6 @@ public class PaneFragment extends CoreFragment {
         return rootView;
     }
 
-    BroadcastReceiver mKeyBoardReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction() == Utils.KEYBOARD_ACTION) {
-                if (intent.getBooleanExtra(Utils.ACTION, false)) {
-                    updateListViewLayout(true);
-                } else {
-                    updateListViewLayout(false);
-
-                }
-            }
-        }
-    };
-
     @Override
     public void onPause() {
         super.onPause();
@@ -173,47 +171,6 @@ public class PaneFragment extends CoreFragment {
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        pagerPane.setAlpha(1);
-        if (DashboardActivity.currentIndexPaneFragment == 0 && DashboardActivity.isJunkFoodOpen) {
-            DashboardActivity.currentIndexPaneFragment = 1;
-            DashboardActivity.isJunkFoodOpen = false;
-            pagerPane.setCurrentItem(DashboardActivity.currentIndexPaneFragment, true);
-        }
-        if (DashboardActivity.currentIndexDashboard == 1) {
-            if (DashboardActivity.currentIndexPaneFragment == 0) {
-                Log.d("Firebase", "Junkfood Start");
-                DashboardActivity.startTime = System.currentTimeMillis();
-            } else if (DashboardActivity.currentIndexPaneFragment == 1) {
-                Log.d("Firebase", "Favorite Start");
-                DashboardActivity.startTime = System.currentTimeMillis();
-            } else if (DashboardActivity.currentIndexPaneFragment == 2) {
-                Log.d("Firebase", "Tools Start");
-                DashboardActivity.startTime = System.currentTimeMillis();
-            }
-        }
-        setToolsPaneDate();
-
-
-        if (PrefSiempo.getInstance(context).read(PrefSiempo
-                .APPLAND_TOUR_SEEN, false) && PrefSiempo.getInstance(context)
-                .read(PrefSiempo
-                        .IS_AUTOSCROLL, false) && pagerPane
-                .getCurrentItem() == 0) {
-            pagerPane.setCurrentItem(1);
-            //delay
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            pagerPane.setCurrentItem(2);
-        }
-
-
-    }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -368,6 +325,21 @@ public class PaneFragment extends CoreFragment {
         setToolsPaneDate();
         if (searchLayout != null && searchLayout.getVisibility() == View.VISIBLE) {
             updateListViewLayout(false);
+        }
+
+        if (PrefSiempo.getInstance(context).read(PrefSiempo
+                .APPLAND_TOUR_SEEN, false) && PrefSiempo.getInstance(context)
+                .read(PrefSiempo
+                        .IS_AUTOSCROLL, false) && pagerPane
+                .getCurrentItem() == 0) {
+            pagerPane.setCurrentItem(1);
+            //delay
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            pagerPane.setCurrentItem(2);
         }
     }
 
@@ -937,84 +909,6 @@ public class PaneFragment extends CoreFragment {
         super.onDestroyView();
     }
 
-    private class OnSwipeTouchListener implements View.OnTouchListener {
-
-        ListView list;
-        private GestureDetector gestureDetector;
-        private Context context;
-
-        public OnSwipeTouchListener(Context ctx, ListView list) {
-            gestureDetector = new GestureDetector(ctx, new GestureListener());
-            context = ctx;
-            this.list = list;
-        }
-
-        public OnSwipeTouchListener() {
-            super();
-        }
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-
-            //Added as a part of SSA-1475, in case if GestureDetector is not
-            // initialised and null, it will be assigned and then its event
-            // will be captured
-            if (null != gestureDetector) {
-                return gestureDetector.onTouchEvent(event);
-            } else {
-                gestureDetector = new GestureDetector(context, new GestureListener
-                        ());
-                return gestureDetector.onTouchEvent(event);
-            }
-        }
-
-        void onSwipeRight(int pos) {
-            //Do what you want after swiping left to right
-            if (pagerPane != null) {
-                pagerPane.setCurrentItem(0);
-            }
-
-        }
-
-        void onSwipeLeft(int pos) {
-
-            //Do what you want after swiping right to left
-        }
-
-        private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
-
-            private static final int SWIPE_THRESHOLD = 100;
-            private static final int SWIPE_VELOCITY_THRESHOLD = 100;
-
-            @Override
-            public boolean onDown(MotionEvent e) {
-                return true;
-            }
-
-            private int getPostion(MotionEvent e1) {
-                return list.pointToPosition((int) e1.getX(), (int) e1.getY());
-            }
-
-            @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2,
-                                   float velocityX, float velocityY) {
-                float distanceX = e2.getX() - e1.getX();
-                float distanceY = e2.getY() - e1.getY();
-                if (Math.abs(distanceX) > Math.abs(distanceY)
-                        && Math.abs(distanceX) > SWIPE_THRESHOLD
-                        && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                    if (distanceX > 0)
-                        onSwipeRight(getPostion(e1));
-                    else
-                        onSwipeLeft(getPostion(e1));
-                    return true;
-                }
-                return false;
-            }
-
-        }
-    }
-
     private void bindSearchView() {
 //        //Circular Edit Text
         router = new TokenRouter();
@@ -1092,6 +986,84 @@ public class PaneFragment extends CoreFragment {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private class OnSwipeTouchListener implements View.OnTouchListener {
+
+        ListView list;
+        private GestureDetector gestureDetector;
+        private Context context;
+
+        public OnSwipeTouchListener(Context ctx, ListView list) {
+            gestureDetector = new GestureDetector(ctx, new GestureListener());
+            context = ctx;
+            this.list = list;
+        }
+
+        public OnSwipeTouchListener() {
+            super();
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            //Added as a part of SSA-1475, in case if GestureDetector is not
+            // initialised and null, it will be assigned and then its event
+            // will be captured
+            if (null != gestureDetector) {
+                return gestureDetector.onTouchEvent(event);
+            } else {
+                gestureDetector = new GestureDetector(context, new GestureListener
+                        ());
+                return gestureDetector.onTouchEvent(event);
+            }
+        }
+
+        void onSwipeRight(int pos) {
+            //Do what you want after swiping left to right
+            if (pagerPane != null) {
+                pagerPane.setCurrentItem(0);
+            }
+
+        }
+
+        void onSwipeLeft(int pos) {
+
+            //Do what you want after swiping right to left
+        }
+
+        private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
+
+            private static final int SWIPE_THRESHOLD = 100;
+            private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+
+            @Override
+            public boolean onDown(MotionEvent e) {
+                return true;
+            }
+
+            private int getPostion(MotionEvent e1) {
+                return list.pointToPosition((int) e1.getX(), (int) e1.getY());
+            }
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2,
+                                   float velocityX, float velocityY) {
+                float distanceX = e2.getX() - e1.getX();
+                float distanceY = e2.getY() - e1.getY();
+                if (Math.abs(distanceX) > Math.abs(distanceY)
+                        && Math.abs(distanceX) > SWIPE_THRESHOLD
+                        && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                    if (distanceX > 0)
+                        onSwipeRight(getPostion(e1));
+                    else
+                        onSwipeLeft(getPostion(e1));
+                    return true;
+                }
+                return false;
+            }
+
         }
     }
 }
