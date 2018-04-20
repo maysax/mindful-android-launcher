@@ -1,6 +1,7 @@
 package com.eyeem.chips;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.text.Editable;
@@ -14,6 +15,7 @@ import android.text.style.ReplacementSpan;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
@@ -113,10 +115,7 @@ public class ChipsEditText extends MultilineEditText {
                     onActionDone(false, null);
                     return true;
                 }
-            } else if (keyEvent != null && actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
-                // CustomViewAbove seems to send enter keyevent for some reason  (part two)
-                return true;
-            }
+            } else return keyEvent != null && actionId == EditorInfo.IME_ACTION_UNSPECIFIED;
             return false;
         }
     };
@@ -191,7 +190,17 @@ public class ChipsEditText extends MultilineEditText {
         setOnEditorActionListener(editorActionListener);
 
         // setCursorVisible(false);
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Log.e("key","opening key");
+                Intent intentBroadCast = new Intent();
+                intentBroadCast.setAction(Utils.KEYBOARD_ACTION);
+                intentBroadCast.putExtra(Utils.ACTION, true);
+                getContext().sendBroadcast(intentBroadCast);
 
+            }
+        });
         // default bubble & cursor style
         setCurrentBubbleStyle(DefaultBubbles.get(DefaultBubbles.GRAY_WHITE_TEXT, getContext(), (int) getTextSize()));
         this.savedHint = getHint();
@@ -335,6 +344,10 @@ public class ChipsEditText extends MultilineEditText {
     }
 
     public void hideKeyboard() {
+        Intent intentBroadCast = new Intent();
+        intentBroadCast.setAction(Utils.KEYBOARD_ACTION);
+        intentBroadCast.putExtra(Utils.ACTION, false);
+        getContext().sendBroadcast(intentBroadCast);
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getWindowToken(), 0);
         onBubbleType("");
@@ -481,7 +494,7 @@ public class ChipsEditText extends MultilineEditText {
         void onManualModeChanged(boolean enabled);
     }
 
-//    @Override
+    //    @Override
 //    public boolean onKeyPreIme(int keyCode, KeyEvent event) {
 //        boolean isReturn = true;
 //        if (keyCode == KeyEvent.KEYCODE_BACK)
@@ -491,6 +504,14 @@ public class ChipsEditText extends MultilineEditText {
 //
 //
 //    }
+    @Override
+    public boolean onKeyPreIme(int keyCode, KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+            hideKeyboard();
+            return super.onKeyPreIme(keyCode, event);
+        }
+        return false;
+    }
 
 
     public interface BubbleTextWatcher {
