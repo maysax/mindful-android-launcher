@@ -1,10 +1,14 @@
 package co.siempo.phone.fragments;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
@@ -19,6 +23,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -111,6 +116,7 @@ public class PaneFragment extends CoreFragment {
     private ImageView imageClear;
     private View rootView;
     private CircleIndicator indicator;
+    private Dialog overlayDialog;
 
     public PaneFragment() {
         // Required empty public constructor
@@ -205,6 +211,12 @@ public class PaneFragment extends CoreFragment {
                         .anim.fade_in_junk, R.anim.fade_out_junk);
                 DashboardActivity.currentIndexPaneFragment = 0;
             }
+        }
+
+        //Add condition if got it is clicked
+        if (isVisibleToUser && pagerPane != null && pagerPane.getCurrentItem
+                () == 2) {
+            showOverLay();
         }
 
 
@@ -812,6 +824,49 @@ public class PaneFragment extends CoreFragment {
             EventBus.getDefault().removeStickyEvent(notifySearchRefresh);
         }
 
+    }
+
+    /**
+     * Method to show overlay for default launcher setting
+     */
+    private void showOverLay() {
+        if (null != getActivity()) {
+            try {
+                getActivity().setRequestedOrientation(ActivityInfo
+                        .SCREEN_ORIENTATION_PORTRAIT);
+                overlayDialog = new Dialog(getActivity(), 0);
+                overlayDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                overlayDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                overlayDialog.setContentView(R.layout.layout_default_launcher);
+                overlayDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+
+                //overlayDialog.setCancelable(false);
+                overlayDialog.setCanceledOnTouchOutside(false);
+                overlayDialog.show();
+
+                Button btnEnable = overlayDialog.findViewById(R.id.btnEnable);
+                Button btnLater = overlayDialog.findViewById(R.id.btnLater);
+                btnEnable.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        overlayDialog.dismiss();
+                        Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+
+                    }
+                });
+
+                btnLater.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        overlayDialog.dismiss();
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private class OnSwipeTouchListener implements View.OnTouchListener {
