@@ -74,7 +74,13 @@ public class EnableTempoActivity extends CoreActivity {
                         startActivityForResult(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS), PermissionUtil.NOTIFICATION_ACCESS);
                     } else if (btnSubmit.getText().toString().equalsIgnoreCase(getString(R.string.enable_setting_b))) {
                         askForPermission(new String[]{
-                                Manifest.permission.CALL_PHONE, Manifest.permission.READ_PHONE_STATE});
+                                Manifest.permission.CALL_PHONE,
+                                Manifest.permission.READ_PHONE_STATE,
+                                Manifest.permission.READ_CONTACTS,
+                                Manifest.permission.WRITE_CONTACTS,
+                                Manifest.permission.RECEIVE_SMS,
+                                Manifest.permission.SEND_SMS,
+                                Manifest.permission.READ_SMS});
                     } else if (btnSubmit.getText().toString().equalsIgnoreCase(getString(R.string.enable_setting_c))) {
                         Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -104,7 +110,7 @@ public class EnableTempoActivity extends CoreActivity {
 
                         }
                     })
-                    .setDeniedMessage(R.string.msg_permission_denied)
+                    .setDeniedMessage(R.string.msg_permission_denied1)
                     .setPermissions(PERMISSIONS)
                     .check();
         } catch (Exception e) {
@@ -122,15 +128,15 @@ public class EnableTempoActivity extends CoreActivity {
     private void bindUi() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             if (!permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) {
-                imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshottop));
+                imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshot_notification));
                 imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_a_lollipop));
                 btnSubmit.setText(getString(R.string.enable_setting_a));
             } else if (!PackageUtil.isSiempoLauncher(this)) {
-                imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshottop1));
+                imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshot_launcher));
                 imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_b_lollipop));
                 btnSubmit.setText(getString(R.string.enable_setting_b));
             } else {
-                imgCenter.setBackground(null);
+                imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshot_launcher));
                 imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_c_lollipop));
                 btnSubmit.setBackground(ContextCompat.getDrawable(this, R.drawable.button_bg_enable));
                 btnSubmit.setText(getString(R.string.tempo_enabled));
@@ -144,19 +150,21 @@ public class EnableTempoActivity extends CoreActivity {
             }
         } else {
             if (!permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) {
-                imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshottop));
+                imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshot_notification));
                 imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_a));
                 btnSubmit.setText(getString(R.string.enable_setting_a));
-            } else if (!permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)) {
-                imgCenter.setBackground(null);
+            } else if (!permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
+                    || !permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)
+                    || !permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)) {
+                imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshot_call_sms_contact));
                 imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_b));
                 btnSubmit.setText(getString(R.string.enable_setting_b));
             } else if (!PackageUtil.isSiempoLauncher(this)) {
-                imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshottop1));
+                imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshot_launcher));
                 imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_c));
                 btnSubmit.setText(getString(R.string.enable_setting_c));
             } else {
-                imgCenter.setBackground(null);
+                imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshot_launcher));
                 imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_d));
                 btnSubmit.setBackground(ContextCompat.getDrawable(this, R.drawable.button_bg_enable));
                 btnSubmit.setText(getString(R.string.tempo_enabled));

@@ -452,6 +452,7 @@
     <string name="not_more_than_twelve_fav_app">Please unselect any of the apps from Frequently used apps section</string>
     <string name="find_app_send_message_or_save_note">Find app, send message, or save note</string>
     <string name="msg_permission_denied">"If you reject this permission,you can not use Siempo\nPlease turn on permissions at [Setting] > [Permission]"</string>
+    <string name="msg_permission_denied1">"If you reject this permission,you can not use Tempo\nPlease turn on permissions at [Setting] > [Permission]"</string>
     <string name="no_app_found_or_no_relevant_app">No app found or no relevant app</string>
     <string name="not_now">Not Now</string>
     <string name="let_s_get_started">Let\'s get started!</string>

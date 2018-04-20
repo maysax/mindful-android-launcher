@@ -221,6 +221,9 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
                     .out_to_left_email);
             UIUtils.hideSoftKeyboard(this, getWindow().getDecorView().getWindowToken());
             viewFlipperEmail.showNext();
+        } else {
+            autoCompleteTextViewEmail.requestFocus();
+            txtErrorMessage.setVisibility(View.VISIBLE);
         }
     }
 
