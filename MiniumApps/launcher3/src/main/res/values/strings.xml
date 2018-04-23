@@ -235,7 +235,9 @@
     <string name="permission_proceed_text">Press Continue to proceed</string>
     <string name="btn_continue">Continue</string>
     <string name="btn_enable">Enable</string>
-    <string name="to_help_you_storage">"To help you understand your current phone habits, Siempo needs permission to store information on this device.  We do not read your private files or collect information about files on your device."</string>
+    <string name="btn_next">Next</string>
+    <string name="btn_got">Got it</string>
+    <string name="to_help_you_storage">"To help you understand your current phone habits, Siempo needs permission to store information on this device. We do not read your private files or collect information about files on your device."</string>
     <string name="userid">UserId:</string>
     <string name="deliver_notifications">When do you want notifications?</string>
     <string name="individually_as_soon_as_they_arrive">Individually, as soon as they arrive</string>
@@ -472,4 +474,26 @@
     <string name="make_your_home_string">"\u2022  Make your homescreen distraction free\n\u2022  Schedule focus time without interuptions\n\u2022  Flag apps that you\'re prone to overuse\n\u2022  Tidy app menus and muted app icons"</string>
     <string name="would_you_like_to">Would you like to make Siempo \nyour default Home app?
 </string>
+    <string name="welcome_to_tool">Welcome to healthier app menus!</string>
+    <string name="from_this_tools">"From this <b>Tools Screen</b>, you can launch your most helpful apps.  Assign your preferred app to each tool.  Add, change, or rearrange tools as desired."</string>
+    <string name="frequently_used_title">Frequently Used Apps</string>
+    <string name="favorite_message">You can add any other non-distracting apps to this screen by long-pressing on an icon.</string>
+    <string name="flagged_app_title">Flagged Apps</string>
+    <string name="flagged_message">"Here you'll find any apps that you have flagged for less use.  By default, Siempo scrambles the app positions each time you enter this screen."</string>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </resources>

@@ -139,6 +139,9 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
                     @Override
                     public void run() {
                         finish();
+                        JunkfoodFlaggingActivity.this.overridePendingTransition(R
+                                .anim.in_from_right_email, R.anim
+                                .out_to_left_email);
                     }
                 });
 
@@ -169,8 +172,13 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
 
     @Override
     public void onBackPressed() {
+
         //Added this code as part of SSA-1333, to save the list on backpress
         super.onBackPressed();
+        JunkfoodFlaggingActivity.this.overridePendingTransition(R
+                .anim.in_from_right_email, R.anim
+                .out_to_left_email);
+
 
     }
 
