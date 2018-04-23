@@ -346,9 +346,9 @@ public class PaneFragment extends CoreFragment {
                                 PrefSiempo.getInstance(context).write(PrefSiempo
                                         .IS_AUTOSCROLL, false);
                             }
-                        }, 1000);
+                        }, 400);
                     }
-                }, 1000);
+                }, 500);
 
                 //delay
 

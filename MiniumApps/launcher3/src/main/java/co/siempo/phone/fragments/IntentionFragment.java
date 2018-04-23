@@ -47,6 +47,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
     private int defaultStatusBarColor;
     Context context;
     private PermissionUtil permissionUtil;
+    private DialogTempoSetting dialogTempo;
 
     public IntentionFragment() {
         // Required empty public constructor
@@ -115,6 +116,14 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
     @Override
     public void onResume() {
         super.onResume();
+        if (dialogTempo != null && dialogTempo.isShowing()) {
+            if (!permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
+                    || !permissionUtil.hasGiven(PermissionUtil
+                    .CALL_PHONE_PERMISSION)
+                    || !PackageUtil.isSiempoLauncher(context)) {
+                dialogTempo.dismiss();
+            }
+        }
         if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.IS_INTENTION_ENABLE, false)) {
             linIF.setVisibility(View.GONE);
         } else {
