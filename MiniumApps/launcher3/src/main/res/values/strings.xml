@@ -17,6 +17,7 @@
     <string name="title.faq">FAQ</string>
     <string name="title.suppressedNotifications">View Suppressed Notification</string>
     <string name="title.siempoPermissions">Siempo Permissions</string>
+    <string name="title.siempoRestrictions">Restrictions</string>
     <string name="title.inbox" tools:ignore="UnusedResources">Google Inbox</string>
     <string name="title.defaultLauncher">Set default home app</string>
     <string name="title_tracking" tools:ignore="UnusedResources">Tracking</string>
@@ -101,7 +102,7 @@
         <item>3</item>
     </string-array>
 
-    <string-array name="multi_select_list_preference_default_value" tools:ignore="UnusedResources" />
+    <string-array name="multi_select_list_preference_default_value" tools:ignore="UnusedResources"/>
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
@@ -270,6 +271,7 @@
 
     <string name="lbl_email">Your email address</string>
     <string name="success_email">Email address Updated</string>
+    <string name="success_msg">Success</string>
 
 
     <!-- Help Section -->
@@ -471,6 +473,7 @@
     <string name="tempo_enabled">TEMPO IS ENABLED!</string>
 
     <string name="later_string">Later</string>
+    <string name="setting_string">Settings</string>
     <string name="make_your_home_string">"\u2022  Make your homescreen distraction free\n\u2022  Schedule focus time without interuptions\n\u2022  Flag apps that you\'re prone to overuse\n\u2022  Tidy app menus and muted app icons"</string>
     <string name="would_you_like_to">Would you like to make Siempo \nyour default Home app?
 </string>
@@ -480,20 +483,9 @@
     <string name="favorite_message">You can add any other non-distracting apps to this screen by long-pressing on an icon.</string>
     <string name="flagged_app_title">Flagged Apps</string>
     <string name="flagged_message">"Here you'll find any apps that you have flagged for less use.  By default, Siempo scrambles the app positions each time you enter this screen."</string>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    <string name="siempo_need_permission">"Siempo needs your permission"</string>
+    <string name="choose_how_minutes">Choose how many minutes you want to allow yourself to spend in flagged apps. With your permission, Siempo will gently encourage you take a short break after you reach that limit.</string>
+    <string name="to_enable_draw">To enable, on the next screen:  tap on the\ntoggle, then tap on the back arrow.</string>
 
 
 </resources>

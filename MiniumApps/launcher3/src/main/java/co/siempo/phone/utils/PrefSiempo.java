@@ -89,6 +89,7 @@ public class PrefSiempo {
     public static String TOGGLE_LEFTMENU = "toggle_leftmenu";
     public static String USER_SEEN_EMAIL_REQUEST = "user_seen_email_request";
     public static String APPLAND_TOUR_SEEN = "appland_tour_seen";
+    public static String JUNK_RESTRICTED = "junk_restricted";
 
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;

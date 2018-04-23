@@ -36,6 +36,7 @@ import co.siempo.phone.utils.UIUtils;
 
 public class IntentionFragment extends CoreFragment implements View.OnClickListener {
 
+    Context context;
     private View view;
     private ImageView imgTempo;
     private ImageView imgOverFlow, imgPullTab;
@@ -45,7 +46,6 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
     private RelativeLayout relRootLayout;
     private Window mWindow;
     private int defaultStatusBarColor;
-    Context context;
     private PermissionUtil permissionUtil;
     private DialogTempoSetting dialogTempo;
 
@@ -165,7 +165,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                     if (permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
                             && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
                             && PackageUtil.isSiempoLauncher(context)) {
-                        DialogTempoSetting dialogTempo = new DialogTempoSetting(getActivity());
+                        dialogTempo = new DialogTempoSetting(getActivity());
                         if (dialogTempo.getWindow() != null)
                             dialogTempo.getWindow().setGravity(Gravity.TOP);
                         dialogTempo.show();

@@ -7,6 +7,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.joanzapata.iconify.IconDrawable;
@@ -19,6 +21,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.utils.PrefSiempo;
 
 import static co.siempo.phone.activities.DashboardActivity.IS_FROM_HOME;
 
@@ -37,9 +40,12 @@ public class AlphaSettingsActivity extends CoreActivity {
     private Context context;
     private long startTime = 0;
     private LinearLayout ln_suppressedNotifications;
+    private RelativeLayout rel_restrictions;
+    private Switch switch_alphaRestriction;
     private ImageView icon_SuppressedNotifications;
     private LinearLayout ln_permissions;
     private ImageView icon_permissions;
+    private ImageView icon_restriction;
     private Toolbar toolbar;
 
 
@@ -65,6 +71,8 @@ public class AlphaSettingsActivity extends CoreActivity {
 
         context = AlphaSettingsActivity.this;
         ln_suppressedNotifications = findViewById(R.id.ln_suppressedNotifications);
+        rel_restrictions = findViewById(R.id.rel_restrictions);
+        switch_alphaRestriction = findViewById(R.id.switch_alphaRestriction);
         ln_permissions = findViewById(R.id.ln_permissions);
         icon_SuppressedNotifications = findViewById(R.id.icon_SuppressedNotifications);
         icon_permissions = findViewById(R.id.icon_permissions);
@@ -80,6 +88,15 @@ public class AlphaSettingsActivity extends CoreActivity {
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
         txt_UserId.setText(String.format("UserId: %s", CoreApplication.getInstance().getDeviceId()));
+        if(PrefSiempo.getInstance(this).read(PrefSiempo.JUNK_RESTRICTED,false))
+        {
+            switch_alphaRestriction.setChecked(true);
+        }
+        else
+
+        {
+            switch_alphaRestriction.setChecked(false);
+        }
 
     }
 
@@ -103,6 +120,23 @@ public class AlphaSettingsActivity extends CoreActivity {
                 startActivity(intent);
             }
         });
+        rel_restrictions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                if (switch_alphaRestriction.isChecked()) {
+                    switch_alphaRestriction.setChecked(false);
+                    PrefSiempo.getInstance(context).write(PrefSiempo.JUNK_RESTRICTED,
+                            false);
+                } else {
+                    switch_alphaRestriction.setChecked(true);
+                    PrefSiempo.getInstance(context).write(PrefSiempo.JUNK_RESTRICTED,
+                            true);
+                }
+            }
+        });
+
 
     }
 
