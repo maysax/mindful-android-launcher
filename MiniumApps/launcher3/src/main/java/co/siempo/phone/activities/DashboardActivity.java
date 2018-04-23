@@ -418,7 +418,9 @@ public class DashboardActivity extends CoreActivity {
 //                    Toast.makeText(this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
 //                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
 //                    startActivityForResult(intent, 102);
-//                } else {
+//                }
+//
+// else {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
                         && !notificationManager.isNotificationPolicyAccessGranted()) {
                     Intent intent = new Intent(
