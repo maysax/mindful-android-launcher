@@ -429,22 +429,12 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         @Override
         public void onReceive(Context arg0, Intent intent) {
             if (intent != null && intent.getAction() != null) {
-                if (intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
-                    if (mTestView != null && mTestView.getVisibility() == View.INVISIBLE) {
-                        //if (Build.MANUFACTURER.equalsIgnoreCase("Samsung")) {
-                        Intent startMain = new Intent(Intent.ACTION_MAIN);
-                        startMain.addCategory(Intent.CATEGORY_HOME);
-                        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(startMain);
-                        //  }
-                        mTestView.setVisibility(View.VISIBLE);
-                    } else {
-                        if (mTestView != null)
-                            mTestView.setVisibility(View.VISIBLE);
-                    }
+                if (intent.getAction().equals(Intent.ACTION_USER_PRESENT) ||
+                        intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+                    Intent startMain = new Intent(Intent.ACTION_MAIN);
+                    startMain.addCategory(Intent.CATEGORY_HOME);
+                    startActivity(startMain);
                 } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
-                    if (mTestView != null)
-                        mTestView.setVisibility(View.INVISIBLE);
                 }
             }
         }
