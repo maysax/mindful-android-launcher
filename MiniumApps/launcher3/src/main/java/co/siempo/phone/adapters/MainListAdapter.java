@@ -366,110 +366,110 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                     String[] splits;
 
 
-                        switch (originalData.get(i).getItemType()) {
-                            case CONTACT:
-                                if (searchString.startsWith("@")) {
-                                    if (searchString.equals("@")) {
-                                        isValidNumber = true;
-                                        buildData.add(originalData.get(i));
-                                    } else {
+                    switch (originalData.get(i).getItemType()) {
+                        case CONTACT:
+                            if (searchString.startsWith("@")) {
+                                if (searchString.equals("@")) {
+                                    isValidNumber = true;
+                                    buildData.add(originalData.get(i));
+                                } else {
                                     /*
                                       A blank space was added with searchString2. After using trim the search problem is resolved
                                      */
-                                        String searchString2 = searchString.replaceAll("@", "").trim();
-                                        MainListItem item = originalData.get(i);
-                                        filterableString = item.getContactName();
-                                        boolean isAdded = false;
-                                        if (filterableString.toLowerCase().contains(searchString2)) {
-                                            isValidNumber = true;
-                                            buildData.add(originalData.get(i));
-                                            isAdded = true;
-                                        }
-
-                                        if (!isAdded) {
-                                            searchString2 = phoneNumberString(searchString);
-                                            List<MainListItem.ContactNumber> numbers = item.getNumbers();
-                                            for (MainListItem.ContactNumber number : numbers) {
-                                                String phoneNum = phoneNumberString(number.getNumber());
-                                                if (phoneNum.contains(searchString2)) {
-                                                    isValidNumber = true;
-                                                    buildData.add(originalData.get(i));
-                                                    break;
-                                                }
-                                            }
-                                        }
+                                    String searchString2 = searchString.replaceAll("@", "").trim();
+                                    MainListItem item = originalData.get(i);
+                                    filterableString = item.getContactName();
+                                    boolean isAdded = false;
+                                    if (filterableString.toLowerCase().contains(searchString2)) {
+                                        isValidNumber = true;
+                                        buildData.add(originalData.get(i));
+                                        isAdded = true;
                                     }
-                                }
 
-                                break;
-                            case ACTION:
-                                filterableString = originalData.get(i).getTitle();
-                                if (!TextUtils.isEmpty(filterableString)) {
-
-
-                                    if (!TextUtils.isEmpty(originalData.get
-                                            (i).getPackageName())) {
-                                        if (filterableString.toLowerCase().contains(searchString.toLowerCase().trim())) {
-                                            buildData.add(originalData.get(i));
-                                            break;
-                                        }
-                                    } else {
-                                        if (originalData.get(i).getTitle().toLowerCase().contains(searchString.toLowerCase())) {
-                                            if (checkToolsDuplicate(buildData, searchString.toLowerCase().toLowerCase())) {
+                                    if (!isAdded) {
+                                        searchString2 = phoneNumberString(searchString);
+                                        List<MainListItem.ContactNumber> numbers = item.getNumbers();
+                                        for (MainListItem.ContactNumber number : numbers) {
+                                            String phoneNum = phoneNumberString(number.getNumber());
+                                            if (phoneNum.contains(searchString2)) {
+                                                isValidNumber = true;
                                                 buildData.add(originalData.get(i));
+                                                break;
                                             }
                                         }
                                     }
                                 }
-                                break;
-                            case NUMBERS:
-                                if (PhoneNumberUtils.isGlobalPhoneNumber(searchString)) {
-                                    isValidNumber = true;
-                                    TokenManager.getInstance().getCurrent().setExtra2(searchString);
-                                    buildData.add(originalData.get(i));
-                                }
-                                break;
-                            case DEFAULT:
-                                TokenItem current = TokenManager.getInstance().getCurrent();
-                                if ((!searchString.equalsIgnoreCase("@") || !(searchString.length() > 1 && searchString.startsWith("@") && TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT))) && checkDuplicate(buildData, originalData.get(i).getTitle().toLowerCase().toLowerCase())) {
-                                    if (searchString.length() > 0 && searchString.startsWith("@") && !TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT) && isValidNumber) {
-                                    } else {
-                                        if (originalData.get(i).getTitle()
-                                                .toLowerCase().equalsIgnoreCase
-                                                        (context.getResources
-                                                                ().getString
-                                                                (R.string.title_sendAsSMS)
-                                                        ) &&
-                                                !isValidNumber && searchString
-                                                .startsWith("@")) {
+                            }
 
-                                        } else if (originalData.get(i).getTitle()
-                                                .toLowerCase().equalsIgnoreCase
-                                                        (context.getResources
-                                                                ().getString
-                                                                (R.string.title_saveNote)
-                                                        ) && searchString.equalsIgnoreCase("^") && current.getItemType() == TokenItemType.DATA) {
-
-                                        } else if (originalData.get(i).getTitle()
-                                                .toLowerCase().equalsIgnoreCase
-                                                        (context.getResources
-                                                                ().getString
-                                                                (R.string
-                                                                        .title_saveNote)) && TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT)) {
+                            break;
+                        case ACTION:
+                            filterableString = originalData.get(i).getTitle();
+                            if (!TextUtils.isEmpty(filterableString)) {
 
 
-                                        } else if (searchString.equalsIgnoreCase("@") || (searchString.startsWith("@") && isValidNumber)) {
-
-                                        } else {
-
+                                if (!TextUtils.isEmpty(originalData.get
+                                        (i).getPackageName())) {
+                                    if (filterableString.toLowerCase().contains(searchString.toLowerCase().trim())) {
+                                        buildData.add(originalData.get(i));
+                                        break;
+                                    }
+                                } else {
+                                    if (originalData.get(i).getTitle().toLowerCase().contains(searchString.toLowerCase())) {
+                                        if (checkToolsDuplicate(buildData, searchString.toLowerCase().toLowerCase())) {
                                             buildData.add(originalData.get(i));
                                         }
                                     }
-
                                 }
-                                break;
+                            }
+                            break;
+                        case NUMBERS:
+                            if (PhoneNumberUtils.isGlobalPhoneNumber(searchString)) {
+                                isValidNumber = true;
+                                TokenManager.getInstance().getCurrent().setExtra2(searchString);
+                                buildData.add(originalData.get(i));
+                            }
+                            break;
+                        case DEFAULT:
+                            TokenItem current = TokenManager.getInstance().getCurrent();
+                            if ((!searchString.equalsIgnoreCase("@") || !(searchString.length() > 1 && searchString.startsWith("@") && TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT))) && checkDuplicate(buildData, originalData.get(i).getTitle().toLowerCase().toLowerCase())) {
+                                if (searchString.length() > 0 && searchString.startsWith("@") && !TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT) && isValidNumber) {
+                                } else {
+                                    if (originalData.get(i).getTitle()
+                                            .toLowerCase().equalsIgnoreCase
+                                                    (context.getResources
+                                                            ().getString
+                                                            (R.string.title_sendAsSMS)
+                                                    ) &&
+                                            !isValidNumber && searchString
+                                            .startsWith("@")) {
 
-                        }
+                                    } else if (originalData.get(i).getTitle()
+                                            .toLowerCase().equalsIgnoreCase
+                                                    (context.getResources
+                                                            ().getString
+                                                            (R.string.title_saveNote)
+                                                    ) && searchString.equalsIgnoreCase("^") && current.getItemType() == TokenItemType.DATA) {
+
+                                    } else if (originalData.get(i).getTitle()
+                                            .toLowerCase().equalsIgnoreCase
+                                                    (context.getResources
+                                                            ().getString
+                                                            (R.string
+                                                                    .title_saveNote)) && TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT)) {
+
+
+                                    } else if (searchString.equalsIgnoreCase("@") || (searchString.startsWith("@") && isValidNumber)) {
+
+                                    } else {
+
+                                        buildData.add(originalData.get(i));
+                                    }
+                                }
+
+                            }
+                            break;
+
+                    }
                 }
             } else {
                 for (MainListItem menuMainListItem : originalData) {
