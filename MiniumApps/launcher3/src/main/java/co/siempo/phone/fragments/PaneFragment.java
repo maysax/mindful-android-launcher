@@ -435,7 +435,10 @@ public class PaneFragment extends CoreFragment {
 
 
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                if (!Settings.canDrawOverlays(context)) {
+                                if (!Settings.canDrawOverlays(context) &&
+                                        PrefSiempo.getInstance(context).read
+                                                (PrefSiempo.JUNK_RESTRICTED,
+                                                        false)) {
                                     showOverLayForDrawingPermission();
                                 }
                             }
@@ -951,8 +954,8 @@ public class PaneFragment extends CoreFragment {
                 overlayDialogPermission.setContentView(R.layout
                         .layout_appland_draw_permission);
                 overlayDialogPermission.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-                overlayDialogPermission.setCancelable(false);
-                overlayDialogPermission.setCanceledOnTouchOutside(false);
+                overlayDialogPermission.setCancelable(true);
+                overlayDialogPermission.setCanceledOnTouchOutside(true);
                 overlayDialogPermission.show();
 
                 final ViewFlipper viewFlipperOverlay = overlayDialogPermission

@@ -17,6 +17,7 @@
     <string name="title.faq">FAQ</string>
     <string name="title.suppressedNotifications">View Suppressed Notification</string>
     <string name="title.siempoPermissions">Siempo Permissions</string>
+    <string name="title.siempoRestrictions">Restrictions</string>
     <string name="title.inbox" tools:ignore="UnusedResources">Google Inbox</string>
     <string name="title.defaultLauncher">Set default home app</string>
     <string name="title_tracking" tools:ignore="UnusedResources">Tracking</string>

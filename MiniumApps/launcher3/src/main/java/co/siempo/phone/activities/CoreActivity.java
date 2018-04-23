@@ -25,7 +25,6 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -44,6 +43,7 @@ import co.siempo.phone.helper.Validate;
 import co.siempo.phone.interfaces.NFCInterface;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.service.OverlayService;
+import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
@@ -399,12 +399,17 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 
 
             try {
-                Intent intent = new Intent(this, OverlayService.class);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings
-                        .canDrawOverlays(this)) {
-                    startService(intent);
-                } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                    startService(intent);
+                if (PackageUtil.isSiempoLauncher(this) && PrefSiempo
+                        .getInstance(this).read
+                                (PrefSiempo.JUNK_RESTRICTED,
+                                        false)) {
+                    Intent intent = new Intent(this, OverlayService.class);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings
+                            .canDrawOverlays(this)) {
+                        startService(intent);
+                    } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                        startService(intent);
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -414,61 +419,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 
     }
 
-    private void showOverlayOnJunkApp() {
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings
-                    .canDrawOverlays(this)) {
-
-                /** if not construct intent to request permission**/
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:" + getPackageName()));
-            /* request permission via start activity for result */
-                startActivity(intent);
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings
-                    .canDrawOverlays(this)) {
-                //Code for overlay
-
-                WindowManager.LayoutParams params = null;
-                int type = 0;
-
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-                    type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
-                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-                }
-
-                int flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
-                        WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                    params = new WindowManager.LayoutParams(
-                            WindowManager.LayoutParams.MATCH_PARENT,
-                            WindowManager.LayoutParams.MATCH_PARENT,
-                            type,
-                            flags,
-                            PixelFormat.TRANSLUCENT);
-                } else {
-                    params = new WindowManager.LayoutParams(
-                            WindowManager.LayoutParams.MATCH_PARENT,
-                            WindowManager.LayoutParams.MATCH_PARENT,
-                            type,
-                            flags,
-                            PixelFormat.TRANSLUCENT);
-                }
-
-                mView.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        return true;
-                    }
-                });
-                windowManager.addView(mView, params);
-
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * This BroadcastReceiver is included for the when user press home button and lock the screen.
