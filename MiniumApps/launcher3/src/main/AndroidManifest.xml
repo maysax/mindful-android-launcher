@@ -39,6 +39,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.android.vending.BILLING" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -258,6 +259,7 @@
         <activity
             android:name=".activities.EnableTempoActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".activities.InAppItemListActivity"></activity>
     </application>
 
 </manifest>

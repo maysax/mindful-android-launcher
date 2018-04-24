@@ -90,6 +90,11 @@ public abstract class CoreApplication extends MultiDexApplication {
     private ArrayList<MainListItem> favoriteItemsList = new ArrayList<>();
     private boolean isHideIconBranding = true;
     private boolean isRandomize = true;
+    String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1WmJ9sNAoO5o5QGJkZXfqLm8Py95ASb7XCY1NewZF7puJcWMGlv269AY2lqJuR0o/dzMnzo20D259NHPN6zF3TCsXcF8+jhRH5gAqKcNJCoc1p0tZ+rxZ5ETVYjR/OQ90MKStXa8MsArhfL+R6E27IuUELObkjS3XIwcjBj7EhBNVPv2ipj8t7w3bNorql8qPEHhgbc/v54krCMSEF1p82nIbZSvOFcJwLGg/wzmv6YfgsLD5fndoaNPiRLQ1nkWNASOryvgUDZAKqYjAtHY7WAV57FtQGgsViPTE4exzCp9t018GEeI5tbo4+RSw23nygSqmNBZkxv9Ee4jxpw7CQIDAQAB";
+
+    public String getBase64EncodedPublicKey() {
+        return base64EncodedPublicKey;
+    }
 
     public static synchronized CoreApplication getInstance() {
         return sInstance;
@@ -322,7 +327,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     /**
      * HashMap to store tools settings data.
      *
-     * @return HashMap<Integer, AppMenu>
+     * @return HashMap<Integer       ,               AppMenu>
      */
     public HashMap<Integer, AppMenu> getToolsSettings() {
         String storedHashMapString = PrefSiempo.getInstance(this).read(PrefSiempo.TOOLS_SETTING, "");

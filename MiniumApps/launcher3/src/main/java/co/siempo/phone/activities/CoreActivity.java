@@ -4,9 +4,11 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -17,6 +19,7 @@ import android.nfc.NdefRecord;
 import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -28,10 +31,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import com.android.vending.billing.IInAppBillingService;
+
 import org.androidannotations.annotations.EActivity;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Config;
@@ -67,6 +71,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     private InnerRecevier mRecevier;
     private String state = "";
     private String TAG = "CoreActivity";
+    IInAppBillingService mService;
 
     // Static method to return File at localPath
     public static File getLocalPath() {
@@ -90,9 +95,23 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 
     }
 
+    ServiceConnection mServiceConn = new ServiceConnection() {
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name,
+                                       IBinder service) {
+            mService = IInAppBillingService.Stub.asInterface(service);
+        }
+    };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        connectInAppService();
         this.setVolumeControlStream(AudioManager.STREAM_SYSTEM);
         //onCreateAnimation(savedInstanceState);
         windowManager = (WindowManager) getBaseContext().getSystemService(Context.WINDOW_SERVICE);
@@ -116,6 +135,12 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         }
     }
 
+    void connectInAppService() {
+        Intent serviceIntent =
+                new Intent("com.android.vending.billing.InAppBillingService.BIND");
+        serviceIntent.setPackage("com.android.vending");
+        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+    }
 
     @Override
     protected void onResume() {
@@ -244,6 +269,9 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (mService != null) {
+            unbindService(mServiceConn);
+        }
         if (userPresentBroadcastReceiver != null) {
             unregisterReceiver(userPresentBroadcastReceiver);
         }
@@ -345,7 +373,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     }
 
     @Override
-    public String readText(NdefRecord record) throws UnsupportedEncodingException {
+    public String readText(NdefRecord record) {
         return null;
     }
 
@@ -408,4 +436,5 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             }
         }
     }
+
 }

@@ -110,6 +110,35 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/linInAppProduct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:id="@+id/icon_in_app"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:contentDescription="@null"
+                android:padding="6dp" />
+
+            <co.siempo.phone.customviews.RobotoRegularTextView
+                android:id="@+id/txtInAppProduct"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Purchase"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
 

@@ -482,18 +482,20 @@
     <string name="flagged_message">"Here you'll find any apps that you have flagged for less use.  By default, Siempo scrambles the app positions each time you enter this screen."</string>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    <string-array name="in_app_items_subscription">
+        <!--<item>sub.monthly.selector.dollars.01</item>-->
+        <!--<item>sub.monthly.selector.dollars.05</item>-->
+        <!--<item>sub.monthly.selector.dollars.10</item>-->
+        <!--<item>sub.monthly.selector.dollars.15</item>-->
+        <!--<item>sub.monthly.selector.dollars.20</item>-->
+        <!--<item>sub.monthly.selector.dollars.25</item>-->
+        <!--<item>sub.monthly.selector.dollars.30</item>-->
+        <!--<item>sub.monthly.selector.dollars.35</item>-->
+        <!--<item>sub.monthly.selector.dollars.40</item>-->
+        <!--<item>sub.monthly.selector.dollars.44</item>-->
+        <!--<item>sub.monthly.selector.dollars.50</item>-->
+        <item>testing_monthly_dollers.01</item>
+        <!--<item>android.test.purchased</item>-->
+    </string-array>
 
 </resources>

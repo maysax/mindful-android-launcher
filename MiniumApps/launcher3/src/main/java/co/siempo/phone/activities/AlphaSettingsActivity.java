@@ -39,9 +39,9 @@ public class AlphaSettingsActivity extends CoreActivity {
     private LinearLayout ln_suppressedNotifications;
     private ImageView icon_SuppressedNotifications;
     private LinearLayout ln_permissions;
-    private ImageView icon_permissions;
+    private ImageView icon_permissions, icon_in_app;
     private Toolbar toolbar;
-
+    private LinearLayout linInAppProduct;
 
     @AfterViews
     void afterViews() {
@@ -66,8 +66,10 @@ public class AlphaSettingsActivity extends CoreActivity {
         context = AlphaSettingsActivity.this;
         ln_suppressedNotifications = findViewById(R.id.ln_suppressedNotifications);
         ln_permissions = findViewById(R.id.ln_permissions);
+        linInAppProduct = findViewById(R.id.linInAppProduct);
         icon_SuppressedNotifications = findViewById(R.id.icon_SuppressedNotifications);
         icon_permissions = findViewById(R.id.icon_permissions);
+        icon_in_app = findViewById(R.id.icon_in_app);
         icon_permissions.setImageDrawable(new IconDrawable(context, "fa-bell").colorRes(R.color.text_primary).sizeDp(18));
         try {
             icon_SuppressedNotifications.setImageDrawable(new IconDrawable(context, "fa-exclamation").colorRes(R.color.text_primary).sizeDp(18));
@@ -77,6 +79,9 @@ public class AlphaSettingsActivity extends CoreActivity {
 //            Crashlytics.logException(e);
         }
         icon_UserId.setImageDrawable(new IconDrawable(context, "fa-user-secret")
+                .colorRes(R.color.text_primary)
+                .sizeDp(18));
+        icon_in_app.setImageDrawable(new IconDrawable(context, "fa-shopping-cart")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
         txt_UserId.setText(String.format("UserId: %s", CoreApplication.getInstance().getDeviceId()));
@@ -103,7 +108,13 @@ public class AlphaSettingsActivity extends CoreActivity {
                 startActivity(intent);
             }
         });
-
+        linInAppProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AlphaSettingsActivity.this, InAppItemListActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 
