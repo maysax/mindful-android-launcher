@@ -220,6 +220,9 @@ public class PaneFragment extends CoreFragment {
         } else if (!isVisibleToUser && null != overlayDialog && overlayDialog
                 .isShowing()) {
             overlayDialog.dismiss();
+        } else if (!isVisibleToUser && null != overlayDialogPermission && overlayDialogPermission
+                .isShowing()) {
+            overlayDialogPermission.dismiss();
         }
 
 
