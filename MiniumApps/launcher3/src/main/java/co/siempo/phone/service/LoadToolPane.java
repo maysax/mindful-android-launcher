@@ -47,10 +47,12 @@ public class LoadToolPane extends AsyncTask<String, String, ArrayList<MainListIt
         for (MainListItem mainListItem : items) {
             if (list.contains(mainListItem.getId())) {
                 bottomDockList.add(mainListItem);
-            }else{
+            } else {
                 items1.add(mainListItem);
             }
         }
+
+
         return items1;
     }
 

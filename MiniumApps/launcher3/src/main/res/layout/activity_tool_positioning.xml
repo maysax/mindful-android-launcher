@@ -1,10 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/transparent"
-    android:weightSum="3"
-    tools:context="co.siempo.phone.fragments.IntentionFragment">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:weightSum="3"
+                tools:context="co.siempo.phone.fragments.IntentionFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +26,7 @@
                 android:background="@color/toolbar_bg"
                 android:elevation="@dimen/dp_5"
                 android:minHeight="?android:attr/actionBarSize"
-                android:visibility="visible" />
+                android:visibility="visible"/>
 
             <RelativeLayout
                 android:id="@+id/relTop"
@@ -93,12 +93,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentBottom="true"
+                            android:visibility="gone"
                             android:background="@color/bottom_doc"
                             android:paddingTop="@dimen/dp_10">
 
                             <include
                                 layout="@layout/list_item_grid"
-                                android:visibility="invisible" />
+                                android:visibility="invisible"/>
                         </LinearLayout>
                     </RelativeLayout>
 
@@ -107,8 +108,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+
                         android:background="@drawable/tranparent"
-                        android:clipToPadding="false" />
+                        android:clipToPadding="false"/>
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
 

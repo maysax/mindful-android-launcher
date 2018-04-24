@@ -48,6 +48,15 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
         mListChangedListener = listChangedListener;
         this.isHideIconBranding = isHideIconBranding;
         map = CoreApplication.getInstance().getToolsSettings();
+//        this.arrayList = new ArrayList<>();
+//        for (MainListItem mainListItem : arrayList) {
+//            final AppMenu appMenu = map.get(mainListItem.getId());
+//            if (appMenu.isVisible()) {
+//                this.arrayList.add(mainListItem);
+//            }
+//        }
+
+
     }
 
     @Override
@@ -63,6 +72,7 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
                         Collections.swap(arrayList, i, i - 1);
                     }
                 }
+
                 mListChangedListener.onToolItemListChanged(arrayList);
                 notifyItemMoved(fromPosition, toPosition);
             }
@@ -100,7 +110,7 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
         final AppMenu appMenu = map.get(item.getId());
 
 
-        if (appMenu.isVisible()) {
+        if (null != appMenu && appMenu.isVisible()) {
             holder.linearLayout.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(item.getTitle())) {
                 holder.text.setText(item.getTitle());
@@ -128,6 +138,24 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
             }
         } else {
             holder.linearLayout.setVisibility(View.INVISIBLE);
+        }
+
+        if (arrayList.size() <= 12) {
+            if (position + 4 >= 12 && appMenu.isVisible()) {
+                holder.relMenu.setBackgroundColor(context.getResources().getColor
+                        (R.color.bottom_doc));
+            } else {
+                holder.relMenu.setBackgroundColor(context.getResources().getColor
+                        (R.color.transparent));
+            }
+        } else {
+            if (position >= 12 && appMenu.isVisible()) {
+                holder.relMenu.setBackgroundColor(context.getResources().getColor
+                        (R.color.bottom_doc));
+            } else {
+                holder.relMenu.setBackgroundColor(context.getResources().getColor
+                        (R.color.transparent));
+            }
         }
 
 

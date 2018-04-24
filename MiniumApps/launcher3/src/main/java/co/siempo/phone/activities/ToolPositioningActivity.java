@@ -42,6 +42,7 @@ import co.siempo.phone.utils.PrefSiempo;
 public class ToolPositioningActivity extends CoreActivity implements OnToolItemListChangedListener,
         OnStartDragListener {
     HashMap<Integer, AppMenu> map = new HashMap<>();
+    HashMap<Integer, Data> temp = new HashMap<>();
     private ArrayList<MainListItem> items = new ArrayList<>();
     private ArrayList<MainListItem> sortedList = new ArrayList<>();
     private ToolPositioningAdapter mAdapter;
@@ -96,7 +97,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
     protected void onPause() {
         super.onPause();
         for (int i = 0; i < sortedList.size(); i++) {
-            if (i >= 12) {
+            if (i > 12) {
                 map.get(sortedList.get(i).getId()).setBottomDoc(true);
             } else {
                 map.get(sortedList.get(i).getId()).setBottomDoc(false);
@@ -124,6 +125,18 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         items = new ArrayList<>();
         new MainListItemLoader(this).loadItemsDefaultApp(items);
         items = PackageUtil.getToolsMenuData(this, items);
+
+        ArrayList<MainListItem> top = new ArrayList<>();
+        ArrayList<MainListItem> bottom = new ArrayList<>();
+        for (MainListItem mainListItem : items) {
+            if (map.get(mainListItem.getId()).isVisible()) {
+                if (map.get(mainListItem.getId()).isBottomDoc()) {
+                    bottom.add(mainListItem);
+                } else {
+                    top.add(mainListItem);
+                }
+            }
+        }
 
         recyclerView = findViewById(R.id.recyclerView);
         txtSelectTools = findViewById(R.id.txtSelectTools);
@@ -192,4 +205,9 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         mItemTouchHelper.startDrag(viewHolder);
     }
 
+    class Data {
+        int id;
+        MainListItem mainListItem;
+        boolean isBottoDoc;
+    }
 }
