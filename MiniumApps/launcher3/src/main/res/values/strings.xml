@@ -485,7 +485,9 @@
     <string name="flagged_message">"Here you'll find any apps that you have flagged for less use.  By default, Siempo scrambles the app positions each time you enter this screen."</string>
     <string name="siempo_need_permission">"Siempo needs your permission"</string>
     <string name="choose_how_minutes">Choose how many minutes you want to allow yourself to spend in flagged apps. With your permission, Siempo will gently encourage you take a short break after you reach that limit.</string>
-    <string name="to_enable_draw">To enable, on the next screen:  tap on the\ntoggle, then tap on the back arrow.</string>
+    <string name="to_enable_draw">To enable, on the next screen: tap on the\ntoggle, then tap on the back arrow.</string>
+    <string name="launcher_text">On the next screen: \nTap the circle, then tap the back arrow.</string>
+    <string name="permission_msg_enable_tempo">Tempo needs permission \nto perform these tasks:</string>
 
 
 </resources>
