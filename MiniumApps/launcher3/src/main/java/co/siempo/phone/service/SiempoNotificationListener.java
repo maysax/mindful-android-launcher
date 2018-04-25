@@ -418,7 +418,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
     private void parseOtherMessages(StatusBarNotification statusBarNotification, String strPackageName, String strTitle, String strText, Date date, String strBigText, int icon, byte[] largeIcon, String strCount) {
         if (statusBarNotification.getNotification() != null
                 && statusBarNotification.getNotification().tickerText != null
-                && !statusBarNotification.getNotification().tickerText.toString().equalsIgnoreCase("USB debugging connected")) {
+                && statusBarNotification.getNotification().tickerText.toString().equalsIgnoreCase("USB debugging connected")) {
             return;
         }
 
@@ -428,15 +428,15 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_TRANSPORT) &&
                 !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_SERVICE) &&
                 !statusBarNotification.getPackageName().equalsIgnoreCase("com.google.android.talk")
-                && !statusBarNotification.getPackageName().equalsIgnoreCase("com.google.android.apps.messaging")
+                //&& !statusBarNotification.getPackageName().equalsIgnoreCase("com.google.android.apps.messaging")
                 && !statusBarNotification.getPackageName().trim().equalsIgnoreCase("android"))) {
 
 
 //            if (launcherPrefs.getSharedPreferences().getBoolean(Constants.CALL_RUNNING, false)) {
-            if (PrefSiempo.getInstance(context).read(PrefSiempo.CALL_RUNNING, false)) {
-                Log.d(TAG, "OnGoing Call is Running.. no need to generate notification");
-                return;
-            }
+//            if (PrefSiempo.getInstance(context).read(PrefSiempo.CALL_RUNNING, false)) {
+//                Log.d(TAG, "OnGoing Call is Running.. no need to generate notification");
+//                return;
+//            }
             try {
                 DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
                 TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
@@ -459,7 +459,10 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     notificationSms.setId(id);
                     EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                 } else {
+                    notificationSms.setApp_icon(icon);
                     notificationSms.set_date(date);
+                    notificationSms.setPackageName(strPackageName);
+                    notificationSms.setUser_icon(largeIcon);
                     notificationSms.setNotification_date(statusBarNotification.getPostTime());
                     notificationSms.set_contact_title(strTitle);
                     if (strBigText == null) {

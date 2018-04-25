@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/imgAppIcon"
-        android:layout_width="@dimen/dp_22"
-        android:layout_height="@dimen/dp_22"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="@dimen/dp_4"
         android:layout_marginRight="@dimen/dp_4"

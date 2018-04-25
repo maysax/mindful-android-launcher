@@ -89,7 +89,7 @@ public class SmsReceiver extends BroadcastReceiver {
                                             }
                                         }
                                     }
-                                    saveMessage(mAddress, mBody, mDate, context);
+                                    // saveMessage(mAddress, mBody, mDate, context);
                                 }
                             }
                         }
