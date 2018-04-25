@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
@@ -19,16 +18,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blankj.utilcode.util.NetworkUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
 
 import org.androidannotations.annotations.AfterTextChange;
 import org.androidannotations.annotations.AfterViews;
@@ -38,6 +33,7 @@ import org.androidannotations.annotations.ViewById;
 import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.UserModel;
+import co.siempo.phone.service.MailChimpOperation;
 import co.siempo.phone.utils.PrefSiempo;
 
 @EFragment(R.layout.fragment_tempo_update_email)
@@ -88,13 +84,20 @@ public class TempoUpdateEmailFragment extends CoreFragment {
                                 .USER_EMAILID, "").equals(val_email)) {
                             Toast.makeText(getActivity(), getResources().getString(R.string.success_email), Toast.LENGTH_SHORT).show();
                         }
-                        new MailChimpOperation().execute(val_email);
-                        if (PrefSiempo.getInstance(context).read(PrefSiempo
-                                .USER_EMAILID, "").equalsIgnoreCase("")) {
-                            storeDataToFirebase(true, CoreApplication.getInstance().getDeviceId(), val_email);
-                        } else {
-                            storeDataToFirebase(false, CoreApplication.getInstance().getDeviceId(), val_email);
+                        try {
+                            if (NetworkUtils.isConnected()) {
+                                new MailChimpOperation().execute(val_email);
+                                if (PrefSiempo.getInstance(context).read(PrefSiempo
+                                        .USER_EMAILID, "").equalsIgnoreCase("")) {
+                                    storeDataToFirebase(true, CoreApplication.getInstance().getDeviceId(), val_email);
+                                } else {
+                                    storeDataToFirebase(false, CoreApplication.getInstance().getDeviceId(), val_email);
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
+
                         PrefSiempo.getInstance(context).write(PrefSiempo
                                 .USER_EMAILID, val_email);
                         hideSoftKeyboard();
@@ -217,33 +220,5 @@ public class TempoUpdateEmailFragment extends CoreFragment {
         }
     }
 
-    private class MailChimpOperation extends AsyncTask<String, Void, String> {
 
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-                OkHttpClient client = new OkHttpClient();
-                String URL = "https://us14.api.mailchimp.com/3.0/lists/08cf9f0fe2/members/";
-                String key = "YW55c3RyaW5nOmQ1ZmMyZTg1YWJiMThkZWE5ZjlhMTAyMGM4ZWYyODU5";
-                String keyValue = "Basic "+key;
-
-                String val_email = strings[0];
-                MediaType mediaType = MediaType.parse("application/json");
-                RequestBody body = RequestBody.create(mediaType, "{\"email_address\":\""+val_email+"\",\"status\":\"subscribed\"}");
-                Request request = new Request.Builder()
-                        .url(URL)
-                        .post(body)
-                        .addHeader("authorization", keyValue)
-                        .build();
-                Response response = client.newCall(request).execute();
-                System.out.println("response call success: ");
-            }
-            catch(Exception e){
-                System.out.println("Exception storeToMailChimp");
-                e.printStackTrace();
-            }
-            return "execute";
-        }
-
-    }
 }

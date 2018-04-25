@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+import com.blankj.utilcode.util.NetworkUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.UserModel;
+import co.siempo.phone.service.MailChimpOperation;
 import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
@@ -219,7 +221,14 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
             PrefSiempo.getInstance(this).write(PrefSiempo.USER_SEEN_EMAIL_REQUEST, true);
             PrefSiempo.getInstance(this).write(PrefSiempo
                     .USER_EMAILID, strEmail);
-            storeDataToFirebase(CoreApplication.getInstance().getDeviceId(), strEmail);
+            try {
+                if (NetworkUtils.isConnected()) {
+                    new MailChimpOperation().execute(strEmail);
+                    storeDataToFirebase(CoreApplication.getInstance().getDeviceId(), strEmail);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             relPrivacyEmail.setVisibility(View.GONE);
             viewFlipperEmail.setInAnimation(this, R.anim
                     .in_from_right_email);
