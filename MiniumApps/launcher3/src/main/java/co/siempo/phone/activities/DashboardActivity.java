@@ -19,6 +19,7 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -461,7 +462,13 @@ public class DashboardActivity extends CoreActivity {
             overlayDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
             overlayDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             overlayDialog.setContentView(R.layout.layout_default_launcher);
-            overlayDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+            Window window = overlayDialog.getWindow();
+
+            window.setGravity(Gravity.BOTTOM);
+            WindowManager.LayoutParams params = window.getAttributes();
+            window.setAttributes(params);
+            overlayDialog.getWindow().setLayout(WindowManager.LayoutParams
+                    .MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
 
             //overlayDialog.setCancelable(false);
             overlayDialog.setCanceledOnTouchOutside(false);
