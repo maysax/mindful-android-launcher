@@ -21,6 +21,7 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -864,7 +865,14 @@ public class PaneFragment extends CoreFragment {
                 overlayDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 overlayDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 overlayDialog.setContentView(R.layout.layout_appland_tour);
-                overlayDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+                Window window = overlayDialog.getWindow();
+                // set "origin" to bottom
+                window.setGravity(Gravity.BOTTOM);
+                WindowManager.LayoutParams params = window.getAttributes();
+                window.setAttributes(params);
+                overlayDialog.getWindow().setLayout(WindowManager
+                        .LayoutParams.MATCH_PARENT, WindowManager
+                        .LayoutParams.WRAP_CONTENT);
 
                 overlayDialog.setCancelable(false);
                 overlayDialog.setCanceledOnTouchOutside(false);
@@ -956,7 +964,14 @@ public class PaneFragment extends CoreFragment {
                 overlayDialogPermission.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 overlayDialogPermission.setContentView(R.layout
                         .layout_appland_draw_permission);
-                overlayDialogPermission.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+                Window window = overlayDialogPermission.getWindow();
+                // set "origin" to bottom
+                window.setGravity(Gravity.BOTTOM);
+                WindowManager.LayoutParams params = window.getAttributes();
+                window.setAttributes(params);
+                overlayDialogPermission.getWindow().setLayout(WindowManager
+                        .LayoutParams.MATCH_PARENT, WindowManager
+                        .LayoutParams.WRAP_CONTENT);
                 overlayDialogPermission.setCancelable(true);
                 overlayDialogPermission.setCanceledOnTouchOutside(true);
                 overlayDialogPermission.show();
