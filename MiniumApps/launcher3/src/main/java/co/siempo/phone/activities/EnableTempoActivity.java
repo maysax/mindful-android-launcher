@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.gun0912.tedpermission.PermissionListener;
@@ -27,6 +28,7 @@ public class EnableTempoActivity extends CoreActivity {
     ImageView imgStep, imgCenter;
     Toolbar toolbar;
     Button btnSubmit;
+    TextView on_the_next;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class EnableTempoActivity extends CoreActivity {
         imgStep = findViewById(R.id.imgStep);
         imgCenter = findViewById(R.id.imgCenter);
         btnSubmit = findViewById(R.id.btnSubmit);
+        on_the_next = findViewById(R.id.on_the_next);
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,15 +129,20 @@ public class EnableTempoActivity extends CoreActivity {
     private void bindUi() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             if (!permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) {
+                on_the_next.setText(R.string.on_the_next);
                 imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshot_notification));
                 imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_a_lollipop));
                 btnSubmit.setText(getString(R.string.enable_setting_a));
             } else if (!PackageUtil.isSiempoLauncher(this)) {
+                on_the_next.setText(R.string.launcher_text);
                 imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshot_launcher));
                 imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_b_lollipop));
                 btnSubmit.setText(getString(R.string.enable_setting_b));
             } else {
+                on_the_next.setText(R.string.launcher_text);
                 imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshot_launcher));
+                on_the_next.setVisibility(View.GONE);
+                imgCenter.setVisibility(View.GONE);
                 imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_c_lollipop));
                 btnSubmit.setBackground(ContextCompat.getDrawable(this, R.drawable.button_bg_enable));
                 btnSubmit.setText(getString(R.string.tempo_enabled));
@@ -148,21 +156,27 @@ public class EnableTempoActivity extends CoreActivity {
             }
         } else {
             if (!permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) {
+                on_the_next.setText(R.string.on_the_next);
                 imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshot_notification));
                 imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_a));
                 btnSubmit.setText(getString(R.string.enable_setting_a));
             } else if (!permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
                     || !permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)
                     || !permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)) {
+                on_the_next.setText(R.string.permission_msg_enable_tempo);
                 imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshot_call_sms_contact));
                 imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_b));
                 btnSubmit.setText(getString(R.string.enable_setting_b));
             } else if (!PackageUtil.isSiempoLauncher(this)) {
+                on_the_next.setText(R.string.launcher_text);
                 imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshot_launcher));
                 imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_c));
                 btnSubmit.setText(getString(R.string.enable_setting_c));
             } else {
+                on_the_next.setText(R.string.launcher_text);
                 imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshot_launcher));
+                on_the_next.setVisibility(View.GONE);
+                imgCenter.setVisibility(View.GONE);
                 imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_d));
                 btnSubmit.setBackground(ContextCompat.getDrawable(this, R.drawable.button_bg_enable));
                 btnSubmit.setText(getString(R.string.tempo_enabled));

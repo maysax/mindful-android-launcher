@@ -8,9 +8,11 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
@@ -19,6 +21,7 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,6 +36,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.eyeem.chips.ChipsEditText;
@@ -136,6 +140,7 @@ public class PaneFragment extends CoreFragment {
     private View rootView;
     private CircleIndicator indicator;
     private Dialog overlayDialog;
+    private Dialog overlayDialogPermission;
 
     public PaneFragment() {
         // Required empty public constructor
@@ -216,6 +221,9 @@ public class PaneFragment extends CoreFragment {
         } else if (!isVisibleToUser && null != overlayDialog && overlayDialog
                 .isShowing()) {
             overlayDialog.dismiss();
+        } else if (!isVisibleToUser && null != overlayDialogPermission && overlayDialogPermission
+                .isShowing()) {
+            overlayDialogPermission.dismiss();
         }
 
 
@@ -346,9 +354,9 @@ public class PaneFragment extends CoreFragment {
                                 PrefSiempo.getInstance(context).write(PrefSiempo
                                         .IS_AUTOSCROLL, false);
                             }
-                        }, 1000);
+                        }, 400);
                     }
-                }, 1000);
+                }, 500);
 
                 //delay
 
@@ -424,6 +432,25 @@ public class PaneFragment extends CoreFragment {
                         startActivity(intent);
                         getActivity().overridePendingTransition(R
                                 .anim.fade_in_junk, R.anim.fade_out_junk);
+                    } else {
+                        if (PrefSiempo.getInstance(context).read(PrefSiempo
+                                .APPLAND_TOUR_SEEN, false)) {
+                            //Show overlay for draw over other apps permission
+
+
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (!Settings.canDrawOverlays(context) &&
+                                        PrefSiempo.getInstance(context).read
+                                                (PrefSiempo.JUNK_RESTRICTED,
+                                                        false)) {
+                                    showOverLayForDrawingPermission();
+                                }
+                            }
+
+
+                        }
+
+
                     }
                     UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
 
@@ -838,7 +865,14 @@ public class PaneFragment extends CoreFragment {
                 overlayDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 overlayDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 overlayDialog.setContentView(R.layout.layout_appland_tour);
-                overlayDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+                Window window = overlayDialog.getWindow();
+                // set "origin" to bottom
+                window.setGravity(Gravity.BOTTOM);
+                WindowManager.LayoutParams params = window.getAttributes();
+                window.setAttributes(params);
+                overlayDialog.getWindow().setLayout(WindowManager
+                        .LayoutParams.MATCH_PARENT, WindowManager
+                        .LayoutParams.WRAP_CONTENT);
 
                 overlayDialog.setCancelable(false);
                 overlayDialog.setCanceledOnTouchOutside(false);
@@ -906,6 +940,75 @@ public class PaneFragment extends CoreFragment {
 
                                 break;
 
+                        }
+
+
+                    }
+                });
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    private void showOverLayForDrawingPermission() {
+        if (null != getActivity()) {
+            try {
+                getActivity().setRequestedOrientation(ActivityInfo
+                        .SCREEN_ORIENTATION_PORTRAIT);
+                overlayDialogPermission = new Dialog(getActivity(), 0);
+                overlayDialogPermission.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                overlayDialogPermission.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                overlayDialogPermission.setContentView(R.layout
+                        .layout_appland_draw_permission);
+                Window window = overlayDialogPermission.getWindow();
+                // set "origin" to bottom
+                window.setGravity(Gravity.BOTTOM);
+                WindowManager.LayoutParams params = window.getAttributes();
+                window.setAttributes(params);
+                overlayDialogPermission.getWindow().setLayout(WindowManager
+                        .LayoutParams.MATCH_PARENT, WindowManager
+                        .LayoutParams.WRAP_CONTENT);
+                overlayDialogPermission.setCancelable(true);
+                overlayDialogPermission.setCanceledOnTouchOutside(true);
+                overlayDialogPermission.show();
+
+                final ViewFlipper viewFlipperOverlay = overlayDialogPermission
+                        .findViewById(R.id.viewFlipperPermissionDrawOverlay);
+                final Button btnEnable = overlayDialogPermission.findViewById
+                        (R.id.btnEnable);
+
+                final Button btnGotIt = overlayDialogPermission.findViewById
+                        (R.id.btnGotIt);
+
+                btnEnable.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        viewFlipperOverlay.setInAnimation(context, R.anim
+                                .in_from_right_email);
+                        viewFlipperOverlay.setOutAnimation(context, R.anim
+                                .out_to_left_email);
+                        viewFlipperOverlay.setDisplayedChild(1);
+
+
+                    }
+                });
+
+                btnGotIt.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        overlayDialogPermission.dismiss();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            if (!Settings.canDrawOverlays(context)) {
+                                Intent intent = new Intent(Settings
+                                        .ACTION_MANAGE_OVERLAY_PERMISSION,
+                                        Uri.parse("package:" +
+                                                context.getPackageName()));
+                                startActivityForResult(intent, 1000);
+                            }
                         }
 
 
@@ -1001,6 +1104,21 @@ public class PaneFragment extends CoreFragment {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1000) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (Settings.canDrawOverlays(context)) {
+                    Toast.makeText(context, R.string.success_msg, Toast
+                            .LENGTH_SHORT).show();
+
+                }
+            }
         }
     }
 

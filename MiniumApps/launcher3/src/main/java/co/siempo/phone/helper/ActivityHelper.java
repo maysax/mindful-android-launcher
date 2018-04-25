@@ -16,6 +16,7 @@ import co.siempo.phone.activities.AlphaSettingsActivity_;
 import co.siempo.phone.activities.NoteListActivity;
 import co.siempo.phone.activities.SuppressNotificationActivity;
 import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.db.DBClient;
 import co.siempo.phone.launcher.FakeLauncherActivity;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.utils.UIUtils;
@@ -135,6 +136,7 @@ public class ActivityHelper {
     public boolean openAppWithPackageName(String packageName) {
         if (packageName != null && !packageName.equalsIgnoreCase("")) {
             try {
+                new DBClient().deleteMsgByPackageName(packageName);
                 Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
                 context.startActivity(intent);
                 return true;

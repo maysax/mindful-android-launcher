@@ -26,6 +26,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,9 +42,12 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.Config;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.DownloadApkEvent;
+import co.siempo.phone.event.JunkAppOpenEvent;
 import co.siempo.phone.helper.Validate;
 import co.siempo.phone.interfaces.NFCInterface;
 import co.siempo.phone.log.Tracer;
+import co.siempo.phone.service.OverlayService;
+import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
@@ -71,6 +75,8 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     private InnerRecevier mRecevier;
     private String state = "";
     private String TAG = "CoreActivity";
+    private View mView;
+
     IInAppBillingService mService;
 
     // Static method to return File at localPath
@@ -123,6 +129,9 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
         userPresentBroadcastReceiver = new UserPresentBroadcastReceiver();
         registerReceiver(userPresentBroadcastReceiver, intentFilter);
+        mView = ((LayoutInflater) getSystemService(Context
+                .LAYOUT_INFLATER_SERVICE)).inflate(R.layout
+                .gray_scale_layout, null);
 
 
         if (PrefSiempo.getInstance(this).read(PrefSiempo.SELECTED_THEME_ID, 0) != 0) {
@@ -146,6 +155,26 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     protected void onResume() {
         super.onResume();
         isOnStopCalled = false;
+        try {
+            Intent intent = new Intent(this, OverlayService.class);
+            stopService(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        try {
+            Intent intentService = new Intent(this, OverlayService.class);
+            stopService(intentService);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     public void loadDialog() {
@@ -258,6 +287,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             e.printStackTrace();
         }
         isOnStopCalled = true;
+
         super.onStop();
     }
 
@@ -268,6 +298,13 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 
     @Override
     protected void onDestroy() {
+        try {
+            if (null != windowManager && null != mView) {
+                windowManager.removeView(mView);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         super.onDestroy();
         if (mService != null) {
             unbindService(mServiceConn);
@@ -282,6 +319,8 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                 e.printStackTrace();
             }
         }
+
+
     }
 
     /**
@@ -382,6 +421,33 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 
     }
 
+    @Subscribe()
+    public void onEvent(JunkAppOpenEvent junkAppOpenEvent) {
+        if (junkAppOpenEvent != null && junkAppOpenEvent.isNotify()) {
+
+
+            try {
+                if (PackageUtil.isSiempoLauncher(this) && PrefSiempo
+                        .getInstance(this).read
+                                (PrefSiempo.JUNK_RESTRICTED,
+                                        false)) {
+                    Intent intent = new Intent(this, OverlayService.class);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings
+                            .canDrawOverlays(this)) {
+                        startService(intent);
+                    } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                        startService(intent);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+
+    }
+
+
     /**
      * This BroadcastReceiver is included for the when user press home button and lock the screen.
      * when it comes back we have to show launcher dialog,toottip window.
@@ -391,28 +457,17 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         @Override
         public void onReceive(Context arg0, Intent intent) {
             if (intent != null && intent.getAction() != null) {
-                if (intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
-                    if (mTestView != null && mTestView.getVisibility() == View.INVISIBLE) {
-                        //if (Build.MANUFACTURER.equalsIgnoreCase("Samsung")) {
-                        Intent startMain = new Intent(Intent.ACTION_MAIN);
-                        startMain.addCategory(Intent.CATEGORY_HOME);
-                        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(startMain);
-                        //  }
-                        mTestView.setVisibility(View.VISIBLE);
-                    } else {
-                        if (mTestView != null)
-                            mTestView.setVisibility(View.VISIBLE);
-                    }
+                if (intent.getAction().equals(Intent.ACTION_USER_PRESENT) ||
+                        intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+                    Intent startMain = new Intent(Intent.ACTION_MAIN);
+                    startMain.addCategory(Intent.CATEGORY_HOME);
+                    startActivity(startMain);
                 } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
-                    if (mTestView != null)
-                        mTestView.setVisibility(View.INVISIBLE);
                 }
             }
         }
 
     }
-
 
     class InnerRecevier extends BroadcastReceiver {
         final String SYSTEM_DIALOG_REASON_KEY = "reason";
@@ -436,5 +491,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             }
         }
     }
+
 
 }
