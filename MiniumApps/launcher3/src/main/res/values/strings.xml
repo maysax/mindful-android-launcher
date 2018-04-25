@@ -483,18 +483,18 @@
 
 
     <string-array name="in_app_items_subscription">
-        <!--<item>sub.monthly.selector.dollars.01</item>-->
-        <!--<item>sub.monthly.selector.dollars.05</item>-->
-        <!--<item>sub.monthly.selector.dollars.10</item>-->
-        <!--<item>sub.monthly.selector.dollars.15</item>-->
-        <!--<item>sub.monthly.selector.dollars.20</item>-->
-        <!--<item>sub.monthly.selector.dollars.25</item>-->
-        <!--<item>sub.monthly.selector.dollars.30</item>-->
-        <!--<item>sub.monthly.selector.dollars.35</item>-->
-        <!--<item>sub.monthly.selector.dollars.40</item>-->
-        <!--<item>sub.monthly.selector.dollars.44</item>-->
-        <!--<item>sub.monthly.selector.dollars.50</item>-->
-        <item>testing_monthly_dollers.01</item>
+        <item>sub.monthly.selector.dollars.01</item>
+        <item>sub.monthly.selector.dollars.05</item>
+        <item>sub.monthly.selector.dollars.10</item>
+        <item>sub.monthly.selector.dollars.15</item>
+        <item>sub.monthly.selector.dollars.20</item>
+        <item>sub.monthly.selector.dollars.25</item>
+        <item>sub.monthly.selector.dollars.30</item>
+        <item>sub.monthly.selector.dollars.35</item>
+        <item>sub.monthly.selector.dollars.40</item>
+        <item>sub.monthly.selector.dollars.45</item>
+        <item>sub.monthly.selector.dollars.50</item>
+        <!--<item>testing_monthly_dollers.01</item>-->
         <!--<item>android.test.purchased</item>-->
     </string-array>
 
