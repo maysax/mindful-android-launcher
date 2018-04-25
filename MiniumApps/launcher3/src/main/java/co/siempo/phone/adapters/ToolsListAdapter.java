@@ -95,7 +95,6 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                             bindView(mainListItem, holder, false);
                         }
                     } else {
-//                        if (getCountOfCheckTools() < 16) {
                         mainListItem.setVisable(true);
                         map.get(mainListItem.getId()).setVisible(true);
                         bindView(mainListItem, holder, true);
@@ -107,10 +106,6 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                             intent.putExtra(Constants.INTENT_MAINLISTITEM, mainListItem);
                             ((ToolSelectionActivity) context).startActivityForResult(intent, ToolSelectionActivity.TOOL_SELECTION);
                         }
-//                        } else {
-//                            UIUtils.toastShort(context, "You cannot select " +
-//                                    "more than 16 tools");
-//                        }
                     }
 
                 }

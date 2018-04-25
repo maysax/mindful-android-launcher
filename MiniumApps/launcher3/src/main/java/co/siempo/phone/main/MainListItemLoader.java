@@ -237,12 +237,6 @@ public class MainListItemLoader {
                 toolsItems.add(new MainListItem(TOOLS_WELLNESS, context.getResources().getString(R.string.title_wellness), R.drawable.ic_vector_wellness));
             }
 
-
-//            if (!TextUtils.isEmpty(toolsSettings.get(12)
-//                    .getApplicationName())) {
-//                toolsItems.add(new MainListItem(12, "", 0));
-//            }
-
             if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_CALL)
                     .getApplicationName()) && toolsSettings.get(TOOLS_CALL)
                     .getApplicationName().contains(".")) {
@@ -506,10 +500,6 @@ public class MainListItemLoader {
                             (packageName);
 
                     break;
-//                case 18:
-//                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_feedback), context.getResources().getString(R.string.title_feedback));
-//                    new ActivityHelper(context).openFeedback();
-//                    break;
                 default:
                     UIUtils.alert(context, context.getResources().getString(R.string.msg_not_yet_implemented));
                     break;
