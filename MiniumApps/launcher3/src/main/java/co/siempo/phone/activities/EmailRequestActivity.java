@@ -1,8 +1,11 @@
 package co.siempo.phone.activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
@@ -34,6 +37,7 @@ import java.util.ArrayList;
 import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.UserModel;
+import co.siempo.phone.service.MailChimpOperation;
 import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
@@ -48,7 +52,7 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
     private Button btnEnable;
     private ViewFlipper viewFlipperEmail;
     private TextInputLayout inputEmail;
-
+    ConnectivityManager connectivityManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -219,7 +223,17 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
             PrefSiempo.getInstance(this).write(PrefSiempo.USER_SEEN_EMAIL_REQUEST, true);
             PrefSiempo.getInstance(this).write(PrefSiempo
                     .USER_EMAILID, strEmail);
-            storeDataToFirebase(CoreApplication.getInstance().getDeviceId(), strEmail);
+            try {
+                connectivityManager = (ConnectivityManager) getSystemService(Context
+                        .CONNECTIVITY_SERVICE);
+                NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+                if (activeNetwork != null) {
+                    new MailChimpOperation().execute(strEmail);
+                    storeDataToFirebase(CoreApplication.getInstance().getDeviceId(), strEmail);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             relPrivacyEmail.setVisibility(View.GONE);
             viewFlipperEmail.setInAnimation(this, R.anim
                     .in_from_right_email);
