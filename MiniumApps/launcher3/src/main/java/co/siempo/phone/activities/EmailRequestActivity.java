@@ -43,6 +43,7 @@ import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 
 public class EmailRequestActivity extends CoreActivity implements View.OnClickListener {
+    ConnectivityManager connectivityManager;
     private Button btnNotNow, btnContinue;
     private TextView txtPrivacy, txtErrorMessage;
     private TextInputEditText autoCompleteTextViewEmail;
@@ -52,7 +53,7 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
     private Button btnEnable;
     private ViewFlipper viewFlipperEmail;
     private TextInputLayout inputEmail;
-    ConnectivityManager connectivityManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -217,7 +218,7 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
     }
 
     private void sendEvent() {
-        String strEmail = autoCompleteTextViewEmail.getText().toString();
+        String strEmail = autoCompleteTextViewEmail.getText().toString().trim();
         boolean isValidEmail = UIUtils.isValidEmail(strEmail);
         if (isValidEmail) {
             PrefSiempo.getInstance(this).write(PrefSiempo.USER_SEEN_EMAIL_REQUEST, true);
