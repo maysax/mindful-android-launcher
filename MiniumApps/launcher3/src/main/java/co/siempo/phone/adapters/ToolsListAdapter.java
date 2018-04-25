@@ -27,7 +27,6 @@ import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.utils.PrefSiempo;
-import co.siempo.phone.utils.UIUtils;
 
 /**
  * Created by RajeshJadi on 14/2/18.
@@ -96,22 +95,22 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                             bindView(mainListItem, holder, false);
                         }
                     } else {
-                        if (getCountOfCheckTools() < 16) {
-                            mainListItem.setVisable(true);
-                            map.get(mainListItem.getId()).setVisible(true);
-                            bindView(mainListItem, holder, true);
+//                        if (getCountOfCheckTools() < 16) {
+                        mainListItem.setVisable(true);
+                        map.get(mainListItem.getId()).setVisible(true);
+                        bindView(mainListItem, holder, true);
 
-                            if (map.get(mainListItem.getId()).getApplicationName().equalsIgnoreCase("")) {
-                                String hashMapToolSettings = new Gson().toJson(map);
-                                PrefSiempo.getInstance(context).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
-                                Intent intent = new Intent(context, AppAssignmentActivity.class);
-                                intent.putExtra(Constants.INTENT_MAINLISTITEM, mainListItem);
-                                ((ToolSelectionActivity) context).startActivityForResult(intent, ToolSelectionActivity.TOOL_SELECTION);
-                            }
-                        } else {
-                            UIUtils.toastShort(context, "You cannot select " +
-                                    "more than 16 tools");
+                        if (map.get(mainListItem.getId()).getApplicationName().equalsIgnoreCase("")) {
+                            String hashMapToolSettings = new Gson().toJson(map);
+                            PrefSiempo.getInstance(context).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
+                            Intent intent = new Intent(context, AppAssignmentActivity.class);
+                            intent.putExtra(Constants.INTENT_MAINLISTITEM, mainListItem);
+                            ((ToolSelectionActivity) context).startActivityForResult(intent, ToolSelectionActivity.TOOL_SELECTION);
                         }
+//                        } else {
+//                            UIUtils.toastShort(context, "You cannot select " +
+//                                    "more than 16 tools");
+//                        }
                     }
 
                 }

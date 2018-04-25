@@ -41,7 +41,7 @@ public class AppAssignmentActivity extends CoreActivity {
     //8 Photos
 //    List<Integer> idList = Arrays.asList(2, 4, 6, 9, 10);
     //Uncomment when adding new tools
-    List<Integer> idList = Arrays.asList(2, 4, 6, 9, 10,11,18,19,20);
+    List<Integer> idList = Arrays.asList(2, 4, 6, 9, 10, 12, 18, 19, 20);
     ArrayList<String> connectedAppsList = new ArrayList<>();
     Set<String> set = new HashSet<>();
     private Toolbar toolbar;

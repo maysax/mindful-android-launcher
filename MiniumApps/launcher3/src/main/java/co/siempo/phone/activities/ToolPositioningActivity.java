@@ -97,7 +97,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
     protected void onPause() {
         super.onPause();
         for (int i = 0; i < sortedList.size(); i++) {
-            if (i > 12) {
+            if (i >= 16) {
                 map.get(sortedList.get(i).getId()).setBottomDoc(true);
             } else {
                 map.get(sortedList.get(i).getId()).setBottomDoc(false);
@@ -126,17 +126,35 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         new MainListItemLoader(this).loadItemsDefaultApp(items);
         items = PackageUtil.getToolsMenuData(this, items);
 
-        ArrayList<MainListItem> top = new ArrayList<>();
-        ArrayList<MainListItem> bottom = new ArrayList<>();
-        for (MainListItem mainListItem : items) {
-            if (map.get(mainListItem.getId()).isVisible()) {
-                if (map.get(mainListItem.getId()).isBottomDoc()) {
-                    bottom.add(mainListItem);
-                } else {
-                    top.add(mainListItem);
-                }
-            }
-        }
+//        ArrayList<MainListItem> top = new ArrayList<>();
+//        ArrayList<MainListItem> bottom = new ArrayList<>();
+//        for (MainListItem mainListItem : items) {
+//            if (map.get(mainListItem.getId()).isVisible()) {
+//                if (map.get(mainListItem.getId()).isBottomDoc()) {
+//                    bottom.add(mainListItem);
+//                } else {
+//                    top.add(mainListItem);
+//                }
+//            }
+//        }
+//
+//        if (top.size() < 12) {
+//            for (MainListItem mainListItem : items) {
+//                if (!map.get(mainListItem.getId()).isVisible() && !map.get
+//                        (mainListItem.getId()).isBottomDoc()) {
+//                    if (top.size() < 12) {
+//                        top.add(mainListItem);
+//                    }
+//                }
+//            }
+//        }
+//
+//        //ArrayList should contain exactly 16 elements 4 in bottom doc , 12
+//        // in top doc
+//
+//        items.clear();
+//        items.addAll(top);
+//        items.addAll(bottom);
 
         recyclerView = findViewById(R.id.recyclerView);
         txtSelectTools = findViewById(R.id.txtSelectTools);

@@ -91,17 +91,7 @@ public class MainListItemLoader {
                     .getString(R.string.title_browser), R.drawable
                     .ic_vector_browser));
 //            items.add(new MainListItem(12, "", 0));
-            items.add(new MainListItem(TOOLS_CALL, context.getResources()
-                    .getString(R.string.title_call), R.drawable.ic_vector_call,
-                    MainListItemType.ACTION));
-            items.add(new MainListItem(TOOLS_CLOCK, context.getResources()
-                    .getString(R.string.title_clock), R.drawable
-                    .ic_vector_clock));
-            items.add(new MainListItem(TOOLS_MESSAGE, context.getResources()
-                    .getString(R.string.title_messages), R.drawable
-                    .ic_vector_messages, MainListItemType.ACTION));
-            items.add(new MainListItem(TOOLS_EMAIL, context.getResources()
-                    .getString(R.string.title_email), R.drawable.ic_vector_email));
+
             items.add(new MainListItem(TOOLS_MUSIC, context.getResources()
                     .getString(R.string.title_music), R.drawable
                     .ic_vector_music));
@@ -114,6 +104,17 @@ public class MainListItemLoader {
             items.add(new MainListItem(TOOLS_FITNESS, context.getResources()
                     .getString(R.string.title_fitness), R.drawable
                     .ic_vector_fitness));
+            items.add(new MainListItem(TOOLS_CALL, context.getResources()
+                    .getString(R.string.title_call), R.drawable.ic_vector_call,
+                    MainListItemType.ACTION));
+            items.add(new MainListItem(TOOLS_CLOCK, context.getResources()
+                    .getString(R.string.title_clock), R.drawable
+                    .ic_vector_clock));
+            items.add(new MainListItem(TOOLS_MESSAGE, context.getResources()
+                    .getString(R.string.title_messages), R.drawable
+                    .ic_vector_messages, MainListItemType.ACTION));
+            items.add(new MainListItem(TOOLS_EMAIL, context.getResources()
+                    .getString(R.string.title_email), R.drawable.ic_vector_email));
 
 
         }
