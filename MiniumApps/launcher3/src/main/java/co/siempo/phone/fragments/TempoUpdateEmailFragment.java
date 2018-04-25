@@ -223,7 +223,7 @@ public class TempoUpdateEmailFragment extends CoreFragment {
         protected String doInBackground(String... strings) {
             try {
                 OkHttpClient client = new OkHttpClient();
-                String URL = "https://us14.api.mailchimp.com/3.0/lists/3dca6e174c/members/";
+                String URL = "https://us14.api.mailchimp.com/3.0/lists/08cf9f0fe2/members/";
                 String key = "YW55c3RyaW5nOmQ1ZmMyZTg1YWJiMThkZWE5ZjlhMTAyMGM4ZWYyODU5";
                 String keyValue = "Basic "+key;
 
