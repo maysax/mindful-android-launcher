@@ -141,6 +141,8 @@ public class EnableTempoActivity extends CoreActivity {
             } else {
                 on_the_next.setText(R.string.launcher_text);
                 imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshot_launcher));
+                on_the_next.setVisibility(View.GONE);
+                imgCenter.setVisibility(View.GONE);
                 imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_c_lollipop));
                 btnSubmit.setBackground(ContextCompat.getDrawable(this, R.drawable.button_bg_enable));
                 btnSubmit.setText(getString(R.string.tempo_enabled));
@@ -173,6 +175,8 @@ public class EnableTempoActivity extends CoreActivity {
             } else {
                 on_the_next.setText(R.string.launcher_text);
                 imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshot_launcher));
+                on_the_next.setVisibility(View.GONE);
+                imgCenter.setVisibility(View.GONE);
                 imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_d));
                 btnSubmit.setBackground(ContextCompat.getDrawable(this, R.drawable.button_bg_enable));
                 btnSubmit.setText(getString(R.string.tempo_enabled));
