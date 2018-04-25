@@ -104,7 +104,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                 }
             }
         } else {
-//            holder.linearLayout.setVisibility(View.INVISIBLE);
+            holder.linearLayout.setVisibility(View.GONE);
             holder.icon.setImageDrawable(null);
             holder.text.setText("");
         }
