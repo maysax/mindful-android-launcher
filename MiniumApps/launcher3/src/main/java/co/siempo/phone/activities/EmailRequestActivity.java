@@ -235,13 +235,11 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            relPrivacyEmail.setVisibility(View.GONE);
-            viewFlipperEmail.setInAnimation(this, R.anim
-                    .in_from_right_email);
-            viewFlipperEmail.setOutAnimation(this, R.anim
-                    .out_to_left_email);
-            UIUtils.hideSoftKeyboard(this, getWindow().getDecorView().getWindowToken());
-            viewFlipperEmail.showNext();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                flipView();
+            } else {
+                finish();
+            }
         } else {
             autoCompleteTextViewEmail.requestFocus();
             txtErrorMessage.setVisibility(View.VISIBLE);
