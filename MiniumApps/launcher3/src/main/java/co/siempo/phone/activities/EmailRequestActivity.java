@@ -1,8 +1,11 @@
 package co.siempo.phone.activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
@@ -21,7 +24,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
-import com.blankj.utilcode.util.NetworkUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -50,7 +52,7 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
     private Button btnEnable;
     private ViewFlipper viewFlipperEmail;
     private TextInputLayout inputEmail;
-
+    ConnectivityManager connectivityManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -222,7 +224,10 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
             PrefSiempo.getInstance(this).write(PrefSiempo
                     .USER_EMAILID, strEmail);
             try {
-                if (NetworkUtils.isConnected()) {
+                connectivityManager = (ConnectivityManager) getSystemService(Context
+                        .CONNECTIVITY_SERVICE);
+                NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+                if (activeNetwork != null) {
                     new MailChimpOperation().execute(strEmail);
                     storeDataToFirebase(CoreApplication.getInstance().getDeviceId(), strEmail);
                 }

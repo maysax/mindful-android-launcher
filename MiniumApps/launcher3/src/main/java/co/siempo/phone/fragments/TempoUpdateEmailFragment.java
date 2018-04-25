@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
@@ -18,7 +20,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.blankj.utilcode.util.NetworkUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -54,6 +55,7 @@ public class TempoUpdateEmailFragment extends CoreFragment {
 
     @ViewById
     TextInputLayout text_input_layout;
+    private ConnectivityManager connectivityManager;
 
 
     public TempoUpdateEmailFragment() {
@@ -85,7 +87,11 @@ public class TempoUpdateEmailFragment extends CoreFragment {
                             Toast.makeText(getActivity(), getResources().getString(R.string.success_email), Toast.LENGTH_SHORT).show();
                         }
                         try {
-                            if (NetworkUtils.isConnected()) {
+
+                            connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context
+                                    .CONNECTIVITY_SERVICE);
+                            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+                            if (activeNetwork != null) {
                                 new MailChimpOperation().execute(val_email);
                                 if (PrefSiempo.getInstance(context).read(PrefSiempo
                                         .USER_EMAILID, "").equalsIgnoreCase("")) {
