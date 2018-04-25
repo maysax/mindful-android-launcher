@@ -30,7 +30,5 @@ public class DBClient {
         List<TableNotificationSms> tableNotificationSms = DBUtility.getNotificationDao().queryBuilder()
                 .where(TableNotificationSmsDao.Properties.PackageName.eq(packageName)).list();
         DBUtility.getNotificationDao().deleteInTx(tableNotificationSms);
-
-        DBUtility.getNotificationDao().deleteInTx(tableNotificationSms);
     }
 }

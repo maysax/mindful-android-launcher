@@ -214,6 +214,7 @@ public class MainFragmentMediator {
                             //Write code for Junk Food Pane on this code
                             case 3:
                                 if (router != null && fragment != null) {
+                                    EventBus.getDefault().post(new SendSmsEvent(true));
                                     fragment.setCurrentPage(0);
                                 }
                                 break;
