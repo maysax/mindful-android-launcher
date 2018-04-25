@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.UserManager;
 import android.provider.AlarmClock;
 import android.provider.CalendarContract;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
@@ -56,12 +57,17 @@ import static co.siempo.phone.main.MainListItemLoader.TOOLS_CALL;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_CAMERA;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_CLOCK;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_EMAIL;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_FITNESS;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_FOOD;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_MAP;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_MESSAGE;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_MUSIC;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_NOTES;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_PAYMENT;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_PHOTOS;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_PODCAST;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_RECORDER;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_TODO;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_TRANSPORT;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_WEATHER;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_WELLNESS;
@@ -232,15 +238,33 @@ public abstract class CoreApplication extends MultiDexApplication {
             map.put(TOOLS_WELLNESS, new AppMenu(true, false, CoreApplication
                     .getInstance().getApplicationByCategory(10).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(10).get(0).activityInfo.packageName : ""));
 
-//            map.put(TOOLS_TODO, new AppMenu(false, false, CoreApplication
-//                    .getInstance().getApplicationByCategory(11).size() == 1 ?
-//                    CoreApplication.getInstance().getApplicationByCategory
-//                            (11).get(0).activityInfo.packageName : ""));
+            map.put(TOOLS_TODO, new AppMenu(false, false, CoreApplication
+                    .getInstance().getApplicationByCategory(11).size() == 1 ?
+                    CoreApplication.getInstance().getApplicationByCategory
+                            (11).get(0).activityInfo.packageName : ""));
             map.put(TOOLS_BROWSER, new AppMenu(false, false, CoreApplication
-                    .getInstance().getApplicationByCategory(12).size() == 1
-                    ? CoreApplication.getInstance().getApplicationByCategory(12).get(0).activityInfo.packageName : ""));
-            map.put(12, new AppMenu(true, false, CoreApplication
-                    .getInstance().getApplicationByCategory(12).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(12).get(0).activityInfo.packageName : ""));
+                    .getInstance().getApplicationByCategory(11).size() == 1
+                    ? CoreApplication.getInstance().getApplicationByCategory
+                    (11).get(0).activityInfo.packageName : ""));
+             map.put(TOOLS_MUSIC, new AppMenu(false, false, CoreApplication
+                    .getInstance().getApplicationByCategory(17).size() == 1 ?
+                    CoreApplication.getInstance().getApplicationByCategory
+                            (17).get(0).activityInfo.packageName : ""));
+            map.put(TOOLS_PODCAST, new AppMenu(false, false, CoreApplication
+                    .getInstance().getApplicationByCategory(18).size() == 1 ?
+                    CoreApplication.getInstance().getApplicationByCategory
+                            (18).get(0).activityInfo.packageName : ""));
+
+            map.put(TOOLS_FOOD, new AppMenu(false, false, CoreApplication
+                    .getInstance().getApplicationByCategory(19).size() == 1 ?
+                    CoreApplication.getInstance().getApplicationByCategory
+                            (19).get(0).activityInfo.packageName : ""));
+
+            map.put(TOOLS_FITNESS, new AppMenu(false, false, CoreApplication
+                    .getInstance().getApplicationByCategory(20).size() == 1 ?
+                    CoreApplication.getInstance().getApplicationByCategory
+                            (20).get(0).activityInfo.packageName : ""));
+
             map.put(TOOLS_CALL, new AppMenu(true, true, CoreApplication.getInstance
                     ().getApplicationByCategory(13).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(13).get(0).activityInfo.packageName : ""));
             map.put(TOOLS_CLOCK, new AppMenu(true, true, CoreApplication.getInstance
@@ -250,24 +274,7 @@ public abstract class CoreApplication extends MultiDexApplication {
             map.put(TOOLS_EMAIL, new AppMenu(true, true, CoreApplication.getInstance
                     ().getApplicationByCategory(16).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(16).get(0).activityInfo.packageName : ""));
 
-//            map.put(TOOLS_MUSIC, new AppMenu(false, false, CoreApplication
-//                    .getInstance().getApplicationByCategory(17).size() == 1 ?
-//                    CoreApplication.getInstance().getApplicationByCategory
-//                            (17).get(0).activityInfo.packageName : ""));
-//            map.put(TOOLS_PODCAST, new AppMenu(false, false, CoreApplication
-//                    .getInstance().getApplicationByCategory(18).size() == 1 ?
-//                    CoreApplication.getInstance().getApplicationByCategory
-//                            (18).get(0).activityInfo.packageName : ""));
-//
-//            map.put(TOOLS_FOOD, new AppMenu(false, false, CoreApplication
-//                    .getInstance().getApplicationByCategory(19).size() == 1 ?
-//                    CoreApplication.getInstance().getApplicationByCategory
-//                            (19).get(0).activityInfo.packageName : ""));
-//
-//            map.put(TOOLS_FITNESS, new AppMenu(false, false, CoreApplication
-//                    .getInstance().getApplicationByCategory(20).size() == 1 ?
-//                    CoreApplication.getInstance().getApplicationByCategory
-//                            (20).get(0).activityInfo.packageName : ""));
+
 
 
             String hashMapToolSettings = new Gson().toJson(map);
@@ -726,24 +733,24 @@ public abstract class CoreApplication extends MultiDexApplication {
                 list.addAll(getPackageManager().queryIntentActivities(intentEmail, 0));
                 break;
 
-//            case TOOLS_MUSIC:// Music
-//
-//                Intent intentMusic = new Intent(MediaStore
-//                        .INTENT_ACTION_MUSIC_PLAYER);
-//                list.addAll(getPackageManager().queryIntentActivities(intentMusic, 0));
-//                break;
-//
-//            case TOOLS_PODCAST://PODCAST
-//                break;
-//
-//            case TOOLS_FOOD://Food
-//                break;
-//
-//            case TOOLS_FITNESS://Fitness
-//                break;
-//
-//            case TOOLS_TODO://
-//                break;
+            case TOOLS_MUSIC:// Music
+
+                Intent intentMusic = new Intent(MediaStore
+                        .INTENT_ACTION_MUSIC_PLAYER);
+                list.addAll(getPackageManager().queryIntentActivities(intentMusic, 0));
+                break;
+
+            case TOOLS_PODCAST://PODCAST
+                break;
+
+            case TOOLS_FOOD://Food
+                break;
+
+            case TOOLS_FITNESS://Fitness
+                break;
+
+            case TOOLS_TODO://
+                break;
             default:
                 break;
         }

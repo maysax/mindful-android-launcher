@@ -862,6 +862,8 @@ public class PaneFragment extends CoreFragment {
                 getActivity().setRequestedOrientation(ActivityInfo
                         .SCREEN_ORIENTATION_PORTRAIT);
                 overlayDialog = new Dialog(getActivity(), 0);
+
+
                 overlayDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 overlayDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 overlayDialog.setContentView(R.layout.layout_appland_tour);
