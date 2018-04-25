@@ -42,7 +42,6 @@ import co.siempo.phone.utils.PrefSiempo;
 public class ToolPositioningActivity extends CoreActivity implements OnToolItemListChangedListener,
         OnStartDragListener {
     HashMap<Integer, AppMenu> map = new HashMap<>();
-    HashMap<Integer, Data> temp = new HashMap<>();
     private ArrayList<MainListItem> items = new ArrayList<>();
     private ArrayList<MainListItem> sortedList = new ArrayList<>();
     private ToolPositioningAdapter mAdapter;
@@ -126,36 +125,6 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         new MainListItemLoader(this).loadItemsDefaultApp(items);
         items = PackageUtil.getToolsMenuData(this, items);
 
-//        ArrayList<MainListItem> top = new ArrayList<>();
-//        ArrayList<MainListItem> bottom = new ArrayList<>();
-//        for (MainListItem mainListItem : items) {
-//            if (map.get(mainListItem.getId()).isVisible()) {
-//                if (map.get(mainListItem.getId()).isBottomDoc()) {
-//                    bottom.add(mainListItem);
-//                } else {
-//                    top.add(mainListItem);
-//                }
-//            }
-//        }
-//
-//        if (top.size() < 12) {
-//            for (MainListItem mainListItem : items) {
-//                if (!map.get(mainListItem.getId()).isVisible() && !map.get
-//                        (mainListItem.getId()).isBottomDoc()) {
-//                    if (top.size() < 12) {
-//                        top.add(mainListItem);
-//                    }
-//                }
-//            }
-//        }
-//
-//        //ArrayList should contain exactly 16 elements 4 in bottom doc , 12
-//        // in top doc
-//
-//        items.clear();
-//        items.addAll(top);
-//        items.addAll(bottom);
-
         recyclerView = findViewById(R.id.recyclerView);
         txtSelectTools = findViewById(R.id.txtSelectTools);
         recyclerView.setHasFixedSize(true);
@@ -223,9 +192,4 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         mItemTouchHelper.startDrag(viewHolder);
     }
 
-    class Data {
-        int id;
-        MainListItem mainListItem;
-        boolean isBottoDoc;
-    }
 }

@@ -246,8 +246,6 @@ public abstract class CoreApplication extends MultiDexApplication {
                     .getInstance().getApplicationByCategory(11).size() == 1
                     ? CoreApplication.getInstance().getApplicationByCategory
                     (11).get(0).activityInfo.packageName : ""));
-//            map.put(12, new AppMenu(true, false, CoreApplication
-//                    .getInstance().getApplicationByCategory(12).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(12).get(0).activityInfo.packageName : ""));
              map.put(TOOLS_MUSIC, new AppMenu(false, false, CoreApplication
                     .getInstance().getApplicationByCategory(17).size() == 1 ?
                     CoreApplication.getInstance().getApplicationByCategory

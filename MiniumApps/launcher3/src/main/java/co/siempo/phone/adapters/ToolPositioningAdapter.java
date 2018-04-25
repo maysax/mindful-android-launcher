@@ -48,15 +48,6 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
         mListChangedListener = listChangedListener;
         this.isHideIconBranding = isHideIconBranding;
         map = CoreApplication.getInstance().getToolsSettings();
-//        this.arrayList = new ArrayList<>();
-//        for (MainListItem mainListItem : arrayList) {
-//            final AppMenu appMenu = map.get(mainListItem.getId());
-//            if (appMenu.isVisible()) {
-//                this.arrayList.add(mainListItem);
-//            }
-//        }
-
-
     }
 
     @Override
@@ -149,18 +140,6 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
                     (R.color.transparent));
         }
 
-//        holder.linearLayout.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                if (holder.linearLayout.getVisibility() == View.VISIBLE) {
-//                    if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-//                        mDragStartListener.onStartDrag(holder);
-//                    }
-//                }
-//                return false;
-//            }
-//        });
-
         holder.imgAppIcon.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -189,7 +168,6 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
 
     @Override
     public int getItemCount() {
-//        return 16;
         return arrayList.size();
     }
 
