@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blankj.utilcode.util.NetworkUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,6 +33,7 @@ import org.androidannotations.annotations.ViewById;
 import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.UserModel;
+import co.siempo.phone.service.MailChimpOperation;
 import co.siempo.phone.utils.PrefSiempo;
 
 @EFragment(R.layout.fragment_tempo_update_email)
@@ -82,12 +84,20 @@ public class TempoUpdateEmailFragment extends CoreFragment {
                                 .USER_EMAILID, "").equals(val_email)) {
                             Toast.makeText(getActivity(), getResources().getString(R.string.success_email), Toast.LENGTH_SHORT).show();
                         }
-                        if (PrefSiempo.getInstance(context).read(PrefSiempo
-                                .USER_EMAILID, "").equalsIgnoreCase("")) {
-                            storeDataToFirebase(true, CoreApplication.getInstance().getDeviceId(), val_email);
-                        } else {
-                            storeDataToFirebase(false, CoreApplication.getInstance().getDeviceId(), val_email);
+                        try {
+                            if (NetworkUtils.isConnected()) {
+                                new MailChimpOperation().execute(val_email);
+                                if (PrefSiempo.getInstance(context).read(PrefSiempo
+                                        .USER_EMAILID, "").equalsIgnoreCase("")) {
+                                    storeDataToFirebase(true, CoreApplication.getInstance().getDeviceId(), val_email);
+                                } else {
+                                    storeDataToFirebase(false, CoreApplication.getInstance().getDeviceId(), val_email);
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
+
                         PrefSiempo.getInstance(context).write(PrefSiempo
                                 .USER_EMAILID, val_email);
                         hideSoftKeyboard();
@@ -209,4 +219,6 @@ public class TempoUpdateEmailFragment extends CoreFragment {
             e.printStackTrace();
         }
     }
+
+
 }
