@@ -14,9 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.adapters.MainListAdapter;
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.fragments.PaneFragment;
@@ -32,6 +34,7 @@ import co.siempo.phone.util.ContactSmsPermissionHelper;
 import co.siempo.phone.utils.ContactsLoader;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PermissionUtil;
+import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 
@@ -184,8 +187,6 @@ public class MainFragmentMediator {
                         position = getAdapter().getItem(position).getId();
                         switch (position) {
                             case 1:
-
-
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                     ContactSmsPermissionHelper
                                             contactSmsPermissionHelper = new
@@ -205,10 +206,27 @@ public class MainFragmentMediator {
                             //Notes
                             case 2:
                                 if (router != null && fragment != null) {
-                                    router.createNote(fragment.getActivity());
-                                    FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_SAVE_NOTE, "", data);
-                                    new ActivityHelper(context).openNotesApp(true);
-                                    EventBus.getDefault().post(new SendSmsEvent(true));
+                                    String inputStr = TokenManager.getInstance().getCurrent().getTitle();
+                                    if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.beta))
+                                            && inputStr.equalsIgnoreCase(Constants.ALPHA_SETTING)) {
+                                        if (PrefSiempo.getInstance(context).read(PrefSiempo
+                                                .IS_ALPHA_SETTING_ENABLE, false)) {
+                                            router.createNote(fragment.getActivity());
+                                            FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_SAVE_NOTE, "", data);
+                                            new ActivityHelper(context).openNotesApp(true);
+                                            EventBus.getDefault().post(new SendSmsEvent(true));
+                                        } else {
+                                            PrefSiempo.getInstance(context).write(PrefSiempo
+                                                    .IS_ALPHA_SETTING_ENABLE, true);
+                                            new ActivityHelper(context).openSiempoAlphaSettingsApp();
+                                            TokenManager.getInstance().clear();
+                                        }
+                                    } else {
+                                        router.createNote(fragment.getActivity());
+                                        FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_SAVE_NOTE, "", data);
+                                        new ActivityHelper(context).openNotesApp(true);
+                                        EventBus.getDefault().post(new SendSmsEvent(true));
+                                    }
                                 }
                                 break;
                             //Write code for Junk Food Pane on this code
