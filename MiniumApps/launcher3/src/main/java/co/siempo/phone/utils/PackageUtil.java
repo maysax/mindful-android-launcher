@@ -808,7 +808,7 @@ public class PackageUtil {
 
         //get the JSON array of the ordered of sorted customers
         String jsonListOfSortedToolsId = PrefSiempo.getInstance(context).read(PrefSiempo.SORTED_MENU, "");
-
+        Log.d("MenuItem", jsonListOfSortedToolsId);
 
         //check for null
         if (!jsonListOfSortedToolsId.isEmpty()) {
@@ -1179,7 +1179,7 @@ public class PackageUtil {
             for (int j = 0; j < recentItemList.size(); j++) {
                 MainListItem mainListItem = recentItemList.get(j);
 
-                if(null!=mainListItem) {
+                if (null != mainListItem) {
                     String recentItemTitle = mainListItem.getTitle();
                     String recentItemPackageName = mainListItem.getPackageName();
 

@@ -26,7 +26,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,7 +87,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     private InnerRecevier mRecevier;
     private String state = "";
     private String TAG = "CoreActivity";
-    private View mView;
 
     // Static method to return File at localPath
     public static File getLocalPath() {
@@ -127,10 +125,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
         userPresentBroadcastReceiver = new UserPresentBroadcastReceiver();
         registerReceiver(userPresentBroadcastReceiver, intentFilter);
-        mView = ((LayoutInflater) getSystemService(Context
-                .LAYOUT_INFLATER_SERVICE)).inflate(R.layout
-                .gray_scale_layout, null);
-
 
         if (PrefSiempo.getInstance(this).read(PrefSiempo.SELECTED_THEME_ID, 0) != 0) {
             setTheme(PrefSiempo.getInstance(this).read(PrefSiempo.SELECTED_THEME_ID, 0));
@@ -166,13 +160,10 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         try {
-            Intent intentService = new Intent(this, OverlayService.class);
-            stopService(intentService);
+            stopService(new Intent(this, OverlayService.class));
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
     public void loadDialog() {
@@ -296,13 +287,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 
     @Override
     protected void onDestroy() {
-        try {
-            if (null != windowManager && null != mView) {
-                windowManager.removeView(mView);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         super.onDestroy();
         if (mService != null) {
             unbindService(mServiceConn);
@@ -422,8 +406,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     @Subscribe()
     public void onEvent(JunkAppOpenEvent junkAppOpenEvent) {
         if (junkAppOpenEvent != null && junkAppOpenEvent.isNotify()) {
-
-
             try {
                 if (PackageUtil.isSiempoLauncher(this) && PrefSiempo
                         .getInstance(this).read

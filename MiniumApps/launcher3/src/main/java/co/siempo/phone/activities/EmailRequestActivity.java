@@ -163,7 +163,7 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
                 break;
             case R.id.btnNotNow:
                 PrefSiempo.getInstance(this).write(PrefSiempo.USER_SEEN_EMAIL_REQUEST, true);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)) {
                     flipView();
                 } else {
                     finish();
@@ -235,7 +235,7 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)) {
                 flipView();
             } else {
                 finish();
