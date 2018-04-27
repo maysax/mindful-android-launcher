@@ -128,7 +128,7 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
                 }
             }
         } else {
-            holder.linearLayout.setVisibility(View.GONE);
+            holder.linearLayout.setVisibility(View.INVISIBLE);
         }
 
 
