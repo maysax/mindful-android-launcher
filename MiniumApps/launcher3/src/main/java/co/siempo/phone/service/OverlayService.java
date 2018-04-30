@@ -32,15 +32,11 @@ public class OverlayService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
         androidHead = ((LayoutInflater) getSystemService(Context
                 .LAYOUT_INFLATER_SERVICE)).inflate(R.layout
                 .gray_scale_layout, null);
-
         wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams();
-
         params.width = ViewGroup.LayoutParams.MATCH_PARENT;
         params.height = ViewGroup.LayoutParams.MATCH_PARENT;
 

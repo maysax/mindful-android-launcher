@@ -46,7 +46,7 @@ public class InAppItemListActivity extends CoreActivity implements
         recyclerView = findViewById(R.id.recyclerView);
         txtNoItem = findViewById(R.id.txtNoItem);
         progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Loading");
+        progressDialog.setMessage("Loading...");
         progressDialog.show();
         subscriptionUtil = new SubscriptionUtil(InAppItemListActivity.this);
     }

@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import co.siempo.phone.R;
@@ -194,11 +195,31 @@ public abstract class CoreApplication extends MultiDexApplication {
         configIconify();
         configureLifecycle();
         configureNetworking();
-        if (null != getToolsSettings() && getToolsSettings().size() < 16) {
+        if (PrefSiempo.getInstance(this).read(PrefSiempo.INSTALLED_APP_VERSION_CODE, 0) == 0) {
+            PrefSiempo.getInstance(this).write(PrefSiempo.INSTALLED_APP_VERSION_CODE,
+                    UIUtils.getCurrentVersionCode(this));
+        }
+        if (getToolsSettings() == null || getToolsSettings().isEmpty()) {
             configureToolsPane();
-            PrefSiempo.getInstance(this).write(PrefSiempo.SORTED_MENU, "");
         } else {
-            configureToolsPane();
+            if (getToolsSettings().size() <= 16) {
+                PrefSiempo.getInstance(this).write(PrefSiempo.SORTED_MENU, "");
+                HashMap<Integer, AppMenu> oldMap = new HashMap<>();
+                String storedHashMapString = PrefSiempo.getInstance(this).read(PrefSiempo.TOOLS_SETTING, "");
+                java.lang.reflect.Type type = new TypeToken<HashMap<Integer, AppMenu>>() {
+                }.getType();
+                oldMap = new Gson().fromJson(storedHashMapString, type);
+                PrefSiempo.getInstance(this).write(PrefSiempo.TOOLS_SETTING, "");
+                configureToolsPane();
+                HashMap<Integer, AppMenu> newMap = getToolsSettings();
+                for (Map.Entry<Integer, AppMenu> newMenuEntry : newMap.entrySet()) {
+                    if (oldMap.containsKey(newMenuEntry.getKey())) {
+                        newMenuEntry.getValue().setApplicationName(oldMap.get(newMenuEntry.getKey()).getApplicationName());
+                    }
+                }
+                String hashMapToolSettings = new Gson().toJson(newMap);
+                PrefSiempo.getInstance(this).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
+            }
         }
         setHideIconBranding(PrefSiempo.getInstance(sInstance).read(PrefSiempo.IS_ICON_BRANDING, true));
         setRandomize(PrefSiempo.getInstance(sInstance).read(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, true));
@@ -239,14 +260,14 @@ public abstract class CoreApplication extends MultiDexApplication {
                     .getInstance().getApplicationByCategory(10).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(10).get(0).activityInfo.packageName : ""));
 
             map.put(TOOLS_TODO, new AppMenu(false, false, CoreApplication
-                    .getInstance().getApplicationByCategory(11).size() == 1 ?
+                    .getInstance().getApplicationByCategory(12).size() == 1 ?
                     CoreApplication.getInstance().getApplicationByCategory
-                            (11).get(0).activityInfo.packageName : ""));
+                            (12).get(0).activityInfo.packageName : ""));
             map.put(TOOLS_BROWSER, new AppMenu(false, false, CoreApplication
                     .getInstance().getApplicationByCategory(11).size() == 1
                     ? CoreApplication.getInstance().getApplicationByCategory
                     (11).get(0).activityInfo.packageName : ""));
-             map.put(TOOLS_MUSIC, new AppMenu(false, false, CoreApplication
+            map.put(TOOLS_MUSIC, new AppMenu(false, false, CoreApplication
                     .getInstance().getApplicationByCategory(17).size() == 1 ?
                     CoreApplication.getInstance().getApplicationByCategory
                             (17).get(0).activityInfo.packageName : ""));
@@ -273,8 +294,6 @@ public abstract class CoreApplication extends MultiDexApplication {
                     ().getApplicationByCategory(15).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(15).get(0).activityInfo.packageName : ""));
             map.put(TOOLS_EMAIL, new AppMenu(true, true, CoreApplication.getInstance
                     ().getApplicationByCategory(16).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(16).get(0).activityInfo.packageName : ""));
-
-
 
 
             String hashMapToolSettings = new Gson().toJson(map);
@@ -334,7 +353,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     /**
      * HashMap to store tools settings data.
      *
-     * @return HashMap<Integer       ,               AppMenu>
+     * @return
      */
     public HashMap<Integer, AppMenu> getToolsSettings() {
         String storedHashMapString = PrefSiempo.getInstance(this).read(PrefSiempo.TOOLS_SETTING, "");

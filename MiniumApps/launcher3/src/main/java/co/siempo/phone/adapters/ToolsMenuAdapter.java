@@ -103,7 +103,8 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                 }
             }
         } else {
-            holder.linearLayout.setVisibility(View.GONE);
+//            holder.linearLayout.setVisibility(View.GONE);
+//            holder.linearLayout.setVisibility(View.INVISIBLE);
             holder.icon.setImageDrawable(null);
             holder.text.setText("");
         }
@@ -219,12 +220,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
 
     @Override
     public int getItemCount() {
-        if (mainListItemList.size() == 0) {
-            return 0;
-        } else {
-            return isBottomDoc ? 4 : mainListItemList.size();
-
-        }
+        return mainListItemList.size();
 
     }
 

@@ -26,7 +26,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,13 +70,23 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     int onStartCount = 0;
     SharedPreferences launcherPrefs;
     UserPresentBroadcastReceiver userPresentBroadcastReceiver;
+    IInAppBillingService mService;
+    ServiceConnection mServiceConn = new ServiceConnection() {
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name,
+                                       IBinder service) {
+            mService = IInAppBillingService.Stub.asInterface(service);
+        }
+    };
     private IntentFilter mFilter;
     private InnerRecevier mRecevier;
     private String state = "";
     private String TAG = "CoreActivity";
-    private View mView;
-
-    IInAppBillingService mService;
 
     // Static method to return File at localPath
     public static File getLocalPath() {
@@ -101,19 +110,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 
     }
 
-    ServiceConnection mServiceConn = new ServiceConnection() {
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mService = null;
-        }
-
-        @Override
-        public void onServiceConnected(ComponentName name,
-                                       IBinder service) {
-            mService = IInAppBillingService.Stub.asInterface(service);
-        }
-    };
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,10 +125,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
         userPresentBroadcastReceiver = new UserPresentBroadcastReceiver();
         registerReceiver(userPresentBroadcastReceiver, intentFilter);
-        mView = ((LayoutInflater) getSystemService(Context
-                .LAYOUT_INFLATER_SERVICE)).inflate(R.layout
-                .gray_scale_layout, null);
-
 
         if (PrefSiempo.getInstance(this).read(PrefSiempo.SELECTED_THEME_ID, 0) != 0) {
             setTheme(PrefSiempo.getInstance(this).read(PrefSiempo.SELECTED_THEME_ID, 0));
@@ -168,13 +160,10 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         try {
-            Intent intentService = new Intent(this, OverlayService.class);
-            stopService(intentService);
+            stopService(new Intent(this, OverlayService.class));
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
     public void loadDialog() {
@@ -298,13 +287,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 
     @Override
     protected void onDestroy() {
-        try {
-            if (null != windowManager && null != mView) {
-                windowManager.removeView(mView);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         super.onDestroy();
         if (mService != null) {
             unbindService(mServiceConn);
@@ -424,8 +406,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     @Subscribe()
     public void onEvent(JunkAppOpenEvent junkAppOpenEvent) {
         if (junkAppOpenEvent != null && junkAppOpenEvent.isNotify()) {
-
-
             try {
                 if (PackageUtil.isSiempoLauncher(this) && PrefSiempo
                         .getInstance(this).read
@@ -456,9 +436,11 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 
         @Override
         public void onReceive(Context arg0, Intent intent) {
-            if (intent != null && intent.getAction() != null) {
-                if (intent.getAction().equals(Intent.ACTION_USER_PRESENT) ||
-                        intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+            if (intent != null && intent.getAction() != null && null != arg0) {
+                if (PackageUtil.isSiempoLauncher(arg0) && (intent.getAction()
+                        .equals
+                                (Intent.ACTION_USER_PRESENT) ||
+                        intent.getAction().equals(Intent.ACTION_SCREEN_ON))) {
                     Intent startMain = new Intent(Intent.ACTION_MAIN);
                     startMain.addCategory(Intent.CATEGORY_HOME);
                     startActivity(startMain);

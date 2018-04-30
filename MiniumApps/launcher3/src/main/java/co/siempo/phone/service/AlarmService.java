@@ -245,7 +245,7 @@ public class AlarmService extends IntentService {
                             notificationManager.notify(tableNotificationSms.getId().intValue(), notification);
                         }
                     }
-                    Notification summary = createGroupNotification(customNotification.getPackagename(), customNotification.getNotificationSms().size());
+                    Notification summary = createGroupNotification(customNotification.getPackagename(), customNotification.getNotificationSms());
                     if (notificationManager != null) {
                         notificationManager.notify(customNotification.getNotificationSms().get(0).getApp_icon(), summary);
                     }
@@ -265,13 +265,15 @@ public class AlarmService extends IntentService {
         }
     }
 
-    private Notification createGroupNotification(String packageName, int size) {
+    private Notification createGroupNotification(String packageName, ArrayList<TableNotificationSms> notificationSms) {
         String applicationName = CoreApplication.getInstance().getListApplicationName().get(packageName);
         Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(packageName);
+        PendingIntent contentIntent = PackageUtil.getPendingIntent(context, notificationSms.get(0));
         return new NotificationCompat.Builder(context, applicationName)
                 .setSmallIcon(R.drawable.siempo_notification_icon)
                 .setContentTitle(applicationName)
-                .setContentText(size + " new messages")
+                .setContentIntent(contentIntent)
+                .setContentText(notificationSms.size() + " new messages")
                 .setLargeIcon(bitmap)
                 .setGroupSummary(true)
                 .setAutoCancel(true)
