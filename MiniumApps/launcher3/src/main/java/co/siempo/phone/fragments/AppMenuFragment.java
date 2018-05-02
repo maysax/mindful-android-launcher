@@ -37,6 +37,7 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
     private Switch switchJunkFoodmize, switchHideIcon;
     private Context context;
     private long startTime = 0;
+    // private int selected;
 
     public AppMenuFragment() {
         // Required empty public constructor
@@ -138,6 +139,7 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
                 break;
 
             case R.id.relReduceOveruseFlagged:
+
                 //UIUtils.alert(context,"Deter Dialog","Deter Dialog");
         }
     }
