@@ -62,6 +62,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
     private List<AppListInfo> unflageAppList = new ArrayList<>();
     private ArrayList<AppListInfo> bindingList = new ArrayList<>();
     private long startTime = 0;
+    private boolean isFromAppMenu;
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
@@ -75,7 +76,10 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_junkfood_flagging);
         initView();
-
+        Intent intent = getIntent();
+        if (intent.getExtras() != null && intent.hasExtra("FromAppMenu")) {
+            isFromAppMenu = intent.getBooleanExtra("FromAppMenu", false);
+        }
 
     }
 
@@ -180,10 +184,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         //Added this code as part of SSA-1333, to save the list on backpress
         super.onBackPressed();
 
-        Intent intent = getIntent();
-        boolean isFromAppMenu = intent.getBooleanExtra("FromAppMenu", false);
         if (isFromAppMenu) {
-            Log.d("from setting", String.valueOf(isFromAppMenu));
             return;
 
         }
