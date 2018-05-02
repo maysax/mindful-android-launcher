@@ -163,9 +163,12 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/on_the_next"
                             android:layout_marginLeft="30dp"
+                            android:paddingTop="-10dp"
                             android:layout_marginRight="30dp"
-                            android:layout_marginTop="@dimen/dp_5"
-                            android:background="@drawable/img_draw_overlay_enable"/>
+                            android:layout_marginTop="-10dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginBottom="-10dp"
+                            android:src="@drawable/img_draw_overlay_enable"/>
                     </RelativeLayout>
 
                 </LinearLayout>

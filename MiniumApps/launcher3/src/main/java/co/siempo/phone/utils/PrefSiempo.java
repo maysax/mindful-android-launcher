@@ -40,6 +40,7 @@ public class PrefSiempo {
 
     // This field is used for to store tools pane visible/hide and its connected application.
     public static final String TOOLS_SETTING = "tools_setting";
+    public static final String INSTALLED_APP_VERSION_CODE = "installed_app_version_code";
 
     // This field is used for to store junkfood application package name.
     public static final String JUNKFOOD_APPS = "junkfood_apps";

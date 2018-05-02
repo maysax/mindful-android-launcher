@@ -24,7 +24,7 @@ public class MainListItem implements Serializable {
     private String icon;
     private int iconRes;
     private ApplicationInfo applicationInfo = null;
-    private boolean isVisable = false;
+    private boolean isVisable;
 
 //    private Date currentDateTime;
     /**

@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,6 +42,8 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         OnStartDragListener {
     HashMap<Integer, AppMenu> map = new HashMap<>();
     private ArrayList<MainListItem> items = new ArrayList<>();
+    private ArrayList<MainListItem> topItems = new ArrayList<>();
+    private ArrayList<MainListItem> bottomItems = new ArrayList<>();
     private ArrayList<MainListItem> sortedList = new ArrayList<>();
     private ToolPositioningAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -95,13 +96,43 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
     @Override
     protected void onPause() {
         super.onPause();
+
+
+//        ArrayList<MainListItem> top = new ArrayList<>();
+//        ArrayList<MainListItem> bottom = new ArrayList<>();
+//
+//        for (int i = 0; i < sortedList.size(); i++) {
+//            if (i >= 12) {
+////                map.get(sortedList.get(i).getId()).setBottomDoc(true);
+//                bottom.add(sortedList.get(i));
+//            } else {
+//                top.add(sortedList.get(i));
+////                map.get(sortedList.get(i).getId()).setBottomDoc(false);
+//            }
+//        }
+//
+//        for (Map.Entry<Integer, AppMenu> entry : map.entrySet()) {
+//            for (int i = 0; i < top.size(); i++) {
+//                if (entry.getKey() == top.get(i).getId()) {
+//                    map.get(top.get(i).getId()).setBottomDoc(false);
+//                }
+//            }
+//
+//            for (int i = 0; i < bottom.size(); i++) {
+//                if (entry.getKey() == bottom.get(i).getId()) {
+//                    map.get(bottom.get(i).getId()).setBottomDoc(true);
+//                }
+//            }
+//        }
+
         for (int i = 0; i < sortedList.size(); i++) {
-            if (i >= 12) {
+            if (i >= 16) {
                 map.get(sortedList.get(i).getId()).setBottomDoc(true);
             } else {
                 map.get(sortedList.get(i).getId()).setBottomDoc(false);
             }
         }
+
         String hashMapToolSettings = new Gson().toJson(map);
         PrefSiempo.getInstance(this).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
         new LoadToolPane(this).execute();
@@ -123,13 +154,41 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
                 .colorAccent));
         items = new ArrayList<>();
         new MainListItemLoader(this).loadItemsDefaultApp(items);
+//        items = CoreApplication.getInstance().getToolItemsList();
         items = PackageUtil.getToolsMenuData(this, items);
+//        ArrayList<MainListItem> visableItems = new ArrayList<>();
+//        ArrayList<MainListItem> inVisableItems = new ArrayList<>();
+//        ArrayList<MainListItem> tempData = new ArrayList<>();
+//
+//        for (MainListItem mainListItem : CoreApplication.getInstance().getToolItemsList()) {
+//            if (map.get(mainListItem.getId()).isVisible()) {
+//                visableItems.add(mainListItem);
+//            } else {
+//                inVisableItems.add(mainListItem);
+//            }
+//        }
+//        tempData.addAll(visableItems);
+//        tempData.addAll(inVisableItems);
+
+//        for (int i = 0; i < 12; i++) {
+//            topItems.add(CoreApplication.getInstance().getToolItemsList().get(i));
+//        }
+//
+//        topItems = new ArrayList<>();
+//        topItems.addAll(CoreApplication.getInstance().getToolItemsList());
+//        bottomItems = new ArrayList<>();
+//        bottomItems.addAll(CoreApplication.getInstance().getToolBottomItemsList());
+//
+//        items.addAll(topItems);
+//        items.addAll(bottomItems);
+//        items = CoreApplication.getInstance().getToolItemsList();
+//
 
         recyclerView = findViewById(R.id.recyclerView);
         txtSelectTools = findViewById(R.id.txtSelectTools);
         recyclerView.setHasFixedSize(true);
         mLayoutManager = new GridLayoutManager(this, 4);
-        recyclerView.setLayoutManager(mLayoutManager);
+                recyclerView.setLayoutManager(mLayoutManager);
         if (itemDecoration != null) {
             recyclerView.removeItemDecoration(itemDecoration);
         }
@@ -145,6 +204,8 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ToolPositioningActivity.this, ToolSelectionActivity.class);
+                intent.putExtra("TopList", topItems);
+                intent.putExtra("BottomList", bottomItems);
                 startActivity(intent);
             }
         });
@@ -175,9 +236,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
 
     @Override
     public void onToolItemListChanged(ArrayList<MainListItem> customers) {
-        Log.d("kamothi", "onToolItemListChange");
         ArrayList<Long> listOfSortedCustomerId = new ArrayList<>();
-
         for (MainListItem customer : customers) {
             listOfSortedCustomerId.add((long) customer.getId());
         }

@@ -223,9 +223,9 @@
     <string name="terms_and_services">Terms of Service</string>
     <string name="faq_section">FAQ</string>
     <string name="contact_permission">Contacts</string>
-    <string name="call_permission">Calls</string>
+    <string name="call_permission">Telephone</string>
     <string name="sms_permission">SMS</string>
-    <string name="storage_permission">Access File Manager</string>
+    <string name="storage_permission">Storage</string>
     <string name="location_permission">Location</string>
     <string name="notificationAccess">Notification access</string>
     <string name="draw_overlay">Draw over other Apps</string>
