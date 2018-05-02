@@ -33,6 +33,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.concurrent.RejectedExecutionException;
+
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.DashboardPagerAdapter;
@@ -118,7 +120,10 @@ public class DashboardActivity extends CoreActivity {
                             .USER_EMAILID, "");
                     connectivityManager = (ConnectivityManager) getSystemService(Context
                             .CONNECTIVITY_SERVICE);
-                    NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+                    NetworkInfo activeNetwork = null;
+                    if (connectivityManager != null) {
+                        activeNetwork = connectivityManager.getActiveNetworkInfo();
+                    }
                     if (activeNetwork != null) {
                         new MailChimpOperation().execute(strEmail);
                         storeDataToFirebase(CoreApplication.getInstance().getDeviceId(), strEmail);
@@ -313,9 +318,14 @@ public class DashboardActivity extends CoreActivity {
     }
 
     private void loadPane() {
-        new LoadFavoritePane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        new LoadToolPane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        new LoadJunkFoodPane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        try {
+            new LoadFavoritePane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new LoadToolPane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new LoadJunkFoodPane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } catch (RejectedExecutionException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -362,7 +372,10 @@ public class DashboardActivity extends CoreActivity {
         Log.d(TAG, "Active network..");
         connectivityManager = (ConnectivityManager) getSystemService(Context
                 .CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        NetworkInfo activeNetwork = null;
+        if (connectivityManager != null) {
+            activeNetwork = connectivityManager.getActiveNetworkInfo();
+        }
         if (activeNetwork != null) {
             if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
                 ApiClient_.getInstance_(DashboardActivity.this)
