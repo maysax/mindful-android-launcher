@@ -86,6 +86,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     private static CoreApplication sInstance;
     UserManager userManager;
     LauncherApps launcherApps;
+    String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1WmJ9sNAoO5o5QGJkZXfqLm8Py95ASb7XCY1NewZF7puJcWMGlv269AY2lqJuR0o/dzMnzo20D259NHPN6zF3TCsXcF8+jhRH5gAqKcNJCoc1p0tZ+rxZ5ETVYjR/OQ90MKStXa8MsArhfL+R6E27IuUELObkjS3XIwcjBj7EhBNVPv2ipj8t7w3bNorql8qPEHhgbc/v54krCMSEF1p82nIbZSvOFcJwLGg/wzmv6YfgsLD5fndoaNPiRLQ1nkWNASOryvgUDZAKqYjAtHY7WAV57FtQGgsViPTE4exzCp9t018GEeI5tbo4+RSw23nygSqmNBZkxv9Ee4jxpw7CQIDAQAB";
     private ArrayMap<String, String> listApplicationName = new ArrayMap<>();
     private Set<String> packagesList = new HashSet<>();
     private ArrayList<String> disableNotificationApps = new ArrayList<>();
@@ -97,14 +98,13 @@ public abstract class CoreApplication extends MultiDexApplication {
     private ArrayList<MainListItem> favoriteItemsList = new ArrayList<>();
     private boolean isHideIconBranding = true;
     private boolean isRandomize = true;
-    String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1WmJ9sNAoO5o5QGJkZXfqLm8Py95ASb7XCY1NewZF7puJcWMGlv269AY2lqJuR0o/dzMnzo20D259NHPN6zF3TCsXcF8+jhRH5gAqKcNJCoc1p0tZ+rxZ5ETVYjR/OQ90MKStXa8MsArhfL+R6E27IuUELObkjS3XIwcjBj7EhBNVPv2ipj8t7w3bNorql8qPEHhgbc/v54krCMSEF1p82nIbZSvOFcJwLGg/wzmv6YfgsLD5fndoaNPiRLQ1nkWNASOryvgUDZAKqYjAtHY7WAV57FtQGgsViPTE4exzCp9t018GEeI5tbo4+RSw23nygSqmNBZkxv9Ee4jxpw7CQIDAQAB";
-
-    public String getBase64EncodedPublicKey() {
-        return base64EncodedPublicKey;
-    }
 
     public static synchronized CoreApplication getInstance() {
         return sInstance;
+    }
+
+    public String getBase64EncodedPublicKey() {
+        return base64EncodedPublicKey;
     }
 
     public boolean isHideIconBranding() {
@@ -411,19 +411,14 @@ public abstract class CoreApplication extends MultiDexApplication {
             this.packagesList = packagesList;
             blockedApps = PrefSiempo.getInstance(this).read(PrefSiempo
                     .BLOCKED_APPLIST, new HashSet<String>());
-            boolean isAppInstallFirstTime = PrefSiempo.getInstance(this).read(PrefSiempo
-                    .IS_APP_INSTALLED_FIRSTTIME, true);
-            if (isAppInstallFirstTime) {
-                blockedApps.clear();
-            }
-            for (String applicationInfo : packagesList) {
-                if (isAppInstallFirstTime) {
-                    blockedApps.add(applicationInfo);
-                }
+
+
+            if (blockedApps != null && blockedApps.size() == 0) {
+                blockedApps.addAll(packagesList);
+                PrefSiempo.getInstance(this).write(PrefSiempo
+                        .BLOCKED_APPLIST, blockedApps);
             }
 
-            PrefSiempo.getInstance(this).write(PrefSiempo
-                    .BLOCKED_APPLIST, blockedApps);
         } catch (Exception e) {
             Tracer.d("Exception e ::" + e.toString());
         }

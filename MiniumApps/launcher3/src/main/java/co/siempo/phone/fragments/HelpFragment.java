@@ -256,8 +256,8 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
     private void showUpdateDialog(String str) {
 
         if (null != mActivity) {
-            PrefSiempo.getInstance(mActivity).write(PrefSiempo
-                    .IS_APP_INSTALLED_FIRSTTIME, false);
+//            PrefSiempo.getInstance(mActivity).write(PrefSiempo
+//                    .IS_APP_INSTALLED_FIRSTTIME, false);
             ConnectivityManager connectivityManager = (ConnectivityManager)
                     mActivity.
                             getSystemService(Context

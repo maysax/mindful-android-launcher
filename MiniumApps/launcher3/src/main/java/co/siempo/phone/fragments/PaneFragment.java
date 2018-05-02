@@ -925,7 +925,6 @@ public class PaneFragment extends CoreFragment {
                             case 2:
                                 PrefSiempo.getInstance(context).write(PrefSiempo
                                         .APPLAND_TOUR_SEEN, true);
-                                overlayDialog.dismiss();
                                 //Start Flagging activity
                                 if (pagerPane != null && pagerPane.getCurrentItem() == 0) {
                                     //Applied for smooth transition
@@ -936,6 +935,7 @@ public class PaneFragment extends CoreFragment {
                                             .out_to_right_tour);
                                     DashboardActivity.currentIndexPaneFragment = 0;
                                 }
+                                overlayDialog.dismiss();
 
                                 break;
 

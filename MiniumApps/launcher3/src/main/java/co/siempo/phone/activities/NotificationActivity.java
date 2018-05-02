@@ -48,7 +48,7 @@ public class NotificationActivity extends CoreActivity {
     private ImageView imgBack;
 
     private List<String> pref_messengerList = new ArrayList<>();
-    private ArrayList<String> pref_helpfulRobots = new ArrayList<>();
+    private Set<String> pref_helpfulRobots = new HashSet<>();
     private Set<String> pref_blockedList = new HashSet<>();
 
     private List<AppListInfo> messengerList = new ArrayList<>();
@@ -107,7 +107,7 @@ public class NotificationActivity extends CoreActivity {
         packageManager = getPackageManager();
 
         pref_messengerList = new ArrayList<>();
-        pref_helpfulRobots = new ArrayList<>();
+        pref_helpfulRobots = new HashSet<>();
         pref_blockedList = new HashSet<>();
 
         blockedList = new ArrayList<>();
@@ -132,7 +132,7 @@ public class NotificationActivity extends CoreActivity {
         }
         String str_helpfulRobots = PrefSiempo.getInstance(this).read(PrefSiempo.HELPFUL_ROBOTS, "");
         if (!TextUtils.isEmpty(str_helpfulRobots)) {
-            Type type = new TypeToken<ArrayList<String>>() {
+            Type type = new TypeToken<Set<String>>() {
             }.getType();
             pref_helpfulRobots = new Gson().fromJson(str_helpfulRobots, type);
         }
@@ -147,8 +147,11 @@ public class NotificationActivity extends CoreActivity {
             }
         }
 
+
         String disableList = new Gson().toJson(pref_helpfulRobots);
         PrefSiempo.getInstance(this).write(PrefSiempo.HELPFUL_ROBOTS, disableList);
+
+
 //        launcherPrefs.edit().putString(Constants.HELPFUL_ROBOTS, disableList).commit();
 
         String str_Header_AppList = PrefSiempo.getInstance(this).read(PrefSiempo.HEADER_APPLIST, "");
