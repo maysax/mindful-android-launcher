@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -93,12 +94,15 @@ public class AlarmService extends IntentService {
         everyTwoHourList.addAll(Arrays.asList(1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23));
         everyFourHoursList.addAll(Arrays.asList(1, 4, 8, 12, 16, 20, 24));
         n = NotificationManagerCompat.from(context);
-        run();
-
+        List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
+        Tracer.d("AlarmService: notificationList.size" + notificationList.size());
+        if (notificationList.size() > 0) {
+            run(notificationList);
+        }
     }
 
 
-    public void run() {
+    public void run(List<TableNotificationSms> notificationList) {
         if (PackageUtil.isSiempoLauncher(context)) {
             Calendar calendar = Calendar.getInstance();
             int systemHours = calendar.get(Calendar.HOUR_OF_DAY);
@@ -113,32 +117,22 @@ public class AlarmService extends IntentService {
                 Tracer.d("AlarmService: batchTime" + batchTime);
                 if (batchTime == 15) {
                     if (systemMinutes == 0 || systemMinutes == 15 || systemMinutes == 30 || systemMinutes == 45) {
-                        List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                        Tracer.d("AlarmService: notificationList.size" + notificationList.size());
                         createNotification(notificationList, context);
                     }
                 } else if (batchTime == 30) {
                     if (systemMinutes == 0 || systemMinutes == 30) {
-                        List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                        Tracer.d("AlarmService: notificationList.size" + notificationList.size());
                         createNotification(notificationList, context);
                     }
                 } else if (batchTime == 1) {
                     if (everyHourList.contains(systemHours) && systemMinutes == 0) {
-                        List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                        Tracer.d("AlarmService: notificationList.size" + notificationList.size());
                         createNotification(notificationList, context);
                     }
                 } else if (batchTime == 2) {
                     if (systemHours % 2 == 0 && systemMinutes == 0) {
-                        List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                        Tracer.d("AlarmService: notificationList.size" + notificationList.size());
                         createNotification(notificationList, context);
                     }
                 } else if (batchTime == 4) {
                     if (systemHours % 4 == 0 && systemMinutes == 0) {
-                        List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                        Tracer.d("AlarmService: notificationList.size" + notificationList.size());
                         createNotification(notificationList, context);
                     }
                 }
@@ -157,8 +151,6 @@ public class AlarmService extends IntentService {
                         Tracer.d("AlarmService: Time " + "User" + hours + ":" + minutes + "System:" + systemHours + ":" + systemMinutes);
                         if (hours == systemHours && minutes == systemMinutes) {
                             Tracer.d("AlarmService: onlyAt match condition" + str);
-                            List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                            Tracer.d("AlarmService: notificationList.size" + notificationList.size());
                             createNotification(notificationList, context);
                         }
                     }
@@ -168,19 +160,21 @@ public class AlarmService extends IntentService {
         }
     }
 
+    boolean isTempoVolume = false;
 
     public void createNotification(List<TableNotificationSms> notificationList, Context context) {
         try {
             Tracer.d("AlarmService: createNotification");
+
             if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-                if (audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM) == 1) {
-                    int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM) / 2;
+                int sound = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM);
+                if (sound == 1) {
+                    isTempoVolume = true;
+                    sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM) / 2;
                     audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, sound, 0);
                 }
                 Tracer.d("AlarmService: audioManager");
             }
-            Tracer.d("AlarmService: notificationList.size" + notificationList.size());
-
             Set<String> packageList = new HashSet<>();
             if (notificationList.size() > 0) {
                 for (TableNotificationSms sms : notificationList) {
@@ -248,9 +242,19 @@ public class AlarmService extends IntentService {
                 Tracer.d("AlarmService: deleteAll");
                 DBUtility.getNotificationDao().deleteAll();
             }
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (audioManager != null) {
+                        if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                            if (isTempoVolume)
+                                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, 0);
+                        }
+                    }
+                }
+            }, 1000);
 
         } catch (Exception e) {
-            Tracer.d("AlarmService: createNotification" + e.getMessage());
             e.printStackTrace();
             CoreApplication.getInstance().logException(e);
         }
@@ -259,26 +263,15 @@ public class AlarmService extends IntentService {
     private Notification createGroupNotification(String packageName, ArrayList<TableNotificationSms> notificationSms) {
         String applicationName = CoreApplication.getInstance().getListApplicationName().get(packageName);
         Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(packageName);
-        NotificationCompat.InboxStyle inboxStyle;
-        inboxStyle = new NotificationCompat.InboxStyle();
-        for (int i = 0; i < notificationSms.size(); i++) {
-            String title = PackageUtil.getNotificationTitle
-                    (notificationSms.get(i).get_contact_title(), packageName, context);
-            inboxStyle.addLine(title + ": " + notificationSms.get(i).get_message());
-        }
-        inboxStyle.setSummaryText(applicationName + " \u2022 " + notificationSms.size() + " unread message");
         PendingIntent contentIntent = PackageUtil.getPendingIntent(context, notificationSms.get(0));
-
         return new NotificationCompat.Builder(context, applicationName)
                 .setSmallIcon(R.drawable.siempo_notification_icon)
                 .setContentTitle(applicationName)
-                .setContentText(notificationSms.size() + " new messages")
+                .setContentIntent(contentIntent)
+                .setContentText(notificationSms.size() == 1 ? "1 new message" : notificationSms.size() + " new messages")
                 .setLargeIcon(bitmap)
                 .setGroupSummary(true)
-                .setContentIntent(contentIntent)
                 .setAutoCancel(true)
-                .setStyle(inboxStyle)
-                .setOnlyAlertOnce(true)
                 .setDefaults(Notification.DEFAULT_SOUND)
                 .setGroup(applicationName)
                 .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)

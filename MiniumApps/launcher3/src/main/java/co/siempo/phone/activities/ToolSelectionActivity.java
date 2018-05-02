@@ -102,18 +102,16 @@ public class ToolSelectionActivity extends CoreActivity {
         for (MainListItem mainListItem : topItems) {
             if (!mainListItem.isVisable()) {
                 id = mainListItem.getId();
-                break;
-            }
-        }
-        if (id == 0) {
-            for (MainListItem mainListItem : bottomItems) {
-                if (!mainListItem.isVisable()) {
-                    id = mainListItem.getId();
-                    break;
-                }
+                return id;
             }
         }
 
+        for (MainListItem mainListItem : bottomItems) {
+            if (!mainListItem.isVisable()) {
+                id = mainListItem.getId();
+                return id;
+            }
+        }
         return id;
     }
 
