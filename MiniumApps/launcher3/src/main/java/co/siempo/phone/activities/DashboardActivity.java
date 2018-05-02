@@ -18,6 +18,7 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -26,10 +27,16 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 import com.github.javiersantos.appupdater.AppUpdaterUtils;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.DashboardPagerAdapter;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.CheckVersionEvent;
 import co.siempo.phone.event.HomePress;
 import co.siempo.phone.event.OnBackPressedEvent;
@@ -41,10 +48,12 @@ import co.siempo.phone.fragments.ToolsPaneFragment;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
+import co.siempo.phone.models.UserModel;
 import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.service.LoadFavoritePane;
 import co.siempo.phone.service.LoadJunkFoodPane;
 import co.siempo.phone.service.LoadToolPane;
+import co.siempo.phone.service.MailChimpOperation;
 import co.siempo.phone.service.SiempoNotificationListener_;
 import co.siempo.phone.ui.SiempoViewPager;
 import co.siempo.phone.utils.PackageUtil;
@@ -99,14 +108,62 @@ public class DashboardActivity extends CoreActivity {
     protected void onResume() {
         super.onResume();
 
-        if (!PrefSiempo.getInstance(this).read(PrefSiempo
-                .USER_SEEN_EMAIL_REQUEST, false) || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && !permissionUtil.hasGiven
-                (PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION))) {
-            Intent intent = new Intent(this, EmailRequestActivity.class);
-            startActivity(intent);
+        if (!TextUtils.isEmpty(PrefSiempo.getInstance(this).read(PrefSiempo
+                .USER_EMAILID, ""))) {
+            boolean isUserSeenEmail = PrefSiempo.getInstance(this).read(PrefSiempo
+                    .USER_SEEN_EMAIL_REQUEST, false);
+            if (!isUserSeenEmail) {
+                try {
+                    String strEmail = PrefSiempo.getInstance(this).read(PrefSiempo
+                            .USER_EMAILID, "");
+                    connectivityManager = (ConnectivityManager) getSystemService(Context
+                            .CONNECTIVITY_SERVICE);
+                    NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+                    if (activeNetwork != null) {
+                        new MailChimpOperation().execute(strEmail);
+                        storeDataToFirebase(CoreApplication.getInstance().getDeviceId(), strEmail);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                PrefSiempo.getInstance(this).write(PrefSiempo
+                        .USER_SEEN_EMAIL_REQUEST, true);
+            }
+            if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !permissionUtil.hasGiven
+                    (PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION))) {
+                Intent intent = new Intent(this, EmailRequestActivity.class);
+                startActivity(intent);
+            }
+        } else {
+            if (!PrefSiempo.getInstance(this).read(PrefSiempo
+                    .USER_SEEN_EMAIL_REQUEST, false) || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                    && !permissionUtil.hasGiven
+                    (PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION))) {
+                Intent intent = new Intent(this, EmailRequestActivity.class);
+                startActivity(intent);
+            }
         }
+    }
 
+    private void storeDataToFirebase(String userId, String emailId) {
+        try {
+            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("users");
+            UserModel user = new UserModel(userId, emailId);
+            mDatabase.child(userId).setValue(user);
+            mDatabase.child(userId).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    Log.w("Firebase RealTime", "Failed to read value.", error.toException());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 

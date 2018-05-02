@@ -57,6 +57,16 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
     private ArrayList<Integer> everyFourHoursList = new ArrayList<>();
     private Context context;
 
+    private OnDismissListener onDismissListener = new OnDismissListener() {
+        @Override
+        public void onDismiss(DialogInterface dialog) {
+            if (null != radioBatched && !radioBatched.isChecked()) {
+                PrefSiempo.getInstance(context).write(PrefSiempo
+                        .BATCH_TIME, 15);
+            }
+        }
+    };
+
     public DialogTempoSetting(@NonNull Context context) {
         super(context, R.style.FullScreenDialogStyle);
         this.context = context;
@@ -87,6 +97,8 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
                 fabPlay.setVisibility(View.VISIBLE);
             }
         }, 400);
+
+
     }
 
     private void initView() {
@@ -124,6 +136,11 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
         txtOnlyAtTime1.setOnClickListener(this);
         txtOnlyAtTime2.setOnClickListener(this);
         txtOnlyAtTime3.setOnClickListener(this);
+
+        //Added as part of SSA-1534, to reset the preference of batch mode
+        // when any other radio button is checked
+        this.setOnDismissListener(onDismissListener);
+
 
     }
 
@@ -501,7 +518,8 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
             strMessage = strMessage + context.getString(R.string.msg_next_delivery) + df.format(calendar.getTime());
             txtMessage.setText(strMessage);
             calendar.set(Calendar.SECOND, 0);
-            if (CoreApplication.getInstance() != null) PackageUtil.enableDisableAlarm(calendar, 0);
+            if (CoreApplication.getInstance() != null)
+                PackageUtil.enableDisableAlarm(calendar, 0);
         } else if (pos == 2) {
             radioIndividual.setChecked(false);
             radioBatched.setChecked(false);
