@@ -229,15 +229,7 @@ public class AlarmService extends IntentService {
                         if (notificationManager != null) {
                             notificationManager.createNotificationChannel(notificationChannel);
                         }
-//                        notificationManager.createNotificationChannelGroup(new NotificationChannelGroup("" + channelName, channelName));
                     }
-//                    if (customNotification.getNotificationSms().size() == 1) {
-//                        Notification notification =
-//                                createSingleNotification(customNotification.getNotificationSms().get(0), false);
-//                        if (notificationManager != null) {
-//                            notificationManager.notify(customNotification.getNotificationSms().get(0).getId().intValue(), notification);
-//                        }
-//                    } else {
                     for (TableNotificationSms tableNotificationSms : customNotification.getNotificationSms()) {
                         Notification notification =
                                 createSingleNotification(tableNotificationSms, true);
@@ -249,7 +241,6 @@ public class AlarmService extends IntentService {
                     if (notificationManager != null) {
                         notificationManager.notify(customNotification.getNotificationSms().get(0).getApp_icon(), summary);
                     }
-//                    }
                 }
             }
 
@@ -268,15 +259,26 @@ public class AlarmService extends IntentService {
     private Notification createGroupNotification(String packageName, ArrayList<TableNotificationSms> notificationSms) {
         String applicationName = CoreApplication.getInstance().getListApplicationName().get(packageName);
         Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(packageName);
+        NotificationCompat.InboxStyle inboxStyle;
+        inboxStyle = new NotificationCompat.InboxStyle();
+        for (int i = 0; i < notificationSms.size(); i++) {
+            String title = PackageUtil.getNotificationTitle
+                    (notificationSms.get(i).get_contact_title(), packageName, context);
+            inboxStyle.addLine(title + ": " + notificationSms.get(i).get_message());
+        }
+        inboxStyle.setSummaryText(applicationName + " \u2022 " + notificationSms.size() + " unread message");
         PendingIntent contentIntent = PackageUtil.getPendingIntent(context, notificationSms.get(0));
+
         return new NotificationCompat.Builder(context, applicationName)
                 .setSmallIcon(R.drawable.siempo_notification_icon)
                 .setContentTitle(applicationName)
-                .setContentIntent(contentIntent)
                 .setContentText(notificationSms.size() + " new messages")
                 .setLargeIcon(bitmap)
                 .setGroupSummary(true)
+                .setContentIntent(contentIntent)
                 .setAutoCancel(true)
+                .setStyle(inboxStyle)
+                .setOnlyAlertOnce(true)
                 .setDefaults(Notification.DEFAULT_SOUND)
                 .setGroup(applicationName)
                 .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)

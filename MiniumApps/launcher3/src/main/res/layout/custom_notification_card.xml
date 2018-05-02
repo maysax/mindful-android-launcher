@@ -23,8 +23,8 @@
 
             <ImageView
                 android:id="@+id/imgAppIcon"
-                android:layout_width="@dimen/dp_20"
-                android:layout_height="@dimen/dp_20"
+                android:layout_width="@dimen/dp_22"
+                android:layout_height="@dimen/dp_22"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/dp_2"
                 android:scaleType="fitCenter"
@@ -58,6 +58,7 @@
         </LinearLayout>
 
         <RelativeLayout
+            android:layout_marginLeft="@dimen/dp_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -86,6 +87,7 @@
                     android:layout_height="wrap_content"
                     android:maxLines="10"
                     android:paddingBottom="@dimen/dp_1"
+                    android:paddingLeft="@dimen/dp_3"
                     android:paddingRight="@dimen/dp_3"
                     android:paddingTop="@dimen/dp_1"
                     android:textColor="@color/actionbar_background_start"
