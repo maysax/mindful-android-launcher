@@ -2,6 +2,7 @@ package co.siempo.phone.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -178,6 +179,14 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
 
         //Added this code as part of SSA-1333, to save the list on backpress
         super.onBackPressed();
+
+        Intent intent = getIntent();
+        boolean isFromAppMenu = intent.getBooleanExtra("FromAppMenu", false);
+        if (isFromAppMenu) {
+            Log.d("from setting", String.valueOf(isFromAppMenu));
+            return;
+
+        }
         JunkfoodFlaggingActivity.this.overridePendingTransition(R
                 .anim.in_from_right_email, R.anim
                 .out_to_left_email);
