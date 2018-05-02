@@ -290,7 +290,6 @@
                         android:text="@string/choose_app_flag_desc"
                         android:textSize="16sp" />
                 </RelativeLayout>
-
             </RelativeLayout>
         </ScrollView>
 
