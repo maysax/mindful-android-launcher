@@ -248,13 +248,7 @@ public class DashboardActivity extends CoreActivity {
                         PrefSiempo.getInstance(DashboardActivity.this).write(PrefSiempo.TOGGLE_LEFTMENU, swipeCount);
                     }
                     FirebaseHelper.getInstance().logScreenUsageTime(IntentionFragment.class.getSimpleName(), startTime);
-                    if (currentIndexDashboard == 1 && PrefSiempo.getInstance(DashboardActivity.this).read(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, true)) {
-//                        PrefSiempo.getInstance(DashboardActivity.this).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, false);
-//                        Intent intent = new Intent(DashboardActivity.this, JunkfoodFlaggingActivity.class);
-//                        startActivity(intent);
-//                        overridePendingTransition(R
-//                                .anim.fade_in_junk, R.anim.fade_out_junk);
-                    } else if (DashboardActivity.currentIndexPaneFragment == 0) {
+                    if (DashboardActivity.currentIndexPaneFragment == 0) {
                         Log.d("Firebase", "Junkfood Start");
                         startTime = System.currentTimeMillis();
                     } else if (DashboardActivity.currentIndexPaneFragment == 1) {
@@ -301,11 +295,21 @@ public class DashboardActivity extends CoreActivity {
             }
         });
         loadPane();
+//        if (PrefSiempo.getInstance(this).read(PrefSiempo
+//                .IS_APP_INSTALLED_FIRSTTIME, true)) {
+//            Log.d(TAG, "Display upgrade overlayDialog.");
+//            checkUpgradeVersion();
+//        }
         if (PrefSiempo.getInstance(this).read(PrefSiempo
-                .IS_APP_INSTALLED_FIRSTTIME, true)) {
-            Log.d(TAG, "Display upgrade overlayDialog.");
+                .INSTALLED_APP_VERSION_CODE, 0) == 0 || (PrefSiempo.getInstance(this).read(PrefSiempo
+                .INSTALLED_APP_VERSION_CODE, 0) < UIUtils
+                .getCurrentVersionCode(this))) {
+            PrefSiempo.getInstance(this).write(PrefSiempo
+                    .INSTALLED_APP_VERSION_CODE, UIUtils.getCurrentVersionCode(this));
             checkUpgradeVersion();
         }
+
+
     }
 
     private void loadPane() {
@@ -419,8 +423,8 @@ public class DashboardActivity extends CoreActivity {
     }
 
     private void showUpdateDialog(String str) {
-        PrefSiempo.getInstance(DashboardActivity.this).write(PrefSiempo
-                .IS_APP_INSTALLED_FIRSTTIME, false);
+//        PrefSiempo.getInstance(DashboardActivity.this).write(PrefSiempo
+//                .IS_APP_INSTALLED_FIRSTTIME, false);
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
         if (activeNetwork != null) { // connected to the internet
             UIUtils.confirmWithCancel(this, "", str.equalsIgnoreCase(CheckVersionEvent.ALPHA) ? "New alpha version found! Would you like to update Siempo?" : "New beta version found! Would you like to update Siempo?", new DialogInterface.OnClickListener() {
