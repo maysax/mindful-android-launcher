@@ -28,16 +28,15 @@ public class Sorting {
      * @param list
      * @return
      */
-    public static ArrayList<ResolveInfo> sortAppAssignment(final Context context, ArrayList<ResolveInfo> list) {
+    public synchronized static ArrayList<ResolveInfo> sortAppAssignment(final Context context, ArrayList<ResolveInfo> list) {
         sort(list, new Comparator<ResolveInfo>() {
             @Override
             public int compare(final ResolveInfo object1, final ResolveInfo object2) {
                 if (object1 != null && object2 != null) {
-                    int sortValue = object1.loadLabel(context
+                    return object1.loadLabel(context
                             .getPackageManager()).toString().toLowerCase().compareTo
                             (object2.loadLabel(context.getPackageManager())
                                     .toString().toLowerCase());
-                    return sortValue;
                 } else {
                     return 1;
                 }
@@ -52,7 +51,7 @@ public class Sorting {
      * @param list
      * @return
      */
-    public static ArrayList<String> sortJunkAppAssignment(ArrayList<String> list) {
+    public synchronized static ArrayList<String> sortJunkAppAssignment(ArrayList<String> list) {
         sort(list, new Comparator<String>() {
             @Override
             public int compare(final String object1, final String object2) {
@@ -63,7 +62,7 @@ public class Sorting {
     }
 
 
-    public static ArrayList<MainListItem> SortApplications(final ArrayList<MainListItem> appList) {
+    public synchronized static ArrayList<MainListItem> SortApplications(final ArrayList<MainListItem> appList) {
         sort(appList, new Comparator<MainListItem>() {
             @Override
             public int compare(final MainListItem object1, final MainListItem object2) {
@@ -74,7 +73,7 @@ public class Sorting {
     }
 
 
-    public static ArrayList<MainListItem> sortToolAppAssignment(final Context context, ArrayList<MainListItem> list) {
+    public synchronized static ArrayList<MainListItem> sortToolAppAssignment(final Context context, ArrayList<MainListItem> list) {
         Collections.sort(list, new Comparator<MainListItem>() {
             @Override
             public int compare(final MainListItem object1, final MainListItem object2) {
@@ -84,7 +83,7 @@ public class Sorting {
         return list;
     }
 
-    public static List<AppListInfo> sortApplication(List<AppListInfo> list) {
+    public synchronized static List<AppListInfo> sortApplication(List<AppListInfo> list) {
         Collections.sort(list, new Comparator<AppListInfo>() {
             @Override
             public int compare(final AppListInfo object1, final AppListInfo object2) {
@@ -110,7 +109,7 @@ public class Sorting {
     }
 
 
-    public static ArrayList<TableNotificationSms> sortNotificationByDate(final ArrayList<TableNotificationSms> appList) {
+    public synchronized static ArrayList<TableNotificationSms> sortNotificationByDate(final ArrayList<TableNotificationSms> appList) {
         sort(appList, new Comparator<TableNotificationSms>() {
             @Override
             public int compare(final TableNotificationSms object1, final TableNotificationSms object2) {
@@ -120,7 +119,7 @@ public class Sorting {
         return appList;
     }
 
-    public static ArrayList<CustomNotification> sortNotificationByDate1(final ArrayList<CustomNotification> appList) {
+    public synchronized static ArrayList<CustomNotification> sortNotificationByDate1(final ArrayList<CustomNotification> appList) {
         sort(appList, new Comparator<CustomNotification>() {
             @Override
             public int compare(final CustomNotification object1, final CustomNotification object2) {
