@@ -41,6 +41,8 @@
     <dimen name="sp_20">20sp</dimen>
     <dimen name="dp_4">4dp</dimen>
     <dimen name="dp_20">20dp</dimen>
+    <dimen name="dp_24">24dp</dimen>
+    <dimen name="dp_32">32dp</dimen>
     <dimen name="dp_48">48dp</dimen>
     <dimen name="sp_15">15sp</dimen>
     <dimen name="dp_46">46dp</dimen>
