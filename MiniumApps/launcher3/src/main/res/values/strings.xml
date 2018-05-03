@@ -32,10 +32,10 @@
     <string name="title.swipe">Swipe right to show flagged apps</string>
 
     <string name="label_multiple_numbers">Multiple numbers</string>
-    <string name="string_notification_title">Notifications</string>
+    <string name="string_notification_title">Control notifications</string>
     <string name="string_account_title">Account</string>
     <string name="string_account_service_title">"Account &amp; services"</string>
-    <string name="string_update_email_title">Update Email</string>
+    <string name="string_update_email_title">Update email</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" tools:ignore="UnusedResources">Hello blank fragment</string>
@@ -249,7 +249,7 @@
     <string name="batched_every_4_hour">Batched, every 4 hours</string>
     <string name="only_at">Only at:</string>
     <string name="add">ADD</string>
-    <string name="home_screen">Home Screen</string>
+    <string name="home_screen">Customize appearance</string>
     <string name="account">Account</string>
     <string name="alpha_settings">Alpha Settings</string>
     <string name="allow_specific_apps">Allow specific apps</string>
@@ -259,7 +259,9 @@
 
     <!--Account Setting Section-->
 
+    <string name="lbl_purchaseSiempo">Purchase Siempo</string>
     <string name="lbl_updateEmail">Update email address</string>
+    <string name="lbl_freeTrial">"Your free trial ends in 13 days.\nLearn more about pricing options."</string>
     <string name="lbl_exitSiempo">Exit Siempo services</string>
     <string name="lbl_updateEmailDescription">Siempo will never email you unless you request support or opt-in.</string>
     <string name="lbl_switchSiempo">Switch to another home app</string>
@@ -270,7 +272,7 @@
     <!--Update Email Section-->
 
     <string name="lbl_email">Your email address</string>
-    <string name="success_email">Email address Updated</string>
+    <string name="success_email">Email address updated</string>
     <string name="success_msg">Success</string>
 
 
@@ -310,11 +312,13 @@
     <string name="next">NEXT</string>
 
     <string name="faqlink">http://www.getsiempo.com/apps/android/beta/faq.htm</string>
-    <string name="privacypolicy_link"><a href="">Privacy Policy.</a></string>
+    <string name="privacypolicy_link"><a href="">Privacy Policy</a></string>
     <string name="disable_intentions">Disable intentions</string>
+    <string name="dark_theme">Dark theme</string>
     <string name="when_intentions_are_disabled_your_home_screen_will_be_blank">When intentions are disabled, your home screen will be blank.</string>
-    <string name="homescreen">Home Screen</string>
-    <string name="app_menus">App menus</string>
+    <string name="dark_theme_text">"Backgrounds will be dark while icons &amp; text will be light."</string>
+    <string name="homescreen">Customize appearance</string>
+    <string name="app_menus">Reduce app usage</string>
     <string name="msg_no_apps">You haven\'t moved any apps into this category.</string>
     <string name="search_hint">Find app, send message, or save note</string>
     <string name="notification_interrupt_title">Select apps that may interrupt you</string>
@@ -360,8 +364,7 @@
         <item>Large</item>
     </string-array>
 
-    <string name="you_ve_flag">"You've flagged these apps.Your current intention:"
-</string>
+    <string name="you_ve_flag">"You've flagged these apps.Your current intention:"</string>
 
 
     <!-- errors -->
@@ -441,7 +444,7 @@
     <string name="are_you_sure">Are you sure?</string>
     <string name="exiting_siempo">Exiting Siempo</string>
     <string name="exit">EXIT</string>
-    <string name="exiting_siempo_msg">To re-enable Siempo protections after exiting, launch the Siempo app at any time.  Using Siempo can help decrease unintended app use.</string>
+    <string name="exiting_siempo_msg">"Exiting does not impact your subscription status. To re-enable Siempo protections after exiting, launch the Siempo app at any time. "</string>
     <string name="editing_tools">Editing tools</string>
     <string name="editing_frequently_apps">Editing frequently used apps</string>
     <string name="select_tools">Select Tools</string>
@@ -494,6 +497,7 @@
     <string name="reduce_overuse_Flagged_description_setting">You will be gently detered from using flagged apps after 5 minutes of use. Unrestriced use will be restored after any 1 minute break from flagged apps.</string>
     <string name="choose_app_flag_desc">Flag any apps that you want to use less. </string>
     <string name="choose_app_flag">Choose apps to flag</string>
+    <string name="custom_background_image_title">Custom background image</string>
 
 
     <string-array name="in_app_items_subscription">

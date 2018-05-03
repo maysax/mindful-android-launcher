@@ -28,6 +28,18 @@ public class TempoHomeFragment extends CoreFragment {
     @ViewById
     RelativeLayout relAllowSpecificApps;
 
+    @ViewById
+    Switch switchCustomBackground;
+
+    @ViewById
+    RelativeLayout relCustomBackground;
+
+    @ViewById
+    Switch switchDarkTheme;
+
+    @ViewById
+    RelativeLayout relDarkTheme;
+
     public TempoHomeFragment() {
         // Required empty public constructor
     }
@@ -52,7 +64,6 @@ public class TempoHomeFragment extends CoreFragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 PrefSiempo.getInstance(context).write(PrefSiempo
                         .IS_INTENTION_ENABLE, isChecked);
-//                droidPrefs.isIntentionEnable().put(isChecked);
             }
         });
     }
@@ -61,6 +72,16 @@ public class TempoHomeFragment extends CoreFragment {
     void relAllowSpecificApps() {
 
         switchDisableIntentionsControls.performClick();
+    }
+
+    @Click
+    void relCustomBackground() {
+        switchCustomBackground.performClick();
+    }
+
+    @Click
+    void relDarkTheme() {
+        switchDarkTheme.performClick();
     }
 
 
