@@ -2,6 +2,7 @@ package co.siempo.phone.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -61,6 +62,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
     private List<AppListInfo> unflageAppList = new ArrayList<>();
     private ArrayList<AppListInfo> bindingList = new ArrayList<>();
     private long startTime = 0;
+    private boolean isFromAppMenu;
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
@@ -74,7 +76,10 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_junkfood_flagging);
         initView();
-
+        Intent intent = getIntent();
+        if (intent.getExtras() != null && intent.hasExtra("FromAppMenu")) {
+            isFromAppMenu = intent.getBooleanExtra("FromAppMenu", false);
+        }
 
     }
 
@@ -178,6 +183,11 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
 
         //Added this code as part of SSA-1333, to save the list on backpress
         super.onBackPressed();
+
+        if (isFromAppMenu) {
+            return;
+
+        }
         JunkfoodFlaggingActivity.this.overridePendingTransition(R
                 .anim.in_from_right_email, R.anim
                 .out_to_left_email);

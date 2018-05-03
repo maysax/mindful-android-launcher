@@ -417,8 +417,10 @@
     <string name="title.messages">Messages</string>
     <string name="title.email">Email</string>
     <string name="hide_icon_branding">Hide icon branding</string>
-    <string name="randomize_junkfood">"Randomize flagged app icons"</string>
+    <string name="randomize_junkfood">Randomize flagged-app icons</string>
+    <string name="reduce_overuse_screen">Reduce overuse of screen</string>
     <string name="junkfood_description_setting">App icons will have a different position each time you open the junk-food menu.</string>
+    <string name="reduce_overuse_screen_description_setting">Your daily screen-time limit starts high and gradually decreases. After reaching your limit each day, you will be gently detered from using non-essential apps.</string>
     <string name="iconbranding_description_setting">App icon logos are replaced with less enticing images and patterns.</string>
     <string name="assign_an_app">Assign an app to </string>
     <string name="title_flagging_screen">Flag apps</string>
@@ -491,6 +493,10 @@
     <string name="to_enable_draw">To enable, on the next screen: tap on the\ntoggle, then tap on the back arrow.</string>
     <string name="launcher_text">On the next screen: \nTap the circle, then tap the back arrow.</string>
     <string name="permission_msg_enable_tempo">Tempo needs permission \nto perform these tasks:</string>
+    <string name="reduce_overuse_flagged">Reduce overuse of flagged apps</string>
+    <string name="reduce_overuse_Flagged_description_setting">You will be gently detered from using flagged apps after 5 minutes of use. Unrestriced use will be restored after any 1 minute break from flagged apps.</string>
+    <string name="choose_app_flag_desc">Flag any apps that you want to use less. </string>
+    <string name="choose_app_flag">Choose apps to flag</string>
     <string name="custom_background_image_title">Custom background image</string>
 
 
