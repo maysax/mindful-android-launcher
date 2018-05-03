@@ -364,8 +364,7 @@
         <item>Large</item>
     </string-array>
 
-    <string name="you_ve_flag">"You've flagged these apps.Your current intention:"
-</string>
+    <string name="you_ve_flag">"You've flagged these apps.Your current intention:"</string>
 
 
     <!-- errors -->
