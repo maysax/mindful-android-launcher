@@ -491,7 +491,7 @@
     <string name="launcher_text">On the next screen: \nTap the circle, then tap the back arrow.</string>
     <string name="permission_msg_enable_tempo">Tempo needs permission \nto perform these tasks:</string>
     <string name="reduce_overuse_flagged">Reduce overuse of flagged apps</string>
-    <string name="reduce_overuse_Flagged_description_setting">You will be gently detered from using flagged apps after 5 minutes of use. Unrestriced use will be restored after any 1 minute break from flagged apps.</string>
+    <string name="reduce_overuse_Flagged_description_setting">You will be gently detered from using flagged apps after 5 minutes of use. Unrestriced use will be restored after any %s  break from flagged apps.</string>
     <string name="choose_app_flag_desc">Flag any apps that you want to use less. </string>
     <string name="choose_app_flag">Choose apps to flag</string>
 
@@ -510,6 +510,15 @@
         <item>sub.monthly.selector.dollars.50</item>
         <!--<item>testing_monthly_dollers.01</item>-->
         <!--<item>android.test.purchased</item>-->
+    </string-array>
+
+    <string-array name="deter_after_dialog">
+        <item>0 minutes</item>
+        <item>2 minutes</item>
+        <item>5 minutes</item>
+        <item>10 minutes</item>
+        <item>15 minutes</item>
+        <item>disable</item>
     </string-array>
 
 </resources>
