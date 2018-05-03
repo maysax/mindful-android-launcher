@@ -770,10 +770,11 @@ public class PaneFragment extends CoreFragment {
         }
     }
 
-    @Subscribe
+    @Subscribe(sticky = true, threadMode = ThreadMode.MainThread)
     public void homePress(HomePress event) {
         if (event != null) {
             pagerPane.setCurrentItem(event.getCurrentIndexPaneFragment(), true);
+            EventBus.getDefault().removeStickyEvent(event);
         }
     }
 
