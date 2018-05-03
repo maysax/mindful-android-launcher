@@ -224,7 +224,7 @@ public class DashboardActivity extends CoreActivity {
         currentIndexDashboard = 1;
         currentIndexPaneFragment = 2;
         mPager.setCurrentItem(currentIndexDashboard, false);
-        EventBus.getDefault().post(new HomePress(1, 2));
+        EventBus.getDefault().postSticky(new HomePress(1, 2));
         loadPane();
         //In case of home press, when app is launched again we need to show
         // this overlay of default launcher if siempo is not set as default
