@@ -83,7 +83,8 @@
         <activity
             android:name=".launcher.FakeLauncherActivity"
             android:enabled="false"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AlertDialogTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -186,7 +187,6 @@
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:taskAffinity=""
-            android:theme="@style/SiempoAppTheme"
             android:windowSoftInputMode="adjustPan|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

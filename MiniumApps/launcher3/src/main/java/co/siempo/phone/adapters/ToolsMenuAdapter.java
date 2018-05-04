@@ -79,7 +79,16 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                 Log.d("Test", "hideIcon branding true tooolll");
                 holder.icon.setVisibility(View.VISIBLE);
                 holder.imgAppIcon.setVisibility(View.GONE);
-                holder.icon.setImageResource(item.getDrawable());
+
+
+                try {
+
+                    holder.icon.setImageResource(item.getDrawable());
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 holder.text.setText(item.getTitle());
             } else {
                 Log.d("Test", "hideIcon branding false...");
@@ -98,6 +107,12 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                     }
                     holder.icon.setVisibility(View.VISIBLE);
                     holder.imgAppIcon.setVisibility(View.GONE);
+//                    final Resources.Theme theme = context.getResources()
+//                            .newTheme();
+//                    final Drawable drawable = ResourcesCompat.getDrawable
+//                            (context.getResources(), item.getDrawable(),
+//                                    theme);
+//                    holder.icon.setImageDrawable(drawable);
                     holder.icon.setImageResource(item.getDrawable());
                     holder.text.setText(item.getTitle());
                 }

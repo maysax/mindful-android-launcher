@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary">
+
+
+    <co.siempo.phone.customviews.RobotoCondensedTextView
+        android:id="@+id/txtIntentionLabelJunkPane"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:layout_below="@id/cardViewEdtSearch"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center|bottom"
+        android:paddingLeft="@dimen/dp_16"
+        android:paddingRight="@dimen/dp_16"
+        android:text="@string/you_ve_flag"
+        android:textColor="@color/dialog_blue"
+        android:textSize="@dimen/sp_15"
+        android:visibility="gone"/>
+
+    <co.siempo.phone.customviews.RobotoCondensedTextView
+        android:id="@+id/txtIntention"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_46"
+        android:layout_below="@id/txtIntentionLabelJunkPane"
+        android:layout_marginTop="@dimen/dp_6"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center|top"
+        android:paddingLeft="@dimen/dp_16"
+        android:paddingRight="@dimen/dp_16"
+        android:textColor="@color/dialog_blue"
+        android:textSize="@dimen/sp_18"
+        android:textStyle="bold"
+        android:visibility="gone"/>
+
+
+</RelativeLayout>

@@ -68,7 +68,8 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
     };
 
     public DialogTempoSetting(@NonNull Context context) {
-        super(context, R.style.FullScreenDialogStyle);
+        super(context, R.style.FullScreenDialogStyleDark);
+//        super(context, R.style.FullScreenDialogStyle);
         this.context = context;
     }
 

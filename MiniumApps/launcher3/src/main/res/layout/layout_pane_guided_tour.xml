@@ -15,7 +15,6 @@
         android:layout_marginLeft="@dimen/dp_16"
         android:layout_marginRight="@dimen/dp_16"
         android:gravity="right|center"
-        android:textColor="@color/appland_date"
         android:textSize="@dimen/sp_20"
         tool:text="dshfkhdskfds" />
 

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:id="@+id/activity_pause"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/layout_bg"
               android:orientation="vertical">
 
     <RelativeLayout
@@ -15,11 +15,9 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/toolbar_bg"
-            android:elevation="@dimen/dp_5"
-            android:minHeight="?android:attr/actionBarSize"/>
+            style="@style/toolbar_style"
+            app:navigationIcon="@drawable/ic_arrow_back_blue_24dp"
+            app:titleTextColor="?attr/toolbar_text_color"/>
 
         <ScrollView
             android:layout_width="match_parent"
@@ -63,7 +61,6 @@
                             android:layout_toRightOf="@+id/img_tempo"
                             android:lineSpacingExtra="5sp"
                             android:text="@string/notification_interrupt_title"
-                            android:textColor="@color/settings_title_black"
                             android:textSize="16sp"
                             />
 
@@ -78,7 +75,6 @@
                             android:layout_toRightOf="@+id/img_tempo"
                             android:lineSpacingExtra="4sp"
                             android:text="@string/notification_interrupt_description"
-                            android:textColor="@color/settings_content_black"
                             android:textSize="14sp"/>
 
                     </RelativeLayout>
@@ -102,7 +98,6 @@
                         android:lineSpacingExtra="5sp"
                         android:padding="8dp"
                         android:text="@string/allow_peaking"
-                        android:textColor="@color/settings_title_black"
                         android:textSize="16sp"/>
 
                     <LinearLayout
@@ -136,7 +131,6 @@
                         android:paddingRight="8dp"
                         android:paddingTop="0dp"
                         android:text="@string/msg_allowpeaking"
-                        android:textColor="@color/settings_content_black"
                         android:textSize="14sp"
                         />
 

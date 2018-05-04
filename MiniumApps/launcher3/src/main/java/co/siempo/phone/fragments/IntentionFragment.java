@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -16,6 +15,7 @@ import android.view.WindowManager;
 import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -43,6 +43,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
     private TextView txtIntention;
     private LinearLayout linIF;
     private PopupWindow mPopupWindow;
+    private PopupMenu mPopupMenu;
     private RelativeLayout relRootLayout;
     private Window mWindow;
     private int defaultStatusBarColor;
@@ -216,6 +217,9 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                         ViewGroup.LayoutParams.WRAP_CONTENT
                 );
 
+                mPopupMenu = new PopupMenu
+                        (context, customView, Gravity.END);
+
                 // Set an elevation value for popup window
                 // Call requires API level 21
                 if (Build.VERSION.SDK_INT >= 21) {
@@ -270,17 +274,17 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                     }
                 });
                 mPopupWindow.setOutsideTouchable(true);
-                mPopupWindow.setFocusable(true);
-                mPopupWindow.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+//                mPopupWindow.setFocusable(true);
+//                mPopupWindow.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 mPopupWindow.showAsDropDown(imgOverFlow, 0, (int) -imgOverFlow.getX() - 10);
-                UIUtils.applyDim(root, 0.6f);
+//                UIUtils.applyDim(root, 0.6f);
                 if (null != getActivity()) {
                     UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
                 }
                 mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                        UIUtils.clearDim(root);
+//                        UIUtils.clearDim(root);
 
                     }
                 });

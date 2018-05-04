@@ -2,23 +2,23 @@
 <resources>
 
     <declare-styleable name="siempo_slider">
-        <attr name="wheel_start_angle" format="float" />
-        <attr name="wheel_angle" format="float" />
-        <attr name="wheel_border_thickness" format="dimension" />
-        <attr name="wheel_border_color" format="color" />
-        <attr name="wheel_active_color" format="string" />
-        <attr name="wheel_inactive_color" format="string" />
-        <attr name="wheel_title_color" format="string" />
-        <attr name="wheel_subTitle_color" format="string" />
-        <attr name="wheel_center_text_color" format="string" />
-        <attr name="wheel_title_size" format="dimension" />
-        <attr name="wheel_subTitle_size" format="dimension" />
-        <attr name="wheel_center_text_size" format="dimension" />
-        <attr name="thumb_size" format="dimension" />
-        <attr name="thumb_image" format="reference" />
-        <attr name="thumb_color" format="color" />
-        <attr name="thumb_visible" format="boolean" />
-        <attr name="thumb_init_position" format="integer" />
+        <attr name="wheel_start_angle" format="float"/>
+        <attr name="wheel_angle" format="float"/>
+        <attr name="wheel_border_thickness" format="dimension"/>
+        <attr name="wheel_border_color" format="color"/>
+        <attr name="wheel_active_color" format="string"/>
+        <attr name="wheel_inactive_color" format="string"/>
+        <attr name="wheel_title_color" format="string"/>
+        <attr name="wheel_subTitle_color" format="string"/>
+        <attr name="wheel_center_text_color" format="string"/>
+        <attr name="wheel_title_size" format="dimension"/>
+        <attr name="wheel_subTitle_size" format="dimension"/>
+        <attr name="wheel_center_text_size" format="dimension"/>
+        <attr name="thumb_size" format="dimension"/>
+        <attr name="thumb_image" format="reference"/>
+        <attr name="thumb_color" format="color"/>
+        <attr name="thumb_visible" format="boolean"/>
+        <attr name="thumb_init_position" format="integer"/>
     </declare-styleable>
 
     <!-- Declare custom theme attributes that allow changing which styles are
@@ -26,13 +26,24 @@
          ?android:attr/buttonBarStyle is new as of API 11 so this is
          necessary to support previous API levels. -->
     <declare-styleable name="ButtonBarContainerTheme">
-        <attr name="metaButtonBarStyle" format="reference" />
-        <attr name="metaButtonBarButtonStyle" format="reference" />
+        <attr name="metaButtonBarStyle" format="reference"/>
+        <attr name="metaButtonBarButtonStyle" format="reference"/>
     </declare-styleable>
     <declare-styleable name="ClearableEditText">
-        <attr name="clearIconDrawable" format="color|reference" />
-        <attr name="clearIconDrawWhenFocused" format="boolean" />
+        <attr name="clearIconDrawable" format="color|reference"/>
+        <attr name="clearIconDrawWhenFocused" format="boolean"/>
     </declare-styleable>
+
+    <declare-styleable name="icon">
+        <attr name="icon_color" format="color"/>
+        <attr name="toolbar_bg" format="color"/>
+        <attr name="bottom_doc" format="reference"/>
+        <attr name="top_doc" format="reference"/>
+        <attr name="top_date_color" format="color"/>
+        <attr name="toolbar_text_color" format="color"/>
+    </declare-styleable>
+
+
 
 
 </resources>

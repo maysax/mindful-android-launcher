@@ -94,14 +94,14 @@ public class TempoNotificationItemViewHolder extends RecyclerView.ViewHolder {
     public void disableViews() {
         imv_appicon.setVisibility(View.INVISIBLE);
         img_block_unblock.setVisibility(View.INVISIBLE);
-        txt_app_name.setTextColor(Color.parseColor("#777777"));
+//        txt_app_name.setTextColor(Color.parseColor("#777777"));
         txt_app_name.setTextSize(12);
 
     }
 
     public void enableViews() {
         txt_app_name.setTextSize(16);
-        txt_app_name.setTextColor(Color.parseColor("#000000"));
+//        txt_app_name.setTextColor(Color.parseColor("#000000"));
         img_block_unblock.setVisibility(View.VISIBLE);
         imv_appicon.setVisibility(View.VISIBLE);
     }

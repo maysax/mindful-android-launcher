@@ -81,7 +81,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.app_junkfood_flagging, menu);
         MenuItem menuItem = menu.findItem(R.id.item_save);
-        setTextColorForMenuItem(menuItem, R.color.colorAccent);
+//        setTextColorForMenuItem(menuItem, R.color.colorAccent);
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -150,8 +150,8 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.editing_tools);
         setSupportActionBar(toolbar);
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
-                .colorAccent));
+//        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
+//                .colorAccent));
         items = new ArrayList<>();
         new MainListItemLoader(this).loadItemsDefaultApp(items);
 //        items = CoreApplication.getInstance().getToolItemsList();

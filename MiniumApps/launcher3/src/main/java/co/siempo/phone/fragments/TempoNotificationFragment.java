@@ -60,8 +60,8 @@ public class TempoNotificationFragment extends CoreFragment {
     void afterViews() {
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
         toolbar.setTitle(R.string.string_notification_title);
-        toolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color
-                .colorAccent));
+//        toolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color
+//                .colorAccent));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

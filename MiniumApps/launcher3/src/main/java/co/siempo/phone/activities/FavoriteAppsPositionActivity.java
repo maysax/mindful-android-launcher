@@ -75,7 +75,8 @@ public class FavoriteAppsPositionActivity extends CoreActivity implements OnFavo
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.app_junkfood_flagging, menu);
         MenuItem menuItem = menu.findItem(R.id.item_save);
-        setTextColorForMenuItem(menuItem, R.color.colorAccent);
+
+//              setTextColorForMenuItem(menuItem, colorId);
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -112,8 +113,8 @@ public class FavoriteAppsPositionActivity extends CoreActivity implements OnFavo
         relPane = findViewById(R.id.relPane);
         toolbar.setTitle(R.string.editing_frequently_apps);
         setSupportActionBar(toolbar);
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
-                .colorAccent));
+//        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
+//                .colorAccent));
         items = new ArrayList<>();
         items = PackageUtil.getFavoriteList(this);
 

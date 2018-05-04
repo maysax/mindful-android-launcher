@@ -19,7 +19,6 @@
         android:paddingLeft="55dp"
         android:paddingRight="55dp"
         android:text="@string/flag_app"
-        android:textColor="@color/white"
         android:textSize="20sp"
         android:visibility="gone" />
 
@@ -69,7 +68,6 @@
             android:paddingLeft="@dimen/dp_20"
             android:paddingRight="@dimen/dp_20"
             android:text="Sound"
-            android:textColor="#000000"
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
 
@@ -85,9 +83,5 @@
             android:src="@drawable/ic_down_arrow" />
     </LinearLayout>
 
-    <!--<View-->
-    <!--android:id="@+id/divider"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="0.8dp"-->
-    <!--android:background="@android:color/darker_gray" />-->
+
 </LinearLayout>

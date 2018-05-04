@@ -30,7 +30,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
 
@@ -113,7 +112,11 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
+        boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
+        setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
         super.onCreate(savedInstanceState);
+
         connectInAppService();
         this.setVolumeControlStream(AudioManager.STREAM_SYSTEM);
         //onCreateAnimation(savedInstanceState);

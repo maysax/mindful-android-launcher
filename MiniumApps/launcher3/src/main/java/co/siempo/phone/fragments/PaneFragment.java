@@ -20,6 +20,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -141,6 +142,8 @@ public class PaneFragment extends CoreFragment {
     private CircleIndicator indicator;
     private Dialog overlayDialog;
     private Dialog overlayDialogPermission;
+    private View junkDoc;
+    private View searchDoc;
 
     public PaneFragment() {
         // Required empty public constructor
@@ -182,14 +185,14 @@ public class PaneFragment extends CoreFragment {
         super.setUserVisibleHint(isVisibleToUser);
         //Changing the status bar default value on page change from dashboard
         // to direct Junk Food pane
-        if (isVisibleToUser && null != mWindow && pagerPane != null && pagerPane.getCurrentItem() == 0) {
-            mWindow.setStatusBarColor(getResources().getColor(R.color
-                    .appland_blue_bright));
-        } else {
-            if (null != mWindow) {
-                mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
-            }
-        }
+//        if (isVisibleToUser && null != mWindow && pagerPane != null && pagerPane.getCurrentItem() == 0) {
+//            mWindow.setStatusBarColor(getResources().getColor(R.color
+//                    .appland_blue_bright));
+//        } else {
+//            if (null != mWindow) {
+//                mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
+//            }
+//        }
         if (!isVisibleToUser && null != imageClear && linSearchList != null &&
                 linSearchList.getVisibility() == View.VISIBLE) {
             //Perform click in order to set it when user moves from search
@@ -245,13 +248,13 @@ public class PaneFragment extends CoreFragment {
     }
 
     private void changeColorOfStatusBar() {
-        if (pagerPane != null && pagerPane.getCurrentItem() == 0 && isVisible
-                () && DashboardActivity.currentIndexDashboard == 0) {
-            mWindow.setStatusBarColor(getResources().getColor(R.color
-                    .appland_blue_bright));
-        } else {
-            mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
-        }
+//        if (pagerPane != null && pagerPane.getCurrentItem() == 0 && isVisible
+//                () && DashboardActivity.currentIndexDashboard == 0) {
+//            mWindow.setStatusBarColor(getResources().getColor(R.color
+//                    .appland_blue_bright));
+//        } else {
+//            mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
+//        }
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MainThread)
@@ -270,6 +273,8 @@ public class PaneFragment extends CoreFragment {
 
     private void initView(View view) {
         linTopDoc = view.findViewById(R.id.linTopDoc);
+        junkDoc = view.findViewById(R.id.junk_doc);
+        searchDoc = view.findViewById(R.id.search_doc);
         linPane = view.findViewById(R.id.linPane);
         recyclerViewBottomDoc = rootView.findViewById(R.id.recyclerViewBottomDoc);
         edtSearchToolsRounded = view.findViewById(R.id.edtSearchTools);
@@ -284,8 +289,8 @@ public class PaneFragment extends CoreFragment {
         searchLayout = view.findViewById(R.id.edtSearchListView);
         relSearchTools = view.findViewById(R.id.relSearchTools);
         txtTopDockDate = view.findViewById(R.id.txtTopDockDate);
-        txtIntentionLabelJunkPane = view.findViewById(R.id.txtIntentionLabelJunkPane);
-        txtIntention = view.findViewById(R.id.txtIntention);
+        txtIntentionLabelJunkPane = junkDoc.findViewById(R.id.txtIntentionLabelJunkPane);
+        txtIntention = junkDoc.findViewById(R.id.txtIntention);
         linBottomDoc = view.findViewById(R.id.linBottomDoc);
         linSearchList = view.findViewById(R.id.linSearchList);
         listView = view.findViewById(R.id.listView);
@@ -475,22 +480,34 @@ public class PaneFragment extends CoreFragment {
                     }
 
                     junkFoodAppPane();
-                    mWindow.setStatusBarColor(getResources().getColor(R.color
-                            .appland_blue_bright));
+//                    mWindow.setStatusBarColor(getResources().getColor(R.color
+//                            .appland_blue_bright));
                     linTopDoc.setElevation(20);
+
+                    TypedValue typedValue = new TypedValue();
+                    if (context.getTheme().resolveAttribute(R.attr.colorPrimary,
+                            typedValue, true)) ;
+                    int color = typedValue.data;
+                    linTopDoc.setBackgroundColor(color);
+//                    linTopDoc.setBackground(getResources().getDrawable(R
+//                            .color.transparent));
+
+                    searchDoc.setVisibility(View.GONE);
+                    junkDoc.setVisibility(View.VISIBLE);
 
                 } else {
                     /* Tools and Favourite Pane */
                     linTopDoc.setElevation(0);
                     linTopDoc.setBackground(getResources().getDrawable(R
-                            .drawable.top_bar_bg));
+                            .color.transparent));
                     txtTopDockDate.setVisibility(View.VISIBLE);
                     edtSearchToolsRounded.setVisibility(View.VISIBLE);
                     txtIntention.setVisibility(View.GONE);
                     txtIntentionLabelJunkPane.setVisibility(View.GONE);
-
+                    searchDoc.setVisibility(View.VISIBLE);
+                    junkDoc.setVisibility(View.GONE);
                     // finally change the color
-                    mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
+//                    mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
                 }
 
                 //Indicator to be set here so that when coming from another
@@ -533,8 +550,8 @@ public class PaneFragment extends CoreFragment {
     }
 
     private void junkFoodAppPane() {
-        linTopDoc.setBackgroundColor(getResources().getColor(R.color
-                .bg_junk_apps_top_dock));
+//        linTopDoc.setBackgroundColor(getResources().getColor(R.color
+//                .bg_junk_apps_top_dock));
         txtTopDockDate.setVisibility(View.GONE);
         searchLayout.setVisibility(View.GONE);
         edtSearchToolsRounded.setVisibility(View.GONE);

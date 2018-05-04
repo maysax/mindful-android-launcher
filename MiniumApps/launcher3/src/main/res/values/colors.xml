@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#FBFBFA</color>
+    <color name="colorPrimaryDark">#000000</color>
     <!--<color name="colorAccent">#331749</color>-->
     <color name="colorAccent">#448AFF</color>
     <color name="menu_circle">#F3F3F3</color>
     <color name="dim_foreground_dark_inverse">#323232</color>
     "
     <color name="toolbar_bg">#EEEEEE</color>
+    <color name="toolbar_bg_dark">#212121</color>
     <color name="layout_bg">#F3F3F3</color>
     <color name="errorColor">#EA3D85</color>
 
@@ -98,6 +100,10 @@
     <!-- Android core colors for easy access -->
     <color name="dialog_text">#202020</color>
     <color name="white">@android:color/white</color>
+    <color name="white_dark">#CCFFFFFF</color>
+    <color name="dark_window">#5E000000</color>
+    <color name="trans_black">#8AFFFFFF</color>
+    <color name="trans_white">#8A000000</color>
     <color name="black">@android:color/black</color>
     <color name="shadow">#727272</color>
     <color name="transparent">@android:color/transparent</color>

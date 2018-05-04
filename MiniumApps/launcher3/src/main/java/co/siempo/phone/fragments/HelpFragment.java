@@ -98,8 +98,8 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
 
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
         toolbar.setTitle(R.string.help);
-        toolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color
-                .colorAccent));
+//        toolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color
+//                .colorAccent));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

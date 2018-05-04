@@ -53,7 +53,6 @@
                         android:layout_marginTop="@dimen/dp_10"
                         android:gravity="center"
                         android:text="@string/siempo_need_permission"
-                        android:textColor="@color/black"
                         android:textSize="18sp"
                         android:visibility="visible"/>
 
@@ -68,7 +67,6 @@
                         android:paddingLeft="@dimen/dp_16"
                         android:paddingRight="@dimen/dp_5"
                         android:text="@string/choose_how_minutes"
-                        android:textColor="#8A000000"
                         android:textSize="15sp"
                         android:visibility="visible"/>
 
@@ -99,7 +97,6 @@
                         android:layout_height="36dp"
                         android:background="@drawable/button_background_blue"
                         android:text="@string/btn_enable"
-                        android:textColor="@color/white"
                         android:textSize="14sp"/>
 
 
@@ -153,7 +150,6 @@
                             android:paddingBottom="@dimen/dp_5"
                             android:paddingTop="@dimen/dp_5"
                             android:text="@string/to_enable_draw"
-                            android:textColor="#8A000000"
                             android:textSize="16sp"
                             android:textStyle="normal"/>
 
@@ -190,7 +186,6 @@
                         android:gravity="center"
                         android:minWidth="150dp"
                         android:text="@string/btn_got"
-                        android:textColor="@color/white"
                         android:textSize="14sp"/>
 
 

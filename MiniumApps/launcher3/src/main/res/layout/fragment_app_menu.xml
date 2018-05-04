@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_pause"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/activity_pause"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -12,11 +13,9 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/toolbar_bg"
-            android:elevation="@dimen/dp_5"
-            android:minHeight="?android:attr/actionBarSize" />
+            style="@style/toolbar_style"
+            app:navigationIcon="@drawable/ic_arrow_back_blue_24dp"
+            app:titleTextColor="?attr/toolbar_text_color"/>
 
         <ScrollView
             android:layout_width="wrap_content"
@@ -44,8 +43,7 @@
                         android:lineSpacingExtra="5sp"
                         android:padding="8dp"
                         android:text="@string/hide_icon_branding"
-                        android:textColor="#DE000000"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"/>
 
                     <LinearLayout
                         android:id="@+id/linHide"
@@ -62,7 +60,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:clickable="false" />
+                            android:clickable="false"/>
                     </LinearLayout>
 
                     <co.siempo.phone.customviews.RobotoRegularTextView
@@ -78,8 +76,7 @@
                         android:paddingRight="8dp"
                         android:paddingTop="0dp"
                         android:text="@string/iconbranding_description_setting"
-                        android:textColor="#8B000000"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"/>
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -100,8 +97,7 @@
                         android:lineSpacingExtra="5sp"
                         android:padding="8dp"
                         android:text="@string/reduce_overuse_screen"
-                        android:textColor="#DE000000"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"/>
 
                     <LinearLayout
                         android:id="@+id/linOverUseScreen"
@@ -117,7 +113,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:clickable="false" />
+                            android:clickable="false"/>
                     </LinearLayout>
 
                     <co.siempo.phone.customviews.RobotoRegularTextView
@@ -133,8 +129,7 @@
                         android:paddingRight="8dp"
                         android:paddingTop="0dp"
                         android:text="@string/reduce_overuse_screen_description_setting"
-                        android:textColor="#8B000000"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"/>
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -155,8 +150,7 @@
                         android:lineSpacingExtra="5sp"
                         android:padding="8dp"
                         android:text="@string/reduce_overuse_flagged"
-                        android:textColor="#DE000000"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"/>
 
                     <LinearLayout
                         android:id="@+id/linOverUseFlagged"
@@ -172,7 +166,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:clickable="false" />
+                            android:clickable="false"/>
                     </LinearLayout>
 
                     <co.siempo.phone.customviews.RobotoRegularTextView
@@ -188,8 +182,7 @@
                         android:paddingRight="8dp"
                         android:paddingTop="0dp"
                         android:text="@string/reduce_overuse_Flagged_description_setting"
-                        android:textColor="#8B000000"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"/>
                 </RelativeLayout>
 
 
@@ -211,8 +204,7 @@
                         android:lineSpacingExtra="5sp"
                         android:padding="8dp"
                         android:text="@string/randomize_junkfood"
-                        android:textColor="#DE000000"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"/>
 
                     <LinearLayout
                         android:id="@+id/linJunkFoodmize"
@@ -228,7 +220,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:clickable="false" />
+                            android:clickable="false"/>
                     </LinearLayout>
 
                     <co.siempo.phone.customviews.RobotoRegularTextView
@@ -244,8 +236,7 @@
                         android:paddingRight="8dp"
                         android:paddingTop="0dp"
                         android:text="@string/junkfood_description_setting"
-                        android:textColor="#8B000000"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"/>
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -267,8 +258,7 @@
                         android:lineSpacingExtra="5sp"
                         android:padding="8dp"
                         android:text="@string/choose_app_flag"
-                        android:textColor="#DE000000"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"/>
 
                     <LinearLayout
                         android:id="@+id/linChooseFlagapp"
@@ -285,7 +275,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:clickable="false"
-                            android:visibility="gone" />
+                            android:visibility="gone"/>
                     </LinearLayout>
 
                     <co.siempo.phone.customviews.RobotoRegularTextView
@@ -301,8 +291,7 @@
                         android:paddingRight="8dp"
                         android:paddingTop="0dp"
                         android:text="@string/choose_app_flag_desc"
-                        android:textColor="#8B000000"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"/>
                 </RelativeLayout>
             </RelativeLayout>
         </ScrollView>

@@ -145,8 +145,8 @@ public class AppAssignmentActivity extends CoreActivity {
         if (mainListItem != null) {
             toolbar.setTitle(getString(R.string.assign_an_app) + " " + mainListItem.getTitle());
         }
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
-                .colorAccent));
+//        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
+//                .colorAccent));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

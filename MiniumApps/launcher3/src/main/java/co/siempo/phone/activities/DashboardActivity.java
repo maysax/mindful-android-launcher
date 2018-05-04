@@ -110,6 +110,7 @@ public class DashboardActivity extends CoreActivity {
     protected void onResume() {
         super.onResume();
 
+
         if (!TextUtils.isEmpty(PrefSiempo.getInstance(this).read(PrefSiempo
                 .USER_EMAILID, ""))) {
             boolean isUserSeenEmail = PrefSiempo.getInstance(this).read(PrefSiempo
@@ -175,7 +176,10 @@ public class DashboardActivity extends CoreActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
+        setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
         setContentView(R.layout.activity_dashboard);
+
         swipeCount = PrefSiempo.getInstance(DashboardActivity.this).read(PrefSiempo.TOGGLE_LEFTMENU, 0);
         loadViews();
         Log.d("Test", "P1");

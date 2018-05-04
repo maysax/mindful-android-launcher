@@ -55,8 +55,8 @@ public class InAppItemListActivity extends CoreActivity implements
         toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
         toolbar.setTitle("In App Products");
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
-                .colorAccent));
+//        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
+//                .colorAccent));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

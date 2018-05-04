@@ -58,6 +58,8 @@ public class PrefSiempo {
 
     // used for Allow peaking.
     public static final String ALLOW_PEAKING = "Allowpeaking";
+    public static final String IS_DARK_THEME = "isDarkTheme";
+
 
 
     //Launcher 3 preferences

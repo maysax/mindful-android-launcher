@@ -258,10 +258,11 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             if ((null != itemType) && (itemType == MainListItemType.DEFAULT )) {
                 holder.text.setTextColor(context.getResources().getColor(R
                         .color.appland_blue_bright));
-            } else {
-                holder.text.setTextColor(context.getResources().getColor(R
-                        .color.black));
             }
+
+//            else {
+//                holder.text.setTextColor(context.getResources());
+//            }
 
         }
 

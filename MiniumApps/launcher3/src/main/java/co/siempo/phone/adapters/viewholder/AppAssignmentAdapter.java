@@ -96,7 +96,7 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
                     holder.imgIcon.setImageDrawable(drawable);
                 }
                 holder.btnHideApps.setVisibility(View.GONE);
-                holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.app_assignment_normal));
+//                holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.app_assignment_normal));
 
             }
         }

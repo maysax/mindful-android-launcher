@@ -22,11 +22,9 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/toolbar_bg"
-                android:elevation="@dimen/dp_5"
-                android:minHeight="?android:attr/actionBarSize"
+                app:navigationIcon="@drawable/ic_arrow_back_blue_24dp"
+                app:titleTextColor="?attr/toolbar_text_color"
+                style="@style/toolbar_style"
                 android:visibility="visible" />
 
             <RelativeLayout
@@ -86,7 +84,6 @@
                         android:layout_height="wrap_content"
                         android:layout_alignBottom="@id/recyclerView"
                         android:layout_alignTop="@id/recyclerView"
-                        android:background="@color/white"
                         android:orientation="vertical"
                         android:paddingTop="@dimen/dp_10">
 
@@ -112,7 +109,6 @@
                         android:layout_gravity="center"
                         android:transcriptMode="alwaysScroll"
                         android:stackFromBottom="true"
-                        android:background="@drawable/tranparent"
                         android:clipToPadding="false"
                         app:stackFromEnd="true"
                         android:fadeScrollbars="false"

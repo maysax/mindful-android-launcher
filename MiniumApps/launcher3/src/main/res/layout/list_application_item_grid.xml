@@ -37,7 +37,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text=""
-            android:textColor="@android:color/black"
             android:textSize="30dp"
             android:visibility="gone" />
 
@@ -75,7 +74,6 @@
                 android:gravity="center"
                 android:maxLines="1"
                 android:paddingTop="8dp"
-                android:textColor="@color/black_80"
                 android:textSize="13sp"
                 tools:text="Send as a message" />
 

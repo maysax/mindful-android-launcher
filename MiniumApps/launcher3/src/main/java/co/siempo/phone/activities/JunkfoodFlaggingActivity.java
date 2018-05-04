@@ -91,8 +91,8 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_flagging_screen);
         setSupportActionBar(toolbar);
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
-                .colorAccent));
+//        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
+//                .colorAccent));
         listAllApps = findViewById(R.id.listAllApps);
         listAllApps.setOnItemClickListener(JunkfoodFlaggingActivity.this);
     }
@@ -121,7 +121,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.app_junkfood_flagging, menu);
         MenuItem menuItem = menu.findItem(R.id.item_save);
-        setTextColorForMenuItem(menuItem, R.color.colorAccent);
+//        setTextColorForMenuItem(menuItem, R.color.colorAccent);
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -136,7 +136,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
      * Show save dialog for saving the user filter data.
      */
     private void showSaveDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(JunkfoodFlaggingActivity.this, R.style.AlertDialogTheme);
+        AlertDialog.Builder builder = new AlertDialog.Builder(JunkfoodFlaggingActivity.this);
         builder.setTitle(getString(R.string.msg_congratulations));
         builder.setMessage(R.string.msg_flage_save_dialog);
         builder.setPositiveButton(R.string.strcontinue, new DialogInterface.OnClickListener() {
@@ -164,7 +164,8 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
      * Show save dialog for saving the user filter data.
      */
     private void showFirstTimeDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(JunkfoodFlaggingActivity.this, R.style.AlertDialogTheme);
+        AlertDialog.Builder builder = new AlertDialog.Builder
+                (JunkfoodFlaggingActivity.this);
         builder.setTitle(getString(R.string.flag_app_first_time));
         builder.setMessage(R.string.flag_first_time_install);
         builder.setPositiveButton(R.string.gotit, new DialogInterface.OnClickListener() {
@@ -416,7 +417,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
      * @param position
      */
     private void showAlertForFirstTime(final int position, final View itemView) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(JunkfoodFlaggingActivity.this, R.style.AlertDialogTheme);
+        AlertDialog.Builder builder = new AlertDialog.Builder(JunkfoodFlaggingActivity.this);
         builder.setTitle(getString(R.string.are_you_sure));
         builder.setMessage(R.string.msg_flag_first_time);
         builder.setPositiveButton(getString(R.string.yes_unhide), new DialogInterface.OnClickListener() {
