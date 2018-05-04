@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.6"
-            android:background="?attr/colorPrimary"
+            android:background="?attr/top_doc"
             android:orientation="horizontal">
 
             <include
@@ -42,7 +42,7 @@
         <View
             android:id="@+id/blueLineView"
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="1dp"
             android:background="#3342A4FF"/>
 
         <LinearLayout
@@ -59,6 +59,13 @@
                 android:layout_height="match_parent"/>
 
         </LinearLayout>
+
+
+        <!--<View-->
+        <!--android:id="@+id/blueLineViewBottom"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="#3342A4FF"/>-->
 
         <RelativeLayout
             android:id="@+id/linBottomDoc"

@@ -78,7 +78,7 @@ public class JunkFoodPaneAdapter extends RecyclerView.Adapter<JunkFoodPaneAdapte
             holder.txtAppTextImage.setVisibility(View.VISIBLE);
             holder.imgAppIcon.setVisibility(View.GONE);
             holder.imgUnderLine.setVisibility(View.VISIBLE);
-            holder.imgUnderLine.setImageResource(R.drawable.letter_bottom_border_junkfood);
+//            holder.imgUnderLine.setImageResource(R.drawable.letter_bottom_border_junkfood);
             String fontPath = "fonts/robotocondensedregular.ttf";
             if (!TextUtils.isEmpty(applicationName)) {
 //                holder.text.setTextColor(ContextCompat.getColor(context, R.color.junkfood_text_and_underlinecolor));
@@ -142,7 +142,9 @@ public class JunkFoodPaneAdapter extends RecyclerView.Adapter<JunkFoodPaneAdapte
         // each data item is just a string in this case
         public View layout;
         // each data item is just a string in this case
-        ImageView imgView, imgAppIcon, imgUnderLine;
+        ImageView imgView, imgAppIcon;
+
+        View imgUnderLine;
         TextView text, txtAppTextImage;
         TextView textDefaultApp;
         RelativeLayout relMenu;

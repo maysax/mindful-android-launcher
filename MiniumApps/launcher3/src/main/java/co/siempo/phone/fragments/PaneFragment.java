@@ -488,7 +488,9 @@ public class PaneFragment extends CoreFragment {
                     if (context.getTheme().resolveAttribute(R.attr.colorPrimary,
                             typedValue, true)) ;
                     int color = typedValue.data;
-                    linTopDoc.setBackgroundColor(color);
+//                    linTopDoc.setBackgroundColor(color);
+//                    linTopDoc.setBackground(getResources().getDrawable(R
+//                            .color.transparent));
 //                    linTopDoc.setBackground(getResources().getDrawable(R
 //                            .color.transparent));
 
@@ -498,8 +500,8 @@ public class PaneFragment extends CoreFragment {
                 } else {
                     /* Tools and Favourite Pane */
                     linTopDoc.setElevation(0);
-                    linTopDoc.setBackground(getResources().getDrawable(R
-                            .color.transparent));
+//                    linTopDoc.setBackground(getResources().getDrawable(R
+//                            .color.transparent));
                     txtTopDockDate.setVisibility(View.VISIBLE);
                     edtSearchToolsRounded.setVisibility(View.VISIBLE);
                     txtIntention.setVisibility(View.GONE);
