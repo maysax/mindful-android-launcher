@@ -81,6 +81,9 @@ public class PrefSiempo {
     public static final String ONLY_AT = "onlyAt";
     public static final String USER_EMAILID = "userEmailId";
     public static final String IS_CONTACT_UPDATE = "isContactUpdate";
+
+    public static final String DETER_AFTER = "deterAfter";
+
     private static final PrefSiempo ourInstance = new PrefSiempo();
 
 
