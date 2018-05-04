@@ -115,4 +115,11 @@
     <color name="forground">#26E81313</color>
     <color name="flageapp_header">#E81313</color>
     <color name="unflageapp_header">#666666</color>
+    <color name="bg_permissionscreenstatusbar">#E5E5E5</color>
+    <color name="bg_permissionscreen">#F2F2F2</color>
+    <color name="bg_button">#33000000</color>
+    <color name="settings_title_black">#DE000000</color>
+    <color name="settings_content_black">#8B000000</color>
+
+
 </resources>

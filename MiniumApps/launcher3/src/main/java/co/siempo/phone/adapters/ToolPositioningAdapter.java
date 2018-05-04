@@ -63,6 +63,7 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
                         Collections.swap(arrayList, i, i - 1);
                     }
                 }
+
                 mListChangedListener.onToolItemListChanged(arrayList);
                 notifyItemMoved(fromPosition, toPosition);
             }
@@ -99,22 +100,29 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
         final MainListItem item = arrayList.get(position);
         final AppMenu appMenu = map.get(item.getId());
 
-        if (appMenu.isVisible()) {
+
+        if (null != appMenu && appMenu.isVisible()) {
             holder.linearLayout.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(item.getTitle())) {
                 holder.text.setText(item.getTitle());
             }
             if (isHideIconBranding) {
+                holder.icon.setVisibility(View.VISIBLE);
+                holder.imgAppIcon.setVisibility(View.GONE);
                 holder.icon.setImageResource(item.getDrawable());
                 holder.text.setText(item.getTitle());
             } else {
                 holder.text.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(appMenu.getApplicationName()));
                 Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(appMenu.getApplicationName());
                 if (bitmap != null) {
-                    holder.icon.setImageBitmap(bitmap);
+                    holder.icon.setVisibility(View.GONE);
+                    holder.imgAppIcon.setVisibility(View.VISIBLE);
+                    holder.imgAppIcon.setImageBitmap(bitmap);
                 } else {
                     BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, appMenu.getApplicationName());
                     CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                    holder.icon.setVisibility(View.VISIBLE);
+                    holder.imgAppIcon.setVisibility(View.GONE);
                     holder.icon.setImageResource(item.getDrawable());
                     holder.text.setText(item.getTitle());
                 }
@@ -124,23 +132,37 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
         }
 
 
-        holder.linearLayout.setOnTouchListener(new View.OnTouchListener() {
+        if (position + 4 >= arrayList.size()) {
+            holder.relMenu.setBackgroundColor(context.getResources().getColor
+                    (R.color.bottom_doc));
+        } else {
+            holder.relMenu.setBackgroundColor(context.getResources().getColor
+                    (R.color.transparent));
+        }
+
+        holder.imgAppIcon.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                    mDragStartListener.onStartDrag(holder);
+                if (holder.linearLayout.getVisibility() == View.VISIBLE) {
+                    if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                        mDragStartListener.onStartDrag(holder);
+                    }
                 }
                 return false;
             }
         });
 
-//            holder.linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
-//                @Override
-//                public boolean onLongClick(View view) {
-//                    mDragStartListener.onStartDrag(holder);
-//                    return true;
-//                }
-//            });
+        holder.icon.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (holder.linearLayout.getVisibility() == View.VISIBLE) {
+                    if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                        mDragStartListener.onStartDrag(holder);
+                    }
+                }
+                return false;
+            }
+        });
 
     }
 
@@ -154,6 +176,7 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
         public View layout;
         // each data item is just a string in this case
         ImageView icon, imgView, temp;
+        ImageView imgAppIcon;
         TextView text, textDefaultApp;
         RelativeLayout relMenu;
         private LinearLayout linearLayout;
@@ -168,6 +191,7 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
             icon = v.findViewById(R.id.icon);
             imgView = v.findViewById(R.id.imgView);
             temp = v.findViewById(R.id.temp);
+            imgAppIcon = v.findViewById(R.id.imgAppIcon);
         }
 
         @Override

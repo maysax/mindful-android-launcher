@@ -15,12 +15,16 @@
         <item name="popupMenuStyle">@style/interrupt_popup_menu</item>
         <item name="actionMenuTextColor">@color/colorAccent</item>
         <item name="android:windowDisablePreview">true</item>
+        <item name="colorControlNormal">@color/dialog_blue</item>
     </style>
 
     <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">20sp</item>
     </style>
 
+    <style name="TextLabel" parent="TextAppearance.Design.Hint">
+        <item name="android:textSize">12sp</item>
+    </style>
 
     <style name="FullScreenDialogStyle" parent="SiempoAppTheme">
         <item name="android:windowNoTitle">true</item>
@@ -39,7 +43,9 @@
         <item name="android:windowBackground">@color/white</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:windowIsFloating">false</item>
-        <item name="android:windowAnimationStyle">@style/MaterialDialogSheetAnimation</item>
+        <item name="android:windowAnimationStyle">
+            @style/MaterialDialogSheetAnimation
+        </item>
     </style>
 
     <style name="MaterialDialogSheetAnimation">
@@ -48,12 +54,16 @@
     </style>
 
     <style name="TempoDialog">
-        <item name="android:windowEnterAnimation">@anim/slide_in_tempo_dialog</item>
-        <item name="android:windowExitAnimation">@anim/slide_out_tempo_dialog</item>
+        <item name="android:windowEnterAnimation">@anim/slide_in_tempo_dialog
+        </item>
+        <item name="android:windowExitAnimation">@anim/slide_out_tempo_dialog
+        </item>
     </style>
 
     <style name="ListItem">
-        <item name="android:minHeight">?android:attr/listPreferredItemHeightSmall</item>
+        <item name="android:minHeight">
+            ?android:attr/listPreferredItemHeightSmall
+        </item>
         <item name="android:paddingLeft">@dimen/margin.6</item>
         <item name="android:paddingRight">@dimen/margin.6</item>
     </style>
@@ -87,7 +97,8 @@
 
     <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
 
-        <item name="android:colorForeground">@android:color/primary_text_dark</item>
+        <item name="android:colorForeground">@android:color/primary_text_dark
+        </item>
     </style>
 
     <!-- Base application theme. -->
@@ -105,6 +116,14 @@
         <item name="android:colorAccent">@color/colorAccent</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textColorPrimary">#A3A3A3</item>
+    </style>
+
+
+    <style name="DialogStyleOverlay" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorPrimary">#A3A3A3</item>
+
     </style>
 
 

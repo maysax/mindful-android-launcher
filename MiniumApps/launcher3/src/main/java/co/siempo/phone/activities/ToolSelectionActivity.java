@@ -4,23 +4,31 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.ToolsListAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.NotifyBottomView;
+import co.siempo.phone.event.NotifySearchRefresh;
 import co.siempo.phone.event.NotifyToolView;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.main.MainListItemLoader;
@@ -41,6 +49,8 @@ public class ToolSelectionActivity extends CoreActivity {
     private RecyclerView recyclerView;
     private ToolsListAdapter mAdapter;
     private long startTime = 0;
+    private ArrayList<MainListItem> topItems = new ArrayList<>(12);
+    private ArrayList<MainListItem> bottomItems = new ArrayList<>(4);
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -80,8 +90,31 @@ public class ToolSelectionActivity extends CoreActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tool_selection);
         map = CoreApplication.getInstance().getToolsSettings();
+        topItems = (ArrayList<MainListItem>) getIntent().getExtras().getSerializable("TopList");
+        bottomItems = (ArrayList<MainListItem>) getIntent().getExtras().getSerializable("BottomList");
+
         initView();
     }
+
+    public int check() {
+        int id = 0;
+        //MainListItem is giving isVisable always true hence this condition cannot be used for id replacement
+        for (MainListItem mainListItem : topItems) {
+            if (!mainListItem.isVisable()) {
+                id = mainListItem.getId();
+                return id;
+            }
+        }
+
+        for (MainListItem mainListItem : bottomItems) {
+            if (!mainListItem.isVisable()) {
+                id = mainListItem.getId();
+                return id;
+            }
+        }
+        return id;
+    }
+
 
     @Override
     protected void onResume() {
@@ -98,6 +131,7 @@ public class ToolSelectionActivity extends CoreActivity {
             EventBus.getDefault().postSticky(new NotifyToolView(true));
         }
         new LoadToolPane(this).execute();
+        EventBus.getDefault().postSticky(new NotifySearchRefresh(true));
         FirebaseHelper.getInstance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
     }
 
@@ -110,6 +144,9 @@ public class ToolSelectionActivity extends CoreActivity {
         recyclerView = findViewById(R.id.recyclerView);
         filterListData();
         mLayoutManager = new LinearLayoutManager(this);
+        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                mLayoutManager.getOrientation());
+        recyclerView.addItemDecoration(mDividerItemDecoration);
         recyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new ToolsListAdapter(this, items);
         recyclerView.setAdapter(mAdapter);
@@ -119,7 +156,6 @@ public class ToolSelectionActivity extends CoreActivity {
     private void filterListData() {
         items = new ArrayList<>();
         new MainListItemLoader(this).loadItemsDefaultApp(items);
-        items.remove(11);
         for (int i = 0; i < items.size(); i++) {
             items.get(i).setVisable(map.get(items.get(i).getId()).isVisible());
         }
@@ -133,6 +169,31 @@ public class ToolSelectionActivity extends CoreActivity {
             if (resultCode == RESULT_OK) {
                 mAdapter.refreshEvents(items);
             }
+        }
+    }
+
+    public void replace(int oldId, int newId) {
+        ArrayList<MainListItem> sortedTools = new ArrayList<>();
+
+        //get the JSON array of the ordered of sorted customers
+        String jsonListOfSortedToolsId = PrefSiempo.getInstance(this).read(PrefSiempo.SORTED_MENU, "");
+        Log.d("MenuItem", jsonListOfSortedToolsId);
+
+        //check for null
+        if (!jsonListOfSortedToolsId.isEmpty()) {
+
+
+            //convert onNoteListChangedJSON array into a List<Long>
+            Gson gson = new GsonBuilder()
+                    .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
+            List<Long> listOfSortedCustomersId = gson.fromJson(jsonListOfSortedToolsId, new TypeToken<List<Long>>() {
+            }.getType());
+            if (listOfSortedCustomersId.contains(oldId)) {
+                Collections.replaceAll(listOfSortedCustomersId, (long) oldId, (long) newId);
+            }
+            Gson gson1 = new Gson();
+            String jsonListOfSortedCustomerIds = gson1.toJson(listOfSortedCustomersId);
+            PrefSiempo.getInstance(this).write(PrefSiempo.SORTED_MENU, jsonListOfSortedCustomerIds);
         }
     }
 

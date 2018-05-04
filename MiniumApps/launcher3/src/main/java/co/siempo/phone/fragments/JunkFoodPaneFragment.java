@@ -1,12 +1,19 @@
 package co.siempo.phone.fragments;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.PixelFormat;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -23,6 +30,8 @@ import co.siempo.phone.event.NotifyJunkFoodView;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
+
+import static android.content.Context.WINDOW_SERVICE;
 
 
 public class JunkFoodPaneFragment extends CoreFragment {
@@ -104,7 +113,24 @@ public class JunkFoodPaneFragment extends CoreFragment {
             recyclerView.addItemDecoration(itemDecoration);
             mAdapter = new JunkFoodPaneAdapter(getActivity(), items, CoreApplication.getInstance().isHideIconBranding());
             recyclerView.setAdapter(mAdapter);
+
+
+
         }
     }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (!isVisibleToUser) {
+            // do something when visible.
+            if (recyclerView != null) {
+                recyclerView.scrollToPosition(0);
+            }
+        }
+    }
+
+
+
 
 }

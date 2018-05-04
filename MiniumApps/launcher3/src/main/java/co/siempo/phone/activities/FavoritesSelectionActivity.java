@@ -19,6 +19,7 @@ import android.widget.ListView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -102,11 +103,7 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
      */
     private void loadApps() {
         List<String> installedPackageListLocal = CoreApplication.getInstance().getPackagesList();
-        List<String> appList = new ArrayList<>();
-
-        for (int i = 0; i < installedPackageListLocal.size(); i++) {
-            appList.add(installedPackageListLocal.get(i));
-        }
+        List<String> appList = new ArrayList<>(installedPackageListLocal);
         installedPackageList = appList;
         bindData(false);
     }
@@ -270,7 +267,7 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
                                 }
                                 firstPosition = listAllApps.getFirstVisiblePosition();
 //                                bindData(true);
-                                new FilterApps(true).execute();
+                                new FilterApps(true,FavoritesSelectionActivity.this).execute();
                             }
                         });
                     } catch (Exception e) {
@@ -329,8 +326,10 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
     class FilterApps extends AsyncTask<String, String, ArrayList<AppListInfo>> {
         boolean isNotify;
         int size;
+        private WeakReference<FavoritesSelectionActivity> activityReference;
 
-        FilterApps(boolean isNotify) {
+        FilterApps(boolean isNotify, FavoritesSelectionActivity context) {
+            activityReference = new WeakReference<>(context);
             this.isNotify = isNotify;
             listAllApps.setOnItemClickListener(null);
         }
@@ -346,38 +345,42 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
 
         @Override
         protected ArrayList<AppListInfo> doInBackground(String... strings) {
-            for (String resolveInfo : installedPackageList) {
-                if (!resolveInfo.equalsIgnoreCase(getPackageName())) {
-                    boolean isEnable = UIUtils.isAppInstalledAndEnabled(FavoritesSelectionActivity.this, resolveInfo);
-                    if (isEnable) {
-                        if (list.contains(resolveInfo)) {
-                            favoriteList.add(new AppListInfo(resolveInfo, false, false, true));
-                        } else {
-                            if (null != junkFoodList && !junkFoodList
-                                    .contains(resolveInfo)) {
-                                unfavoriteList.add(new AppListInfo(resolveInfo, false, false, false));
+            try {
+                for (String resolveInfo : installedPackageList) {
+                    if (!resolveInfo.equalsIgnoreCase(getPackageName())) {
+                        boolean isEnable = UIUtils.isAppInstalledAndEnabled(FavoritesSelectionActivity.this, resolveInfo);
+                        if (isEnable) {
+                            if (list.contains(resolveInfo)) {
+                                favoriteList.add(new AppListInfo(resolveInfo, false, false, true));
+                            } else {
+                                if (null != junkFoodList && !junkFoodList
+                                        .contains(resolveInfo)) {
+                                    unfavoriteList.add(new AppListInfo(resolveInfo, false, false, false));
+                                }
                             }
                         }
                     }
                 }
-            }
-            size = favoriteList.size();
+                size = favoriteList.size();
 
-            if (favoriteList.size() == 0) {
-                favoriteList.add(new AppListInfo("", true, true, true));
-            } else {
-                favoriteList.add(0, new AppListInfo("", true, false, true));
-            }
-            favoriteList = Sorting.sortApplication(favoriteList);
-            bindingList.addAll(favoriteList);
+                if (favoriteList.size() == 0) {
+                    favoriteList.add(new AppListInfo("", true, true, true));
+                } else {
+                    favoriteList.add(0, new AppListInfo("", true, false, true));
+                }
+                favoriteList = Sorting.sortApplication(favoriteList);
+                bindingList.addAll(favoriteList);
 
-            if (unfavoriteList.size() == 0) {
-                unfavoriteList.add(new AppListInfo("", true, true, false));
-            } else {
-                unfavoriteList.add(0, new AppListInfo("", true, false, false));
+                if (unfavoriteList.size() == 0) {
+                    unfavoriteList.add(new AppListInfo("", true, true, false));
+                } else {
+                    unfavoriteList.add(0, new AppListInfo("", true, false, false));
+                }
+                unfavoriteList = Sorting.sortApplication(unfavoriteList);
+                bindingList.addAll(unfavoriteList);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            unfavoriteList = Sorting.sortApplication(unfavoriteList);
-            bindingList.addAll(unfavoriteList);
             return bindingList;
         }
 
@@ -385,6 +388,9 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
         protected void onPostExecute(ArrayList<AppListInfo> s) {
             super.onPostExecute(s);
             try {
+                FavoritesSelectionActivity activity = activityReference.get();
+                if (activity == null || activity.isFinishing()) return;
+
                 if (toolbar != null) {
                     setToolBarText(size);
                     junkfoodFlaggingAdapter = new FavoriteFlaggingAdapter(FavoritesSelectionActivity.this, bindingList, list);

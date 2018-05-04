@@ -31,7 +31,7 @@
             <!--android:layout_gravity="center_vertical"-->
             <!--android:background="@drawable/ic_tempo_dailog" />-->
 
-            <TextView
+            <co.siempo.phone.customviews.RobotoMediumTextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
@@ -59,7 +59,7 @@
             <!--android:layout_gravity="center_vertical"-->
             <!--android:background="@drawable/ic_settings_tempo" />-->
 
-            <TextView
+            <co.siempo.phone.customviews.RobotoMediumTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -88,7 +88,7 @@
             <!--android:layout_gravity="center_vertical"-->
             <!--android:background="@drawable/ic_help_tempo" />-->
 
-            <TextView
+            <co.siempo.phone.customviews.RobotoMediumTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

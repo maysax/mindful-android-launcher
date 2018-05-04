@@ -110,14 +110,10 @@ public class JunkfoodFlaggingAdapter extends BaseAdapter {
                 holder.txtNoAppsMessage.setVisibility(View.GONE);
                 holder.txtHeader.setVisibility(View.GONE);
                 try {
-                    if (CoreApplication.getInstance().getListApplicationName().get(resolveInfo.packageName) != null) {
-                        String strData = CoreApplication.getInstance().getListApplicationName().get(resolveInfo.packageName);
-                        holder.txtAppName.setText(strData);
-                    } else {
-                        String strData = CoreApplication.getInstance().getApplicationNameFromPackageName(resolveInfo.packageName);
-                        holder.txtAppName.setText(strData);
-                    }
-
+                    //Done as a part of SSA-1454, in order to change the app name
+                    // based on user selected language
+                    holder.txtAppName.setText(CoreApplication.getInstance()
+                            .getApplicationNameFromPackageName(resolveInfo.packageName));
                     Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(resolveInfo.packageName);
                     if (bitmap != null) {
                         holder.imgAppIcon.setImageBitmap(bitmap);

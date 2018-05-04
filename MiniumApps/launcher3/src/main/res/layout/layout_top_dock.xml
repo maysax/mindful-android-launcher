@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:tool="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                xmlns:tool="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
 
-    <TextView
+    <co.siempo.phone.customviews.RobotoCondensedTextView
         android:id="@+id/txtTopDockDate"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
@@ -15,7 +15,7 @@
         android:gravity="right|center"
         android:textColor="@color/appland_date"
         android:textSize="@dimen/sp_20"
-        tool:text="dshfkhdskfds" />
+        tool:text="dshfkhdskfds"/>
 
 
     <RelativeLayout
@@ -42,10 +42,11 @@
             android:focusable="false"
             android:gravity="center_vertical"
             android:hint="@string/find_app_send_message_or_save_note"
+            android:longClickable="false"
             android:paddingLeft="@dimen/dp_20"
             android:paddingRight="@dimen/dp_10"
             android:textColorHint="@color/appland_blue"
-            android:textSize="16sp" />
+            android:textSize="16sp"/>
 
 
     </RelativeLayout>
@@ -94,11 +95,11 @@
             android:singleLine="true"
             android:textColorHint="#61000000"
             android:textSize="@dimen/sp_16"
-            android:visibility="gone" />
+            android:visibility="gone"/>
     </android.support.v7.widget.CardView>
 
 
-    <TextView
+    <co.siempo.phone.customviews.RobotoCondensedTextView
         android:id="@+id/txtIntentionLabelJunkPane"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_40"
@@ -111,9 +112,9 @@
         android:textColor="#BFFFFFFF"
         android:textSize="@dimen/sp_15"
 
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
-    <TextView
+    <co.siempo.phone.customviews.RobotoCondensedTextView
         android:id="@+id/txtIntention"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_46"
@@ -126,7 +127,7 @@
         android:textColor="@color/white"
         android:textSize="@dimen/sp_18"
         android:textStyle="bold"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
 
 </RelativeLayout>

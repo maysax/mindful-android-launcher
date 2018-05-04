@@ -76,6 +76,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
     ArrayList<String> enableNotificationList = new ArrayList<>();
     Set<String> blockedAppList = new HashSet<>();
 
+    int volumeLevel = 1;
+
     private static boolean isInteger(String s, int radix) {
         try {
             if (s.isEmpty()) {
@@ -177,10 +179,10 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 }
 
 
-            /* do not display messages from "android"
-            * This includes keyboard selection message, usb connection messages, etc
-             * Hope it does not filter out too much, we will see...
-            */
+                /* do not display messages from "android"
+                 * This includes keyboard selection message, usb connection messages, etc
+                 * Hope it does not filter out too much, we will see...
+                 */
                 try {
                     if (notification != null) {
                         if (notification.getPackageName().equals("android") ||
@@ -207,8 +209,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         new HashSet<String>());
                 Tracer.d("SiempoNotificationListener:blockedAppList.size" + blockedAppList.size());
                 if (null != blockedAppList && blockedAppList.size() > 0 && blockedAppList.contains(notification.getPackageName())) {
-
-
                     if (!notification.getPackageName().equalsIgnoreCase(getPackageName())) {
                         SiempoNotificationListener.this.cancelNotification(notification.getKey());
                         Tracer.d("SiempoNotificationListener:cancelNotification");
@@ -216,10 +216,12 @@ public class SiempoNotificationListener extends NotificationListenerService {
                             Tracer.d("SiempoNotificationListener:cancelNotification");
                             if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_VIBRATE ||
                                     audioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
-                                int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
+                                int sound = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM);
                                 if (sound != 1) {
-                                    Tracer.d("SiempoNotificationListener:audioManager");
+                                    volumeLevel = sound;
+                                    Log.d("Rajesh:audioManager", "" + sound);
                                     audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+                                    Log.d("Rajesh:audioManager : ", "" + audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
                                 }
                             }
                         }
@@ -261,7 +263,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 + "\n" + " Details: " + notification.getNotification().toString()
                 + "\n" + " Category: " + notification.getNotification().category
                 + "\n" + " Ticker: " + notification.getNotification().tickerText
-                + "\n" + " Bundle Data:" + finalString);
+                + "\n" + " Bundle AlarmData:" + finalString);
     }
 
     /**
@@ -270,6 +272,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
      * @param statusBarNotification
      */
     private synchronized void filterByCategory(StatusBarNotification statusBarNotification) {
+
+
         String strPackageName;//getPackageName
         String strTitle = null;//android.title
         String strText = null;//android.text
@@ -413,12 +417,16 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 CoreApplication.getInstance().logException(e);
             }
         }
+        if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+            audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, volumeLevel, 0);
+            Log.d("Rajesh:audioManager : ", "" + audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+        }
     }
 
     private void parseOtherMessages(StatusBarNotification statusBarNotification, String strPackageName, String strTitle, String strText, Date date, String strBigText, int icon, byte[] largeIcon, String strCount) {
         if (statusBarNotification.getNotification() != null
                 && statusBarNotification.getNotification().tickerText != null
-                && !statusBarNotification.getNotification().tickerText.toString().equalsIgnoreCase("USB debugging connected")) {
+                && statusBarNotification.getNotification().tickerText.toString().equalsIgnoreCase("USB debugging connected")) {
             return;
         }
 
@@ -428,15 +436,15 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_TRANSPORT) &&
                 !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_SERVICE) &&
                 !statusBarNotification.getPackageName().equalsIgnoreCase("com.google.android.talk")
-                && !statusBarNotification.getPackageName().equalsIgnoreCase("com.google.android.apps.messaging")
+                //&& !statusBarNotification.getPackageName().equalsIgnoreCase("com.google.android.apps.messaging")
                 && !statusBarNotification.getPackageName().trim().equalsIgnoreCase("android"))) {
 
 
 //            if (launcherPrefs.getSharedPreferences().getBoolean(Constants.CALL_RUNNING, false)) {
-            if (PrefSiempo.getInstance(context).read(PrefSiempo.CALL_RUNNING, false)) {
-                Log.d(TAG, "OnGoing Call is Running.. no need to generate notification");
-                return;
-            }
+//            if (PrefSiempo.getInstance(context).read(PrefSiempo.CALL_RUNNING, false)) {
+//                Log.d(TAG, "OnGoing Call is Running.. no need to generate notification");
+//                return;
+//            }
             try {
                 DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
                 TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
@@ -459,7 +467,10 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     notificationSms.setId(id);
                     EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                 } else {
+                    notificationSms.setApp_icon(icon);
                     notificationSms.set_date(date);
+                    notificationSms.setPackageName(strPackageName);
+                    notificationSms.setUser_icon(largeIcon);
                     notificationSms.setNotification_date(statusBarNotification.getPostTime());
                     notificationSms.set_contact_title(strTitle);
                     if (strBigText == null) {

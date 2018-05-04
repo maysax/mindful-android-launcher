@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -26,7 +27,9 @@ import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.SuppressNotificationAdapter;
@@ -36,11 +39,13 @@ import co.siempo.phone.db.MultipleItemDelete;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.models.CustomNotification;
 import co.siempo.phone.models.DeleteItem;
 import co.siempo.phone.models.Notification;
 import co.siempo.phone.models.NotificationContactModel;
 import co.siempo.phone.utils.NotificationUtility;
 import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.Sorting;
 
 public class SuppressNotificationActivity extends CoreActivity {
 
@@ -85,6 +90,12 @@ public class SuppressNotificationActivity extends CoreActivity {
         notificationList = new ArrayList<>();
         suggetionList = new ArrayList<>();
         edt_search = findViewById(R.id.edt_search);
+        try {
+            Typeface myTypeface = Typeface.createFromAsset(getAssets(), "fonts/robotocondensedregular.ttf");
+            edt_search.setTypeface(myTypeface);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         edt_search.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -168,6 +179,33 @@ public class SuppressNotificationActivity extends CoreActivity {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(context, "Enable permission from Settings to access Contact details.", Toast.LENGTH_SHORT).show();
+        }
+
+        Set<String> packageList = new HashSet<>();
+        if (items.size() > 0) {
+            for (TableNotificationSms sms : items) {
+                packageList.add(sms.getPackageName());
+            }
+        }
+
+        ArrayList<CustomNotification> customNotifications = new ArrayList<>();
+        for (String string : packageList) {
+            CustomNotification customNotification = new CustomNotification();
+            ArrayList<TableNotificationSms> tableNotificationSms = new ArrayList<>();
+            for (TableNotificationSms sms : items) {
+                if (sms.getPackageName().equalsIgnoreCase(string)) {
+                    tableNotificationSms.add(sms);
+                }
+            }
+            Sorting.sortNotificationByDate(tableNotificationSms);
+            customNotification.setDate(tableNotificationSms.get(0).get_date());
+            customNotification.setNotificationSms(tableNotificationSms);
+            customNotifications.add(customNotification);
+        }
+        Sorting.sortNotificationByDate1(customNotifications);
+        items = new ArrayList<>();
+        for (CustomNotification customNotification : customNotifications) {
+            items.addAll(customNotification.getNotificationSms());
         }
 
         for (int i = 0; i < items.size(); i++) {

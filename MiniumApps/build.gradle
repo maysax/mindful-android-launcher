@@ -11,8 +11,8 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-        classpath 'io.fabric.tools:gradle:1.21.6'
-        classpath 'me.tatarka:gradle-retrolambda:3.2.2'
+        classpath 'io.fabric.tools:gradle:1.22.1'
+        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
         classpath "org.greenrobot:greendao-gradle-plugin:3.2.0"
         classpath 'com.google.gms:google-services:3.2.0'
@@ -35,7 +35,7 @@ project.ext {
     targetSdkVersion = 26
 
 
-    supportVersion = "26.0.0"
+    supportVersion = "26.1.0"
     annotationsVersion = "4.3.1"
     iconifyVersion = "2.2.1"
     calligraphyVersion = "2.1.0@aar"
@@ -45,10 +45,10 @@ project.ext {
     baseRecyclerViewAdapterHelperVersion = "2.2.0"
     sugarOrmVersion = "1.5"
     greenDaoVersion = "3.2.0"
-    tedPermissionVersion = "2.1.0"
+    tedPermissionVersion = "2.1.1"
     fastAndroidNetworkingVersion = "0.3.0"
     espressoVersion = "2.2.2"
-    multidexVersion = "1.0.1"
+    multidexVersion = "1.0.3"
     circleImageViewVersion = "2.0.0"
     couchbaseVersion = "1.4.0"
     appIntroVersion = "4.1.0"

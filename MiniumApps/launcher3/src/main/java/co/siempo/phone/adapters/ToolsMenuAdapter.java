@@ -69,7 +69,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final MainListItem item = mainListItemList.get(position);
         final AppMenu appMenu = map.get(item.getId());
-        if (appMenu.isVisible() && item.getId() != 12) {
+        if (null != appMenu && appMenu.isVisible()) {
             holder.linearLayout.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(item.getTitle())) {
                 Log.d("Test", "Title is ::" + item.getTitle());
@@ -77,6 +77,8 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
             }
             if (isHideIconBranding) {
                 Log.d("Test", "hideIcon branding true tooolll");
+                holder.icon.setVisibility(View.VISIBLE);
+                holder.imgAppIcon.setVisibility(View.GONE);
                 holder.icon.setImageResource(item.getDrawable());
                 holder.text.setText(item.getTitle());
             } else {
@@ -85,19 +87,26 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                 Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(appMenu.getApplicationName());
                 if (bitmap != null) {
                     Log.d("Test", "bitmap  null");
-                    holder.icon.setImageBitmap(bitmap);
+                    holder.icon.setVisibility(View.GONE);
+                    holder.imgAppIcon.setVisibility(View.VISIBLE);
+                    holder.imgAppIcon.setImageBitmap(bitmap);
                 } else {
                     Log.d("Test", "bitmap  not null");
                     if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
                         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, appMenu.getApplicationName());
                         CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
                     }
+                    holder.icon.setVisibility(View.VISIBLE);
+                    holder.imgAppIcon.setVisibility(View.GONE);
                     holder.icon.setImageResource(item.getDrawable());
                     holder.text.setText(item.getTitle());
                 }
             }
         } else {
-            holder.linearLayout.setVisibility(View.INVISIBLE);
+//            holder.linearLayout.setVisibility(View.GONE);
+//            holder.linearLayout.setVisibility(View.INVISIBLE);
+            holder.icon.setImageDrawable(null);
+            holder.text.setText("");
         }
 
         holder.linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
@@ -115,7 +124,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
             @Override
             public void onClick(View v) {
                 int id = item.getId();
-                if (holder.linearLayout.getVisibility() == View.VISIBLE && id != 12) {
+                if (!holder.text.getText().toString().equalsIgnoreCase("")) {
                     if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
                         if (appMenu.getApplicationName().equalsIgnoreCase("Notes")) {
                             new ActivityHelper(context).openNotesApp(false);
@@ -127,9 +136,20 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                                             new HashSet<String>()).contains(appMenu.getApplicationName().trim())) {
                                         openAppAssignmentScreen(item);
                                     } else {
-//                                if a 3rd party app is already assigned to this tool
-                                        new ActivityHelper(context).openAppWithPackageName(appMenu.getApplicationName().trim());
+//                                If a 3rd party app is already assigned to this tool
                                         FirebaseHelper.getInstance().logSiempoMenuUsage(0, item.getTitle(), CoreApplication.getInstance().getApplicationNameFromPackageName(appMenu.getApplicationName()));
+                                        if (id == 13) {
+                                            try {
+                                                Intent intent = new Intent(Intent.ACTION_DIAL);
+                                                intent.setPackage(appMenu.getApplicationName().trim());
+                                                context.startActivity(intent);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                                new ActivityHelper(context).openAppWithPackageName(appMenu.getApplicationName().trim());
+                                            }
+                                        } else {
+                                            new ActivityHelper(context).openAppWithPackageName(appMenu.getApplicationName().trim());
+                                        }
                                     }
                                 } else {
                                     openAppAssignmentScreen(item);
@@ -143,12 +163,24 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                         } else if (CoreApplication.getInstance().getApplicationByCategory(id).size() == 1
                                 && !PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS,
                                 new HashSet<String>()).contains(appMenu.getApplicationName().trim())) {
-//                                if a 3rd party app is already assigned to this tool
+//                            If a 3 rd party app is already assigned to this tool
                             ResolveInfo resolveInfo = CoreApplication.getInstance().getApplicationByCategory(id).get(0);
                             if (null != resolveInfo) {
                                 String strPackageName = resolveInfo.activityInfo.packageName;
                                 if (UIUtils.isAppEnabled(context, strPackageName) && strPackageName.equalsIgnoreCase(appMenu.getApplicationName())) {
-                                    new ActivityHelper(context).openAppWithPackageName(strPackageName);
+
+                                    if (id == 13) {
+                                        try {
+                                            Intent intent = new Intent(Intent.ACTION_DIAL);
+                                            intent.setPackage(strPackageName);
+                                            context.startActivity(intent);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                            new ActivityHelper(context).openAppWithPackageName(strPackageName);
+                                        }
+                                    } else {
+                                        new ActivityHelper(context).openAppWithPackageName(strPackageName);
+                                    }
                                     FirebaseHelper.getInstance().logSiempoMenuUsage(0, item.getTitle(), CoreApplication.getInstance().getApplicationNameFromPackageName(appMenu.getApplicationName()));
                                 } else {
                                     openAppAssignmentScreen(item);
@@ -188,11 +220,8 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
 
     @Override
     public int getItemCount() {
-        if (mainListItemList.size() == 0) {
-            return 0;
-        } else {
-            return isBottomDoc ? 4 : 12;
-        }
+        return mainListItemList.size();
+
     }
 
     public void setMainListItemList(List<MainListItem> mainListItemList, boolean isBottomDoc, boolean isHideIconBranding) {
@@ -209,6 +238,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
         public View layout;
         // each data item is just a string in this case
         ImageView icon, imgView;
+        ImageView imgAppIcon;
         TextView text;
         TextView textDefaultApp;
         RelativeLayout relMenu;
@@ -223,6 +253,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
             textDefaultApp = v.findViewById(R.id.textDefaultApp);
             icon = v.findViewById(R.id.icon);
             imgView = v.findViewById(R.id.imgView);
+            imgAppIcon = v.findViewById(R.id.imgAppIcon);
         }
     }
 }

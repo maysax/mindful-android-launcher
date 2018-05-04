@@ -24,6 +24,9 @@ public class PrefSiempo {
     public static final String IS_APP_INSTALLED_FIRSTTIME = "is_app_installed_firsttime";
 
     // This field is used to store check application installed first time or not.
+    public static final String IS_AUTOSCROLL = "is_autoscroll";
+
+    // This field is used to store check application installed first time or not.
     public static final String IS_APP_INSTALLED_FIRSTTIME_SHOW_TOOLTIP = "is_app_installed_firsttime_show_tooltip";
 
     // This field is used to store check application installed first time or not.
@@ -37,6 +40,7 @@ public class PrefSiempo {
 
     // This field is used for to store tools pane visible/hide and its connected application.
     public static final String TOOLS_SETTING = "tools_setting";
+    public static final String INSTALLED_APP_VERSION_CODE = "installed_app_version_code";
 
     // This field is used for to store junkfood application package name.
     public static final String JUNKFOOD_APPS = "junkfood_apps";
@@ -75,6 +79,9 @@ public class PrefSiempo {
     public static final String ONLY_AT = "onlyAt";
     public static final String USER_EMAILID = "userEmailId";
     public static final String IS_CONTACT_UPDATE = "isContactUpdate";
+
+    public static final String DETER_AFTER = "deterAfter";
+
     private static final PrefSiempo ourInstance = new PrefSiempo();
 
 
@@ -83,6 +90,11 @@ public class PrefSiempo {
     public static String MESSENGER_DISABLE_COUNT = "MESSENGER_DISABLE_COUNT";
     public static String APP_DISABLE_COUNT = "APP_DISABLE_COUNT";
     public static String HEADER_APPLIST = "HEADER_APPLIST";
+    public static String TOGGLE_LEFTMENU = "toggle_leftmenu";
+    public static String USER_SEEN_EMAIL_REQUEST = "user_seen_email_request";
+    public static String APPLAND_TOUR_SEEN = "appland_tour_seen";
+    public static String JUNK_RESTRICTED = "junk_restricted";
+
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
 

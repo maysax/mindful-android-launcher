@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_5"
+                android:background="@color/transparent"
+                android:orientation="vertical"
+                tools:context=".activities.EmailRequestActivity">
+
+
+    <ViewFlipper
+        android:id="@+id/viewFlipperPermissionDrawOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardRequestOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_marginLeft="@dimen/dp_5"
+            android:layout_marginRight="@dimen/dp_5"
+            android:background="#F7F7F7"
+            android:elevation="@dimen/dp_5"
+            app:cardCornerRadius="@dimen/dp_10">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="16dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <co.siempo.phone.customviews.RobotoRegularTextView
+                        android:id="@+id/txtPermissionTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="@dimen/dp_5"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:gravity="center"
+                        android:text="@string/siempo_need_permission"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:visibility="visible"/>
+
+
+                    <co.siempo.phone.customviews.RobotoRegularTextView
+                        android:id="@+id/txtDrawPermission"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/dp_5"
+                        android:lineSpacingExtra="4sp"
+                        android:paddingLeft="@dimen/dp_16"
+                        android:paddingRight="@dimen/dp_5"
+                        android:text="@string/choose_how_minutes"
+                        android:textColor="#8A000000"
+                        android:textSize="15sp"
+                        android:visibility="visible"/>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:gravity="right"
+                    android:paddingTop="8dp">
+
+                    <Button
+                        android:id="@+id/btnLater"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:layout_marginRight="@dimen/dp_10"
+                        android:background="@null"
+                        android:text="@string/setting_string"
+                        android:textAllCaps="true"
+                        android:textColor="@color/dialog_blue"
+                        android:textSize="14sp"/>
+
+                    <Button
+                        android:id="@+id/btnEnable"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:background="@drawable/button_background_blue"
+                        android:text="@string/btn_enable"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"/>
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardDrawOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_marginLeft="@dimen/dp_5"
+            android:layout_marginRight="@dimen/dp_5"
+            android:background="#F7F7F7"
+            android:elevation="@dimen/dp_5"
+            app:cardCornerRadius="@dimen/dp_10">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="16dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:gravity="center">
+
+                        <co.siempo.phone.customviews.RobotoMediumTextView
+                            android:id="@+id/on_the_next"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:gravity="center_horizontal"
+                            android:lineSpacingExtra="4sp"
+                            android:paddingBottom="@dimen/dp_5"
+                            android:paddingTop="@dimen/dp_5"
+                            android:text="@string/to_enable_draw"
+                            android:textColor="#8A000000"
+                            android:textSize="16sp"
+                            android:textStyle="normal"/>
+
+                        <ImageView
+                            android:id="@+id/imgCenter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/on_the_next"
+                            android:layout_marginLeft="30dp"
+                            android:paddingTop="-10dp"
+                            android:layout_marginRight="30dp"
+                            android:layout_marginTop="-10dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginBottom="-10dp"
+                            android:src="@drawable/img_draw_overlay_enable"/>
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingTop="8dp">
+
+
+                    <Button
+                        android:id="@+id/btnGotIt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center"
+                        android:background="@drawable/button_background_blue"
+                        android:gravity="center"
+                        android:minWidth="150dp"
+                        android:text="@string/btn_got"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"/>
+
+
+                </RelativeLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+    </ViewFlipper>
+
+
+</RelativeLayout>

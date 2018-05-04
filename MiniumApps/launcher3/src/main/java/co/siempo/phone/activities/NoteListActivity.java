@@ -143,7 +143,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
 
                     // Equal main notes array with new sorted array and reset adapter
                     notes = newArray;
-                    adapter = new NoteAdapter(context, notes);
+                    adapter = new NoteAdapter(NoteListActivity.this, notes);
                     listView.setAdapter(adapter);
 
                     // Smooth scroll to top
@@ -235,7 +235,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
         newNoteButtonBaseYCoordinate = newNote.getY();
 
         // Initialize NoteAdapter with notes array
-        adapter = new NoteAdapter(getApplicationContext(), notes);
+        adapter = new NoteAdapter(NoteListActivity.this, notes);
         listView.setAdapter(adapter);
 
         // Set item click, multi choice and scroll listeners
@@ -460,7 +460,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
                             if (restoreSuccessful) {
                                 notes = tempNotes;
 
-                                adapter = new NoteAdapter(getApplicationContext(), notes);
+                                adapter = new NoteAdapter(NoteListActivity.this, notes);
                                 listView.setAdapter(adapter);
 
                                 Toast toast = Toast.makeText(getApplicationContext(),
@@ -533,57 +533,59 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
     }
 
     private void openEditActivity(int position) {
-        Intent intent = new Intent(this, NotesEditActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        if (realIndexesOfSearchResults != null) {
+            Intent intent = new Intent(this, NotesEditActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
-        // If search is active -> use position from realIndexesOfSearchResults for NotesEditActivity
-        if (searchActive) {
-            int newPosition = realIndexesOfSearchResults.get(position);
+            // If search is active -> use position from realIndexesOfSearchResults for NotesEditActivity
+            if (searchActive) {
+                int newPosition = realIndexesOfSearchResults.get(position);
 
-            try {
-                // Package selected note content and send to NotesEditActivity
-                intent.putExtra(NOTE_TITLE, notes.getJSONObject(newPosition).getString(NOTE_TITLE));
-                intent.putExtra(NOTE_BODY, notes.getJSONObject(newPosition).getString(NOTE_BODY));
-                intent.putExtra(NOTE_COLOUR, notes.getJSONObject(newPosition).getString(NOTE_COLOUR));
-                intent.putExtra(NOTE_FONT_SIZE, notes.getJSONObject(newPosition).getInt(NOTE_FONT_SIZE));
+                try {
+                    // Package selected note content and send to NotesEditActivity
+                    intent.putExtra(NOTE_TITLE, notes.getJSONObject(newPosition).getString(NOTE_TITLE));
+                    intent.putExtra(NOTE_BODY, notes.getJSONObject(newPosition).getString(NOTE_BODY));
+                    intent.putExtra(NOTE_COLOUR, notes.getJSONObject(newPosition).getString(NOTE_COLOUR));
+                    intent.putExtra(NOTE_FONT_SIZE, notes.getJSONObject(newPosition).getInt(NOTE_FONT_SIZE));
 
-                if (notes.getJSONObject(newPosition).has(NOTE_HIDE_BODY)) {
-                    intent.putExtra(NOTE_HIDE_BODY,
-                            notes.getJSONObject(newPosition).getBoolean(NOTE_HIDE_BODY));
-                } else
-                    intent.putExtra(NOTE_HIDE_BODY, false);
+                    if (notes.getJSONObject(newPosition).has(NOTE_HIDE_BODY)) {
+                        intent.putExtra(NOTE_HIDE_BODY,
+                                notes.getJSONObject(newPosition).getBoolean(NOTE_HIDE_BODY));
+                    } else
+                        intent.putExtra(NOTE_HIDE_BODY, false);
 
-            } catch (JSONException e) {
-                CoreApplication.getInstance().logException(e);
-                e.printStackTrace();
+                } catch (JSONException e) {
+                    CoreApplication.getInstance().logException(e);
+                    e.printStackTrace();
+                }
+
+                intent.putExtra(NOTE_REQUEST_CODE, newPosition);
+                startActivityForResult(intent, newPosition);
             }
 
-            intent.putExtra(NOTE_REQUEST_CODE, newPosition);
-            startActivityForResult(intent, newPosition);
-        }
+            // If search is not active -> use normal position for NotesEditActivity
+            else {
+                try {
+                    // Package selected note content and send to NotesEditActivity
+                    intent.putExtra(NOTE_TITLE, notes.getJSONObject(position).getString(NOTE_TITLE));
+                    intent.putExtra(NOTE_BODY, notes.getJSONObject(position).getString(NOTE_BODY));
+                    intent.putExtra(NOTE_COLOUR, notes.getJSONObject(position).getString(NOTE_COLOUR));
+                    intent.putExtra(NOTE_FONT_SIZE, notes.getJSONObject(position).getInt(NOTE_FONT_SIZE));
 
-        // If search is not active -> use normal position for NotesEditActivity
-        else {
-            try {
-                // Package selected note content and send to NotesEditActivity
-                intent.putExtra(NOTE_TITLE, notes.getJSONObject(position).getString(NOTE_TITLE));
-                intent.putExtra(NOTE_BODY, notes.getJSONObject(position).getString(NOTE_BODY));
-                intent.putExtra(NOTE_COLOUR, notes.getJSONObject(position).getString(NOTE_COLOUR));
-                intent.putExtra(NOTE_FONT_SIZE, notes.getJSONObject(position).getInt(NOTE_FONT_SIZE));
+                    if (notes.getJSONObject(position).has(NOTE_HIDE_BODY)) {
+                        intent.putExtra(NOTE_HIDE_BODY,
+                                notes.getJSONObject(position).getBoolean(NOTE_HIDE_BODY));
+                    } else
+                        intent.putExtra(NOTE_HIDE_BODY, false);
 
-                if (notes.getJSONObject(position).has(NOTE_HIDE_BODY)) {
-                    intent.putExtra(NOTE_HIDE_BODY,
-                            notes.getJSONObject(position).getBoolean(NOTE_HIDE_BODY));
-                } else
-                    intent.putExtra(NOTE_HIDE_BODY, false);
+                } catch (JSONException e) {
+                    CoreApplication.getInstance().logException(e);
+                    e.printStackTrace();
+                }
 
-            } catch (JSONException e) {
-                CoreApplication.getInstance().logException(e);
-                e.printStackTrace();
+                intent.putExtra(NOTE_REQUEST_CODE, position);
+                startActivityForResult(intent, position);
             }
-
-            intent.putExtra(NOTE_REQUEST_CODE, position);
-            startActivityForResult(intent, position);
         }
     }
 
@@ -711,7 +713,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
                             notes = deleteNotes(notes, checkedArray);
 
                             // Create and set new adapter with new notes array
-                            adapter = new NoteAdapter(getApplicationContext(), notes);
+                            adapter = new NoteAdapter(NoteListActivity.this, notes);
                             listView.setAdapter(adapter);
 
                             // Attempt to save notes to local file
@@ -844,7 +846,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
             }
 
             // Create and set adapter with notesFound to refresh ListView
-            NoteAdapter searchAdapter = new NoteAdapter(getApplicationContext(), notesFound);
+            NoteAdapter searchAdapter = new NoteAdapter(NoteListActivity.this, notesFound);
             listView.setAdapter(searchAdapter);
         }
 
@@ -854,7 +856,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
             for (int i = 0; i < notes.length(); i++)
                 realIndexesOfSearchResults.add(i);
 
-            adapter = new NoteAdapter(getApplicationContext(), notes);
+            adapter = new NoteAdapter(NoteListActivity.this, notes);
             listView.setAdapter(adapter);
         }
 
@@ -873,7 +875,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
      */
     protected void searchEnded() {
         searchActive = false;
-        adapter = new NoteAdapter(getApplicationContext(), notes);
+        adapter = new NoteAdapter(NoteListActivity.this, notes);
         listView.setAdapter(adapter);
         listView.setLongClickable(true);
         newNoteButtonVisibility(true);
@@ -987,13 +989,15 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
                 mBundle = data.getExtras();
 
                 // If new note discarded -> toast empty note discarded
-                if (mBundle != null && mBundle.getString("request").equals("discard")) {
+                if (mBundle != null && mBundle.getString("request") != null
+                        && mBundle.getString("request").equals("discard")) {
                     Toast toast = Toast.makeText(getApplicationContext(),
                             getResources().getString(R.string.msg_emptyNoteDiscarded),
                             Toast.LENGTH_SHORT);
                     toast.show();
                 }
-                if (mBundle != null && mBundle.getString("request").equals("HOME")) {
+                if (mBundle != null && mBundle.getString("request") != null
+                        && mBundle.getString("request").equals("HOME")) {
                     JSONArray tempNotes = retrieveData(localPath);
 
                     Tracer.i("All notes: " + tempNotes);

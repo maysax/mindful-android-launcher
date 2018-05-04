@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.text.TextUtils;
 
 import java.text.DateFormat;
@@ -12,9 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.adapters.MainListAdapter;
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.fragments.PaneFragment;
@@ -26,8 +30,11 @@ import co.siempo.phone.models.MainListItemType;
 import co.siempo.phone.token.TokenItemType;
 import co.siempo.phone.token.TokenManager;
 import co.siempo.phone.token.TokenRouter;
+import co.siempo.phone.util.ContactSmsPermissionHelper;
 import co.siempo.phone.utils.ContactsLoader;
 import co.siempo.phone.utils.PackageUtil;
+import co.siempo.phone.utils.PermissionUtil;
+import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 
@@ -44,64 +51,60 @@ public class MainFragmentMediator {
     private List<MainListItem> items;
     private List<MainListItem> contactItems;
 
+    private resetData resetData;
+    private PermissionUtil permissionUtil;
+
     public MainFragmentMediator(PaneFragment paneFragment) {
         this.fragment = paneFragment;
         context = this.fragment.getActivity();
+        permissionUtil = new PermissionUtil(context);
     }
 
-    public void loadData() {
-
-        items = new ArrayList<>();
-        contactItems = new ArrayList<>();
-        loadActions();
-        loadContacts();
-        loadDefaults();
-        items = PackageUtil.getListWithMostRecentData(items, context);
-        if (getAdapter() != null) {
-            getAdapter().loadData(items);
-            getAdapter().notifyDataSetChanged();
-        }
+    public synchronized void loadData() {
+        new resetData(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 
-    public void resetData() {
-        items = new ArrayList<>();
-        contactItems = new ArrayList<>();
-        loadActions();
-        loadContacts();
-        loadDefaults();
-        items = PackageUtil.getListWithMostRecentData(items, context);
-        if (getAdapter() != null) {
-            getAdapter().loadData(items);
-            getAdapter().notifyDataSetChanged();
-        }
+    public synchronized void resetData() {
+        new resetData(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
+
+    public synchronized void cancelAsync() {
+        resetData.cancel(true);
+    }
+
+    public synchronized boolean getRunningStatus() {
+        return null != resetData && resetData.getStatus() == AsyncTask.Status.RUNNING;
 
     }
 
-    private void loadActions() {
+    private synchronized void loadActions() {
         new MainListItemLoader(fragment.getActivity()).loadItems(items, fragment);
     }
 
+    public void loadContacts() {
 
-    private void loadContacts() {
-        try {
-            List<MainListItem> localList = null;
-            if (fragment != null && fragment.getManager() != null && fragment.getManager().hasCompleted(TokenItemType.CONTACT)) {
-                return;
-            }
-            if (fragment != null && contactItems.size() == 0) {
+        if (permissionUtil.hasGiven(PermissionUtil
+                .CONTACT_PERMISSION)) {
+            try {
+                List<MainListItem> localList = null;
+                if (fragment != null && fragment.getManager() != null && fragment.getManager().hasCompleted(TokenItemType.CONTACT)) {
+                    return;
+                }
+                if (fragment != null && contactItems.size() == 0) {
 
-                localList = new ContactsLoader().loadContacts(fragment.getActivity());
-                contactItems = localList;
+                    localList = new ContactsLoader().loadContacts(fragment.getActivity());
+                    contactItems = localList;
 
+                }
+                if (localList != null) {
+                    items.addAll(localList);
+                }
+            } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
+                Tracer.e(e, e.getMessage());
             }
-            if (localList != null) {
-                items.addAll(localList);
-            }
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            Tracer.e(e, e.getMessage());
         }
 
     }
@@ -145,106 +148,137 @@ public class MainFragmentMediator {
         return fragment.getAdapter();
     }
 
-    public void listItemClicked(TokenRouter router, int position, String data) {
+    public void listItemClicked(final TokenRouter router, int position, final String data) {
         MainListItemType type;
-        type = getAdapter().getItem(position).getItemType();
-        if (type != null)
-            switch (type) {
-                case CONTACT:
-                    if (router != null) {
-                        router.contactPicked(getAdapter().getItem(position));
-                        FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_CONTACT_PICK, "", data);
-                    }
-                    break;
-                case ACTION:
-                    if (getAdapter() != null && TextUtils.isEmpty(getAdapter().getItem(position).getPackageName())) {
-                        SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance
-                                (DateFormat.FULL, Locale
-                                        .getDefault());
-                        PackageUtil.addRecentItemList(getAdapter().getItem(position), context);
-                        position = getAdapter().getItem(position).getId();
-                        new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
-                        EventBus.getDefault().post(new SendSmsEvent(true));
-                    } else {
-                        if (fragment != null) {
+        if (getAdapter() != null) {
+            type = getAdapter().getItem(position).getItemType();
+            if (type != null)
+                switch (type) {
+                    case CONTACT:
+                        if (router != null) {
+                            router.contactPicked(getAdapter().getItem(position));
+                            FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_CONTACT_PICK, "", data);
+                        }
+                        break;
+                    case ACTION:
+                        if (getAdapter() != null && TextUtils.isEmpty(getAdapter().getItem(position).getPackageName())) {
+                            SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance
+                                    (DateFormat.FULL, Locale
+                                            .getDefault());
+                            PackageUtil.addRecentItemList(getAdapter().getItem(position), context);
+                            position = getAdapter().getItem(position).getId();
+                            new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
+                            EventBus.getDefault().post(new SendSmsEvent(true));
+                        } else {
+                            if (fragment != null) {
 
-                            DashboardActivity.isTextLenghGreater = "";
-                            UIUtils.hideSoftKeyboard(fragment.getActivity(), fragment.getActivity().getWindow().getDecorView().getWindowToken());
-                            boolean status = new ActivityHelper(fragment.getActivity()).openAppWithPackageName(getAdapter().getItem(position).getPackageName());
-                            FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_APPLICATION_PICK, getAdapter().getItem(position).getPackageName(), "");
-                            if (status) {
-                                PackageUtil.addRecentItemList(getAdapter().getItem(position), context);
-                                EventBus.getDefault().post(new SendSmsEvent(true));
+                                DashboardActivity.isTextLenghGreater = "";
+                                UIUtils.hideSoftKeyboard(fragment.getActivity(), fragment.getActivity().getWindow().getDecorView().getWindowToken());
+                                boolean status = new ActivityHelper(fragment.getActivity()).openAppWithPackageName(getAdapter().getItem(position).getPackageName());
+                                FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_APPLICATION_PICK, getAdapter().getItem(position).getPackageName(), "");
+                                if (status) {
+                                    PackageUtil.addRecentItemList(getAdapter().getItem(position), context);
+                                    EventBus.getDefault().post(new SendSmsEvent(true));
+                                }
                             }
                         }
-                    }
-                    break;
-                case DEFAULT:
-                    position = getAdapter().getItem(position).getId();
-                    switch (position) {
-                        case 1:
-                            if (router != null && fragment != null) {
-                                router.sendText(fragment.getActivity());
-                                FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_SMS, "", data);
-                            }
-                            break;
-                        //Notes
-                        case 2:
-                            if (router != null && fragment != null) {
-                                router.createNote(fragment.getActivity());
-                                FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_SAVE_NOTE, "", data);
-                                new ActivityHelper(context).openNotesApp(true);
-                                EventBus.getDefault().post(new SendSmsEvent(true));
-                            }
-                            break;
-                        //Write code for Junk Food Pane on this code
-                        case 3:
-                            if (router != null && fragment != null) {
-                                fragment.setCurrentPage(0);
-                            }
-                            break;
-                        case 4:
-                            if (router != null && fragment != null) {
-                                router.call(fragment.getActivity());
+                        break;
+                    case DEFAULT:
+                        position = getAdapter().getItem(position).getId();
+                        switch (position) {
+                            case 1:
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    ContactSmsPermissionHelper
+                                            contactSmsPermissionHelper = new
+                                            ContactSmsPermissionHelper(router,
+                                            context, this, false, data);
+                                    contactSmsPermissionHelper.checkForContactAndSMSPermission();
+                                } else {
+                                    loadContacts();
+                                    if (router != null && fragment != null) {
+                                        router.sendText(fragment.getActivity());
+                                        FirebaseHelper.getInstance().logIFAction(FirebaseHelper
+                                                .ACTION_SMS, "", data);
+                                    }
+                                }
+
+                                break;
+                            //Notes
+                            case 2:
+                                if (router != null && fragment != null) {
+                                    String inputStr = TokenManager.getInstance().getCurrent().getTitle();
+                                    if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.beta))
+                                            && inputStr.equalsIgnoreCase(Constants.ALPHA_SETTING)) {
+                                        if (PrefSiempo.getInstance(context).read(PrefSiempo
+                                                .IS_ALPHA_SETTING_ENABLE, false)) {
+                                            router.createNote(fragment.getActivity());
+                                            FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_SAVE_NOTE, "", data);
+                                            new ActivityHelper(context).openNotesApp(true);
+                                            EventBus.getDefault().post(new SendSmsEvent(true));
+                                        } else {
+                                            PrefSiempo.getInstance(context).write(PrefSiempo
+                                                    .IS_ALPHA_SETTING_ENABLE, true);
+                                            new ActivityHelper(context).openSiempoAlphaSettingsApp();
+                                            TokenManager.getInstance().clear();
+                                        }
+                                    } else {
+                                        router.createNote(fragment.getActivity());
+                                        FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_SAVE_NOTE, "", data);
+                                        new ActivityHelper(context).openNotesApp(true);
+                                        EventBus.getDefault().post(new SendSmsEvent(true));
+                                    }
+                                }
+                                break;
+                            //Write code for Junk Food Pane on this code
+                            case 3:
+                                if (router != null && fragment != null) {
+                                    EventBus.getDefault().post(new SendSmsEvent(true));
+                                    fragment.setCurrentPage(0);
+                                }
+                                break;
+                            case 4:
+                                if (router != null && fragment != null) {
+                                    router.call(fragment.getActivity());
+                                    DashboardActivity.isTextLenghGreater = "";
+                                    FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_CALL, "", data);
+                                    EventBus.getDefault().post(new SendSmsEvent(true, "", ""));
+                                }
+                                break;
+                            default:
+                                UIUtils.alert(fragment.getActivity(), fragment.getString(R.string.msg_not_yet_implemented));
+                                break;
+                        }
+                        break;
+                    case NUMBERS:
+                        if (getAdapter().getItem(position).getTitle().trim().equalsIgnoreCase("call") && getAdapter().getItem(position).getId() == 4) {
+                            try {
+                                fragment.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + TokenManager.getInstance().getCurrent().getExtra2())));
                                 DashboardActivity.isTextLenghGreater = "";
                                 FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_CALL, "", data);
                                 EventBus.getDefault().post(new SendSmsEvent(true, "", ""));
+                            } catch (Exception e) {
+                                CoreApplication.getInstance().logException(e);
+                                e.printStackTrace();
                             }
-                            break;
-                        default:
-                            UIUtils.alert(fragment.getActivity(), fragment.getString(R.string.msg_not_yet_implemented));
-                            break;
-                    }
-                    break;
-                case NUMBERS:
-                    if (getAdapter().getItem(position).getTitle().trim().equalsIgnoreCase("call") && getAdapter().getItem(position).getId() == 4) {
-                        try {
-                            fragment.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + TokenManager.getInstance().getCurrent().getExtra2())));
-                            DashboardActivity.isTextLenghGreater = "";
-                            FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_CALL, "", data);
-                            EventBus.getDefault().post(new SendSmsEvent(true, "", ""));
-                        } catch (Exception e) {
-                            CoreApplication.getInstance().logException(e);
-                            e.printStackTrace();
+                        } else {
+                            if (router != null) {
+                                router.contactNumberPicked(getAdapter().getItem(position));
+                                FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_CONTACT_PICK, "", data);
+                            }
                         }
-                    } else {
-                        if (router != null) {
-                            router.contactNumberPicked(getAdapter().getItem(position));
-                            FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_CONTACT_PICK, "", data);
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
+                        break;
+                    default:
+                        break;
+                }
+        }
     }
-
 
     public void loadDefaultData() {
         List<MainListItem> defaultItems = new ArrayList<>();
         items = new ArrayList<>();
         contactItems = new ArrayList<>();
         loadActions();
+
         loadContacts();
         loadDefaults();
         items = PackageUtil.getListWithMostRecentData(items, context);
@@ -253,10 +287,16 @@ public class MainFragmentMediator {
                 defaultItems.add(cItems);
             }
         }
-        if (getAdapter() != null) {
-            getAdapter().loadData(defaultItems);
-            getAdapter().notifyDataSetChanged();
+        try {
+            if (getAdapter() != null) {
+                getAdapter().loadData(defaultItems);
+                getAdapter().notifyDataSetChanged();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+
     }
 
     public void contactPicker() {
@@ -264,7 +304,7 @@ public class MainFragmentMediator {
         List<MainListItem> newList = new ArrayList<>();
         contactItems = new ArrayList<>();
 
-        loadActions();
+        // loadActions();
         loadContacts();
         loadDefaults();
         items = PackageUtil.getListWithMostRecentData(items, context);
@@ -276,11 +316,15 @@ public class MainFragmentMediator {
         }
 
         contactItems = newList;
-        if (getAdapter() != null) {
-            getAdapter().loadData(newList);
-            getAdapter().getFilter().filter("@");
-            getAdapter().notifyDataSetChanged();
+        try {
+            if (getAdapter() != null) {
+                getAdapter().loadData(newList);
+                getAdapter().getFilter().filter("@");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     public void contactNumberPicker(int selectedContactId) {
@@ -295,8 +339,15 @@ public class MainFragmentMediator {
                     }
                 }
             }
-            getAdapter().loadData(items);
-            getAdapter().notifyDataSetChanged();
+            try {
+                if (getAdapter() != null) {
+                    getAdapter().loadData(items);
+                    getAdapter().notifyDataSetChanged();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
 
     }
@@ -316,9 +367,52 @@ public class MainFragmentMediator {
                 defaultItems.add(cItems);
             }
         }
-        if (getAdapter() != null) {
-            getAdapter().loadData(defaultItems);
-            getAdapter().notifyDataSetChanged();
+        try {
+            if (getAdapter() != null) {
+                getAdapter().loadData(defaultItems);
+                getAdapter().notifyDataSetChanged();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public class resetData extends AsyncTask<String, String, List<MainListItem>> {
+
+        Context context;
+
+        public resetData(Context context) {
+            this.context = context;
+            items = new ArrayList<>();
+            contactItems = new ArrayList<>();
+            resetData = this;
+        }
+
+        @Override
+        protected List<MainListItem> doInBackground(String... strings) {
+            loadActions();
+            loadContacts();
+            loadDefaults();
+            items = PackageUtil.getListWithMostRecentData(items, context);
+            return items;
+        }
+
+        @Override
+        protected void onPostExecute(List<MainListItem> s) {
+            super.onPostExecute(s);
+            try {
+                if (getAdapter() != null) {
+                    getAdapter().loadData(items);
+                    getAdapter().getFilter().filter("");
+                    getAdapter().notifyDataSetChanged();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
         }
     }
 

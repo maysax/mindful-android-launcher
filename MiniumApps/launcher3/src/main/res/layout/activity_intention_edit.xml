@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
+            <co.siempo.phone.customviews.RobotoRegularTextView
                 android:id="@+id/txtSave"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
         android:paddingRight="@dimen/dp_10"
         android:paddingTop="@dimen/dp_5">
 
-        <TextView
+        <co.siempo.phone.customviews.RobotoRegularTextView
             android:id="@+id/hint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -117,7 +117,7 @@
         android:layout_below="@+id/linEditText"
         android:orientation="vertical">
 
-        <TextView
+        <co.siempo.phone.customviews.RobotoRegularTextView
             android:id="@+id/txtHelp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -145,7 +145,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TextView
+                <co.siempo.phone.customviews.RobotoRegularTextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -161,7 +161,7 @@
                     android:textColor="#7F7F7F"
                     android:textSize="16sp" />
 
-                <TextView
+                <co.siempo.phone.customviews.RobotoRegularTextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -177,7 +177,7 @@
                     android:textColor="#7F7F7F"
                     android:textSize="16sp" />
 
-                <TextView
+                <co.siempo.phone.customviews.RobotoRegularTextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -193,7 +193,7 @@
                     android:textColor="#7F7F7F"
                     android:textSize="16sp" />
 
-                <TextView
+                <co.siempo.phone.customviews.RobotoRegularTextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -217,7 +217,7 @@
                 android:paddingRight="@dimen/dp_10"
                 tools:ignore="RtlSymmetry">
 
-                <TextView
+                <co.siempo.phone.customviews.RobotoRegularTextView
                     android:id="@+id/txtOne"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -230,7 +230,7 @@
                     android:textColor="@color/colorAccent"
                     android:textSize="16sp" />
 
-                <TextView
+                <co.siempo.phone.customviews.RobotoRegularTextView
                     android:id="@+id/txtTwo"
                     android:layout_width="70dp"
                     android:layout_height="wrap_content"

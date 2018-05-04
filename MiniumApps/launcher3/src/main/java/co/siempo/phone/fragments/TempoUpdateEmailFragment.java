@@ -3,6 +3,9 @@ package co.siempo.phone.fragments;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
@@ -31,6 +34,7 @@ import org.androidannotations.annotations.ViewById;
 import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.UserModel;
+import co.siempo.phone.service.MailChimpOperation;
 import co.siempo.phone.utils.PrefSiempo;
 
 @EFragment(R.layout.fragment_tempo_update_email)
@@ -51,6 +55,7 @@ public class TempoUpdateEmailFragment extends CoreFragment {
 
     @ViewById
     TextInputLayout text_input_layout;
+    private ConnectivityManager connectivityManager;
 
 
     public TempoUpdateEmailFragment() {
@@ -81,12 +86,24 @@ public class TempoUpdateEmailFragment extends CoreFragment {
                                 .USER_EMAILID, "").equals(val_email)) {
                             Toast.makeText(getActivity(), getResources().getString(R.string.success_email), Toast.LENGTH_SHORT).show();
                         }
-                        if (PrefSiempo.getInstance(context).read(PrefSiempo
-                                .USER_EMAILID, "").equalsIgnoreCase("")) {
-                            storeDataToFirebase(true, CoreApplication.getInstance().getDeviceId(), val_email);
-                        } else {
-                            storeDataToFirebase(false, CoreApplication.getInstance().getDeviceId(), val_email);
+                        try {
+
+                            connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context
+                                    .CONNECTIVITY_SERVICE);
+                            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+                            if (activeNetwork != null) {
+                                new MailChimpOperation().execute(val_email);
+                                if (PrefSiempo.getInstance(context).read(PrefSiempo
+                                        .USER_EMAILID, "").equalsIgnoreCase("")) {
+                                    storeDataToFirebase(true, CoreApplication.getInstance().getDeviceId(), val_email);
+                                } else {
+                                    storeDataToFirebase(false, CoreApplication.getInstance().getDeviceId(), val_email);
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
+
                         PrefSiempo.getInstance(context).write(PrefSiempo
                                 .USER_EMAILID, val_email);
                         hideSoftKeyboard();
@@ -111,7 +128,12 @@ public class TempoUpdateEmailFragment extends CoreFragment {
                 fm.popBackStack();
             }
         });
-
+        try {
+            Typeface myTypeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/robotocondensedregular.ttf");
+            edt_email.setTypeface(myTypeface);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (!TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.USER_EMAILID, ""))) {
             edt_email.setText(PrefSiempo.getInstance(context).read(PrefSiempo.USER_EMAILID, ""));
             edt_email.setSelection(edt_email.getText().length());
@@ -203,4 +225,6 @@ public class TempoUpdateEmailFragment extends CoreFragment {
             e.printStackTrace();
         }
     }
+
+
 }
