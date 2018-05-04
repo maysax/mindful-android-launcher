@@ -43,18 +43,23 @@ public class LoadToolPane extends AsyncTask<String, String, ArrayList<MainListIt
                 list.add(entry.getKey());
             }
         }
-
+        ArrayList<MainListItem> items1 = new ArrayList<>();
         for (MainListItem mainListItem : items) {
             if (list.contains(mainListItem.getId())) {
                 bottomDockList.add(mainListItem);
+            } else {
+                items1.add(mainListItem);
             }
         }
-        return items;
+
+
+        return items1;
     }
 
     @Override
     protected void onPostExecute(ArrayList<MainListItem> s) {
         super.onPostExecute(s);
+
         CoreApplication.getInstance().setToolItemsList(s);
         CoreApplication.getInstance().setToolBottomItemsList(bottomDockList);
         EventBus.getDefault().postSticky(new NotifyToolView(true));

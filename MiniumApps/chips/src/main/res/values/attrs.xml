@@ -9,7 +9,8 @@
     ========================================================================== -->
     <dimen name="default_chips_text_size">16sp</dimen>
     <color name="default_chips_text_color">#FFF</color>
-    <item name="default_chips_line_spacing" format="float" type="dimen">1.25</item>
+    <item name="default_chips_line_spacing" format="float" type="dimen">1.25
+    </item>
     <integer name="default_chips_max_lines">4</integer>
     <string name="default_chips_more_text">…more</string>
     <color name="default_chips_more_text_color">#FFF</color>
@@ -38,7 +39,9 @@
         <item name="debug">false</item>
         <item name="moreText">@string/default_chips_more_text</item>
         <item name="moreTextColor">@color/default_chips_more_text_color</item>
-        <item name="moreTextColorActive">@color/default_chips_more_text_color_active</item>
+        <item name="moreTextColorActive">
+            @color/default_chips_more_text_color_active
+        </item>
     </style>
 
     <!-- Below is the attributes/resources/style that forms the bubble styling
@@ -59,29 +62,44 @@
 
     <!-- default bubble style -->
     <style name="default_bubble_style">
-        <item name="bubble_stateActive">@drawable/default_bubble_background</item>
-        <item name="bubble_statePressed">@drawable/default_bubble_background_pressed</item>
+        <item name="bubble_stateActive">@drawable/default_bubble_background
+        </item>
+        <item name="bubble_statePressed">
+            @drawable/default_bubble_background_pressed
+        </item>
         <item name="bubble_textSize">@dimen/default_bubble_text_size</item>
         <item name="bubble_textColor">@color/default_bubble_text_color</item>
-        <item name="bubble_textColorActive">@color/default_bubble_text_color_active</item>
+        <item name="bubble_textColorActive">
+            @color/default_bubble_text_color_active
+        </item>
         <item name="bubble_textPadding">@dimen/default_bubble_text_pad</item>
     </style>
 
     <style name="bubble_style_empty">
-        <item name="bubble_stateActive">@drawable/default_bubble_background</item>
-        <item name="bubble_statePressed">@drawable/default_bubble_background_pressed</item>
+        <item name="bubble_stateActive">@drawable/default_bubble_background
+        </item>
+        <item name="bubble_statePressed">
+            @drawable/default_bubble_background_pressed
+        </item>
         <item name="bubble_textSize">15sp</item>
         <item name="bubble_textColor">@color/default_bubble_text_color</item>
-        <item name="bubble_textColorActive">@color/default_bubble_text_color_active</item>
+        <item name="bubble_textColorActive">
+            @color/default_bubble_text_color_active
+        </item>
         <item name="bubble_textPadding">3dp</item>
     </style>
 
     <style name="bubble_style_selected">
-        <item name="bubble_stateActive">@drawable/greentext_background_active</item>
-        <item name="bubble_statePressed">@drawable/greentext_background_pressed</item>
+        <item name="bubble_stateActive">@drawable/greentext_background_active
+        </item>
+        <item name="bubble_statePressed">
+            @drawable/greentext_background_pressed
+        </item>
         <item name="bubble_textSize">15sp</item>
         <item name="bubble_textColor">@color/default_bubble_text_color</item>
-        <item name="bubble_textColorActive">@color/default_bubble_text_color_active</item>
+        <item name="bubble_textColorActive">
+            @color/default_bubble_text_color_active
+        </item>
         <item name="bubble_textPadding">3dp</item>
     </style>
 

@@ -10,6 +10,12 @@ public class Constants {
 
 
     public static final String WHATSAPP_PACKAGE = "com.whatsapp";
+    public static final String VIBER_PACKAGE = "com.viber.voip";
+    public static final String SKYPE_PACKAGE = "com.skype.raider";
+    public static final String WECHAT_PACKAGE = "com.tencent.mm";
+    public static final String LINE_PACKAGE = "jp.naver.line.android";
+
+
     public static final String GOOGLE_CALENDAR_PACKAGES = "com.google.android.calendar";
     //Packages to be added by default in junk food app
     public static final String FACEBOOK_PACKAGE = "com.facebook.katana";
@@ -61,20 +67,15 @@ public class Constants {
     public static final String ALPHA_SETTING = "0x0p9o8i7u6y";
     public static final String HUAWEI = "huawei";
     public static String[] PERMISSIONS = {
+            Manifest.permission.CALL_PHONE,
             Manifest.permission.READ_CONTACTS,
             Manifest.permission.WRITE_CONTACTS,
-            Manifest.permission.READ_CALL_LOG,
-            Manifest.permission.WRITE_CALL_LOG,
-            Manifest.permission.CALL_PHONE,
+            Manifest.permission.RECEIVE_SMS,
             Manifest.permission.SEND_SMS,
             Manifest.permission.READ_SMS,
-            Manifest.permission.CAMERA,
-            Manifest.permission.RECEIVE_SMS,
-            Manifest.permission.RECEIVE_MMS,
-            Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.ACCESS_NETWORK_STATE};
+            Manifest.permission.READ_EXTERNAL_STORAGE
+    };
     public static String HELPFUL_ROBOTS = "HELPFUL_ROBOTS";
     public static String BLOCKED_APPLIST = "BLOCKED_APPLIST";
     public static String SOCIAL_DISABLE_COUNT = "SOCIAL_DISABLE_COUNT";

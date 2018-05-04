@@ -17,6 +17,7 @@
     <string name="title.faq">FAQ</string>
     <string name="title.suppressedNotifications">View Suppressed Notification</string>
     <string name="title.siempoPermissions">Siempo Permissions</string>
+    <string name="title.siempoRestrictions">Restrictions</string>
     <string name="title.inbox" tools:ignore="UnusedResources">Google Inbox</string>
     <string name="title.defaultLauncher">Set default home app</string>
     <string name="title_tracking" tools:ignore="UnusedResources">Tracking</string>
@@ -31,10 +32,10 @@
     <string name="title.swipe">Swipe right to show flagged apps</string>
 
     <string name="label_multiple_numbers">Multiple numbers</string>
-    <string name="string_notification_title">Notifications</string>
+    <string name="string_notification_title">Control notifications</string>
     <string name="string_account_title">Account</string>
     <string name="string_account_service_title">"Account &amp; services"</string>
-    <string name="string_update_email_title">Update Email</string>
+    <string name="string_update_email_title">Update email</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" tools:ignore="UnusedResources">Hello blank fragment</string>
@@ -68,7 +69,7 @@
         <item>-1</item>
     </string-array>
 
-    <!-- Example settings for Data & Sync -->
+    <!-- Example settings for AlarmData & Sync -->
     <string name="pref_header_data_sync" tools:ignore="UnusedResources">Data &amp; sync</string>
 
     <string name="pref_title_sync_frequency">Sync frequency</string>
@@ -222,9 +223,9 @@
     <string name="terms_and_services">Terms of Service</string>
     <string name="faq_section">FAQ</string>
     <string name="contact_permission">Contacts</string>
-    <string name="call_permission">Calls</string>
+    <string name="call_permission">Telephone</string>
     <string name="sms_permission">SMS</string>
-    <string name="storage_permission">Access File Manager</string>
+    <string name="storage_permission">Storage</string>
     <string name="location_permission">Location</string>
     <string name="notificationAccess">Notification access</string>
     <string name="draw_overlay">Draw over other Apps</string>
@@ -234,8 +235,12 @@
     <string name="runtime_permission_text">Please consider turn on permissions at Setting > Permission</string>
     <string name="permission_proceed_text">Press Continue to proceed</string>
     <string name="btn_continue">Continue</string>
+    <string name="btn_enable">Enable</string>
+    <string name="btn_next">Next</string>
+    <string name="btn_got">Got it</string>
+    <string name="to_help_you_storage">"To help you understand your current phone habits, Siempo needs permission to store information on this device. We do not read your private files or collect information about files on your device."</string>
     <string name="userid">UserId:</string>
-    <string name="deliver_notifications">Deliver notifications:</string>
+    <string name="deliver_notifications">When do you want notifications?</string>
     <string name="individually_as_soon_as_they_arrive">Individually, as soon as they arrive</string>
     <string name="batched_every_15_minutes">Batched, every 15 minutes</string>
     <string name="batched_every_30_minutes">Batched, every 30 minutes</string>
@@ -244,7 +249,7 @@
     <string name="batched_every_4_hour">Batched, every 4 hours</string>
     <string name="only_at">Only at:</string>
     <string name="add">ADD</string>
-    <string name="home_screen">Home Screen</string>
+    <string name="home_screen">Customize appearance</string>
     <string name="account">Account</string>
     <string name="alpha_settings">Alpha Settings</string>
     <string name="allow_specific_apps">Allow specific apps</string>
@@ -254,7 +259,9 @@
 
     <!--Account Setting Section-->
 
+    <string name="lbl_purchaseSiempo">Purchase Siempo</string>
     <string name="lbl_updateEmail">Update email address</string>
+    <string name="lbl_freeTrial">"Your free trial ends in 13 days.\nLearn more about pricing options."</string>
     <string name="lbl_exitSiempo">Exit Siempo services</string>
     <string name="lbl_updateEmailDescription">Siempo will never email you unless you request support or opt-in.</string>
     <string name="lbl_switchSiempo">Switch to another home app</string>
@@ -265,7 +272,8 @@
     <!--Update Email Section-->
 
     <string name="lbl_email">Your email address</string>
-    <string name="success_email">Email address Updated</string>
+    <string name="success_email">Email address updated</string>
+    <string name="success_msg">Success</string>
 
 
     <!-- Help Section -->
@@ -291,7 +299,7 @@
     <string name="msg_half">Batches will arrive on the half-hour.</string>
     <string name="msg_1hour">Batches will arrive on the hour.</string>
     <string name="msg_2hour">Batches will arrive 12 times per day.</string>
-    <string name="msg_4hour">Batches will arrive 8 times per day.</string>
+    <string name="msg_4hour">Batches will arrive 6 times per day.</string>
     <string name="msg_next_delivery">Next Delivery: </string>
     <string name="message1">For the next day, week, or month, what do you want to remind yourself about whenever you unlock your phone?</string>
     <string name="message2">An intention is a goal or an idea that you want to focus on. Unlike a task, it might never be \"complete\", but your top priority may change.</string>
@@ -304,11 +312,13 @@
     <string name="next">NEXT</string>
 
     <string name="faqlink">http://www.getsiempo.com/apps/android/beta/faq.htm</string>
-    <string name="privacypolicy_link"><a href="">Privacy Policy.</a></string>
+    <string name="privacypolicy_link"><a href="">Privacy Policy</a></string>
     <string name="disable_intentions">Disable intentions</string>
+    <string name="dark_theme">Dark theme</string>
     <string name="when_intentions_are_disabled_your_home_screen_will_be_blank">When intentions are disabled, your home screen will be blank.</string>
-    <string name="homescreen">Home Screen</string>
-    <string name="app_menus">App menus</string>
+    <string name="dark_theme_text">"Backgrounds will be dark while icons &amp; text will be light."</string>
+    <string name="homescreen">Customize appearance</string>
+    <string name="app_menus">Reduce app usage</string>
     <string name="msg_no_apps">You haven\'t moved any apps into this category.</string>
     <string name="search_hint">Find app, send message, or save note</string>
     <string name="notification_interrupt_title">Select apps that may interrupt you</string>
@@ -354,8 +364,7 @@
         <item>Large</item>
     </string-array>
 
-    <string name="you_ve_flag">"You've flagged these apps.Your current intention:"
-</string>
+    <string name="you_ve_flag">"You've flagged these apps.Your current intention:"</string>
 
 
     <!-- errors -->
@@ -390,9 +399,14 @@
 
     <!--name tools menu-->
     <string name="title.map">Maps</string>
-    <string name="title.transport">Transport</string>
+    <string name="title.transport">Rides</string>
     <string name="title.weather">Weather</string>
     <string name="title.recorder">Recorder</string>
+    <string name="title.todo">To-do</string>
+    <string name="title.podcast">Podcast</string>
+    <string name="title.food">Food</string>
+    <string name="title.music">Music</string>
+    <string name="title.fitness">Fitness</string>
     <string name="title.camera">Camera</string>
     <string name="title.photos">Photos</string>
     <string name="title.payment">Payment</string>
@@ -403,8 +417,10 @@
     <string name="title.messages">Messages</string>
     <string name="title.email">Email</string>
     <string name="hide_icon_branding">Hide icon branding</string>
-    <string name="randomize_junkfood">"Randomize flagged app icons"</string>
+    <string name="randomize_junkfood">Randomize flagged-app icons</string>
+    <string name="reduce_overuse_screen">Reduce overuse of screen</string>
     <string name="junkfood_description_setting">App icons will have a different position each time you open the junk-food menu.</string>
+    <string name="reduce_overuse_screen_description_setting">Your daily screen-time limit starts high and gradually decreases. After reaching your limit each day, you will be gently detered from using non-essential apps.</string>
     <string name="iconbranding_description_setting">App icon logos are replaced with less enticing images and patterns.</string>
     <string name="assign_an_app">Assign an app to </string>
     <string name="title_flagging_screen">Flag apps</string>
@@ -428,7 +444,7 @@
     <string name="are_you_sure">Are you sure?</string>
     <string name="exiting_siempo">Exiting Siempo</string>
     <string name="exit">EXIT</string>
-    <string name="exiting_siempo_msg">To re-enable Siempo protections after exiting, launch the Siempo app at any time.  Using Siempo can help decrease unintended app use.</string>
+    <string name="exiting_siempo_msg">"Exiting does not impact your subscription status. To re-enable Siempo protections after exiting, launch the Siempo app at any time. "</string>
     <string name="editing_tools">Editing tools</string>
     <string name="editing_frequently_apps">Editing frequently used apps</string>
     <string name="select_tools">Select Tools</string>
@@ -436,7 +452,7 @@
     <string name="assign_app">ASSIGN APP</string>
     <string name="msg_allowpeakingon">On. When new notifications arrive, they may pop up over the current app. The status bar will also show when you have new notifications.</string>
     <string name="msg_allowpeaking">Off.The status bar will show you when you have new notifications in your tray, but your tray won\'t pop up automatically.</string>
-    <string name="allow_peaking">Allow peaking</string>
+    <string name="allow_peaking">Allow peeking</string>
     <string name="you_have_t_selected_any_junkfood_app_nselect_junkfood">"You haven\'t selected any Junkfood app."</string>
     <string name="select_junkfood">Select Junkfood</string>
     <string name="you_have_t_selected_any_favourite_app">"You haven\'t selected any Favorite app."</string>
@@ -444,6 +460,69 @@
     <string name="atleast_one_fav_app">"Atleast one app will stay as favorite"</string>
     <string name="not_more_than_twelve_fav_app">Please unselect any of the apps from Frequently used apps section</string>
     <string name="find_app_send_message_or_save_note">Find app, send message, or save note</string>
+    <string name="msg_permission_denied">"If you reject this permission,you can not use Siempo\nPlease turn on permissions at [Setting] > [Permission]"</string>
+    <string name="msg_permission_denied1">"If you reject this permission,you can not use Tempo\nPlease turn on permissions at [Setting] > [Permission]"</string>
+    <string name="no_app_found_or_no_relevant_app">No app found or no relevant app</string>
+    <string name="not_now">Not Now</string>
+    <string name="let_s_get_started">Let\'s get started!</string>
+    <string name="tempo_lets_you_schedule_time_that_is_free_from_interruptions_it_batches_your_notifications_to_arrive_only_at_the_times_you_choose_follow_the_instructions_to_enable">Tempo lets you schedule time that is free from interruptions. It batches your notifications to arrive only at the times you choose. Follow the instructions to enable:</string>
+    <string name="on_the_next">On the next screen:\nTap the toggle, then tap the back arrow.</string>
+    <string name="your_email_address">Your email address</string>
+    <string name="we_respect_your_privacy">We respect your privacy and do not tolerate spam. Your email allows us to send occasional important announcements about your account. We will never sell or give away your email to any third party.</string>
+    <string name="learn_more_on_our">Learn more on our</string>
+    <string name="enable_tempo">Enable Tempo</string>
+    <string name="done">Done</string>
+    <string name="enable_setting_a">Enable Setting A</string>
+    <string name="enable_setting_b">Enable Setting B</string>
+    <string name="enable_setting_c">Enable Setting C</string>
+    <string name="tempo_enabled">TEMPO IS ENABLED!</string>
 
+    <string name="later_string">Later</string>
+    <string name="setting_string">Settings</string>
+    <string name="make_your_home_string">"\u2022  Make your homescreen distraction free\n\u2022  Schedule focus time without interuptions\n\u2022  Flag apps that you\'re prone to overuse\n\u2022  Tidy app menus and muted app icons"</string>
+    <string name="would_you_like_to">Would you like to make Siempo \nyour default Home app?
+</string>
+    <string name="welcome_to_tool">Welcome to healthier app menus!</string>
+    <string name="from_this_tools">"From this <b>Tools Screen</b>, you can launch your most helpful apps.  Assign your preferred app to each tool.  Add, change, or rearrange tools as desired."</string>
+    <string name="frequently_used_title">Frequently Used Apps</string>
+    <string name="favorite_message">You can add any other non-distracting apps to this screen by long-pressing on an icon.</string>
+    <string name="flagged_app_title">Flagged Apps</string>
+    <string name="flagged_message">"Here you'll find any apps that you have flagged for less use.  By default, Siempo scrambles the app positions each time you enter this screen."</string>
+    <string name="siempo_need_permission">"Siempo needs your permission"</string>
+    <string name="choose_how_minutes">Choose how many minutes you want to allow yourself to spend in flagged apps. With your permission, Siempo will gently encourage you take a short break after you reach that limit.</string>
+    <string name="to_enable_draw">To enable, on the next screen: tap on the\ntoggle, then tap on the back arrow.</string>
+    <string name="launcher_text">On the next screen: \nTap the circle, then tap the back arrow.</string>
+    <string name="permission_msg_enable_tempo">Tempo needs permission \nto perform these tasks:</string>
+    <string name="reduce_overuse_flagged">Reduce overuse of flagged apps</string>
+    <string name="reduce_overuse_Flagged_description_setting">You will be gently detered from using flagged apps after 5 minutes of use. Unrestriced use will be restored after any %s  break from flagged apps.</string>
+    <string name="choose_app_flag_desc">Flag any apps that you want to use less. </string>
+    <string name="choose_app_flag">Choose apps to flag</string>
+    <string name="custom_background_image_title">Custom background image</string>
+
+
+    <string-array name="in_app_items_subscription">
+        <item>sub.monthly.selector.dollars.01</item>
+        <item>sub.monthly.selector.dollars.05</item>
+        <item>sub.monthly.selector.dollars.10</item>
+        <item>sub.monthly.selector.dollars.15</item>
+        <item>sub.monthly.selector.dollars.20</item>
+        <item>sub.monthly.selector.dollars.25</item>
+        <item>sub.monthly.selector.dollars.30</item>
+        <item>sub.monthly.selector.dollars.35</item>
+        <item>sub.monthly.selector.dollars.40</item>
+        <item>sub.monthly.selector.dollars.45</item>
+        <item>sub.monthly.selector.dollars.50</item>
+        <!--<item>testing_monthly_dollers.01</item>-->
+        <!--<item>android.test.purchased</item>-->
+    </string-array>
+
+    <string-array name="deter_after_dialog">
+        <item>0 minutes</item>
+        <item>2 minutes</item>
+        <item>5 minutes</item>
+        <item>10 minutes</item>
+        <item>15 minutes</item>
+        <item>disable</item>
+    </string-array>
 
 </resources>

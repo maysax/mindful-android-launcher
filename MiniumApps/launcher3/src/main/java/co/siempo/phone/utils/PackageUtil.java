@@ -1,5 +1,6 @@
 package co.siempo.phone.utils;
 
+import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -30,6 +31,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -41,6 +43,10 @@ import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -51,11 +57,14 @@ import java.util.Set;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.customviews.NotificationHelper;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.log.Tracer;
+import co.siempo.phone.models.AlarmData;
 import co.siempo.phone.models.AppMenu;
+import co.siempo.phone.models.CustomNotification;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.models.MainListItemType;
 import co.siempo.phone.service.AlarmBroadcast;
@@ -158,6 +167,86 @@ public class PackageUtil {
         }
     }
 
+
+    public static void createNotification(Context context, CustomNotification customNotification) {
+        int notificationListSize = customNotification.getNotificationSms().size();
+        if (notificationListSize != 0) {
+            NotificationManager notificationManager =
+                    (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            String packageName = customNotification.getNotificationSms().get(0).getPackageName();
+            if (packageName != null && !packageName.equalsIgnoreCase("android")) {
+                int icon = customNotification.getNotificationSms().get(0).getApp_icon();
+                if (Build.VERSION.SDK_INT >= 26) {
+                    NotificationHelper notificationHelper = new NotificationHelper(context, packageName);
+                    String strChannelName = CoreApplication.getInstance().getListApplicationName().get(packageName);
+                    Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(packageName);
+                    Notification newMessageNotification = new NotificationCompat.Builder(context, strChannelName)
+                            .setSmallIcon(R.drawable.siempo_notification_icon)
+                            .setContentTitle(strChannelName)
+                            .setContentText("")
+                            .setLargeIcon(bitmap)
+                            .setGroup(strChannelName)
+                            .build();
+                    notificationHelper.notify(customNotification.getNotificationSms().get(0).getApp_icon(), newMessageNotification);
+                    for (TableNotificationSms tableNotificationSms : customNotification.getNotificationSms()) {
+                        NotificationCompat.Builder builder = getNotification(context, tableNotificationSms);
+                        notificationHelper.notify(tableNotificationSms.getId().intValue(), builder.build());
+                        notificationHelper.notify(tableNotificationSms.getApp_icon(), newMessageNotification);
+                    }
+                } else {
+                    if (notificationListSize > 1) {
+                        if (Build.VERSION.SDK_INT >= 24) {
+                            String strChannelName = CoreApplication.getInstance().getListApplicationName().get(packageName);
+                            Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(packageName);
+                            Notification newMessageNotification = new NotificationCompat.Builder(context, strChannelName)
+                                    .setSmallIcon(R.drawable.siempo_notification_icon)
+                                    .setContentTitle(strChannelName)
+                                    .setContentText("")
+                                    .setLargeIcon(bitmap)
+                                    .setGroup(strChannelName)
+                                    .build();
+                            if (notificationManager != null) {
+                                notificationManager.notify(customNotification.getNotificationSms().get(0).getApp_icon(), newMessageNotification);
+                            }
+                            for (TableNotificationSms tableNotificationSms : customNotification.getNotificationSms()) {
+                                NotificationCompat.Builder builder = getNotification(context, tableNotificationSms);
+                                notificationManager.notify(tableNotificationSms.getId().intValue(), builder.build());
+                                notificationManager.notify(tableNotificationSms.getApp_icon(), newMessageNotification);
+
+                            }
+                        } else {
+                            generateBelow24(context, notificationManager, customNotification.getNotificationSms(), packageName);
+                        }
+                    } else {
+                        NotificationCompat.Builder builder = getNotification(context, customNotification.getNotificationSms().get(0));
+                        if (notificationManager != null) {
+                            notificationManager.notify(icon, builder.build());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    static void createNotificationChannel(Context context, NotificationManager notificationManager, String packageName) {
+        CharSequence channelName = CoreApplication.getInstance().getListApplicationName().get(packageName);
+        int importance;
+        if (!PrefSiempo.getInstance(context).read(PrefSiempo.ALLOW_PEAKING, true)) {
+            importance = NotificationManager.IMPORTANCE_DEFAULT;
+        } else {
+            importance = NotificationManager.IMPORTANCE_HIGH;
+        }
+        NotificationChannel notificationChannel = new NotificationChannel(packageName, channelName, importance);
+        notificationChannel.enableLights(true);
+        notificationChannel.setLightColor(Color.RED);
+        notificationChannel.enableVibration(true);
+        notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+        notificationChannel.setVibrationPattern(new long[]{1000});
+        notificationManager.createNotificationChannel(notificationChannel);
+    }
+
+
     /**
      * Create Notification after parsing the notification from notification listener
      *
@@ -175,7 +264,6 @@ public class PackageUtil {
                     NotificationChannel notificationChannel = createChannel(context,
                             applicationNameFromPackageName);
                     if (notificationManager != null) {
-                        notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
                         notificationManager.createNotificationChannel(notificationChannel);
                         Tracer.i("Tracking createNotificationChannel");
                     }
@@ -188,7 +276,6 @@ public class PackageUtil {
 
 
                 NotificationCompat.Builder builder = getNotification(context, notification);
-
 
                 if (notificationManager != null) {
                     notificationManager.notify(icon, groupBuilder.build());
@@ -203,6 +290,7 @@ public class PackageUtil {
         }
 
     }
+
 
     /**
      * Generate Notification object
@@ -247,7 +335,7 @@ public class PackageUtil {
         contentView.setTextViewText(R.id.txtAppName, applicationNameFromPackageName);
         b.setAutoCancel(true)
                 .setGroup(applicationNameFromPackageName)
-                .setWhen(System.currentTimeMillis())
+                .setWhen(notification.get_date().getTime())
                 .setSmallIcon(R.drawable.siempo_notification_icon)
                 .setPriority(priority)
                 .setContentTitle(title)
@@ -269,7 +357,7 @@ public class PackageUtil {
      * @return
      */
     @Nullable
-    private static PendingIntent getPendingIntent(Context context, TableNotificationSms notification) {
+    public static PendingIntent getPendingIntent(Context context, TableNotificationSms notification) {
         Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage(notification.getPackageName());
         PendingIntent contentIntent = null;
         if (launchIntentForPackage != null) {
@@ -298,14 +386,68 @@ public class PackageUtil {
         Tracer.i("Tracking createGroupNotification3");
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 
+        //In case of more than one notification, instead of showing contact
+        // image bitmap the app icon will be used
+        if (notificationSms.size() > 1) {
+            if (notification.getPackageName() != null) {
+                bitmap = CoreApplication.getInstance().getBitmapFromMemCache
+                        (notification.getPackageName());
+            }
+        }
+
+
         for (int i = 0; i < notificationSms.size(); i++) {
-
-            String title = getNotificationTitle(notification.get_contact_title(), notification.getPackageName(), context);
-
+            String title = getNotificationTitle
+                    (notificationSms.get(i).get_contact_title(), notification
+                            .getPackageName(), context);
             inboxStyle.addLine(title + ": " + notificationSms.get(i).get_message());
         }
         inboxStyle.setSummaryText("You have " + notificationSms.size() + " unread message");
         PendingIntent pendingIntent = getPendingIntent(context, notification);
+        NotificationCompat.Builder groupBuilder =
+                new NotificationCompat.Builder(context, strChannelName)
+                        .setContentTitle(strChannelName)
+                        .setContentText(notificationSms.size() + " New message")
+                        .setLargeIcon(bitmap)
+                        .setSmallIcon(R.drawable.siempo_notification_icon)
+                        .setGroupSummary(false)
+                        .setDefaults(Notification.DEFAULT_LIGHTS)
+                        .setGroup(strChannelName)
+                        .setOnlyAlertOnce(true)
+                        .setAutoCancel(true)
+                        .setContentIntent(pendingIntent);
+        groupBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            groupBuilder.setStyle(inboxStyle);
+            Tracer.i("Tracking createGroupNotification5");
+        } else {
+//            Tracer.i("Tracking createGroupNotification4");
+//            groupBuilder.setStyle(new NotificationCompat.BigTextStyle());
+        }
+        return groupBuilder;
+    }
+
+
+    private static NotificationCompat.Builder generateBelow24(Context context, NotificationManager notificationManager, ArrayList<TableNotificationSms> notificationSms, String packageName) {
+        int SUMMARY_ID;
+        Bitmap bitmap = null;
+        //In case of more than one notification, instead of showing contact
+        // image bitmap the app icon will be used
+        if (notificationSms.size() > 1) {
+            if (packageName != null) {
+                bitmap = CoreApplication.getInstance().getBitmapFromMemCache(packageName);
+            }
+        }
+        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+        SUMMARY_ID = notificationSms.get(0).getApp_icon();
+        for (int i = 0; i < notificationSms.size(); i++) {
+            String title = getNotificationTitle
+                    (notificationSms.get(i).get_contact_title(), packageName, context);
+            inboxStyle.addLine(title + ": " + notificationSms.get(i).get_message());
+        }
+        inboxStyle.setSummaryText("You have " + notificationSms.size() + " unread message");
+        PendingIntent pendingIntent = getPendingIntent(context, notificationSms.get(0));
+        String strChannelName = CoreApplication.getInstance().getListApplicationName().get(packageName);
         NotificationCompat.Builder groupBuilder =
                 new NotificationCompat.Builder(context, strChannelName)
                         .setContentTitle(strChannelName)
@@ -319,18 +461,17 @@ public class PackageUtil {
                         .setAutoCancel(true)
                         .setContentIntent(pendingIntent);
         groupBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Tracer.i("Tracking createGroupNotification4");
-            groupBuilder.setStyle(new NotificationCompat.BigTextStyle());
-        } else {
-            groupBuilder.setStyle(inboxStyle);
-            Tracer.i("Tracking createGroupNotification5");
+        groupBuilder.setStyle(inboxStyle);
+
+        for (int i = 0; i < notificationSms.size(); i++) {
+            NotificationCompat.Builder b = getNotification(context, notificationSms.get(i));
+            notificationManager.notify(notificationSms.get(i).getId().intValue(), b.build());
+            notificationManager.notify(SUMMARY_ID, groupBuilder.build());
         }
         return groupBuilder;
     }
 
-
-    private static String getTimeFormat(Context context) {
+    public static String getTimeFormat(Context context) {
         String format;
         boolean is24hourformat = android.text.format.DateFormat.is24HourFormat(context);
 
@@ -342,40 +483,261 @@ public class PackageUtil {
         return format;
     }
 
-    public static void enableAlarm(Context context) {
+
+    /**
+     * this method cancel the alarm.
+     *
+     * @param id
+     */
+    private static void cancelAlarm(int id) {
         try {
-            Intent intentToFire = new Intent(context, AlarmBroadcast.class);
-            intentToFire.setAction(AlarmBroadcast.ACTION_ALARM);
-            PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 1234, intentToFire, PendingIntent.FLAG_UPDATE_CURRENT);
-            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-            long delay = 30000;
-            long time = System.currentTimeMillis() + delay;
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                // Wakes up the device in Doze Mode
+            if (isAlarmEnable(id)) {
+                Log.d("Alarm", "Cancel Enabled Alarm :" + id);
+                Intent intentToFire = new Intent(CoreApplication.getInstance(), AlarmBroadcast.class);
+                PendingIntent alarmIntent = PendingIntent.getBroadcast(CoreApplication.getInstance(), id, intentToFire, 0);
+                AlarmManager alarmManager = (AlarmManager) CoreApplication.getInstance().getSystemService(Context.ALARM_SERVICE);
                 if (alarmManager != null) {
-                    alarmManager.setAlarmClock(new AlarmManager
-                            .AlarmClockInfo(time,alarmIntent),
-                            alarmIntent);
-//                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, alarmIntent);
-                }
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                // Wakes up the device in Idle Mode
-                if (alarmManager != null) {
-                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, alarmIntent);
-                }
-            } else {
-                if (alarmManager != null) {
-                    alarmManager.set(AlarmManager.RTC_WAKEUP, time, alarmIntent);
+                    alarmManager.cancel(alarmIntent);
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    private static boolean isAlarmEnable(int id) {
+        if (CoreApplication.getInstance() != null) {
+            Intent intentToFire = new Intent(CoreApplication.getInstance(), AlarmBroadcast.class);
+            return (PendingIntent.getBroadcast(CoreApplication.getInstance(), id, intentToFire, PendingIntent.FLAG_NO_CREATE) != null);
+        }
+        return false;
+    }
+
+    public static void enableDisableAlarm(Calendar calendar, int id) {
+        try {
+            if (id == -1) {
+                PackageUtil.cancelAlarm(0);
+            }
+            if (id != -1 && CoreApplication.getInstance() != null) {
+
+                Intent intentToFire = new Intent(CoreApplication.getInstance(), AlarmBroadcast.class);
+                PendingIntent alarmIntent = PendingIntent.getBroadcast(CoreApplication.getInstance(), id, intentToFire, 0);
+                AlarmManager alarmManager = (AlarmManager) CoreApplication.getInstance().getSystemService(Context.ALARM_SERVICE);
+                long time = calendar.getTimeInMillis();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    // Wakes up the device in Doze Mode
+                    if (alarmManager != null) {
+                        Log.d("Alarm", "Time:" + calendar.getTime());
+                        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, alarmIntent);
+                    }
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    // Wakes up the device in Idle Mode
+                    if (alarmManager != null) {
+                        Log.d("Alarm", "Time:" + calendar.getTime());
+                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, alarmIntent);
+                    }
+                } else {
+                    if (alarmManager != null) {
+                        Log.d("Alarm", "Time:" + calendar.getTime());
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, time, alarmIntent);
+                    }
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
             CoreApplication.getInstance().logException(e);
         }
     }
+
+    public static Calendar getOnlyAt(Context context) {
+        String timeString;
+        if (android.text.format.DateFormat.is24HourFormat(context)) {
+            timeString = "HH:mm";
+        } else {
+            timeString = "hh:mm a";
+        }
+        SimpleDateFormat df = new SimpleDateFormat(timeString, Locale.getDefault());
+        String strTimeData = PrefSiempo.getInstance(context).read(PrefSiempo
+                .ONLY_AT, "12:01");
+        String strTime[] = strTimeData.split(",");
+
+        Calendar calendar1 = Calendar.getInstance();
+        if (strTime.length == 1) {
+            String str1 = strTime[0];
+            int setMinute, setHours;
+
+            setHours = Integer.parseInt(str1.split(":")[0]);
+            setMinute = Integer.parseInt(str1.split(":")[1]);
+
+            calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+            calendar1.set(Calendar.MINUTE, setMinute);
+        } else if (strTime.length == 2) {
+            Calendar currentTime = Calendar.getInstance();
+
+            int systemMinute, setMinute, systemHours, setHours;
+
+            ArrayList<AlarmData> hourList = new ArrayList<>();
+
+            systemHours = currentTime.get(Calendar.HOUR_OF_DAY);
+            systemMinute = currentTime.get(Calendar.MINUTE);
+
+            String str1 = strTime[0];
+            setHours = Integer.parseInt(str1.split(":")[0]);
+            setMinute = Integer.parseInt(str1.split(":")[1]);
+            calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+            calendar1.set(Calendar.MINUTE, setMinute);
+            hourList.add(new AlarmData(setHours, setMinute, df.format(calendar1.getTime())));
+            String str2 = strTime[1];
+            setHours = Integer.parseInt(str2.split(":")[0]);
+            setMinute = Integer.parseInt(str2.split(":")[1]);
+            calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+            calendar1.set(Calendar.MINUTE, setMinute);
+            hourList.add(new AlarmData(setHours, setMinute, df.format(calendar1.getTime())));
+            try {
+                Collections.sort(hourList, new PackageUtil.HoursComparator());
+                for (int i = 0; i < hourList.size(); i++) {
+                    if (hourList.get(i).getHours() == systemHours) {
+                        if (hourList.get(i).getMinute() > systemMinute) {
+                            String str4 = strTime[i];
+                            setHours = Integer.parseInt(str4.split(":")[0]);
+                            setMinute = Integer.parseInt(str4.split(":")[1]);
+                            calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+                            calendar1.set(Calendar.MINUTE, setMinute);
+                            break;
+                        } else {
+                            calendar1.set(Calendar.HOUR_OF_DAY, hourList.get(0).getHours());
+                            calendar1.set(Calendar.MINUTE, hourList.get(0).getMinute());
+                        }
+                    } else if (hourList.get(i).getHours() > systemHours) {
+                        String str4 = strTime[i];
+                        setHours = Integer.parseInt(str4.split(":")[0]);
+                        setMinute = Integer.parseInt(str4.split(":")[1]);
+                        calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+                        calendar1.set(Calendar.MINUTE, setMinute);
+                        break;
+                    } else {
+                        calendar1.set(Calendar.HOUR_OF_DAY, hourList.get(0).getHours());
+                        calendar1.set(Calendar.MINUTE, hourList.get(0).getMinute());
+                    }
+                }
+            } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
+            }
+
+        } else if (strTime.length == 3) {
+            Calendar currentTime = Calendar.getInstance();
+
+            ArrayList<AlarmData> hourList = new ArrayList<>();
+
+            int systemMinute, setMinute, systemHours, setHours;
+            systemHours = currentTime.get(Calendar.HOUR_OF_DAY);
+            systemMinute = currentTime.get(Calendar.MINUTE);
+
+
+            String str1 = strTime[0];
+            setHours = Integer.parseInt(str1.split(":")[0]);
+            setMinute = Integer.parseInt(str1.split(":")[1]);
+            calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+            calendar1.set(Calendar.MINUTE, setMinute);
+            hourList.add(new AlarmData(setHours, setMinute, df.format(calendar1.getTime())));
+
+            String str2 = strTime[1];
+            setHours = Integer.parseInt(str2.split(":")[0]);
+            setMinute = Integer.parseInt(str2.split(":")[1]);
+            calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+            calendar1.set(Calendar.MINUTE, setMinute);
+            hourList.add(new AlarmData(setHours, setMinute, df.format(calendar1.getTime())));
+
+            String str3 = strTime[2];
+            setHours = Integer.parseInt(str3.split(":")[0]);
+            setMinute = Integer.parseInt(str3.split(":")[1]);
+            calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+            calendar1.set(Calendar.MINUTE, setMinute);
+            hourList.add(new AlarmData(setHours, setMinute, df.format(calendar1.getTime())));
+            try {
+                Collections.sort(hourList, new PackageUtil.HoursComparator());
+                for (int i = 0; i < hourList.size(); i++) {
+                    if (hourList.get(i).getHours() == systemHours) {
+                        if (hourList.get(i).getMinute() > systemMinute) {
+                            String str4 = strTime[i];
+                            setHours = Integer.parseInt(str4.split(":")[0]);
+                            setMinute = Integer.parseInt(str4.split(":")[1]);
+                            calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+                            calendar1.set(Calendar.MINUTE, setMinute);
+                            break;
+                        } else {
+                            calendar1.set(Calendar.HOUR_OF_DAY, hourList.get(0).getHours());
+                            calendar1.set(Calendar.MINUTE, hourList.get(0).getMinute());
+                        }
+                    } else if (hourList.get(i).getHours() > systemHours) {
+                        String str4 = strTime[i];
+                        setHours = Integer.parseInt(str4.split(":")[0]);
+                        setMinute = Integer.parseInt(str4.split(":")[1]);
+                        calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+                        calendar1.set(Calendar.MINUTE, setMinute);
+                        break;
+                    } else {
+                        calendar1.set(Calendar.HOUR_OF_DAY, hourList.get(0).getHours());
+                        calendar1.set(Calendar.MINUTE, hourList.get(0).getMinute());
+                    }
+                }
+            } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
+            }
+        }
+        calendar1.set(Calendar.SECOND, 0);
+        // If the time being set is past time, android system will keep on creating alarms
+        // Hence in order to prevent this, check with current system time, and if the time is past
+        // then add 24 hours to it.
+        if (calendar1.getTimeInMillis() < System.currentTimeMillis()) {
+            calendar1.add(Calendar.DATE, 1);
+        }
+        return calendar1;
+    }
+
+    public static Calendar batchMode(Context context) {
+        int batchTime = PrefSiempo.getInstance(context).read(PrefSiempo
+                .BATCH_TIME, 15);
+        Calendar calendar = Calendar.getInstance();
+        int hour;
+        int minute = calendar.get(Calendar.MINUTE);
+        if (batchTime == 15) {
+            if (minute >= 0 && minute < 15) {
+                calendar.set(Calendar.MINUTE, 15);
+            } else if (minute >= 15 && minute < 30) {
+                calendar.set(Calendar.MINUTE, 30);
+            } else if (minute >= 30 && minute < 45) {
+                calendar.set(Calendar.MINUTE, 45);
+            } else if (minute >= 45 && minute < 60) {
+                calendar.set(Calendar.MINUTE, 60);
+            }
+        } else if (batchTime == 30) {
+            if (minute >= 0 && minute < 30) {
+                calendar.set(Calendar.MINUTE, 30);
+            } else if (minute >= 30 && minute < 60) {
+                calendar.add(Calendar.HOUR_OF_DAY, 1);
+                calendar.set(Calendar.MINUTE, 0);
+            }
+        } else if (batchTime == 1) {
+            calendar.add(Calendar.HOUR_OF_DAY, 1);
+            calendar.set(Calendar.MINUTE, 0);
+        } else if (batchTime == 2) {
+            calendar = Calendar.getInstance();
+            hour = calendar.get(Calendar.HOUR_OF_DAY);
+            int intHour = forTwoHours(hour);
+            calendar.set(Calendar.HOUR_OF_DAY, intHour);
+            calendar.set(Calendar.MINUTE, 0);
+        } else if (batchTime == 4) {
+            calendar = Calendar.getInstance();
+            hour = calendar.get(Calendar.HOUR_OF_DAY);
+            int intHour = forFourHours(hour);
+            calendar.set(Calendar.HOUR_OF_DAY, intHour);
+            calendar.set(Calendar.MINUTE, 0);
+        }
+        calendar.set(Calendar.SECOND, 0);
+        return calendar;
+    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private static NotificationChannel createChannel(Context context, String channelName) {
@@ -389,6 +751,7 @@ public class PackageUtil {
         chan.setVibrationPattern(new long[]{1000});
         return chan;
     }
+
 
     /**
      * Below function is used to get contact name from contact number store in contact list
@@ -413,7 +776,7 @@ public class PackageUtil {
         return contactName;
     }
 
-    private static String getNotificationTitle(String notificationTitle, String notificationPackageName, Context context) {
+    public static String getNotificationTitle(String notificationTitle, String notificationPackageName, Context context) {
         String title = "";
         if (!TextUtils.isEmpty(notificationTitle)) {
             title = notificationTitle;
@@ -445,7 +808,7 @@ public class PackageUtil {
 
         //get the JSON array of the ordered of sorted customers
         String jsonListOfSortedToolsId = PrefSiempo.getInstance(context).read(PrefSiempo.SORTED_MENU, "");
-
+        Log.d("MenuItem", jsonListOfSortedToolsId);
 
         //check for null
         if (!jsonListOfSortedToolsId.isEmpty()) {
@@ -484,26 +847,23 @@ public class PackageUtil {
 
 
     public static ArrayList<MainListItem> getFavoriteList(Context context) {
-
-
-        ArrayList<MainListItem> appList = getAppList(context);
-
-        ArrayList<MainListItem> sortedFavoriteList;
-
-        if (appList.size() > 0) {
-
-            String jsonListOfSortedFavorites = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
-            List<String> listOfSortFavoritesApps;
-            if (!TextUtils.isEmpty(jsonListOfSortedFavorites)) {
-
-
-                listOfSortFavoritesApps = syncFavoriteList(jsonListOfSortedFavorites, context);
-                sortedFavoriteList = sortFavoriteAppsByPosition(listOfSortFavoritesApps, appList, context);
+        ArrayList<MainListItem> sortedFavoriteList = new ArrayList<>();
+        try {
+            ArrayList<MainListItem> appList = getAppList(context);
+            if (appList.size() > 0) {
+                String jsonListOfSortedFavorites = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
+                List<String> listOfSortFavoritesApps;
+                if (!TextUtils.isEmpty(jsonListOfSortedFavorites)) {
+                    listOfSortFavoritesApps = syncFavoriteList(jsonListOfSortedFavorites, context);
+                    sortedFavoriteList = sortFavoriteAppsByPosition(listOfSortFavoritesApps, appList, context);
+                } else {
+                    sortedFavoriteList = addDefaultFavoriteApps(context, appList);
+                }
             } else {
                 sortedFavoriteList = addDefaultFavoriteApps(context, appList);
             }
-        } else {
-            sortedFavoriteList = addDefaultFavoriteApps(context, appList);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return sortedFavoriteList;
@@ -511,20 +871,40 @@ public class PackageUtil {
 
 
     private static ArrayList<MainListItem> getAppList(Context context) {
-
         ArrayList<MainListItem> appList = new ArrayList<>();
-        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-        List<ResolveInfo> installedPackageList = context.getPackageManager().queryIntentActivities(mainIntent, 0);
+        try {
+            List<String> installedPackageList = CoreApplication.getInstance().getPackagesList();
 
-        for (ResolveInfo resolveInfo : installedPackageList) {
-            if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(context.getPackageName())) {
-                if (!TextUtils.isEmpty(resolveInfo.activityInfo.packageName) && !TextUtils.isEmpty(resolveInfo.loadLabel(context.getPackageManager()))) {
+            //Added as a part of SSA-1483, in case of installed package
+            if (installedPackageList.isEmpty()) {
+                Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+                mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+                List<ResolveInfo> pkgAppsList = context.getPackageManager().queryIntentActivities(mainIntent, 0);
 
-                    appList.add(new MainListItem(-1, "" + resolveInfo.loadLabel(context.getPackageManager()), resolveInfo.activityInfo.packageName));
+                for (ResolveInfo resolveInfo : pkgAppsList) {
+                    installedPackageList.add(resolveInfo.activityInfo
+                            .packageName);
                 }
-            }
 
+
+            }
+            for (String resolveInfo : installedPackageList) {
+                if (!resolveInfo.equalsIgnoreCase(context.getPackageName())) {
+                    if (!TextUtils.isEmpty(resolveInfo)) {
+                        String strAppName = CoreApplication.getInstance().getListApplicationName().get(resolveInfo);
+                        if (strAppName == null) {
+                            strAppName = CoreApplication.getInstance().getApplicationNameFromPackageName(resolveInfo);
+                        }
+                        if (!TextUtils.isEmpty(strAppName)) {
+                            appList.add(new MainListItem(-1, "" + strAppName, resolveInfo));
+                        }
+                    }
+
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return appList;
     }
@@ -795,33 +1175,37 @@ public class PackageUtil {
         List<MainListItem> removeList = new ArrayList<>();
         List<MainListItem> listWithMostRecentdata = new ArrayList<>();
 
+        if (recentItemList != null) {
+            for (int j = 0; j < recentItemList.size(); j++) {
+                MainListItem mainListItem = recentItemList.get(j);
 
-        for (int j = 0; j < recentItemList.size(); j++) {
-            String recentItemTitle = recentItemList.get(j).getTitle();
-            String recentItemPackageName = recentItemList.get(j).getPackageName();
+                if (null != mainListItem) {
+                    String recentItemTitle = mainListItem.getTitle();
+                    String recentItemPackageName = mainListItem.getPackageName();
 
-            for (int i = 0; i < allItems.size(); i++) {
-                MainListItem item = allItems.get(i);
-                String title = allItems.get(i).getTitle();
-                String packageName = allItems.get(i).getPackageName();
+                    for (int i = 0; i < allItems.size(); i++) {
+                        MainListItem item = allItems.get(i);
+                        String title = allItems.get(i).getTitle();
+                        String packageName = allItems.get(i).getPackageName();
 
-                if (TextUtils.isEmpty(packageName) && TextUtils.isEmpty(recentItemPackageName) && !TextUtils.isEmpty(title) && !TextUtils.isEmpty(recentItemTitle) && title.toLowerCase().trim().equalsIgnoreCase(recentItemTitle.toLowerCase().trim())) {
-                    removeList.add(item);
-                } else if (!TextUtils.isEmpty(packageName) && !TextUtils.isEmpty(recentItemPackageName) && packageName.trim().equalsIgnoreCase(recentItemPackageName.trim())) {
-                    removeList.add(item);
+                        if (TextUtils.isEmpty(packageName) && TextUtils.isEmpty(recentItemPackageName) && !TextUtils.isEmpty(title) && !TextUtils.isEmpty(recentItemTitle) && title.toLowerCase().trim().equalsIgnoreCase(recentItemTitle.toLowerCase().trim())) {
+                            removeList.add(item);
+                        } else if (!TextUtils.isEmpty(packageName) && !TextUtils.isEmpty(recentItemPackageName) && packageName.trim().equalsIgnoreCase(recentItemPackageName.trim())) {
+                            removeList.add(item);
+                        }
+                    }
                 }
+
             }
 
+            allItems.removeAll(removeList);
+
+            listWithMostRecentdata.addAll(removeList);
+            listWithMostRecentdata.addAll(allItems);
+
+            List<MainListItem> junkListItems = getJunkListItems(listWithMostRecentdata, context);
+            listWithMostRecentdata.removeAll(junkListItems);
         }
-
-        allItems.removeAll(removeList);
-
-        listWithMostRecentdata.addAll(removeList);
-        listWithMostRecentdata.addAll(allItems);
-
-        List<MainListItem> junkListItems = getJunkListItems(listWithMostRecentdata, context);
-        listWithMostRecentdata.removeAll(junkListItems);
-
         return listWithMostRecentdata;
     }
 
@@ -883,5 +1267,43 @@ public class PackageUtil {
         }
 
         return junkListItems;
+    }
+
+    public static class HoursComparator implements Comparator<AlarmData> {
+        @Override
+        public int compare(AlarmData o1, AlarmData o2) {
+            if (o1.getHours() == o2.getHours()) {
+                return o1.getMinute() - o2.getMinute();
+            }
+            return o1.getHours() - o2.getHours();
+        }
+    }
+
+    public static int forTwoHours(int hour) {
+        ArrayList<Integer> everyTwoHourList = new ArrayList<>(Arrays.asList(0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22));
+        if (hour >= 22) {
+            return 0;
+        } else {
+            for (Integer integer : everyTwoHourList) {
+                if (integer > hour) {
+                    return integer;
+                }
+            }
+        }
+        return 0;
+    }
+
+    public static int forFourHours(int hour) {
+        ArrayList<Integer> everyFourHoursList = new ArrayList<>(Arrays.asList(0, 4, 8, 12, 16, 20));
+        if (hour >= 20) {
+            return 0;
+        } else {
+            for (Integer integer : everyFourHoursList) {
+                if (integer > hour) {
+                    return integer;
+                }
+            }
+        }
+        return 0;
     }
 }

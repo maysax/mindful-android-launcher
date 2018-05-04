@@ -370,36 +370,42 @@ public class NotesEditActivity extends CoreActivity implements Toolbar.OnMenuIte
     @Override
     public void onBackPressed() {
         // New note -> show 'Save changes?' dialog
-        if (bundle != null && bundle.getInt(NOTE_REQUEST_CODE) == NEW_NOTE_REQUEST)
-            saveChangesDialog.show();
+        try {
+            if (bundle != null && bundle.getInt(NOTE_REQUEST_CODE) == NEW_NOTE_REQUEST)
+                saveChangesDialog.show();
 
-            // Existing note
-        else {
+                // Existing note
+            else {
             /*
              * If title is not empty -> Check if note changed
              *  If yes -> saveChanges
              *  If not -> hide keyboard if showing and finish
              */
-            if (!isEmpty(titleEdit)) {
-                if (bundle != null && !(titleEdit.getText().toString().equals(bundle.getString(NOTE_TITLE))) ||
-                        !(bodyEdit.getText().toString().equals(bundle.getString(NOTE_BODY))) ||
-                        !(colour.equals(bundle.getString(NOTE_COLOUR))) ||
-                        fontSize != bundle.getInt(NOTE_FONT_SIZE) ||
-                        hideBody != bundle.getBoolean(NOTE_HIDE_BODY)) {
+                if (!isEmpty(titleEdit)) {
 
-                    saveChanges();
-                } else {
-                    imm.hideSoftInputFromWindow(titleEdit.getWindowToken(), 0);
+                    if (bundle != null && (bundle.containsKey(NOTE_TITLE) && !(titleEdit.getText().toString().equals(bundle.getString(NOTE_TITLE)))) ||
+                            (bundle.containsKey(NOTE_BODY) && !(bodyEdit.getText().toString().equals(bundle.getString(NOTE_BODY)))) ||
+                            (bundle.containsKey(NOTE_BODY) && !(colour.equals(bundle.getString(NOTE_COLOUR)))) ||
+                            fontSize != bundle.getInt(NOTE_FONT_SIZE) ||
+                            hideBody != bundle.getBoolean(NOTE_HIDE_BODY)) {
 
-                    finish();
-                    overridePendingTransition(0, 0);
+                        saveChanges();
+                    } else {
+                        imm.hideSoftInputFromWindow(titleEdit.getWindowToken(), 0);
+
+                        finish();
+                        overridePendingTransition(0, 0);
+                    }
                 }
-            }
 
-            // If title empty -> Toast title cannot be empty
-            else
-                toastEditTextCannotBeEmpty();
+                // If title empty -> Toast title cannot be empty
+                else
+                    toastEditTextCannotBeEmpty();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     @Override

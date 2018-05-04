@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,9 +55,7 @@ public class FavoritePaneFragment extends CoreFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_favorite_pane, container, false);
-        Log.d("Test", "F1");
         initView();
-        Log.d("Test", "F2");
         return view;
 
     }
@@ -77,7 +74,6 @@ public class FavoritePaneFragment extends CoreFragment {
     private void initView() {
         if (getActivity() != null && view != null) {
             items = CoreApplication.getInstance().getFavoriteItemsList();
-//            items = PackageUtil.getFavoriteList(getActivity());
             recyclerView = view.findViewById(R.id.recyclerView);
             btnSelect = view.findViewById(R.id.btnSelect);
             btnSelect.setOnClickListener(new View.OnClickListener() {

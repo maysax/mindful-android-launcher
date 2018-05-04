@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,7 +49,11 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
     private HelpActivity mActivity;
     private ProgressDialog progressDialog;
     private LinearLayout lnrVersion;
-    private View txtTermsOfCondition;
+    private TextView txtTermsOfCondition;
+    private RelativeLayout relPrivacyPolicy;
+    private RelativeLayout relFaq;
+    private RelativeLayout relTermsOfCondition;
+    private RelativeLayout relFeedback;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,7 +82,16 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
         txtPrivacyPolicy.setOnClickListener(this);
 
         txtFaq = view.findViewById(R.id.txtFaq);
+        relPrivacyPolicy = view.findViewById(R.id.relPrivacyPolicy);
+        relFaq = view.findViewById(R.id.relFaq);
+        relTermsOfCondition = view.findViewById(R.id.relTermsOfCondition);
+        relFeedback = view.findViewById(R.id.relFeedback);
+
         txtFaq.setOnClickListener(this);
+        relPrivacyPolicy.setOnClickListener(this);
+        relFaq.setOnClickListener(this);
+        relTermsOfCondition.setOnClickListener(this);
+        relFeedback.setOnClickListener(this);
 
         txtVersionValue = view.findViewById(R.id.txtVersionValue);
         lnrVersion = view.findViewById(R.id.lnrVersion);
@@ -135,6 +149,20 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.relFeedback:
+                txtSendFeedback();
+                break;
+            case R.id.relFaq:
+                txtFaq();
+                break;
+            case R.id.relPrivacyPolicy:
+                txtPrivacyPolicy();
+                break;
+
+            case R.id.relTermsOfCondition:
+                termsOfServices();
+                break;
+
             case R.id.txtSendFeedback:
                 txtSendFeedback();
                 break;
@@ -228,8 +256,8 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
     private void showUpdateDialog(String str) {
 
         if (null != mActivity) {
-            PrefSiempo.getInstance(mActivity).write(PrefSiempo
-                    .IS_APP_INSTALLED_FIRSTTIME, false);
+//            PrefSiempo.getInstance(mActivity).write(PrefSiempo
+//                    .IS_APP_INSTALLED_FIRSTTIME, false);
             ConnectivityManager connectivityManager = (ConnectivityManager)
                     mActivity.
                             getSystemService(Context

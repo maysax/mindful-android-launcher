@@ -16,7 +16,6 @@
             android:id="@+id/linTopDoc"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-
             android:layout_weight="0.6"
             android:background="@drawable/top_dock_bg"
             android:orientation="vertical">
@@ -40,14 +39,14 @@
             android:orientation="vertical"
             android:visibility="visible">
 
-            <android.support.v4.view.ViewPager
+            <co.siempo.phone.ui.SiempoViewPager
                 android:id="@+id/pagerPane"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/linBottomDoc"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -60,17 +59,20 @@
                 android:id="@+id/indicator"
                 android:layout_width="match_parent"
                 android:layout_height="24dp"
+                android:layout_alignParentTop="true"
                 android:layout_gravity="center"
                 app:ci_drawable="@drawable/indicator_active"
                 app:ci_drawable_unselected="@drawable/indicator_inactive" />
 
             <android.support.v7.widget.RecyclerView
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/dp_5"
                 android:id="@+id/recyclerViewBottomDoc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_marginRight="@dimen/dp_5"
                 android:clipToPadding="false" />
-        </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/linSearchList"

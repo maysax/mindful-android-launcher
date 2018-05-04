@@ -46,7 +46,7 @@
         app:civ_border_color="@color/black"
         app:civ_border_width="2dp" />
 
-    <TextView
+    <co.siempo.phone.customviews.RobotoMediumTextView
         android:id="@+id/txtTitle"
         android:layout_width="match_parent"
         android:layout_height="20dp"
@@ -59,7 +59,7 @@
         android:textSize="@dimen/text.size.medium"
         tools:text="John Doe" />
 
-    <TextView
+    <co.siempo.phone.customviews.RobotoCondensedTextView
         android:id="@+id/txtSubTitle"
         android:layout_width="wrap_content"
         android:layout_height="20dp"

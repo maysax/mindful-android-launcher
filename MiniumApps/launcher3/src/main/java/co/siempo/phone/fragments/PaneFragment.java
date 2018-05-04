@@ -1,16 +1,27 @@
 package co.siempo.phone.fragments;
 
+import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
+import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,14 +29,18 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.eyeem.chips.ChipsEditText;
+import com.eyeem.chips.Utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -45,7 +60,6 @@ import co.siempo.phone.adapters.ToolsMenuAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
 import co.siempo.phone.customviews.SearchLayout;
-import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.HomePress;
 import co.siempo.phone.event.NotifyBottomView;
 import co.siempo.phone.event.NotifySearchRefresh;
@@ -64,6 +78,7 @@ import co.siempo.phone.token.TokenManager;
 import co.siempo.phone.token.TokenParser;
 import co.siempo.phone.token.TokenRouter;
 import co.siempo.phone.token.TokenUpdateEvent;
+import co.siempo.phone.ui.SiempoViewPager;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
@@ -81,12 +96,13 @@ import me.relex.circleindicator.CircleIndicator;
 public class PaneFragment extends CoreFragment {
 
     public static boolean isSearchVisable = false;
-    public ViewPager pagerPane;
+    final int MIN_KEYBOARD_HEIGHT_PX = 150;
+    public SiempoViewPager pagerPane;
     public View linSearchList;
     PanePagerAdapter mPagerAdapter;
     private LinearLayout linTopDoc;
     private LinearLayout linPane;
-    private LinearLayout linBottomDoc;
+    private RelativeLayout linBottomDoc;
     private EditText edtSearchToolsRounded;
     private TextView txtTopDockDate;
     private SearchLayout searchLayout;
@@ -100,6 +116,19 @@ public class PaneFragment extends CoreFragment {
     private MainFragmentMediator mediator;
     private TokenRouter router;
     private MainListAdapter adapter;
+    BroadcastReceiver mKeyBoardReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction() == Utils.KEYBOARD_ACTION) {
+                if (intent.getBooleanExtra(Utils.ACTION, false)) {
+                    updateListViewLayout(true);
+                } else {
+                    updateListViewLayout(false);
+
+                }
+            }
+        }
+    };
     private TokenParser parser;
     private RecyclerView recyclerViewBottomDoc;
     private List<MainListItem> items = new ArrayList<>();
@@ -110,6 +139,8 @@ public class PaneFragment extends CoreFragment {
     private ImageView imageClear;
     private View rootView;
     private CircleIndicator indicator;
+    private Dialog overlayDialog;
+    private Dialog overlayDialogPermission;
 
     public PaneFragment() {
         // Required empty public constructor
@@ -118,7 +149,6 @@ public class PaneFragment extends CoreFragment {
     public static PaneFragment newInstance() {
         return new PaneFragment();
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -129,7 +159,6 @@ public class PaneFragment extends CoreFragment {
         getColorOfStatusBar();
         initView(rootView);
         changeColorOfStatusBar();
-
 
         mediator = new MainFragmentMediator(PaneFragment.this);
         mediator.loadData();
@@ -143,33 +172,10 @@ public class PaneFragment extends CoreFragment {
     public void onPause() {
         super.onPause();
         UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
+        getActivity().unregisterReceiver(mKeyBoardReceiver);
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        pagerPane.setAlpha(1);
-        if (DashboardActivity.currentIndexPaneFragment == 0 && DashboardActivity.isJunkFoodOpen) {
-            DashboardActivity.currentIndexPaneFragment = 1;
-            DashboardActivity.isJunkFoodOpen = false;
-            pagerPane.setCurrentItem(DashboardActivity.currentIndexPaneFragment, true);
-        }
-        if (DashboardActivity.currentIndexDashboard == 1) {
-            if (DashboardActivity.currentIndexPaneFragment == 0) {
-                Log.d("Firebase", "Junkfood Start");
-                DashboardActivity.startTime = System.currentTimeMillis();
-            } else if (DashboardActivity.currentIndexPaneFragment == 1) {
-                Log.d("Firebase", "Favorite Start");
-                DashboardActivity.startTime = System.currentTimeMillis();
-            } else if (DashboardActivity.currentIndexPaneFragment == 2) {
-                Log.d("Firebase", "Tools Start");
-                DashboardActivity.startTime = System.currentTimeMillis();
-            }
-        }
-        setToolsPaneDate();
-
-    }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -184,19 +190,19 @@ public class PaneFragment extends CoreFragment {
                 mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
             }
         }
-        if (!isVisibleToUser && null != imageClear && linSearchList
-                .getVisibility() == View.VISIBLE) {
+        if (!isVisibleToUser && null != imageClear && linSearchList != null &&
+                linSearchList.getVisibility() == View.VISIBLE) {
             //Perform click in order to set it when user moves from search
             // pane to DashboardActivity and comes back so as to hide the list
-            imageClear.performClick();
+            if (imageClear != null) imageClear.performClick();
             linSearchList.setVisibility(View.GONE);
-            linPane.setAlpha(1);
+            if (linPane != null) linPane.setAlpha(1);
         }
 
         //Added as part of SSA-1332 , when user clicks home button on empty
         // junk food app and swipes back from Intention , empty screen was
         // showing , but now flagging screen will open
-        if (isVisibleToUser && pagerPane.getCurrentItem() == 0) {
+        if (isVisibleToUser && pagerPane != null && pagerPane.getCurrentItem() == 0) {
             if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>()).size() == 0) {
                 //Applied for smooth transition
                 Intent intent = new Intent(getActivity(), JunkfoodFlaggingActivity.class);
@@ -205,6 +211,19 @@ public class PaneFragment extends CoreFragment {
                         .anim.fade_in_junk, R.anim.fade_out_junk);
                 DashboardActivity.currentIndexPaneFragment = 0;
             }
+        }
+
+        //Add condition if got it is clicked
+        if (isVisibleToUser && pagerPane != null && pagerPane.getCurrentItem
+                () == 2 && !PrefSiempo.getInstance(context).read(PrefSiempo
+                .APPLAND_TOUR_SEEN, false)) {
+            showOverLay();
+        } else if (!isVisibleToUser && null != overlayDialog && overlayDialog
+                .isShowing()) {
+            overlayDialog.dismiss();
+        } else if (!isVisibleToUser && null != overlayDialogPermission && overlayDialogPermission
+                .isShowing()) {
+            overlayDialogPermission.dismiss();
         }
 
 
@@ -254,6 +273,12 @@ public class PaneFragment extends CoreFragment {
         linPane = view.findViewById(R.id.linPane);
         recyclerViewBottomDoc = rootView.findViewById(R.id.recyclerViewBottomDoc);
         edtSearchToolsRounded = view.findViewById(R.id.edtSearchTools);
+        try {
+            Typeface myTypeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/robotocondensedregular.ttf");
+            edtSearchToolsRounded.setTypeface(myTypeface);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         blueLineDivider = view.findViewById(R.id.blueLineView);
         cardViewEdtSearch = view.findViewById(R.id.cardViewEdtSearch);
         searchLayout = view.findViewById(R.id.edtSearchListView);
@@ -280,6 +305,92 @@ public class PaneFragment extends CoreFragment {
 
 
         bindSearchView();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().registerReceiver(mKeyBoardReceiver, new IntentFilter(Utils
+                .KEYBOARD_ACTION));
+        pagerPane.setAlpha(1);
+        if (DashboardActivity.currentIndexPaneFragment == 0 && DashboardActivity.isJunkFoodOpen) {
+            DashboardActivity.currentIndexPaneFragment = 1;
+            DashboardActivity.isJunkFoodOpen = false;
+            pagerPane.setCurrentItem(DashboardActivity.currentIndexPaneFragment, true);
+        }
+        if (DashboardActivity.currentIndexDashboard == 1) {
+            if (DashboardActivity.currentIndexPaneFragment == 0) {
+                Log.d("Firebase", "Junkfood Start");
+                DashboardActivity.startTime = System.currentTimeMillis();
+            } else if (DashboardActivity.currentIndexPaneFragment == 1) {
+                Log.d("Firebase", "Favorite Start");
+                DashboardActivity.startTime = System.currentTimeMillis();
+            } else if (DashboardActivity.currentIndexPaneFragment == 2) {
+                Log.d("Firebase", "Tools Start");
+                DashboardActivity.startTime = System.currentTimeMillis();
+            }
+        }
+        setToolsPaneDate();
+        if (searchLayout != null && searchLayout.getVisibility() == View.VISIBLE) {
+            updateListViewLayout(false);
+        }
+
+
+        try {
+            if (PrefSiempo.getInstance(context).read(PrefSiempo
+                    .APPLAND_TOUR_SEEN, false) && PrefSiempo.getInstance(context).read(PrefSiempo
+                    .IS_AUTOSCROLL, true) && pagerPane
+                    .getCurrentItem() == 0) {
+
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        pagerPane.setCurrentItem(1);
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                pagerPane.setCurrentItem(2);
+                                PrefSiempo.getInstance(context).write(PrefSiempo
+                                        .IS_AUTOSCROLL, false);
+                            }
+                        }, 700);
+                    }
+                }, 800);
+                //delay
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void bindBottomDock() {
+
+        mLayoutManager = new GridLayoutManager(getActivity(), 4);
+        recyclerViewBottomDoc.setLayoutManager(mLayoutManager);
+        if (itemDecoration != null) {
+            recyclerViewBottomDoc.removeItemDecoration(itemDecoration);
+        }
+        itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_10);
+        recyclerViewBottomDoc.addItemDecoration(itemDecoration);
+        items = CoreApplication.getInstance().getToolBottomItemsList();
+        mAdapter = new ToolsMenuAdapter(getActivity(), CoreApplication.getInstance().isHideIconBranding(), true, items);
+        recyclerViewBottomDoc.setAdapter(mAdapter);
+    }
+
+    private void getColorOfStatusBar() {
+        mWindow = getActivity().getWindow();
+        // clear FLAG_TRANSLUCENT_STATUS flag:
+        if (null != mWindow) {
+            mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+            mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+        }
+    }
+
+    public MainListAdapter getAdapter() {
+        return adapter;
     }
 
     private void bindViewPager() {
@@ -310,7 +421,7 @@ public class PaneFragment extends CoreFragment {
             public void onPageSelected(int i) {
 
                 if (i == 0) {
-                      /* Junkfood Pane */
+                    /* Junkfood Pane */
                     if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>()).size() == 0) {
                         //Applied for smooth transition
                         pagerPane.setAlpha(0);
@@ -318,6 +429,25 @@ public class PaneFragment extends CoreFragment {
                         startActivity(intent);
                         getActivity().overridePendingTransition(R
                                 .anim.fade_in_junk, R.anim.fade_out_junk);
+                    } else {
+                        if (PrefSiempo.getInstance(context).read(PrefSiempo
+                                .APPLAND_TOUR_SEEN, false)) {
+                            //Show overlay for draw over other apps permission
+
+
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (!Settings.canDrawOverlays(context) &&
+                                        PrefSiempo.getInstance(context).read
+                                                (PrefSiempo.JUNK_RESTRICTED,
+                                                        false)) {
+                                    showOverLayForDrawingPermission();
+                                }
+                            }
+
+
+                        }
+
+
                     }
                     UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
 
@@ -347,9 +477,11 @@ public class PaneFragment extends CoreFragment {
                     junkFoodAppPane();
                     mWindow.setStatusBarColor(getResources().getColor(R.color
                             .appland_blue_bright));
+                    linTopDoc.setElevation(20);
 
                 } else {
                     /* Tools and Favourite Pane */
+                    linTopDoc.setElevation(0);
                     linTopDoc.setBackground(getResources().getDrawable(R
                             .drawable.top_bar_bg));
                     txtTopDockDate.setVisibility(View.VISIBLE);
@@ -400,111 +532,6 @@ public class PaneFragment extends CoreFragment {
         }
     }
 
-    private void bindBottomDock() {
-//        ArrayList<MainListItem> itemsLocal = new ArrayList<>();
-//        new MainListItemLoader(getActivity()).loadItemsDefaultApp(itemsLocal);
-//        itemsLocal = PackageUtil.getToolsMenuData(getActivity(), itemsLocal);
-//        Set<Integer> list = new HashSet<>();
-//
-//        for (Map.Entry<Integer, AppMenu> entry : CoreApplication.getInstance().getToolsSettings().entrySet()) {
-//            if (entry.getValue().isBottomDoc()) {
-//                list.add(entry.getKey());
-//            }
-//        }
-//
-//        for (MainListItem mainListItem : itemsLocal) {
-//            if (list.contains(mainListItem.getId())) {
-//                items.add(mainListItem);
-//            }
-//        }
-
-
-        mLayoutManager = new GridLayoutManager(getActivity(), 4);
-        recyclerViewBottomDoc.setLayoutManager(mLayoutManager);
-        if (itemDecoration != null) {
-            recyclerViewBottomDoc.removeItemDecoration(itemDecoration);
-        }
-        itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_10);
-        recyclerViewBottomDoc.addItemDecoration(itemDecoration);
-        items = CoreApplication.getInstance().getToolBottomItemsList();
-        mAdapter = new ToolsMenuAdapter(getActivity(), CoreApplication.getInstance().isHideIconBranding(), true, items);
-        recyclerViewBottomDoc.setAdapter(mAdapter);
-    }
-
-    private void getColorOfStatusBar() {
-        mWindow = getActivity().getWindow();
-        // clear FLAG_TRANSLUCENT_STATUS flag:
-        if (null != mWindow) {
-            mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-            mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-        }
-    }
-
-    public MainListAdapter getAdapter() {
-        return adapter;
-    }
-
-    private void bindSearchView() {
-//        //Circular Edit Text
-        router = new TokenRouter();
-        parser = new TokenParser(router);
-        loadView();
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (router != null && searchLayout != null && searchLayout.getTxtSearchBox() != null) {
-                    mediator.listItemClicked(router, position, searchLayout.getTxtSearchBox().getStrText());
-//                    imageClear.performClick();
-                }
-            }
-        });
-        edtSearchToolsRounded.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (searchLayout.getVisibility() == View.GONE) {
-                    hidePaneAndBottomView(context);
-                    listView.setAdapter(adapter);
-                    imageClear.setVisibility(View.VISIBLE);
-                    blueLineDivider.setVisibility(View.GONE);
-                    searchLayout.setVisibility(View.VISIBLE);
-                    searchLayout.getTxtSearchBox().requestFocus();
-                    cardViewEdtSearch.setVisibility(View.VISIBLE);
-                    relSearchTools.setVisibility(View.GONE);
-                    UIUtils.showKeyboard(chipsEditText);
-                    if (adapter != null) {
-                        adapter.getFilter().filter("");
-                    }
-
-                } else {
-                    UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
-                    showPaneAndBottomView(context);
-                    blueLineDivider.setVisibility(View.VISIBLE);
-                    searchLayout.setVisibility(View.GONE);
-                    cardViewEdtSearch.setVisibility(View.GONE);
-                    relSearchTools.setVisibility(View.VISIBLE);
-                    imageClear.setVisibility(View.GONE);
-
-                }
-            }
-        });
-
-        imageClear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (edtSearchToolsRounded != null) {
-                    edtSearchToolsRounded.performClick();
-                }
-                if (searchLayout != null && chipsEditText != null && chipsEditText.getText().toString().length() > 0) {
-                    searchLayout.txtSearchBox.setText("");
-                }
-
-            }
-        });
-
-    }
-
     private void junkFoodAppPane() {
         linTopDoc.setBackgroundColor(getResources().getColor(R.color
                 .bg_junk_apps_top_dock));
@@ -542,8 +569,7 @@ public class PaneFragment extends CoreFragment {
      */
     private void setToolsPaneDate() {
         Calendar c = Calendar.getInstance();
-        DateFormat df = getDateInstanceWithoutYears(Locale
-                .getDefault());
+        DateFormat df = getDateInstanceWithoutYears(Locale.getDefault());
         if (getActivity() != null && txtTopDockDate != null) {
             txtTopDockDate.setText(df.format(c.getTime()));
             txtTopDockDate.setOnTouchListener(new View.OnTouchListener() {
@@ -561,9 +587,18 @@ public class PaneFragment extends CoreFragment {
     }
 
     public DateFormat getDateInstanceWithoutYears(Locale locale) {
+
+
         SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance
                 (DateFormat.FULL, locale);
-        sdf.applyPattern(sdf.toPattern().replaceAll("[^\\p{Alpha}]*y+[^\\p{Alpha}]*", ""));
+        try {
+            sdf.applyPattern(sdf.toPattern().replaceAll(
+                    "([^\\p{Alpha}']|('[\\p{Alpha}]+'))*y+([^\\p{Alpha}']|('[\\p{Alpha}]+'))*",
+                    ""));
+        } catch (Exception e) {
+            Tracer.d("Exception  :: " + e.toString());
+        }
+
         return sdf;
     }
 
@@ -638,14 +673,6 @@ public class PaneFragment extends CoreFragment {
         }
     }
 
-    @Subscribe
-    public void appInstalledEvent(AppInstalledEvent appInstalledEvent) {
-        if (appInstalledEvent.isAppInstalledSuccessfully()) {
-            if (mediator != null) {
-                mediator.loadData();
-            }
-        }
-    }
 
     @Subscribe
     public void onBackPressedEvent(OnBackPressedEvent onBackPressedEvent) {
@@ -662,6 +689,10 @@ public class PaneFragment extends CoreFragment {
                 isSearchVisable = false;
                 linPane.setAlpha(1);
                 imageClear.setVisibility(View.VISIBLE);
+                //SSA-1458 to clear searchLayout.
+                if (searchLayout != null && chipsEditText != null && chipsEditText.getText().toString().length() > 0) {
+                    searchLayout.txtSearchBox.setText("");
+                }
             }
         }
     }
@@ -709,9 +740,17 @@ public class PaneFragment extends CoreFragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+
                             parser.parse(event.getString());
                             if (adapter != null) {
                                 adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());
+                            }
+
+                            //Cancelling the result of previous async task
+                            // for empty token in case of Edit Text string
+                            // not being empty
+                            if (!event.getString().equalsIgnoreCase("")) {
+                                mediator.cancelAsync();
                             }
                         }
                     });
@@ -731,53 +770,67 @@ public class PaneFragment extends CoreFragment {
         }
     }
 
-    @Subscribe
+    @Subscribe(sticky = true, threadMode = ThreadMode.MainThread)
     public void homePress(HomePress event) {
         if (event != null) {
             pagerPane.setCurrentItem(event.getCurrentIndexPaneFragment(), true);
+            EventBus.getDefault().removeStickyEvent(event);
         }
     }
 
     @Subscribe
     public void tokenManagerEvent(TokenUpdateEvent event) {
         try {
-            final TokenItem current = TokenManager.getInstance().getCurrent();
-            if (current != null) {
-                if (current.getItemType() == TokenItemType.END_OP) {
-                    mediator.defaultData();
-                } else if (current.getItemType() == TokenItemType.CONTACT) {
-                    if (current.getCompleteType() == TokenCompleteType.HALF) {
-                        mediator.contactNumberPicker(Integer.parseInt(current.getExtra1()));
-                    } else {
-                        mediator.contactPicker();
-                    }
-                } else if (current.getItemType() == TokenItemType.DATA) {
-                    if (TokenManager.getInstance().get(0).getItemType() == TokenItemType.DATA) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mediator.resetData();
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    final TokenItem current = TokenManager.getInstance().getCurrent();
+                    if (current != null) {
+                        if (current.getItemType() == TokenItemType.END_OP) {
+                            mediator.defaultData();
+                        } else if (current.getItemType() == TokenItemType.CONTACT) {
+                            if (current.getCompleteType() == TokenCompleteType.HALF) {
+                                mediator.contactNumberPicker(Integer.parseInt(current.getExtra1()));
+                            } else {
+                                mediator.contactPicker();
+                            }
+                        } else if (current.getItemType() == TokenItemType.DATA) {
+                            if (TokenManager.getInstance().get(0).getItemType() == TokenItemType.DATA) {
+
+                                //If the task of async is running, then no
+                                // need to run its another instance. This
+                                // will happen in case of list item click
+                                // where already the data is being reset and
+                                // after it the empty token ("") is being
+                                // called. Hence in order to prevent this,
+                                // empty token will be called only in case if
+                                // no previous async task of similar type is
+                                // running.
+                                if (!mediator.getRunningStatus()) {
+                                    mediator.resetData();
+                                }
                                 if (adapter != null)
                                     adapter.getFilter().filter(current.getTitle());
-                            }
-                        });
 
-                    } else {
-                        if (current.getTitle().trim().isEmpty()) {
-                            if (adapter != null) {
-                                mediator.loadDefaultData();
-                                adapter.getFilter().filter("^");
-                            }
-                        } else {
-                            if (adapter != null) {
-                                mediator.loadDefaultData();
-                                adapter.getFilter().filter(current.getTitle());
+
+                            } else {
+                                if (current.getTitle().trim().isEmpty()) {
+                                    if (adapter != null) {
+                                        mediator.loadDefaultData();
+                                        adapter.getFilter().filter("^");
+                                    }
+                                } else {
+                                    if (adapter != null) {
+                                        mediator.loadDefaultData();
+                                        adapter.getFilter().filter(current.getTitle());
+                                    }
+                                }
+
                             }
                         }
-
                     }
                 }
-            }
+            });
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
@@ -789,12 +842,284 @@ public class PaneFragment extends CoreFragment {
         if (notifySearchRefresh != null && notifySearchRefresh.isNotify()) {
             mediator = new MainFragmentMediator(PaneFragment.this);
             mediator.loadData();
+
             if (adapter != null) {
                 adapter.getFilter().filter("");
             }
             EventBus.getDefault().removeStickyEvent(notifySearchRefresh);
         }
 
+    }
+
+    /**
+     * Method to show overlay for default launcher setting
+     */
+    private void showOverLay() {
+        if (null != getActivity()) {
+            try {
+                getActivity().setRequestedOrientation(ActivityInfo
+                        .SCREEN_ORIENTATION_PORTRAIT);
+                overlayDialog = new Dialog(getActivity(), 0);
+
+
+                overlayDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                overlayDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                overlayDialog.setContentView(R.layout.layout_appland_tour);
+                Window window = overlayDialog.getWindow();
+                // set "origin" to bottom
+                window.setGravity(Gravity.BOTTOM);
+                WindowManager.LayoutParams params = window.getAttributes();
+                window.setAttributes(params);
+                overlayDialog.getWindow().setLayout(WindowManager
+                        .LayoutParams.MATCH_PARENT, WindowManager
+                        .LayoutParams.WRAP_CONTENT);
+
+                overlayDialog.setCancelable(false);
+                overlayDialog.setCanceledOnTouchOutside(false);
+                overlayDialog.show();
+
+                final ViewFlipper viewFlipper = overlayDialog.findViewById(R.id.viewFlipperTour);
+                final Button btnNext = overlayDialog.findViewById(R.id.btnNext);
+                final TextView txtNext = overlayDialog.findViewById(R.id.txtNext);
+                final TextView txtToolsMessage = overlayDialog.findViewById(R.id.txtToolsMessage);
+                final TextView txtToolsTitle = overlayDialog.findViewById(R.id
+                        .txtToolsTitle);
+                if (viewFlipper.getDisplayedChild() == 0) {
+                    String sourceString = "From this <b>Tools Screen</b>, you " +
+                            "can launch your most helpful apps.  Assign your preferred app to each tool.  Add, change, or rearrange tools as desired.";
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        txtToolsMessage.setText(Html.fromHtml(sourceString, Html
+                                .FROM_HTML_MODE_COMPACT));
+                    } else {
+                        txtToolsMessage.setText(Html.fromHtml(sourceString));
+                    }
+
+                }
+
+                btnNext.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        switch (viewFlipper.getDisplayedChild()) {
+                            case 0:
+
+                                viewFlipper.setInAnimation(context, R.anim
+                                        .in_from_left_tour);
+                                viewFlipper.setOutAnimation(context, R.anim
+                                        .out_to_right_tour);
+                                viewFlipper.setDisplayedChild(1);
+                                txtToolsTitle.setText(R.string.frequently_used_title);
+                                txtNext.setText("2 of 3");
+                                pagerPane.setCurrentItem(1);
+
+                                break;
+                            case 1:
+                                viewFlipper.setInAnimation(context, R.anim
+                                        .in_from_left_tour);
+                                viewFlipper.setOutAnimation(context, R.anim
+                                        .out_to_right_tour);
+                                viewFlipper.setDisplayedChild(2);
+                                btnNext.setText(R.string.gotit);
+                                txtToolsTitle.setText(R.string.flagged_app_title);
+                                txtNext.setText("3 of 3");
+                                pagerPane.setCurrentItem(0);
+                                break;
+                            case 2:
+                                PrefSiempo.getInstance(context).write(PrefSiempo
+                                        .APPLAND_TOUR_SEEN, true);
+                                //Start Flagging activity
+                                if (pagerPane != null && pagerPane.getCurrentItem() == 0) {
+                                    //Applied for smooth transition
+                                    Intent intent = new Intent(getActivity(), JunkfoodFlaggingActivity.class);
+                                    startActivity(intent);
+                                    getActivity().overridePendingTransition(R
+                                            .anim.in_from_left_tour, R.anim
+                                            .out_to_right_tour);
+                                    DashboardActivity.currentIndexPaneFragment = 0;
+                                }
+                                overlayDialog.dismiss();
+
+                                break;
+
+                        }
+
+
+                    }
+                });
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    private void showOverLayForDrawingPermission() {
+        if (null != getActivity()) {
+            try {
+                getActivity().setRequestedOrientation(ActivityInfo
+                        .SCREEN_ORIENTATION_PORTRAIT);
+                overlayDialogPermission = new Dialog(getActivity(), 0);
+                overlayDialogPermission.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                overlayDialogPermission.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                overlayDialogPermission.setContentView(R.layout
+                        .layout_appland_draw_permission);
+                Window window = overlayDialogPermission.getWindow();
+                // set "origin" to bottom
+                window.setGravity(Gravity.BOTTOM);
+                WindowManager.LayoutParams params = window.getAttributes();
+                window.setAttributes(params);
+                overlayDialogPermission.getWindow().setLayout(WindowManager
+                        .LayoutParams.MATCH_PARENT, WindowManager
+                        .LayoutParams.WRAP_CONTENT);
+                overlayDialogPermission.setCancelable(true);
+                overlayDialogPermission.setCanceledOnTouchOutside(true);
+                overlayDialogPermission.show();
+
+                final ViewFlipper viewFlipperOverlay = overlayDialogPermission
+                        .findViewById(R.id.viewFlipperPermissionDrawOverlay);
+                final Button btnEnable = overlayDialogPermission.findViewById
+                        (R.id.btnEnable);
+
+                final Button btnGotIt = overlayDialogPermission.findViewById
+                        (R.id.btnGotIt);
+
+                btnEnable.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        viewFlipperOverlay.setInAnimation(context, R.anim
+                                .in_from_right_email);
+                        viewFlipperOverlay.setOutAnimation(context, R.anim
+                                .out_to_left_email);
+                        viewFlipperOverlay.setDisplayedChild(1);
+
+
+                    }
+                });
+
+                btnGotIt.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        overlayDialogPermission.dismiss();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            if (!Settings.canDrawOverlays(context)) {
+                                Intent intent = new Intent(Settings
+                                        .ACTION_MANAGE_OVERLAY_PERMISSION,
+                                        Uri.parse("package:" +
+                                                context.getPackageName()));
+                                startActivityForResult(intent, 1000);
+                            }
+                        }
+
+
+                    }
+                });
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
+    private void bindSearchView() {
+//        //Circular Edit Text
+        router = new TokenRouter();
+        parser = new TokenParser(router, context, mediator);
+        loadView();
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (router != null && searchLayout != null && searchLayout.getTxtSearchBox() != null) {
+                    mediator.listItemClicked(router, position, searchLayout.getTxtSearchBox().getStrText());
+//                    imageClear.performClick();
+                }
+            }
+        });
+        edtSearchToolsRounded.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (searchLayout.getVisibility() == View.GONE) {
+                    hidePaneAndBottomView(context);
+                    listView.setAdapter(adapter);
+                    imageClear.setVisibility(View.VISIBLE);
+                    blueLineDivider.setVisibility(View.GONE);
+                    searchLayout.setVisibility(View.VISIBLE);
+                    searchLayout.getTxtSearchBox().requestFocus();
+                    cardViewEdtSearch.setVisibility(View.VISIBLE);
+                    relSearchTools.setVisibility(View.GONE);
+                    UIUtils.showKeyboard(chipsEditText);
+                    updateListViewLayout(true);
+                    if (adapter != null) {
+                        adapter.getFilter().filter("");
+                    }
+
+                } else {
+                    UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
+                    showPaneAndBottomView(context);
+                    blueLineDivider.setVisibility(View.VISIBLE);
+                    searchLayout.setVisibility(View.GONE);
+                    cardViewEdtSearch.setVisibility(View.GONE);
+                    relSearchTools.setVisibility(View.VISIBLE);
+                    imageClear.setVisibility(View.GONE);
+
+                }
+            }
+        });
+
+        imageClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (edtSearchToolsRounded != null) {
+                    edtSearchToolsRounded.performClick();
+                }
+                if (searchLayout != null && chipsEditText != null && chipsEditText.getText().toString().length() > 0) {
+                    searchLayout.txtSearchBox.setText("");
+                }
+
+            }
+        });
+
+    }
+
+    private void updateListViewLayout(boolean b) {
+        try {
+            int val;
+            if (b) {
+                val = Math.min(adapter.getCount() * 54, 54 * 4);
+                if (val != 0) val += 8;
+                // extra padding when there is something in listView
+                listView.getLayoutParams().height = UIUtils.dpToPx(getActivity(), val);
+                listView.requestLayout();
+            } else {
+                listView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                listView.requestLayout();
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1000) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (Settings.canDrawOverlays(context)) {
+                    Toast.makeText(context, R.string.success_msg, Toast
+                            .LENGTH_SHORT).show();
+
+                }
+            }
+        }
     }
 
     private class OnSwipeTouchListener implements View.OnTouchListener {
@@ -815,7 +1140,17 @@ public class PaneFragment extends CoreFragment {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            return gestureDetector.onTouchEvent(event);
+
+            //Added as a part of SSA-1475, in case if GestureDetector is not
+            // initialised and null, it will be assigned and then its event
+            // will be captured
+            if (null != gestureDetector) {
+                return gestureDetector.onTouchEvent(event);
+            } else {
+                gestureDetector = new GestureDetector(context, new GestureListener
+                        ());
+                return gestureDetector.onTouchEvent(event);
+            }
         }
 
         void onSwipeRight(int pos) {
@@ -864,5 +1199,4 @@ public class PaneFragment extends CoreFragment {
 
         }
     }
-
 }

@@ -14,14 +14,14 @@
         android:orientation="vertical"
         android:visibility="gone">
 
-        <TextView
+        <co.siempo.phone.customviews.RobotoCondensedTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
             android:lineSpacingExtra="@dimen/dp_1"
             android:padding="@dimen/dp_1"
-            android:text="@string/you_have_t_selected_any_favourite_app" />
+            android:text="@string/you_have_t_selected_any_favourite_app"/>
 
         <Button
             android:id="@+id/btnSelect"

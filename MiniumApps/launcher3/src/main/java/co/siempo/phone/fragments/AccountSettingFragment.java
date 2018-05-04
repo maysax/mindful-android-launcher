@@ -2,8 +2,11 @@ package co.siempo.phone.fragments;
 
 import android.app.AlertDialog;
 import android.app.FragmentManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
@@ -21,6 +24,7 @@ import org.androidannotations.annotations.ViewById;
 import co.siempo.phone.R;
 import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.launcher.FakeLauncherActivity;
 import co.siempo.phone.utils.PrefSiempo;
 
 @EFragment(R.layout.fragment_tempo_account_settings)
@@ -143,9 +147,7 @@ public class AccountSettingFragment extends CoreFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                resetPreferredLauncherAndOpenChooser(context);
 
             }
         });
@@ -160,6 +162,33 @@ public class AccountSettingFragment extends CoreFragment {
         dialog.show();
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(getActivity(), R.color.dialog_blue));
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(getActivity(), R.color.dialog_blue));
+    }
+
+    /**
+     * Method to reset the launcher activity and show default chooser
+     *
+     * @param context
+     */
+    private void resetPreferredLauncherAndOpenChooser(Context context) {
+        try {
+            PackageManager packageManager = context.getPackageManager();
+            ComponentName componentName = new ComponentName(context, FakeLauncherActivity.class);
+            packageManager.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+
+            Intent selector = new Intent(Intent.ACTION_MAIN);
+            selector.addCategory(Intent.CATEGORY_HOME);
+            selector.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(selector);
+
+            packageManager.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, PackageManager.DONT_KILL_APP);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            //In case of exception start the default setting screen
+            Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
     }
 
 }

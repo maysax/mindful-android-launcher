@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_pause"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/layout_bg"
-    android:orientation="vertical">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/activity_pause"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/layout_bg"
+              android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context="co.siempo.phone.pause.PauseActivity">
+        tools:context="co.siempo.phone.pause.PauseActivity"
+        tools:ignore="UselessParent">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -18,7 +19,7 @@
             android:layout_height="wrap_content"
             android:background="@color/toolbar_bg"
             android:elevation="@dimen/dp_5"
-            android:minHeight="?android:attr/actionBarSize" />
+            android:minHeight="?android:attr/actionBarSize"/>
 
         <ScrollView
             android:layout_width="match_parent"
@@ -49,10 +50,10 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
                             android:layout_marginTop="3dp"
-                            android:src="@drawable/ic_tempo_dailog" />
+                            android:src="@drawable/ic_tempo_dailog"/>
 
 
-                        <TextView
+                        <co.siempo.phone.customviews.RobotoRegularTextView
                             android:id="@+id/txtAllowApps"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -60,11 +61,13 @@
                             android:layout_marginLeft="35dp"
                             android:layout_marginRight="60dp"
                             android:layout_toRightOf="@+id/img_tempo"
+                            android:lineSpacingExtra="5sp"
                             android:text="@string/notification_interrupt_title"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
+                            android:textColor="@color/settings_title_black"
+                            android:textSize="16sp"
+                            />
 
-                        <TextView
+                        <co.siempo.phone.customviews.RobotoRegularTextView
                             android:id="@+id/txtAllowAppsText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -73,8 +76,10 @@
                             android:layout_marginRight="60dp"
                             android:layout_marginTop="5dp"
                             android:layout_toRightOf="@+id/img_tempo"
+                            android:lineSpacingExtra="4sp"
                             android:text="@string/notification_interrupt_description"
-                            android:textSize="16sp" />
+                            android:textColor="@color/settings_content_black"
+                            android:textSize="14sp"/>
 
                     </RelativeLayout>
                 </RelativeLayout>
@@ -83,19 +88,22 @@
                     android:id="@+id/relAllowPicking"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="50dp">
+                    android:layout_marginTop="@dimen/dp_16"
+                    android:paddingLeft="50dp"
+                    tools:ignore="RtlSymmetry">
 
-                    <TextView
+                    <co.siempo.phone.customviews.RobotoRegularTextView
                         android:id="@+id/txtAllowPicking"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
                         android:layout_marginTop="8dp"
+                        android:lineSpacingExtra="5sp"
                         android:padding="8dp"
                         android:text="@string/allow_peaking"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:textColor="@color/settings_title_black"
+                        android:textSize="16sp"/>
 
                     <LinearLayout
                         android:id="@+id/lin"
@@ -111,10 +119,10 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginRight="8dp"
-                            android:clickable="false" />
+                            android:clickable="false"/>
                     </LinearLayout>
 
-                    <TextView
+                    <co.siempo.phone.customviews.RobotoRegularTextView
                         android:id="@+id/txtAllowPickingtxt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -122,12 +130,15 @@
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
                         android:layout_toLeftOf="@+id/lin"
+                        android:lineSpacingExtra="4sp"
                         android:paddingBottom="4dp"
                         android:paddingLeft="8dp"
                         android:paddingRight="8dp"
                         android:paddingTop="0dp"
                         android:text="@string/msg_allowpeaking"
-                        android:textSize="16sp" />
+                        android:textColor="@color/settings_content_black"
+                        android:textSize="14sp"
+                        />
 
                 </RelativeLayout>
             </LinearLayout>

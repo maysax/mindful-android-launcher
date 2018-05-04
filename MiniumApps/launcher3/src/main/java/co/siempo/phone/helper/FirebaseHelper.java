@@ -30,7 +30,7 @@ public class FirebaseHelper {
     private static String FAVORITE_PANE = "favorite_pane";
     private static String JUNKFOOD_PANE = "junkfood_pane";
     //Event
-    private static String IF_ACTION = "if_action";
+    private static String USER_SEARCH = "user_search";
     private static String SCREEN_USAGE = "screen_usage";
     private static String SIEMPO_DEFAULT = "siempo_default";
     private static String SUPPRESSED_NOTIFICATION = "suppressed_notification";
@@ -43,7 +43,7 @@ public class FirebaseHelper {
     private String TOOL_NAME = "tool_name";
     private String INTENT_FROM = "intent_from";
     private String ACTION = "action";
-    private String IF_DATA = "if_data";
+    private String SEARCH_DATA = "search_data";
     private String SUPPRESSED_COUNT = "suppressed_count";
     private String TEMPO_INTERVAL_ONLY_AT = "tempo_interval_onlyat";
     private String TEMPO_INTERVAL = "tempo_interval";
@@ -142,10 +142,10 @@ public class FirebaseHelper {
         if (!applicationName.equalsIgnoreCase("")) {
             bundle.putString(APPLICATION_NAME, applicationName);
         } else {
-            bundle.putString(IF_DATA, data);
+            bundle.putString(SEARCH_DATA, data);
         }
-        Tracer.i(IF_ACTION + ": " + bundle.toString());
-        getFirebaseAnalytics().logEvent(IF_ACTION, bundle);
+        Tracer.i(USER_SEARCH + ": " + bundle.toString());
+        getFirebaseAnalytics().logEvent(USER_SEARCH, bundle);
     }
 
     /**

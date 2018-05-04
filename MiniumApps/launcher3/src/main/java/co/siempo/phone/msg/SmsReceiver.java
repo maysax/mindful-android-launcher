@@ -9,8 +9,6 @@ import android.provider.Telephony;
 import android.telephony.SmsMessage;
 import android.text.TextUtils;
 
-import org.androidannotations.annotations.EReceiver;
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -91,7 +89,7 @@ public class SmsReceiver extends BroadcastReceiver {
                                             }
                                         }
                                     }
-                                    saveMessage(mAddress, mBody, mDate, context);
+                                    // saveMessage(mAddress, mBody, mDate, context);
                                 }
                             }
                         }

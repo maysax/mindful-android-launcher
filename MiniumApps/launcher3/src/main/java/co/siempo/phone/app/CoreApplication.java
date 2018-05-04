@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.UserManager;
 import android.provider.AlarmClock;
 import android.provider.CalendarContract;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
@@ -30,11 +31,10 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import co.siempo.phone.R;
@@ -52,6 +52,27 @@ import io.fabric.sdk.android.BuildConfig;
 import io.fabric.sdk.android.Fabric;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_BROWSER;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_CALENDAR;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_CALL;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_CAMERA;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_CLOCK;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_EMAIL;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_FITNESS;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_FOOD;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_MAP;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_MESSAGE;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_MUSIC;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_NOTES;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_PAYMENT;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_PHOTOS;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_PODCAST;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_RECORDER;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_TODO;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_TRANSPORT;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_WEATHER;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_WELLNESS;
+
 /**
  * Each application should contain an {@link Application} class instance
  * All applications of this project should extend their own application from this class
@@ -65,8 +86,9 @@ public abstract class CoreApplication extends MultiDexApplication {
     private static CoreApplication sInstance;
     UserManager userManager;
     LauncherApps launcherApps;
+    String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1WmJ9sNAoO5o5QGJkZXfqLm8Py95ASb7XCY1NewZF7puJcWMGlv269AY2lqJuR0o/dzMnzo20D259NHPN6zF3TCsXcF8+jhRH5gAqKcNJCoc1p0tZ+rxZ5ETVYjR/OQ90MKStXa8MsArhfL+R6E27IuUELObkjS3XIwcjBj7EhBNVPv2ipj8t7w3bNorql8qPEHhgbc/v54krCMSEF1p82nIbZSvOFcJwLGg/wzmv6YfgsLD5fndoaNPiRLQ1nkWNASOryvgUDZAKqYjAtHY7WAV57FtQGgsViPTE4exzCp9t018GEeI5tbo4+RSw23nygSqmNBZkxv9Ee4jxpw7CQIDAQAB";
     private ArrayMap<String, String> listApplicationName = new ArrayMap<>();
-    private List<String> packagesList = new ArrayList<>();
+    private Set<String> packagesList = new HashSet<>();
     private ArrayList<String> disableNotificationApps = new ArrayList<>();
     private Set<String> blockedApps = new HashSet<>();
     private LruCache<String, Bitmap> mMemoryCache;
@@ -79,6 +101,10 @@ public abstract class CoreApplication extends MultiDexApplication {
 
     public static synchronized CoreApplication getInstance() {
         return sInstance;
+    }
+
+    public String getBase64EncodedPublicKey() {
+        return base64EncodedPublicKey;
     }
 
     public boolean isHideIconBranding() {
@@ -169,7 +195,32 @@ public abstract class CoreApplication extends MultiDexApplication {
         configIconify();
         configureLifecycle();
         configureNetworking();
-        configureToolsPane();
+        if (PrefSiempo.getInstance(this).read(PrefSiempo.INSTALLED_APP_VERSION_CODE, 0) == 0) {
+            PrefSiempo.getInstance(this).write(PrefSiempo.INSTALLED_APP_VERSION_CODE,
+                    UIUtils.getCurrentVersionCode(this));
+        }
+        if (getToolsSettings() == null || getToolsSettings().isEmpty()) {
+            configureToolsPane();
+        } else {
+            if (getToolsSettings().size() <= 16) {
+                PrefSiempo.getInstance(this).write(PrefSiempo.SORTED_MENU, "");
+                HashMap<Integer, AppMenu> oldMap = new HashMap<>();
+                String storedHashMapString = PrefSiempo.getInstance(this).read(PrefSiempo.TOOLS_SETTING, "");
+                java.lang.reflect.Type type = new TypeToken<HashMap<Integer, AppMenu>>() {
+                }.getType();
+                oldMap = new Gson().fromJson(storedHashMapString, type);
+                PrefSiempo.getInstance(this).write(PrefSiempo.TOOLS_SETTING, "");
+                configureToolsPane();
+                HashMap<Integer, AppMenu> newMap = getToolsSettings();
+                for (Map.Entry<Integer, AppMenu> newMenuEntry : newMap.entrySet()) {
+                    if (oldMap.containsKey(newMenuEntry.getKey())) {
+                        newMenuEntry.getValue().setApplicationName(oldMap.get(newMenuEntry.getKey()).getApplicationName());
+                    }
+                }
+                String hashMapToolSettings = new Gson().toJson(newMap);
+                PrefSiempo.getInstance(this).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
+            }
+        }
         setHideIconBranding(PrefSiempo.getInstance(sInstance).read(PrefSiempo.IS_ICON_BRANDING, true));
         setRandomize(PrefSiempo.getInstance(sInstance).read(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, true));
     }
@@ -183,42 +234,68 @@ public abstract class CoreApplication extends MultiDexApplication {
             HashMap<Integer, AppMenu> map = new HashMap<>();
             //by default on install, the "Recorder", "Payment", and "Browser" tools are hidden
             // (they may be revealed via the tool-selection screen (see tool-selection below)).
-            map.put(1, new AppMenu(true, false, CoreApplication.getInstance
+            map.put(TOOLS_MAP, new AppMenu(true, false, CoreApplication.getInstance
                     ().getApplicationByCategory(1).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(1).get(0).activityInfo.packageName : ""));
-            map.put(2, new AppMenu(true, false, CoreApplication.getInstance
+            map.put(TOOLS_TRANSPORT, new AppMenu(true, false, CoreApplication.getInstance
                     ().getApplicationByCategory(2).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(2).get(0).activityInfo.packageName : ""));
-            map.put(3, new AppMenu(true, false, CoreApplication.getInstance
+            map.put(TOOLS_CALENDAR, new AppMenu(true, false, CoreApplication.getInstance
                     ().getApplicationByCategory(3).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(3).get(0).activityInfo.packageName : ""));
-            map.put(4, new AppMenu(true, false, CoreApplication.getInstance
+            map.put(TOOLS_WEATHER, new AppMenu(true, false, CoreApplication.getInstance
                     ().getApplicationByCategory(4).size() == 1 ?
                     CoreApplication.getInstance().getApplicationByCategory(4).get(0).activityInfo.packageName : ""));
 //            map.put(5, new AppMenu(true, false, getString(R.string.notes)));
-            map.put(5, new AppMenu(true, false, CoreApplication.getInstance
+            map.put(TOOLS_NOTES, new AppMenu(true, false, CoreApplication.getInstance
                     ().getApplicationByCategory(5).size() == 1 ?
                     getString(R.string.notes) : ""));
-            map.put(6, new AppMenu(false, false, CoreApplication
+            map.put(TOOLS_RECORDER, new AppMenu(false, false, CoreApplication
                     .getInstance().getApplicationByCategory(6).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(6).get(0).activityInfo.packageName : ""));
-            map.put(7, new AppMenu(true, false, CoreApplication.getInstance
+            map.put(TOOLS_CAMERA, new AppMenu(true, false, CoreApplication.getInstance
                     ().getApplicationByCategory(7).size() == 1 ?
                     CoreApplication.getInstance().getApplicationByCategory(7).get(0).activityInfo.packageName : ""));
-            map.put(8, new AppMenu(true, false, CoreApplication.getInstance
+            map.put(TOOLS_PHOTOS, new AppMenu(true, false, CoreApplication.getInstance
                     ().getApplicationByCategory(8).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(8).get(0).activityInfo.packageName : ""));
-            map.put(9, new AppMenu(false, false, CoreApplication
+            map.put(TOOLS_PAYMENT, new AppMenu(false, false, CoreApplication
                     .getInstance().getApplicationByCategory(9).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(9).get(0).activityInfo.packageName : ""));
-            map.put(10, new AppMenu(true, false, CoreApplication
+            map.put(TOOLS_WELLNESS, new AppMenu(true, false, CoreApplication
                     .getInstance().getApplicationByCategory(10).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(10).get(0).activityInfo.packageName : ""));
-            map.put(11, new AppMenu(false, false, CoreApplication
-                    .getInstance().getApplicationByCategory(11).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(11).get(0).activityInfo.packageName : ""));
-            map.put(12, new AppMenu(true, false, CoreApplication
-                    .getInstance().getApplicationByCategory(12).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(12).get(0).activityInfo.packageName : ""));
-            map.put(13, new AppMenu(true, true, CoreApplication.getInstance
+
+            map.put(TOOLS_TODO, new AppMenu(false, false, CoreApplication
+                    .getInstance().getApplicationByCategory(12).size() == 1 ?
+                    CoreApplication.getInstance().getApplicationByCategory
+                            (12).get(0).activityInfo.packageName : ""));
+            map.put(TOOLS_BROWSER, new AppMenu(false, false, CoreApplication
+                    .getInstance().getApplicationByCategory(11).size() == 1
+                    ? CoreApplication.getInstance().getApplicationByCategory
+                    (11).get(0).activityInfo.packageName : ""));
+            map.put(TOOLS_MUSIC, new AppMenu(false, false, CoreApplication
+                    .getInstance().getApplicationByCategory(17).size() == 1 ?
+                    CoreApplication.getInstance().getApplicationByCategory
+                            (17).get(0).activityInfo.packageName : ""));
+            map.put(TOOLS_PODCAST, new AppMenu(false, false, CoreApplication
+                    .getInstance().getApplicationByCategory(18).size() == 1 ?
+                    CoreApplication.getInstance().getApplicationByCategory
+                            (18).get(0).activityInfo.packageName : ""));
+
+            map.put(TOOLS_FOOD, new AppMenu(false, false, CoreApplication
+                    .getInstance().getApplicationByCategory(19).size() == 1 ?
+                    CoreApplication.getInstance().getApplicationByCategory
+                            (19).get(0).activityInfo.packageName : ""));
+
+            map.put(TOOLS_FITNESS, new AppMenu(false, false, CoreApplication
+                    .getInstance().getApplicationByCategory(20).size() == 1 ?
+                    CoreApplication.getInstance().getApplicationByCategory
+                            (20).get(0).activityInfo.packageName : ""));
+
+            map.put(TOOLS_CALL, new AppMenu(true, true, CoreApplication.getInstance
                     ().getApplicationByCategory(13).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(13).get(0).activityInfo.packageName : ""));
-            map.put(14, new AppMenu(true, true, CoreApplication.getInstance
+            map.put(TOOLS_CLOCK, new AppMenu(true, true, CoreApplication.getInstance
                     ().getApplicationByCategory(14).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(14).get(0).activityInfo.packageName : ""));
-            map.put(15, new AppMenu(true, true, CoreApplication.getInstance
+            map.put(TOOLS_MESSAGE, new AppMenu(true, true, CoreApplication.getInstance
                     ().getApplicationByCategory(15).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(15).get(0).activityInfo.packageName : ""));
-            map.put(16, new AppMenu(true, true, CoreApplication.getInstance
+            map.put(TOOLS_EMAIL, new AppMenu(true, true, CoreApplication.getInstance
                     ().getApplicationByCategory(16).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(16).get(0).activityInfo.packageName : ""));
+
+
             String hashMapToolSettings = new Gson().toJson(map);
             PrefSiempo.getInstance(this).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
 
@@ -276,7 +353,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     /**
      * HashMap to store tools settings data.
      *
-     * @return HashMap<Integer, AppMenu>
+     * @return
      */
     public HashMap<Integer, AppMenu> getToolsSettings() {
         String storedHashMapString = PrefSiempo.getInstance(this).read(PrefSiempo.TOOLS_SETTING, "");
@@ -325,36 +402,25 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     public List<String> getPackagesList() {
-        return packagesList;
+        List<String> pList = new ArrayList<>(packagesList);
+        return pList;
     }
 
-    public void setPackagesList(List<String> packagesList) {
+    public void setPackagesList(Set<String> packagesList) {
         try {
-            Collections.sort(packagesList, new Comparator<String>() {
-                public int compare(String v1, String v2) {
-
-                    return v1.toLowerCase().compareTo(v2.toLowerCase());
-                }
-            });
             this.packagesList = packagesList;
-
-
             blockedApps = PrefSiempo.getInstance(this).read(PrefSiempo
                     .BLOCKED_APPLIST, new HashSet<String>());
-            boolean isAppInstallFirstTime = PrefSiempo.getInstance(this).read(PrefSiempo
-                    .IS_APP_INSTALLED_FIRSTTIME, true);
-            if (isAppInstallFirstTime) {
-                blockedApps.clear();
-            }
-            for (String applicationInfo : packagesList) {
-                if (isAppInstallFirstTime) {
-                    blockedApps.add(applicationInfo);
-                }
+
+
+            if (blockedApps != null && blockedApps.size() == 0) {
+                blockedApps.addAll(packagesList);
+                PrefSiempo.getInstance(this).write(PrefSiempo
+                        .BLOCKED_APPLIST, blockedApps);
             }
 
-            PrefSiempo.getInstance(this).write(PrefSiempo
-                    .BLOCKED_APPLIST, blockedApps);
         } catch (Exception e) {
+            Tracer.d("Exception e ::" + e.toString());
         }
     }
 
@@ -400,7 +466,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     public ArrayList<ResolveInfo> getApplicationByCategory(int id) {
         ArrayList<ResolveInfo> list = new ArrayList<>();
         switch (id) {
-            case 1:// Map
+            case TOOLS_MAP:// Map
                 Double myLatitude = 44.433106;
                 Double myLongitude = 26.103687;
                 String labelLocation = "Jorgesys @ Bucharest";
@@ -408,24 +474,19 @@ public abstract class CoreApplication extends MultiDexApplication {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlAddress));
                 list.addAll(getPackageManager().queryIntentActivities(intent, 0));
                 break;
-            case 2:// Transport
+            case TOOLS_TRANSPORT:// Transport
                 break;
-//            case 3://Calender
-//                Intent calenderIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("content://com.android.calendar/time/"));
-//                list.addAll(getPackageManager().queryIntentActivities(calenderIntent, 0));
-//                break;
-            case 3://Calender
+            case TOOLS_CALENDAR://Calender
                 Uri.Builder builder =
                         CalendarContract.CONTENT_URI.buildUpon();
                 builder.appendPath("time");
                 Intent calenderIntent =
                         new Intent(Intent.ACTION_VIEW, builder.build());
-//                Intent calenderIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("content://com.android.calendar/time/"));
                 list.addAll(getPackageManager().queryIntentActivities(calenderIntent, 0));
                 break;
-            case 4://Weather
+            case TOOLS_WEATHER://Weather
                 break;
-            case 5://Notes
+            case TOOLS_NOTES://Notes
                 String filepath = "mnt/sdcard/doc.txt";
                 File file = new File(filepath);
                 if (!file.exists()) {
@@ -442,169 +503,267 @@ public abstract class CoreApplication extends MultiDexApplication {
                 list.add(null);
                 list.addAll(getPackageManager().queryIntentActivities(intentNotes, 0));
 
-                if (UIUtils.isAppInstalledAndEnabled(this, "com.google.android.keep")) {
-                    Intent keepIntent = new Intent();
-                    keepIntent.setPackage("com.google.android.keep");
-                    List<ResolveInfo> resolveInfo = getPackageManager().queryIntentActivities(keepIntent, 0);
-                    if (resolveInfo != null && resolveInfo.size() > 0 && !list
-                            .contains(resolveInfo.get(0))) {
-                        list.add(resolveInfo.get(0));
-                    }
-                }
+                try {
 
-                if (UIUtils.isAppInstalledAndEnabled(this, "com.evernote")) {
-                    Intent evernote = new Intent();
-                    evernote.setPackage("com.evernote");
-                    List<ResolveInfo> resolveInfoEverNote = getPackageManager()
-                            .queryIntentActivities(evernote, 0);
-                    if (resolveInfoEverNote != null && resolveInfoEverNote
-                            .size() > 0 && !list
-                            .contains(resolveInfoEverNote.get(0))) {
-                        list.add(resolveInfoEverNote.get(0));
+                    if (UIUtils.isAppInstalledAndEnabled(this, "com.google.android.keep")) {
+                        Intent keepIntent = new Intent();
+                        keepIntent.setPackage("com.google.android.keep");
+                        List<ResolveInfo> resolveInfo = getPackageManager().queryIntentActivities(keepIntent, 0);
+                        if (resolveInfo != null && resolveInfo.size() > 0 && !list
+                                .contains(resolveInfo.get(0))) {
+                            list.add(resolveInfo.get(0));
+                        }
                     }
-                }
 
-                if (UIUtils.isAppInstalledAndEnabled(this, "com.microsoft.office.onenote")) {
-                    Intent oneNote = new Intent();
-                    oneNote.setPackage("com.microsoft.office.onenote");
-                    List<ResolveInfo> resolveInfoOneNote = getPackageManager()
-                            .queryIntentActivities(oneNote, 0);
-                    if (resolveInfoOneNote != null && resolveInfoOneNote.size
-                            () > 0 && !list.contains(resolveInfoOneNote.get
-                            (0))) {
-                        list.add(resolveInfoOneNote.get(0));
+                    if (UIUtils.isAppInstalledAndEnabled(this, "com.evernote")) {
+                        Intent evernote = new Intent();
+                        evernote.setPackage("com.evernote");
+                        List<ResolveInfo> resolveInfoEverNote = getPackageManager()
+                                .queryIntentActivities(evernote, 0);
+                        if (resolveInfoEverNote != null && resolveInfoEverNote
+                                .size() > 0 && !list
+                                .contains(resolveInfoEverNote.get(0))) {
+                            list.add(resolveInfoEverNote.get(0));
+                        }
                     }
-                }
-                if (UIUtils.isAppInstalledAndEnabled(this, "com.automattic.simplenote")) {
-                    Intent simpleNote = new Intent();
-                    simpleNote.setPackage("com.automattic.simplenote");
-                    List<ResolveInfo> resolveInfoSimpleNote =
-                            getPackageManager()
-                                    .queryIntentActivities(simpleNote, 0);
-                    if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
-                            () > 0 && !list.contains(resolveInfoSimpleNote.get
-                            (0))) {
-                        list.add(resolveInfoSimpleNote.get(0));
-                    }
-                }
-                if (UIUtils.isAppInstalledAndEnabled(this, "com.socialnmobile.dictapps.notepad.color.note")) {
-                    Intent colorNote = new Intent();
-                    colorNote.setPackage("com.socialnmobile.dictapps.notepad.color.note");
-                    List<ResolveInfo> resolveInfoSimpleNote =
-                            getPackageManager()
-                                    .queryIntentActivities(colorNote, 0);
-                    if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
-                            () > 0 && !list.contains(resolveInfoSimpleNote.get
-                            (0))) {
-                        list.add(resolveInfoSimpleNote.get(0));
-                    }
-                }
 
-                if (UIUtils.isAppInstalledAndEnabled(this, "com.task.notes")) {
-                    Intent colorNote = new Intent();
-                    colorNote.setPackage("com.task.notes");
-                    List<ResolveInfo> resolveInfoSimpleNote =
-                            getPackageManager()
-                                    .queryIntentActivities(colorNote, 0);
-                    if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
-                            () > 0 && !list.contains(resolveInfoSimpleNote.get
-                            (0))) {
-                        list.add(resolveInfoSimpleNote.get(0));
+                    if (UIUtils.isAppInstalledAndEnabled(this, "com.microsoft.office.onenote")) {
+                        Intent oneNote = new Intent();
+                        oneNote.setPackage("com.microsoft.office.onenote");
+                        List<ResolveInfo> resolveInfoOneNote = getPackageManager()
+                                .queryIntentActivities(oneNote, 0);
+                        if (resolveInfoOneNote != null && resolveInfoOneNote.size
+                                () > 0 && !list.contains(resolveInfoOneNote.get
+                                (0))) {
+                            list.add(resolveInfoOneNote.get(0));
+                        }
                     }
-                }
+                    if (UIUtils.isAppInstalledAndEnabled(this, "com.automattic.simplenote")) {
+                        Intent simpleNote = new Intent();
+                        simpleNote.setPackage("com.automattic.simplenote");
+                        List<ResolveInfo> resolveInfoSimpleNote =
+                                getPackageManager()
+                                        .queryIntentActivities(simpleNote, 0);
+                        if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
+                                () > 0 && !list.contains(resolveInfoSimpleNote.get
+                                (0))) {
+                            list.add(resolveInfoSimpleNote.get(0));
+                        }
+                    }
+                    if (UIUtils.isAppInstalledAndEnabled(this, "com.socialnmobile.dictapps.notepad.color.note")) {
+                        Intent colorNote = new Intent();
+                        colorNote.setPackage("com.socialnmobile.dictapps.notepad.color.note");
+                        List<ResolveInfo> resolveInfoSimpleNote =
+                                getPackageManager()
+                                        .queryIntentActivities(colorNote, 0);
+                        if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
+                                () > 0 && !list.contains(resolveInfoSimpleNote.get
+                                (0))) {
+                            list.add(resolveInfoSimpleNote.get(0));
+                        }
+                    }
 
-                if (UIUtils.isAppInstalledAndEnabled(this, "com.edi.masaki.mymemoapp")) {
-                    Intent colorNote = new Intent();
-                    colorNote.setPackage("com.edi.masaki.mymemoapp");
-                    List<ResolveInfo> resolveInfoSimpleNote =
-                            getPackageManager()
-                                    .queryIntentActivities(colorNote, 0);
-                    if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
-                            () > 0 && !list.contains(resolveInfoSimpleNote.get
-                            (0))) {
-                        list.add(resolveInfoSimpleNote.get(0));
+                    if (UIUtils.isAppInstalledAndEnabled(this, "com.task.notes")) {
+                        Intent colorNote = new Intent();
+                        colorNote.setPackage("com.task.notes");
+                        List<ResolveInfo> resolveInfoSimpleNote =
+                                getPackageManager()
+                                        .queryIntentActivities(colorNote, 0);
+                        if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
+                                () > 0 && !list.contains(resolveInfoSimpleNote.get
+                                (0))) {
+                            list.add(resolveInfoSimpleNote.get(0));
+                        }
                     }
-                }
 
-                if (UIUtils.isAppInstalledAndEnabled(this, "com.dencreak.esmemo")) {
-                    Intent colorNote = new Intent();
-                    colorNote.setPackage("com.dencreak.esmemo");
-                    List<ResolveInfo> resolveInfoSimpleNote =
-                            getPackageManager()
-                                    .queryIntentActivities(colorNote, 0);
-                    if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
-                            () > 0 && !list.contains(resolveInfoSimpleNote.get
-                            (0))) {
-                        list.add(resolveInfoSimpleNote.get(0));
+                    if (UIUtils.isAppInstalledAndEnabled(this, "com.edi.masaki.mymemoapp")) {
+                        Intent colorNote = new Intent();
+                        colorNote.setPackage("com.edi.masaki.mymemoapp");
+                        List<ResolveInfo> resolveInfoSimpleNote =
+                                getPackageManager()
+                                        .queryIntentActivities(colorNote, 0);
+                        if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
+                                () > 0 && !list.contains(resolveInfoSimpleNote.get
+                                (0))) {
+                            list.add(resolveInfoSimpleNote.get(0));
+                        }
                     }
-                }
-                if (UIUtils.isAppInstalledAndEnabled(this, "com.samsung.android.snote")) {
-                    Intent colorNote = new Intent();
-                    colorNote.setPackage("com.samsung.android.snote");
-                    List<ResolveInfo> resolveInfoSimpleNote =
-                            getPackageManager()
-                                    .queryIntentActivities(colorNote, 0);
-                    if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
-                            () > 0 && !list.contains(resolveInfoSimpleNote.get
-                            (0))) {
-                        list.add(resolveInfoSimpleNote.get(0));
+
+                    if (UIUtils.isAppInstalledAndEnabled(this, "com.dencreak.esmemo")) {
+                        Intent colorNote = new Intent();
+                        colorNote.setPackage("com.dencreak.esmemo");
+                        List<ResolveInfo> resolveInfoSimpleNote =
+                                getPackageManager()
+                                        .queryIntentActivities(colorNote, 0);
+                        if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
+                                () > 0 && !list.contains(resolveInfoSimpleNote.get
+                                (0))) {
+                            list.add(resolveInfoSimpleNote.get(0));
+                        }
                     }
-                }
-                if (UIUtils.isAppInstalledAndEnabled(this, "com.samsung.android.app.notes")) {
-                    Intent colorNote = new Intent();
-                    colorNote.setPackage("com.samsung.android.app.notes");
-                    List<ResolveInfo> resolveInfoSimpleNote =
-                            getPackageManager()
-                                    .queryIntentActivities(colorNote, 0);
-                    if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
-                            () > 0 && !list.contains(resolveInfoSimpleNote.get
-                            (0))) {
-                        list.add(resolveInfoSimpleNote.get(0));
+                    if (UIUtils.isAppInstalledAndEnabled(this, "com.samsung.android.snote")) {
+                        Intent colorNote = new Intent();
+                        colorNote.setPackage("com.samsung.android.snote");
+                        List<ResolveInfo> resolveInfoSimpleNote =
+                                getPackageManager()
+                                        .queryIntentActivities(colorNote, 0);
+                        if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
+                                () > 0 && !list.contains(resolveInfoSimpleNote.get
+                                (0))) {
+                            list.add(resolveInfoSimpleNote.get(0));
+                        }
                     }
+                    if (UIUtils.isAppInstalledAndEnabled(this, "com.samsung.android.app.notes")) {
+                        Intent colorNote = new Intent();
+                        colorNote.setPackage("com.samsung.android.app.notes");
+                        List<ResolveInfo> resolveInfoSimpleNote =
+                                getPackageManager()
+                                        .queryIntentActivities(colorNote, 0);
+                        if (resolveInfoSimpleNote != null && resolveInfoSimpleNote.size
+                                () > 0 && !list.contains(resolveInfoSimpleNote.get
+                                (0))) {
+                            list.add(resolveInfoSimpleNote.get(0));
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
 
                 break;
-            case 6://Recorder
+            case TOOLS_RECORDER://Recorder
                 break;
-            case 7://Camera
+            case TOOLS_CAMERA://Camera
                 Intent intentCamera = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 list.addAll(getPackageManager().queryIntentActivities(intentCamera, 0));
                 break;
-            case 8://Photos
+            case TOOLS_PHOTOS://Photos
                 Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 pickIntent.setType("image/* video/*");
                 list.addAll(getPackageManager().queryIntentActivities(pickIntent, 0));
                 break;
-            case 9://Payment
+            case TOOLS_PAYMENT://Payment
                 break;
-            case 10://Wellness
+            case TOOLS_WELLNESS://Wellness
                 break;
-            case 11://Browser
+            case TOOLS_BROWSER://Browser
                 Intent intentBrowser = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/"));
                 list.addAll(getPackageManager().queryIntentActivities(intentBrowser, 0));
                 break;
-            case 12:// blank
-                break;
-            case 13://Call
+
+            case TOOLS_CALL://Call
                 Uri number = Uri.parse("tel:");
                 Intent dial = new Intent(Intent.ACTION_DIAL, number);
                 list.addAll(getPackageManager().queryIntentActivities(dial, 0));
                 break;
-            case 14://Clock
+            case TOOLS_CLOCK://Clock
                 Intent intentClock = new Intent(AlarmClock.ACTION_SET_ALARM);
                 list.addAll(getPackageManager().queryIntentActivities(intentClock, 0));
                 break;
-            case 15://message
+            case TOOLS_MESSAGE://message
                 Intent message = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + ""));
                 message.putExtra("sms_body", "Test text...");
                 list.addAll(getPackageManager().queryIntentActivities(message, 0));
+
+                try {
+                    if (UIUtils.isAppInstalledAndEnabled(this, Constants
+                            .WHATSAPP_PACKAGE)) {
+                        Intent keepIntent = new Intent();
+                        keepIntent.setPackage(Constants
+                                .WHATSAPP_PACKAGE);
+                        List<ResolveInfo> resolveInfo = getPackageManager().queryIntentActivities(keepIntent, 0);
+                        if (resolveInfo != null && resolveInfo.size() > 0 && !list
+                                .contains(resolveInfo.get(0))) {
+                            list.add(resolveInfo.get(0));
+                        }
+                    }
+
+                    if (UIUtils.isAppInstalledAndEnabled(this, Constants
+                            .LINE_PACKAGE)) {
+                        Intent evernote = new Intent();
+                        evernote.setPackage(Constants
+                                .LINE_PACKAGE);
+                        List<ResolveInfo> resolveInfoEverNote = getPackageManager()
+                                .queryIntentActivities(evernote, 0);
+                        if (resolveInfoEverNote != null && resolveInfoEverNote
+                                .size() > 0 && !list
+                                .contains(resolveInfoEverNote.get(0))) {
+                            list.add(resolveInfoEverNote.get(0));
+                        }
+                    }
+
+                    if (UIUtils.isAppInstalledAndEnabled(this, Constants
+                            .VIBER_PACKAGE)) {
+                        Intent evernote = new Intent();
+                        evernote.setPackage(Constants
+                                .VIBER_PACKAGE);
+                        List<ResolveInfo> resolveInfoEverNote = getPackageManager()
+                                .queryIntentActivities(evernote, 0);
+                        if (resolveInfoEverNote != null && resolveInfoEverNote
+                                .size() > 0 && !list
+                                .contains(resolveInfoEverNote.get(0))) {
+                            list.add(resolveInfoEverNote.get(0));
+                        }
+                    }
+
+                    if (UIUtils.isAppInstalledAndEnabled(this, Constants
+                            .SKYPE_PACKAGE)) {
+                        Intent evernote = new Intent();
+                        evernote.setPackage(Constants
+                                .SKYPE_PACKAGE);
+                        List<ResolveInfo> resolveInfoEverNote = getPackageManager()
+                                .queryIntentActivities(evernote, 0);
+                        if (resolveInfoEverNote != null && resolveInfoEverNote
+                                .size() > 0 && !list
+                                .contains(resolveInfoEverNote.get(0))) {
+                            list.add(resolveInfoEverNote.get(0));
+                        }
+                    }
+                    if (UIUtils.isAppInstalledAndEnabled(this, Constants
+                            .WECHAT_PACKAGE)) {
+                        Intent evernote = new Intent();
+                        evernote.setPackage(Constants
+                                .WECHAT_PACKAGE);
+                        List<ResolveInfo> resolveInfoEverNote = getPackageManager()
+                                .queryIntentActivities(evernote, 0);
+                        if (resolveInfoEverNote != null && resolveInfoEverNote
+                                .size() > 0 && !list
+                                .contains(resolveInfoEverNote.get(0))) {
+                            list.add(resolveInfoEverNote.get(0));
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
                 break;
-            case 16://email
+            case TOOLS_EMAIL://email
                 Intent intentEmail = new Intent(Intent.ACTION_VIEW);
                 Uri data = Uri.parse("mailto:recipient@example.com?subject=" + "" + "&body=" + "");
                 intentEmail.setData(data);
                 list.addAll(getPackageManager().queryIntentActivities(intentEmail, 0));
+                break;
+
+            case TOOLS_MUSIC:// Music
+
+                Intent intentMusic = new Intent(MediaStore
+                        .INTENT_ACTION_MUSIC_PLAYER);
+                list.addAll(getPackageManager().queryIntentActivities(intentMusic, 0));
+                break;
+
+            case TOOLS_PODCAST://PODCAST
+                break;
+
+            case TOOLS_FOOD://Food
+                break;
+
+            case TOOLS_FITNESS://Fitness
+                break;
+
+            case TOOLS_TODO://
                 break;
             default:
                 break;
@@ -617,15 +776,20 @@ public abstract class CoreApplication extends MultiDexApplication {
         try {
             if (addingOrDelete) {
                 ApplicationInfo appInfo = getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA);
-                getPackagesList().add(appInfo.packageName);
-                getListApplicationName().put(packageName, "" + getPackageManager().getApplicationLabel(appInfo));
+                if (!packagesList.contains(appInfo.packageName)) {
+                    packagesList.add(appInfo.packageName);
+                    getListApplicationName().put(packageName, "" + getPackageManager().getApplicationLabel(appInfo));
+                    EventBus.getDefault().post(new AppInstalledEvent(true));
+                }
+
             } else {
-                if (getPackagesList().contains(packageName)) {
-                    getPackagesList().remove(packageName);
+                if (packagesList.contains(packageName)) {
+                    packagesList.remove(packageName);
                     getListApplicationName().remove(packageName);
+                    EventBus.getDefault().post(new AppInstalledEvent(true));
                 }
             }
-            EventBus.getDefault().post(new AppInstalledEvent(true));
+
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -708,9 +872,7 @@ public abstract class CoreApplication extends MultiDexApplication {
         @Override
         protected void onPostExecute(Set<String> applicationInfos) {
             super.onPostExecute(applicationInfos);
-//            packagesList.clear();
-            List<String> apps = new ArrayList<String>(applicationInfos);
-            setPackagesList(apps);
+            setPackagesList(applicationInfos);
             EventBus.getDefault().post(new AppInstalledEvent(true));
         }
     }
