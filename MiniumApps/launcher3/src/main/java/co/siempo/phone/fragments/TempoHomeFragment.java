@@ -1,6 +1,7 @@
 package co.siempo.phone.fragments;
 
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -14,6 +15,7 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
 import co.siempo.phone.R;
+import co.siempo.phone.activities.ChooseBackgroundActivity;
 import co.siempo.phone.utils.PrefSiempo;
 
 @EFragment(R.layout.fragment_tempo_home)
@@ -59,6 +61,8 @@ public class TempoHomeFragment extends CoreFragment {
             }
         });
         switchDisableIntentionsControls.setChecked(PrefSiempo.getInstance(context).read(PrefSiempo.IS_INTENTION_ENABLE, false));
+
+
         switchDisableIntentionsControls.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -66,17 +70,38 @@ public class TempoHomeFragment extends CoreFragment {
                         .IS_INTENTION_ENABLE, isChecked);
             }
         });
+//        switchCustomBackground.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if(isChecked) {
+//                    startActivity(new Intent(context, ChooseBackgroundActivity.class));
+//                }else{
+//                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_BAG,"");
+//                }
+//            }
+//        });
     }
 
     @Click
     void relAllowSpecificApps() {
-
         switchDisableIntentionsControls.performClick();
     }
 
     @Click
     void relCustomBackground() {
-        switchCustomBackground.performClick();
+        if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_BAG, "").equalsIgnoreCase("")) {
+            startActivity(new Intent(context, ChooseBackgroundActivity.class));
+        } else {
+            PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_BAG, "");
+            switchCustomBackground.setChecked(false);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        switchCustomBackground.setChecked(PrefSiempo.getInstance(context).read(PrefSiempo
+                .DEFAULT_BAG, "").equalsIgnoreCase("") ? false : true);
     }
 
     @Click

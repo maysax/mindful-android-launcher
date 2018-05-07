@@ -152,7 +152,8 @@
                 android:layout_alignBaseline="@+id/txtCustomBackground"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="8dp"/>
+                android:layout_marginRight="8dp"
+                android:clickable="false" />
 
 
         </RelativeLayout>
