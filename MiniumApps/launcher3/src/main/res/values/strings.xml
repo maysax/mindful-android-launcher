@@ -500,6 +500,9 @@
     <string name="choose_app_flag">Choose apps to flag</string>
     <string name="custom_background_image_title">Custom background image</string>
     <string name="update_background">Update background?</string>
+    <string name="current_background">Current background</string>
+    <string name="my_images">My images</string>
+    <string name="siempo_images">Siempo images</string>
 
 
     <string-array name="in_app_items_subscription">

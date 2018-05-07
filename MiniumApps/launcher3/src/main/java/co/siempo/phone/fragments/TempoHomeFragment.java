@@ -70,16 +70,6 @@ public class TempoHomeFragment extends CoreFragment {
                         .IS_INTENTION_ENABLE, isChecked);
             }
         });
-//        switchCustomBackground.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if(isChecked) {
-//                    startActivity(new Intent(context, ChooseBackgroundActivity.class));
-//                }else{
-//                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_BAG,"");
-//                }
-//            }
-//        });
     }
 
     @Click

@@ -1,15 +1,10 @@
 package co.siempo.phone.customviews;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
-/**
- * Created by parth on 3/5/18.
- */
-@SuppressLint("AppCompatCustomView")
-public class SquareImageView extends ImageView {
+public class SquareImageView extends AppCompatImageView {
     public SquareImageView(Context context) {
         super(context);
     }

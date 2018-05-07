@@ -45,36 +45,40 @@ public final class BackgroundItemAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int i) {
-        // return mItems.get(i).drawableId;
         return i;
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        View v = view;
-        ImageView mImage;
-        TextView imageText;
-        if (v == null) {
-            v = mInflater.inflate(R.layout.choose_background_grid_item, viewGroup, false);
-            v.setTag(R.id.gridImage, v.findViewById(R.id.gridImage));
-            v.setTag(R.id.text, v.findViewById(R.id.text));
+    public View getView(int i, View convertView, ViewGroup viewGroup) {
+        ViewHolder viewHolder = new ViewHolder();
+
+        if (convertView == null) {
+            convertView = mInflater.inflate(R.layout.choose_background_grid_item, viewGroup, false);
+            viewHolder.mImage = (ImageView) convertView.findViewById(R.id.gridImage);
+            viewHolder.imageText = (TextView) convertView.findViewById(R.id.text);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
         }
         ImageItem item = getItem(i);
-        mImage = (ImageView) v.getTag(R.id.gridImage);
-        imageText = (TextView) v.getTag(R.id.text);
-        if (item.getName().equalsIgnoreCase("Current background")) {
-            imageText.setCompoundDrawables(null, null, null, null);
+        if (item.getName().equalsIgnoreCase(context.getString(R.string.current_background))) {
+            viewHolder.imageText.setCompoundDrawables(null, null, null, null);
         }
         if (item.getName().equalsIgnoreCase("")) {
-            imageText.setVisibility(View.GONE);
+            viewHolder.imageText.setVisibility(View.GONE);
         } else {
-            imageText.setVisibility(View.VISIBLE);
-            imageText.setText(item.name);
+            viewHolder.imageText.setVisibility(View.VISIBLE);
+            viewHolder.imageText.setText(item.name);
         }
         Glide.with(context)
                 .load(Uri.fromFile(new File(item.getDrawableId().get(0).toString())))
-                .into(mImage);
-        return v;
+                .into(viewHolder.mImage);
+        return convertView;
+    }
+
+    public static class ViewHolder {
+        ImageView mImage;
+        TextView imageText;
     }
 
 

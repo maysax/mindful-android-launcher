@@ -1,9 +1,11 @@
 package co.siempo.phone.activities;
 
+import android.Manifest;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -12,6 +14,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ProgressBar;
+
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,15 +27,19 @@ import java.util.TreeSet;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.BackgroundItemAdapter;
 import co.siempo.phone.models.ImageItem;
+import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.PrefSiempo;
 
 public class ChooseBackgroundActivity extends CoreActivity {
-    ArrayList<ImageItem> internallist;
+    ArrayList<ImageItem> internalItemList;
     File folderSiempoImage;
     boolean openSubFolder = false;
+    BackgroundItemAdapter backgroundItemAdapter;
+    PermissionUtil permissionUtil;
+    ProgressBar loading_progress;
     private Toolbar toolbar;
     private GridView mImageGridview;
-    private ArrayList<ImageItem> mItems;
+    private ArrayList<ImageItem> mainItemList;
     private int PICK_IMAGE_REQUEST = 1;
 
     @Override
@@ -37,11 +47,13 @@ public class ChooseBackgroundActivity extends CoreActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_background);
 
+
         initView();
 
         createSiempoFolder();
 
-        bindGridView();
+        checkPermissionAndBind();
+
     }
 
     private void initView() {
@@ -57,7 +69,7 @@ public class ChooseBackgroundActivity extends CoreActivity {
             }
         });
         mImageGridview = (GridView) findViewById(R.id.ImageGridview);
-
+        loading_progress = findViewById(R.id.loading_progress);
     }
 
     private void createSiempoFolder() {
@@ -79,7 +91,7 @@ public class ChooseBackgroundActivity extends CoreActivity {
     }
 
     private void bindGridView() {
-        mItems = new ArrayList<>();
+        mainItemList = new ArrayList<>();
         final String strDefault = PrefSiempo.getInstance(ChooseBackgroundActivity.this).read(PrefSiempo
                 .DEFAULT_BAG, "");
         new AsyncTask<String, String, ArrayList<ImageItem>>() {
@@ -89,6 +101,7 @@ public class ChooseBackgroundActivity extends CoreActivity {
             protected void onPreExecute() {
                 super.onPreExecute();
                 local = new ArrayList<>();
+                loading_progress.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -96,11 +109,13 @@ public class ChooseBackgroundActivity extends CoreActivity {
                 if (!strDefault.equalsIgnoreCase("")) {
                     ArrayList<String> list = new ArrayList<>();
                     list.add(strDefault);
-                    local.add(new ImageItem("Current background", list, true));
+                    local.add(new ImageItem(getString(R.string.current_background), list,
+                            true));
                 }
 
                 if (getAllImagePaths() != null && getAllImagePaths().size() > 0) {
-                    local.add(new ImageItem("My images", getAllImagePaths(), true));
+                    local.add(new ImageItem(getString(R.string.my_images), getAllImagePaths(),
+                            true));
                 }
 
                 if (folderSiempoImage.exists()) {
@@ -116,7 +131,8 @@ public class ChooseBackgroundActivity extends CoreActivity {
                     }
                     if (list != null && list.size() > 0) {
                         String first_image = list.get(0);
-                        local.add(new ImageItem("Siempo images", list, true));
+                        local.add(new ImageItem(getString(R.string.siempo_images), list,
+                                true));
                     }
 
                 }
@@ -126,9 +142,11 @@ public class ChooseBackgroundActivity extends CoreActivity {
             @Override
             protected void onPostExecute(ArrayList<ImageItem> local) {
                 super.onPostExecute(local);
-                mItems = local;
-                mImageGridview.setAdapter(new BackgroundItemAdapter(ChooseBackgroundActivity
-                        .this, mItems));
+                loading_progress.setVisibility(View.GONE);
+                mainItemList = local;
+                backgroundItemAdapter = new BackgroundItemAdapter(ChooseBackgroundActivity
+                        .this, mainItemList);
+                mImageGridview.setAdapter(backgroundItemAdapter);
             }
         }.execute();
 
@@ -139,48 +157,53 @@ public class ChooseBackgroundActivity extends CoreActivity {
 
                 ImageItem item = (ImageItem) parent.getItemAtPosition(position);
                 String mItemText = item.name;
-                if (mItemText == "Current background") {
+                if (mItemText.equalsIgnoreCase(getString(R.string.current_background))) {
                     finish();
-                } else if (mItemText == "My images") {
+                } else if (mItemText.equalsIgnoreCase(getString(R.string.my_images))) {
                     openSubFolder = true;
-                    internallist = new ArrayList<>();
-                    for (String imageItem : mItems.get(position).getDrawableId()) {
+                    internalItemList = new ArrayList<>();
+                    for (String imageItem : mainItemList.get(position).getDrawableId()) {
                         ArrayList<String> stringArrayList = new ArrayList<>();
                         stringArrayList.add(imageItem);
                         ImageItem imageItem1 = new ImageItem("", stringArrayList, true);
-                        internallist.add(imageItem1);
+                        internalItemList.add(imageItem1);
                     }
-                    toolbar.setTitle("My images");
-                    mImageGridview.setAdapter(new BackgroundItemAdapter(ChooseBackgroundActivity
-                            .this, internallist));
+                    toolbar.setTitle(getString(R.string.my_images));
+                    backgroundItemAdapter = new BackgroundItemAdapter(ChooseBackgroundActivity
+                            .this, internalItemList);
+                    mImageGridview.setAdapter(backgroundItemAdapter);
+
 //                    Intent intent=new Intent();
 //                    intent.setType("image/*");
 //                    intent.setAction(Intent.ACTION_GET_CONTENT);
 //                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-                } else if (mItemText == "Siempo images") {
+                } else if (mItemText.equalsIgnoreCase(getString(R.string.siempo_images))) {
 //                    Uri selectedUri = Uri.parse(folderSiempoImage.toString()+"/");
 //                    Intent intent = new Intent(Intent.ACTION_PICK);
 //                    intent.setDataAndType(selectedUri, "image/*");
 //                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
                     openSubFolder = true;
-                    internallist = new ArrayList<>();
-                    for (String imageItem : mItems.get(position).getDrawableId()) {
+                    internalItemList = new ArrayList<>();
+                    for (String imageItem : mainItemList.get(position).getDrawableId()) {
                         ArrayList<String> stringArrayList = new ArrayList<>();
                         stringArrayList.add(imageItem);
                         ImageItem imageItem1 = new ImageItem("", stringArrayList, true);
-                        internallist.add(imageItem1);
+                        internalItemList.add(imageItem1);
 
                     }
-                    toolbar.setTitle("Siempo images");
-                    mImageGridview.setAdapter(new BackgroundItemAdapter(ChooseBackgroundActivity
-                            .this, internallist));
+                    toolbar.setTitle(getString(R.string.siempo_images));
+                    backgroundItemAdapter = new BackgroundItemAdapter(ChooseBackgroundActivity
+                            .this, internalItemList);
+                    mImageGridview.setAdapter(backgroundItemAdapter);
                 } else {
-                    Intent mUpdateBackgroundIntent = new Intent(ChooseBackgroundActivity.this,
-                            UpdateBackgroundActivity
-                                    .class);
-                    mUpdateBackgroundIntent.putExtra("imageUri", internallist.get(position)
-                            .getDrawableId().get(0).toString());
-                    startActivityForResult(mUpdateBackgroundIntent, PICK_IMAGE_REQUEST);
+                    if (internalItemList != null && internalItemList.size() > 0) {
+                        Intent mUpdateBackgroundIntent = new Intent(ChooseBackgroundActivity.this,
+                                UpdateBackgroundActivity
+                                        .class);
+                        mUpdateBackgroundIntent.putExtra("imageUri", internalItemList.get(position)
+                                .getDrawableId().get(0).toString());
+                        startActivityForResult(mUpdateBackgroundIntent, PICK_IMAGE_REQUEST);
+                    }
                 }
             }
         });
@@ -191,8 +214,10 @@ public class ChooseBackgroundActivity extends CoreActivity {
         //super.onBackPressed();
         if (openSubFolder) {
             openSubFolder = false;
-            toolbar.setTitle(R.string.choose_background);
-            mImageGridview.setAdapter(new BackgroundItemAdapter(this, mItems));
+            toolbar.setTitle(getString(R.string.choose_background));
+            backgroundItemAdapter = new BackgroundItemAdapter(ChooseBackgroundActivity
+                    .this, mainItemList);
+            mImageGridview.setAdapter(backgroundItemAdapter);
         } else {
             finish();
         }
@@ -208,10 +233,72 @@ public class ChooseBackgroundActivity extends CoreActivity {
 //            mUpdateBackgroundIntent.putExtra("imageUri", imageUri.toString());
 //            startActivity(mUpdateBackgroundIntent);
             openSubFolder = false;
-            toolbar.setTitle(R.string.choose_background);
-            bindGridView();
-        } else {
+            toolbar.setTitle(getString(R.string.choose_background));
+            String strDefault = PrefSiempo.getInstance(ChooseBackgroundActivity.this).read(PrefSiempo
+                    .DEFAULT_BAG, "");
 
+            if (!strDefault.equalsIgnoreCase("")) {
+                ArrayList<String> list = new ArrayList<>();
+                list.add(strDefault);
+                int id = checkItem();
+                if (id == -1) {
+                    mainItemList.add(0, new ImageItem(getString(R.string.current_background), list,
+                            true));
+                } else {
+                    mainItemList.set(id, new ImageItem(getString(R.string.current_background), list,
+                            true));
+
+                }
+            }
+            backgroundItemAdapter = new BackgroundItemAdapter(ChooseBackgroundActivity
+                    .this, mainItemList);
+            mImageGridview.setAdapter(backgroundItemAdapter);
+        }
+    }
+
+
+    int checkItem() {
+        if (mainItemList != null && mainItemList.size() > 0) {
+            for (int i = 0; i < mainItemList.size(); i++) {
+                if (mainItemList.get(i).getName().equalsIgnoreCase(getString(R.string
+                        .current_background))) {
+                    return i;
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    private void checkPermissionAndBind() {
+        permissionUtil = new PermissionUtil(this);
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !permissionUtil.hasGiven
+                (PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION))) {
+            try {
+                TedPermission.with(this)
+                        .setPermissionListener(new PermissionListener() {
+                            @Override
+                            public void onPermissionGranted() {
+                                bindGridView();
+                            }
+
+                            @Override
+                            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+
+                            }
+                        })
+                        .setDeniedMessage(R.string.msg_permission_denied)
+                        .setPermissions(new String[]{
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest
+                                        .permission
+                                        .READ_EXTERNAL_STORAGE,})
+                        .check();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            bindGridView();
         }
     }
 
@@ -249,7 +336,7 @@ public class ChooseBackgroundActivity extends CoreActivity {
             if (imageList == null)
                 continue;
             for (File imagePath : imageList) {
-                if (!imagePath.toString().endsWith("Siempo images")) {
+                if (!imagePath.toString().endsWith(getString(R.string.siempo_images))) {
                     try {
                         if (imagePath.isDirectory()) {
                             //imageList = imagePath.listFiles();
