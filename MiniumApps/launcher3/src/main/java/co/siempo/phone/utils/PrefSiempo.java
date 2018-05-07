@@ -59,6 +59,9 @@ public class PrefSiempo {
     // used for Allow peaking.
     public static final String ALLOW_PEAKING = "Allowpeaking";
 
+    // used for Allow peaking.
+    public static final String DEFAULT_BAG = "default_back";
+
 
     //Launcher 3 preferences
     public static final String UPDATE_PROMPT = "updatePrompt";

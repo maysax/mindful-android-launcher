@@ -102,7 +102,7 @@
         <item>3</item>
     </string-array>
 
-    <string-array name="multi_select_list_preference_default_value" tools:ignore="UnusedResources"/>
+    <string-array name="multi_select_list_preference_default_value" tools:ignore="UnusedResources" />
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
@@ -319,6 +319,7 @@
     <string name="dark_theme_text">"Backgrounds will be dark while icons &amp; text will be light."</string>
     <string name="homescreen">Customize appearance</string>
     <string name="app_menus">Reduce app usage</string>
+    <string name="choose_background">Choose background</string>
     <string name="msg_no_apps">You haven\'t moved any apps into this category.</string>
     <string name="search_hint">Find app, send message, or save note</string>
     <string name="notification_interrupt_title">Select apps that may interrupt you</string>
@@ -498,6 +499,10 @@
     <string name="choose_app_flag_desc">Flag any apps that you want to use less. </string>
     <string name="choose_app_flag">Choose apps to flag</string>
     <string name="custom_background_image_title">Custom background image</string>
+    <string name="update_background">Update background?</string>
+    <string name="current_background">Current background</string>
+    <string name="my_images">My images</string>
+    <string name="siempo_images">Siempo images</string>
 
 
     <string-array name="in_app_items_subscription">
