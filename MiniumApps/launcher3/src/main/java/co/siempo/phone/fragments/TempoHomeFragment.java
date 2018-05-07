@@ -15,6 +15,7 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
 import co.siempo.phone.R;
+import co.siempo.phone.activities.ChooseBackgroundActivity;
 import co.siempo.phone.utils.PrefSiempo;
 
 @EFragment(R.layout.fragment_tempo_home)
@@ -60,6 +61,8 @@ public class TempoHomeFragment extends CoreFragment {
             }
         });
         switchDisableIntentionsControls.setChecked(PrefSiempo.getInstance(context).read(PrefSiempo.IS_INTENTION_ENABLE, false));
+
+
         switchDisableIntentionsControls.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -98,13 +101,24 @@ public class TempoHomeFragment extends CoreFragment {
 
     @Click
     void relAllowSpecificApps() {
-
         switchDisableIntentionsControls.performClick();
     }
 
     @Click
     void relCustomBackground() {
-        switchCustomBackground.performClick();
+        if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_BAG, "").equalsIgnoreCase("")) {
+            startActivity(new Intent(context, ChooseBackgroundActivity.class));
+        } else {
+            PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_BAG, "");
+            switchCustomBackground.setChecked(false);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        switchCustomBackground.setChecked(PrefSiempo.getInstance(context).read(PrefSiempo
+                .DEFAULT_BAG, "").equalsIgnoreCase("") ? false : true);
     }
 
     @Click
