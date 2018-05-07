@@ -3,11 +3,9 @@ package co.siempo.phone.fragments;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -66,9 +64,6 @@ public class FeedbackFragment extends CoreFragment {
     EditText txtMessage;
 
     String selectedItemText = "";
-
-
-
 
 
     public static boolean isValidMessage(String msg) {
@@ -194,7 +189,6 @@ public class FeedbackFragment extends CoreFragment {
                                         @NonNull ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView tv = (TextView) view;
-                tv.setTextColor(Color.BLACK);
                 return view;
             }
         };

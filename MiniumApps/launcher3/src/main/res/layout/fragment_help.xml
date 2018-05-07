@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
               xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
               android:id="@+id/activity_pause"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
@@ -33,6 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
                 android:text="@string/faq"
+                android:textColor="?attr/txt_content_title"
                 android:textSize="@dimen/text.size.large"/>
         </RelativeLayout>
 
@@ -51,6 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
                 android:text="@string/privacy_policyy"
+                android:textColor="?attr/txt_content_title"
                 android:textSize="@dimen/text.size.large"/>
         </RelativeLayout>
 
@@ -68,6 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
                 android:text="@string/terms_services"
+                android:textColor="?attr/txt_content_title"
                 android:textSize="@dimen/text.size.large"/>
         </RelativeLayout>
 
@@ -84,6 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
                 android:text="@string/feedback"
+                android:textColor="?attr/txt_content_title"
                 android:textSize="@dimen/text.size.large"/>
         </RelativeLayout>
 
@@ -109,6 +113,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="50dp"
                     android:text="@string/version"
+                    android:textColor="?attr/txt_content_title"
                     android:textSize="@dimen/text.size.large"/>
 
                 <co.siempo.phone.customviews.RobotoRegularTextView
@@ -118,6 +123,7 @@
                     android:layout_marginLeft="50dp"
                     android:layout_marginTop="5dp"
                     android:text=""
+                    android:textColor="?attr/txt_content_color"
                     android:textSize="@dimen/text.size.regular"/>
             </LinearLayout>
         </RelativeLayout>

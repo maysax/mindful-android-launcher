@@ -75,6 +75,7 @@
                 android:gravity="center"
                 android:maxLines="1"
                 android:paddingTop="4dp"
+                android:textColor="?attr/icon_color"
                 android:textSize="13sp"
                 tools:text="Send as a message"/>
 

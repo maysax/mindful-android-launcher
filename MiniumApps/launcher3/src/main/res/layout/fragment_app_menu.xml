@@ -43,6 +43,7 @@
                         android:lineSpacingExtra="5sp"
                         android:padding="8dp"
                         android:text="@string/hide_icon_branding"
+                        android:textColor="?attr/txt_content_title"
                         android:textSize="16sp"/>
 
                     <LinearLayout
@@ -76,6 +77,7 @@
                         android:paddingRight="8dp"
                         android:paddingTop="0dp"
                         android:text="@string/iconbranding_description_setting"
+                        android:textColor="?attr/txt_content_color"
                         android:textSize="14sp"/>
                 </RelativeLayout>
 
@@ -97,6 +99,7 @@
                         android:lineSpacingExtra="5sp"
                         android:padding="8dp"
                         android:text="@string/reduce_overuse_screen"
+                        android:textColor="?attr/txt_content_title"
                         android:textSize="16sp"/>
 
                     <LinearLayout
@@ -129,6 +132,7 @@
                         android:paddingRight="8dp"
                         android:paddingTop="0dp"
                         android:text="@string/reduce_overuse_screen_description_setting"
+                        android:textColor="?attr/txt_content_color"
                         android:textSize="14sp"/>
                 </RelativeLayout>
 
@@ -150,6 +154,7 @@
                         android:lineSpacingExtra="5sp"
                         android:padding="8dp"
                         android:text="@string/reduce_overuse_flagged"
+                        android:textColor="?attr/txt_content_title"
                         android:textSize="16sp"/>
 
                     <LinearLayout
@@ -182,6 +187,7 @@
                         android:paddingRight="8dp"
                         android:paddingTop="0dp"
                         android:text="@string/reduce_overuse_Flagged_description_setting"
+                        android:textColor="?attr/txt_content_color"
                         android:textSize="14sp"/>
                 </RelativeLayout>
 
@@ -204,6 +210,7 @@
                         android:lineSpacingExtra="5sp"
                         android:padding="8dp"
                         android:text="@string/randomize_junkfood"
+                        android:textColor="?attr/txt_content_title"
                         android:textSize="16sp"/>
 
                     <LinearLayout
@@ -236,6 +243,8 @@
                         android:paddingRight="8dp"
                         android:paddingTop="0dp"
                         android:text="@string/junkfood_description_setting"
+
+                        android:textColor="?attr/txt_content_color"
                         android:textSize="14sp"/>
                 </RelativeLayout>
 
@@ -258,6 +267,7 @@
                         android:lineSpacingExtra="5sp"
                         android:padding="8dp"
                         android:text="@string/choose_app_flag"
+                        android:textColor="?attr/txt_content_title"
                         android:textSize="16sp"/>
 
                     <LinearLayout
@@ -291,6 +301,7 @@
                         android:paddingRight="8dp"
                         android:paddingTop="0dp"
                         android:text="@string/choose_app_flag_desc"
+                        android:textColor="?attr/txt_content_color"
                         android:textSize="14sp"/>
                 </RelativeLayout>
             </RelativeLayout>

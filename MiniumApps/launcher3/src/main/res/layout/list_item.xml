@@ -4,6 +4,7 @@
               android:id="@+id/linearList"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              android:background="?attr/theme_base_color"
               android:orientation="vertical"
               tools:ignore="UseCompoundDrawables,UselessParent">
 

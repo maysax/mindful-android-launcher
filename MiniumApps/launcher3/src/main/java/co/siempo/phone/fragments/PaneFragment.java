@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -144,6 +145,7 @@ public class PaneFragment extends CoreFragment {
     private Dialog overlayDialogPermission;
     private View junkDoc;
     private View searchDoc;
+    private View blueLineDividerBottom;
 
     public PaneFragment() {
         // Required empty public constructor
@@ -285,6 +287,7 @@ public class PaneFragment extends CoreFragment {
             e.printStackTrace();
         }
         blueLineDivider = view.findViewById(R.id.blueLineView);
+        blueLineDividerBottom = view.findViewById(R.id.blueLineViewBottom);
         cardViewEdtSearch = view.findViewById(R.id.cardViewEdtSearch);
         searchLayout = view.findViewById(R.id.edtSearchListView);
         relSearchTools = view.findViewById(R.id.relSearchTools);
@@ -464,8 +467,8 @@ public class PaneFragment extends CoreFragment {
                         linPane.setVisibility(View.VISIBLE);
                     if (linBottomDoc.getVisibility() == View.GONE)
                         linBottomDoc.setVisibility(View.VISIBLE);
-                    if (blueLineDivider.getVisibility() == View.GONE)
-                        blueLineDivider.setVisibility(View.VISIBLE);
+//                    if (blueLineDivider.getVisibility() == View.GONE)
+//                        blueLineDivider.setVisibility(View.VISIBLE);
                     if (searchLayout.getVisibility() == View.VISIBLE)
                         searchLayout.setVisibility(View.GONE);
                     if (cardViewEdtSearch.getVisibility() == View.VISIBLE)
@@ -633,14 +636,25 @@ public class PaneFragment extends CoreFragment {
     public void hidePaneAndBottomView(final Context context) {
         linPane.setVisibility(View.GONE);
         linBottomDoc.setVisibility(View.GONE);
+        blueLineDivider.setVisibility(View.GONE);
+        blueLineDividerBottom.setVisibility(View.GONE);
+        linTopDoc.setBackgroundColor(getResources().getColor(R.color.transparent));
         searchListVisible(context);
     }
 
     public void showPaneAndBottomView(final Context context) {
         linSearchList.setVisibility(View.GONE);
         linPane.setVisibility(View.VISIBLE);
+        blueLineDivider.setVisibility(View.VISIBLE);
+        blueLineDividerBottom.setVisibility(View.VISIBLE);
         linBottomDoc.setVisibility(View.VISIBLE);
         isSearchVisable = false;
+
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(R.attr.top_doc, typedValue, true);
+        int color = typedValue.resourceId;
+        linTopDoc.setBackgroundResource(color);
         FirebaseHelper.getInstance().logScreenUsageTime(FirebaseHelper.SEARCH_PANE, DashboardActivity.startTime);
         DashboardActivity.startTime = System.currentTimeMillis();
     }

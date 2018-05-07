@@ -5,13 +5,11 @@
               android:id="@+id/activity_account_setting"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="#5E000000"
     >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#5E000000"
         tools:ignore="UselessParent">
 
         <android.support.v7.widget.Toolbar
@@ -94,6 +92,7 @@
                         android:paddingRight="8dp"
                         android:paddingTop="4dp"
                         android:text="@string/lbl_updateEmail"
+                        android:textColor="?attr/txt_content_title"
                         android:textSize="16sp"
                         />
 
@@ -110,6 +109,7 @@
                         android:paddingRight="8dp"
                         android:paddingTop="2dp"
                         android:text="@string/lbl_updateEmailDescription"
+                        android:textColor="?attr/txt_content_color"
                         android:textSize="14sp"
                         />
                 </RelativeLayout>
@@ -136,6 +136,7 @@
                         android:paddingRight="8dp"
                         android:paddingTop="4dp"
                         android:text="@string/lbl_exitSiempo"
+                        android:textColor="?attr/txt_content_title"
                         android:textSize="16sp"
                         />
 
@@ -152,6 +153,7 @@
                         android:paddingRight="8dp"
                         android:paddingTop="2dp"
                         android:text="@string/lbl_switchSiempo"
+                        android:textColor="?attr/txt_content_color"
                         android:textSize="14sp"/>
                 </RelativeLayout>
 
@@ -172,13 +174,13 @@
 
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
-
                         android:lineSpacingExtra="5sp"
                         android:paddingBottom="2dp"
                         android:paddingLeft="8dp"
                         android:paddingRight="8dp"
                         android:paddingTop="4dp"
                         android:text="@string/lbl_analytics"
+                        android:textColor="?attr/txt_content_title"
                         android:textSize="16sp"/>
 
                     <LinearLayout
@@ -202,6 +204,7 @@
                             android:paddingRight="8dp"
                             android:paddingTop="2dp"
                             android:text="@string/lbl_analytics_description"
+                            android:textColor="?attr/txt_content_color"
                             android:textSize="14sp"/>
 
                         <Switch

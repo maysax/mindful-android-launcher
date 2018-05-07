@@ -2,6 +2,7 @@ package co.siempo.phone.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.PopupMenu;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -164,6 +166,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                 });
             } else {
                 if (!TextUtils.isEmpty(item.getContactName())) {
+
                     Drawable drawable = mProvider.getRound("" + item
                             .getContactName().charAt(0), context.getResources
                             ().getColor(R.color.appland_contact_black), 24);
@@ -225,9 +228,13 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                         } else {
                             upperCaseTitle = String.valueOf(titleApp.toUpperCase().charAt(0));
                         }
+
+                        TypedValue typedValue = new TypedValue();
+                        Resources.Theme theme = context.getTheme();
+                        theme.resolveAttribute(R.attr.icon_color, typedValue, true);
+                        int color = typedValue.data;
                         Drawable drawable = mProvider.getRound(upperCaseTitle,
-                                context.getResources().getColor(R.color
-                                        .appland_contact_black), 24);
+                                color, 24);
                         holder.icon.setImageDrawable(drawable);
                     } else {
                         Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(packageName);
@@ -255,7 +262,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             MainListItemType itemType = item.getItemType();
 
             // Call item in Tools has id=13 , while as a default type has id=4
-            if ((null != itemType) && (itemType == MainListItemType.DEFAULT )) {
+            if ((null != itemType) && (itemType == MainListItemType.DEFAULT)) {
                 holder.text.setTextColor(context.getResources().getColor(R
                         .color.appland_blue_bright));
             }

@@ -87,6 +87,7 @@
                     android:layout_height="36dp"
                     android:background="@drawable/button_background_blue"
                     android:text="@string/btn_enable"
+                    android:textColor="@color/white"
                     android:textSize="14sp"/>
 
 

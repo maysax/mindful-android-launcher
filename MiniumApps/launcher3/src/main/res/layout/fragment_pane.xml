@@ -42,14 +42,15 @@
         <View
             android:id="@+id/blueLineView"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#3342A4FF"/>
+            android:layout_height="0.6dp"
+            android:background="@color/dialog_blue"/>
 
         <LinearLayout
             android:id="@+id/linPane"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1.85"
+            android:background="?attr/pane_color"
             android:orientation="vertical"
             android:visibility="visible">
 
@@ -61,17 +62,18 @@
         </LinearLayout>
 
 
-        <!--<View-->
-        <!--android:id="@+id/blueLineViewBottom"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="1dp"-->
-        <!--android:background="#3342A4FF"/>-->
+        <View
+            android:id="@+id/blueLineViewBottom"
+            android:layout_width="match_parent"
+            android:layout_height="0.6dp"
+            android:background="@color/dialog_blue"/>
 
         <RelativeLayout
             android:id="@+id/linBottomDoc"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.6"
+            android:background="?attr/bottom_doc"
             android:orientation="vertical"
             android:visibility="visible">
 
@@ -81,6 +83,7 @@
                 android:layout_height="24dp"
                 android:layout_alignParentTop="true"
                 android:layout_gravity="center"
+
                 app:ci_drawable="@drawable/indicator_active"
                 app:ci_drawable_unselected="@drawable/indicator_inactive"/>
 
@@ -88,8 +91,7 @@
                 android:id="@+id/recyclerViewBottomDoc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:background="?attr/bottom_doc"
+                android:layout_alignParentBottom="true"
                 android:clipToPadding="false"/>
         </RelativeLayout>
 
@@ -108,7 +110,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:divider="@android:color/transparent"
-                android:dividerHeight="0dp"/>
+                android:dividerHeight="4dp"/>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

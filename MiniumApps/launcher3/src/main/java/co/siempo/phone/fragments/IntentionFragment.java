@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -274,17 +275,18 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                     }
                 });
                 mPopupWindow.setOutsideTouchable(true);
+
 //                mPopupWindow.setFocusable(true);
-//                mPopupWindow.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                mPopupWindow.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 mPopupWindow.showAsDropDown(imgOverFlow, 0, (int) -imgOverFlow.getX() - 10);
-//                UIUtils.applyDim(root, 0.6f);
+                UIUtils.applyDim(root, 0.4f);
                 if (null != getActivity()) {
                     UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
                 }
                 mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-//                        UIUtils.clearDim(root);
+                        UIUtils.clearDim(root);
 
                     }
                 });

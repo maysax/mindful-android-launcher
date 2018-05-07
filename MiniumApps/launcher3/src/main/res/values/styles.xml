@@ -7,7 +7,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <!--<item name="android:colorPrimaryDark">@color/layout_bg</item>-->
         <item name="android:colorControlHighlight">@color/colorAccent</item>
-        <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowBackground">@color/background_white</item>
         <!-- enable overlapping of exiting and entering activities-->
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
@@ -16,12 +16,23 @@
         <item name="android:windowDisablePreview">true</item>
         <item name="colorControlNormal">@color/dialog_blue</item>
         <item name="icon_color">@color/black_80</item>
+        <item name="icon_color_reverse">@color/white_dark</item>
         <item name="toolbar_bg">@color/toolbar_bg</item>
         <item name="toolbar_text_color">@color/colorAccent</item>
         <item name="android:actionMenuTextColor">@color/colorAccent</item>
         <item name="bottom_doc">@drawable/bottom_dock_gradient_light</item>
         <item name="top_doc">@drawable/top_dock_gradient_light</item>
+        <item name="bottom_doc_pos">@drawable/top_dock_gradient_light_pos</item>
         <item name="top_date_color">@color/trans_white</item>
+        <item name="pane_color">@color/white_dark</item>
+        <item name="indicator_active">@color/indicator_active</item>
+        <item name="indicator_inactive">@color/indicator_inactive</item>
+        <item name="txt_content_color">@color/settings_content_black</item>
+        <item name="txt_content_title">@color/dialog_title</item>
+        <item name="pop_up_color">@color/popup_white</item>
+        <item name="theme_base_color">@color/white</item>
+        <item name="button_bg">@color/white</item>
+
     </style>
 
 
@@ -41,12 +52,22 @@
         <item name="android:windowDisablePreview">true</item>
         <item name="colorControlNormal">@color/dialog_blue</item>
         <item name="icon_color">@color/white_dark</item>
+        <item name="icon_color_reverse">@color/black_80</item>
         <item name="toolbar_bg">@color/toolbar_bg_dark</item>
         <item name="toolbar_text_color">@color/white</item>
         <item name="bottom_doc">@drawable/bottom_dock_gradient</item>
         <item name="android:actionMenuTextColor">@color/white</item>
         <item name="top_doc">@drawable/top_dock_gradient</item>
         <item name="top_date_color">@color/trans_black</item>
+        <item name="pane_color">@color/black_80</item>
+        <item name="indicator_active">@color/indicator_active_dark</item>
+        <item name="indicator_inactive">@color/indicator_inactive_dark</item>
+        <item name="txt_content_color">@color/settings_content_dark</item>
+        <item name="txt_content_title">@color/white</item>
+        <item name="pop_up_color">@color/popup</item>
+        <item name="theme_base_color">@color/black</item>
+        <item name="button_bg">@color/dialog_blue</item>
+        <item name="bottom_doc_pos">@drawable/bottom_dock_gradient</item>
     </style>
 
     <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">

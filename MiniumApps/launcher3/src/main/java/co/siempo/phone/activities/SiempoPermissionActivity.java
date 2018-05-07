@@ -255,6 +255,12 @@ public class SiempoPermissionActivity extends CoreActivity {
                 tblContact.setVisibility(View.VISIBLE);
             }
 
+            if (Build.VERSION.SDK_INT >= 23) {
+                if (permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
+                    tblDrawOverlay.setVisibility(View.VISIBLE);
+                }
+            }
+
 
         }
         if (isFromHome &&
