@@ -46,9 +46,6 @@ public class JunkfoodFlaggingAdapter extends BaseAdapter implements Filterable {
     public JunkfoodFlaggingAdapter(JunkfoodFlaggingActivity context, ArrayList<AppListInfo> mData) {
         this.context = context;
         this.mData = mData;
-        for (AppListInfo appListInfo : mData) {
-            Log.d("Rajesh", "" + appListInfo.applicationName);
-        }
         filterList = mData;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
