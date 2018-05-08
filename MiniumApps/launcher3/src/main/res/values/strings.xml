@@ -504,6 +504,7 @@
     <string name="current_background">Current background</string>
     <string name="my_images">My images</string>
     <string name="siempo_images">Siempo images</string>
+    <string name="filter_apps">Filter apps...</string>
 
 
     <string-array name="in_app_items_subscription">
