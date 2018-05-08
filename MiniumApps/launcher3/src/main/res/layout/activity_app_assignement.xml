@@ -33,4 +33,16 @@
         android:textColor="@color/black_80"
         android:textSize="@dimen/dp_20"
         android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/btnViewAllapps"
+        android:layout_width="218.4dp"
+        android:layout_height="36dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="41dp"
+        android:background="@drawable/button_background_blue"
+        android:text="@string/btn_viewall_installed"
+        android:textColor="#DEFFFFFF"
+        android:textSize="14sp" />
 </RelativeLayout>

@@ -8,16 +8,17 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import co.siempo.phone.R;
@@ -27,7 +28,6 @@ import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.NotifySearchRefresh;
 import co.siempo.phone.helper.FirebaseHelper;
-import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.Sorting;
@@ -42,11 +42,14 @@ public class AppAssignmentActivity extends CoreActivity {
     List<Integer> idList = Arrays.asList(2, 4, 6, 9, 10, 12, 18, 19, 20);
     ArrayList<String> connectedAppsList = new ArrayList<>();
     Set<String> set = new HashSet<>();
+    ArrayList<ResolveInfo> appListAll = new ArrayList<>();
+    ArrayList<ResolveInfo> mimeList = new ArrayList<>();
     private Toolbar toolbar;
     private RecyclerView recyclerView;
     private TextView txtErrorMessage;
     private ArrayList<ResolveInfo> appList = new ArrayList<>();
     private AppAssignmentAdapter appAssignmentAdapter;
+    private Button showallAppBtn;
     private long startTime = 0;
 
     @Override
@@ -88,7 +91,6 @@ public class AppAssignmentActivity extends CoreActivity {
         // Junk Apps directly from this screen
         filterList();
         initView();
-
     }
 
     @Override
@@ -114,21 +116,23 @@ public class AppAssignmentActivity extends CoreActivity {
     private void filterList() {
         appList = new ArrayList<>();
         if (mainListItem != null) {
+            List<ResolveInfo> installedPackageList = new ArrayList<>();
+            Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+            mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+            installedPackageList = getPackageManager().queryIntentActivities(mainIntent, 0);
             if (idList.contains(mainListItem.getId())) {
-                Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-                mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-                List<ResolveInfo> installedPackageList = getPackageManager().queryIntentActivities(mainIntent, 0);
-                for (Map.Entry<Integer, AppMenu> app : CoreApplication.getInstance().getToolsSettings().entrySet()) {
+                /*for (Map.Entry<Integer, AppMenu> app : CoreApplication.getInstance().getToolsSettings().entrySet()) {
                     if (app.getKey() != mainListItem.getId()) {
                         AppMenu appMenu = app.getValue();
                         if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
                             connectedAppsList.add(appMenu.getApplicationName());
                         }
                     }
-                }
+                }*/
+                mimeList = getMimeList();
                 for (ResolveInfo resolveInfo : installedPackageList) {
                     if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
-                        if (!connectedAppsList.contains(resolveInfo.activityInfo.packageName)) {
+                        if (!checkExits(resolveInfo)) {
                             appList.add(resolveInfo);
                         }
                     }
@@ -136,7 +140,41 @@ public class AppAssignmentActivity extends CoreActivity {
             } else {
                 appList = CoreApplication.getInstance().getApplicationByCategory(mainListItem.getId());
             }
+
+            appListAll = new ArrayList<>();
+          /*  for (ResolveInfo resolveInfo : installedPackageList){
+                if(!checkExits(resolveInfo) && !resolveInfo.activityInfo.packageName
+                        .equalsIgnoreCase(getPackageName())){
+                    appListAll.add(resolveInfo);
+                }
+            }*/
+            appListAll.addAll(installedPackageList);
+            appListAll = Sorting.sortAppAssignment(AppAssignmentActivity.this, appListAll);
+        } else {
+            finish();
         }
+    }
+
+    private ArrayList<ResolveInfo> getMimeList() {
+        ArrayList<ResolveInfo> mimeListLocal = new ArrayList<>();
+        for (int i = 1; i <= 20; i++) {
+            mimeListLocal.addAll(CoreApplication.getInstance().getApplicationByCategory(i));
+        }
+        return mimeListLocal;
+    }
+
+    private boolean checkExits(ResolveInfo resolveInfo) {
+        for (ResolveInfo resolveInfo1 : mimeList) {
+            Log.e("resinfo log", String.valueOf(resolveInfo));
+            if (resolveInfo != null && resolveInfo1 != null) {
+                if (resolveInfo.activityInfo.packageName.equalsIgnoreCase(resolveInfo1.activityInfo
+                        .packageName)) {
+                    Log.e("Test resinfo", " " + resolveInfo.activityInfo.packageName);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void initView() {
@@ -175,8 +213,25 @@ public class AppAssignmentActivity extends CoreActivity {
                 txtErrorMessage.setText("No " + mainListItem.getTitle() + " apps are installed.");
             }
         }
-
+        showallAppBtn = findViewById(R.id.btnViewAllapps);
+        showallAppBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showallAppBtn.setVisibility(View.GONE);
+                appAssignmentAdapter.setdata(appListAll);
+            }
+        });
     }
 
-
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        if (showallAppBtn.getVisibility() == View.GONE) {
+            showallAppBtn.setVisibility(View.VISIBLE);
+            filterList();
+            initView();
+        } else {
+            super.onBackPressed();
+        }
+    }
 }

@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -47,6 +48,12 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
         this.id = id;
         map = CoreApplication.getInstance().getToolsSettings();
         mProvider = new DrawableProvider(context);
+    }
+
+    public void setdata(ArrayList<ResolveInfo> appListAll) {
+        resolveInfoList.clear();
+        resolveInfoList.addAll(appListAll);
+        notifyDataSetChanged();
     }
 
     @Override
