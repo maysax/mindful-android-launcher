@@ -492,8 +492,8 @@ public class PaneFragment extends CoreFragment {
                     mWindow.setStatusBarColor(statusBarColorJunk);
                     linTopDoc.setElevation(20);
 
-//                    linTopDoc.setBackgroundColor(getResources().getColor(backGroundColor));
-                    linTopDoc.setBackground(null);
+                    linTopDoc.setBackgroundColor(getResources().getColor(backGroundColor));
+//                    linTopDoc.setBackground(null);
 //                    linTopDoc.setBackground(getResources().getDrawable(R
 //                            .color.transparent));
 //                    linTopDoc.setBackground(getResources().getDrawable(R
