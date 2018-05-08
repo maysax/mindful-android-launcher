@@ -1,6 +1,7 @@
 package co.siempo.phone.activities;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -9,17 +10,25 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.SpannableString;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -48,21 +57,25 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
 public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterView.OnItemClickListener {
-    Set<String> list = new HashSet<>();
+    public Set<String> list = new HashSet<>();
     Set<String> favoriteList = new HashSet<>();
     JunkfoodFlaggingAdapter junkfoodFlaggingAdapter;
-    int firstPosition;
     List<String> installedPackageList;
+    int firstPosition;
     boolean isClickOnView = true;
     private Toolbar toolbar;
     private ListView listAllApps;
     private PopupMenu popup;
-    private boolean isLoadFirstTime = true;
+    public boolean isLoadFirstTime = true;
     private List<AppListInfo> flagAppList = new ArrayList<>();
     private List<AppListInfo> unflageAppList = new ArrayList<>();
     private ArrayList<AppListInfo> bindingList = new ArrayList<>();
     private long startTime = 0;
     private boolean isFromAppMenu;
+    private CardView cardView;
+    private ImageView imgClear;
+    private EditText edtSearch;
+    private int positionPopUP;
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
@@ -94,7 +107,47 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
 //        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
 //                .colorAccent));
         listAllApps = findViewById(R.id.listAllApps);
+        cardView = findViewById(R.id.cardView);
+        imgClear = findViewById(R.id.imgClear);
+        edtSearch = findViewById(R.id.edtSearch);
         listAllApps.setOnItemClickListener(JunkfoodFlaggingActivity.this);
+        edtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (junkfoodFlaggingAdapter != null) {
+                    junkfoodFlaggingAdapter.getFilter().filter(s.toString());
+                }
+                if (s.toString().length() > 0) {
+                    imgClear.setVisibility(View.VISIBLE);
+                } else {
+                    imgClear.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        imgClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edtSearch.setText("");
+            }
+        });
+        LinearLayout layout = findViewById(R.id.layout);
+        layout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent ev) {
+                InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                in.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                return false;
+            }
+        });
     }
 
 
@@ -215,12 +268,12 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (bindingList != null && bindingList.get(position) != null) {
-            AppListInfo appListInfo = bindingList.get(position);
-            if (!appListInfo.packageName.equalsIgnoreCase("")) {
-                showPopUp(view, position, appListInfo.isFlagApp);
-            }
-        }
+//        if (bindingList != null && bindingList.get(position) != null) {
+//            AppListInfo appListInfo = bindingList.get(position);
+//            if (!appListInfo.packageName.equalsIgnoreCase("")) {
+//                showPopUp(view, position, appListInfo.isFlagApp);
+//            }
+//        }
     }
 
     /**
@@ -231,12 +284,18 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
             flagAppList = new ArrayList<>();
             unflageAppList = new ArrayList<>();
             bindingList = new ArrayList<>();
+            junkfoodFlaggingAdapter = new JunkfoodFlaggingAdapter(this, bindingList);
+            listAllApps.setAdapter(junkfoodFlaggingAdapter);
             for (String resolveInfo : installedPackageList) {
                 if (!resolveInfo.equalsIgnoreCase(getPackageName())) {
-                    if (list.contains(resolveInfo)) {
-                        flagAppList.add(new AppListInfo(resolveInfo, false, false, true));
-                    } else {
-                        unflageAppList.add(new AppListInfo(resolveInfo, false, false, false));
+                    String applicationname = CoreApplication.getInstance()
+                            .getListApplicationName().get(resolveInfo);
+                    if (!TextUtils.isEmpty(applicationname)) {
+                        if (list.contains(resolveInfo)) {
+                            flagAppList.add(new AppListInfo(resolveInfo, applicationname, false, false, true));
+                        } else {
+                            unflageAppList.add(new AppListInfo(resolveInfo, applicationname, false, false, false));
+                        }
                     }
                 }
             }
@@ -245,24 +304,23 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
             removeJunkAppsFromFavorites();
 
             if (flagAppList.size() == 0) {
-                flagAppList.add(new AppListInfo("", true, true, true));
+                flagAppList.add(new AppListInfo("", "", true, true, true));
             } else {
-                flagAppList.add(0, new AppListInfo("", true, false, true));
+                flagAppList.add(0, new AppListInfo("", "", true, false, true));
             }
             flagAppList = Sorting.sortApplication(flagAppList);
             bindingList.addAll(flagAppList);
 
             if (unflageAppList.size() == 0) {
-                unflageAppList.add(new AppListInfo("", true, true, false));
+                unflageAppList.add(new AppListInfo("", "", true, true, false));
             } else {
-                unflageAppList.add(0, new AppListInfo("", true, false, false));
+                unflageAppList.add(0, new AppListInfo("", "", true, false, false));
             }
             unflageAppList = Sorting.sortApplication(unflageAppList);
             bindingList.addAll(unflageAppList);
-            junkfoodFlaggingAdapter = new JunkfoodFlaggingAdapter(this, bindingList, list);
-            listAllApps.setAdapter(junkfoodFlaggingAdapter);
-            if (false) {
-                junkfoodFlaggingAdapter.notifyDataSetChanged();
+
+            if (junkfoodFlaggingAdapter != null) {
+                junkfoodFlaggingAdapter.setData(bindingList);
                 listAllApps.setSelection(firstPosition);
             }
 
@@ -315,10 +373,18 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
      * show pop dialog on List item click for flag/un-flag and application information.
      *
      * @param view
-     * @param position
+     * @param packagename
      * @param isFlagApp
      */
-    private void showPopUp(final View view, final int position, final boolean isFlagApp) {
+    public void showPopUp(final View view, String packagename, final boolean isFlagApp) {
+        positionPopUP = 0;
+        for (int i = 0; i < bindingList.size(); i++) {
+            if (bindingList.get(i).packageName.equalsIgnoreCase(packagename)) {
+                positionPopUP = i;
+                break;
+            }
+        }
+
         if (popup != null) {
             popup.dismiss();
         }
@@ -329,28 +395,25 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
                 if (item.getItemId() == R.id.item_Unflag) {
                     try {
                         if (isLoadFirstTime && isFlagApp) {
-                            showAlertForFirstTime(position, view);
+                            showAlertForFirstTime(positionPopUP, view);
                         } else {
                             popup.dismiss();
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-
-
                                     showEmptyRowBeforeDelete(view);
-
                                     Handler handler = new Handler();
                                     handler.postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
-                                            if (list.contains(bindingList.get(position).packageName)) {
-                                                list.remove(bindingList.get(position).packageName);
+                                            if (list.contains(bindingList.get(positionPopUP).packageName)) {
+                                                list.remove(bindingList.get(positionPopUP).packageName);
                                             } else {
-                                                list.add(bindingList.get(position).packageName);
+                                                list.add(bindingList.get(positionPopUP).packageName);
                                             }
                                             firstPosition = listAllApps.getFirstVisiblePosition();
 //                                    bindData(true);
-                                            new FilterApps(true).execute();
+                                            new FilterApps().execute();
                                             listAllApps.setEnabled(true);
                                             listAllApps.setClickable(true);
                                         }
@@ -366,7 +429,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
                     }
                 } else if (item.getItemId() == R.id.item_Info) {
                     try {
-                        PackageUtil.appSettings(JunkfoodFlaggingActivity.this, bindingList.get(position).packageName);
+                        PackageUtil.appSettings(JunkfoodFlaggingActivity.this, bindingList.get(positionPopUP).packageName);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -376,7 +439,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         });
         popup.getMenuInflater().inflate(R.menu.junkfood_popup, popup.getMenu());
         MenuItem menuItem = popup.getMenu().findItem(R.id.item_Unflag);
-        menuItem.setTitle(list.contains(bindingList.get(position).packageName) ? getString(R.string.unflagapp) : getString(R.string.flag_app));
+        menuItem.setTitle(list.contains(bindingList.get(positionPopUP).packageName) ? getString(R.string.unflagapp) : getString(R.string.flag_app));
         popup.show();
         popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
             @Override
@@ -391,21 +454,17 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         listAllApps.setClickable(false);
         TextView textView = view.findViewById(R.id
                 .txtAppName);
-
         ImageView imageView = view.findViewById(R
                 .id.imgAppIcon);
-
         ImageView imageViewChevron = view
                 .findViewById(R
                         .id.imgChevron);
-
         if (null != textView) {
             textView.setText("");
         }
         if (null != imageView) {
             imageView.setImageDrawable(null);
         }
-
         if (null != imageViewChevron) {
             imageViewChevron.setImageDrawable(null);
         }
@@ -444,11 +503,11 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
                                 }
                                 firstPosition = listAllApps.getFirstVisiblePosition();
 //                                    bindData(true);
-                                new FilterApps(true).execute();
+                                new FilterApps().execute();
                                 listAllApps.setEnabled(true);
                                 listAllApps.setClickable(true);
                             }
-                        }, 300);
+                        }, 200);
 
                     }
                 });
@@ -506,10 +565,8 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
     }
 
     class FilterApps extends AsyncTask<String, String, ArrayList<AppListInfo>> {
-        boolean isNotify;
 
-        FilterApps(boolean isNotify) {
-            this.isNotify = isNotify;
+        FilterApps() {
             listAllApps.setOnItemClickListener(null);
         }
 
@@ -526,10 +583,14 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         protected ArrayList<AppListInfo> doInBackground(String... strings) {
             for (String resolveInfo : installedPackageList) {
                 if (!resolveInfo.equalsIgnoreCase(getPackageName())) {
-                    if (list.contains(resolveInfo)) {
-                        flagAppList.add(new AppListInfo(resolveInfo, false, false, true));
-                    } else {
-                        unflageAppList.add(new AppListInfo(resolveInfo, false, false, false));
+                    String applicationname = CoreApplication.getInstance()
+                            .getListApplicationName().get(resolveInfo);
+                    if (!TextUtils.isEmpty(applicationname)) {
+                        if (list.contains(resolveInfo)) {
+                            flagAppList.add(new AppListInfo(resolveInfo, applicationname, false, false, true));
+                        } else {
+                            unflageAppList.add(new AppListInfo(resolveInfo, applicationname, false, false, false));
+                        }
                     }
                 }
             }
@@ -538,17 +599,17 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
             removeJunkAppsFromFavorites();
 
             if (flagAppList.size() == 0) {
-                flagAppList.add(new AppListInfo("", true, true, true));
+                flagAppList.add(new AppListInfo("", "", true, true, true));
             } else {
-                flagAppList.add(0, new AppListInfo("", true, false, true));
+                flagAppList.add(0, new AppListInfo("", "", true, false, true));
             }
             flagAppList = Sorting.sortApplication(flagAppList);
             bindingList.addAll(flagAppList);
 
             if (unflageAppList.size() == 0) {
-                unflageAppList.add(new AppListInfo("", true, true, false));
+                unflageAppList.add(new AppListInfo("", "", true, true, false));
             } else {
-                unflageAppList.add(0, new AppListInfo("", true, false, false));
+                unflageAppList.add(0, new AppListInfo("", "", true, false, false));
             }
             unflageAppList = Sorting.sortApplication(unflageAppList);
             bindingList.addAll(unflageAppList);
@@ -560,11 +621,11 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
             super.onPostExecute(s);
             try {
                 if (listAllApps != null) {
-                    junkfoodFlaggingAdapter = new JunkfoodFlaggingAdapter(JunkfoodFlaggingActivity.this, bindingList, list);
-                    listAllApps.setAdapter(junkfoodFlaggingAdapter);
+                    bindingList = s;
                     listAllApps.setOnItemClickListener(JunkfoodFlaggingActivity.this);
-                    if (isNotify) {
-                        junkfoodFlaggingAdapter.notifyDataSetChanged();
+                    if (junkfoodFlaggingAdapter != null) {
+                        junkfoodFlaggingAdapter.setData(bindingList);
+                        edtSearch.setText("");
                         listAllApps.setSelection(firstPosition);
                     }
                     isClickOnView = true;

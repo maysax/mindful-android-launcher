@@ -538,7 +538,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
             // If search is active -> use position from realIndexesOfSearchResults for NotesEditActivity
-            if (searchActive) {
+            if (searchActive && null != realIndexesOfSearchResults) {
                 int newPosition = realIndexesOfSearchResults.get(position);
 
                 try {

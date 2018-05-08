@@ -82,6 +82,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:visibility="gone"
                     android:id="@+id/relReduceOveruseScreen"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -137,6 +138,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:visibility="gone"
                     android:id="@+id/relReduceOveruseFlagged"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

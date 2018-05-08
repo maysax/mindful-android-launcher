@@ -132,6 +132,7 @@
     <color name="popup">#444444</color>
     <color name="popup_white">#FAFAFA</color>
     <color name="background_white">#EDEDED</color>
+    <color name="hint_white">#61000000</color>
 
 
 </resources>
