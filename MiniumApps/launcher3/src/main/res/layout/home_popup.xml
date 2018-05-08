@@ -44,6 +44,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:gravity="center"
                     android:text="@string/tempo"
+                    android:textColor="?attr/txt_content_title"
                     android:textSize="@dimen/sp_16"/>
             </LinearLayout>
 
@@ -70,6 +71,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:gravity="center"
                     android:text="@string/settings"
+                    android:textColor="?attr/txt_content_title"
                     android:textSize="@dimen/sp_16"/>
             </LinearLayout>
 
@@ -97,6 +99,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:gravity="center"
                     android:text="@string/help"
+                    android:textColor="?attr/txt_content_title"
                     android:textSize="@dimen/sp_16"/>
             </LinearLayout>
 

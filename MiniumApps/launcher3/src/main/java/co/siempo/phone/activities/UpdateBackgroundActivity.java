@@ -30,10 +30,7 @@ public class UpdateBackgroundActivity extends CoreActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_background);
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
         toolbar.setTitle(R.string.update_background);
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
-                .colorAccent));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

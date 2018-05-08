@@ -120,8 +120,8 @@
 
     <color name="section_title_bg">#9C9C9C</color>
     <color name="section_title_text">#57000000</color>
-    <color name="forground">#26E81313</color>
-    <color name="flageapp_header">#E81313</color>
+    <color name="forground">#30FF0000</color>
+    <color name="flageapp_header">#FF0000</color>
     <color name="unflageapp_header">#666666</color>
     <color name="bg_permissionscreenstatusbar">#E5E5E5</color>
     <color name="bg_permissionscreen">#F2F2F2</color>

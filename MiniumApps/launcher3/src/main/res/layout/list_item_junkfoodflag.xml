@@ -14,7 +14,7 @@
         android:id="@+id/txtHeader"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="#E81313"
+        android:background="#FF0000"
         android:gravity="center_vertical"
         android:paddingLeft="55dp"
         android:paddingRight="55dp"

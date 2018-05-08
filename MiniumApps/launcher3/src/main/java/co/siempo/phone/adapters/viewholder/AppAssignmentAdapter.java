@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,9 +76,12 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
             String packageName = item.activityInfo.packageName;
             if (PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>()).contains(packageName)) {
                 holder.btnHideApps.setVisibility(View.VISIBLE);
+                TypedValue typedValue = new TypedValue();
+                Resources.Theme theme = context.getTheme();
+                theme.resolveAttribute(R.attr.icon_color, typedValue, true);
+                int color = typedValue.data;
                 Drawable drawable = mProvider.getRound("" + item.loadLabel
-                        (context.getPackageManager()).charAt(0), R.color
-                        .app_assignment_junkfood, 30);
+                        (context.getPackageManager()).charAt(0),color, 30);
                 holder.imgIcon.setImageDrawable(drawable);
                 holder.btnHideApps.setOnClickListener(new View.OnClickListener() {
                     @Override

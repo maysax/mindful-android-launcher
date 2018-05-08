@@ -105,8 +105,9 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                                 .white), android.graphics.PorterDuff.Mode.SRC_IN);
                     } else {
 
-                        holder.imgAppIcon.setColorFilter(ContextCompat.getColor(context, R.color
-                                .black_80), android.graphics.PorterDuff.Mode.SRC_IN);
+                        holder.imgAppIcon.setColorFilter(ContextCompat.getColor
+                                (context, defaultTextColor), android.graphics.PorterDuff.Mode
+                                .SRC_IN);
                     }
                 }
             });
