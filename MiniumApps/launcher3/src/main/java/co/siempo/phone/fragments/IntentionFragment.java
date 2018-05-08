@@ -4,9 +4,11 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -170,7 +172,12 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                     if (permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
                             && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
                             && PackageUtil.isSiempoLauncher(context)) {
-                        dialogTempo = new DialogTempoSetting(getActivity());
+
+                        TypedValue typedValue = new TypedValue();
+                        Resources.Theme theme = context.getTheme();
+                        theme.resolveAttribute(R.attr.dialog_style, typedValue, true);
+                        int dialogStyle = typedValue.resourceId;
+                        dialogTempo = new DialogTempoSetting(getActivity(),dialogStyle);
                         if (dialogTempo.getWindow() != null)
                             dialogTempo.getWindow().setGravity(Gravity.TOP);
                         dialogTempo.show();
@@ -243,7 +250,12 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                             if (permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
                                     && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
                                     && PackageUtil.isSiempoLauncher(context)) {
-                                DialogTempoSetting dialogTempo = new DialogTempoSetting(getActivity());
+                                TypedValue typedValue = new TypedValue();
+                                Resources.Theme theme = context.getTheme();
+                                theme.resolveAttribute(R.attr.dialog_style, typedValue, true);
+                                int dialogStyle = typedValue.resourceId;
+                                DialogTempoSetting dialogTempo = new
+                                        DialogTempoSetting(getActivity(),dialogStyle);
                                 if (dialogTempo.getWindow() != null)
                                     dialogTempo.getWindow().setGravity(Gravity.TOP);
                                 dialogTempo.show();

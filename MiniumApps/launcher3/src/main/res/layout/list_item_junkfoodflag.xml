@@ -32,7 +32,6 @@
         android:paddingLeft="55dp"
         android:paddingRight="55dp"
         android:text="@string/tap_apps_below_to_move_them_into_this_section"
-        android:textColor="#57000000"
         android:textSize="16sp"
         android:visibility="gone"/>
 

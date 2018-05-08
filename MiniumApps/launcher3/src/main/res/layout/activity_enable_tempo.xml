@@ -110,6 +110,7 @@
                     android:layout_gravity="center_horizontal"
                     android:background="@drawable/button_bg"
                     android:lineSpacingExtra="3sp"
+                    android:textColor="@color/white"
                     android:text="@string/enable_setting_a"
                     />
 

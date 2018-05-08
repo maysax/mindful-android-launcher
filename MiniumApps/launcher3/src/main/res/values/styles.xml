@@ -36,6 +36,8 @@
         <item name="card_image_trans">@color/trans_black</item>
         <item name="card_image_trans_reverse">@color/trans_white</item>
         <item name="hint_search">@color/hint_white</item>
+        <item name="dialog_style">@style/FullScreenDialogStyle</item>
+
 
     </style>
 
@@ -48,11 +50,13 @@
         <!--<item name="android:colorPrimaryDark">@color/layout_bg</item>-->
         <item name="android:colorControlHighlight">@color/colorAccent</item>
         <item name="android:windowBackground">@color/dark_window</item>
+        <!--<item name="android:statusBarColor">@color/dark_window</item>-->
         <!-- enable overlapping of exiting and entering activities-->
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
         <item name="popupMenuStyle">@style/interrupt_popup_menu</item>
+        <item name="dialog_style">@style/FullScreenDialogStyleDark</item>
         <item name="android:windowDisablePreview">true</item>
         <item name="colorControlNormal">@color/dialog_blue</item>
         <item name="icon_color">@color/white_dark</item>
@@ -76,6 +80,8 @@
         <item name="card_image_trans">@color/trans_white</item>
         <item name="card_image_trans_reverse">@color/trans_black</item>
         <item name="hint_search">@color/dialog_blue</item>
+
+
     </style>
 
     <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">

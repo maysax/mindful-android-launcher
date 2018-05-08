@@ -97,6 +97,7 @@
                         android:layout_height="36dp"
                         android:background="@drawable/button_background_blue"
                         android:text="@string/btn_enable"
+                        android:textColor="@color/white"
                         android:textSize="14sp"/>
 
 
@@ -158,12 +159,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/on_the_next"
-                            android:layout_marginLeft="30dp"
-                            android:paddingTop="-10dp"
-                            android:layout_marginRight="30dp"
-                            android:layout_marginTop="-10dp"
                             android:layout_centerHorizontal="true"
                             android:layout_marginBottom="-10dp"
+                            android:layout_marginLeft="30dp"
+                            android:layout_marginRight="30dp"
+                            android:layout_marginTop="-10dp"
+                            android:paddingTop="-10dp"
                             android:src="@drawable/img_draw_overlay_enable"/>
                     </RelativeLayout>
 
@@ -186,6 +187,7 @@
                         android:gravity="center"
                         android:minWidth="150dp"
                         android:text="@string/btn_got"
+                        android:textColor="@color/white"
                         android:textSize="14sp"/>
 
 

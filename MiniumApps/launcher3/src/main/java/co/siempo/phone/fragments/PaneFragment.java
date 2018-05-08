@@ -147,6 +147,7 @@ public class PaneFragment extends CoreFragment {
     private View searchDoc;
     private View blueLineDividerBottom;
     private int backGroundColor;
+    private int statusBarColorJunk;
 
     public PaneFragment() {
         // Required empty public constructor
@@ -172,6 +173,8 @@ public class PaneFragment extends CoreFragment {
         Resources.Theme theme = context.getTheme();
         theme.resolveAttribute(android.R.attr.windowBackground, typedValue, true);
         backGroundColor = typedValue.resourceId;
+        theme.resolveAttribute(android.R.attr.windowBackground, typedValue, true);
+        statusBarColorJunk = typedValue.data;
         bindView();
         Log.d("Test", "P2");
         return rootView;
@@ -189,16 +192,16 @@ public class PaneFragment extends CoreFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        //Changing the status bar default value on page change from dashboard
-        // to direct Junk Food pane
-//        if (isVisibleToUser && null != mWindow && pagerPane != null && pagerPane.getCurrentItem() == 0) {
-//            mWindow.setStatusBarColor(getResources().getColor(R.color
-//                    .appland_blue_bright));
-//        } else {
-//            if (null != mWindow) {
-//                mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
-//            }
-//        }
+//        Changing the status bar default value on page change from dashboard
+//         to direct Junk Food pane
+
+        if (isVisibleToUser && null != mWindow && pagerPane != null && pagerPane.getCurrentItem() == 0) {
+            mWindow.setStatusBarColor(statusBarColorJunk);
+        } else {
+            if (null != mWindow) {
+                mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
+            }
+        }
         if (!isVisibleToUser && null != imageClear && linSearchList != null &&
                 linSearchList.getVisibility() == View.VISIBLE) {
             //Perform click in order to set it when user moves from search
@@ -254,13 +257,12 @@ public class PaneFragment extends CoreFragment {
     }
 
     private void changeColorOfStatusBar() {
-//        if (pagerPane != null && pagerPane.getCurrentItem() == 0 && isVisible
-//                () && DashboardActivity.currentIndexDashboard == 0) {
-//            mWindow.setStatusBarColor(getResources().getColor(R.color
-//                    .appland_blue_bright));
-//        } else {
-//            mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
-//        }
+        if (pagerPane != null && pagerPane.getCurrentItem() == 0 && isVisible
+                () && DashboardActivity.currentIndexDashboard == 0) {
+            mWindow.setStatusBarColor(statusBarColorJunk);
+        } else {
+            mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
+        }
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MainThread)
@@ -487,15 +489,11 @@ public class PaneFragment extends CoreFragment {
                     }
 
                     junkFoodAppPane();
-//                    mWindow.setStatusBarColor(getResources().getColor(R.color
-//                            .appland_blue_bright));
+                    mWindow.setStatusBarColor(statusBarColorJunk);
                     linTopDoc.setElevation(20);
 
-                    TypedValue typedValue = new TypedValue();
-                    if (context.getTheme().resolveAttribute(R.attr.colorPrimary,
-                            typedValue, true)) ;
-                    int color = typedValue.data;
-//                    linTopDoc.setBackgroundColor(color);
+//                    linTopDoc.setBackgroundColor(getResources().getColor(backGroundColor));
+                    linTopDoc.setBackground(null);
 //                    linTopDoc.setBackground(getResources().getDrawable(R
 //                            .color.transparent));
 //                    linTopDoc.setBackground(getResources().getDrawable(R
@@ -507,8 +505,13 @@ public class PaneFragment extends CoreFragment {
                 } else {
                     /* Tools and Favourite Pane */
                     linTopDoc.setElevation(0);
-//                    linTopDoc.setBackground(getResources().getDrawable(R
-//                            .color.transparent));
+                    TypedValue typedValue = new TypedValue();
+                    Resources.Theme theme = context.getTheme();
+                    theme.resolveAttribute(R.attr.top_doc, typedValue, true);
+                    int drawableId = typedValue.resourceId;
+                    linTopDoc.setBackgroundColor(getResources().getColor(R
+                            .color.transparent));
+                    linTopDoc.setBackground(getResources().getDrawable(drawableId));
                     txtTopDockDate.setVisibility(View.VISIBLE);
                     edtSearchToolsRounded.setVisibility(View.VISIBLE);
                     txtIntention.setVisibility(View.GONE);
@@ -516,7 +519,7 @@ public class PaneFragment extends CoreFragment {
                     searchDoc.setVisibility(View.VISIBLE);
                     junkDoc.setVisibility(View.GONE);
                     // finally change the color
-//                    mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
+                    mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
                 }
 
                 //Indicator to be set here so that when coming from another

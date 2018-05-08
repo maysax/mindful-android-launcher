@@ -46,6 +46,7 @@
         <attr name="toolbar_bg" format="color"/>
         <attr name="bottom_doc" format="reference"/>
         <attr name="bottom_doc_pos" format="reference"/>
+        <attr name="dialog_style" format="reference"/>
         <attr name="top_doc" format="reference"/>
         <attr name="top_date_color" format="color"/>
         <attr name="toolbar_text_color" format="color"/>
