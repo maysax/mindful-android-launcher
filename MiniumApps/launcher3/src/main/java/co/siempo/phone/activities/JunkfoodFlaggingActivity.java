@@ -387,6 +387,8 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
     }
 
     private void showEmptyRowBeforeDelete(View view) {
+        listAllApps.setEnabled(false);
+        listAllApps.setClickable(false);
         TextView textView = view.findViewById(R.id
                 .txtAppName);
 
@@ -407,8 +409,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         if (null != imageViewChevron) {
             imageViewChevron.setImageDrawable(null);
         }
-        listAllApps.setEnabled(false);
-        listAllApps.setClickable(false);
+
     }
 
     /**

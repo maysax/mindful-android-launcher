@@ -16,7 +16,9 @@ import com.bumptech.glide.Glide;
 import java.io.File;
 
 import co.siempo.phone.R;
+import co.siempo.phone.event.NotifyBackgroundChange;
 import co.siempo.phone.utils.PrefSiempo;
+import de.greenrobot.event.EventBus;
 
 public class UpdateBackgroundActivity extends CoreActivity {
 
@@ -42,7 +44,8 @@ public class UpdateBackgroundActivity extends CoreActivity {
         Intent imageIntent = getIntent();
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
 
-        if (imageIntent.getExtras() != null && imageIntent.hasExtra("imageUri")) ;
+        if (imageIntent.getExtras() != null && imageIntent.hasExtra("imageUri"))
+            ;
         {
             strImage = imageIntent.getExtras().getString("imageUri");
             Glide.with(this)
@@ -68,6 +71,7 @@ public class UpdateBackgroundActivity extends CoreActivity {
                 PrefSiempo.getInstance(UpdateBackgroundActivity.this).write(PrefSiempo
                         .DEFAULT_BAG, strImage);
                 setResult(Activity.RESULT_OK, new Intent());
+                EventBus.getDefault().postSticky(new NotifyBackgroundChange(true));
                 finish();
                 return false;
             }

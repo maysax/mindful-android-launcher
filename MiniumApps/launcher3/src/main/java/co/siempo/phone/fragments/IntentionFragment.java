@@ -74,6 +74,8 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         Intent myService = new Intent(getActivity(), StatusBarService.class);
         getActivity().startService(myService);
         initView(view);
+
+
         return view;
     }
 
@@ -156,6 +158,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                 }
             }
         }
+
     }
 
 
@@ -279,7 +282,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
 //                mPopupWindow.setFocusable(true);
                 mPopupWindow.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 mPopupWindow.showAsDropDown(imgOverFlow, 0, (int) -imgOverFlow.getX() - 10);
-                UIUtils.applyDim(root, 0.4f);
+                UIUtils.applyDim(root, 0.7f);
                 if (null != getActivity()) {
                     UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
                 }
@@ -302,4 +305,26 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
             imgTempo.performClick();
         }
     }
+
+//    @Subscribe(sticky = true, threadMode = ThreadMode.MainThread)
+//    public void onEvent(NotifyBackgroundChange notifyBackgroundChange) {
+//        if (notifyBackgroundChange != null && notifyBackgroundChange.isNotify()) {
+//            String filePath = PrefSiempo.getInstance(getActivity()).read(PrefSiempo
+//                    .DEFAULT_BAG, "");
+//            if (!TextUtils.isEmpty(filePath)) {
+//
+//
+//                Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+//                BitmapDrawable ob = new BitmapDrawable(getResources(), bitmap);
+//                //Code for Applying background
+//                relRootLayout.setBackground(ob);
+//
+//
+//            }
+//            EventBus.getDefault().removeStickyEvent(notifyBackgroundChange);
+//        }
+//
+//    }
+
+
 }

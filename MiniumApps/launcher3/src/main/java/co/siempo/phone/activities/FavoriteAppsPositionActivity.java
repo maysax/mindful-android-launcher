@@ -1,6 +1,9 @@
 package co.siempo.phone.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.ColorRes;
@@ -10,10 +13,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -56,12 +61,31 @@ public class FavoriteAppsPositionActivity extends CoreActivity implements OnFavo
             finish();
         }
     };
+    private LinearLayout linMain;
+    private RelativeLayout relMain;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorite_apps_positioning);
+        String filePath = PrefSiempo.getInstance(this).read(PrefSiempo
+                .DEFAULT_BAG, "");
+        linMain = findViewById(R.id.linMain);
+        relMain = findViewById(R.id.relMain);
+        if (!TextUtils.isEmpty(filePath)) {
+            Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+
+            BitmapDrawable ob = new BitmapDrawable(getResources(), bitmap);
+
+            //Code for Applying background
+            relMain.setBackground(ob);
+            linMain.setBackgroundColor(ContextCompat.getColor(this, R.color.trans_black));
+
+        } else {
+            linMain.setBackgroundColor(ContextCompat.getColor(this, R.color
+                    .transparent));
+        }
     }
 
     private void setTextColorForMenuItem(MenuItem menuItem, @ColorRes int color) {

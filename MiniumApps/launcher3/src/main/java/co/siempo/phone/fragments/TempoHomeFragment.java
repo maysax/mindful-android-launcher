@@ -16,7 +16,9 @@ import org.androidannotations.annotations.ViewById;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.ChooseBackgroundActivity;
+import co.siempo.phone.event.NotifyBackgroundChange;
 import co.siempo.phone.utils.PrefSiempo;
+import de.greenrobot.event.EventBus;
 
 @EFragment(R.layout.fragment_tempo_home)
 public class TempoHomeFragment extends CoreFragment {
@@ -110,6 +112,7 @@ public class TempoHomeFragment extends CoreFragment {
             startActivity(new Intent(context, ChooseBackgroundActivity.class));
         } else {
             PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_BAG, "");
+            EventBus.getDefault().postSticky(new NotifyBackgroundChange(true));
             switchCustomBackground.setChecked(false);
         }
     }
@@ -117,8 +120,8 @@ public class TempoHomeFragment extends CoreFragment {
     @Override
     public void onResume() {
         super.onResume();
-        switchCustomBackground.setChecked(PrefSiempo.getInstance(context).read(PrefSiempo
-                .DEFAULT_BAG, "").equalsIgnoreCase("") ? false : true);
+        switchCustomBackground.setChecked(!PrefSiempo.getInstance(context).read(PrefSiempo
+                .DEFAULT_BAG, "").equalsIgnoreCase(""));
     }
 
     @Click

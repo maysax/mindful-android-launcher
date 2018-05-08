@@ -32,6 +32,9 @@
         <item name="pop_up_color">@color/popup_white</item>
         <item name="theme_base_color">@color/white</item>
         <item name="button_bg">@color/white</item>
+        <item name="flag_header">@color/unflageapp_header</item>
+        <item name="card_image_trans">@color/trans_black</item>
+        <item name="card_image_trans_reverse">@color/trans_white</item>
 
     </style>
 
@@ -68,6 +71,9 @@
         <item name="theme_base_color">@color/black</item>
         <item name="button_bg">@color/dialog_blue</item>
         <item name="bottom_doc_pos">@drawable/bottom_dock_gradient</item>
+        <item name="flag_header">@color/section_title_bg</item>
+        <item name="card_image_trans">@color/trans_white</item>
+        <item name="card_image_trans_reverse">@color/trans_black</item>
     </style>
 
     <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">

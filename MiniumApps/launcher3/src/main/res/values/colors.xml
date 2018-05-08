@@ -118,7 +118,7 @@
     <!-- Complementary colors -->
 
 
-    <color name="section_title_bg">#666666</color>
+    <color name="section_title_bg">#9C9C9C</color>
     <color name="section_title_text">#57000000</color>
     <color name="forground">#26E81313</color>
     <color name="flageapp_header">#E81313</color>

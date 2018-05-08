@@ -146,6 +146,7 @@ public class PaneFragment extends CoreFragment {
     private View junkDoc;
     private View searchDoc;
     private View blueLineDividerBottom;
+    private int backGroundColor;
 
     public PaneFragment() {
         // Required empty public constructor
@@ -167,7 +168,10 @@ public class PaneFragment extends CoreFragment {
 
         mediator = new MainFragmentMediator(PaneFragment.this);
         mediator.loadData();
-
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(android.R.attr.windowBackground, typedValue, true);
+        backGroundColor = typedValue.resourceId;
         bindView();
         Log.d("Test", "P2");
         return rootView;
@@ -638,7 +642,8 @@ public class PaneFragment extends CoreFragment {
         linBottomDoc.setVisibility(View.GONE);
         blueLineDivider.setVisibility(View.GONE);
         blueLineDividerBottom.setVisibility(View.GONE);
-        linTopDoc.setBackgroundColor(getResources().getColor(R.color.transparent));
+
+        linTopDoc.setBackgroundColor(getResources().getColor(backGroundColor));
         searchListVisible(context);
     }
 
@@ -675,6 +680,8 @@ public class PaneFragment extends CoreFragment {
 
     public void searchListVisible(Context context) {
         linSearchList.setVisibility(View.VISIBLE);
+
+        linSearchList.setBackgroundColor(getResources().getColor(backGroundColor));
         isSearchVisable = true;
         imageClear.setVisibility(View.VISIBLE);
         if (DashboardActivity.currentIndexDashboard == 0) {

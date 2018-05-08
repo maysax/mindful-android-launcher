@@ -8,6 +8,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -25,6 +28,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.github.javiersantos.appupdater.AppUpdaterUtils;
 import com.google.firebase.database.DataSnapshot;
@@ -41,6 +46,7 @@ import co.siempo.phone.adapters.DashboardPagerAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.CheckVersionEvent;
 import co.siempo.phone.event.HomePress;
+import co.siempo.phone.event.NotifyBackgroundChange;
 import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.fragments.FavoritePaneFragment;
 import co.siempo.phone.fragments.IntentionFragment;
@@ -64,6 +70,7 @@ import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 
 public class DashboardActivity extends CoreActivity {
 
@@ -93,6 +100,8 @@ public class DashboardActivity extends CoreActivity {
     private DashboardPagerAdapter mPagerAdapter;
     private AlertDialog notificationDialog;
     private Dialog overlayDialog;
+    private RelativeLayout linMain;
+    private ImageView imgBackground;
 
     /**
      * @return True if {@link android.service.notification.NotificationListenerService} is enabled.
@@ -179,6 +188,23 @@ public class DashboardActivity extends CoreActivity {
         boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
         setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
         setContentView(R.layout.activity_dashboard);
+
+        linMain = findViewById(R.id.linMain);
+        imgBackground = findViewById(R.id.imgBackground);
+        String filePath = PrefSiempo.getInstance(this).read(PrefSiempo
+                .DEFAULT_BAG, "");
+        if (!TextUtils.isEmpty(filePath)) {
+
+
+            Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+            BitmapDrawable ob = new BitmapDrawable(getResources(), bitmap);
+            //Code for Applying background
+            imgBackground.setBackground(ob);
+
+
+        } else {
+            imgBackground.setBackground(null);
+        }
 
         swipeCount = PrefSiempo.getInstance(DashboardActivity.this).read(PrefSiempo.TOGGLE_LEFTMENU, 0);
         loadViews();
@@ -576,6 +602,28 @@ public class DashboardActivity extends CoreActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MainThread)
+    public void onEvent(NotifyBackgroundChange notifyBackgroundChange) {
+        if (notifyBackgroundChange != null && notifyBackgroundChange.isNotify()) {
+            String filePath = PrefSiempo.getInstance(this).read(PrefSiempo
+                    .DEFAULT_BAG, "");
+            if (!TextUtils.isEmpty(filePath)) {
+
+
+                Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+                BitmapDrawable ob = new BitmapDrawable(getResources(), bitmap);
+                //Code for Applying background
+                imgBackground.setBackground(ob);
+
+
+            } else {
+                imgBackground.setBackground(null);
+            }
+            EventBus.getDefault().removeStickyEvent(notifyBackgroundChange);
+        }
+
     }
 
 

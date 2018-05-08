@@ -51,6 +51,9 @@
         <attr name="toolbar_text_color" format="color"/>
         <attr name="theme_base_color" format="color"/>
         <attr name="button_bg" format="color"/>
+        <attr name="flag_header" format="color"/>
+        <attr name="card_image_trans" format="color"/>
+        <attr name="card_image_trans_reverse" format="color"/>
     </declare-styleable>
 
 
