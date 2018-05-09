@@ -58,6 +58,7 @@ import de.greenrobot.event.Subscribe;
 
 public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterView.OnItemClickListener {
     public Set<String> list = new HashSet<>();
+    public boolean isLoadFirstTime = true;
     Set<String> favoriteList = new HashSet<>();
     JunkfoodFlaggingAdapter junkfoodFlaggingAdapter;
     List<String> installedPackageList;
@@ -66,7 +67,6 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
     private Toolbar toolbar;
     private ListView listAllApps;
     private PopupMenu popup;
-    public boolean isLoadFirstTime = true;
     private List<AppListInfo> flagAppList = new ArrayList<>();
     private List<AppListInfo> unflageAppList = new ArrayList<>();
     private ArrayList<AppListInfo> bindingList = new ArrayList<>();

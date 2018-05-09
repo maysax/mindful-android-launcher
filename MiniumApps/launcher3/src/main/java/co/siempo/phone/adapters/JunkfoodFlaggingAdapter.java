@@ -206,7 +206,6 @@ public class JunkfoodFlaggingAdapter extends BaseAdapter implements Filterable {
 
     private class ItemFilter extends Filter {
 
-
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
 

@@ -236,6 +236,7 @@
     <string name="permission_proceed_text">Press Continue to proceed</string>
     <string name="btn_continue">Continue</string>
     <string name="btn_enable">Enable</string>
+    <string name="btn_viewall_installed">Show all installed apps.</string>
     <string name="btn_next">Next</string>
     <string name="btn_got">Got it</string>
     <string name="to_help_you_storage">"To help you understand your current phone habits, Siempo needs permission to store information on this device. We do not read your private files or collect information about files on your device."</string>

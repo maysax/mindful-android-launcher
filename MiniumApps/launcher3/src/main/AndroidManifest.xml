@@ -235,13 +235,15 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AppAssignmentActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <!-- <activity -->
         <!-- android:name=".fragments.PaneFragment" -->
         <!-- android:screenOrientation="portrait" /> -->
         <activity
             android:name=".activities.JunkfoodFlaggingActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".activities.FavoritesSelectionActivity"
             android:screenOrientation="portrait" />
