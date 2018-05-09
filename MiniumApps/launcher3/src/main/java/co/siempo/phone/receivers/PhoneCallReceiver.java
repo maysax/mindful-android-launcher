@@ -172,7 +172,8 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
                     Tracer.i("VolumeCheck Call Coming + user sound", sound);
                     Tracer.i("VolumeCheck Call Coming + max sound", soundMax);
                     if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL && sound == 1) {
-                        audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, soundMax, 0);
+                        int volume = PrefSiempo.getInstance(mContext).read(PrefSiempo.USER_VOLUME, audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+                        audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, volume, 0);
                         Tracer.i("VolumeCheck Call Coming Update Sound");
                     }
                 }
@@ -180,7 +181,9 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
                 Tracer.i("VolumeCheck Call Coming When call disconnected or miscall");
                 if ((tempoType == 1 || tempoType == 2)) {
                     if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-                        audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+                        int volume = PrefSiempo.getInstance(mContext).read(PrefSiempo.USER_VOLUME, audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+                        audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, volume, 0);
+//                        audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
                         Tracer.i("VolumeCheck Call Coming Update Sound");
                     }
                 }
