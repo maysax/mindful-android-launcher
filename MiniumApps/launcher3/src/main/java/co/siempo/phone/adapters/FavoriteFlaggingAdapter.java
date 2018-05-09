@@ -2,7 +2,9 @@ package co.siempo.phone.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -45,19 +47,9 @@ public class FavoriteFlaggingAdapter extends BaseAdapter implements Filterable {
         filterList = mData;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
-
-
     public int getCount() {
         return filterList.size();
     }
-
-
-    /*
-    public void setData(ArrayList<AppListInfo> bind) {
-        mData = bind;
-        filterList = bind;
-        notifyDataSetChanged();
-    }*/
 
     public AppListInfo getItem(int position) {
         return filterList.get(position);
@@ -91,12 +83,22 @@ public class FavoriteFlaggingAdapter extends BaseAdapter implements Filterable {
                 holder.txtNoAppsMessage.setVisibility(View.VISIBLE);
                 holder.linTop.setVisibility(View.GONE);
                 if (resolveInfo.isFlagApp) {
-                    holder.txtHeader.setBackgroundColor(ContextCompat.getColor(context, R.color.section_title_bg));
+                    holder.txtHeader.setBackgroundColor(ContextCompat.getColor(context, R.color.unflageapp_header));
                     holder.txtHeader.setText(context.getString(R.string.str_frequently_used_apps));
+                    int color = R.color.transparent;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        holder.txtNoAppsMessage.setForeground(new ColorDrawable(ContextCompat.getColor(context, color)));
+                        holder.txtNoAppsMessage.setText(strSearch.equalsIgnoreCase("") ? context.getString(R.string.tap_apps_below_to_move_them_into_this_section) : context.getString(R
+                                .string.no_apps));
+                    }
                 } else {
                     holder.txtHeader.setBackgroundColor(ContextCompat.getColor(context, R.color.unflageapp_header));
                     holder.txtHeader.setText(context.getString(R.string.all_other_installed_apps));
-                    holder.txtNoAppsMessage.setText(context.getString(R.string.tap_apps_above_to_move_them_into_this_section));
+                    int color = R.color.transparent;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        holder.txtNoAppsMessage.setForeground(new ColorDrawable(ContextCompat.getColor(context, color)));
+                    }
+                    holder.txtNoAppsMessage.setText(strSearch.equalsIgnoreCase("") ? context.getString(R.string.tap_apps_above_to_move_them_into_this_section) : "No apps match that input text");
                 }
             } else if (resolveInfo.isShowHeader && !resolveInfo.isShowTitle) {
                 holder.txtHeader.setVisibility(View.VISIBLE);

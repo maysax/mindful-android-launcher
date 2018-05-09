@@ -44,7 +44,6 @@
                     android:layout_marginTop="@dimen/dp_10"
                     android:gravity="center"
                     android:text="@string/would_you_like_to"
-                    android:textColor="@color/black"
                     android:textSize="18sp"
                     android:visibility="visible"/>
 
@@ -57,7 +56,6 @@
                     android:layout_marginTop="@dimen/dp_5"
                     android:lineSpacingExtra="4sp"
                     android:text="@string/make_your_home_string"
-                    android:textColor="#8A000000"
                     android:textSize="15sp"
                     android:visibility="visible"/>
 

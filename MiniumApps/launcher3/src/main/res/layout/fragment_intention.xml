@@ -1,9 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relRootLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/layout_bg">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/relRootLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+    >
 
     <RelativeLayout
         android:id="@+id/relTop"
@@ -20,11 +20,11 @@
 
             <ImageView
                 android:id="@+id/imgPullTab"
-                android:layout_width="70dp"
-                android:layout_height="60dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/app_menus_icon"
-                android:scaleType="centerInside" />
+                android:background="@drawable/ic_pull_button"
+                android:scaleType="centerInside"/>
         </LinearLayout>
 
         <LinearLayout
@@ -44,14 +44,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/dp_5"
                 android:padding="@dimen/dp_5"
-                android:src="@drawable/ic_tempo_dailog" />
+                android:src="@drawable/ic_tempo_dailog"/>
 
             <ImageView
                 android:id="@+id/imgOverFlow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/dp_5"
-                android:src="@drawable/ic_more_vert_black_24dp" />
+                android:src="@drawable/ic_more_vert_black_24dp"/>
         </LinearLayout>
     </RelativeLayout>
 
@@ -76,13 +76,13 @@
             android:maxEms="48"
             android:maxLines="2"
             android:text=""
-            android:textColor="#7F7F7F"
-            android:textSize="15sp" />
+            android:textColor="?attr/icon_color"
+            android:textSize="15sp"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:layout_marginTop="@dimen/dp_10"
-            android:background="#93BCF5" />
+            android:background="@color/dialog_blue"/>
     </LinearLayout>
 </RelativeLayout>

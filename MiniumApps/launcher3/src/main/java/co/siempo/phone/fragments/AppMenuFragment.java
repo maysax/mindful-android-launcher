@@ -108,8 +108,6 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
         toolbar.setTitle(R.string.app_menus);
-        toolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color
-                .colorAccent));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -168,26 +166,23 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
                 break;
             case R.id.relHideIconBranding:
                 if (switchHideIcon.isChecked()) {
-                    switchHideIcon.setChecked(false);
-                    PrefSiempo.getInstance(context).write(PrefSiempo.IS_ICON_BRANDING, false);
-                    CoreApplication.getInstance().setHideIconBranding(false);
+                    showDialogOnHideIconBranding();
                 } else {
                     switchHideIcon.setChecked(true);
                     PrefSiempo.getInstance(context).write(PrefSiempo.IS_ICON_BRANDING, true);
                     CoreApplication.getInstance().setHideIconBranding(true);
+                    EventBus.getDefault().postSticky(new NotifyJunkFoodView(true));
+                    EventBus.getDefault().postSticky(new NotifyFavortieView(true));
+                    EventBus.getDefault().postSticky(new NotifyToolView(true));
+                    EventBus.getDefault().postSticky(new NotifyBottomView(true));
                 }
-                EventBus.getDefault().postSticky(new NotifyJunkFoodView(true));
-                EventBus.getDefault().postSticky(new NotifyFavortieView(true));
-                EventBus.getDefault().postSticky(new NotifyToolView(true));
-                EventBus.getDefault().postSticky(new NotifyBottomView(true));
-                break;
 
+                break;
             case R.id.relChooseFlagApp:
                 Intent junkFoodFlagIntent = new Intent(context, JunkfoodFlaggingActivity.class);
                 junkFoodFlagIntent.putExtra("FromAppMenu", true);
                 startActivity(junkFoodFlagIntent);
                 break;
-
             case R.id.relReduceOveruseFlagged:
                 showDialog();
         }
@@ -273,5 +268,35 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
     public void onPause() {
         super.onPause();
         FirebaseHelper.getInstance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
+    }
+
+
+    private void showDialogOnHideIconBranding() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(getString(R.string.are_you_sure));
+        builder.setMessage(R.string.msg_hide_icon_branding);
+        builder.setPositiveButton(getString(R.string.yes_unhide), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                switchHideIcon.setChecked(false);
+                PrefSiempo.getInstance(context).write(PrefSiempo.IS_ICON_BRANDING, false);
+                CoreApplication.getInstance().setHideIconBranding(false);
+                EventBus.getDefault().postSticky(new NotifyJunkFoodView(true));
+                EventBus.getDefault().postSticky(new NotifyFavortieView(true));
+                EventBus.getDefault().postSticky(new NotifyToolView(true));
+                EventBus.getDefault().postSticky(new NotifyBottomView(true));
+            }
+        });
+        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(getActivity(), R.color.dialog_blue));
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(getActivity(), R.color.dialog_red));
     }
 }

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,7 +29,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -104,13 +104,18 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_flagging_screen);
         setSupportActionBar(toolbar);
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
-                .colorAccent));
         listAllApps = findViewById(R.id.listAllApps);
         cardView = findViewById(R.id.cardView);
         imgClear = findViewById(R.id.imgClear);
         edtSearch = findViewById(R.id.edtSearch);
+        try {
+            Typeface myTypeface = Typeface.createFromAsset(getAssets(), "fonts/robotoregular.ttf");
+            edtSearch.setTypeface(myTypeface);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         listAllApps.setOnItemClickListener(JunkfoodFlaggingActivity.this);
+        edtSearch.clearFocus();
         edtSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -139,15 +144,6 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
                 edtSearch.setText("");
             }
         });
-        LinearLayout layout = findViewById(R.id.layout);
-        layout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent ev) {
-                InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                in.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                return false;
-            }
-        });
     }
 
 
@@ -174,7 +170,6 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.app_junkfood_flagging, menu);
         MenuItem menuItem = menu.findItem(R.id.item_save);
-        setTextColorForMenuItem(menuItem, R.color.colorAccent);
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -189,7 +184,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
      * Show save dialog for saving the user filter data.
      */
     private void showSaveDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(JunkfoodFlaggingActivity.this, R.style.AlertDialogTheme);
+        AlertDialog.Builder builder = new AlertDialog.Builder(JunkfoodFlaggingActivity.this);
         builder.setTitle(getString(R.string.msg_congratulations));
         builder.setMessage(R.string.msg_flage_save_dialog);
         builder.setPositiveButton(R.string.strcontinue, new DialogInterface.OnClickListener() {
@@ -217,7 +212,8 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
      * Show save dialog for saving the user filter data.
      */
     private void showFirstTimeDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(JunkfoodFlaggingActivity.this, R.style.AlertDialogTheme);
+        AlertDialog.Builder builder = new AlertDialog.Builder
+                (JunkfoodFlaggingActivity.this);
         builder.setTitle(getString(R.string.flag_app_first_time));
         builder.setMessage(R.string.flag_first_time_install);
         builder.setPositiveButton(R.string.gotit, new DialogInterface.OnClickListener() {
@@ -267,12 +263,6 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//        if (bindingList != null && bindingList.get(position) != null) {
-//            AppListInfo appListInfo = bindingList.get(position);
-//            if (!appListInfo.packageName.equalsIgnoreCase("")) {
-//                showPopUp(view, position, appListInfo.isFlagApp);
-//            }
-//        }
     }
 
     /**
@@ -476,7 +466,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
      * @param position
      */
     private void showAlertForFirstTime(final int position, final View itemView) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(JunkfoodFlaggingActivity.this, R.style.AlertDialogTheme);
+        AlertDialog.Builder builder = new AlertDialog.Builder(JunkfoodFlaggingActivity.this);
         builder.setTitle(getString(R.string.are_you_sure));
         builder.setMessage(R.string.msg_flag_first_time);
         builder.setPositiveButton(getString(R.string.yes_unhide), new DialogInterface.OnClickListener() {
@@ -535,6 +525,9 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         favoriteList.removeAll(list);
         PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
         loadApps();
+        if(junkfoodFlaggingAdapter!=null){
+            junkfoodFlaggingAdapter.getFilter().filter(edtSearch.getText().toString());
+        }
     }
 
     @Override
@@ -561,6 +554,15 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
                 popup.dismiss();
             }
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (getCurrentFocus() != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     class FilterApps extends AsyncTask<String, String, ArrayList<AppListInfo>> {

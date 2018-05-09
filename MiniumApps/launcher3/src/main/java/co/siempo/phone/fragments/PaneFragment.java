@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -20,6 +21,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -141,6 +143,11 @@ public class PaneFragment extends CoreFragment {
     private CircleIndicator indicator;
     private Dialog overlayDialog;
     private Dialog overlayDialogPermission;
+    private View junkDoc;
+    private View searchDoc;
+    private View blueLineDividerBottom;
+    private int backGroundColor;
+    private int statusBarColorJunk;
 
     public PaneFragment() {
         // Required empty public constructor
@@ -162,7 +169,12 @@ public class PaneFragment extends CoreFragment {
 
         mediator = new MainFragmentMediator(PaneFragment.this);
         mediator.loadData();
-
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(android.R.attr.windowBackground, typedValue, true);
+        backGroundColor = typedValue.resourceId;
+        theme.resolveAttribute(android.R.attr.windowBackground, typedValue, true);
+        statusBarColorJunk = typedValue.data;
         bindView();
         Log.d("Test", "P2");
         return rootView;
@@ -180,11 +192,10 @@ public class PaneFragment extends CoreFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        //Changing the status bar default value on page change from dashboard
-        // to direct Junk Food pane
+//        Changing the status bar default value on page change from dashboard
+//         to direct Junk Food pane
         if (isVisibleToUser && null != mWindow && pagerPane != null && pagerPane.getCurrentItem() == 0) {
-            mWindow.setStatusBarColor(getResources().getColor(R.color
-                    .appland_blue_bright));
+            mWindow.setStatusBarColor(statusBarColorJunk);
         } else {
             if (null != mWindow) {
                 mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
@@ -247,8 +258,7 @@ public class PaneFragment extends CoreFragment {
     private void changeColorOfStatusBar() {
         if (pagerPane != null && pagerPane.getCurrentItem() == 0 && isVisible
                 () && DashboardActivity.currentIndexDashboard == 0) {
-            mWindow.setStatusBarColor(getResources().getColor(R.color
-                    .appland_blue_bright));
+            mWindow.setStatusBarColor(statusBarColorJunk);
         } else {
             mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
         }
@@ -270,6 +280,8 @@ public class PaneFragment extends CoreFragment {
 
     private void initView(View view) {
         linTopDoc = view.findViewById(R.id.linTopDoc);
+        junkDoc = view.findViewById(R.id.junk_doc);
+        searchDoc = view.findViewById(R.id.search_doc);
         linPane = view.findViewById(R.id.linPane);
         recyclerViewBottomDoc = rootView.findViewById(R.id.recyclerViewBottomDoc);
         edtSearchToolsRounded = view.findViewById(R.id.edtSearchTools);
@@ -280,12 +292,13 @@ public class PaneFragment extends CoreFragment {
             e.printStackTrace();
         }
         blueLineDivider = view.findViewById(R.id.blueLineView);
+        blueLineDividerBottom = view.findViewById(R.id.blueLineViewBottom);
         cardViewEdtSearch = view.findViewById(R.id.cardViewEdtSearch);
         searchLayout = view.findViewById(R.id.edtSearchListView);
         relSearchTools = view.findViewById(R.id.relSearchTools);
         txtTopDockDate = view.findViewById(R.id.txtTopDockDate);
-        txtIntentionLabelJunkPane = view.findViewById(R.id.txtIntentionLabelJunkPane);
-        txtIntention = view.findViewById(R.id.txtIntention);
+        txtIntentionLabelJunkPane = junkDoc.findViewById(R.id.txtIntentionLabelJunkPane);
+        txtIntention = junkDoc.findViewById(R.id.txtIntention);
         linBottomDoc = view.findViewById(R.id.linBottomDoc);
         linSearchList = view.findViewById(R.id.linSearchList);
         listView = view.findViewById(R.id.listView);
@@ -459,8 +472,6 @@ public class PaneFragment extends CoreFragment {
                         linPane.setVisibility(View.VISIBLE);
                     if (linBottomDoc.getVisibility() == View.GONE)
                         linBottomDoc.setVisibility(View.VISIBLE);
-                    if (blueLineDivider.getVisibility() == View.GONE)
-                        blueLineDivider.setVisibility(View.VISIBLE);
                     if (searchLayout.getVisibility() == View.VISIBLE)
                         searchLayout.setVisibility(View.GONE);
                     if (cardViewEdtSearch.getVisibility() == View.VISIBLE)
@@ -475,20 +486,30 @@ public class PaneFragment extends CoreFragment {
                     }
 
                     junkFoodAppPane();
-                    mWindow.setStatusBarColor(getResources().getColor(R.color
-                            .appland_blue_bright));
+                    mWindow.setStatusBarColor(statusBarColorJunk);
                     linTopDoc.setElevation(20);
+
+                    linTopDoc.setBackgroundColor(getResources().getColor(backGroundColor));
+
+                    searchDoc.setVisibility(View.GONE);
+                    junkDoc.setVisibility(View.VISIBLE);
 
                 } else {
                     /* Tools and Favourite Pane */
                     linTopDoc.setElevation(0);
-                    linTopDoc.setBackground(getResources().getDrawable(R
-                            .drawable.top_bar_bg));
+                    TypedValue typedValue = new TypedValue();
+                    Resources.Theme theme = context.getTheme();
+                    theme.resolveAttribute(R.attr.top_doc, typedValue, true);
+                    int drawableId = typedValue.resourceId;
+                    linTopDoc.setBackgroundColor(getResources().getColor(R
+                            .color.transparent));
+                    linTopDoc.setBackground(getResources().getDrawable(drawableId));
                     txtTopDockDate.setVisibility(View.VISIBLE);
                     edtSearchToolsRounded.setVisibility(View.VISIBLE);
                     txtIntention.setVisibility(View.GONE);
                     txtIntentionLabelJunkPane.setVisibility(View.GONE);
-
+                    searchDoc.setVisibility(View.VISIBLE);
+                    junkDoc.setVisibility(View.GONE);
                     // finally change the color
                     mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
                 }
@@ -533,8 +554,6 @@ public class PaneFragment extends CoreFragment {
     }
 
     private void junkFoodAppPane() {
-        linTopDoc.setBackgroundColor(getResources().getColor(R.color
-                .bg_junk_apps_top_dock));
         txtTopDockDate.setVisibility(View.GONE);
         searchLayout.setVisibility(View.GONE);
         edtSearchToolsRounded.setVisibility(View.GONE);
@@ -614,14 +633,26 @@ public class PaneFragment extends CoreFragment {
     public void hidePaneAndBottomView(final Context context) {
         linPane.setVisibility(View.GONE);
         linBottomDoc.setVisibility(View.GONE);
+        blueLineDivider.setVisibility(View.GONE);
+        blueLineDividerBottom.setVisibility(View.GONE);
+
+        linTopDoc.setBackgroundColor(getResources().getColor(backGroundColor));
         searchListVisible(context);
     }
 
     public void showPaneAndBottomView(final Context context) {
         linSearchList.setVisibility(View.GONE);
         linPane.setVisibility(View.VISIBLE);
+        blueLineDivider.setVisibility(View.VISIBLE);
+        blueLineDividerBottom.setVisibility(View.VISIBLE);
         linBottomDoc.setVisibility(View.VISIBLE);
         isSearchVisable = false;
+
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(R.attr.top_doc, typedValue, true);
+        int color = typedValue.resourceId;
+        linTopDoc.setBackgroundResource(color);
         FirebaseHelper.getInstance().logScreenUsageTime(FirebaseHelper.SEARCH_PANE, DashboardActivity.startTime);
         DashboardActivity.startTime = System.currentTimeMillis();
     }
@@ -642,6 +673,8 @@ public class PaneFragment extends CoreFragment {
 
     public void searchListVisible(Context context) {
         linSearchList.setVisibility(View.VISIBLE);
+
+        linSearchList.setBackgroundColor(getResources().getColor(backGroundColor));
         isSearchVisable = true;
         imageClear.setVisibility(View.VISIBLE);
         if (DashboardActivity.currentIndexDashboard == 0) {
@@ -1037,7 +1070,6 @@ public class PaneFragment extends CoreFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (router != null && searchLayout != null && searchLayout.getTxtSearchBox() != null) {
                     mediator.listItemClicked(router, position, searchLayout.getTxtSearchBox().getStrText());
-//                    imageClear.performClick();
                 }
             }
         });

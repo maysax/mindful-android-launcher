@@ -2,7 +2,6 @@ package co.siempo.phone.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
@@ -59,8 +58,6 @@ public class AlphaSettingsActivity extends CoreActivity {
         toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
         toolbar.setTitle(R.string.alpha_settings);
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
-                .colorAccent));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,11 +89,9 @@ public class AlphaSettingsActivity extends CoreActivity {
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
         txt_UserId.setText(String.format("UserId: %s", CoreApplication.getInstance().getDeviceId()));
-        if(PrefSiempo.getInstance(this).read(PrefSiempo.JUNK_RESTRICTED,false))
-        {
+        if (PrefSiempo.getInstance(this).read(PrefSiempo.JUNK_RESTRICTED, false)) {
             switch_alphaRestriction.setChecked(true);
-        }
-        else
+        } else
 
         {
             switch_alphaRestriction.setChecked(false);

@@ -90,8 +90,6 @@ public class MainListItemLoader {
             items.add(new MainListItem(TOOLS_BROWSER, context.getResources()
                     .getString(R.string.title_browser), R.drawable
                     .ic_vector_browser));
-//            items.add(new MainListItem(12, "", 0));
-
             items.add(new MainListItem(TOOLS_MUSIC, context.getResources()
                     .getString(R.string.title_music), R.drawable
                     .ic_vector_music));

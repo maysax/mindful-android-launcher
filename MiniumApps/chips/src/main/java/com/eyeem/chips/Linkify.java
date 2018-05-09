@@ -113,7 +113,7 @@ public class Linkify {
         public Entity() {
         }
 
-        ;
+
 
         public Entity(int start, int end, String id, String text, int type) {
             this.start = start;

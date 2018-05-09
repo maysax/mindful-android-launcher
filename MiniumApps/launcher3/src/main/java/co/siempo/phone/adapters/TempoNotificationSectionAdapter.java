@@ -225,7 +225,6 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
                                         PrefSiempo.getInstance(context).write
                                                 (PrefSiempo
                                                         .MESSENGER_DISABLE_COUNT, disableCount - 1);
-//                                        launcherPrefs.edit().putInt(Constants.MESSENGER_DISABLE_COUNT, disableCount - 1).apply();
                                     } else {
                                         helpfulRobot_List.add(otherAppsItems);
 
@@ -236,7 +235,6 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
                                         PrefSiempo.getInstance(context).write
                                                 (PrefSiempo
                                                         .MESSENGER_DISABLE_COUNT, disableCount - 1);
-//                                        launcherPrefs.edit().putInt(Constants.APP_DISABLE_COUNT, disableCount - 1).apply();
                                     }
 
                                     changeHeaderNotification(section, pref_headerSectionList, context);
@@ -294,7 +292,6 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
                                                                                               messengerList.add(d);
                                                                                               int disableCount = PrefSiempo.getInstance(context).read(PrefSiempo.MESSENGER_DISABLE_COUNT, 0);
                                                                                               PrefSiempo.getInstance(context).write(PrefSiempo.MESSENGER_DISABLE_COUNT, disableCount - 1);
-//                                                                                              launcherPrefs.edit().putInt(Constants.MESSENGER_DISABLE_COUNT, disableCount - 1).apply();
                                                                                           } else {
                                                                                               helpfulRobot_List.add(d);
                                                                                               int disableCount = PrefSiempo.getInstance(context).read
@@ -303,7 +300,6 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
                                                                                               PrefSiempo.getInstance(context).write
                                                                                                       (PrefSiempo
                                                                                                               .MESSENGER_DISABLE_COUNT, disableCount - 1);
-//                                                                                              launcherPrefs.edit().putInt(Constants.APP_DISABLE_COUNT, disableCount - 1).apply();
                                                                                           }
                                                                                           changeHeaderNotification(section, pref_headerSectionList, context);
                                                                                       }
@@ -373,7 +369,6 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
                                         (PrefSiempo
                                                         .MESSENGER_DISABLE_COUNT,
                                                 disableCount + 1);
-//                                launcherPrefs.edit().putInt(Constants.MESSENGER_DISABLE_COUNT, disableCount + 1).apply();
                                 changeHeaderNotification(section, pref_headerSectionList, context);
                                 return true;
                             }
@@ -426,7 +421,6 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
                                 PrefSiempo.getInstance(context).write(
                                         PrefSiempo
                                                 .APP_DISABLE_COUNT, disableCount + 1);
-//                                launcherPrefs.edit().putInt(Constants.APP_DISABLE_COUNT, disableCount + 1).apply();
                                 changeHeaderNotification(section, pref_headerSectionList, context);
                                 return true;
                             }
@@ -556,20 +550,8 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
     }
 
 
-    public void validationMessage() {
-
-    }
 
 
-    private String getAppNameFromPackage(String packageName) {
-        final PackageManager pm = context.getPackageManager();
-        ApplicationInfo ai;
-        try {
-            ai = pm.getApplicationInfo(packageName, 0);
-        } catch (final PackageManager.NameNotFoundException e) {
-            ai = null;
-        }
-        final String applicationName = (String) (ai != null ? pm.getApplicationLabel(ai) : packageName);
-        return applicationName;
-    }
+
+
 }

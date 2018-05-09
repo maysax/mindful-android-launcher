@@ -14,7 +14,7 @@
 
     <co.siempo.phone.customviews.RobotoRegularTextView
         android:id="@+id/txt_headerName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="58dp"
         android:layout_weight="1"

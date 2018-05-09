@@ -20,7 +20,7 @@
             android:paddingLeft="@dimen/dp_5"
             android:paddingRight="@dimen/dp_5"
             android:paddingTop="@dimen/dp_5"
-            android:textColor="@color/dialog_title" />
+            />
 
         <co.siempo.phone.customviews.RobotoMediumTextView
             android:id="@+id/txtDescription"
@@ -29,7 +29,7 @@
             android:maxLines="2"
             android:paddingLeft="@dimen/dp_5"
             android:paddingRight="@dimen/dp_5"
-            android:textColor="@color/dialog_title" />
+        />
 
         <co.siempo.phone.customviews.RobotoMediumTextView
             android:id="@+id/txtPrice"
@@ -37,6 +37,6 @@
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/dp_5"
             android:paddingRight="@dimen/dp_5"
-            android:textColor="@color/dialog_title" />
+             />
     </LinearLayout>
 </android.support.v7.widget.CardView>

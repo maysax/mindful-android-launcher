@@ -56,7 +56,7 @@ public class ToolSelectionActivity extends CoreActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.app_junkfood_flagging, menu);
         MenuItem menuItem = menu.findItem(R.id.item_save);
-        setTextColorForMenuItem(menuItem, R.color.colorAccent);
+//        setTextColorForMenuItem(menuItem, R.color.colorAccent);
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -139,8 +139,6 @@ public class ToolSelectionActivity extends CoreActivity {
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.select_tools);
         setSupportActionBar(toolbar);
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
-                .colorAccent));
         recyclerView = findViewById(R.id.recyclerView);
         filterListData();
         mLayoutManager = new LinearLayoutManager(this);

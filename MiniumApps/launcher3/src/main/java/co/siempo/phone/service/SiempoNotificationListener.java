@@ -982,10 +982,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
         }
         int lastParenthesiIndex = title.lastIndexOf("(");
         int lastEndParenthesisIndex = title.lastIndexOf(")");
-        if (true) {
-            return "CODE_IGNORE_ME";
-        }
-        return title;
+        return "CODE_IGNORE_ME";
     }
 
     private String removeColFromTitle(String title) {

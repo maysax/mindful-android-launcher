@@ -75,6 +75,7 @@ public class ChipsEditText extends MultilineEditText {
 //               showAutocomplete(new EditAction(textForAutocomplete, start, before, count));
 //            }
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -349,18 +350,24 @@ public class ChipsEditText extends MultilineEditText {
         intentBroadCast.putExtra(Utils.ACTION, false);
         getContext().sendBroadcast(intentBroadCast);
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getWindowToken(), 0);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(getWindowToken(), 0);
+        }
         onBubbleType("");
     }
 
     public void showKeyboard() {
         InputMethodManager inputMgr = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMgr.showSoftInput(this, InputMethodManager.SHOW_FORCED);
+        if (inputMgr != null) {
+            inputMgr.showSoftInput(this, InputMethodManager.SHOW_FORCED);
+        }
     }
 
     public void restartInput() {
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.restartInput(this);
+        if (imm != null) {
+            imm.restartInput(this);
+        }
     }
 
     public Point getInnerCursorPosition() {

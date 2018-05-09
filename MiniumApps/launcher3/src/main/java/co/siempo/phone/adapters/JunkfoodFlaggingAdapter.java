@@ -42,6 +42,7 @@ public class JunkfoodFlaggingAdapter extends BaseAdapter implements Filterable {
     private List<AppListInfo> filterList = new ArrayList<>();
     private ItemFilter mFilter = new ItemFilter();
     private PopupMenu popup;
+    String searchReference = "";
 
     public JunkfoodFlaggingAdapter(JunkfoodFlaggingActivity context, ArrayList<AppListInfo> mData) {
         this.context = context;
@@ -100,7 +101,8 @@ public class JunkfoodFlaggingAdapter extends BaseAdapter implements Filterable {
                     int color = R.color.forground;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         holder.txtNoAppsMessage.setForeground(new ColorDrawable(ContextCompat.getColor(context, color)));
-                        holder.txtNoAppsMessage.setText(context.getString(R.string.tap_apps_below_to_move_them_into_this_section));
+                        holder.txtNoAppsMessage.setText(searchReference.equalsIgnoreCase("") ? context.getString(R.string.tap_apps_below_to_move_them_into_this_section) : context.getString(R
+                                .string.no_apps));
                     }
                 } else {
                     holder.txtHeader.setBackgroundColor(ContextCompat.getColor(context, R.color.unflageapp_header));
@@ -109,7 +111,7 @@ public class JunkfoodFlaggingAdapter extends BaseAdapter implements Filterable {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         holder.txtNoAppsMessage.setForeground(new ColorDrawable(ContextCompat.getColor(context, color)));
                     }
-                    holder.txtNoAppsMessage.setText(context.getString(R.string.tap_apps_above_to_move_them_into_this_section));
+                    holder.txtNoAppsMessage.setText(searchReference.equalsIgnoreCase("") ? context.getString(R.string.tap_apps_above_to_move_them_into_this_section) : "No apps match that input text");
                 }
             } else if (resolveInfo.isShowHeader && !resolveInfo.isShowTitle) {
                 holder.txtHeader.setVisibility(View.VISIBLE);
@@ -210,6 +212,7 @@ public class JunkfoodFlaggingAdapter extends BaseAdapter implements Filterable {
         protected FilterResults performFiltering(CharSequence constraint) {
 
             String searchString = constraint.toString().toLowerCase().trim();
+            searchReference = searchString;
             FilterResults ret = new FilterResults();
 
             int count = mData.size();

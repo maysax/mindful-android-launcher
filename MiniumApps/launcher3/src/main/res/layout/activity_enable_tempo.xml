@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".activities.EnableTempoActivity">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context=".activities.EnableTempoActivity">
 
     <Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white">
+        >
 
         <co.siempo.phone.customviews.RobotoMediumTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/enable_tempo"
-            android:textColor="#99000000"
-            android:textSize="@dimen/sp_20" />
+            android:textSize="@dimen/sp_20"/>
     </Toolbar>
 
     <RelativeLayout
@@ -35,15 +34,13 @@
             <co.siempo.phone.customviews.RobotoRegularTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white"
                 android:lineSpacingExtra="2sp"
                 android:paddingBottom="10dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:paddingTop="5dp"
                 android:text="@string/tempo_lets_you_schedule_time_that_is_free_from_interruptions_it_batches_your_notifications_to_arrive_only_at_the_times_you_choose_follow_the_instructions_to_enable"
-                android:textColor="#99000000"
-                android:textSize="14sp" />
+                android:textSize="14sp"/>
         </android.support.v7.widget.CardView>
 
 
@@ -52,7 +49,6 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/relBottom"
             android:layout_below="@+id/txtMessage"
-            android:background="#EDEDEE"
             android:gravity="center">
 
             <co.siempo.phone.customviews.RobotoMediumTextView
@@ -65,8 +61,7 @@
                 android:paddingBottom="@dimen/dp_5"
                 android:paddingTop="@dimen/dp_5"
                 android:text="@string/on_the_next"
-                android:textColor="#B2000000"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
 
             <ImageView
                 android:id="@+id/imgCenter"
@@ -77,7 +72,7 @@
                 android:layout_marginBottom="@dimen/dp_10"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
-                android:background="@drawable/screenshot_notification" />
+                android:background="@drawable/screenshot_notification"/>
         </RelativeLayout>
 
         <android.support.v7.widget.CardView
@@ -92,7 +87,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:background="@color/white"
                 android:orientation="vertical"
                 android:paddingBottom="@dimen/dp_10"
                 android:paddingTop="@dimen/dp_10">
@@ -104,7 +98,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="@dimen/dp_10"
                     android:background="@drawable/progress_a"
-                    android:visibility="visible" />
+                    android:visibility="visible"/>
 
 
                 <Button
@@ -116,8 +110,9 @@
                     android:layout_gravity="center_horizontal"
                     android:background="@drawable/button_bg"
                     android:lineSpacingExtra="3sp"
+                    android:textColor="@color/white"
                     android:text="@string/enable_setting_a"
-                    android:textColor="@color/white" />
+                    />
 
             </LinearLayout>
         </android.support.v7.widget.CardView>

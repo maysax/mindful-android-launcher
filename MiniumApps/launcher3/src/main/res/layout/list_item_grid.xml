@@ -51,7 +51,7 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center|bottom"
                 android:contentDescription="@null"
-                android:visibility="gone"/>
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -71,7 +71,6 @@
                 android:gravity="center|bottom"
                 android:maxLines="1"
                 android:paddingTop="8dp"
-                android:textColor="@color/black_80"
                 android:textSize="13sp"
                 tools:text="Send as a message"/>
 

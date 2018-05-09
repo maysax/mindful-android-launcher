@@ -63,10 +63,7 @@ public class AccountSettingFragment extends CoreFragment {
 
     @AfterViews
     void afterViews() {
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
         toolbar.setTitle(R.string.string_account_service_title);
-        toolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color
-                .colorAccent));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,14 +92,12 @@ public class AccountSettingFragment extends CoreFragment {
                 if (isChecked) {
                     PrefSiempo.getInstance(context).write(PrefSiempo
                             .IS_FIREBASE_ANALYTICS_ENABLE, true);
-//                    droidPrefs_.isFireBaseAnalyticsEnable().put(true);
                     FirebaseHelper.getInstance().getFirebaseAnalytics().setAnalyticsCollectionEnabled(true);
                 } else {
 
                     FirebaseHelper.getInstance().getFirebaseAnalytics().setAnalyticsCollectionEnabled(false);
                     PrefSiempo.getInstance(context).write(PrefSiempo
                             .IS_FIREBASE_ANALYTICS_ENABLE, false);
-//                    droidPrefs_.isFireBaseAnalyticsEnable().put(false);
                 }
             }
         });
@@ -140,7 +135,7 @@ public class AccountSettingFragment extends CoreFragment {
      * This dialog used when user press exit siempo service.
      */
     private void showAlertForFirstTime() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogThemeChangeLauncher);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getString(R.string.exiting_siempo));
         builder.setMessage(R.string.exiting_siempo_msg);
         builder.setPositiveButton(getString(R.string.exit), new DialogInterface.OnClickListener() {

@@ -71,7 +71,7 @@ public final class BackgroundItemAdapter extends BaseAdapter {
             viewHolder.imageText.setText(item.name);
         }
         Glide.with(context)
-                .load(Uri.fromFile(new File(item.getDrawableId().get(0).toString())))
+                .load(Uri.fromFile(new File(item.getDrawableId().get(0))))
                 .into(viewHolder.mImage);
         return convertView;
     }

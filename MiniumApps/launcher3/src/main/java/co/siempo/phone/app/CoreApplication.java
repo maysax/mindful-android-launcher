@@ -243,7 +243,6 @@ public abstract class CoreApplication extends MultiDexApplication {
             map.put(TOOLS_WEATHER, new AppMenu(true, false, CoreApplication.getInstance
                     ().getApplicationByCategory(4).size() == 1 ?
                     CoreApplication.getInstance().getApplicationByCategory(4).get(0).activityInfo.packageName : ""));
-//            map.put(5, new AppMenu(true, false, getString(R.string.notes)));
             map.put(TOOLS_NOTES, new AppMenu(true, false, CoreApplication.getInstance
                     ().getApplicationByCategory(5).size() == 1 ?
                     getString(R.string.notes) : ""));
