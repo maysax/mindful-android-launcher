@@ -28,7 +28,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -135,17 +134,6 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
             @Override
             public void onClick(View v) {
                 edtSearch.setText("");
-            }
-        });
-        LinearLayout layout = findViewById(R.id.layout);
-        layout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent ev) {
-                InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (in != null) {
-                    in.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                }
-                return false;
             }
         });
     }
@@ -555,6 +543,15 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
                 popup.dismiss();
             }
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (getCurrentFocus() != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     class FilterApps extends AsyncTask<String, String, ArrayList<AppListInfo>> {
