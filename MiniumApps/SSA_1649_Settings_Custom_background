@@ -7,7 +7,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 +++ MiniumApps/launcher3/src/main/java/co/siempo/phone/fragments/TempoHomeFragment.java	(revision )
 @@ -1,6 +1,7 @@
  package co.siempo.phone.fragments;
- 
+
  import android.app.FragmentManager;
 +import android.content.Intent;
  import android.support.v4.content.ContextCompat;
@@ -15,26 +15,26 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
  import android.view.View;
 @@ -14,6 +15,7 @@
  import org.androidannotations.annotations.ViewById;
- 
+
  import co.siempo.phone.R;
 +import co.siempo.phone.activities.ChooseBackgroundActivity;
  import co.siempo.phone.utils.PrefSiempo;
- 
+
  @EFragment(R.layout.fragment_tempo_home)
 @@ -70,13 +72,13 @@
- 
+
      @Click
      void relAllowSpecificApps() {
 -
          switchDisableIntentionsControls.performClick();
      }
- 
+
      @Click
      void relCustomBackground() {
          switchCustomBackground.performClick();
 +        startActivity(new Intent(context, ChooseBackgroundActivity.class));
      }
- 
+
      @Click
 Index: MiniumApps/launcher3/src/main/res/layout/activity_choose_background.xml
 IDEA additional info:
@@ -89,7 +89,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 -          package="co.siempo.phone">
 +    xmlns:tools="http://schemas.android.com/tools"
 +    package="co.siempo.phone">
- 
+
      <supports-screens
          android:anyDensity="true"
          android:largeScreens="true"
@@ -97,7 +97,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
          android:smallScreens="true"
 -        android:xlargeScreens="true"/>
 +        android:xlargeScreens="true" />
- 
+
 -    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
 -    <uses-permission android:name="android.permission.PREVENT_POWER_KEY"/>
 -    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
@@ -155,7 +155,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 +    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 +    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 +    <uses-permission android:name="com.android.vending.BILLING" />
- 
+
      <uses-feature
          android:name="android.hardware.camera"
 -        android:required="false"/>
@@ -164,14 +164,14 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
          android:name="android.hardware.camera.autofocus"
 -        android:required="false"/>
 +        android:required="false" />
- 
+
 -    <uses-permission android:name="android.permission.FLASHLIGHT"/>
 +    <uses-permission android:name="android.permission.FLASHLIGHT" />
      <uses-permission
          android:name="android.permission.WRITE_SETTINGS"
 -        tools:ignore="ProtectedPermissions"/>
 +        tools:ignore="ProtectedPermissions" />
- 
+
      <!-- TODO: using it for flow, we might not need this -->
      <uses-permission
          android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
@@ -179,7 +179,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 -    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
 +        tools:ignore="ProtectedPermissions" />
 +    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
- 
+
      <uses-feature
          android:name="android.hardware.nfc"
 -        android:required="false"/>
@@ -188,7 +188,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
          android:name="android.hardware.telephony"
 -        android:required="false"/>
 +        android:required="false" />
- 
+
      <application
          android:name=".app.Launcher3App_"
 @@ -78,17 +78,17 @@
@@ -197,7 +197,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
              android:name="io.fabric.ApiKey"
 -            android:value="6a700e064d3ba9dbf81d871dd3c0b3081ab158f7"/>
 +            android:value="6a700e064d3ba9dbf81d871dd3c0b3081ab158f7" />
- 
+
          <activity
              android:name=".launcher.FakeLauncherActivity"
              android:enabled="false"
@@ -205,14 +205,14 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
              <intent-filter>
 -                <action android:name="android.intent.action.MAIN"/>
 +                <action android:name="android.intent.action.MAIN" />
- 
+
 -                <category android:name="android.intent.category.HOME"/>
 -                <category android:name="android.intent.category.DEFAULT"/>
 +                <category android:name="android.intent.category.HOME" />
 +                <category android:name="android.intent.category.DEFAULT" />
              </intent-filter>
          </activity>
- 
+
 @@ -97,7 +97,7 @@
              android:label="@string/app_name"
              android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
@@ -221,7 +221,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 +                <action android:name="android.service.notification.NotificationListenerService" />
              </intent-filter>
          </service>
- 
+
 @@ -105,9 +105,9 @@
              android:name=".receivers.CallReceiver"
              android:enabled="true">
@@ -245,7 +245,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 +                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
              </intent-filter>
          </receiver>
- 
+
          <activity
              android:name=".ui.UpdateActivity_"
 -            android:screenOrientation="portrait"/>
@@ -254,13 +254,13 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
              android:name=".activities.AlphaSettingsActivity_"
 -            android:screenOrientation="portrait"/>
 +            android:screenOrientation="portrait" />
- 
+
          <service
              android:name=".service.StatusBarService"
              android:enabled="true"
 -            android:exported="false"/>
 +            android:exported="false" />
- 
+
          <activity
              android:name=".activities.SuppressNotificationActivity"
 -            android:screenOrientation="portrait"/>
@@ -285,7 +285,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
              android:name=".activities.IntentionEditActivity"
 -            android:windowSoftInputMode="stateAlwaysVisible"/>
 +            android:windowSoftInputMode="stateAlwaysVisible" />
- 
+
          <receiver android:name=".service.AlarmBroadcast">
              <intent-filter>
 -                <action android:name="co.siempo.phone.ACTION_ALARM"/>
@@ -294,7 +294,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 +                <action android:name="android.intent.action.BOOT_COMPLETED" />
              </intent-filter>
          </receiver>
- 
+
 -        <service android:name=".service.AlarmService"/>
 +        <service android:name=".service.AlarmService" />
          <service
@@ -305,21 +305,21 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 -            >
 -        </service>
 +            android:label="@string/app_name"></service>
- 
+
          <receiver android:name=".receivers.BootReceiver">
              <intent-filter>
 -                <action android:name="android.intent.action.BOOT_COMPLETED"/>
 +                <action android:name="android.intent.action.BOOT_COMPLETED" />
              </intent-filter>
          </receiver>
- 
+
 @@ -189,13 +187,13 @@
              android:theme="@style/SiempoAppTheme"
              android:windowSoftInputMode="adjustPan|adjustResize">
              <intent-filter>
 -                <action android:name="android.intent.action.MAIN"/>
 +                <action android:name="android.intent.action.MAIN" />
- 
+
 -                <category android:name="android.intent.category.HOME"/>
 -                <category android:name="android.intent.category.DEFAULT"/>
 -                <category android:name="android.intent.category.LAUNCHER"/>
@@ -349,7 +349,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 -                android:value=".activities.NotesEditActivity"/>
 +                android:value=".activities.NotesEditActivity" />
          </activity>
- 
+
          <receiver
 @@ -222,52 +220,53 @@
              android:exported="true"
@@ -363,7 +363,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 +                <action android:name="minium.co.notes.EDIT_NOTES" />
              </intent-filter>
          </receiver>
- 
+
          <activity
              android:name="com.evernote.client.android.EvernoteOAuthActivity"
 -            android:screenOrientation="portrait"/>
@@ -417,7 +417,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 +            android:screenOrientation="portrait" />
 +        <activity android:name=".activities.ChooseBackgroundActivity"></activity>
      </application>
- 
+
 -</manifest>
 \ No newline at end of file
 +</manifest>
@@ -546,12 +546,12 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 @@ -102,7 +102,7 @@
          <item>3</item>
      </string-array>
- 
+
 -    <string-array name="multi_select_list_preference_default_value" tools:ignore="UnusedResources"/>
 +    <string-array name="multi_select_list_preference_default_value" tools:ignore="UnusedResources" />
- 
+
      <string name="pref_title_system_sync_settings">System sync settings</string>
- 
+
 @@ -319,6 +319,7 @@
      <string name="dark_theme_text">"Backgrounds will be dark while icons &amp; text will be light."</string>
      <string name="homescreen">Customize appearance</string>
@@ -571,8 +571,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
          // set initial configurations here
          configTracer();
          configCalligraphy();
--        configFabric();
-+        // configFabric();
+         configFabric();
          configIconify();
          configureLifecycle();
          configureNetworking();
