@@ -269,6 +269,7 @@ public class AppAssignmentActivity extends CoreActivity {
             }
         });
     }
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (getCurrentFocus() != null) {
