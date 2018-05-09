@@ -5,15 +5,21 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.SpannableString;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
@@ -42,7 +48,7 @@ import de.greenrobot.event.Subscribe;
 
 public class FavoritesSelectionActivity extends CoreActivity implements AdapterView.OnItemClickListener {
 
-    Set<String> list = new HashSet<>();
+    public Set<String> list = new HashSet<>();
     //Junk list removal will be needed here as we need to remove the
     //junk-flagged app from other app list which cn be marked as favorite
     Set<String> junkFoodList = new HashSet<>();
@@ -58,6 +64,9 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
     private ArrayList<AppListInfo> bindingList = new ArrayList<>();
     private long startTime = 0;
     private boolean isClickOnView;
+    private CardView cardView;
+    private ImageView imgClear;
+    private EditText edtSearch;
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
@@ -95,6 +104,39 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
                 .colorAccent));
         listAllApps = findViewById(R.id.lst_OtherApps);
+
+        cardView = findViewById(R.id.cardView);
+        imgClear = findViewById(R.id.imgClear);
+        edtSearch = findViewById(R.id.edtSearch);
+        listAllApps.setOnItemClickListener(FavoritesSelectionActivity.this);
+        edtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (junkfoodFlaggingAdapter != null) {
+                    junkfoodFlaggingAdapter.getFilter().filter(s.toString());
+                }
+                if (s.toString().length() > 0) {
+                    imgClear.setVisibility(View.VISIBLE);
+                } else {
+                    imgClear.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        imgClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edtSearch.setText("");
+            }
+        });
     }
 
 
@@ -154,12 +196,18 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
                 if (!resolveInfo.equalsIgnoreCase(getPackageName())) {
                     boolean isEnable = UIUtils.isAppInstalledAndEnabled(this, resolveInfo);
                     if (isEnable) {
-                        if (list.contains(resolveInfo)) {
-                            favoriteList.add(new AppListInfo(resolveInfo, false, false, true));
-                        } else {
-                            if (null != junkFoodList && !junkFoodList
-                                    .contains(resolveInfo)) {
-                                unfavoriteList.add(new AppListInfo(resolveInfo, false, false, false));
+                        String applicationname = CoreApplication.getInstance()
+                                .getListApplicationName().get(resolveInfo);
+                        if (!TextUtils.isEmpty(applicationname)) {
+                            if (list.contains(resolveInfo)) {
+                                favoriteList.add(new AppListInfo(resolveInfo, applicationname,
+                                        false, false, true));
+                            } else {
+                                if (null != junkFoodList && !junkFoodList
+                                        .contains(resolveInfo)) {
+                                    unfavoriteList.add(new AppListInfo(resolveInfo,
+                                            applicationname, false, false, false));
+                                }
                             }
                         }
                     }
@@ -167,21 +215,21 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
             }
             setToolBarText(favoriteList.size());
             if (favoriteList.size() == 0) {
-                favoriteList.add(new AppListInfo("", true, true, true));
+                favoriteList.add(new AppListInfo("", "", true, true, true));
             } else {
-                favoriteList.add(0, new AppListInfo("", true, false, true));
+                favoriteList.add(0, new AppListInfo("", "", true, false, true));
             }
             favoriteList = Sorting.sortApplication(favoriteList);
             bindingList.addAll(favoriteList);
 
             if (unfavoriteList.size() == 0) {
-                unfavoriteList.add(new AppListInfo("", true, true, false));
+                unfavoriteList.add(new AppListInfo("", "", true, true, false));
             } else {
-                unfavoriteList.add(0, new AppListInfo("", true, false, false));
+                unfavoriteList.add(0, new AppListInfo("", "", true, false, false));
             }
             unfavoriteList = Sorting.sortApplication(unfavoriteList);
             bindingList.addAll(unfavoriteList);
-            junkfoodFlaggingAdapter = new FavoriteFlaggingAdapter(this, bindingList, list);
+            junkfoodFlaggingAdapter = new FavoriteFlaggingAdapter(this, bindingList);
             listAllApps.setAdapter(junkfoodFlaggingAdapter);
             listAllApps.setOnItemClickListener(this);
             if (isNotify) {
@@ -350,12 +398,20 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
                     if (!resolveInfo.equalsIgnoreCase(getPackageName())) {
                         boolean isEnable = UIUtils.isAppInstalledAndEnabled(FavoritesSelectionActivity.this, resolveInfo);
                         if (isEnable) {
-                            if (list.contains(resolveInfo)) {
-                                favoriteList.add(new AppListInfo(resolveInfo, false, false, true));
-                            } else {
-                                if (null != junkFoodList && !junkFoodList
-                                        .contains(resolveInfo)) {
-                                    unfavoriteList.add(new AppListInfo(resolveInfo, false, false, false));
+                            String applicationname = CoreApplication.getInstance()
+                                    .getListApplicationName().get(resolveInfo);
+                            if (!TextUtils.isEmpty(applicationname)) {
+                                if (list.contains(resolveInfo)) {
+                                    favoriteList.add(new AppListInfo(resolveInfo, applicationname,
+                                            false, false,
+                                            true));
+                                } else {
+                                    if (null != junkFoodList && !junkFoodList
+                                            .contains(resolveInfo)) {
+                                        unfavoriteList.add(new AppListInfo(resolveInfo,
+                                                applicationname, false,
+                                                false, false));
+                                    }
                                 }
                             }
                         }
@@ -364,17 +420,17 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
                 size = favoriteList.size();
 
                 if (favoriteList.size() == 0) {
-                    favoriteList.add(new AppListInfo("", true, true, true));
+                    favoriteList.add(new AppListInfo("", "", true, true, true));
                 } else {
-                    favoriteList.add(0, new AppListInfo("", true, false, true));
+                    favoriteList.add(0, new AppListInfo("", "", true, false, true));
                 }
                 favoriteList = Sorting.sortApplication(favoriteList);
                 bindingList.addAll(favoriteList);
 
                 if (unfavoriteList.size() == 0) {
-                    unfavoriteList.add(new AppListInfo("", true, true, false));
+                    unfavoriteList.add(new AppListInfo("", "", true, true, false));
                 } else {
-                    unfavoriteList.add(0, new AppListInfo("", true, false, false));
+                    unfavoriteList.add(0, new AppListInfo("", "", true, false, false));
                 }
                 unfavoriteList = Sorting.sortApplication(unfavoriteList);
                 bindingList.addAll(unfavoriteList);
@@ -393,11 +449,12 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
 
                 if (toolbar != null) {
                     setToolBarText(size);
-                    junkfoodFlaggingAdapter = new FavoriteFlaggingAdapter(FavoritesSelectionActivity.this, bindingList, list);
+                    junkfoodFlaggingAdapter = new FavoriteFlaggingAdapter(FavoritesSelectionActivity.this, bindingList);
                     listAllApps.setAdapter(junkfoodFlaggingAdapter);
                     listAllApps.setOnItemClickListener(FavoritesSelectionActivity.this);
                     if (isNotify) {
                         junkfoodFlaggingAdapter.notifyDataSetChanged();
+
                         listAllApps.setSelection(firstPosition);
                     }
                 }
