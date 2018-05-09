@@ -97,6 +97,7 @@ public class PrefSiempo {
     public static String USER_SEEN_EMAIL_REQUEST = "user_seen_email_request";
     public static String APPLAND_TOUR_SEEN = "appland_tour_seen";
     public static String JUNK_RESTRICTED = "junk_restricted";
+    public static String USER_VOLUME = "user_volume";
 
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
