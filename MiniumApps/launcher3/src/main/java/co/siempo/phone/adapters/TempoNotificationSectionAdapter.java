@@ -550,8 +550,4 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
     }
 
 
-
-
-
-
 }

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context="co.siempo.phone.activities.ChooseBackgroundActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="co.siempo.phone.activities.ChooseBackgroundActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/toolbar_style"
         app:navigationIcon="@drawable/ic_arrow_back_blue_24dp"
-        app:titleTextColor="?attr/toolbar_text_color"/>
+        app:titleTextColor="?attr/toolbar_text_color" />
 
     <GridView
         android:id="@+id/ImageGridview"
@@ -25,13 +25,13 @@
         android:horizontalSpacing="4dp"
         android:numColumns="2"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="4dp"/>
+        android:verticalSpacing="4dp" />
 
     <ProgressBar
         android:id="@+id/loading_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </RelativeLayout>

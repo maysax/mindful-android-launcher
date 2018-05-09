@@ -3,8 +3,7 @@
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 xmlns:tool="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-    >
+    android:layout_height="wrap_content">
 
 
     <co.siempo.phone.customviews.RobotoCondensedTextView

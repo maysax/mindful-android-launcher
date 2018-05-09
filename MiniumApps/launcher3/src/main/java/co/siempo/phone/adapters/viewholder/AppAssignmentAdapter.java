@@ -131,7 +131,7 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
             public void onClick(View v) {
                 if (holder.btnHideApps.getVisibility() != View.VISIBLE) {
                     HashMap<Integer, AppMenu> map = CoreApplication.getInstance().getToolsSettings();
-                    boolean isSameApp=false;
+                    boolean isSameApp = false;
                     if (id == 5 && item == null) {
                         if (map.get(id).getApplicationName().equalsIgnoreCase("Notes")) {
                             isSameApp = true;

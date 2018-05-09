@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/activity_pause"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              tools:ignore="UnusedIds">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_pause"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:ignore="UnusedIds">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/toolbar_style"
         app:navigationIcon="@drawable/ic_arrow_back_blue_24dp"
-        app:titleTextColor="?attr/toolbar_text_color"/>
+        app:titleTextColor="?attr/toolbar_text_color" />
 
 
     <LinearLayout
@@ -34,7 +34,7 @@
                 android:layout_marginLeft="50dp"
                 android:text="@string/faq"
                 android:textColor="?attr/txt_content_title"
-                android:textSize="@dimen/text.size.large"/>
+                android:textSize="@dimen/text.size.large" />
         </RelativeLayout>
 
 
@@ -53,7 +53,7 @@
                 android:layout_marginLeft="50dp"
                 android:text="@string/privacy_policyy"
                 android:textColor="?attr/txt_content_title"
-                android:textSize="@dimen/text.size.large"/>
+                android:textSize="@dimen/text.size.large" />
         </RelativeLayout>
 
 
@@ -71,7 +71,7 @@
                 android:layout_marginLeft="50dp"
                 android:text="@string/terms_services"
                 android:textColor="?attr/txt_content_title"
-                android:textSize="@dimen/text.size.large"/>
+                android:textSize="@dimen/text.size.large" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -88,7 +88,7 @@
                 android:layout_marginLeft="50dp"
                 android:text="@string/feedback"
                 android:textColor="?attr/txt_content_title"
-                android:textSize="@dimen/text.size.large"/>
+                android:textSize="@dimen/text.size.large" />
         </RelativeLayout>
 
 
@@ -114,7 +114,7 @@
                     android:layout_marginLeft="50dp"
                     android:text="@string/version"
                     android:textColor="?attr/txt_content_title"
-                    android:textSize="@dimen/text.size.large"/>
+                    android:textSize="@dimen/text.size.large" />
 
                 <co.siempo.phone.customviews.RobotoRegularTextView
                     android:id="@+id/txtVersionValue"
@@ -124,7 +124,7 @@
                     android:layout_marginTop="5dp"
                     android:text=""
                     android:textColor="?attr/txt_content_color"
-                    android:textSize="@dimen/text.size.regular"/>
+                    android:textSize="@dimen/text.size.regular" />
             </LinearLayout>
         </RelativeLayout>
 

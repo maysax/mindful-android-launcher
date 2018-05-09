@@ -77,7 +77,7 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(null !=getWindow()) {
+        if (null != getWindow()) {
             getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
             setContentView(R.layout.activity_tempo);
             initView();

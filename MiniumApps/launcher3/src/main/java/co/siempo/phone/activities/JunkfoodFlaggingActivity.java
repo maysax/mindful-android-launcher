@@ -525,7 +525,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         favoriteList.removeAll(list);
         PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
         loadApps();
-        if(junkfoodFlaggingAdapter!=null){
+        if (junkfoodFlaggingAdapter != null) {
             junkfoodFlaggingAdapter.getFilter().filter(edtSearch.getText().toString());
         }
     }

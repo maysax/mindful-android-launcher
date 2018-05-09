@@ -6,19 +6,19 @@
 
     <Preference
         android:key="@string/wifi_key"
-        android:title="@string/pref_wifi_title"/>
+        android:title="@string/pref_wifi_title" />
 
     <Preference
         android:key="@string/bluetooth_key"
-        android:title="@string/pref_bluetooth"/>
+        android:title="@string/pref_bluetooth" />
 
     <Preference
         android:key="@string/data_usage_key"
-        android:title="@string/pref_data_usage"/>
+        android:title="@string/pref_data_usage" />
 
     <Preference
         android:key="@string/wireless_key"
-        android:title="@string/wireless_and_network"/>
+        android:title="@string/wireless_and_network" />
 
 
 </PreferenceScreen>

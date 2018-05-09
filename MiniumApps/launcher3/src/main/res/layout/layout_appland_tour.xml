@@ -114,8 +114,8 @@
                     android:layout_centerVertical="true"
                     android:background="@drawable/button_next_bg"
                     android:elevation="@dimen/dp_10"
-                    android:textColor="@color/white"
                     android:text="@string/btn_next"
+                    android:textColor="@color/white"
                     android:textSize="14sp"/>
 
                 <co.siempo.phone.customviews.RobotoRegularTextView

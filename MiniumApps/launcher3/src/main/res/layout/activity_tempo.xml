@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:fab="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/pauseContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                tools:ignore="UnusedIds">
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pauseContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:ignore="UnusedIds">
 
     <RelativeLayout
         android:id="@+id/top"
@@ -41,7 +41,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:text="@string/deliver_notifications"
-                            android:textSize="18sp"/>
+                            android:textSize="18sp" />
                     </Toolbar>
 
                     <RelativeLayout
@@ -58,7 +58,7 @@
                             android:id="@+id/radioIndividual"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:checked="false"/>
+                            android:checked="false" />
 
                         <co.siempo.phone.customviews.RobotoMediumTextView
                             android:layout_width="match_parent"
@@ -69,7 +69,7 @@
                             android:layout_toRightOf="@+id/radioIndividual"
                             android:gravity="center_vertical"
                             android:text="@string/individually_as_soon_as_they_arrive"
-                            android:textSize="16sp"/>
+                            android:textSize="16sp" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -94,7 +94,7 @@
                                 android:id="@+id/radioBatched"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:checked="false"/>
+                                android:checked="false" />
 
                             <co.siempo.phone.customviews.RobotoMediumTextView
                                 android:id="@+id/txtBatch"
@@ -103,7 +103,7 @@
                                 android:layout_marginLeft="@dimen/dp_10"
                                 android:gravity="center_vertical"
                                 android:text="@string/batched_every_15_minutes"
-                                android:textSize="16sp"/>
+                                android:textSize="16sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -124,7 +124,7 @@
                                 android:paddingLeft="@dimen/dp_10"
                                 android:paddingRight="@dimen/dp_10"
                                 android:paddingTop="@dimen/dp_5"
-                                android:src="@drawable/ic_remove_black_24dp"/>
+                                android:src="@drawable/ic_remove_black_24dp" />
 
                             <ImageView
                                 android:id="@+id/imgPlus"
@@ -136,7 +136,7 @@
                                 android:paddingLeft="@dimen/dp_10"
                                 android:paddingRight="@dimen/dp_10"
                                 android:paddingTop="@dimen/dp_5"
-                                android:src="@drawable/ic_add_black_24dp"/>
+                                android:src="@drawable/ic_add_black_24dp" />
                         </LinearLayout>
                     </RelativeLayout>
 
@@ -155,7 +155,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:checked="false"/>
+                            android:checked="false" />
 
                         <co.siempo.phone.customviews.RobotoMediumTextView
                             android:id="@+id/txtOnly"
@@ -166,7 +166,7 @@
                             android:gravity="center_vertical"
                             android:paddingLeft="10dp"
                             android:text="@string/only_at"
-                            android:textSize="16sp"/>
+                            android:textSize="16sp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -189,14 +189,14 @@
                                     android:gravity="center_vertical"
                                     android:textColor="#4B7EF4"
                                     android:textSize="15sp"
-                                    tools:text="09:15am"/>
+                                    tools:text="09:15am" />
 
                                 <co.siempo.phone.customviews.RobotoMediumTextView
                                     android:id="@+id/txtSign1"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text=", "
-                                    android:textColor="#202020"/>
+                                    android:textColor="#202020" />
 
                                 <co.siempo.phone.customviews.RobotoMediumTextView
                                     android:id="@+id/txtOnlyAtTime2"
@@ -205,14 +205,13 @@
                                     android:gravity="center_vertical"
                                     android:textColor="#4B7EF4"
                                     android:textSize="15sp"
-                                    tools:text="05:32pm"/>
+                                    tools:text="05:32pm" />
 
                                 <co.siempo.phone.customviews.RobotoMediumTextView
                                     android:id="@+id/txtSign2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text=" &amp; "
-                                    />
+                                    android:text=" &amp; " />
 
                                 <co.siempo.phone.customviews.RobotoMediumTextView
                                     android:id="@+id/txtOnlyAtTime3"
@@ -221,7 +220,7 @@
                                     android:gravity="center_vertical"
                                     android:textColor="#4B7EF4"
                                     android:textSize="15sp"
-                                    tools:text="05:32pm"/>
+                                    tools:text="05:32pm" />
                             </LinearLayout>
 
                         </LinearLayout>
@@ -246,7 +245,7 @@
                             android:textSize="15sp"
                             android:textStyle="bold"
                             android:visibility="visible"
-                            tools:ignore="RelativeOverlap"/>
+                            tools:ignore="RelativeOverlap" />
                     </RelativeLayout>
                 </LinearLayout>
 
@@ -266,7 +265,7 @@
                     android:paddingRight="10dp"
                     android:paddingTop="10dp"
                     android:textSize="15sp"
-                    tools:text="Testing"/>
+                    tools:text="Testing" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
     </RelativeLayout>
@@ -283,7 +282,7 @@
         fab:fab_colorNormal="#1565C0"
         fab:fab_colorPressed="#2272CD"
         fab:fab_colorRipple="#62B2FF"
-        fab:fab_size="normal"/>
+        fab:fab_size="normal" />
 
 </RelativeLayout>
 

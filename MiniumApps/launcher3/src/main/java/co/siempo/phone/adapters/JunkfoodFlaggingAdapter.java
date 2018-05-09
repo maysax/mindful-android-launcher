@@ -37,12 +37,12 @@ import co.siempo.phone.utils.UIUtils;
 public class JunkfoodFlaggingAdapter extends BaseAdapter implements Filterable {
 
     public final JunkfoodFlaggingActivity context;
+    String searchReference = "";
     private ArrayList<AppListInfo> mData = new ArrayList<>();
     private LayoutInflater mInflater;
     private List<AppListInfo> filterList = new ArrayList<>();
     private ItemFilter mFilter = new ItemFilter();
     private PopupMenu popup;
-    String searchReference = "";
 
     public JunkfoodFlaggingAdapter(JunkfoodFlaggingActivity context, ArrayList<AppListInfo> mData) {
         this.context = context;

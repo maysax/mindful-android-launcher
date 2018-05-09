@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/pauseContainer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                android:orientation="vertical"
-                android:transitionName="@string/what_s_your_intention"
-                tools:ignore="UnusedIds">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pauseContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:transitionName="@string/what_s_your_intention"
+    tools:ignore="UnusedIds">
 
     <Toolbar
         android:id="@+id/toolbar"
@@ -30,7 +30,7 @@
                 android:padding="@dimen/dp_10"
                 android:text="@string/save"
                 android:textColor="@color/white"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
         </RelativeLayout>
     </Toolbar>
 
@@ -59,7 +59,7 @@
             android:textColor="#8AFFFFFF"
             android:textSize="15sp"
             android:visibility="visible"
-            tools:ignore="RtlSymmetry"/>
+            tools:ignore="RtlSymmetry" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -97,7 +97,7 @@
                 tools:targetApi="o"
                 tools:text="Try out new music">
 
-                <requestFocus/>
+                <requestFocus />
             </co.siempo.phone.customviews.LockEditText>
 
             <ImageView
@@ -108,7 +108,7 @@
                 android:layout_centerVertical="true"
                 android:padding="@dimen/dp_5"
                 android:src="@drawable/ic_icons_clear_white"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -132,7 +132,7 @@
             android:text="@string/help"
             android:textColor="@color/dialog_blue"
             android:textSize="17sp"
-            android:visibility="visible"/>
+            android:visibility="visible" />
 
         <LinearLayout
             android:id="@+id/linHelpWindow"
@@ -160,7 +160,7 @@
                     android:paddingTop="10dp"
                     android:text="@string/message1"
                     android:textColor="#57000000"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
                 <co.siempo.phone.customviews.RobotoRegularTextView
                     android:layout_width="match_parent"
@@ -176,7 +176,7 @@
                     android:paddingTop="10dp"
                     android:text="@string/message2"
                     android:textColor="#57000000"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
                 <co.siempo.phone.customviews.RobotoRegularTextView
                     android:layout_width="match_parent"
@@ -192,7 +192,7 @@
                     android:paddingTop="10dp"
                     android:text="@string/message3"
                     android:textColor="#57000000"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
                 <co.siempo.phone.customviews.RobotoRegularTextView
                     android:layout_width="match_parent"
@@ -208,7 +208,7 @@
                     android:paddingTop="10dp"
                     android:text="@string/message4"
                     android:textColor="#57000000"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
             </ViewFlipper>
             <!--</ScrollView>-->
 
@@ -229,7 +229,7 @@
                     android:padding="@dimen/dp_10"
                     android:text="@string/close"
                     android:textColor="@color/dialog_blue"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
                 <co.siempo.phone.customviews.RobotoRegularTextView
                     android:id="@+id/txtTwo"
@@ -241,7 +241,7 @@
                     android:padding="@dimen/dp_10"
                     android:text="@string/next"
                     android:textColor="@color/dialog_blue"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>

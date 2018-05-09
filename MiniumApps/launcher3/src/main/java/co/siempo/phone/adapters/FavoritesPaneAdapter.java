@@ -175,7 +175,7 @@ public class FavoritesPaneAdapter extends RecyclerView.Adapter<FavoritesPaneAdap
         public View layout;
         // each data item is just a string in this case
         ImageView imgView, imgAppIcon;
-                View imgUnderLine;
+        View imgUnderLine;
         TextView text, txtAppTextImage;
         TextView textDefaultApp;
         RelativeLayout relMenu;

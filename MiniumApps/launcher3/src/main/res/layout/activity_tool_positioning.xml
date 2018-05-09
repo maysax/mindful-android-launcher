@@ -1,11 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/relMain"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:weightSum="3"
-                tools:context="co.siempo.phone.fragments.IntentionFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relMain"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="3"
+    tools:context="co.siempo.phone.fragments.IntentionFragment">
 
 
     <LinearLayout
@@ -27,7 +27,7 @@
                 style="@style/toolbar_style"
                 android:visibility="visible"
                 app:navigationIcon="@drawable/ic_arrow_back_blue_24dp"
-                app:titleTextColor="?attr/toolbar_text_color"/>
+                app:titleTextColor="?attr/toolbar_text_color" />
 
             <RelativeLayout
                 android:id="@+id/relTop"
@@ -54,7 +54,7 @@
                         android:padding="@dimen/dp_10"
                         android:text="@string/select_tools"
                         android:textAllCaps="true"
-                        android:textColor="?attr/toolbar_text_color"/>
+                        android:textColor="?attr/toolbar_text_color" />
                 </android.support.v7.widget.CardView>
             </RelativeLayout>
 
@@ -100,7 +100,7 @@
 
                             <include
                                 layout="@layout/list_item_grid"
-                                android:visibility="invisible"/>
+                                android:visibility="invisible" />
                         </LinearLayout>
                     </RelativeLayout>
 
@@ -114,7 +114,7 @@
                         android:scrollbars="vertical"
                         android:stackFromBottom="true"
                         android:transcriptMode="alwaysScroll"
-                        app:stackFromEnd="true"/>
+                        app:stackFromEnd="true" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
 

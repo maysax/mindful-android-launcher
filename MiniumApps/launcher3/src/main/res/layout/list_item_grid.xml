@@ -50,8 +50,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center|bottom"
-                android:contentDescription="@null"
-                />
+                android:contentDescription="@null" />
         </LinearLayout>
 
         <LinearLayout

@@ -9,9 +9,9 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
+        style="@style/toolbar_style"
         app:navigationIcon="@drawable/ic_arrow_back_blue_24dp"
-        app:titleTextColor="?attr/toolbar_text_color"
-        style="@style/toolbar_style" />
+        app:titleTextColor="?attr/toolbar_text_color" />
 
     <RelativeLayout
         android:layout_width="match_parent"

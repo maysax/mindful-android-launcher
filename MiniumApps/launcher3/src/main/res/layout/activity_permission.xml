@@ -45,8 +45,8 @@
 
             <TableRow
                 android:id="@+id/tblCalls"
-                android:visibility="gone"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="16dp"
+                android:visibility="gone">
 
                 <co.siempo.phone.customviews.RobotoCondensedTextView
                     android:layout_width="match_parent"
