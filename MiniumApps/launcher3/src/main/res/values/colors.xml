@@ -29,6 +29,7 @@
     <color name="black_05">#0E000000</color>
     <color name="dialog_red">#FF4291</color>
     <color name="dialog_blue">#42A4FF</color>
+    <color name="dialog_blue_alpha">#3342A4FF</color>
     <color name="dialog_message">#8A000000</color>
     <color name="dialog_title">#DE000000</color>
     <color name="bottom_doc">#E8E8E8</color>
