@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -271,7 +272,7 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
 
 
     private void showDialogOnHideIconBranding() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogTheme);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getString(R.string.are_you_sure));
         builder.setMessage(R.string.msg_hide_icon_branding);
         builder.setPositiveButton(getString(R.string.yes_unhide), new DialogInterface.OnClickListener() {
