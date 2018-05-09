@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -25,37 +27,49 @@ import java.util.List;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.AppAssignmentActivity;
+import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.activities.JunkfoodFlaggingActivity;
 import co.siempo.phone.app.BitmapWorkerTask;
 import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.service.LoadToolPane;
 import co.siempo.phone.utils.DrawableProvider;
 import co.siempo.phone.utils.PrefSiempo;
 
 
-public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdapter.ViewHolder> {
-
+public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdapter.ViewHolder>
+        implements Filterable {
     private final Context context;
+    private List<ResolveInfo> filterList = new ArrayList<>();
     private List<ResolveInfo> resolveInfoList;
     private HashMap<Integer, AppMenu> map;
     private DrawableProvider mProvider;
     private int id;
+    private String class_name;
+    private ItemFilter mFilter = new ItemFilter();
 
-    public AppAssignmentAdapter(Context context, int id, List<ResolveInfo> resolveInfoList) {
+    public AppAssignmentAdapter(Context context, int id, List<ResolveInfo> resolveInfoList, String class_name) {
         this.context = context;
         this.resolveInfoList = resolveInfoList;
         this.id = id;
+        filterList = resolveInfoList;
         map = CoreApplication.getInstance().getToolsSettings();
         mProvider = new DrawableProvider(context);
+        this.class_name = class_name;
     }
 
     public void setdata(ArrayList<ResolveInfo> appListAll) {
         resolveInfoList.clear();
-        resolveInfoList.addAll(appListAll);
+        filterList.clear();
+        resolveInfoList = appListAll;
+        filterList = resolveInfoList;
         notifyDataSetChanged();
     }
 
+    public Filter getFilter() {
+        return mFilter;
+    }
     @Override
     public AppAssignmentAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                               int viewType) {
@@ -71,9 +85,9 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final ResolveInfo item = resolveInfoList.get(position);
+        final ResolveInfo item = filterList.get(position);
         if (id == 5 && item == null) {
-            holder.txtAppName.setText("Note");
+            holder.txtAppName.setText(context.getString(R.string.label_note));
             holder.btnHideApps.setVisibility(View.GONE);
             holder.imgIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_menu_notes));
         } else if (item != null) {
@@ -131,10 +145,23 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
 
                     String hashMapToolSettings = new Gson().toJson(map);
                     PrefSiempo.getInstance(context).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
-                    Intent returnIntent = new Intent();
-                    ((AppAssignmentActivity) context).setResult(isSameApp ? Activity.RESULT_CANCELED : Activity.RESULT_OK, returnIntent);
+
                     new LoadToolPane(context).execute();
-                    ((AppAssignmentActivity) context).finish();
+                    if (class_name.equalsIgnoreCase(DashboardActivity.class.getSimpleName().toString())) {
+                        if (id == 5 && item == null) {
+                            new ActivityHelper(context).openNotesApp(false);
+                            ((AppAssignmentActivity) context).finish();
+
+                        } else {
+                            new ActivityHelper(context).openAppWithPackageName(item.activityInfo
+                                    .packageName);
+                            ((AppAssignmentActivity) context).finish();
+                        }
+                    } else {
+                        Intent returnIntent = new Intent();
+                        ((AppAssignmentActivity) context).setResult(isSameApp ? Activity.RESULT_CANCELED : Activity.RESULT_OK, returnIntent);
+                        ((AppAssignmentActivity) context).finish();
+                    }
                 }
             }
         });
@@ -142,7 +169,7 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
 
     @Override
     public int getItemCount() {
-        return resolveInfoList.size();
+        return filterList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -158,6 +185,59 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
             txtAppName = v.findViewById(R.id.txtAppName);
             btnHideApps = v.findViewById(R.id.btnHideApps);
             linearList = v.findViewById(R.id.linearList);
+        }
+    }
+
+    private class ItemFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+            String searchString = constraint.toString().toLowerCase().trim();
+            FilterResults ret = new FilterResults();
+
+            int count = resolveInfoList.size();
+            List<ResolveInfo> templist = new ArrayList<>();
+
+            String filterableString;
+
+            if (!searchString.isEmpty()) {
+                for (int i = 0; i < count; i++) {
+                    if (id == 5 && resolveInfoList.get(i) == null) {
+                        filterableString = context.getString(R.string.label_note);
+                    } else {
+                        filterableString = CoreApplication.getInstance().getListApplicationName()
+                                .get(resolveInfoList.get(i)
+                                        .activityInfo
+                                        .packageName);
+                    }
+                    if (filterableString == null) {
+                        filterableString = CoreApplication.getInstance()
+                                .getApplicationNameFromPackageName(resolveInfoList.get(i)
+                                        .activityInfo.packageName);
+                    }
+                    if (filterableString != null) {
+                        if (filterableString.toLowerCase().contains(searchString.toLowerCase())) {
+                            templist.add(resolveInfoList.get(i));
+                        }
+                    }
+                }
+            } else {
+                templist = resolveInfoList;
+            }
+            ret.values = templist;
+            ret.count = templist.size();
+            return ret;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            if (results.values != null) {
+                filterList = (ArrayList<ResolveInfo>) results.values;
+            } else {
+                filterList = new ArrayList<>(resolveInfoList);
+            }
+            notifyDataSetChanged();
         }
     }
 }

@@ -1,18 +1,26 @@
 package co.siempo.phone.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -36,6 +44,7 @@ import de.greenrobot.event.Subscribe;
 
 public class AppAssignmentActivity extends CoreActivity {
 
+    public ArrayList<ResolveInfo> appList = new ArrayList<>();
     MainListItem mainListItem;
     MenuItem item_tools;
     //8 Photos
@@ -47,10 +56,13 @@ public class AppAssignmentActivity extends CoreActivity {
     private Toolbar toolbar;
     private RecyclerView recyclerView;
     private TextView txtErrorMessage;
-    private ArrayList<ResolveInfo> appList = new ArrayList<>();
     private AppAssignmentAdapter appAssignmentAdapter;
     private Button showallAppBtn;
     private long startTime = 0;
+    private CardView cardView;
+    private ImageView imgClear;
+    private EditText edtSearch;
+    private String class_name;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -76,6 +88,7 @@ public class AppAssignmentActivity extends CoreActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_assignement);
         mainListItem = (MainListItem) getIntent().getSerializableExtra(Constants.INTENT_MAINLISTITEM);
+        class_name = getIntent().getStringExtra("class_name");
         if (mainListItem != null) {
             set = PrefSiempo.getInstance(this).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
         } else {
@@ -155,6 +168,9 @@ public class AppAssignmentActivity extends CoreActivity {
         }
     }
 
+    private ArrayList<ResolveInfo> getAllapp() {
+        return appListAll;
+    }
     private ArrayList<ResolveInfo> getMimeList() {
         ArrayList<ResolveInfo> mimeListLocal = new ArrayList<>();
         for (int i = 1; i <= 20; i++) {
@@ -165,11 +181,9 @@ public class AppAssignmentActivity extends CoreActivity {
 
     private boolean checkExits(ResolveInfo resolveInfo) {
         for (ResolveInfo resolveInfo1 : mimeList) {
-            Log.e("resinfo log", String.valueOf(resolveInfo));
             if (resolveInfo != null && resolveInfo1 != null) {
                 if (resolveInfo.activityInfo.packageName.equalsIgnoreCase(resolveInfo1.activityInfo
                         .packageName)) {
-                    Log.e("Test resinfo", " " + resolveInfo.activityInfo.packageName);
                     return true;
                 }
             }
@@ -203,7 +217,8 @@ public class AppAssignmentActivity extends CoreActivity {
             recyclerView.addItemDecoration(
                     new DividerItemDecoration(this, mLayoutManager.getOrientation()));
             if (mainListItem != null) {
-                appAssignmentAdapter = new AppAssignmentAdapter(this, mainListItem.getId(), appList);
+                appAssignmentAdapter = new AppAssignmentAdapter(this, mainListItem.getId(),
+                        appList, class_name);
                 recyclerView.setAdapter(appAssignmentAdapter);
             }
         } else {
@@ -221,17 +236,52 @@ public class AppAssignmentActivity extends CoreActivity {
                 appAssignmentAdapter.setdata(appListAll);
             }
         });
+
+        //Added for searchbar
+        cardView = findViewById(R.id.cardView);
+        imgClear = findViewById(R.id.imgClear);
+        edtSearch = findViewById(R.id.edtSearch);
+        edtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (appAssignmentAdapter != null) {
+                    appAssignmentAdapter.getFilter().filter(s.toString());
+                }
+                if (s.toString().length() > 0) {
+                    imgClear.setVisibility(View.VISIBLE);
+                } else {
+                    imgClear.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        imgClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edtSearch.setText("");
+            }
+        });
+        RelativeLayout layout = findViewById(R.id.applayout);
+        layout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent ev) {
+                InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                in.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                return false;
+            }
+        });
     }
 
     @Override
     public void onBackPressed() {
-        //super.onBackPressed();
-        if (showallAppBtn.getVisibility() == View.GONE) {
-            showallAppBtn.setVisibility(View.VISIBLE);
-            filterList();
-            initView();
-        } else {
-            super.onBackPressed();
-        }
+        super.onBackPressed();
     }
 }

@@ -75,7 +75,8 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                 public void onClick(View v) {
                     Intent intent = new Intent(context, AppAssignmentActivity.class);
                     intent.putExtra(Constants.INTENT_MAINLISTITEM, mainListItem);
-                    //       intent.putExtra("fromTools",true);
+                    intent.putExtra("class_name", ToolSelectionActivity.class.getSimpleName
+                            ().toString());
                     ((ToolSelectionActivity) context).startActivityForResult(intent, ToolSelectionActivity.TOOL_SELECTION);
                 }
             });
@@ -110,6 +111,8 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                                 PrefSiempo.getInstance(context).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
                                 Intent intent = new Intent(context, AppAssignmentActivity.class);
                                 intent.putExtra(Constants.INTENT_MAINLISTITEM, mainListItem);
+                                intent.putExtra("class_name", ToolSelectionActivity.class.getSimpleName
+                                        ().toString());
                                 ((ToolSelectionActivity) context).startActivityForResult(intent, ToolSelectionActivity.TOOL_SELECTION);
                             }
 //                        } else {

@@ -22,6 +22,7 @@ import java.util.List;
 import co.siempo.phone.R;
 import co.siempo.phone.activities.AppAssignmentActivity;
 import co.siempo.phone.activities.CoreActivity;
+import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.activities.ToolPositioningActivity;
 import co.siempo.phone.app.BitmapWorkerTask;
 import co.siempo.phone.app.Constants;
@@ -215,6 +216,8 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
         FirebaseHelper.getInstance().logSiempoMenuUsage(0, item.getTitle(), "");
         Intent intent = new Intent(context, AppAssignmentActivity.class);
         intent.putExtra(Constants.INTENT_MAINLISTITEM, item);
+        intent.putExtra("class_name", DashboardActivity.class.getSimpleName
+                ().toString());
         context.startActivity(intent);
     }
 
@@ -228,7 +231,6 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
         this.mainListItemList = mainListItemList;
         this.isBottomDoc = isBottomDoc;
         this.isHideIconBranding = isHideIconBranding;
-        Log.d("Test", "" + isHideIconBranding);
         map = CoreApplication.getInstance().getToolsSettings();
         notifyDataSetChanged();
     }
