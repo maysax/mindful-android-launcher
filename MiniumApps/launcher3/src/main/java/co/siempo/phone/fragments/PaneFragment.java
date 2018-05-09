@@ -486,6 +486,7 @@ public class PaneFragment extends CoreFragment {
                     }
 
                     junkFoodAppPane();
+                    blueLineDivider.setVisibility(View.GONE);
                     mWindow.setStatusBarColor(statusBarColorJunk);
                     linTopDoc.setElevation(20);
 
@@ -497,6 +498,7 @@ public class PaneFragment extends CoreFragment {
                 } else {
                     /* Tools and Favourite Pane */
                     linTopDoc.setElevation(0);
+                    blueLineDivider.setVisibility(View.VISIBLE);
                     TypedValue typedValue = new TypedValue();
                     Resources.Theme theme = context.getTheme();
                     theme.resolveAttribute(R.attr.top_doc, typedValue, true);

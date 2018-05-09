@@ -29,6 +29,7 @@
     <color name="black_05">#0E000000</color>
     <color name="dialog_red">#FF4291</color>
     <color name="dialog_blue">#42A4FF</color>
+    <color name="dialog_blue_alpha">#3342A4FF</color>
     <color name="dialog_message">#8A000000</color>
     <color name="dialog_title">#DE000000</color>
     <color name="bottom_doc">#E8E8E8</color>
@@ -95,6 +96,7 @@
 
     <!-- Material core colors -->
     <color name="material.core.red">#f44336</color>
+    <color name="red">#ff0000</color>
     <color name="material.core.blue">#2196F3</color>
     <color name="material.core.cyan">#00BCD4</color>
     <color name="material.core.orange">#FF9800</color>

@@ -15,6 +15,7 @@ import org.androidannotations.annotations.ViewById;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.ChooseBackgroundActivity;
+import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.event.NotifyBackgroundChange;
 import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.EventBus;
@@ -87,10 +88,10 @@ public class TempoHomeFragment extends CoreFragment {
                 } else {
                     getActivity().setTheme(R.style.SiempoAppTheme);
                 }
-                Intent startMain = new Intent(Intent.ACTION_MAIN);
+                Intent startMain = new Intent(getActivity(),
+                        DashboardActivity.class);
                 startMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startMain.addCategory(Intent.CATEGORY_HOME);
                 startActivity(startMain);
 
 

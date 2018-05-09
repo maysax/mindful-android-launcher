@@ -44,8 +44,7 @@
             android:id="@+id/blueLineView"
             android:layout_width="match_parent"
             android:layout_height="0.6dp"
-            android:alpha="0.5"
-            android:background="@color/dialog_blue"/>
+            android:background="@color/dialog_blue_alpha"/>
 
         <LinearLayout
             android:id="@+id/linPane"
@@ -68,7 +67,7 @@
             android:id="@+id/blueLineViewBottom"
             android:layout_width="match_parent"
             android:layout_height="0.6dp"
-            android:background="@color/dialog_blue"/>
+            android:background="@color/dialog_blue_alpha"/>
 
         <RelativeLayout
             android:id="@+id/linBottomDoc"
