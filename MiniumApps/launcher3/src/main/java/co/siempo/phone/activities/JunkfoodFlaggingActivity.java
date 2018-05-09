@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -107,7 +108,14 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         cardView = findViewById(R.id.cardView);
         imgClear = findViewById(R.id.imgClear);
         edtSearch = findViewById(R.id.edtSearch);
+        try {
+            Typeface myTypeface = Typeface.createFromAsset(getAssets(), "fonts/robotoregular.ttf");
+            edtSearch.setTypeface(myTypeface);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         listAllApps.setOnItemClickListener(JunkfoodFlaggingActivity.this);
+        edtSearch.clearFocus();
         edtSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -517,6 +525,9 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         favoriteList.removeAll(list);
         PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
         loadApps();
+        if(junkfoodFlaggingAdapter!=null){
+            junkfoodFlaggingAdapter.getFilter().filter(edtSearch.getText().toString());
+        }
     }
 
     @Override
