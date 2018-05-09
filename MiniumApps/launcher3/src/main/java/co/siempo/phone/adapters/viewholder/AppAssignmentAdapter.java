@@ -81,7 +81,7 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
                 theme.resolveAttribute(R.attr.icon_color, typedValue, true);
                 int color = typedValue.data;
                 Drawable drawable = mProvider.getRound("" + item.loadLabel
-                        (context.getPackageManager()).charAt(0),color, 30);
+                        (context.getPackageManager()).charAt(0), color, 30);
                 holder.imgIcon.setImageDrawable(drawable);
                 holder.btnHideApps.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -110,7 +110,7 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
             public void onClick(View v) {
                 if (holder.btnHideApps.getVisibility() != View.VISIBLE) {
                     HashMap<Integer, AppMenu> map = CoreApplication.getInstance().getToolsSettings();
-                    boolean isSameApp;
+                    boolean isSameApp=false;
                     if (id == 5 && item == null) {
                         if (map.get(id).getApplicationName().equalsIgnoreCase("Notes")) {
                             isSameApp = true;
@@ -119,11 +119,13 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
                             map.get(id).setApplicationName(context.getString(R.string.notes));
                         }
                     } else {
-                        if (map.get(id).getApplicationName().equalsIgnoreCase(item.activityInfo.packageName)) {
-                            isSameApp = true;
-                        } else {
-                            isSameApp = false;
-                            map.get(id).setApplicationName(item.activityInfo.packageName);
+                        if (null != item) {
+                            if (map.get(id).getApplicationName().equalsIgnoreCase(item.activityInfo.packageName)) {
+                                isSameApp = true;
+                            } else {
+                                isSameApp = false;
+                                map.get(id).setApplicationName(item.activityInfo.packageName);
+                            }
                         }
                     }
 

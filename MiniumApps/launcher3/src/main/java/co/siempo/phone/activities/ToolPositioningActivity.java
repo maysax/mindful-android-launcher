@@ -176,8 +176,6 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.editing_tools);
         setSupportActionBar(toolbar);
-//        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
-//                .colorAccent));
         items = new ArrayList<>();
         new MainListItemLoader(this).loadItemsDefaultApp(items);
 //        items = CoreApplication.getInstance().getToolItemsList();

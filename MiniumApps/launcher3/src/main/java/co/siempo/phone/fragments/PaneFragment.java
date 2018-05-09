@@ -194,7 +194,6 @@ public class PaneFragment extends CoreFragment {
         super.setUserVisibleHint(isVisibleToUser);
 //        Changing the status bar default value on page change from dashboard
 //         to direct Junk Food pane
-
         if (isVisibleToUser && null != mWindow && pagerPane != null && pagerPane.getCurrentItem() == 0) {
             mWindow.setStatusBarColor(statusBarColorJunk);
         } else {
@@ -473,8 +472,6 @@ public class PaneFragment extends CoreFragment {
                         linPane.setVisibility(View.VISIBLE);
                     if (linBottomDoc.getVisibility() == View.GONE)
                         linBottomDoc.setVisibility(View.VISIBLE);
-//                    if (blueLineDivider.getVisibility() == View.GONE)
-//                        blueLineDivider.setVisibility(View.VISIBLE);
                     if (searchLayout.getVisibility() == View.VISIBLE)
                         searchLayout.setVisibility(View.GONE);
                     if (cardViewEdtSearch.getVisibility() == View.VISIBLE)
@@ -493,11 +490,6 @@ public class PaneFragment extends CoreFragment {
                     linTopDoc.setElevation(20);
 
                     linTopDoc.setBackgroundColor(getResources().getColor(backGroundColor));
-//                    linTopDoc.setBackground(null);
-//                    linTopDoc.setBackground(getResources().getDrawable(R
-//                            .color.transparent));
-//                    linTopDoc.setBackground(getResources().getDrawable(R
-//                            .color.transparent));
 
                     searchDoc.setVisibility(View.GONE);
                     junkDoc.setVisibility(View.VISIBLE);
@@ -562,8 +554,6 @@ public class PaneFragment extends CoreFragment {
     }
 
     private void junkFoodAppPane() {
-//        linTopDoc.setBackgroundColor(getResources().getColor(R.color
-//                .bg_junk_apps_top_dock));
         txtTopDockDate.setVisibility(View.GONE);
         searchLayout.setVisibility(View.GONE);
         edtSearchToolsRounded.setVisibility(View.GONE);
@@ -1080,7 +1070,6 @@ public class PaneFragment extends CoreFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (router != null && searchLayout != null && searchLayout.getTxtSearchBox() != null) {
                     mediator.listItemClicked(router, position, searchLayout.getTxtSearchBox().getStrText());
-//                    imageClear.performClick();
                 }
             }
         });

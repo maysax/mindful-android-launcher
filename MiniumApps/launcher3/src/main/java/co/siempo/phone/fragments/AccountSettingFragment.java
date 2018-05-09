@@ -63,10 +63,7 @@ public class AccountSettingFragment extends CoreFragment {
 
     @AfterViews
     void afterViews() {
-//        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
         toolbar.setTitle(R.string.string_account_service_title);
-//        toolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color
-//                .colorAccent));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,14 +92,12 @@ public class AccountSettingFragment extends CoreFragment {
                 if (isChecked) {
                     PrefSiempo.getInstance(context).write(PrefSiempo
                             .IS_FIREBASE_ANALYTICS_ENABLE, true);
-//                    droidPrefs_.isFireBaseAnalyticsEnable().put(true);
                     FirebaseHelper.getInstance().getFirebaseAnalytics().setAnalyticsCollectionEnabled(true);
                 } else {
 
                     FirebaseHelper.getInstance().getFirebaseAnalytics().setAnalyticsCollectionEnabled(false);
                     PrefSiempo.getInstance(context).write(PrefSiempo
                             .IS_FIREBASE_ANALYTICS_ENABLE, false);
-//                    droidPrefs_.isFireBaseAnalyticsEnable().put(false);
                 }
             }
         });

@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -98,8 +97,6 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
 
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
         toolbar.setTitle(R.string.help);
-//        toolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color
-//                .colorAccent));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,7 +184,10 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
         ConnectivityManager connectivityManager = (ConnectivityManager)
                 getActivity().getSystemService(Context
                         .CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        NetworkInfo activeNetwork = null;
+        if (connectivityManager != null) {
+            activeNetwork = connectivityManager.getActiveNetworkInfo();
+        }
         if (activeNetwork != null) {
 
             if (null != progressDialog) {
@@ -256,14 +256,15 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
     private void showUpdateDialog(String str) {
 
         if (null != mActivity) {
-//            PrefSiempo.getInstance(mActivity).write(PrefSiempo
-//                    .IS_APP_INSTALLED_FIRSTTIME, false);
             ConnectivityManager connectivityManager = (ConnectivityManager)
                     mActivity.
                             getSystemService(Context
                                     .CONNECTIVITY_SERVICE);
-            NetworkInfo activeNetwork = connectivityManager
-                    .getActiveNetworkInfo();
+            NetworkInfo activeNetwork = null;
+            if (connectivityManager != null) {
+                activeNetwork = connectivityManager
+                        .getActiveNetworkInfo();
+            }
             if (activeNetwork != null) {
                 UIUtils.confirmWithCancel(mActivity, "", str.equalsIgnoreCase(CheckVersionEvent.ALPHA) ? "New alpha version found! Would you like to update Siempo?" : "New beta version found! Would you like to update Siempo?", new DialogInterface.OnClickListener() {
                     @Override

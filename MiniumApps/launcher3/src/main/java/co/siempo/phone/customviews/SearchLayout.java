@@ -66,7 +66,6 @@ public class SearchLayout extends CardView {
         isWatching = true;
         inflateLayout = inflate(context, R.layout.search_layout, this);
 
-//        launcherPrefs = context.getSharedPreferences("Launcher3Prefs", 0);
         txtSearchBox = inflateLayout.findViewById(R.id.txtSearchBox);
         btnClear = inflateLayout.findViewById(R.id.btnClear);
         btnClear.setOnClickListener(new OnClickListener() {

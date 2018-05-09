@@ -92,8 +92,6 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_flagging_screen);
         setSupportActionBar(toolbar);
-//        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
-//                .colorAccent));
         listAllApps = findViewById(R.id.lst_OtherApps);
     }
 

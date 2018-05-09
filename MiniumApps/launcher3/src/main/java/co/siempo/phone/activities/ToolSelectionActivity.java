@@ -139,8 +139,6 @@ public class ToolSelectionActivity extends CoreActivity {
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.select_tools);
         setSupportActionBar(toolbar);
-//        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
-//                .colorAccent));
         recyclerView = findViewById(R.id.recyclerView);
         filterListData();
         mLayoutManager = new LinearLayoutManager(this);

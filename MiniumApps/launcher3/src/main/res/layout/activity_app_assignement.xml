@@ -29,6 +29,6 @@
         android:gravity="center"
         android:text="@string/no_app_found_or_no_relevant_app"
         android:textColor="@color/black_80"
-        android:textSize="@dimen/dp_20"
+        android:textSize="@dimen/sp_20"
         android:visibility="invisible" />
 </RelativeLayout>

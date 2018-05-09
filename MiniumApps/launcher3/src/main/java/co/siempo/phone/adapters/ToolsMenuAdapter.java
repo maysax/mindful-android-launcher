@@ -107,19 +107,11 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                     }
                     holder.icon.setVisibility(View.VISIBLE);
                     holder.imgAppIcon.setVisibility(View.GONE);
-//                    final Resources.Theme theme = context.getResources()
-//                            .newTheme();
-//                    final Drawable drawable = ResourcesCompat.getDrawable
-//                            (context.getResources(), item.getDrawable(),
-//                                    theme);
-//                    holder.icon.setImageDrawable(drawable);
                     holder.icon.setImageResource(item.getDrawable());
                     holder.text.setText(item.getTitle());
                 }
             }
         } else {
-//            holder.linearLayout.setVisibility(View.GONE);
-//            holder.linearLayout.setVisibility(View.INVISIBLE);
             holder.icon.setImageDrawable(null);
             holder.text.setText("");
         }

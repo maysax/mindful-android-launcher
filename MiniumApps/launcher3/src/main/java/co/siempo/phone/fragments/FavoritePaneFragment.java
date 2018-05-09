@@ -2,7 +2,6 @@ package co.siempo.phone.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -33,7 +32,6 @@ public class FavoritePaneFragment extends CoreFragment {
     private ArrayList<MainListItem> items = new ArrayList<>();
     private FavoritesPaneAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private Parcelable mListState;
     private ItemOffsetDecoration itemDecoration;
     private LinearLayout linSelectFavouriteFood;
     private Button btnSelect;

@@ -148,10 +148,14 @@ public class SiempoPermissionActivity extends CoreActivity {
                     if (!new PermissionUtil(SiempoPermissionActivity.this)
                             .hasGiven(PermissionUtil
                                     .NOTIFICATION_ACCESS)) {
-                        startActivityForResult(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS), PermissionUtil.NOTIFICATION_ACCESS);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                            startActivityForResult(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS), PermissionUtil.NOTIFICATION_ACCESS);
+                        }
                     }
                 } else {
-                    startActivityForResult(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS), PermissionUtil.NOTIFICATION_ACCESS);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                        startActivityForResult(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS), PermissionUtil.NOTIFICATION_ACCESS);
+                    }
                 }
             }
         });
@@ -171,11 +175,6 @@ public class SiempoPermissionActivity extends CoreActivity {
     protected void onResume() {
         super.onResume();
 
-//        if (permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)) {
-//            switchContactPermission.setChecked(true);
-//        } else {
-//            switchContactPermission.setChecked(false);
-//        }
         if (permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)) {
             switchCallPermission.setChecked(true);
         } else {
@@ -186,11 +185,6 @@ public class SiempoPermissionActivity extends CoreActivity {
         } else {
             switchSmsPermission.setChecked(false);
         }
-//        if (permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)) {
-//            switchFilePermission.setChecked(true);
-//        } else {
-//            switchFilePermission.setChecked(false);
-//        }
         if (permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) {
             switchNotificationAccess.setChecked(true);
         } else {
@@ -198,9 +192,7 @@ public class SiempoPermissionActivity extends CoreActivity {
         }
 
         if (isFromHome) {
-//            switchContactPermission.setVisibility(View.VISIBLE);
             switchCallPermission.setVisibility(View.VISIBLE);
-//            switchSmsPermission.setVisibility(View.VISIBLE);
             switchFilePermission.setVisibility(View.VISIBLE);
             switchNotificationAccess.setVisibility(View.VISIBLE);
             switchOverlayAccess.setVisibility(View.VISIBLE);
@@ -209,12 +201,9 @@ public class SiempoPermissionActivity extends CoreActivity {
             txtPermissionLabel.setText(getString(R.string.permission_title));
 
             if (Build.VERSION.SDK_INT >= 23) {
-//                tblContact.setVisibility(View.VISIBLE);
                 tblCalls.setVisibility(View.VISIBLE);
                 tblDrawOverlay.setVisibility(View.GONE);
-//                tblStorage.setVisibility(View.VISIBLE);
                 tblNotification.setVisibility(View.VISIBLE);
-//                tblSMS.setVisibility(View.VISIBLE);
             } else {
                 tblContact.setVisibility(View.GONE);
                 tblCalls.setVisibility(View.GONE);
@@ -288,7 +277,6 @@ public class SiempoPermissionActivity extends CoreActivity {
         if (
                 permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) &&
                         permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) {
-//            launcher3Prefs.isPermissionGivenAndContinued().put(true);
             finish();
         } else {
             UIUtils.toastShort(SiempoPermissionActivity.this, R.string.grant_all_to_proceed_text);

@@ -66,7 +66,6 @@ public class ToolsPaneFragment extends CoreFragment {
     public void onEvent(NotifyToolView notifyToolView) {
         if (notifyToolView != null && notifyToolView.isNotify()) {
             items = CoreApplication.getInstance().getToolItemsList();
-//            mAdapter.setMainListItemList(items, false, CoreApplication.getInstance().isHideIconBranding());
             mAdapter = new ToolsMenuAdapter(getActivity(), CoreApplication.getInstance().isHideIconBranding(), false, items);
             recyclerView.setAdapter(mAdapter);
             mAdapter.notifyDataSetChanged();
@@ -78,8 +77,6 @@ public class ToolsPaneFragment extends CoreFragment {
     private void initView() {
         if (getActivity() != null && recyclerView != null) {
             items = CoreApplication.getInstance().getToolItemsList();
-//            new MainListItemLoader(getActivity()).loadItemsDefaultApp(items);
-//            items = PackageUtil.getToolsMenuData(getActivity(), items);
             mLayoutManager = new GridLayoutManager(getActivity(), 4);
             recyclerView.setLayoutManager(mLayoutManager);
             if (itemDecoration != null) {

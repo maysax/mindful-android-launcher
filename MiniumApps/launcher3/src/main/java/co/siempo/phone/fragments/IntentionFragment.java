@@ -18,7 +18,6 @@ import android.view.WindowManager;
 import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -46,7 +45,6 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
     private TextView txtIntention;
     private LinearLayout linIF;
     private PopupWindow mPopupWindow;
-    private PopupMenu mPopupMenu;
     private RelativeLayout relRootLayout;
     private Window mWindow;
     private int defaultStatusBarColor;
@@ -102,11 +100,13 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         linIF = view.findViewById(R.id.linIF);
 
         // clear FLAG_TRANSLUCENT_STATUS flag:
-        mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        if (null != mWindow) {
+            mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
-        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-        mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        defaultStatusBarColor = mWindow.getStatusBarColor();
+            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+            mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            defaultStatusBarColor = mWindow.getStatusBarColor();
+        }
         hideView();
     }
 
@@ -144,14 +144,10 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                         @Override
                         public void run() {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                                if (Settings.canDrawOverlays(getActivity())) {
                                 new ActivityHelper(getActivity()).handleDefaultLauncher(getActivity());
-                                //((CoreActivity) getActivity()).loadDialog();
                                 PrefSiempo.getInstance(getActivity()).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME_SHOW_TOOLTIP, false);
-//                                }
                             } else {
                                 new ActivityHelper(getActivity()).handleDefaultLauncher(getActivity());
-                                //((CoreActivity) getActivity()).loadDialog();
                                 PrefSiempo.getInstance(getActivity()).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME_SHOW_TOOLTIP, false);
                             }
 
@@ -177,7 +173,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                         Resources.Theme theme = context.getTheme();
                         theme.resolveAttribute(R.attr.dialog_style, typedValue, true);
                         int dialogStyle = typedValue.resourceId;
-                        dialogTempo = new DialogTempoSetting(getActivity(),dialogStyle);
+                        dialogTempo = new DialogTempoSetting(getActivity(), dialogStyle);
                         if (dialogTempo.getWindow() != null)
                             dialogTempo.getWindow().setGravity(Gravity.TOP);
                         dialogTempo.show();
@@ -227,10 +223,6 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT
                 );
-
-                mPopupMenu = new PopupMenu
-                        (context, customView, Gravity.END);
-
                 // Set an elevation value for popup window
                 // Call requires API level 21
                 if (Build.VERSION.SDK_INT >= 21) {
@@ -255,7 +247,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                                 theme.resolveAttribute(R.attr.dialog_style, typedValue, true);
                                 int dialogStyle = typedValue.resourceId;
                                 DialogTempoSetting dialogTempo = new
-                                        DialogTempoSetting(getActivity(),dialogStyle);
+                                        DialogTempoSetting(getActivity(), dialogStyle);
                                 if (dialogTempo.getWindow() != null)
                                     dialogTempo.getWindow().setGravity(Gravity.TOP);
                                 dialogTempo.show();
@@ -290,8 +282,6 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                     }
                 });
                 mPopupWindow.setOutsideTouchable(true);
-
-//                mPopupWindow.setFocusable(true);
                 mPopupWindow.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 mPopupWindow.showAsDropDown(imgOverFlow, 0, (int) -imgOverFlow.getX() - 10);
                 UIUtils.applyDim(root, 0.7f);
@@ -317,26 +307,6 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
             imgTempo.performClick();
         }
     }
-
-//    @Subscribe(sticky = true, threadMode = ThreadMode.MainThread)
-//    public void onEvent(NotifyBackgroundChange notifyBackgroundChange) {
-//        if (notifyBackgroundChange != null && notifyBackgroundChange.isNotify()) {
-//            String filePath = PrefSiempo.getInstance(getActivity()).read(PrefSiempo
-//                    .DEFAULT_BAG, "");
-//            if (!TextUtils.isEmpty(filePath)) {
-//
-//
-//                Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-//                BitmapDrawable ob = new BitmapDrawable(getResources(), bitmap);
-//                //Code for Applying background
-//                relRootLayout.setBackground(ob);
-//
-//
-//            }
-//            EventBus.getDefault().removeStickyEvent(notifyBackgroundChange);
-//        }
-//
-//    }
 
 
 }

@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -55,8 +54,6 @@ public class InAppItemListActivity extends CoreActivity implements
         toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
         toolbar.setTitle("In App Products");
-//        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
-//                .colorAccent));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,7 +88,7 @@ public class InAppItemListActivity extends CoreActivity implements
 
     @Override
     public void onSuccess() {
-        Toast.makeText(this, "Purchased Successfully", Toast.LENGTH_SHORT);
+        Toast.makeText(this, "Purchased Successfully", Toast.LENGTH_SHORT).show();
     }
 
     @Override

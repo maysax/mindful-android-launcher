@@ -59,7 +59,6 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
     private DrawableProvider mProvider;
     private TextDrawable.IBuilder mDrawableBuilder;
     private PopupMenu popup;
-    //    private HashMap<String, Bitmap> iconList;
 
     public MainListAdapter(Context context, List<MainListItem> items) {
         super(context, 0);

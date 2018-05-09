@@ -169,15 +169,7 @@ public class ChooseBackgroundActivity extends CoreActivity {
                             .this, internalItemList);
                     mImageGridview.setAdapter(backgroundItemAdapter);
 
-//                    Intent intent=new Intent();
-//                    intent.setType("image/*");
-//                    intent.setAction(Intent.ACTION_GET_CONTENT);
-//                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
                 } else if (mItemText.equalsIgnoreCase(getString(R.string.siempo_images))) {
-//                    Uri selectedUri = Uri.parse(folderSiempoImage.toString()+"/");
-//                    Intent intent = new Intent(Intent.ACTION_PICK);
-//                    intent.setDataAndType(selectedUri, "image/*");
-//                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
                     openSubFolder = true;
                     internalItemList = new ArrayList<>();
                     for (String imageItem : mainItemList.get(position).getDrawableId()) {
@@ -197,7 +189,7 @@ public class ChooseBackgroundActivity extends CoreActivity {
                                 UpdateBackgroundActivity
                                         .class);
                         mUpdateBackgroundIntent.putExtra("imageUri", internalItemList.get(position)
-                                .getDrawableId().get(0).toString());
+                                .getDrawableId().get(0));
                         startActivityForResult(mUpdateBackgroundIntent, PICK_IMAGE_REQUEST);
                     }
                 }
@@ -224,10 +216,6 @@ public class ChooseBackgroundActivity extends CoreActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK) {
-//            Uri imageUri = data.getData();
-//            Intent mUpdateBackgroundIntent=new Intent(this,UpdateBackgroundActivity.class);
-//            mUpdateBackgroundIntent.putExtra("imageUri", imageUri.toString());
-//            startActivity(mUpdateBackgroundIntent);
             openSubFolder = false;
             toolbar.setTitle(getString(R.string.choose_background));
             String strDefault = PrefSiempo.getInstance(ChooseBackgroundActivity.this).read(PrefSiempo
@@ -318,7 +306,7 @@ public class ChooseBackgroundActivity extends CoreActivity {
                 try {
                     dirList.add(tempDir);
                 } catch (Exception e) {
-
+                    e.printStackTrace();
                 }
             }
             while (cursor.moveToNext());

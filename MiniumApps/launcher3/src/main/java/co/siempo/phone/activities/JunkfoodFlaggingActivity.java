@@ -58,6 +58,7 @@ import de.greenrobot.event.Subscribe;
 
 public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterView.OnItemClickListener {
     public Set<String> list = new HashSet<>();
+    public boolean isLoadFirstTime = true;
     Set<String> favoriteList = new HashSet<>();
     JunkfoodFlaggingAdapter junkfoodFlaggingAdapter;
     List<String> installedPackageList;
@@ -66,7 +67,6 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
     private Toolbar toolbar;
     private ListView listAllApps;
     private PopupMenu popup;
-    public boolean isLoadFirstTime = true;
     private List<AppListInfo> flagAppList = new ArrayList<>();
     private List<AppListInfo> unflageAppList = new ArrayList<>();
     private ArrayList<AppListInfo> bindingList = new ArrayList<>();
@@ -104,8 +104,6 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_flagging_screen);
         setSupportActionBar(toolbar);
-//        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
-//                .colorAccent));
         listAllApps = findViewById(R.id.listAllApps);
         cardView = findViewById(R.id.cardView);
         imgClear = findViewById(R.id.imgClear);
@@ -144,7 +142,9 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
             @Override
             public boolean onTouch(View view, MotionEvent ev) {
                 InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                in.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                if (in != null) {
+                    in.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                }
                 return false;
             }
         });
@@ -174,7 +174,6 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.app_junkfood_flagging, menu);
         MenuItem menuItem = menu.findItem(R.id.item_save);
-//        setTextColorForMenuItem(menuItem, R.color.colorAccent);
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -268,12 +267,6 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//        if (bindingList != null && bindingList.get(position) != null) {
-//            AppListInfo appListInfo = bindingList.get(position);
-//            if (!appListInfo.packageName.equalsIgnoreCase("")) {
-//                showPopUp(view, position, appListInfo.isFlagApp);
-//            }
-//        }
     }
 
     /**

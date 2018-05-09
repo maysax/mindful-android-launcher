@@ -63,13 +63,10 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(getResources().getColor(R.color.bg_permissionscreenstatusbar));
         View decor = window.getDecorView();
-        decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
         initView();
-//        if (Build.VERSION.SDK_INT >= 23) {
-//            if (!permissionUtil.hasGiven(PermissionUtil.ACCOUNT_PERMISSION)) {
-//                askForPermission(new String[]{android.Manifest.permission.GET_ACCOUNTS});
-//            }
-//        }
     }
 
     private void initView() {
@@ -122,18 +119,6 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                if (!TextUtils.isEmpty(autoCompleteTextViewEmail.getText().toString())) {
-//                    String val_email = autoCompleteTextViewEmail.getText().toString().trim();
-//                    boolean isValidEmail = UIUtils.isValidEmail(val_email);
-//                    if (isValidEmail) {
-//                        txtErrorMessage.setVisibility(View.INVISIBLE);
-//                    } else {
-//
-//                        txtErrorMessage.setVisibility(View.VISIBLE);
-//                    }
-//                } else {
-//                    txtErrorMessage.setVisibility(View.INVISIBLE);
-//                }
             }
 
             @Override
@@ -227,7 +212,10 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
             try {
                 connectivityManager = (ConnectivityManager) getSystemService(Context
                         .CONNECTIVITY_SERVICE);
-                NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+                NetworkInfo activeNetwork = null;
+                if (connectivityManager != null) {
+                    activeNetwork = connectivityManager.getActiveNetworkInfo();
+                }
                 if (activeNetwork != null) {
                     new MailChimpOperation().execute(strEmail);
                     storeDataToFirebase(CoreApplication.getInstance().getDeviceId(), strEmail);
@@ -267,7 +255,6 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
         }
 
     }
-
 
 
 }

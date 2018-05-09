@@ -78,7 +78,9 @@ public class FeedbackFragment extends CoreFragment {
             display = wm.getDefaultDisplay();
         }
         DisplayMetrics metrics = new DisplayMetrics();
-        display.getMetrics(metrics);
+        if (display != null) {
+            display.getMetrics(metrics);
+        }
         int width = metrics.widthPixels;
         int height = metrics.heightPixels;
 
@@ -99,7 +101,6 @@ public class FeedbackFragment extends CoreFragment {
                         if (!TextUtils.isEmpty(edt_email.getText().toString().trim())) {
                             PrefSiempo.getInstance(context).write(PrefSiempo
                                     .USER_EMAILID, edt_email.getText().toString().trim());
-//                            droidPrefs_.userEmailId().put(edt_email.getText().toString().trim());
                         }
                         try {
                             String version = "";
@@ -121,7 +122,6 @@ public class FeedbackFragment extends CoreFragment {
                                     ", Version - " + version;
 
 
-                            long currentTimeMills = System.currentTimeMillis();
 
 
                             //Creating SendMail object
@@ -151,8 +151,6 @@ public class FeedbackFragment extends CoreFragment {
         });
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
         toolbar.setTitle(R.string.feedback);
-//        toolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color
-//                .colorAccent));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
