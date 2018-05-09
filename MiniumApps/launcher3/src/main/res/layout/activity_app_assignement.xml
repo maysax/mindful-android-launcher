@@ -5,16 +5,14 @@
     android:id="@+id/applayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FAFAFA"
+
     tools:context="co.siempo.phone.activities.AppAssignmentActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/toolbar_bg"
-        android:elevation="@dimen/dp_5"
-        android:minHeight="?android:attr/actionBarSize"></android.support.v7.widget.Toolbar>
+        app:navigationIcon="@drawable/ic_arrow_back_blue_24dp"
+        app:titleTextColor="?attr/toolbar_text_color"
+        style="@style/toolbar_style"/>
 
     <RelativeLayout
         android:id="@+id/search_bar_app"
@@ -85,7 +83,7 @@
         android:gravity="center"
         android:text="@string/no_app_found_or_no_relevant_app"
         android:textColor="@color/black_80"
-        android:textSize="@dimen/dp_20"
+        android:textSize="@dimen/sp_20"
         android:visibility="invisible" />
 
     <Button

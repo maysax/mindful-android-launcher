@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/linearList"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:showDividers="none"
-    tools:ignore="UseCompoundDrawables">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/linearList"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="?attr/selectableItemBackground"
+              android:gravity="center"
+              android:orientation="vertical"
+              android:showDividers="none"
+              tools:ignore="UseCompoundDrawables">
 
-    <co.siempo.phone.customviews.RobotoCondensedTextView
+    <co.siempo.phone.customviews.RobotoMediumTextView
         android:id="@+id/txtHeader"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="#E81313"
+        android:background="#FF0000"
         android:gravity="center_vertical"
         android:paddingLeft="55dp"
         android:paddingRight="55dp"
         android:text="@string/flag_app"
-        android:textColor="@color/white"
+        android:textColor="?attr/icon_color_reverse"
         android:textSize="20sp"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <co.siempo.phone.customviews.RobotoCondensedTextView
         android:id="@+id/txtNoAppsMessage"
@@ -32,9 +32,8 @@
         android:paddingLeft="55dp"
         android:paddingRight="55dp"
         android:text="@string/tap_apps_below_to_move_them_into_this_section"
-        android:textColor="#57000000"
         android:textSize="16sp"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/linTop"
@@ -50,7 +49,7 @@
             android:id="@+id/imgAppIcon"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            tools:ignore="ContentDescription,PrivateResource" />
+            tools:ignore="ContentDescription,PrivateResource"/>
 
         <co.siempo.phone.customviews.RobotoCondensedTextView
             android:id="@+id/txtAppName"
@@ -69,9 +68,8 @@
             android:paddingLeft="@dimen/dp_20"
             android:paddingRight="@dimen/dp_20"
             android:text="Sound"
-            android:textColor="#000000"
             android:textSize="16sp"
-            tools:ignore="HardcodedText" />
+            tools:ignore="HardcodedText"/>
 
 
         <ImageView
@@ -82,12 +80,8 @@
             android:checked="true"
             android:gravity="center_vertical"
             android:padding="@dimen/dp_10"
-            android:src="@drawable/ic_down_arrow" />
+            android:src="@drawable/ic_down_arrow"/>
     </LinearLayout>
 
-    <!--<View-->
-    <!--android:id="@+id/divider"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="0.8dp"-->
-    <!--android:background="@android:color/darker_gray" />-->
+
 </LinearLayout>

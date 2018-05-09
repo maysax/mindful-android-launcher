@@ -21,7 +21,7 @@
         android:minLines="1"
         android:padding="8dp"
         android:text=""
-        android:textColor="@color/text.primary"
+        android:textColorHint="@color/dialog_blue"
         android:textSize="@dimen/text.size.medium">
 
 

@@ -45,7 +45,6 @@
                 android:fontFamily="sans-serif-medium"
                 android:gravity="center"
                 android:text="Mindful Morning"
-                android:textColor="#000000"
                 android:textSize="20sp"
                 tools:ignore="DuplicateIncludedIds,HardcodedText" />
 

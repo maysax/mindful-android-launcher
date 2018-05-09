@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#FAFAFA"
-    android:orientation="vertical"
-    tools:context="co.siempo.phone.activities.FavoritesSelectionActivity">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              tools:context="co.siempo.phone.activities.FavoritesSelectionActivity">
 
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/toolbar_bg"
-        android:elevation="@dimen/dp_5"
-        android:minHeight="?android:attr/actionBarSize" />
+        app:navigationIcon="@drawable/ic_arrow_back_blue_24dp"
+        app:titleTextColor="?attr/toolbar_text_color"
+        style="@style/toolbar_style" />
 
     <!--<ScrollView-->
     <!--android:id="@+id/scrollView"-->

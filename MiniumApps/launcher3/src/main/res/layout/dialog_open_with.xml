@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/dp_15"
         android:text="@string/open_with"
-        android:textColor="@color/actionbar_background_start"
         android:textSize="20sp" />
 
     <ListView

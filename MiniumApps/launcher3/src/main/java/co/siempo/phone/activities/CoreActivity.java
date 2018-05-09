@@ -30,7 +30,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
 
@@ -113,10 +112,13 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
+        boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
+        setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
         super.onCreate(savedInstanceState);
+
         connectInAppService();
         this.setVolumeControlStream(AudioManager.STREAM_SYSTEM);
-        //onCreateAnimation(savedInstanceState);
         windowManager = (WindowManager) getBaseContext().getSystemService(Context.WINDOW_SERVICE);
 
         mRecevier = new InnerRecevier();
@@ -266,8 +268,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         EventBus.getDefault().unregister(this);
         try {
             if (Config.isNotificationAlive) {
-                //EventBus.getDefault().post(new NotificationTrayEvent(false));
-                //this.getFragmentManager().beginTransaction().remove(NotificationFragment.this).commit();
                 getFragmentManager().beginTransaction().
                         remove(getFragmentManager().findFragmentById(R.id.mainView)).commit();
                 Config.isNotificationAlive = false;
@@ -467,7 +467,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                     if (!state.equalsIgnoreCase(SYSTEM_DIALOG_REASON_RECENT_APPS) && reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
                         DashboardActivity.currentIndexDashboard = 1;
                         DashboardActivity.currentIndexPaneFragment = 2;
-//                        EventBus.getDefault().post(new HomePress(1, 2));
                     }
                     state = reason;
                 }

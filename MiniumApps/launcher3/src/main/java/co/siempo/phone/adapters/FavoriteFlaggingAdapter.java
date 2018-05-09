@@ -1,9 +1,11 @@
 package co.siempo.phone.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,12 +33,18 @@ public class FavoriteFlaggingAdapter extends BaseAdapter {
     Set<String> list = new HashSet<>();
     private ArrayList<AppListInfo> mData = new ArrayList<>();
     private LayoutInflater mInflater;
+    private final int headerColor;
 
     public FavoriteFlaggingAdapter(Context context, ArrayList<AppListInfo> mData, Set<String> list) {
         this.context = context;
         this.mData = mData;
         this.list = list;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(R.attr.flag_header, typedValue, true);
+        headerColor = typedValue.resourceId;
     }
 
     public int getCount() {
@@ -88,10 +96,10 @@ public class FavoriteFlaggingAdapter extends BaseAdapter {
                 holder.txtNoAppsMessage.setVisibility(View.GONE);
                 holder.linTop.setVisibility(View.GONE);
                 if (resolveInfo.isFlagApp) {
-                    holder.txtHeader.setBackgroundColor(ContextCompat.getColor(context, R.color.section_title_bg));
+                    holder.txtHeader.setBackgroundColor(ContextCompat.getColor(context, headerColor));
                     holder.txtHeader.setText(context.getString(R.string.str_frequently_used_apps));
                 } else {
-                    holder.txtHeader.setBackgroundColor(ContextCompat.getColor(context, R.color.unflageapp_header));
+                    holder.txtHeader.setBackgroundColor(ContextCompat.getColor(context, headerColor));
                     holder.txtHeader.setText(context.getString(R.string.all_other_installed_apps));
                 }
             } else {

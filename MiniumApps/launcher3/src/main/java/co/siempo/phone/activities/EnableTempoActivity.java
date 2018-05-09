@@ -34,11 +34,6 @@ public class EnableTempoActivity extends CoreActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enable_tempo);
-//        Window window = getWindow();
-//        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-//        window.setStatusBarColor(getResources().getColor(R.color.white));
-//        View decor = window.getDecorView();
-//        decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
         permissionUtil = new PermissionUtil(this);
         toolbar = findViewById(R.id.toolbar);
@@ -59,7 +54,9 @@ public class EnableTempoActivity extends CoreActivity {
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                     if (btnSubmit.getText().toString().equalsIgnoreCase(getString(R.string.enable_setting_a))) {
-                        startActivityForResult(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS), PermissionUtil.NOTIFICATION_ACCESS);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                            startActivityForResult(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS), PermissionUtil.NOTIFICATION_ACCESS);
+                        }
                     } else if (btnSubmit.getText().toString().equalsIgnoreCase(getString(R.string.enable_setting_b))) {
                         Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

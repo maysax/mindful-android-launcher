@@ -1,19 +1,21 @@
 package co.siempo.phone.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -56,18 +58,31 @@ public class FavoriteAppsPositionActivity extends CoreActivity implements OnFavo
             finish();
         }
     };
+    private LinearLayout linMain;
+    private RelativeLayout relMain;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorite_apps_positioning);
-    }
+        String filePath = PrefSiempo.getInstance(this).read(PrefSiempo
+                .DEFAULT_BAG, "");
+        linMain = findViewById(R.id.linMain);
+        relMain = findViewById(R.id.relMain);
+        if (!TextUtils.isEmpty(filePath)) {
+            Bitmap bitmap = BitmapFactory.decodeFile(filePath);
 
-    private void setTextColorForMenuItem(MenuItem menuItem, @ColorRes int color) {
-        SpannableString spanString = new SpannableString(menuItem.getTitle().toString());
-        spanString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, color)), 0, spanString.length(), 0);
-        menuItem.setTitle(spanString);
+            BitmapDrawable ob = new BitmapDrawable(getResources(), bitmap);
+
+            //Code for Applying background
+            relMain.setBackground(ob);
+            linMain.setBackgroundColor(ContextCompat.getColor(this, R.color.trans_black));
+
+        } else {
+            linMain.setBackgroundColor(ContextCompat.getColor(this, R.color
+                    .transparent));
+        }
     }
 
 
@@ -75,7 +90,6 @@ public class FavoriteAppsPositionActivity extends CoreActivity implements OnFavo
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.app_junkfood_flagging, menu);
         MenuItem menuItem = menu.findItem(R.id.item_save);
-        setTextColorForMenuItem(menuItem, R.color.colorAccent);
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -112,8 +126,6 @@ public class FavoriteAppsPositionActivity extends CoreActivity implements OnFavo
         relPane = findViewById(R.id.relPane);
         toolbar.setTitle(R.string.editing_frequently_apps);
         setSupportActionBar(toolbar);
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
-                .colorAccent));
         items = new ArrayList<>();
         items = PackageUtil.getFavoriteList(this);
 

@@ -53,7 +53,6 @@
                         android:layout_marginTop="@dimen/dp_10"
                         android:gravity="center"
                         android:text="@string/siempo_need_permission"
-                        android:textColor="@color/black"
                         android:textSize="18sp"
                         android:visibility="visible"/>
 
@@ -68,7 +67,6 @@
                         android:paddingLeft="@dimen/dp_16"
                         android:paddingRight="@dimen/dp_5"
                         android:text="@string/choose_how_minutes"
-                        android:textColor="#8A000000"
                         android:textSize="15sp"
                         android:visibility="visible"/>
 
@@ -153,7 +151,6 @@
                             android:paddingBottom="@dimen/dp_5"
                             android:paddingTop="@dimen/dp_5"
                             android:text="@string/to_enable_draw"
-                            android:textColor="#8A000000"
                             android:textSize="16sp"
                             android:textStyle="normal"/>
 
@@ -162,12 +159,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/on_the_next"
-                            android:layout_marginLeft="30dp"
-                            android:paddingTop="-10dp"
-                            android:layout_marginRight="30dp"
-                            android:layout_marginTop="-10dp"
                             android:layout_centerHorizontal="true"
                             android:layout_marginBottom="-10dp"
+                            android:layout_marginLeft="30dp"
+                            android:layout_marginRight="30dp"
+                            android:layout_marginTop="-10dp"
+                            android:paddingTop="-10dp"
                             android:src="@drawable/img_draw_overlay_enable"/>
                     </RelativeLayout>
 

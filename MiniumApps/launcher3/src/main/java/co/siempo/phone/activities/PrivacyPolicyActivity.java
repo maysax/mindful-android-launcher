@@ -2,7 +2,6 @@ package co.siempo.phone.activities;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.webkit.WebView;
@@ -26,8 +25,6 @@ public class PrivacyPolicyActivity extends CoreActivity {
         toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
         toolbar.setTitle(R.string.privacypolicy);
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
-                .colorAccent));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

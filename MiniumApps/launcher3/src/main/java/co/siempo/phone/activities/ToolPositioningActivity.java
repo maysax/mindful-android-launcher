@@ -1,6 +1,9 @@
 package co.siempo.phone.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.ColorRes;
@@ -10,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,6 +45,7 @@ import co.siempo.phone.utils.PrefSiempo;
 public class ToolPositioningActivity extends CoreActivity implements OnToolItemListChangedListener,
         OnStartDragListener {
     HashMap<Integer, AppMenu> map = new HashMap<>();
+    LinearLayout linMain;
     private ArrayList<MainListItem> items = new ArrayList<>();
     private ArrayList<MainListItem> topItems = new ArrayList<>();
     private ArrayList<MainListItem> bottomItems = new ArrayList<>();
@@ -56,11 +61,32 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
     private RelativeLayout relTop;
     private LinearLayout linearTop;
     private long startTime = 0;
+    private RelativeLayout relMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tool_positioning);
+        relMain = findViewById(R.id.relMain);
+        linMain = findViewById(R.id.linMain);
+        String filePath = PrefSiempo.getInstance(this).read(PrefSiempo
+                .DEFAULT_BAG, "");
+        if (!TextUtils.isEmpty(filePath)) {
+
+
+            Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+            BitmapDrawable ob = new BitmapDrawable(getResources(), bitmap);
+            //Code for Applying background
+
+            relMain.setBackground(ob);
+            linMain.setBackgroundColor(ContextCompat.getColor(this, R.color.trans_black));
+
+
+        } else {
+            linMain.setBackgroundColor(ContextCompat.getColor(this, R.color
+                    .transparent));
+        }
+
     }
 
     @Override
@@ -81,7 +107,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.app_junkfood_flagging, menu);
         MenuItem menuItem = menu.findItem(R.id.item_save);
-        setTextColorForMenuItem(menuItem, R.color.colorAccent);
+//        setTextColorForMenuItem(menuItem, R.color.colorAccent);
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -150,8 +176,6 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.editing_tools);
         setSupportActionBar(toolbar);
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
-                .colorAccent));
         items = new ArrayList<>();
         new MainListItemLoader(this).loadItemsDefaultApp(items);
 //        items = CoreApplication.getInstance().getToolItemsList();
@@ -188,7 +212,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         txtSelectTools = findViewById(R.id.txtSelectTools);
         recyclerView.setHasFixedSize(true);
         mLayoutManager = new GridLayoutManager(this, 4);
-                recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setLayoutManager(mLayoutManager);
         if (itemDecoration != null) {
             recyclerView.removeItemDecoration(itemDecoration);
         }

@@ -108,8 +108,6 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
         toolbar.setTitle(R.string.app_menus);
-        toolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color
-                .colorAccent));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -274,7 +272,7 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
 
 
     private void showDialogOnHideIconBranding() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogTheme);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getString(R.string.are_you_sure));
         builder.setMessage(R.string.msg_hide_icon_branding);
         builder.setPositiveButton(getString(R.string.yes_unhide), new DialogInterface.OnClickListener() {

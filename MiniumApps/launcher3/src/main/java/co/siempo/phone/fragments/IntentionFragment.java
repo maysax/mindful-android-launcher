@@ -4,9 +4,11 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,6 +74,8 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         Intent myService = new Intent(getActivity(), StatusBarService.class);
         getActivity().startService(myService);
         initView(view);
+
+
         return view;
     }
 
@@ -96,11 +100,13 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         linIF = view.findViewById(R.id.linIF);
 
         // clear FLAG_TRANSLUCENT_STATUS flag:
-        mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        if (null != mWindow) {
+            mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
-        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-        mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        defaultStatusBarColor = mWindow.getStatusBarColor();
+            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+            mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            defaultStatusBarColor = mWindow.getStatusBarColor();
+        }
         hideView();
     }
 
@@ -138,14 +144,10 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                         @Override
                         public void run() {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                                if (Settings.canDrawOverlays(getActivity())) {
                                 new ActivityHelper(getActivity()).handleDefaultLauncher(getActivity());
-                                //((CoreActivity) getActivity()).loadDialog();
                                 PrefSiempo.getInstance(getActivity()).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME_SHOW_TOOLTIP, false);
-//                                }
                             } else {
                                 new ActivityHelper(getActivity()).handleDefaultLauncher(getActivity());
-                                //((CoreActivity) getActivity()).loadDialog();
                                 PrefSiempo.getInstance(getActivity()).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME_SHOW_TOOLTIP, false);
                             }
 
@@ -154,6 +156,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                 }
             }
         }
+
     }
 
 
@@ -165,7 +168,12 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                     if (permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
                             && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
                             && PackageUtil.isSiempoLauncher(context)) {
-                        dialogTempo = new DialogTempoSetting(getActivity());
+
+                        TypedValue typedValue = new TypedValue();
+                        Resources.Theme theme = context.getTheme();
+                        theme.resolveAttribute(R.attr.dialog_style, typedValue, true);
+                        int dialogStyle = typedValue.resourceId;
+                        dialogTempo = new DialogTempoSetting(getActivity(), dialogStyle);
                         if (dialogTempo.getWindow() != null)
                             dialogTempo.getWindow().setGravity(Gravity.TOP);
                         dialogTempo.show();
@@ -215,7 +223,6 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT
                 );
-
                 // Set an elevation value for popup window
                 // Call requires API level 21
                 if (Build.VERSION.SDK_INT >= 21) {
@@ -235,7 +242,12 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                             if (permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
                                     && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
                                     && PackageUtil.isSiempoLauncher(context)) {
-                                DialogTempoSetting dialogTempo = new DialogTempoSetting(getActivity());
+                                TypedValue typedValue = new TypedValue();
+                                Resources.Theme theme = context.getTheme();
+                                theme.resolveAttribute(R.attr.dialog_style, typedValue, true);
+                                int dialogStyle = typedValue.resourceId;
+                                DialogTempoSetting dialogTempo = new
+                                        DialogTempoSetting(getActivity(), dialogStyle);
                                 if (dialogTempo.getWindow() != null)
                                     dialogTempo.getWindow().setGravity(Gravity.TOP);
                                 dialogTempo.show();
@@ -270,10 +282,9 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                     }
                 });
                 mPopupWindow.setOutsideTouchable(true);
-                mPopupWindow.setFocusable(true);
                 mPopupWindow.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 mPopupWindow.showAsDropDown(imgOverFlow, 0, (int) -imgOverFlow.getX() - 10);
-                UIUtils.applyDim(root, 0.6f);
+                UIUtils.applyDim(root, 0.7f);
                 if (null != getActivity()) {
                     UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
                 }
@@ -296,4 +307,6 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
             imgTempo.performClick();
         }
     }
+
+
 }

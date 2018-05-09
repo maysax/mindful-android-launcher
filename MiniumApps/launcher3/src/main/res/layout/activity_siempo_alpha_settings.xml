@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -7,11 +8,9 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/toolbar_bg"
-        android:elevation="@dimen/dp_5"
-        android:minHeight="?android:attr/actionBarSize"/>
+        style="@style/toolbar_style"
+        app:navigationIcon="@drawable/ic_arrow_back_blue_24dp"
+        app:titleTextColor="?attr/toolbar_text_color"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -167,7 +166,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:contentDescription="@null"
-                android:padding="6dp" />
+                android:padding="6dp"/>
 
             <co.siempo.phone.customviews.RobotoRegularTextView
                 android:id="@+id/txtInAppProduct"
@@ -177,7 +176,7 @@
                 android:layout_marginStart="15dp"
                 android:fontFamily="sans-serif-medium"
                 android:text="Purchase"
-                android:textSize="14sp" />
+                android:textSize="14sp"/>
 
         </LinearLayout>
 

@@ -171,7 +171,8 @@ public class IntentionEditActivity extends CoreActivity implements View.OnClickL
             }
         });
         int from = getWindow().getNavigationBarColor();
-        int to = ContextCompat.getColor(this, R.color.colorAccent); // new color to animate to
+        int to = ContextCompat.getColor(this, R.color.dialog_blue); // new color to
+        // animate to
 
         ValueAnimator colorAnimation = ValueAnimator.ofArgb(from, to);
         colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {

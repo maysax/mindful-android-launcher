@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,7 +15,9 @@ import com.bumptech.glide.Glide;
 import java.io.File;
 
 import co.siempo.phone.R;
+import co.siempo.phone.event.NotifyBackgroundChange;
 import co.siempo.phone.utils.PrefSiempo;
+import de.greenrobot.event.EventBus;
 
 public class UpdateBackgroundActivity extends CoreActivity {
 
@@ -28,10 +29,7 @@ public class UpdateBackgroundActivity extends CoreActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_background);
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
         toolbar.setTitle(R.string.update_background);
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
-                .colorAccent));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -42,7 +40,8 @@ public class UpdateBackgroundActivity extends CoreActivity {
         Intent imageIntent = getIntent();
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
 
-        if (imageIntent.getExtras() != null && imageIntent.hasExtra("imageUri")) ;
+        if (imageIntent.getExtras() != null && imageIntent.hasExtra("imageUri"))
+            ;
         {
             strImage = imageIntent.getExtras().getString("imageUri");
             Glide.with(this)
@@ -68,6 +67,7 @@ public class UpdateBackgroundActivity extends CoreActivity {
                 PrefSiempo.getInstance(UpdateBackgroundActivity.this).write(PrefSiempo
                         .DEFAULT_BAG, strImage);
                 setResult(Activity.RESULT_OK, new Intent());
+                EventBus.getDefault().postSticky(new NotifyBackgroundChange(true));
                 finish();
                 return false;
             }

@@ -2,7 +2,6 @@ package co.siempo.phone.fragments;
 
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -30,10 +29,6 @@ public class TempoNotificationFragment extends CoreFragment {
     @ViewById
     TextView titleActionBar;
 
-//    @Pref
-//    Launcher3Prefs_ launcherPrefs;
-
-
     @ViewById
     TextView txtAllowAppsText;
     @ViewById
@@ -58,10 +53,7 @@ public class TempoNotificationFragment extends CoreFragment {
 
     @AfterViews
     void afterViews() {
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
         toolbar.setTitle(R.string.string_notification_title);
-        toolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color
-                .colorAccent));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

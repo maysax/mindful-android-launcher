@@ -8,6 +8,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -25,6 +28,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.github.javiersantos.appupdater.AppUpdaterUtils;
 import com.google.firebase.database.DataSnapshot;
@@ -41,6 +46,7 @@ import co.siempo.phone.adapters.DashboardPagerAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.CheckVersionEvent;
 import co.siempo.phone.event.HomePress;
+import co.siempo.phone.event.NotifyBackgroundChange;
 import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.fragments.FavoritePaneFragment;
 import co.siempo.phone.fragments.IntentionFragment;
@@ -64,6 +70,7 @@ import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 
 public class DashboardActivity extends CoreActivity {
 
@@ -93,6 +100,8 @@ public class DashboardActivity extends CoreActivity {
     private DashboardPagerAdapter mPagerAdapter;
     private AlertDialog notificationDialog;
     private Dialog overlayDialog;
+    private RelativeLayout linMain;
+    private ImageView imgBackground;
 
     /**
      * @return True if {@link android.service.notification.NotificationListenerService} is enabled.
@@ -109,6 +118,7 @@ public class DashboardActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
 
         if (!TextUtils.isEmpty(PrefSiempo.getInstance(this).read(PrefSiempo
                 .USER_EMAILID, ""))) {
@@ -175,7 +185,13 @@ public class DashboardActivity extends CoreActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
+        setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
         setContentView(R.layout.activity_dashboard);
+        linMain = findViewById(R.id.linMain);
+        imgBackground = findViewById(R.id.imgBackground);
+        changeLayoutBackground();
+
         swipeCount = PrefSiempo.getInstance(DashboardActivity.this).read(PrefSiempo.TOGGLE_LEFTMENU, 0);
         loadViews();
         Log.d("Test", "P1");
@@ -184,17 +200,42 @@ public class DashboardActivity extends CoreActivity {
         }
         mWindow = getWindow();
         // clear FLAG_TRANSLUCENT_STATUS flag:
-        mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        if (null != mWindow) {
+            mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
-        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-        mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        defaultStatusBarColor = mWindow.getStatusBarColor();
+            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+            mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            defaultStatusBarColor = mWindow.getStatusBarColor();
+        }
         Log.d("Test", "P2");
         permissionUtil = new PermissionUtil(this);
         overlayDialog = new Dialog(this, 0);
         showOverlayOfDefaultLauncher();
 
 
+    }
+
+    private void changeLayoutBackground() {
+        try {
+            String filePath = PrefSiempo.getInstance(this).read(PrefSiempo
+                    .DEFAULT_BAG, "");
+            if (!TextUtils.isEmpty(filePath)) {
+
+
+                Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+                BitmapDrawable ob = new BitmapDrawable(getResources(), bitmap);
+                //Code for Applying background
+                if (null != imgBackground) {
+                    imgBackground.setBackground(ob);
+                }
+
+
+            } else {
+                imgBackground.setBackground(null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void showOverlayOfDefaultLauncher() {
@@ -300,11 +341,6 @@ public class DashboardActivity extends CoreActivity {
             }
         });
         loadPane();
-//        if (PrefSiempo.getInstance(this).read(PrefSiempo
-//                .IS_APP_INSTALLED_FIRSTTIME, true)) {
-//            Log.d(TAG, "Display upgrade overlayDialog.");
-//            checkUpgradeVersion();
-//        }
         if (PrefSiempo.getInstance(this).read(PrefSiempo
                 .INSTALLED_APP_VERSION_CODE, 0) == 0 || (PrefSiempo.getInstance(this).read(PrefSiempo
                 .INSTALLED_APP_VERSION_CODE, 0) < UIUtils
@@ -436,8 +472,6 @@ public class DashboardActivity extends CoreActivity {
     }
 
     private void showUpdateDialog(String str) {
-//        PrefSiempo.getInstance(DashboardActivity.this).write(PrefSiempo
-//                .IS_APP_INSTALLED_FIRSTTIME, false);
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
         if (activeNetwork != null) { // connected to the internet
             UIUtils.confirmWithCancel(this, "", str.equalsIgnoreCase(CheckVersionEvent.ALPHA) ? "New alpha version found! Would you like to update Siempo?" : "New beta version found! Would you like to update Siempo?", new DialogInterface.OnClickListener() {
@@ -468,11 +502,6 @@ public class DashboardActivity extends CoreActivity {
         if (requestCode == 100) {
             if (isEnabled(DashboardActivity.this)) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                    if (!Settings.canDrawOverlays(DashboardActivity.this)) {
-//                        Toast.makeText(this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
-//                        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-//                        startActivityForResult(intent, 102);
-//                    } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
                             && !notificationManager.isNotificationPolicyAccessGranted()) {
                         Intent intent = new Intent(
@@ -480,7 +509,6 @@ public class DashboardActivity extends CoreActivity {
                                         .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
                         startActivityForResult(intent, 103);
                     }
-//                    }
                 }
 
             } else {
@@ -489,13 +517,6 @@ public class DashboardActivity extends CoreActivity {
         }
         if (requestCode == 102) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                if (!Settings.canDrawOverlays(DashboardActivity.this)) {
-//                    Toast.makeText(this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
-//                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-//                    startActivityForResult(intent, 102);
-//                }
-//
-// else {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
                         && !notificationManager.isNotificationPolicyAccessGranted()) {
                     Intent intent = new Intent(
@@ -504,7 +525,6 @@ public class DashboardActivity extends CoreActivity {
                     startActivityForResult(intent, 103);
                 }
             }
-//            }
         }
 
         if (requestCode == 103) {
@@ -572,6 +592,15 @@ public class DashboardActivity extends CoreActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MainThread)
+    public void onEvent(NotifyBackgroundChange notifyBackgroundChange) {
+        if (notifyBackgroundChange != null && notifyBackgroundChange.isNotify()) {
+            changeLayoutBackground();
+            EventBus.getDefault().removeStickyEvent(notifyBackgroundChange);
+        }
+
     }
 
 
