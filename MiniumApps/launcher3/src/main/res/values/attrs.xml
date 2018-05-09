@@ -36,6 +36,7 @@
 
     <declare-styleable name="icon">
         <attr name="icon_color" format="color"/>
+        <attr name="chevron_junk" format="color"/>
         <attr name="icon_color_reverse" format="color"/>
         <attr name="txt_content_color" format="color"/>
         <attr name="pop_up_color" format="color"/>

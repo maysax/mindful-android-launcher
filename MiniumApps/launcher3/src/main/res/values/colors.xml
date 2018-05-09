@@ -96,6 +96,7 @@
 
     <!-- Material core colors -->
     <color name="material.core.red">#f44336</color>
+    <color name="red">#ff0000</color>
     <color name="material.core.blue">#2196F3</color>
     <color name="material.core.cyan">#00BCD4</color>
     <color name="material.core.orange">#FF9800</color>
