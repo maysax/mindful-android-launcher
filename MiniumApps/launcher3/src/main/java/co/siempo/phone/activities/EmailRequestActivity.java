@@ -61,7 +61,7 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
         permissionUtil = new PermissionUtil(this);
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(getResources().getColor(R.color.bg_permissionscreenstatusbar));
+        window.setStatusBarColor(getResources().getColor(R.color.white));
         View decor = window.getDecorView();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);

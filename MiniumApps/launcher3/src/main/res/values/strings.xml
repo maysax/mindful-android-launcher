@@ -308,6 +308,7 @@
     <string name="message4"><b>Sample intentions:</b>\nKeep my phone locked\nFocus on family\nEat healthy foods</string>
     <string name="save">SAVE</string>
     <string name="what_s_your_intention">What\'s your intention?</string>
+    <string name="your_intention">Your Intention:</string>
     <string name="type_a_few_words">Type a few words</string>
     <string name="close">CLOSE</string>
     <string name="next">NEXT</string>
