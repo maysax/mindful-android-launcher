@@ -34,7 +34,7 @@ import co.siempo.phone.utils.Sorting;
 public class FavoriteFlaggingAdapter extends BaseAdapter implements Filterable {
 
     private final FavoritesSelectionActivity context;
-    public String strSearch = "";
+    private String strSearch = "";
     private ArrayList<AppListInfo> mData = new ArrayList<>();
     private List<AppListInfo> filterList = new ArrayList<>();
     private LayoutInflater mInflater;
@@ -97,7 +97,7 @@ public class FavoriteFlaggingAdapter extends BaseAdapter implements Filterable {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         holder.txtNoAppsMessage.setForeground(new ColorDrawable(ContextCompat.getColor(context, color)));
                     }
-                    holder.txtNoAppsMessage.setText(strSearch.equalsIgnoreCase("") ? context.getString(R.string.tap_apps_above_to_move_them_into_this_section) :context.getString(R
+                    holder.txtNoAppsMessage.setText(strSearch.equalsIgnoreCase("") ? context.getString(R.string.tap_apps_above_to_move_them_into_this_section) : context.getString(R
                             .string.no_apps));
                 }
             } else if (resolveInfo.isShowHeader && !resolveInfo.isShowTitle) {
@@ -161,7 +161,7 @@ public class FavoriteFlaggingAdapter extends BaseAdapter implements Filterable {
             strSearch = searchString;
             FilterResults ret = new FilterResults();
             int count = mData.size();
-            final ArrayList<AppListInfo> nlist = new ArrayList<AppListInfo>();
+            final ArrayList<AppListInfo> nlist = new ArrayList<>();
             String filterableString;
             List<AppListInfo> bindingList = new ArrayList<>();
             if (!searchString.isEmpty()) {

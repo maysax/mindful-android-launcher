@@ -35,28 +35,28 @@
     </declare-styleable>
 
     <declare-styleable name="icon">
-        <attr name="icon_color" format="color"/>
-        <attr name="chevron_junk" format="color"/>
-        <attr name="icon_color_reverse" format="color"/>
-        <attr name="txt_content_color" format="color"/>
-        <attr name="pop_up_color" format="color"/>
-        <attr name="txt_content_title" format="color"/>
-        <attr name="pane_color" format="color"/>
-        <attr name="indicator_active" format="color"/>
-        <attr name="indicator_inactive" format="color"/>
-        <attr name="toolbar_bg" format="color"/>
-        <attr name="bottom_doc" format="reference"/>
-        <attr name="bottom_doc_pos" format="reference"/>
-        <attr name="dialog_style" format="reference"/>
-        <attr name="top_doc" format="reference"/>
-        <attr name="top_date_color" format="color"/>
-        <attr name="toolbar_text_color" format="color"/>
-        <attr name="theme_base_color" format="color"/>
-        <attr name="button_bg" format="color"/>
-        <attr name="flag_header" format="color"/>
-        <attr name="card_image_trans" format="color"/>
-        <attr name="hint_search" format="color"/>
-        <attr name="card_image_trans_reverse" format="color"/>
+        <attr name="icon_color" format="color" />
+        <attr name="chevron_junk" format="color" />
+        <attr name="icon_color_reverse" format="color" />
+        <attr name="txt_content_color" format="color" />
+        <attr name="pop_up_color" format="color" />
+        <attr name="txt_content_title" format="color" />
+        <attr name="pane_color" format="color" />
+        <attr name="indicator_active" format="color" />
+        <attr name="indicator_inactive" format="color" />
+        <attr name="toolbar_bg" format="color" />
+        <attr name="bottom_doc" format="reference" />
+        <attr name="bottom_doc_pos" format="reference" />
+        <attr name="dialog_style" format="reference" />
+        <attr name="top_doc" format="reference" />
+        <attr name="top_date_color" format="color" />
+        <attr name="toolbar_text_color" format="color" />
+        <attr name="theme_base_color" format="color" />
+        <attr name="button_bg" format="color" />
+        <attr name="flag_header" format="color" />
+        <attr name="card_image_trans" format="color" />
+        <attr name="hint_search" format="color" />
+        <attr name="card_image_trans_reverse" format="color" />
     </declare-styleable>
 
 
