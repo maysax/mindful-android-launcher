@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="co.siempo.phone.activities.ToolPositioningActivity">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/layout"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="co.siempo.phone.activities.ToolPositioningActivity">
 
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/toolbar_style"
+
         app:navigationIcon="@drawable/ic_arrow_back_blue_24dp"
-        app:titleTextColor="?attr/toolbar_text_color" />
+        app:titleTextColor="?attr/toolbar_text_color"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/toolbar_bg"
+
         android:elevation="@dimen/dp_5"
         android:padding="@dimen/dp_8">
 
@@ -26,7 +28,8 @@
             android:id="@+id/cardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="@dimen/dp_5">
+            android:elevation="@dimen/dp_10"
+            >
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -39,7 +42,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_margin="@dimen/dp_8"
-                    android:background="@drawable/ic_search" />
+                    android:background="@drawable/ic_search"/>
 
                 <EditText
                     android:id="@+id/edtSearch"
@@ -54,7 +57,7 @@
                     android:singleLine="true"
                     android:text=""
                     android:textColorHint="?attr/hint_search"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"/>
 
                 <ImageView
                     android:id="@+id/imgClear"
@@ -64,7 +67,7 @@
                     android:layout_centerVertical="true"
                     android:padding="@dimen/dp_8"
                     android:src="@drawable/ic_close_blue"
-                    android:visibility="invisible" />
+                    android:visibility="invisible"/>
             </RelativeLayout>
         </android.support.v7.widget.CardView>
     </RelativeLayout>
@@ -73,8 +76,10 @@
         android:id="@+id/listAllApps"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:divider="?attr/divider_color"
+        android:dividerHeight="@dimen/dp_1"
         android:listSelector="@color/transparent"
-        tools:listitem="@layout/list_item_junkfoodflag" />
+        tools:listitem="@layout/list_item_junkfoodflag"/>
 
 
 </LinearLayout>

@@ -71,6 +71,7 @@
                 android:maxLines="1"
                 android:paddingTop="8dp"
                 android:textSize="13sp"
+                android:textColor="?attr/icon_color"
                 tools:text="Send as a message"/>
 
             <co.siempo.phone.customviews.RobotoCondensedTextView

@@ -1,14 +1,15 @@
 package co.siempo.phone.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ import co.siempo.phone.utils.UIUtils;
 public class JunkfoodFlaggingAdapter extends BaseAdapter implements Filterable {
 
     public final JunkfoodFlaggingActivity context;
+    private final int foreground;
     String searchReference = "";
     private ArrayList<AppListInfo> mData = new ArrayList<>();
     private LayoutInflater mInflater;
@@ -49,6 +51,10 @@ public class JunkfoodFlaggingAdapter extends BaseAdapter implements Filterable {
         this.mData = mData;
         filterList = mData;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(R.attr.flag_foreground, typedValue, true);
+        foreground = typedValue.resourceId;
     }
 
     public int getCount() {
@@ -98,19 +104,20 @@ public class JunkfoodFlaggingAdapter extends BaseAdapter implements Filterable {
                 if (resolveInfo.isFlagApp) {
                     holder.txtHeader.setBackgroundColor(ContextCompat.getColor(context, R.color.flageapp_header));
                     holder.txtHeader.setText(context.getString(R.string.flag_app));
-                    int color = R.color.forground;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        holder.txtNoAppsMessage.setForeground(new ColorDrawable(ContextCompat.getColor(context, color)));
-                        holder.txtNoAppsMessage.setText(searchReference.equalsIgnoreCase("") ? context.getString(R.string.tap_apps_below_to_move_them_into_this_section) : context.getString(R
-                                .string.no_apps));
-                    }
+
+                    holder.txtNoAppsMessage.setBackground(new
+                            ColorDrawable(ContextCompat.getColor(context,
+                            foreground)));
+                    holder.txtNoAppsMessage.setText(searchReference.equalsIgnoreCase("") ? context.getString(R.string.tap_apps_below_to_move_them_into_this_section) : context.getString(R
+                            .string.no_apps));
+
                 } else {
                     holder.txtHeader.setBackgroundColor(ContextCompat.getColor(context, R.color.unflageapp_header));
                     holder.txtHeader.setText(context.getString(R.string.all_other_installed_apps));
                     int color = R.color.transparent;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        holder.txtNoAppsMessage.setForeground(new ColorDrawable(ContextCompat.getColor(context, color)));
-                    }
+
+                    holder.txtNoAppsMessage.setBackground(new ColorDrawable
+                            (ContextCompat.getColor(context, color)));
                     holder.txtNoAppsMessage.setText(searchReference.equalsIgnoreCase("") ? context.getString(R.string.tap_apps_above_to_move_them_into_this_section) : context.getString(R
                             .string.no_apps));
                 }
@@ -149,16 +156,14 @@ public class JunkfoodFlaggingAdapter extends BaseAdapter implements Filterable {
                 }
                 if (resolveInfo.isFlagApp) {
                     holder.imgChevron.setImageResource(R.drawable.ic_down_arrow_red);
-                    int color = R.color.forground;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        holder.linTop.setForeground(new ColorDrawable(ContextCompat.getColor(context, color)));
-                    }
+                    holder.linTop.setBackground(new ColorDrawable(ContextCompat
+                            .getColor(context, foreground)));
+
                 } else {
                     holder.imgChevron.setImageResource(R.drawable.ic_down_arrow);
                     int color = R.color.transparent;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        holder.linTop.setForeground(new ColorDrawable(ContextCompat.getColor(context, color)));
-                    }
+                    holder.linTop.setBackground(new ColorDrawable(ContextCompat.getColor(context, color)));
+
                 }
             }
             holder.linearList.setOnClickListener(new View.OnClickListener() {

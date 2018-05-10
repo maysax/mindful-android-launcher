@@ -58,6 +58,8 @@
         <attr name="card_image_trans" format="color"/>
         <attr name="hint_search" format="color"/>
         <attr name="card_image_trans_reverse" format="color"/>
+        <attr name="flag_foreground" format="color"/>
+        <attr name="divider_color" format="color"/>
     </declare-styleable>
 
 
