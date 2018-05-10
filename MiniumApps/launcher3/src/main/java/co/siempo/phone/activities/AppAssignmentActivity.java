@@ -230,6 +230,16 @@ public class AppAssignmentActivity extends CoreActivity {
             public void onClick(View v) {
                 showallAppBtn.setVisibility(View.GONE);
                 appAssignmentAdapter.setdata(appListAll);
+                appAssignmentAdapter.getFilter().filter(edtSearch.getText().toString().trim());
+                if (appAssignmentAdapter.getItemCount() >= 0) {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    txtErrorMessage.setVisibility(View.INVISIBLE);
+                } else {
+                    recyclerView.setVisibility(View.INVISIBLE);
+                    txtErrorMessage.setVisibility(View.VISIBLE);
+                    txtErrorMessage.setText("No apps match that input text");
+
+                }
             }
         });
 
@@ -246,12 +256,22 @@ public class AppAssignmentActivity extends CoreActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (appAssignmentAdapter != null) {
                     appAssignmentAdapter.getFilter().filter(s.toString());
+                    if (appAssignmentAdapter.getItemCount() >= 0) {
+                        recyclerView.setVisibility(View.VISIBLE);
+                        txtErrorMessage.setVisibility(View.INVISIBLE);
+                    } else {
+                        recyclerView.setVisibility(View.INVISIBLE);
+                        txtErrorMessage.setVisibility(View.VISIBLE);
+                        txtErrorMessage.setText("No apps match that input text");
+
+                    }
                 }
                 if (s.toString().length() > 0) {
                     imgClear.setVisibility(View.VISIBLE);
                 } else {
                     imgClear.setVisibility(View.INVISIBLE);
                 }
+
             }
 
             @Override
