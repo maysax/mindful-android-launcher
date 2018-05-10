@@ -425,7 +425,7 @@
     <string name="reduce_overuse_screen_description_setting">Your daily screen-time limit starts high and gradually decreases. After reaching your limit each day, you will be gently detered from using non-essential apps.</string>
     <string name="iconbranding_description_setting">App icon logos are replaced with less enticing images and patterns.</string>
     <string name="assign_an_app">Assign an app to </string>
-    <string name="title_flagging_screen">Flag apps</string>
+    <string name="title_flagging_screen">Flag apps to use them less</string>
     <string name="all_other_installed_apps">All other installed apps</string>
     <string name="tap_apps_below_to_move_them_into_this_section">Tap apps below to move them into this section.</string>
     <string name="tap_apps_above_to_move_them_into_this_section">Tap apps above to move them into this section.</string>

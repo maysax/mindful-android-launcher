@@ -36,6 +36,7 @@
         <item name="card_image_trans">@color/trans_black</item>
         <item name="card_image_trans_reverse">@color/trans_white</item>
         <item name="hint_search">@color/hint_white</item>
+        <item name="chevron_junk">@color/red</item>
         <item name="dialog_style">@style/FullScreenDialogStyle</item>
 
 
@@ -79,6 +80,7 @@
         <item name="card_image_trans">@color/trans_white</item>
         <item name="card_image_trans_reverse">@color/trans_black</item>
         <item name="hint_search">@color/dialog_blue</item>
+        <item name="chevron_junk">@color/white</item>
 
 
     </style>

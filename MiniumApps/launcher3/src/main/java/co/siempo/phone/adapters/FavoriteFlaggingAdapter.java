@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -98,14 +97,15 @@ public class FavoriteFlaggingAdapter extends BaseAdapter implements Filterable {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         holder.txtNoAppsMessage.setForeground(new ColorDrawable(ContextCompat.getColor(context, color)));
                     }
-                    holder.txtNoAppsMessage.setText(strSearch.equalsIgnoreCase("") ? context.getString(R.string.tap_apps_above_to_move_them_into_this_section) : "No apps match that input text");
+                    holder.txtNoAppsMessage.setText(strSearch.equalsIgnoreCase("") ? context.getString(R.string.tap_apps_above_to_move_them_into_this_section) :context.getString(R
+                            .string.no_apps));
                 }
             } else if (resolveInfo.isShowHeader && !resolveInfo.isShowTitle) {
                 holder.txtHeader.setVisibility(View.VISIBLE);
                 holder.txtNoAppsMessage.setVisibility(View.GONE);
                 holder.linTop.setVisibility(View.GONE);
                 if (resolveInfo.isFlagApp) {
-                    holder.txtHeader.setBackgroundColor(ContextCompat.getColor(context, R.color.section_title_bg));
+                    holder.txtHeader.setBackgroundColor(ContextCompat.getColor(context, R.color.unflageapp_header));
                     holder.txtHeader.setText(context.getString(R.string.str_frequently_used_apps));
                 } else {
                     holder.txtHeader.setBackgroundColor(ContextCompat.getColor(context, R.color.unflageapp_header));
@@ -217,7 +217,6 @@ public class FavoriteFlaggingAdapter extends BaseAdapter implements Filterable {
         protected void publishResults(CharSequence constraint, FilterResults results) {
             if (results.values != null) {
                 filterList = (List<AppListInfo>) results.values;
-                Log.e("filterlist size", String.valueOf(filterList.size()));
             } else {
                 filterList = new ArrayList<>(mData);
             }

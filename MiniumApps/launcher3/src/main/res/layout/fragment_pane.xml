@@ -27,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:visibility="visible" />
+                android:visibility="visible"/>
 
             <include
                 android:id="@+id/junk_doc"
@@ -35,7 +35,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
 
         </LinearLayout>
@@ -44,8 +44,8 @@
             android:id="@+id/blueLineView"
             android:layout_width="match_parent"
             android:layout_height="0.6dp"
-            android:alpha="0.5"
-            android:background="@color/dialog_blue" />
+            android:background="@color/dialog_blue_alpha" />
+
 
         <LinearLayout
             android:id="@+id/linPane"
@@ -59,7 +59,7 @@
             <co.siempo.phone.ui.SiempoViewPager
                 android:id="@+id/pagerPane"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"/>
 
         </LinearLayout>
 
@@ -68,7 +68,7 @@
             android:id="@+id/blueLineViewBottom"
             android:layout_width="match_parent"
             android:layout_height="0.6dp"
-            android:background="@color/dialog_blue" />
+            android:background="@color/dialog_blue_alpha"/>
 
         <RelativeLayout
             android:id="@+id/linBottomDoc"
