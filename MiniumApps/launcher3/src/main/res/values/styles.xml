@@ -41,6 +41,7 @@
         <item name="pull_tab">@color/pull_light</item>
         <item name="flag_foreground">@color/forground_light</item>
         <item name="divider_color">@color/divider_light</item>
+        <item name="image_alpha">@color/trans_white_bg_pane</item>
 
 
     </style>
@@ -87,6 +88,7 @@
         <item name="pull_tab">@color/pull_dark</item>
         <item name="flag_foreground">@color/forground_dark</item>
         <item name="divider_color">@color/divider_dark</item>
+        <item name="image_alpha">@color/trans_black_bg</item>
 
 
     </style>

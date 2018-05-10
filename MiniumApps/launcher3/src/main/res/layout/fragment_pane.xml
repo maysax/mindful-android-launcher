@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="3"
     tools:context="co.siempo.phone.fragments.PaneFragment">
 
     <LinearLayout
+        android:id="@+id/linMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"

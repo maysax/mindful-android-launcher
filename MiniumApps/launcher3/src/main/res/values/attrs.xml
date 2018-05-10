@@ -36,13 +36,14 @@
 
     <declare-styleable name="icon">
         <attr name="icon_color" format="color"/>
+        <attr name="image_alpha" format="color"/>
         <attr name="pull_tab" format="color"/>
         <attr name="chevron_junk" format="color"/>
         <attr name="icon_color_reverse" format="color"/>
         <attr name="txt_content_color" format="color"/>
         <attr name="pop_up_color" format="color"/>
         <attr name="txt_content_title" format="color"/>
-        <attr name="pane_color" format="color"/>d7d7d7
+        <attr name="pane_color" format="color"/>
         <attr name="indicator_active" format="color"/>
         <attr name="indicator_inactive" format="color"/>
         <attr name="toolbar_bg" format="color"/>

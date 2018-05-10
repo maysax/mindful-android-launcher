@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
@@ -148,6 +149,7 @@ public class PaneFragment extends CoreFragment {
     private View blueLineDividerBottom;
     private int backGroundColor;
     private int statusBarColorJunk;
+    private LinearLayout linMain;
 
     public PaneFragment() {
         // Required empty public constructor
@@ -161,6 +163,7 @@ public class PaneFragment extends CoreFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_pane, container, false);
+        linMain = rootView.findViewById(R.id.linMain);
         Log.d("Test", "P1");
         context = (CoreActivity) getActivity();
         getColorOfStatusBar();
@@ -177,6 +180,7 @@ public class PaneFragment extends CoreFragment {
         statusBarColorJunk = typedValue.data;
         bindView();
         Log.d("Test", "P2");
+
         return rootView;
     }
 
@@ -323,6 +327,22 @@ public class PaneFragment extends CoreFragment {
     @Override
     public void onResume() {
         super.onResume();
+        String filePath = PrefSiempo.getInstance(context).read(PrefSiempo
+                .DEFAULT_BAG, "");
+        if (!TextUtils.isEmpty(filePath)) {
+
+            TypedValue typedValue = new TypedValue();
+            Resources.Theme theme = context.getTheme();
+            theme.resolveAttribute(R.attr.image_alpha, typedValue, true);
+            int drawableId = typedValue.resourceId;
+            linMain.setBackgroundColor(ContextCompat.getColor(context,
+                    drawableId));
+
+
+        } else {
+            linMain.setBackgroundColor(ContextCompat.getColor(context, R.color
+                    .transparent));
+        }
         getActivity().registerReceiver(mKeyBoardReceiver, new IntentFilter(Utils
                 .KEYBOARD_ACTION));
         pagerPane.setAlpha(1);

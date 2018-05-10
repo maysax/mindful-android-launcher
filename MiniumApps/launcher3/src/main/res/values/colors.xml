@@ -23,6 +23,7 @@
     <color name="drop_shadow_grey">#87737373</color>
 
     <color name="black_95">#F2000000</color>
+    <color name="black_85">#DD000000</color>
     <color name="black_80">#CC000000</color>
     <color name="black_50">#80000000</color>
     <color name="black_10">#1A000000</color>
@@ -106,8 +107,11 @@
     <color name="white">@android:color/white</color>
     <color name="white_dark">#CCFFFFFF</color>
     <color name="dark_window">#333333</color>
-    <color name="trans_black">#8AFFFFFF</color>
-    <color name="trans_white">#8A000000</color>
+    <color name="trans_black">#DDFFFFFF</color>
+    <color name="trans_black_bg">#80FFFFFF</color>
+    <color name="trans_white_bg_pane">#80000000</color>
+    <color name="trans_white_bg">#CC000000</color>
+    <color name="trans_white">#CC000000</color>
     <color name="black">@android:color/black</color>
     <color name="shadow">#727272</color>
     <color name="transparent">@android:color/transparent</color>
