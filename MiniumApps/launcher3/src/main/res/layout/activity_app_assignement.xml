@@ -26,7 +26,9 @@
             android:id="@+id/cardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="@dimen/dp_5">
+            android:elevation="@dimen/dp_10"
+            app:cardCornerRadius="@dimen/dp_2"
+            app:cardUseCompatPadding="true">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
