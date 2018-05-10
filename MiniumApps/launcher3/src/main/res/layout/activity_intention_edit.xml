@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/pauseContainer"
     android:layout_width="match_parent"
@@ -9,113 +10,128 @@
     android:transitionName="@string/what_s_your_intention"
     tools:ignore="UnusedIds">
 
-    <Toolbar
-        android:id="@+id/toolbar"
+    <android.support.v7.widget.CardView
+        android:id="@+id/top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/dialog_blue"
-        android:visibility="visible">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <co.siempo.phone.customviews.RobotoRegularTextView
-                android:id="@+id/txtSave"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:gravity="center"
-                android:padding="@dimen/dp_10"
-                android:text="@string/save"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
-        </RelativeLayout>
-    </Toolbar>
-
-    <LinearLayout
-        android:id="@+id/linEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
-        android:background="@color/dialog_blue"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/dp_10"
-        android:paddingLeft="@dimen/dp_20"
-        android:paddingRight="@dimen/dp_10"
-        android:paddingTop="@dimen/dp_5">
-
-        <co.siempo.phone.customviews.RobotoRegularTextView
-            android:id="@+id/hint"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:alpha="0.7"
-            android:paddingBottom="@dimen/dp_2"
-            android:paddingLeft="@dimen/dp_5"
-            android:paddingTop="@dimen/dp_2"
-            android:text="@string/what_s_your_intention"
-            android:textColor="#8AFFFFFF"
-            android:textSize="15sp"
-            android:visibility="visible"
-            tools:ignore="RtlSymmetry" />
+        android:layout_marginTop="@dimen/dp_8"
+        android:layout_marginLeft="@dimen/dp_8"
+        android:layout_marginRight="@dimen/dp_8"
+        app:cardCornerRadius="@dimen/dp_3"
+        app:cardElevation="@dimen/dp_5">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
-            android:paddingBottom="@dimen/dp_2"
-            android:paddingLeft="@dimen/dp_5"
-            android:paddingTop="@dimen/dp_2"
-            tools:ignore="RtlSymmetry">
+            android:orientation="vertical">
 
-            <co.siempo.phone.customviews.LockEditText
-                android:id="@+id/edtIntention"
+            <Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/dp_5"
-                android:layout_toLeftOf="@+id/imgClear"
-                android:background="@null"
-                android:focusable="true"
-                android:focusedByDefault="true"
-                android:gravity="left|center"
-                android:hint="@string/type_a_few_words"
-                android:imeActionLabel="SAVE"
-                android:imeOptions="actionDone"
-                android:inputType="textCapSentences"
-                android:maxLength="48"
-                android:padding="5dp"
-                android:paddingBottom="@dimen/dp_10"
-                android:paddingTop="@dimen/dp_10"
-                android:textColor="@color/white"
-                android:textColorHint="#99C2FB"
-                android:textCursorDrawable="@drawable/custom_edit_text_cursor"
-                android:textSize="19sp"
-                android:transitionName=""
-                tools:targetApi="o"
-                tools:text="Try out new music">
+                android:background="@color/dialog_blue"
+                android:buttonGravity="top"
+                android:gravity="center_vertical"
+                android:visibility="visible">
 
-                <requestFocus />
-            </co.siempo.phone.customviews.LockEditText>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/imgClear"
-                android:layout_width="wrap_content"
+                    <co.siempo.phone.customviews.RobotoRegularTextView
+                        android:id="@+id/txtSave"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:gravity="center"
+                        android:padding="@dimen/dp_10"
+                        android:text="@string/save"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+                </RelativeLayout>
+            </Toolbar>
+
+            <LinearLayout
+                android:id="@+id/linEditText"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:padding="@dimen/dp_5"
-                android:src="@drawable/ic_icons_clear_white"
-                android:visibility="gone" />
+                android:layout_below="@+id/toolbar"
+                android:background="@color/dialog_blue"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/dp_10"
+                android:paddingLeft="@dimen/dp_20"
+                android:paddingRight="@dimen/dp_10"
+                android:paddingTop="@dimen/dp_5">
+
+                <co.siempo.phone.customviews.RobotoRegularTextView
+                    android:id="@+id/hint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.7"
+                    android:paddingLeft="@dimen/dp_5"
+                    android:paddingTop="@dimen/dp_2"
+                    android:text="@string/what_s_your_intention"
+                    android:textColor="#8AFFFFFF"
+                    android:textSize="14sp"
+                    android:visibility="visible"
+                    tools:ignore="RtlSymmetry" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="@dimen/dp_2"
+                    tools:ignore="RtlSymmetry">
+
+                    <co.siempo.phone.customviews.LockEditText
+                        android:id="@+id/edtIntention"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/dp_5"
+                        android:layout_toLeftOf="@+id/imgClear"
+                        android:background="@null"
+                        android:focusable="true"
+                        android:focusedByDefault="true"
+                        android:gravity="left|center"
+                        android:hint="@string/type_a_few_words"
+                        android:imeActionLabel="SAVE"
+                        android:imeOptions="actionDone"
+                        android:inputType="textCapSentences"
+                        android:maxLength="48"
+                        android:paddingLeft="5dp"
+                        android:paddingBottom="@dimen/dp_10"
+                        android:textColor="@color/white"
+                        android:textColorHint="#57FFFFFF"
+                        android:textCursorDrawable="@drawable/custom_edit_text_cursor"
+                        android:textSize="22sp"
+                        android:transitionName=""
+                        tools:targetApi="o"
+                        tools:text="Try out new music">
+
+                        <requestFocus />
+                    </co.siempo.phone.customviews.LockEditText>
+
+                    <ImageView
+                        android:id="@+id/imgClear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:padding="@dimen/dp_5"
+                        android:src="@drawable/ic_icons_clear_white"
+                        android:visibility="gone" />
+                </RelativeLayout>
+            </LinearLayout>
         </RelativeLayout>
-    </LinearLayout>
+    </android.support.v7.widget.CardView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/linEditText"
+        android:layout_below="@+id/top"
         android:orientation="vertical">
 
         <co.siempo.phone.customviews.RobotoRegularTextView

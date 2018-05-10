@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relRootLayout"
     android:layout_width="match_parent"
@@ -60,28 +61,51 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_centerVertical="true"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/dp_20"
-        android:paddingLeft="@dimen/margin.5"
-        android:paddingRight="@dimen/margin.5"
-        android:visibility="visible">
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_10"
+        android:clickable="true">
 
-        <co.siempo.phone.customviews.RobotoRegularTextView
-            android:id="@+id/txtIntention"
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_3"
-            android:hint="@string/what_s_your_intention"
-            android:maxEms="48"
-            android:maxLines="2"
-            android:text=""
-            android:textColor="?attr/icon_color"
-            android:textSize="15sp" />
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="2dp"
+            app:cardElevation="@dimen/dp_5">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:layout_marginTop="@dimen/dp_10"
-            android:background="@color/dialog_blue" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/dp_10"
+                android:paddingLeft="@dimen/dp_16"
+                android:paddingRight="@dimen/dp_16"
+                android:paddingTop="@dimen/dp_10"
+                android:visibility="visible">
+
+                <co.siempo.phone.customviews.RobotoRegularTextView
+                    android:id="@+id/txtHint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/your_intention"
+                    android:textColor="@color/dialog_message"
+                    android:textSize="12sp"
+                    android:visibility="invisible" />
+
+                <co.siempo.phone.customviews.RobotoRegularTextView
+                    android:id="@+id/txtIntention"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxEms="48"
+                    android:maxLines="2"
+                    android:text="@string/what_s_your_intention"
+                    android:textColor="@color/hint_white"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
     </LinearLayout>
+
 </RelativeLayout>
