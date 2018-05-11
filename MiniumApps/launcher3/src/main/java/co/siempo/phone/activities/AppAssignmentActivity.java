@@ -55,12 +55,13 @@ public class AppAssignmentActivity extends CoreActivity {
     private RecyclerView recyclerView;
     private TextView txtErrorMessage;
     private AppAssignmentAdapter appAssignmentAdapter;
-    private Button showallAppBtn;
+    private TextView showallAppBtn;
     private long startTime = 0;
     private CardView cardView;
     private ImageView imgClear;
     private EditText edtSearch;
     private String class_name;
+    static boolean showAllapps = false;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -71,6 +72,12 @@ public class AppAssignmentActivity extends CoreActivity {
             item_tools.setTitle(mainListItem.getTitle());
         }
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onDestroy() {
+        showAllapps = false;
+        super.onDestroy();
     }
 
     @Subscribe
@@ -127,7 +134,7 @@ public class AppAssignmentActivity extends CoreActivity {
     private void filterList() {
         appList = new ArrayList<>();
         if (mainListItem != null) {
-            List<ResolveInfo> installedPackageList = new ArrayList<>();
+            List<ResolveInfo> installedPackageList;
             Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
             mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
             installedPackageList = getPackageManager().queryIntentActivities(mainIntent, 0);
@@ -169,6 +176,7 @@ public class AppAssignmentActivity extends CoreActivity {
     private ArrayList<ResolveInfo> getAllapp() {
         return appListAll;
     }
+
     private ArrayList<ResolveInfo> getMimeList() {
         ArrayList<ResolveInfo> mimeListLocal = new ArrayList<>();
         for (int i = 1; i <= 20; i++) {
@@ -204,26 +212,14 @@ public class AppAssignmentActivity extends CoreActivity {
         setSupportActionBar(toolbar);
         recyclerView = findViewById(R.id.recyclerView);
         txtErrorMessage = findViewById(R.id.txtErrorMessage);
-        bindList(appList);
-        showallAppBtn = findViewById(R.id.btnViewAllapps);
+
+        showallAppBtn = findViewById(R.id.txtViewAllapps);
         showallAppBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showallAppBtn.setVisibility(View.GONE);
-                if (appAssignmentAdapter != null) {
-                    appAssignmentAdapter.setdata(appListAll);
-                } else {
-                    bindList(appListAll);
-                }
-                appAssignmentAdapter.getFilter().filter(edtSearch.getText().toString().trim());
-                if (appAssignmentAdapter.getItemCount() > 0) {
-                    recyclerView.setVisibility(View.VISIBLE);
-                    txtErrorMessage.setVisibility(View.INVISIBLE);
-                } else {
-                    recyclerView.setVisibility(View.INVISIBLE);
-                    txtErrorMessage.setVisibility(View.VISIBLE);
-                    txtErrorMessage.setText("No apps match that input text");
-                }
+                showAllapps = true;
+                bindList(appListAll);
             }
         });
 
@@ -240,15 +236,6 @@ public class AppAssignmentActivity extends CoreActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (appAssignmentAdapter != null) {
                     appAssignmentAdapter.getFilter().filter(s.toString());
-                    if (appAssignmentAdapter.getItemCount() >= 0) {
-                        recyclerView.setVisibility(View.VISIBLE);
-                        txtErrorMessage.setVisibility(View.INVISIBLE);
-                    } else {
-                        recyclerView.setVisibility(View.INVISIBLE);
-                        txtErrorMessage.setVisibility(View.VISIBLE);
-                        txtErrorMessage.setText("No apps match that input text");
-
-                    }
                 }
                 if (s.toString().length() > 0) {
                     imgClear.setVisibility(View.VISIBLE);
@@ -269,10 +256,16 @@ public class AppAssignmentActivity extends CoreActivity {
                 edtSearch.setText("");
             }
         });
+        if (showAllapps) {
+            showAllapps = false;
+            bindList(appListAll);
+        } else {
+            bindList(appList);
+        }
     }
 
     private void bindList(ArrayList<ResolveInfo> appList) {
-        if (appList != null && appList.size() >= 1) {
+        if (appList != null && appList.size() > 0) {
             recyclerView.setVisibility(View.VISIBLE);
             txtErrorMessage.setVisibility(View.INVISIBLE);
             appList = Sorting.sortAppAssignment(this, appList);
@@ -284,13 +277,13 @@ public class AppAssignmentActivity extends CoreActivity {
                 appAssignmentAdapter = new AppAssignmentAdapter(this, mainListItem.getId(),
                         appList, class_name);
                 recyclerView.setAdapter(appAssignmentAdapter);
+                appAssignmentAdapter.getFilter().filter(edtSearch.getText().toString().trim());
             }
         } else {
             recyclerView.setVisibility(View.INVISIBLE);
             txtErrorMessage.setVisibility(View.VISIBLE);
             if (mainListItem != null) {
                 txtErrorMessage.setText("No " + mainListItem.getTitle() + " apps are installed.");
-
             }
         }
     }
@@ -299,8 +292,21 @@ public class AppAssignmentActivity extends CoreActivity {
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (getCurrentFocus() != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
         }
         return super.dispatchTouchEvent(ev);
+    }
+
+    public void hideOrShowMessage(boolean isShow) {
+        if (isShow) {
+            recyclerView.setVisibility(View.VISIBLE);
+            txtErrorMessage.setVisibility(View.INVISIBLE);
+        } else {
+            recyclerView.setVisibility(View.INVISIBLE);
+            txtErrorMessage.setVisibility(View.VISIBLE);
+            txtErrorMessage.setText(R.string.no_mattched_text);
+        }
     }
 }
