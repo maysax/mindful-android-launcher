@@ -82,7 +82,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
     }
 
     public void hideView() {
-        if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.TOGGLE_LEFTMENU, 0) >= 2) {
+        if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.TOGGLE_LEFTMENU, 0) >= 3) {
             if (imgPullTab != null) imgPullTab.setVisibility(View.GONE);
         } else {
             if (imgPullTab != null) imgPullTab.setVisibility(View.VISIBLE);
