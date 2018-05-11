@@ -1,7 +1,6 @@
 package co.siempo.phone.adapters.viewholder;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
@@ -42,8 +41,8 @@ import co.siempo.phone.utils.PrefSiempo;
 
 public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdapter.ViewHolder>
         implements Filterable {
-    private final Context context;
-    private List<ResolveInfo> filterList = new ArrayList<>();
+    private final AppAssignmentActivity context;
+    private List<ResolveInfo> filterList;
     private List<ResolveInfo> resolveInfoList;
     private HashMap<Integer, AppMenu> map;
     private DrawableProvider mProvider;
@@ -51,7 +50,7 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
     private String class_name;
     private ItemFilter mFilter = new ItemFilter();
 
-    public AppAssignmentAdapter(Context context, int id, List<ResolveInfo> resolveInfoList, String class_name) {
+    public AppAssignmentAdapter(AppAssignmentActivity context, int id, List<ResolveInfo> resolveInfoList, String class_name) {
         this.context = context;
         this.resolveInfoList = resolveInfoList;
         this.id = id;
@@ -72,6 +71,7 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
     public Filter getFilter() {
         return mFilter;
     }
+
     @Override
     public AppAssignmentAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                               int viewType) {
@@ -157,17 +157,19 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
                     if (class_name.equalsIgnoreCase(DashboardActivity.class.getSimpleName().toString())) {
                         if (id == 5 && item == null) {
                             new ActivityHelper(context).openNotesApp(false);
-                            ((AppAssignmentActivity) context).finish();
+                            context.finish();
 
                         } else {
-                            new ActivityHelper(context).openAppWithPackageName(item.activityInfo
-                                    .packageName);
-                            ((AppAssignmentActivity) context).finish();
+                            if (item != null) {
+                                new ActivityHelper(context).openAppWithPackageName(item.activityInfo
+                                        .packageName);
+                            }
+                            context.finish();
                         }
                     } else {
                         Intent returnIntent = new Intent();
-                        ((AppAssignmentActivity) context).setResult(isSameApp ? Activity.RESULT_CANCELED : Activity.RESULT_OK, returnIntent);
-                        ((AppAssignmentActivity) context).finish();
+                        context.setResult(isSameApp ? Activity.RESULT_CANCELED : Activity.RESULT_OK, returnIntent);
+                        context.finish();
                     }
                 }
             }
@@ -248,6 +250,11 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
                 filterList = (ArrayList<ResolveInfo>) results.values;
             } else {
                 filterList = new ArrayList<>(resolveInfoList);
+            }
+            if (filterList != null && filterList.size() > 0) {
+                context.hideOrShowMessage(true);
+            } else {
+                context.hideOrShowMessage(false);
             }
             notifyDataSetChanged();
         }
