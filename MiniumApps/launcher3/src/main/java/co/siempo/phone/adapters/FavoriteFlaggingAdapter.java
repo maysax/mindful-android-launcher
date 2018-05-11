@@ -26,6 +26,7 @@ import co.siempo.phone.app.BitmapWorkerTask;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.AppListInfo;
 import co.siempo.phone.utils.Sorting;
+import co.siempo.phone.utils.UIUtils;
 
 /**
  * Created by rajeshjadi on 26/2/18.
@@ -63,21 +64,21 @@ public class FavoriteFlaggingAdapter extends BaseAdapter implements Filterable {
         ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
-            convertView = mInflater.inflate(R.layout.list_item_junkfoodflag, parent,false);
+            convertView = mInflater.inflate(R.layout.list_item_junkfoodflag, parent, false);
             holder.txtAppName = convertView.findViewById(R.id.txtAppName);
             holder.imgAppIcon = convertView.findViewById(R.id.imgAppIcon);
             holder.imgChevron = convertView.findViewById(R.id.imgChevron);
             holder.linTop = convertView.findViewById(R.id.linTop);
             holder.txtNoAppsMessage = convertView.findViewById(R.id.txtNoAppsMessage);
             holder.txtHeader = convertView.findViewById(R.id.txtHeader);
+            holder.linearList = convertView.findViewById(R.id.linearList);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.linTop.setTag(filterList.get(position));
         try {
-            AppListInfo resolveInfo = (AppListInfo) holder.linTop.getTag();
+            final AppListInfo resolveInfo = filterList.get(position);
             if (resolveInfo.isShowHeader && resolveInfo.isShowTitle) {
                 holder.txtHeader.setVisibility(View.VISIBLE);
                 holder.txtNoAppsMessage.setVisibility(View.VISIBLE);
@@ -131,8 +132,30 @@ public class FavoriteFlaggingAdapter extends BaseAdapter implements Filterable {
                     e.printStackTrace();
                 }
 
-            }
 
+                holder.linearList.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!resolveInfo.packageName.equalsIgnoreCase("")) {
+                            UIUtils.hideSoftKeyboard(context, context.getWindow().getDecorView().getWindowToken());
+                            context.showPopUp(v, resolveInfo.packageName, resolveInfo.isFlagApp);
+                        }
+                    }
+                });
+
+                holder.txtHeader.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        UIUtils.hideSoftKeyboard(context, context.getWindow().getDecorView().getWindowToken());
+                    }
+                });
+                holder.txtNoAppsMessage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        UIUtils.hideSoftKeyboard(context, context.getWindow().getDecorView().getWindowToken());
+                    }
+                });
+            }
         } catch (Exception e) {
             e.printStackTrace();
             CoreApplication.getInstance().logException(e);
@@ -149,7 +172,7 @@ public class FavoriteFlaggingAdapter extends BaseAdapter implements Filterable {
         ImageView imgChevron, imgAppIcon;
         TextView txtNoAppsMessage;
         TextView txtAppName, txtHeader;
-        LinearLayout linTop;
+        LinearLayout linTop, linearList;
     }
 
     //added for search facilty
