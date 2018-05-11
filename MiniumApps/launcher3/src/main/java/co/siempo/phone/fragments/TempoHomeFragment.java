@@ -17,6 +17,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.activities.ChooseBackgroundActivity;
 import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.event.NotifyBackgroundChange;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.EventBus;
 
@@ -61,13 +62,13 @@ public class TempoHomeFragment extends CoreFragment {
             }
         });
         switchDisableIntentionsControls.setChecked(PrefSiempo.getInstance(context).read(PrefSiempo.IS_INTENTION_ENABLE, false));
-
-
         switchDisableIntentionsControls.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 PrefSiempo.getInstance(context).write(PrefSiempo
                         .IS_INTENTION_ENABLE, isChecked);
+                FirebaseHelper.getInstance().logIntention_IconBranding_Randomize(FirebaseHelper.INTENTIONS, isChecked ? 1 : 0);
+
             }
         });
 
