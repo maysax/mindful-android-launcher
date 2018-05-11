@@ -209,26 +209,31 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
             String filterableString;
 
             if (!searchString.isEmpty()) {
-                for (int i = 0; i < count; i++) {
-                    if (id == 5 && resolveInfoList.get(i) == null) {
-                        filterableString = context.getString(R.string.label_note);
-                    } else {
-                        filterableString = CoreApplication.getInstance().getListApplicationName()
-                                .get(resolveInfoList.get(i)
-                                        .activityInfo
-                                        .packageName);
-                    }
-                    if (filterableString == null) {
-                        filterableString = CoreApplication.getInstance()
-                                .getApplicationNameFromPackageName(resolveInfoList.get(i)
-                                        .activityInfo.packageName);
-                    }
-                    if (filterableString != null) {
-                        if (filterableString.toLowerCase().contains(searchString.toLowerCase())) {
-                            templist.add(resolveInfoList.get(i));
+                try {
+                    for (int i = 0; i < count; i++) {
+                        if (id == 5 && resolveInfoList.get(i) == null) {
+                            filterableString = context.getString(R.string.label_note);
+                        } else {
+                            filterableString = CoreApplication.getInstance().getListApplicationName()
+                                    .get(resolveInfoList.get(i)
+                                            .activityInfo
+                                            .packageName);
+                        }
+                        if (filterableString == null) {
+                            filterableString = CoreApplication.getInstance()
+                                    .getApplicationNameFromPackageName(resolveInfoList.get(i)
+                                            .activityInfo.packageName);
+                        }
+                        if (filterableString != null) {
+                            if (filterableString.toLowerCase().contains(searchString.toLowerCase())) {
+                                templist.add(resolveInfoList.get(i));
+                            }
                         }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
             } else {
                 templist = resolveInfoList;
             }
