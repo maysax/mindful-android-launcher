@@ -204,6 +204,74 @@ public class AppAssignmentActivity extends CoreActivity {
         setSupportActionBar(toolbar);
         recyclerView = findViewById(R.id.recyclerView);
         txtErrorMessage = findViewById(R.id.txtErrorMessage);
+        bindList(appList);
+        showallAppBtn = findViewById(R.id.btnViewAllapps);
+        showallAppBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showallAppBtn.setVisibility(View.GONE);
+                if (appAssignmentAdapter != null) {
+                    appAssignmentAdapter.setdata(appListAll);
+                } else {
+                    bindList(appListAll);
+                }
+                appAssignmentAdapter.getFilter().filter(edtSearch.getText().toString().trim());
+                if (appAssignmentAdapter.getItemCount() > 0) {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    txtErrorMessage.setVisibility(View.INVISIBLE);
+                } else {
+                    recyclerView.setVisibility(View.INVISIBLE);
+                    txtErrorMessage.setVisibility(View.VISIBLE);
+                    txtErrorMessage.setText("No apps match that input text");
+                }
+            }
+        });
+
+        //Added for searchbar
+        cardView = findViewById(R.id.cardView);
+        imgClear = findViewById(R.id.imgClear);
+        edtSearch = findViewById(R.id.edtSearch);
+        edtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (appAssignmentAdapter != null) {
+                    appAssignmentAdapter.getFilter().filter(s.toString());
+                    if (appAssignmentAdapter.getItemCount() >= 0) {
+                        recyclerView.setVisibility(View.VISIBLE);
+                        txtErrorMessage.setVisibility(View.INVISIBLE);
+                    } else {
+                        recyclerView.setVisibility(View.INVISIBLE);
+                        txtErrorMessage.setVisibility(View.VISIBLE);
+                        txtErrorMessage.setText("No apps match that input text");
+
+                    }
+                }
+                if (s.toString().length() > 0) {
+                    imgClear.setVisibility(View.VISIBLE);
+                } else {
+                    imgClear.setVisibility(View.INVISIBLE);
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        imgClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edtSearch.setText("");
+            }
+        });
+    }
+
+    private void bindList(ArrayList<ResolveInfo> appList) {
         if (appList != null && appList.size() >= 1) {
             recyclerView.setVisibility(View.VISIBLE);
             txtErrorMessage.setVisibility(View.INVISIBLE);
@@ -222,49 +290,9 @@ public class AppAssignmentActivity extends CoreActivity {
             txtErrorMessage.setVisibility(View.VISIBLE);
             if (mainListItem != null) {
                 txtErrorMessage.setText("No " + mainListItem.getTitle() + " apps are installed.");
+
             }
         }
-        showallAppBtn = findViewById(R.id.btnViewAllapps);
-        showallAppBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showallAppBtn.setVisibility(View.GONE);
-                appAssignmentAdapter.setdata(appListAll);
-            }
-        });
-
-        //Added for searchbar
-        cardView = findViewById(R.id.cardView);
-        imgClear = findViewById(R.id.imgClear);
-        edtSearch = findViewById(R.id.edtSearch);
-        edtSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (appAssignmentAdapter != null) {
-                    appAssignmentAdapter.getFilter().filter(s.toString());
-                }
-                if (s.toString().length() > 0) {
-                    imgClear.setVisibility(View.VISIBLE);
-                } else {
-                    imgClear.setVisibility(View.INVISIBLE);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        imgClear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                edtSearch.setText("");
-            }
-        });
     }
 
     @Override

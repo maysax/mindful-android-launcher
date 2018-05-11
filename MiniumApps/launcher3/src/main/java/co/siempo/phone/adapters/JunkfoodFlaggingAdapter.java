@@ -38,11 +38,11 @@ import co.siempo.phone.utils.UIUtils;
 public class JunkfoodFlaggingAdapter extends BaseAdapter implements Filterable {
 
     public final JunkfoodFlaggingActivity context;
+    private String searchReference = "";
     private final int foreground;
-    String searchReference = "";
-    private ArrayList<AppListInfo> mData = new ArrayList<>();
+    private ArrayList<AppListInfo> mData;
     private LayoutInflater mInflater;
-    private List<AppListInfo> filterList = new ArrayList<>();
+    private List<AppListInfo> filterList;
     private ItemFilter mFilter = new ItemFilter();
     private PopupMenu popup;
 
@@ -80,7 +80,7 @@ public class JunkfoodFlaggingAdapter extends BaseAdapter implements Filterable {
         if (convertView == null) {
             holder = new ViewHolder();
 
-            convertView = mInflater.inflate(R.layout.list_item_junkfoodflag, null);
+            convertView = mInflater.inflate(R.layout.list_item_junkfoodflag,  parent, false);
             holder.txtAppName = convertView.findViewById(R.id.txtAppName);
             holder.imgAppIcon = convertView.findViewById(R.id.imgAppIcon);
             holder.imgChevron = convertView.findViewById(R.id.imgChevron);
@@ -169,13 +169,9 @@ public class JunkfoodFlaggingAdapter extends BaseAdapter implements Filterable {
             holder.linearList.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (resolveInfo != null) {
-                        if (!resolveInfo.packageName.equalsIgnoreCase("")) {
-                            UIUtils.hideSoftKeyboard(context, context.getWindow().getDecorView().getWindowToken());
-                            context.showPopUp(v, resolveInfo.packageName, resolveInfo.isFlagApp);
-                        }
-                    } else {
+                    if (!resolveInfo.packageName.equalsIgnoreCase("")) {
                         UIUtils.hideSoftKeyboard(context, context.getWindow().getDecorView().getWindowToken());
+                        context.showPopUp(v, resolveInfo.packageName, resolveInfo.isFlagApp);
                     }
                 }
             });
@@ -222,7 +218,7 @@ public class JunkfoodFlaggingAdapter extends BaseAdapter implements Filterable {
             FilterResults ret = new FilterResults();
 
             int count = mData.size();
-            final ArrayList<AppListInfo> nlist = new ArrayList<AppListInfo>();
+            final ArrayList<AppListInfo> nlist = new ArrayList<>();
 
 
             String filterableString;

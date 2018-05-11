@@ -35,6 +35,10 @@ public class FirebaseHelper {
     private static String SIEMPO_DEFAULT = "siempo_default";
     private static String SUPPRESSED_NOTIFICATION = "suppressed_notification";
     private static String TEMPO = "tempo";
+    public static String INTENTIONS = "intentions";
+    public static String HIDE_ICON_BRANDING = "hide_icon_branding";
+    public static String RANDOMIZED_JUNK_FOOD = "randomized_junk_food";
+    public static String ALLOW_SPECIFIC = "allow_specific";
 
     //Attribute
     private String SCREEN_NAME = "screen_name";
@@ -48,7 +52,8 @@ public class FirebaseHelper {
     private String TEMPO_INTERVAL_ONLY_AT = "tempo_interval_onlyat";
     private String TEMPO_INTERVAL = "tempo_interval";
     private String TEMPO_TYPE = "tempo_type";
-
+    private String ENABLE_DISABLE = "enable_disable";
+    private String BLOCK_UNBLOCK = "block_unblock";
 
     public FirebaseHelper() {
 
@@ -199,6 +204,43 @@ public class FirebaseHelper {
         }
         Tracer.i("Firebase:" + TEMPO + ": " + bundle.toString());
         getFirebaseAnalytics().logEvent(TEMPO, bundle);
+    }
+
+    /**
+     * This method used when user enable/disable Intention,IconBranding,Randomize Junk-food.
+     *
+     * @param eventFor
+     * @param enableDisable
+     */
+    public void logIntention_IconBranding_Randomize(String eventFor, int enableDisable) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(ENABLE_DISABLE, enableDisable);
+        if (eventFor.equalsIgnoreCase(INTENTIONS)) {
+            Tracer.i("Firebase:" + INTENTIONS + ": " + bundle.toString());
+            getFirebaseAnalytics().logEvent(INTENTIONS, bundle);
+        } else if (eventFor.equalsIgnoreCase(HIDE_ICON_BRANDING)) {
+            Tracer.i("Firebase:" + HIDE_ICON_BRANDING + ": " + bundle.toString());
+            getFirebaseAnalytics().logEvent(HIDE_ICON_BRANDING, bundle);
+        } else if (eventFor.equalsIgnoreCase(RANDOMIZED_JUNK_FOOD)) {
+            Tracer.i("Firebase:" + RANDOMIZED_JUNK_FOOD + ": " + bundle.toString());
+            getFirebaseAnalytics().logEvent(RANDOMIZED_JUNK_FOOD, bundle);
+        }
+
+
+    }
+
+    /**
+     * Block/Unblock application name log.
+     *
+     * @param application_name
+     * @param block_unblock
+     */
+    public void logBlockUnblockApplication(String application_name, int block_unblock) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(BLOCK_UNBLOCK, block_unblock);
+        bundle.putString(APPLICATION_NAME, application_name);
+        Tracer.i("Firebase:" + ALLOW_SPECIFIC + ": " + bundle.toString());
+        getFirebaseAnalytics().logEvent(ALLOW_SPECIFIC, bundle);
     }
 
 }

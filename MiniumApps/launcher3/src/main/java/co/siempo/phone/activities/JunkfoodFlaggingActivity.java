@@ -153,9 +153,8 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
     private void loadApps() {
         List<String> installedPackageListLocal = CoreApplication.getInstance().getPackagesList();
         Log.d("Junkfood", "" + installedPackageListLocal.size());
-        List<String> appList = new ArrayList<>();
         installedPackageList = new ArrayList<>();
-        appList.addAll(installedPackageListLocal);
+        List<String> appList = new ArrayList<>(installedPackageListLocal);
 
         installedPackageList = appList;
 //        new FilterApps(false).execute();
@@ -310,10 +309,9 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
 
             if (junkfoodFlaggingAdapter != null) {
                 junkfoodFlaggingAdapter.setData(bindingList);
+                junkfoodFlaggingAdapter.getFilter().filter(edtSearch.getText().toString());
                 listAllApps.setSelection(firstPosition);
             }
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -401,7 +399,6 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
                                                 list.add(bindingList.get(positionPopUP).packageName);
                                             }
                                             firstPosition = listAllApps.getFirstVisiblePosition();
-//                                    bindData(true);
                                             new FilterApps().execute();
                                             listAllApps.setEnabled(true);
                                             listAllApps.setClickable(true);
@@ -491,7 +488,6 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
                                     list.add(bindingList.get(position).packageName);
                                 }
                                 firstPosition = listAllApps.getFirstVisiblePosition();
-//                                    bindData(true);
                                 new FilterApps().execute();
                                 listAllApps.setEnabled(true);
                                 listAllApps.setClickable(true);
@@ -525,9 +521,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         favoriteList.removeAll(list);
         PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
         loadApps();
-        if (junkfoodFlaggingAdapter != null) {
-            junkfoodFlaggingAdapter.getFilter().filter(edtSearch.getText().toString());
-        }
+
     }
 
     @Override
@@ -560,7 +554,9 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (getCurrentFocus() != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
         }
         return super.dispatchTouchEvent(ev);
     }

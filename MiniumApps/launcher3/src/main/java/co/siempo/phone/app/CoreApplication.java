@@ -401,8 +401,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     public List<String> getPackagesList() {
-        List<String> pList = new ArrayList<>(packagesList);
-        return pList;
+        return new ArrayList<>(packagesList);
     }
 
     public void setPackagesList(Set<String> packagesList) {
