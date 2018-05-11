@@ -25,7 +25,6 @@
                 android:id="@+id/toolbar"
                 style="@style/toolbar_style"
                 android:visibility="visible"
-                app:navigationIcon="@drawable/ic_arrow_back_blue_24dp"
                 app:titleTextColor="?attr/toolbar_text_color"/>
 
             <RelativeLayout

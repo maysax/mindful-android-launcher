@@ -61,6 +61,9 @@
         <attr name="card_image_trans_reverse" format="color"/>
         <attr name="flag_foreground" format="color"/>
         <attr name="divider_color" format="color"/>
+        <attr name="default_item_color" format="color"/>
+        <attr name="default_item_bg" format="color"/>
+        <attr name="divider_tools" format="color"/>
     </declare-styleable>
 
 

@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -165,10 +166,12 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                 });
             } else {
                 if (!TextUtils.isEmpty(item.getContactName())) {
-
+                    TypedValue typedValue = new TypedValue();
+                    Resources.Theme theme = context.getTheme();
+                    theme.resolveAttribute(R.attr.icon_color, typedValue, true);
+                    int color = typedValue.data;
                     Drawable drawable = mProvider.getRound("" + item
-                            .getContactName().charAt(0), context.getResources
-                            ().getColor(R.color.appland_contact_black), 24);
+                            .getContactName().charAt(0), color, 24);
                     holder.icon.setImageDrawable(drawable);
                 }
             }
@@ -197,6 +200,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                 holder.icon = view.findViewById(R.id.icon);
                 holder.text = view.findViewById(R.id.text);
                 holder.imgChevron = view.findViewById(R.id.imgChevron);
+                holder.linList = view.findViewById(R.id.linList);
 
                 view.setTag(holder);
             }
@@ -259,16 +263,23 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             }
 
             MainListItemType itemType = item.getItemType();
-
             // Call item in Tools has id=13 , while as a default type has id=4
             if ((null != itemType) && (itemType == MainListItemType.DEFAULT)) {
-                holder.text.setTextColor(context.getResources().getColor(R
-                        .color.appland_blue_bright));
-            }
 
-//            else {
-//                holder.text.setTextColor(context.getResources());
-//            }
+                TypedValue typedValue = new TypedValue();
+                Resources.Theme theme = context.getTheme();
+                theme.resolveAttribute(R.attr.default_item_color, typedValue, true);
+                int itemColor = typedValue.data;
+                holder.text.setTextColor(itemColor);
+                theme.resolveAttribute(R.attr.default_item_bg, typedValue, true);
+                int color = typedValue.data;
+                holder.linList.setBackgroundColor(color);
+
+
+            } else {
+                holder.linList.setBackgroundColor(context.getResources().getColor(R
+                        .color.transparent));
+            }
 
         }
 
@@ -340,6 +351,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         ImageView icon;
         TextView text;
         ImageView imgChevron;
+        LinearLayout linList;
     }
 
 

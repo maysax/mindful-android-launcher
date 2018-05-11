@@ -148,14 +148,13 @@ public class SiempoPermissionActivity extends CoreActivity {
                     if (!new PermissionUtil(SiempoPermissionActivity.this)
                             .hasGiven(PermissionUtil
                                     .NOTIFICATION_ACCESS)) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                            startActivityForResult(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS), PermissionUtil.NOTIFICATION_ACCESS);
-                        }
-                    }
-                } else {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+
                         startActivityForResult(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS), PermissionUtil.NOTIFICATION_ACCESS);
                     }
+                } else {
+
+                    startActivityForResult(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS), PermissionUtil.NOTIFICATION_ACCESS);
+
                 }
             }
         });
@@ -220,33 +219,33 @@ public class SiempoPermissionActivity extends CoreActivity {
             switchNotificationAccess.setVisibility(View.GONE);
             switchOverlayAccess.setVisibility(View.GONE);
             btnContinue.setVisibility(View.GONE);
-            if (permissionUtil.hasGiven(PermissionUtil.LOCATION_PERMISSION)) {
-                tblLocation.setVisibility(View.VISIBLE);
-            } else {
-                tblLocation.setVisibility(View.GONE);
-            }
+//            if (permissionUtil.hasGiven(PermissionUtil.LOCATION_PERMISSION)) {
+//                tblLocation.setVisibility(View.VISIBLE);
+//            } else {
+//                tblLocation.setVisibility(View.GONE);
+//            }
             txtPermissionLabel.setText(getString(R.string.permission_siempo_alpha_title));
 
 
-            if (permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)) {
-                tblCalls.setVisibility(View.VISIBLE);
-            }
-            if (permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)) {
-                tblSMS.setVisibility(View.VISIBLE);
-            }
-            if (permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)) {
-                tblStorage.setVisibility(View.VISIBLE);
-            }
             if (permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) {
                 tblNotification.setVisibility(View.VISIBLE);
             }
-            if (permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)) {
-                tblContact.setVisibility(View.VISIBLE);
-            }
-
             if (Build.VERSION.SDK_INT >= 23) {
                 if (permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
                     tblDrawOverlay.setVisibility(View.VISIBLE);
+                }
+                if (permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)) {
+                    tblCalls.setVisibility(View.VISIBLE);
+                }
+                if (permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)) {
+                    tblSMS.setVisibility(View.VISIBLE);
+                }
+                if (permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)) {
+                    tblStorage.setVisibility(View.VISIBLE);
+                }
+
+                if (permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)) {
+                    tblContact.setVisibility(View.VISIBLE);
                 }
             }
 

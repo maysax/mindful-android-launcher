@@ -39,6 +39,8 @@
     <color name="appland_contact_black">#CC000000</color>
     <color name="appland_date">#8A000000</color>
     <color name="bg_junk_apps_top_dock">#42A4FF</color>
+    <color name="divider_dark_tools">#FFFFFF</color>
+    <color name="divider_light_tools">#1A000000</color>
 
     <string-array name="colours" translatable="false">
         <item>#44A1EB</item> <!-- blue -->

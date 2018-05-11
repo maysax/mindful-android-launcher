@@ -657,7 +657,6 @@ public class PaneFragment extends CoreFragment {
         linBottomDoc.setVisibility(View.GONE);
         blueLineDivider.setVisibility(View.GONE);
         blueLineDividerBottom.setVisibility(View.GONE);
-
         linTopDoc.setBackgroundColor(getResources().getColor(backGroundColor));
         searchListVisible(context);
     }
@@ -739,6 +738,11 @@ public class PaneFragment extends CoreFragment {
                 cardViewEdtSearch.setVisibility(View.GONE);
                 relSearchTools.setVisibility(View.VISIBLE);
                 linSearchList.setVisibility(View.GONE);
+                TypedValue typedValue = new TypedValue();
+                Resources.Theme theme = context.getTheme();
+                theme.resolveAttribute(R.attr.top_doc, typedValue, true);
+                int color = typedValue.resourceId;
+                linTopDoc.setBackgroundResource(color);
                 linBottomDoc.setVisibility(View.VISIBLE);
                 linPane.setVisibility(View.VISIBLE);
                 isSearchVisable = false;

@@ -42,6 +42,9 @@
         <item name="flag_foreground">@color/forground_light</item>
         <item name="divider_color">@color/divider_light</item>
         <item name="image_alpha">@color/trans_white_bg_pane</item>
+        <item name="default_item_color">@color/dialog_blue</item>
+        <item name="default_item_bg">@color/white</item>
+        <item name="divider_tools">@color/divider_light_tools</item>
 
 
     </style>
@@ -89,6 +92,9 @@
         <item name="flag_foreground">@color/forground_dark</item>
         <item name="divider_color">@color/divider_dark</item>
         <item name="image_alpha">@color/trans_black_bg</item>
+        <item name="default_item_color">@color/white</item>
+        <item name="default_item_bg">@color/dialog_blue</item>
+        <item name="divider_tools">@color/divider_dark_tools</item>
 
 
     </style>
