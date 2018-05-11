@@ -191,7 +191,7 @@ public abstract class CoreApplication extends MultiDexApplication {
         // set initial configurations here
         configTracer();
         configCalligraphy();
-        // configFabric();
+        configFabric();
         configIconify();
         configureLifecycle();
         configureNetworking();
@@ -401,8 +401,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     public List<String> getPackagesList() {
-        List<String> pList = new ArrayList<>(packagesList);
-        return pList;
+        return new ArrayList<>(packagesList);
     }
 
     public void setPackagesList(Set<String> packagesList) {

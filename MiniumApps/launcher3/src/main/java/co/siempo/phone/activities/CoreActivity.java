@@ -442,9 +442,9 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                         .equals
                                 (Intent.ACTION_USER_PRESENT) ||
                         intent.getAction().equals(Intent.ACTION_SCREEN_ON))) {
-                    Intent startMain = new Intent(Intent.ACTION_MAIN);
-                    startMain.addCategory(Intent.CATEGORY_HOME);
-                    startActivity(startMain);
+//                    Intent startMain = new Intent(Intent.ACTION_MAIN);
+//                    startMain.addCategory(Intent.CATEGORY_HOME);
+//                    startActivity(startMain);
                 } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 }
             }
