@@ -79,7 +79,8 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
             //Code for Applying background
 
             relMain.setBackground(ob);
-            linMain.setBackgroundColor(ContextCompat.getColor(this, R.color.trans_black));
+            linMain.setBackgroundColor(ContextCompat.getColor(this, R.color
+                    .trans_black_bg));
 
 
         } else {

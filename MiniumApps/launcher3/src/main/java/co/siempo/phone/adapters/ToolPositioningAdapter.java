@@ -141,6 +141,7 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
             int drawable = typedValue.resourceId;
 
             holder.relMenu.setBackgroundResource(drawable);
+
         } else {
             holder.relMenu.setBackgroundColor(context.getResources().getColor
                     (R.color.transparent));

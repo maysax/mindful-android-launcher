@@ -23,6 +23,7 @@
     <color name="drop_shadow_grey">#87737373</color>
 
     <color name="black_95">#F2000000</color>
+    <color name="black_85">#DD000000</color>
     <color name="black_80">#CC000000</color>
     <color name="black_50">#80000000</color>
     <color name="black_10">#1A000000</color>
@@ -38,6 +39,8 @@
     <color name="appland_contact_black">#CC000000</color>
     <color name="appland_date">#8A000000</color>
     <color name="bg_junk_apps_top_dock">#42A4FF</color>
+    <color name="divider_dark_tools">#FFFFFF</color>
+    <color name="divider_light_tools">#1A000000</color>
 
     <string-array name="colours" translatable="false">
         <item>#44A1EB</item> <!-- blue -->
@@ -106,8 +109,12 @@
     <color name="white">@android:color/white</color>
     <color name="white_dark">#CCFFFFFF</color>
     <color name="dark_window">#333333</color>
-    <color name="trans_black">#8AFFFFFF</color>
-    <color name="trans_white">#8A000000</color>
+    <color name="trans_black">#DDFFFFFF</color>
+    <color name="trans_black_date">#8AFFFFFF</color>
+    <color name="trans_black_bg">#80FFFFFF</color>
+    <color name="trans_white_bg_pane">#80000000</color>
+    <color name="trans_white_bg">#CC000000</color>
+    <color name="trans_white">#CC000000</color>
     <color name="black">@android:color/black</color>
     <color name="shadow">#727272</color>
     <color name="transparent">@android:color/transparent</color>
@@ -122,7 +129,8 @@
 
     <color name="section_title_bg">#9C9C9C</color>
     <color name="section_title_text">#57000000</color>
-    <color name="forground">#30FF0000</color>
+    <color name="forground_dark">#80FF0000</color>
+    <color name="forground_light">#26E81313</color>
     <color name="flageapp_header">#FF0000</color>
     <color name="unflageapp_header">#666666</color>
     <color name="bg_permissionscreenstatusbar">#E5E5E5</color>
@@ -133,8 +141,13 @@
     <color name="settings_content_dark">#B2FFFFFF</color>
     <color name="popup">#444444</color>
     <color name="popup_white">#FAFAFA</color>
-    <color name="background_white">#EDEDED</color>
+    <color name="background_white">#E5E5E5</color>
     <color name="hint_white">#61000000</color>
+    <color name="hint_dark">#D642A4FF</color>
+    <color name="pull_light">#99000000</color>
+    <color name="pull_dark">#99FFFFFF</color>
+    <color name="divider_light">#1F000000</color>
+    <color name="divider_dark">#40FFFFFF</color>
 
 
 </resources>

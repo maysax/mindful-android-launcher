@@ -102,7 +102,7 @@
         <item>3</item>
     </string-array>
 
-    <string-array name="multi_select_list_preference_default_value" tools:ignore="UnusedResources" />
+    <string-array name="multi_select_list_preference_default_value" tools:ignore="UnusedResources"/>
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
@@ -433,6 +433,7 @@
     <string name="str_frequently_used_apps">Frequently used apps</string>
     <string name="msg_congratulations">Congratulations!</string>
     <string name="flag_app">Flag this app to use it less</string>
+    <string name="flag_app_cell">Apps you want to use less</string>
     <string name="flag_app_first_time">Flag apps to use them less</string>
     <string name="unflagapp">Un-flag this app</string>
     <string name="favorite_menu_unselect">Unselect as frequently used</string>

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -142,9 +141,11 @@ public class ToolSelectionActivity extends CoreActivity {
         recyclerView = findViewById(R.id.recyclerView);
         filterListData();
         mLayoutManager = new LinearLayoutManager(this);
-        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                mLayoutManager.getOrientation());
-        recyclerView.addItemDecoration(mDividerItemDecoration);
+//        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+//                mLayoutManager.getOrientation());
+//        mDividerItemDecoration.setDrawable(getResources().getDrawable(R
+//                .drawable.divider_tools));
+//        recyclerView.addItemDecoration(mDividerItemDecoration);
         recyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new ToolsListAdapter(this, items);
         recyclerView.setAdapter(mAdapter);

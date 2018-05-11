@@ -77,7 +77,7 @@ public class FavoriteAppsPositionActivity extends CoreActivity implements OnFavo
 
             //Code for Applying background
             relMain.setBackground(ob);
-            linMain.setBackgroundColor(ContextCompat.getColor(this, R.color.trans_black));
+            linMain.setBackgroundColor(ContextCompat.getColor(this, R.color.trans_black_bg));
 
         } else {
             linMain.setBackgroundColor(ContextCompat.getColor(this, R.color
