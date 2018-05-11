@@ -67,7 +67,6 @@ public class TempoSettingsFragment extends CoreFragment {
 
     @Click
     void relHome() {
-
         ((CoreActivity) getActivity()).loadChildFragment(TempoHomeFragment_.builder()
                 .build(), R.id.tempoView);
     }

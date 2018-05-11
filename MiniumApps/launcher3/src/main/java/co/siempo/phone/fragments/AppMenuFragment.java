@@ -156,11 +156,13 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
                 if (switchJunkFoodmize.isChecked()) {
                     switchJunkFoodmize.setChecked(false);
                     PrefSiempo.getInstance(context).write(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, false);
+                    FirebaseHelper.getInstance().logIntention_IconBranding_Randomize(FirebaseHelper.RANDOMIZED_JUNK_FOOD, 0);
                     CoreApplication.getInstance().setRandomize(false);
                 } else {
                     switchJunkFoodmize.setChecked(true);
                     PrefSiempo.getInstance(context).write(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, true);
                     CoreApplication.getInstance().setRandomize(true);
+                    FirebaseHelper.getInstance().logIntention_IconBranding_Randomize(FirebaseHelper.RANDOMIZED_JUNK_FOOD, 1);
                 }
                 EventBus.getDefault().postSticky(new NotifyJunkFoodView(true));
                 break;
@@ -170,6 +172,7 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
                 } else {
                     switchHideIcon.setChecked(true);
                     PrefSiempo.getInstance(context).write(PrefSiempo.IS_ICON_BRANDING, true);
+                    FirebaseHelper.getInstance().logIntention_IconBranding_Randomize(FirebaseHelper.HIDE_ICON_BRANDING, 1);
                     CoreApplication.getInstance().setHideIconBranding(true);
                     EventBus.getDefault().postSticky(new NotifyJunkFoodView(true));
                     EventBus.getDefault().postSticky(new NotifyFavortieView(true));
@@ -281,6 +284,7 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
                 dialog.dismiss();
                 switchHideIcon.setChecked(false);
                 PrefSiempo.getInstance(context).write(PrefSiempo.IS_ICON_BRANDING, false);
+                FirebaseHelper.getInstance().logIntention_IconBranding_Randomize(FirebaseHelper.HIDE_ICON_BRANDING, 0);
                 CoreApplication.getInstance().setHideIconBranding(false);
                 EventBus.getDefault().postSticky(new NotifyJunkFoodView(true));
                 EventBus.getDefault().postSticky(new NotifyFavortieView(true));

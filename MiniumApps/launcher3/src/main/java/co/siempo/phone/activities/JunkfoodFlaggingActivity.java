@@ -312,8 +312,6 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
                 junkfoodFlaggingAdapter.setData(bindingList);
                 listAllApps.setSelection(firstPosition);
             }
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
