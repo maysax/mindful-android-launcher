@@ -35,8 +35,8 @@ public class FavoriteFlaggingAdapter extends BaseAdapter implements Filterable {
 
     private final FavoritesSelectionActivity context;
     private String strSearch = "";
-    private ArrayList<AppListInfo> mData = new ArrayList<>();
-    private List<AppListInfo> filterList = new ArrayList<>();
+    private ArrayList<AppListInfo> mData;
+    private List<AppListInfo> filterList;
     private LayoutInflater mInflater;
     private ItemFilter mFilter = new ItemFilter();
 
@@ -46,6 +46,7 @@ public class FavoriteFlaggingAdapter extends BaseAdapter implements Filterable {
         filterList = mData;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
+
     public int getCount() {
         return filterList.size();
     }
@@ -62,7 +63,7 @@ public class FavoriteFlaggingAdapter extends BaseAdapter implements Filterable {
         ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
-            convertView = mInflater.inflate(R.layout.list_item_junkfoodflag, null);
+            convertView = mInflater.inflate(R.layout.list_item_junkfoodflag, parent,false);
             holder.txtAppName = convertView.findViewById(R.id.txtAppName);
             holder.imgAppIcon = convertView.findViewById(R.id.imgAppIcon);
             holder.imgChevron = convertView.findViewById(R.id.imgChevron);
@@ -87,10 +88,9 @@ public class FavoriteFlaggingAdapter extends BaseAdapter implements Filterable {
                     int color = R.color.transparent;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         holder.txtNoAppsMessage.setForeground(new ColorDrawable(ContextCompat.getColor(context, color)));
-                        holder.txtNoAppsMessage.setText(strSearch.equalsIgnoreCase("") ? context.getString(R.string.tap_apps_below_to_move_them_into_this_section) : context.getString(R
-                                .string.no_apps));
-
                     }
+                    holder.txtNoAppsMessage.setText(strSearch.equalsIgnoreCase("") ? context.getString(R.string.tap_apps_below_to_move_them_into_this_section) : context.getString(R
+                            .string.no_apps));
                 } else {
                     holder.txtHeader.setBackgroundColor(ContextCompat.getColor(context, R.color.unflageapp_header));
                     holder.txtHeader.setText(context.getString(R.string.all_other_installed_apps));
