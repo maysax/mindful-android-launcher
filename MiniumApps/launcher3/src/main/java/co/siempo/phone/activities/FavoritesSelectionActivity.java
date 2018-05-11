@@ -91,10 +91,10 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (bindingList != null && bindingList.get(position) != null
-                && !bindingList.get(position).packageName.equalsIgnoreCase("")) {
-            showPopUp(view, bindingList.get(position).isFlagApp, position);
-        }
+//        if (bindingList != null && bindingList.get(position) != null
+//                && !bindingList.get(position).packageName.equalsIgnoreCase("")) {
+//            showPopUp(view, bindingList.get(position).isFlagApp, position);
+//        }
     }
 
     /**
@@ -245,10 +245,8 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
     /**
      * show pop dialog on List item click for flag/un-flag and application information.
      *
-     * @param view
-     * @param position
      */
-    private void showPopUp(View view, final boolean isFlagApp, final int position) {
+    public void showPopUp(View view, final String packagename , final boolean isFlagApp) {
 
         if (popup != null) {
             popup.dismiss();
@@ -280,8 +278,8 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (list.contains(bindingList.get(position).packageName)) {
-                                    list.remove(bindingList.get(position).packageName);
+                                if (list.contains(packagename)) {
+                                    list.remove(packagename);
                                     //get the JSON array of the ordered of sorted customers
                                     String jsonListOfSortedFavorites = PrefSiempo.getInstance(FavoritesSelectionActivity.this).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
                                     //convert onNoteListChangedJSON array into a List<Long>
@@ -293,7 +291,7 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
                                          listOfSortFavoritesApps.listIterator(); it.hasNext
                                             (); ) {
                                         String packageName = it.next();
-                                        if (bindingList.get(position).packageName.equalsIgnoreCase(packageName)) {
+                                        if (packagename.equalsIgnoreCase(packageName)) {
                                             //Used List Iterator to set empty
                                             // value for package name retaining
                                             // the positions of elements
@@ -309,7 +307,7 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
                                 } else {
 
                                     if (favoriteList != null && favoriteList.size() < 13) {
-                                        list.add(bindingList.get(position).packageName);
+                                        list.add(packagename);
                                         isLoadFirstTime = false;
                                     }
                                     // setToolBarText(favoriteList.size());
@@ -325,7 +323,7 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
 
                 } else if (item.getItemId() == R.id.item_Info) {
                     try {
-                        PackageUtil.appSettings(FavoritesSelectionActivity.this, bindingList.get(position).packageName);
+                        PackageUtil.appSettings(FavoritesSelectionActivity.this, packagename);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
