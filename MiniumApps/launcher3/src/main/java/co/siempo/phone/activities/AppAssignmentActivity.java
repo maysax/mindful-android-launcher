@@ -204,41 +204,25 @@ public class AppAssignmentActivity extends CoreActivity {
         setSupportActionBar(toolbar);
         recyclerView = findViewById(R.id.recyclerView);
         txtErrorMessage = findViewById(R.id.txtErrorMessage);
-        if (appList != null && appList.size() >= 1) {
-            recyclerView.setVisibility(View.VISIBLE);
-            txtErrorMessage.setVisibility(View.INVISIBLE);
-            appList = Sorting.sortAppAssignment(this, appList);
-            LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-            recyclerView.setLayoutManager(mLayoutManager);
-            recyclerView.addItemDecoration(
-                    new DividerItemDecoration(this, mLayoutManager.getOrientation()));
-            if (mainListItem != null) {
-                appAssignmentAdapter = new AppAssignmentAdapter(this, mainListItem.getId(),
-                        appList, class_name);
-                recyclerView.setAdapter(appAssignmentAdapter);
-            }
-        } else {
-            recyclerView.setVisibility(View.INVISIBLE);
-            txtErrorMessage.setVisibility(View.VISIBLE);
-            if (mainListItem != null) {
-                txtErrorMessage.setText("No " + mainListItem.getTitle() + " apps are installed.");
-            }
-        }
+        bindList(appList);
         showallAppBtn = findViewById(R.id.btnViewAllapps);
         showallAppBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showallAppBtn.setVisibility(View.GONE);
-                appAssignmentAdapter.setdata(appListAll);
+                if (appAssignmentAdapter != null) {
+                    appAssignmentAdapter.setdata(appListAll);
+                } else {
+                    bindList(appListAll);
+                }
                 appAssignmentAdapter.getFilter().filter(edtSearch.getText().toString().trim());
-                if (appAssignmentAdapter.getItemCount() >= 0) {
+                if (appAssignmentAdapter.getItemCount() > 0) {
                     recyclerView.setVisibility(View.VISIBLE);
                     txtErrorMessage.setVisibility(View.INVISIBLE);
                 } else {
                     recyclerView.setVisibility(View.INVISIBLE);
                     txtErrorMessage.setVisibility(View.VISIBLE);
                     txtErrorMessage.setText("No apps match that input text");
-
                 }
             }
         });
@@ -285,6 +269,30 @@ public class AppAssignmentActivity extends CoreActivity {
                 edtSearch.setText("");
             }
         });
+    }
+
+    private void bindList(ArrayList<ResolveInfo> appList) {
+        if (appList != null && appList.size() >= 1) {
+            recyclerView.setVisibility(View.VISIBLE);
+            txtErrorMessage.setVisibility(View.INVISIBLE);
+            appList = Sorting.sortAppAssignment(this, appList);
+            LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+            recyclerView.setLayoutManager(mLayoutManager);
+            recyclerView.addItemDecoration(
+                    new DividerItemDecoration(this, mLayoutManager.getOrientation()));
+            if (mainListItem != null) {
+                appAssignmentAdapter = new AppAssignmentAdapter(this, mainListItem.getId(),
+                        appList, class_name);
+                recyclerView.setAdapter(appAssignmentAdapter);
+            }
+        } else {
+            recyclerView.setVisibility(View.INVISIBLE);
+            txtErrorMessage.setVisibility(View.VISIBLE);
+            if (mainListItem != null) {
+                txtErrorMessage.setText("No " + mainListItem.getTitle() + " apps are installed.");
+
+            }
+        }
     }
 
     @Override
