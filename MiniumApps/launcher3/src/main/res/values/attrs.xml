@@ -36,6 +36,7 @@
 
     <declare-styleable name="icon">
         <attr name="icon_color" format="color"/>
+        <attr name="hint_color" format="color"/>
         <attr name="image_alpha" format="color"/>
         <attr name="pull_tab" format="color"/>
         <attr name="chevron_junk" format="color"/>

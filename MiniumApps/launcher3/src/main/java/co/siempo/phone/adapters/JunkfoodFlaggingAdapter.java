@@ -38,8 +38,8 @@ import co.siempo.phone.utils.UIUtils;
 public class JunkfoodFlaggingAdapter extends BaseAdapter implements Filterable {
 
     public final JunkfoodFlaggingActivity context;
-    private String searchReference = "";
     private final int foreground;
+    private String searchReference = "";
     private ArrayList<AppListInfo> mData;
     private LayoutInflater mInflater;
     private List<AppListInfo> filterList;
@@ -80,7 +80,7 @@ public class JunkfoodFlaggingAdapter extends BaseAdapter implements Filterable {
         if (convertView == null) {
             holder = new ViewHolder();
 
-            convertView = mInflater.inflate(R.layout.list_item_junkfoodflag,  parent, false);
+            convertView = mInflater.inflate(R.layout.list_item_junkfoodflag, parent, false);
             holder.txtAppName = convertView.findViewById(R.id.txtAppName);
             holder.imgAppIcon = convertView.findViewById(R.id.imgAppIcon);
             holder.imgChevron = convertView.findViewById(R.id.imgChevron);
@@ -103,6 +103,7 @@ public class JunkfoodFlaggingAdapter extends BaseAdapter implements Filterable {
                 holder.linTop.setVisibility(View.GONE);
                 if (resolveInfo.isFlagApp) {
                     holder.txtHeader.setBackgroundColor(ContextCompat.getColor(context, R.color.flageapp_header));
+//                    holder.txtHeader.setText(context.getString(R.string.flag_app));
                     holder.txtHeader.setText(context.getString(R.string.flag_app));
 
                     holder.txtNoAppsMessage.setBackground(new
@@ -126,7 +127,7 @@ public class JunkfoodFlaggingAdapter extends BaseAdapter implements Filterable {
                 holder.linTop.setVisibility(View.GONE);
                 if (resolveInfo.isFlagApp) {
                     holder.txtHeader.setBackgroundColor(ContextCompat.getColor(context, R.color.flageapp_header));
-                    holder.txtHeader.setText(context.getString(R.string.flag_app));
+                    holder.txtHeader.setText(context.getString(R.string.flag_app_cell));
                 } else {
                     holder.txtHeader.setBackgroundColor(ContextCompat.getColor(context, R.color.unflageapp_header));
                     holder.txtHeader.setText(context.getString(R.string.all_other_installed_apps));

@@ -9,6 +9,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -40,17 +41,17 @@ import co.siempo.phone.utils.UIUtils;
 public class IntentionFragment extends CoreFragment implements View.OnClickListener {
 
     Context context;
+    TextView txtIntention, txtHint;
     private View view;
     private ImageView imgTempo;
     private ImageView imgOverFlow, imgPullTab;
-    private LinearLayout linIF;
+    private CardView cardView;
     private PopupWindow mPopupWindow;
     private RelativeLayout relRootLayout;
     private Window mWindow;
     private int defaultStatusBarColor;
     private PermissionUtil permissionUtil;
     private DialogTempoSetting dialogTempo;
-    TextView txtIntention, txtHint;
 
     public IntentionFragment() {
         // Required empty public constructor
@@ -98,8 +99,8 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         imgOverFlow.setOnClickListener(this);
         txtIntention = view.findViewById(R.id.txtIntention);
         txtHint = view.findViewById(R.id.txtHint);
-        linIF = view.findViewById(R.id.linIF);
-        linIF.setOnClickListener(this);
+        cardView = view.findViewById(R.id.cardView);
+        cardView.setOnClickListener(this);
 
         // clear FLAG_TRANSLUCENT_STATUS flag:
         if (null != mWindow) {
@@ -133,19 +134,19 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
             }
         }
         if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.IS_INTENTION_ENABLE, false)) {
-            linIF.setVisibility(View.GONE);
+            cardView.setVisibility(View.GONE);
         } else {
-            linIF.setVisibility(View.VISIBLE);
+            cardView.setVisibility(View.VISIBLE);
         }
         if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_INTENTION, "").equalsIgnoreCase("")) {
             txtHint.setVisibility(View.INVISIBLE);
             txtIntention.setText(getString(R.string.what_s_your_intention));
-            txtIntention.setTextColor(ContextCompat.getColor(getActivity(),R.color.hint_white));
+            txtIntention.setTextColor(ContextCompat.getColor(getActivity(), R.color.hint_white));
         } else {
             txtHint.setVisibility(View.VISIBLE);
             txtHint.setText(getString(R.string.your_intention));
             txtIntention.setText(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_INTENTION, ""));
-            txtIntention.setTextColor(ContextCompat.getColor(getActivity(),R.color.settings_title_black));
+            txtIntention.setTextColor(ContextCompat.getColor(getActivity(), R.color.settings_title_black));
         }
         if (getActivity() != null) {
             if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME_SHOW_TOOLTIP, true)) {
@@ -206,7 +207,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
             case R.id.imgOverFlow:
                 showOverflowDialog();
                 break;
-            case R.id.linIF:
+            case R.id.cardView:
                 if (null != getActivity()) {
                     Intent intent = new Intent(getActivity(), IntentionEditActivity.class);
                     startActivity(intent);

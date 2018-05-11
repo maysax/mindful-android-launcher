@@ -79,6 +79,7 @@
             android:paddingRight="@dimen/dp_10"
             android:singleLine="true"
             android:textColorHint="#61000000"
+
             android:textSize="@dimen/sp_16"
             android:visibility="gone"/>
     </android.support.v7.widget.CardView>

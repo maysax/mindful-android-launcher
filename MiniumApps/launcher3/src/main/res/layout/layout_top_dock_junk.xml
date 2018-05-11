@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
 
     <co.siempo.phone.customviews.RobotoCondensedTextView
@@ -16,7 +16,7 @@
         android:text="@string/you_ve_flag"
         android:textColor="@color/dialog_blue"
         android:textSize="@dimen/sp_15"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <co.siempo.phone.customviews.RobotoCondensedTextView
         android:id="@+id/txtIntention"
@@ -31,7 +31,7 @@
         android:textColor="@color/dialog_blue"
         android:textSize="@dimen/sp_18"
         android:textStyle="bold"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
 
 </RelativeLayout>

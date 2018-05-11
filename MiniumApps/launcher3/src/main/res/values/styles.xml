@@ -45,6 +45,7 @@
         <item name="default_item_color">@color/dialog_blue</item>
         <item name="default_item_bg">@color/white</item>
         <item name="divider_tools">@color/divider_light_tools</item>
+        <item name="hint_color">@color/hint_white</item>
 
 
     </style>
@@ -73,7 +74,7 @@
         <item name="bottom_doc">@drawable/bottom_dock_gradient</item>
         <item name="android:actionMenuTextColor">@color/white</item>
         <item name="top_doc">@drawable/top_dock_gradient</item>
-        <item name="top_date_color">@color/trans_black</item>
+        <item name="top_date_color">@color/trans_black_date</item>
         <item name="pane_color">@color/black_80</item>
         <item name="indicator_active">@color/indicator_active_dark</item>
         <item name="indicator_inactive">@color/indicator_inactive_dark</item>
@@ -95,6 +96,7 @@
         <item name="default_item_color">@color/white</item>
         <item name="default_item_bg">@color/dialog_blue</item>
         <item name="divider_tools">@color/divider_dark_tools</item>
+        <item name="hint_color">@color/hint_dark</item>
 
 
     </style>
