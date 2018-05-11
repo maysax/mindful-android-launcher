@@ -510,8 +510,6 @@ public class PaneFragment extends CoreFragment {
                     mWindow.setStatusBarColor(statusBarColorJunk);
                     linTopDoc.setElevation(20);
 
-                    linTopDoc.setBackgroundColor(getResources().getColor(backGroundColor));
-
                     searchDoc.setVisibility(View.GONE);
                     junkDoc.setVisibility(View.VISIBLE);
 
@@ -657,7 +655,6 @@ public class PaneFragment extends CoreFragment {
         linBottomDoc.setVisibility(View.GONE);
         blueLineDivider.setVisibility(View.GONE);
         blueLineDividerBottom.setVisibility(View.GONE);
-        linTopDoc.setBackgroundColor(getResources().getColor(backGroundColor));
         searchListVisible(context);
     }
 

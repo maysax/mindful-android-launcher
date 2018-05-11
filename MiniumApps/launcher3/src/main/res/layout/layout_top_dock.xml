@@ -60,6 +60,7 @@
         android:layout_marginLeft="@dimen/dp_16"
         android:layout_marginRight="@dimen/dp_16"
         android:visibility="gone"
+        card_view:cardBackgroundColor="?attr/colorPrimary"
         card_view:cardElevation="@dimen/dp_2"
 
 
