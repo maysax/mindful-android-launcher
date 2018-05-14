@@ -10,7 +10,9 @@ import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Binder;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Vibrator;
@@ -39,6 +41,7 @@ import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.NotifySearchRefresh;
 import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.models.AppMenu;
+import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
@@ -56,6 +59,11 @@ public class StatusBarService extends Service {
     private MyObserver myObserver;
     private AppInstallUninstall appInstallUninstall;
     private Vibrator vibrator;
+    private CountDownTimer countDownTimer;
+    private IBinder mBinder = new LocalBinder();
+    ;
+    private UserPresentBroadcastReceiver userPresentBroadcastReceiver;
+
 
     public StatusBarService() {
     }
@@ -69,6 +77,17 @@ public class StatusBarService extends Service {
         registerObserverForContact();
         registerObserverForAppInstallUninstall();
         EventBus.getDefault().register(this);
+        registerTimerReceiver();
+
+    }
+
+    private void registerTimerReceiver() {
+        userPresentBroadcastReceiver = new UserPresentBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_USER_PRESENT);
+        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        intentFilter.addAction(Intent.ACTION_SCREEN_ON);
+        registerReceiver(userPresentBroadcastReceiver, intentFilter);
     }
 
     @Override
@@ -124,9 +143,13 @@ public class StatusBarService extends Service {
 //        FirebaseHelper.getInstance().logScreenUsageTime(onBackPressed.getScreenName(), onBackPressed.getStrStartTime());
     }
 
+    /* @Override
+     public IBinder onBind(Intent intent) {
+         throw new UnsupportedOperationException("Not yet implemented");
+     }*/
     @Override
     public IBinder onBind(Intent intent) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        return mBinder;
     }
 
     @Override
@@ -283,6 +306,29 @@ public class StatusBarService extends Service {
         EventBus.getDefault().postSticky(new NotifySearchRefresh(true));
     }
 
+    public void startTimer() {
+        countDownTimer = new CountDownTimer(15 * 60000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                PrefSiempo.getInstance(context).write(PrefSiempo.LOCK_COUNTER_STATUS, true);
+                countDownTimer.cancel();
+            }
+        }.start();
+
+    }
+
+    public void stopTimer() {
+        countDownTimer.cancel();
+
+        PrefSiempo.getInstance(this).write(PrefSiempo
+                .LOCK_COUNTER_STATUS, false);
+    }
+
     private class MyObserver extends ContentObserver {
         MyObserver(Handler handler) {
             super(handler);
@@ -362,4 +408,34 @@ public class StatusBarService extends Service {
         }
     }
 
+    //Added code for timer
+    public class LocalBinder extends Binder {
+
+
+        public StatusBarService getService() {
+            // Return this instance of LocalService so clients can call public methods
+            return StatusBarService.this;
+        }
+    }
+
+    public class UserPresentBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context arg0, Intent intent) {
+            if (intent != null && intent.getAction() != null && null != arg0) {
+                if (PackageUtil.isSiempoLauncher(arg0) && (intent.getAction()
+                        .equals
+                                (Intent.ACTION_USER_PRESENT) ||
+                        intent.getAction().equals(Intent.ACTION_SCREEN_ON))) {
+
+                    if (countDownTimer != null) {
+                        stopTimer();
+                    }
+                } else if (intent.getAction().equals(Intent
+                        .ACTION_SCREEN_OFF)) {
+                    startTimer();
+                }
+            }
+        }
+    }
 }
+

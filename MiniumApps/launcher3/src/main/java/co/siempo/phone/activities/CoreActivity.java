@@ -61,7 +61,6 @@ import de.greenrobot.event.Subscribe;
 @EActivity
 public abstract class CoreActivity extends AppCompatActivity implements NFCInterface {
 
-
     public static File localPath, backupPath;
     public int currentIndex = 0;
     public View mTestView = null;
@@ -107,7 +106,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             return defaultLauncherStr.equals(context.getPackageName());
         }
         return false;
-
     }
 
     @Override
@@ -126,6 +124,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_USER_PRESENT);
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        intentFilter.addAction(Intent.ACTION_SCREEN_ON);
         userPresentBroadcastReceiver = new UserPresentBroadcastReceiver();
         registerReceiver(userPresentBroadcastReceiver, intentFilter);
 
@@ -156,7 +155,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
@@ -277,7 +275,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             e.printStackTrace();
         }
         isOnStopCalled = true;
-
         super.onStop();
     }
 
@@ -302,8 +299,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                 e.printStackTrace();
             }
         }
-
-
     }
 
     /**
@@ -434,7 +429,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
      * when it comes back we have to show launcher dialog,toottip window.
      */
     public class UserPresentBroadcastReceiver extends BroadcastReceiver {
-
         @Override
         public void onReceive(Context arg0, Intent intent) {
             if (intent != null && intent.getAction() != null && null != arg0) {
@@ -442,14 +436,22 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                         .equals
                                 (Intent.ACTION_USER_PRESENT) ||
                         intent.getAction().equals(Intent.ACTION_SCREEN_ON))) {
-//                    Intent startMain = new Intent(Intent.ACTION_MAIN);
-//                    startMain.addCategory(Intent.CATEGORY_HOME);
-//                    startActivity(startMain);
-                } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+                    boolean lockcounterstatus = PrefSiempo.getInstance(CoreActivity.this).read
+                            (PrefSiempo
+                                    .LOCK_COUNTER_STATUS, false);
+                    if (lockcounterstatus) {
+                        DashboardActivity.currentIndexDashboard = 1;
+                        DashboardActivity.currentIndexPaneFragment = 2;
+                        Intent startMain = new Intent(Intent.ACTION_MAIN);
+                        startMain.addCategory(Intent.CATEGORY_HOME);
+                        startActivity(startMain);
+                    }
+                } else if (PackageUtil.isSiempoLauncher(arg0) && intent.getAction().equals(Intent
+                        .ACTION_SCREEN_OFF)) {
+
                 }
             }
         }
-
     }
 
     class InnerRecevier extends BroadcastReceiver {
@@ -473,6 +475,4 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             }
         }
     }
-
-
 }
