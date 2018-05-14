@@ -150,6 +150,7 @@ public class PaneFragment extends CoreFragment {
     private int backGroundColor;
     private int statusBarColorJunk;
     private LinearLayout linMain;
+    private boolean firstTimeLoad = true;
 
     public PaneFragment() {
         // Required empty public constructor
@@ -241,7 +242,11 @@ public class PaneFragment extends CoreFragment {
             overlayDialogPermission.dismiss();
         }
 
-
+        //Added as a part of SSA-1669
+        if (isVisibleToUser && firstTimeLoad) {
+            bindBottomDock();
+            firstTimeLoad = false;
+        }
     }
 
     public void loadView() {

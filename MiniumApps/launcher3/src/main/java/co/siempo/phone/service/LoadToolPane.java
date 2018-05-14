@@ -62,7 +62,8 @@ public class LoadToolPane extends AsyncTask<String, String, ArrayList<MainListIt
 
         CoreApplication.getInstance().setToolItemsList(s);
         CoreApplication.getInstance().setToolBottomItemsList(bottomDockList);
-        EventBus.getDefault().postSticky(new NotifyToolView(true));
         EventBus.getDefault().postSticky(new NotifyBottomView(true));
+        EventBus.getDefault().postSticky(new NotifyToolView(true));
+
     }
 }
