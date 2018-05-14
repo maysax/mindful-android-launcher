@@ -33,23 +33,33 @@ public class LoadToolPane extends AsyncTask<String, String, ArrayList<MainListIt
 
     @Override
     protected ArrayList<MainListItem> doInBackground(String... strings) {
-        ArrayList<MainListItem> items = new ArrayList<>();
-        new MainListItemLoader(context).loadItemsDefaultApp(items);
-        items = PackageUtil.getToolsMenuData(context, items);
-        Set<Integer> list = new HashSet<>();
 
-        for (Map.Entry<Integer, AppMenu> entry : CoreApplication.getInstance().getToolsSettings().entrySet()) {
-            if (entry.getValue().isBottomDoc()) {
-                list.add(entry.getKey());
-            }
-        }
+        ArrayList<MainListItem> items = new ArrayList<>();
         ArrayList<MainListItem> items1 = new ArrayList<>();
-        for (MainListItem mainListItem : items) {
-            if (list.contains(mainListItem.getId())) {
-                bottomDockList.add(mainListItem);
-            } else {
-                items1.add(mainListItem);
+
+        try {
+            new MainListItemLoader(context).loadItemsDefaultApp(items);
+            items = PackageUtil.getToolsMenuData(context, items);
+            Set<Integer> list = new HashSet<>();
+
+            if(null!=CoreApplication.getInstance() && null!=CoreApplication
+                    .getInstance().getToolsSettings()) {
+                for (Map.Entry<Integer, AppMenu> entry : CoreApplication.getInstance().getToolsSettings().entrySet()) {
+                    if (entry.getValue().isBottomDoc()) {
+                        list.add(entry.getKey());
+                    }
+                }
             }
+
+            for (MainListItem mainListItem : items) {
+                if (list.contains(mainListItem.getId())) {
+                    bottomDockList.add(mainListItem);
+                } else {
+                    items1.add(mainListItem);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
 
