@@ -38,7 +38,7 @@ public class UpdateBackgroundActivity extends CoreActivity {
         });
         setSupportActionBar(toolbar);
         Intent imageIntent = getIntent();
-        ImageView imageView = (ImageView) findViewById(R.id.imageView);
+        ImageView imageView = findViewById(R.id.imageView);
 
         if (imageIntent.getExtras() != null && imageIntent.hasExtra("imageUri"))
             ;
@@ -66,6 +66,7 @@ public class UpdateBackgroundActivity extends CoreActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 PrefSiempo.getInstance(UpdateBackgroundActivity.this).write(PrefSiempo
                         .DEFAULT_BAG, strImage);
+                PrefSiempo.getInstance(UpdateBackgroundActivity.this).write(PrefSiempo.DEFAULT_BAG_ENABLE, true);
                 setResult(Activity.RESULT_OK, new Intent());
                 EventBus.getDefault().postSticky(new NotifyBackgroundChange(true));
                 finish();

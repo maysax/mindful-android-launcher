@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/activity_pause"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_pause"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -37,8 +37,7 @@
                 android:padding="8dp"
                 android:text="@string/disable_intentions"
                 android:textColor="?attr/txt_content_title"
-                android:textSize="16sp"
-                />
+                android:textSize="16sp" />
 
             <Switch
                 android:id="@+id/switchDisableIntentionsControls"
@@ -46,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/txtDisableNotificationControls"
-                android:layout_marginRight="8dp"/>
+                android:layout_marginRight="8dp" />
 
 
             <co.siempo.phone.customviews.RobotoRegularTextView
@@ -64,7 +63,7 @@
                 android:paddingTop="0dp"
                 android:text="@string/when_intentions_are_disabled_your_home_screen_will_be_blank"
                 android:textColor="?attr/txt_content_color"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
         </RelativeLayout>
 
@@ -89,8 +88,7 @@
                 android:padding="8dp"
                 android:text="@string/dark_theme"
                 android:textColor="?attr/txt_content_title"
-                android:textSize="16sp"
-                />
+                android:textSize="16sp" />
 
             <Switch
                 android:id="@+id/switchDarkTheme"
@@ -98,7 +96,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/txtDarkTheme"
-                android:layout_marginRight="8dp"/>
+                android:layout_marginRight="8dp" />
 
 
             <co.siempo.phone.customviews.RobotoRegularTextView
@@ -116,7 +114,7 @@
                 android:paddingTop="0dp"
                 android:text="@string/dark_theme_text"
                 android:textColor="?attr/txt_content_color"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
         </RelativeLayout>
 
@@ -137,12 +135,12 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="8dp"
+                android:layout_toLeftOf="@+id/switchCustomBackground"
                 android:lineSpacingExtra="5sp"
                 android:padding="8dp"
                 android:text="@string/custom_background_image_title"
                 android:textColor="?attr/txt_content_title"
-                android:textSize="16sp"
-                />
+                android:textSize="16sp" />
 
             <Switch
                 android:id="@+id/switchCustomBackground"

@@ -3,6 +3,7 @@ package co.siempo.phone.fragments;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
@@ -98,6 +99,27 @@ public class TempoHomeFragment extends CoreFragment {
 
             }
         });
+        switchCustomBackground.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String strImage = PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_BAG, "");
+                boolean isEnable = PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_BAG_ENABLE, false);
+                if (isEnable
+                        && !TextUtils.isEmpty(strImage)) {
+                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_BAG_ENABLE, false);
+                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_BAG, "");
+                    EventBus.getDefault().postSticky(new NotifyBackgroundChange(true));
+                    switchCustomBackground.setChecked(false);
+                } else if (!isEnable && TextUtils.isEmpty(strImage)) {
+                    startActivity(new Intent(context, ChooseBackgroundActivity.class));
+                } else if (!isEnable && !TextUtils.isEmpty(strImage)) {
+                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_BAG_ENABLE, true);
+                    EventBus.getDefault().postSticky(new NotifyBackgroundChange(true));
+                    switchCustomBackground.setChecked(true);
+                }
+
+            }
+        });
     }
 
     @Click
@@ -107,20 +129,21 @@ public class TempoHomeFragment extends CoreFragment {
 
     @Click
     void relCustomBackground() {
-        if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_BAG, "").equalsIgnoreCase("")) {
-            startActivity(new Intent(context, ChooseBackgroundActivity.class));
-        } else {
-            PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_BAG, "");
-            EventBus.getDefault().postSticky(new NotifyBackgroundChange(true));
-            switchCustomBackground.setChecked(false);
-        }
+        startActivity(new Intent(context, ChooseBackgroundActivity.class));
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        switchCustomBackground.setChecked(!PrefSiempo.getInstance(context).read(PrefSiempo
-                .DEFAULT_BAG, "").equalsIgnoreCase(""));
+        String strImage = PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_BAG, "");
+        boolean isEnable = PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_BAG_ENABLE, false);
+        if (isEnable
+                && !TextUtils.isEmpty(strImage)) {
+            switchCustomBackground.setChecked(true);
+        } else if (!isEnable && TextUtils.isEmpty(strImage)) {
+            switchCustomBackground.setChecked(false);
+            PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_BAG_ENABLE, false);
+        }
     }
 
     @Click

@@ -61,8 +61,9 @@ public class PrefSiempo {
     public static final String IS_DARK_THEME = "isDarkTheme";
 
 
-    // used for Allow peaking.
+    // used for default background.
     public static final String DEFAULT_BAG = "default_back";
+    public static final String DEFAULT_BAG_ENABLE = "default_enabled";
 
 
     //Launcher 3 preferences

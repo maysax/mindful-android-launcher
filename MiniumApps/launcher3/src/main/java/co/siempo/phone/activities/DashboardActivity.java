@@ -219,17 +219,16 @@ public class DashboardActivity extends CoreActivity {
         try {
             String filePath = PrefSiempo.getInstance(this).read(PrefSiempo
                     .DEFAULT_BAG, "");
-            if (!TextUtils.isEmpty(filePath)) {
+            boolean isEnable = PrefSiempo.getInstance(this).read(PrefSiempo
+                    .DEFAULT_BAG_ENABLE, false);
 
-
+            if (!TextUtils.isEmpty(filePath) && isEnable) {
                 Bitmap bitmap = BitmapFactory.decodeFile(filePath);
                 BitmapDrawable ob = new BitmapDrawable(getResources(), bitmap);
                 //Code for Applying background
                 if (null != imgBackground) {
                     imgBackground.setBackground(ob);
                 }
-
-
             } else {
                 imgBackground.setBackground(null);
             }
