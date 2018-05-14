@@ -153,7 +153,7 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.app_junkfood_flagging, menu);
+        getMenuInflater().inflate(R.menu.app_assignment_list, menu);
         MenuItem menuItem = menu.findItem(R.id.item_save);
 //        setTextColorForMenuItem(menuItem, R.color.colorAccent);
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -244,9 +244,8 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
 
     /**
      * show pop dialog on List item click for flag/un-flag and application information.
-     *
      */
-    public void showPopUp(View view, final String packagename , final boolean isFlagApp) {
+    public void showPopUp(View view, final String packagename, final boolean isFlagApp) {
 
         if (popup != null) {
             popup.dismiss();
@@ -314,7 +313,7 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
                                 }
                                 firstPosition = listAllApps.getFirstVisiblePosition();
 //                                bindData(true);
-                                new FilterApps(true,FavoritesSelectionActivity.this).execute();
+                                new FilterApps(true, FavoritesSelectionActivity.this).execute();
                             }
                         });
                     } catch (Exception e) {
