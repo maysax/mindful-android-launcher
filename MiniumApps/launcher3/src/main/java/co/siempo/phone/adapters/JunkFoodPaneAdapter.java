@@ -61,7 +61,8 @@ public class JunkFoodPaneAdapter extends RecyclerView.Adapter<JunkFoodPaneAdapte
         LayoutInflater inflater = LayoutInflater.from(
                 parent.getContext());
         View v =
-                inflater.inflate(R.layout.list_application_item_grid, parent, false);
+                inflater.inflate(R.layout.list_application_item_grid_junk,
+                        parent, false);
         // set the view's size, margins, paddings and layout parameters
         return new ViewHolder(v);
     }

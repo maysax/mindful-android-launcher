@@ -42,14 +42,13 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
 
     private final Context context;
     private List<MainListItem> mainListItemList;
-    private boolean isHideIconBranding = true, isBottomDoc = false;
+    private boolean isHideIconBranding;
     private HashMap<Integer, AppMenu> map;
 
     public ToolsMenuAdapter(Context context, boolean isHideIconBranding, boolean isBottomDoc, List<MainListItem> mainListItemList) {
         this.context = context;
         this.mainListItemList = mainListItemList;
         this.isHideIconBranding = isHideIconBranding;
-        this.isBottomDoc = isBottomDoc;
         map = CoreApplication.getInstance().getToolsSettings();
     }
 
@@ -236,7 +235,6 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
 
     public void setMainListItemList(List<MainListItem> mainListItemList, boolean isBottomDoc, boolean isHideIconBranding) {
         this.mainListItemList = mainListItemList;
-        this.isBottomDoc = isBottomDoc;
         this.isHideIconBranding = isHideIconBranding;
         map = CoreApplication.getInstance().getToolsSettings();
         notifyDataSetChanged();

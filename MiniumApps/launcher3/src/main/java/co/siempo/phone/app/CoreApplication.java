@@ -23,6 +23,7 @@ import android.util.LruCache;
 
 import com.androidnetworking.AndroidNetworking;
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.joanzapata.iconify.Iconify;
@@ -37,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.log.Tracer;
@@ -48,7 +50,6 @@ import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
-import io.fabric.sdk.android.BuildConfig;
 import io.fabric.sdk.android.Fabric;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
@@ -382,14 +383,13 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     private void configFabric() {
-        if (!BuildConfig.DEBUG) {
-            Crashlytics crashlytics = new Crashlytics();
-            final Fabric fabric = new Fabric.Builder(this)
-                    .kits(crashlytics)
-                    .debuggable(Config.DEBUG)
-                    .build();
-            Fabric.with(fabric);
-        }
+        CrashlyticsCore crashlyticsCore = new CrashlyticsCore.Builder()
+                .disabled(BuildConfig.DEBUG)
+                .build();
+        final Fabric fabric = new Fabric.Builder(this)
+                .kits(crashlyticsCore)
+                .build();
+        Fabric.with(fabric);
     }
 
     public void logException(Throwable e) {

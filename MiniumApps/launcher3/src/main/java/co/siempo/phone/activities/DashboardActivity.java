@@ -211,8 +211,6 @@ public class DashboardActivity extends CoreActivity {
         permissionUtil = new PermissionUtil(this);
         overlayDialog = new Dialog(this, 0);
         showOverlayOfDefaultLauncher();
-
-
     }
 
     private void changeLayoutBackground() {
@@ -273,8 +271,10 @@ public class DashboardActivity extends CoreActivity {
     }
 
     public void loadViews() {
+
         mPager = findViewById(R.id.pager);
         mPagerAdapter = new DashboardPagerAdapter(getFragmentManager());
+        loadPane();
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(currentIndexDashboard);
         mPager.setOffscreenPageLimit(2);
@@ -339,7 +339,7 @@ public class DashboardActivity extends CoreActivity {
 
             }
         });
-        loadPane();
+
         if (PrefSiempo.getInstance(this).read(PrefSiempo
                 .INSTALLED_APP_VERSION_CODE, 0) == 0 || (PrefSiempo.getInstance(this).read(PrefSiempo
                 .INSTALLED_APP_VERSION_CODE, 0) < UIUtils

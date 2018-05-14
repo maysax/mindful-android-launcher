@@ -49,7 +49,7 @@
                 android:id="@+id/blueLineView"
                 android:layout_width="match_parent"
                 android:layout_height="0.6dp"
-                android:background="@color/dialog_blue_alpha"/>
+                android:background="?attr/rounded_edt_color"/>
         </LinearLayout>
 
 
@@ -79,7 +79,7 @@
                 android:id="@+id/blueLineViewBottom"
                 android:layout_width="match_parent"
                 android:layout_height="0.6dp"
-                android:background="@color/dialog_blue_alpha"/>
+                android:background="?attr/rounded_edt_color"/>
         </LinearLayout>
 
         <RelativeLayout
@@ -105,9 +105,9 @@
                 android:id="@+id/recyclerViewBottomDoc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:layout_marginLeft="@dimen/dp_5"
                 android:layout_marginRight="@dimen/dp_5"
-                android:layout_alignParentBottom="true"
                 android:clipToPadding="false"/>
         </RelativeLayout>
 
