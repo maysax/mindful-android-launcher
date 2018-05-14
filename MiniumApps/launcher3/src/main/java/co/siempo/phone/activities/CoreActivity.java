@@ -445,6 +445,8 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                         Intent startMain = new Intent(Intent.ACTION_MAIN);
                         startMain.addCategory(Intent.CATEGORY_HOME);
                         startActivity(startMain);
+                        PrefSiempo.getInstance(CoreActivity.this).write(PrefSiempo
+                                .LOCK_COUNTER_STATUS, false);
                     }
                 } else if (PackageUtil.isSiempoLauncher(arg0) && intent.getAction().equals(Intent
                         .ACTION_SCREEN_OFF)) {

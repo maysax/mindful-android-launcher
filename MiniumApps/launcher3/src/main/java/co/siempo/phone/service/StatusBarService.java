@@ -10,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Binder;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -60,7 +59,6 @@ public class StatusBarService extends Service {
     private AppInstallUninstall appInstallUninstall;
     private Vibrator vibrator;
     private CountDownTimer countDownTimer;
-    private IBinder mBinder = new LocalBinder();
     ;
     private UserPresentBroadcastReceiver userPresentBroadcastReceiver;
 
@@ -143,13 +141,9 @@ public class StatusBarService extends Service {
 //        FirebaseHelper.getInstance().logScreenUsageTime(onBackPressed.getScreenName(), onBackPressed.getStrStartTime());
     }
 
-    /* @Override
+    @Override
      public IBinder onBind(Intent intent) {
          throw new UnsupportedOperationException("Not yet implemented");
-     }*/
-    @Override
-    public IBinder onBind(Intent intent) {
-        return mBinder;
     }
 
     @Override
@@ -307,7 +301,7 @@ public class StatusBarService extends Service {
     }
 
     public void startTimer() {
-        countDownTimer = new CountDownTimer(15 * 60000, 1000) {
+        countDownTimer = new CountDownTimer(15 * 10000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -407,17 +401,6 @@ public class StatusBarService extends Service {
 
         }
     }
-
-    //Added code for timer
-    public class LocalBinder extends Binder {
-
-
-        public StatusBarService getService() {
-            // Return this instance of LocalService so clients can call public methods
-            return StatusBarService.this;
-        }
-    }
-
     public class UserPresentBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context arg0, Intent intent) {
