@@ -65,6 +65,8 @@
         <attr name="default_item_color" format="color"/>
         <attr name="default_item_bg" format="color"/>
         <attr name="divider_tools" format="color"/>
+        <attr name="rounded_edt_color" format="color"/>
+        <attr name="rounded_hint_color" format="color"/>
     </declare-styleable>
 
 

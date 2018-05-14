@@ -211,8 +211,6 @@ public class DashboardActivity extends CoreActivity {
         permissionUtil = new PermissionUtil(this);
         overlayDialog = new Dialog(this, 0);
         showOverlayOfDefaultLauncher();
-
-
     }
 
     private void changeLayoutBackground() {

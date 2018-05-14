@@ -45,7 +45,7 @@
             android:longClickable="false"
             android:paddingLeft="@dimen/dp_20"
             android:paddingRight="@dimen/dp_10"
-            android:textColorHint="#8A42A4FF"
+            android:textColorHint="?attr/rounded_hint_color"
             android:textSize="16sp"/>
 
 
