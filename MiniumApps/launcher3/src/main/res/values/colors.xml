@@ -152,6 +152,8 @@
     <color name="blue_dark">#CC42A4FF</color>
     <color name="blue_dark_hint">#D642A4FF</color>
     <color name="blue_light_hint">#8A42A4FF</color>
+    <color name="junk_text_light">#61000000</color>
+    <color name="junk_text_dark">#99FFFFFF</color>
 
 
 </resources>

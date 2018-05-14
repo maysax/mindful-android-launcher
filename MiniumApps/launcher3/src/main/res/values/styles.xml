@@ -48,6 +48,7 @@
         <item name="hint_color">@color/hint_white</item>
         <item name="rounded_edt_color">@color/blue_light</item>
         <item name="rounded_hint_color">@color/blue_light_hint</item>
+        <item name="junk_text">@color/junk_text_light</item>
 
 
     </style>
@@ -101,6 +102,7 @@
         <item name="hint_color">@color/hint_dark</item>
         <item name="rounded_edt_color">@color/blue_dark</item>
         <item name="rounded_hint_color">@color/blue_dark_hint</item>
+        <item name="junk_text">@color/junk_text_dark</item>
 
 
     </style>
