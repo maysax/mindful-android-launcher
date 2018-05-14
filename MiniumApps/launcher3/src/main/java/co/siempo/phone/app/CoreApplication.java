@@ -231,122 +231,126 @@ public abstract class CoreApplication extends MultiDexApplication {
      * application show/hide bind tools to specific package name.
      */
     private void configureToolsPane() {
-        if (PrefSiempo.getInstance(this).read(PrefSiempo.TOOLS_SETTING, "").equalsIgnoreCase("")) {
-            HashMap<Integer, AppMenu> map = new HashMap<>();
-            //by default on install, the "Recorder", "Payment", and "Browser" tools are hidden
-            // (they may be revealed via the tool-selection screen (see tool-selection below)).
-            map.put(TOOLS_MAP, new AppMenu(true, false, CoreApplication.getInstance
-                    ().getApplicationByCategory(1).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(1).get(0).activityInfo.packageName : ""));
-            map.put(TOOLS_TRANSPORT, new AppMenu(true, false, CoreApplication.getInstance
-                    ().getApplicationByCategory(2).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(2).get(0).activityInfo.packageName : ""));
-            map.put(TOOLS_CALENDAR, new AppMenu(true, false, CoreApplication.getInstance
-                    ().getApplicationByCategory(3).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(3).get(0).activityInfo.packageName : ""));
-            map.put(TOOLS_WEATHER, new AppMenu(true, false, CoreApplication.getInstance
-                    ().getApplicationByCategory(4).size() == 1 ?
-                    CoreApplication.getInstance().getApplicationByCategory(4).get(0).activityInfo.packageName : ""));
-            map.put(TOOLS_NOTES, new AppMenu(true, false, CoreApplication.getInstance
-                    ().getApplicationByCategory(5).size() == 1 ?
-                    getString(R.string.notes) : ""));
-            map.put(TOOLS_RECORDER, new AppMenu(false, false, CoreApplication
-                    .getInstance().getApplicationByCategory(6).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(6).get(0).activityInfo.packageName : ""));
-            map.put(TOOLS_CAMERA, new AppMenu(true, false, CoreApplication.getInstance
-                    ().getApplicationByCategory(7).size() == 1 ?
-                    CoreApplication.getInstance().getApplicationByCategory(7).get(0).activityInfo.packageName : ""));
-            map.put(TOOLS_PHOTOS, new AppMenu(true, false, CoreApplication.getInstance
-                    ().getApplicationByCategory(8).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(8).get(0).activityInfo.packageName : ""));
-            map.put(TOOLS_PAYMENT, new AppMenu(false, false, CoreApplication
-                    .getInstance().getApplicationByCategory(9).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(9).get(0).activityInfo.packageName : ""));
-            map.put(TOOLS_WELLNESS, new AppMenu(true, false, CoreApplication
-                    .getInstance().getApplicationByCategory(10).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(10).get(0).activityInfo.packageName : ""));
+        try {
+            if (PrefSiempo.getInstance(this).read(PrefSiempo.TOOLS_SETTING, "").equalsIgnoreCase("")) {
+                HashMap<Integer, AppMenu> map = new HashMap<>();
+                //by default on install, the "Recorder", "Payment", and "Browser" tools are hidden
+                // (they may be revealed via the tool-selection screen (see tool-selection below)).
+                map.put(TOOLS_MAP, new AppMenu(true, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(1).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(1).get(0).activityInfo.packageName : ""));
+                map.put(TOOLS_TRANSPORT, new AppMenu(true, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(2).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(2).get(0).activityInfo.packageName : ""));
+                map.put(TOOLS_CALENDAR, new AppMenu(true, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(3).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(3).get(0).activityInfo.packageName : ""));
+                map.put(TOOLS_WEATHER, new AppMenu(true, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(4).size() == 1 ?
+                        CoreApplication.getInstance().getApplicationByCategory(4).get(0).activityInfo.packageName : ""));
+                map.put(TOOLS_NOTES, new AppMenu(true, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(5).size() == 1 ?
+                        getString(R.string.notes) : ""));
+                map.put(TOOLS_RECORDER, new AppMenu(false, false, CoreApplication
+                        .getInstance().getApplicationByCategory(6).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(6).get(0).activityInfo.packageName : ""));
+                map.put(TOOLS_CAMERA, new AppMenu(true, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(7).size() == 1 ?
+                        CoreApplication.getInstance().getApplicationByCategory(7).get(0).activityInfo.packageName : ""));
+                map.put(TOOLS_PHOTOS, new AppMenu(true, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(8).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(8).get(0).activityInfo.packageName : ""));
+                map.put(TOOLS_PAYMENT, new AppMenu(false, false, CoreApplication
+                        .getInstance().getApplicationByCategory(9).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(9).get(0).activityInfo.packageName : ""));
+                map.put(TOOLS_WELLNESS, new AppMenu(true, false, CoreApplication
+                        .getInstance().getApplicationByCategory(10).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(10).get(0).activityInfo.packageName : ""));
 
-            map.put(TOOLS_TODO, new AppMenu(false, false, CoreApplication
-                    .getInstance().getApplicationByCategory(12).size() == 1 ?
-                    CoreApplication.getInstance().getApplicationByCategory
-                            (12).get(0).activityInfo.packageName : ""));
-            map.put(TOOLS_BROWSER, new AppMenu(false, false, CoreApplication
-                    .getInstance().getApplicationByCategory(11).size() == 1
-                    ? CoreApplication.getInstance().getApplicationByCategory
-                    (11).get(0).activityInfo.packageName : ""));
-            map.put(TOOLS_MUSIC, new AppMenu(false, false, CoreApplication
-                    .getInstance().getApplicationByCategory(17).size() == 1 ?
-                    CoreApplication.getInstance().getApplicationByCategory
-                            (17).get(0).activityInfo.packageName : ""));
-            map.put(TOOLS_PODCAST, new AppMenu(false, false, CoreApplication
-                    .getInstance().getApplicationByCategory(18).size() == 1 ?
-                    CoreApplication.getInstance().getApplicationByCategory
-                            (18).get(0).activityInfo.packageName : ""));
+                map.put(TOOLS_TODO, new AppMenu(false, false, CoreApplication
+                        .getInstance().getApplicationByCategory(12).size() == 1 ?
+                        CoreApplication.getInstance().getApplicationByCategory
+                                (12).get(0).activityInfo.packageName : ""));
+                map.put(TOOLS_BROWSER, new AppMenu(false, false, CoreApplication
+                        .getInstance().getApplicationByCategory(11).size() == 1
+                        ? CoreApplication.getInstance().getApplicationByCategory
+                        (11).get(0).activityInfo.packageName : ""));
+                map.put(TOOLS_MUSIC, new AppMenu(false, false, CoreApplication
+                        .getInstance().getApplicationByCategory(17).size() == 1 ?
+                        CoreApplication.getInstance().getApplicationByCategory
+                                (17).get(0).activityInfo.packageName : ""));
+                map.put(TOOLS_PODCAST, new AppMenu(false, false, CoreApplication
+                        .getInstance().getApplicationByCategory(18).size() == 1 ?
+                        CoreApplication.getInstance().getApplicationByCategory
+                                (18).get(0).activityInfo.packageName : ""));
 
-            map.put(TOOLS_FOOD, new AppMenu(false, false, CoreApplication
-                    .getInstance().getApplicationByCategory(19).size() == 1 ?
-                    CoreApplication.getInstance().getApplicationByCategory
-                            (19).get(0).activityInfo.packageName : ""));
+                map.put(TOOLS_FOOD, new AppMenu(false, false, CoreApplication
+                        .getInstance().getApplicationByCategory(19).size() == 1 ?
+                        CoreApplication.getInstance().getApplicationByCategory
+                                (19).get(0).activityInfo.packageName : ""));
 
-            map.put(TOOLS_FITNESS, new AppMenu(false, false, CoreApplication
-                    .getInstance().getApplicationByCategory(20).size() == 1 ?
-                    CoreApplication.getInstance().getApplicationByCategory
-                            (20).get(0).activityInfo.packageName : ""));
+                map.put(TOOLS_FITNESS, new AppMenu(false, false, CoreApplication
+                        .getInstance().getApplicationByCategory(20).size() == 1 ?
+                        CoreApplication.getInstance().getApplicationByCategory
+                                (20).get(0).activityInfo.packageName : ""));
 
-            map.put(TOOLS_CALL, new AppMenu(true, true, CoreApplication.getInstance
-                    ().getApplicationByCategory(13).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(13).get(0).activityInfo.packageName : ""));
-            map.put(TOOLS_CLOCK, new AppMenu(true, true, CoreApplication.getInstance
-                    ().getApplicationByCategory(14).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(14).get(0).activityInfo.packageName : ""));
-            map.put(TOOLS_MESSAGE, new AppMenu(true, true, CoreApplication.getInstance
-                    ().getApplicationByCategory(15).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(15).get(0).activityInfo.packageName : ""));
-            map.put(TOOLS_EMAIL, new AppMenu(true, true, CoreApplication.getInstance
-                    ().getApplicationByCategory(16).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(16).get(0).activityInfo.packageName : ""));
+                map.put(TOOLS_CALL, new AppMenu(true, true, CoreApplication.getInstance
+                        ().getApplicationByCategory(13).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(13).get(0).activityInfo.packageName : ""));
+                map.put(TOOLS_CLOCK, new AppMenu(true, true, CoreApplication.getInstance
+                        ().getApplicationByCategory(14).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(14).get(0).activityInfo.packageName : ""));
+                map.put(TOOLS_MESSAGE, new AppMenu(true, true, CoreApplication.getInstance
+                        ().getApplicationByCategory(15).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(15).get(0).activityInfo.packageName : ""));
+                map.put(TOOLS_EMAIL, new AppMenu(true, true, CoreApplication.getInstance
+                        ().getApplicationByCategory(16).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(16).get(0).activityInfo.packageName : ""));
 
 
-            String hashMapToolSettings = new Gson().toJson(map);
-            PrefSiempo.getInstance(this).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
+                String hashMapToolSettings = new Gson().toJson(map);
+                PrefSiempo.getInstance(this).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
 
 
             /*
               SSA-1321: Adding the mentioned apps in junk food by default
              */
-            Set<String> junkfoodList = new HashSet<>();
+                Set<String> junkfoodList = new HashSet<>();
 
-            Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-            mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-            List<ResolveInfo> pkgAppsList = getPackageManager().queryIntentActivities(mainIntent, 0);
+                Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+                mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+                List<ResolveInfo> pkgAppsList = getPackageManager().queryIntentActivities(mainIntent, 0);
 
 
-            for (ResolveInfo resolveInfo : pkgAppsList) {
+                for (ResolveInfo resolveInfo : pkgAppsList) {
 
-                String packageName = !TextUtils.isEmpty(resolveInfo.activityInfo
-                        .packageName) ? resolveInfo.activityInfo
-                        .packageName : "";
-                if (packageName.contains("com.facebook.katana") || packageName.contains("com.facebook.lite") || packageName
-                        .contains("com.king")) {
-                    if (UIUtils.isAppInstalledAndEnabled(getApplicationContext(), packageName)) {
-                        junkfoodList.add(packageName);
+                    String packageName = !TextUtils.isEmpty(resolveInfo.activityInfo
+                            .packageName) ? resolveInfo.activityInfo
+                            .packageName : "";
+                    if (packageName.contains("com.facebook.katana") || packageName.contains("com.facebook.lite") || packageName
+                            .contains("com.king")) {
+                        if (UIUtils.isAppInstalledAndEnabled(getApplicationContext(), packageName)) {
+                            junkfoodList.add(packageName);
+                        }
+                    } else {
+
+                        switch (packageName) {
+                            case Constants.SNAP_PACKAGE:
+                            case Constants.INSTAGRAM_PACKAGE:
+                            case Constants.LINKEDIN_PACKAGE:
+                            case Constants.CLASH_ROYAL_PACKAGE:
+                            case Constants.HINGE_PACKAGE:
+                            case Constants.NETFLIX_PACKAGE:
+                            case Constants.REDDIT_PACKAGE:
+                            case Constants.TINDER_PACKAGE:
+                            case Constants.GRINDR_PACKAGE:
+                            case Constants.YOUTUBE_PACKAGE:
+                            case Constants.COFFEE_MEETS_PACKAGE:
+                            case Constants.TWITTER_PACKAGE:
+                            case Constants.BUMBLE_PACKAGE:
+                                if (UIUtils.isAppInstalledAndEnabled(getApplicationContext(), packageName)) {
+                                    junkfoodList.add(packageName);
+                                }
+                                break;
+                        }
+
                     }
-                } else {
-
-                    switch (packageName) {
-                        case Constants.SNAP_PACKAGE:
-                        case Constants.INSTAGRAM_PACKAGE:
-                        case Constants.LINKEDIN_PACKAGE:
-                        case Constants.CLASH_ROYAL_PACKAGE:
-                        case Constants.HINGE_PACKAGE:
-                        case Constants.NETFLIX_PACKAGE:
-                        case Constants.REDDIT_PACKAGE:
-                        case Constants.TINDER_PACKAGE:
-                        case Constants.GRINDR_PACKAGE:
-                        case Constants.YOUTUBE_PACKAGE:
-                        case Constants.COFFEE_MEETS_PACKAGE:
-                        case Constants.TWITTER_PACKAGE:
-                        case Constants.BUMBLE_PACKAGE:
-                            if (UIUtils.isAppInstalledAndEnabled(getApplicationContext(), packageName)) {
-                                junkfoodList.add(packageName);
-                            }
-                            break;
-                    }
-
                 }
+
+
+                PrefSiempo.getInstance(this).write(PrefSiempo.JUNKFOOD_APPS, junkfoodList);
             }
-
-
-            PrefSiempo.getInstance(this).write(PrefSiempo.JUNKFOOD_APPS, junkfoodList);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
