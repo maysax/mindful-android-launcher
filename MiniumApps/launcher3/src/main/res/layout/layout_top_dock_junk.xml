@@ -14,7 +14,7 @@
         android:paddingLeft="@dimen/dp_16"
         android:paddingRight="@dimen/dp_16"
         android:text="@string/you_ve_flag"
-        android:textColor="@color/dialog_blue"
+        android:textColor="?attr/rounded_hint_color"
         android:textSize="@dimen/sp_15"
         android:visibility="gone"/>
 
