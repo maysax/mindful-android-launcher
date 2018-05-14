@@ -20,6 +20,8 @@ import com.gun0912.tedpermission.TedPermission;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -64,7 +66,7 @@ public class ChooseBackgroundActivity extends CoreActivity {
                 onBackPressed();
             }
         });
-        mImageGridview = (GridView) findViewById(R.id.ImageGridview);
+        mImageGridview = findViewById(R.id.ImageGridview);
         loading_progress = findViewById(R.id.loading_progress);
     }
 
@@ -292,8 +294,8 @@ public class ChooseBackgroundActivity extends CoreActivity {
         String[] projection = {MediaStore.Images.ImageColumns.DATA};
         Cursor cursor = null;
         final SortedSet<String> dirList = new TreeSet<String>();
-        final ArrayList<String> resultIAV = new ArrayList<String>();
-
+        final ArrayList<File> resultIAV = new ArrayList<File>();
+        final ArrayList<String> resultIAV1 = new ArrayList<>();
         String[] directories = null;
         if (imageUri != null) {
             cursor = getContentResolver().query(imageUri, projection, null, null, null);
@@ -330,7 +332,7 @@ public class ChooseBackgroundActivity extends CoreActivity {
                                 || imagePath.getName().contains(".png") || imagePath.getName().contains(".PNG")
                                 ) {
                             String path = imagePath.getAbsolutePath();
-                            resultIAV.add(path);
+                            resultIAV.add(imagePath);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -338,8 +340,20 @@ public class ChooseBackgroundActivity extends CoreActivity {
                 }
             }
         }
+        if (resultIAV.size() > 0) {
+            Collections.sort(resultIAV, new Comparator<File>() {
+                public int compare(File f1, File f2) {
+                    return Long.compare(f2.lastModified(), f1.lastModified());
+                }
+            });
 
-        return resultIAV;
+            for (File file : resultIAV) {
+                String path = file.getAbsolutePath();
+                resultIAV1.add(path);
+            }
+        }
+
+        return resultIAV1;
     }
 }
 
