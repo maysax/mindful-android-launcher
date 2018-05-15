@@ -68,6 +68,7 @@
         <attr name="rounded_edt_color" format="color"/>
         <attr name="rounded_hint_color" format="color"/>
         <attr name="junk_text" format="color"/>
+        <attr name="junk_top" format="color"/>
     </declare-styleable>
 
 

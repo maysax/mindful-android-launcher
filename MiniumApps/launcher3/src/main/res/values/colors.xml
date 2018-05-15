@@ -154,6 +154,8 @@
     <color name="blue_light_hint">#8A42A4FF</color>
     <color name="junk_text_light">#61000000</color>
     <color name="junk_text_dark">#99FFFFFF</color>
+    <color name="junk_pane">#262626</color>
+    <color name="junk_pane_light">#ffffff</color>
 
 
 </resources>

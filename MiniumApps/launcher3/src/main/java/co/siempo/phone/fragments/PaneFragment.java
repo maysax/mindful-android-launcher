@@ -175,9 +175,9 @@ public class PaneFragment extends CoreFragment {
         mediator.loadData();
         TypedValue typedValue = new TypedValue();
         Resources.Theme theme = context.getTheme();
-        theme.resolveAttribute(android.R.attr.windowBackground, typedValue, true);
+        theme.resolveAttribute(R.attr.junk_top, typedValue, true);
         backGroundColor = typedValue.resourceId;
-        theme.resolveAttribute(android.R.attr.windowBackground, typedValue, true);
+        theme.resolveAttribute(R.attr.junk_top, typedValue, true);
         statusBarColorJunk = typedValue.data;
         bindView();
         Log.d("Test", "P2");
