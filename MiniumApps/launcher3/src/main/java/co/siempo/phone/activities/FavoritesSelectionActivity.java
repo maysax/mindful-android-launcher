@@ -152,7 +152,7 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
         List<String> installedPackageListLocal = CoreApplication.getInstance().getPackagesList();
         List<String> appList = new ArrayList<>(installedPackageListLocal);
         installedPackageList = appList;
-        bindData(false);
+        bindData();
     }
 
     @Override
@@ -215,7 +215,7 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
     /**
      * bind the list view of flag app and all apps.
      */
-    private void bindData(boolean isNotify) {
+    private void bindData() {
         try {
             favoriteList = new ArrayList<>();
             unfavoriteList = new ArrayList<>();
@@ -261,10 +261,8 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
             junkfoodFlaggingAdapter = new FavoriteFlaggingAdapter(this, bindingList);
             listAllApps.setAdapter(junkfoodFlaggingAdapter);
             listAllApps.setOnItemClickListener(this);
-            if (isNotify) {
-                junkfoodFlaggingAdapter.notifyDataSetChanged();
-                listAllApps.setSelection(firstPosition);
-            }
+            junkfoodFlaggingAdapter.getFilter().filter(edtSearch.getText().toString());
+            listAllApps.setSelection(firstPosition);
         } catch (Exception e) {
             e.printStackTrace();
         }
