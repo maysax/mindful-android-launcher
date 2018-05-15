@@ -1,6 +1,8 @@
 package co.siempo.phone.app;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -9,8 +11,11 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.os.UserManager;
 import android.provider.AlarmClock;
 import android.provider.CalendarContract;
@@ -19,6 +24,7 @@ import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import android.util.ArrayMap;
+import android.util.Log;
 import android.util.LruCache;
 
 import com.androidnetworking.AndroidNetworking;
@@ -32,6 +38,7 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -183,9 +190,17 @@ public abstract class CoreApplication extends MultiDexApplication {
         new LoadApplications().execute();
     }
 
+    @SuppressLint("HardwareIds")
     public String getDeviceId() {
-        return Settings.Secure.getString(getContentResolver(),
-                Settings.Secure.ANDROID_ID);
+        String strDeviceId = "";
+        try {
+            strDeviceId = Settings.Secure.getString(getContentResolver(),
+                    Settings.Secure.ANDROID_ID);
+            return strDeviceId;
+        } catch (Exception e) {
+            strDeviceId  = android.provider.Settings.Secure.ANDROID_ID;
+            return strDeviceId;
+        }
     }
 
     protected void init() {
@@ -205,7 +220,7 @@ public abstract class CoreApplication extends MultiDexApplication {
         } else {
             if (getToolsSettings().size() <= 16) {
                 PrefSiempo.getInstance(this).write(PrefSiempo.SORTED_MENU, "");
-                HashMap<Integer, AppMenu> oldMap = new HashMap<>();
+                HashMap<Integer, AppMenu> oldMap;
                 String storedHashMapString = PrefSiempo.getInstance(this).read(PrefSiempo.TOOLS_SETTING, "");
                 java.lang.reflect.Type type = new TypeToken<HashMap<Integer, AppMenu>>() {
                 }.getType();
@@ -876,6 +891,45 @@ public abstract class CoreApplication extends MultiDexApplication {
             super.onPostExecute(applicationInfos);
             setPackagesList(applicationInfos);
             EventBus.getDefault().post(new AppInstalledEvent(true));
+        }
+    }
+
+    public void downloadSiempoImages() {
+        File folderSiempoImage = new File(Environment.getExternalStorageDirectory() +
+                "/Siempo images");
+        if (!folderSiempoImage.exists()) {
+              folderSiempoImage.mkdirs();
+        }
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context
+                .CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = null;
+        if (connectivityManager != null) {
+            activeNetwork = connectivityManager.getActiveNetworkInfo();
+        }
+        if (activeNetwork != null) {
+            ArrayList<String> listImageName = new ArrayList<>(Arrays.asList(folderSiempoImage.list()));
+            String[] list = getResources().getStringArray(R.array.siempo_images);
+            DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+            for (String strUrl : list) {
+                String fileName = strUrl.substring(strUrl.lastIndexOf('/') + 1, strUrl.length());
+                String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
+                if (listImageName.contains(fileName)) {
+                    Log.d("File Exists", fileName);
+                } else {
+                    Uri Download_Uri = Uri.parse(strUrl);
+                    DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
+                    request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+                    request.setAllowedOverRoaming(false);
+                    request.setTitle("Downloading " + fileName);
+                    request.setDescription("Downloading " + fileName);
+                    request.setVisibleInDownloadsUi(false);
+                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
+                    request.setDestinationInExternalPublicDir("/Siempo images", fileName);
+                    if (downloadManager != null) {
+                        long refid = downloadManager.enqueue(request);
+                    }
+                }
+            }
         }
     }
 }

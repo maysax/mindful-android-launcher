@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -63,8 +64,11 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         View decor = window.getDecorView();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            window.setStatusBarColor(getResources().getColor(R.color.white));
+            window.setStatusBarColor(ContextCompat.getColor(this, R.color.white));
             decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }else{
+            // Download siempo images
+            CoreApplication.getInstance().downloadSiempoImages();
         }
         initView();
     }
@@ -166,6 +170,8 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
                                 .setPermissionListener(new PermissionListener() {
                                     @Override
                                     public void onPermissionGranted() {
+                                        // Download siempo images
+                                        CoreApplication.getInstance().downloadSiempoImages();
                                         finish();
                                     }
 

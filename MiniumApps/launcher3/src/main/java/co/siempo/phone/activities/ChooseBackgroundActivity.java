@@ -74,14 +74,8 @@ public class ChooseBackgroundActivity extends CoreActivity {
         try {
             folderSiempoImage = new File(Environment.getExternalStorageDirectory() +
                     "/Siempo images");
-            boolean success = true;
             if (!folderSiempoImage.exists()) {
-                success = folderSiempoImage.mkdirs();
-            }
-            if (success) {
-
-            } else {
-                return;
+                folderSiempoImage.mkdirs();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -117,7 +111,6 @@ public class ChooseBackgroundActivity extends CoreActivity {
                 }
 
                 if (folderSiempoImage.exists()) {
-                    folderSiempoImage.list();
                     ArrayList<String> list = new ArrayList<>();
                     for (File imagePath : folderSiempoImage.listFiles()) {
                         if (imagePath.toString().endsWith(".jpg") || imagePath.toString().endsWith(".JPG")
@@ -127,7 +120,7 @@ public class ChooseBackgroundActivity extends CoreActivity {
                             list.add(imagePath.toString());
                         }
                     }
-                    if (list != null && list.size() > 0) {
+                    if (list.size() > 0) {
                         String first_image = list.get(0);
                         local.add(new ImageItem(getString(R.string.siempo_images), list,
                                 true));
@@ -293,8 +286,8 @@ public class ChooseBackgroundActivity extends CoreActivity {
         Uri imageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         String[] projection = {MediaStore.Images.ImageColumns.DATA};
         Cursor cursor = null;
-        final SortedSet<String> dirList = new TreeSet<String>();
-        final ArrayList<File> resultIAV = new ArrayList<File>();
+        final SortedSet<String> dirList = new TreeSet<>();
+        final ArrayList<File> resultIAV = new ArrayList<>();
         final ArrayList<String> resultIAV1 = new ArrayList<>();
         String[] directories = null;
         if (imageUri != null) {
@@ -306,37 +299,43 @@ public class ChooseBackgroundActivity extends CoreActivity {
                 String tempDir = cursor.getString(0);
                 tempDir = tempDir.substring(0, tempDir.lastIndexOf("/"));
                 try {
-                    dirList.add(tempDir);
+                    if (!tempDir.contains("Siempo images")) {
+                        dirList.add(tempDir);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
             while (cursor.moveToNext());
             directories = new String[dirList.size()];
+
             dirList.toArray(directories);
+            cursor.close();
         }
         final String[] finalDirectories = directories;
         for (int i = 0; i < dirList.size(); i++) {
-            File imageDir = new File(finalDirectories[i]);
-            File[] imageList = imageDir.listFiles();
+            File imageDir = null;
+            if (finalDirectories != null) {
+                imageDir = new File(finalDirectories[i]);
+            }
+            File[] imageList = new File[0];
+            if (imageDir != null) {
+                imageList = imageDir.listFiles();
+            }
             if (imageList == null)
                 continue;
             for (File imagePath : imageList) {
-                if (!imagePath.toString().endsWith(getString(R.string.siempo_images))) {
-                    try {
-                        if (imagePath.isDirectory()) {
-                            //imageList = imagePath.listFiles();
-                        }
-                        if (imagePath.getName().contains(".jpg") || imagePath.getName().contains(".JPG")
-                                || imagePath.getName().contains(".jpeg") || imagePath.getName().contains(".JPEG")
-                                || imagePath.getName().contains(".png") || imagePath.getName().contains(".PNG")
-                                ) {
-                            String path = imagePath.getAbsolutePath();
-                            resultIAV.add(imagePath);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                try {
+
+                    if (imagePath.getName().contains(".jpg") || imagePath.getName().contains(".JPG")
+                            || imagePath.getName().contains(".jpeg") || imagePath.getName().contains(".JPEG")
+                            || imagePath.getName().contains(".png") || imagePath.getName().contains(".PNG")
+                            ) {
+                        String path = imagePath.getAbsolutePath();
+                        resultIAV.add(imagePath);
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }

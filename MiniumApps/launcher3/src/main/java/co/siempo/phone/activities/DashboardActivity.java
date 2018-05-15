@@ -38,6 +38,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Objects;
 import java.util.concurrent.RejectedExecutionException;
 
 import co.siempo.phone.BuildConfig;
@@ -406,7 +407,7 @@ public class DashboardActivity extends CoreActivity {
     public void checkUpgradeVersion() {
         Log.d(TAG, "Active network..");
         connectivityManager = (ConnectivityManager) getSystemService(Context
-                .CONNECTIVITY_SERVICE);
+                        .CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = null;
         if (connectivityManager != null) {
             activeNetwork = connectivityManager.getActiveNetworkInfo();
@@ -552,7 +553,7 @@ public class DashboardActivity extends CoreActivity {
         try {
             this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             overlayDialog = new Dialog(this, 0);
-            overlayDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            Objects.requireNonNull(overlayDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
             overlayDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             overlayDialog.setContentView(R.layout.layout_default_launcher);
             Window window = overlayDialog.getWindow();

@@ -289,7 +289,7 @@
     <string name="feedback_success_message">Thank you for your feedback! We read every message, and we try to respond to them as soon as we can. We\'re a small team, so please be patient with us.</string>
 
 
-    <string name="cancel">CANCEL</string>
+    <string name="cancel" tools:ignore="ButtonCase">CANCEL</string>
     <string name="strcontinue">CONTINUE</string>
     <string name="gotit">GOT IT</string>
     <string name="remove">REMOVE</string>
@@ -535,6 +535,16 @@
         <item>10 minutes</item>
         <item>15 minutes</item>
         <item>disable</item>
+    </string-array>
+    <string-array name="siempo_images">
+        <item>https://s3.amazonaws.com/siempo-background-themes/beach_alexey-marchenko.jpg</item>
+        <item>https://s3.amazonaws.com/siempo-background-themes/humingbird_james-wainscoat.jpg</item>
+        <item>https://s3.amazonaws.com/siempo-background-themes/lotus-saffu.jpg</item>
+        <item>https://s3.amazonaws.com/siempo-background-themes/redwoods-victoria_palacios.jpg</item>
+        <item>https://s3.amazonaws.com/siempo-background-themes/stars_paul-gilmore.jpg</item>
+        <item>https://s3.amazonaws.com/siempo-background-themes/sunset_igor-kasalovic.jpg</item>
+        <item>https://s3.amazonaws.com/siempo-background-themes/swirls_adrien-ledoux.jpg</item>
+        <item>https://s3.amazonaws.com/siempo-background-themes/window-paula_borowska.jpg</item>
     </string-array>
 
 </resources>

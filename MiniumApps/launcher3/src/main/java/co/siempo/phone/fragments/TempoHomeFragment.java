@@ -17,6 +17,7 @@ import org.androidannotations.annotations.ViewById;
 import co.siempo.phone.R;
 import co.siempo.phone.activities.ChooseBackgroundActivity;
 import co.siempo.phone.activities.DashboardActivity;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.NotifyBackgroundChange;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.utils.PrefSiempo;
@@ -53,6 +54,8 @@ public class TempoHomeFragment extends CoreFragment {
 
     @AfterViews
     void afterViews() {
+        // Download siempo images
+
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
         toolbar.setTitle(R.string.homescreen);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -120,6 +123,7 @@ public class TempoHomeFragment extends CoreFragment {
 
             }
         });
+        CoreApplication.getInstance().downloadSiempoImages();
     }
 
     @Click

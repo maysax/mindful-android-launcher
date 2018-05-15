@@ -63,7 +63,7 @@ public class PrefSiempo {
 
     // used for default background.
     public static final String DEFAULT_BAG = "default_back";
-    public static final String DEFAULT_BAG_ENABLE = "default_enabled";
+    public static final String DEFAULT_BAG_ENABLE = "default_e";
 
 
     //Launcher 3 preferences
