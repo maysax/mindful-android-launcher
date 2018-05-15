@@ -392,18 +392,24 @@ public class MainFragmentMediator {
 
         @Override
         protected List<MainListItem> doInBackground(String... strings) {
-            loadActions();
-            loadContacts();
-            loadDefaults();
-            items = PackageUtil.getListWithMostRecentData(items, context);
+            try {
+                loadActions();
+                loadContacts();
+                loadDefaults();
+                items = PackageUtil.getListWithMostRecentData(items, context);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return items;
         }
 
         @Override
         protected void onPostExecute(List<MainListItem> s) {
             super.onPostExecute(s);
+
             try {
                 if (getAdapter() != null) {
+
                     getAdapter().loadData(items);
                     getAdapter().getFilter().filter("");
                     getAdapter().notifyDataSetChanged();
