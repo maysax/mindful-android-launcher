@@ -50,6 +50,7 @@ public class ToolSelectionActivity extends CoreActivity {
     private long startTime = 0;
     private ArrayList<MainListItem> topItems = new ArrayList<>(12);
     private ArrayList<MainListItem> bottomItems = new ArrayList<>(4);
+    private ArrayList<MainListItem> adapterList;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -60,7 +61,12 @@ public class ToolSelectionActivity extends CoreActivity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (mAdapter != null) {
-                    PrefSiempo.getInstance(ToolSelectionActivity.this).write(PrefSiempo.TOOLS_SETTING, new Gson().toJson(mAdapter.getMap()));
+                    for (MainListItem mainListItem : adapterList) {
+                        map.get(mainListItem.getId()).setVisible(mainListItem
+                                .isVisable());
+                    }
+
+                    PrefSiempo.getInstance(ToolSelectionActivity.this).write(PrefSiempo.TOOLS_SETTING, new Gson().toJson(map));
                     EventBus.getDefault().postSticky(new NotifyBottomView(true));
                     EventBus.getDefault().postSticky(new NotifyToolView(true));
                     finish();
@@ -141,24 +147,27 @@ public class ToolSelectionActivity extends CoreActivity {
         recyclerView = findViewById(R.id.recyclerView);
         filterListData();
         mLayoutManager = new LinearLayoutManager(this);
-//        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-//                mLayoutManager.getOrientation());
-//        mDividerItemDecoration.setDrawable(getResources().getDrawable(R
-//                .drawable.divider_tools));
-//        recyclerView.addItemDecoration(mDividerItemDecoration);
         recyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new ToolsListAdapter(this, items);
+        mAdapter = new ToolsListAdapter(this, adapterList, map);
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
     }
 
     private void filterListData() {
         items = new ArrayList<>();
-        new MainListItemLoader(this).loadItemsDefaultApp(items);
-        for (int i = 0; i < items.size(); i++) {
-            items.get(i).setVisable(map.get(items.get(i).getId()).isVisible());
+        adapterList = new ArrayList<>();
+        for (MainListItem item : items) {
+            MainListItem mainListItem = new MainListItem(item);
+            adapterList.add(mainListItem);
         }
-        items = Sorting.sortToolAppAssignment(this, items);
+
+
+        new MainListItemLoader(this).loadItemsDefaultApp(adapterList);
+        int size = adapterList.size();
+        for (int i = 0; i < size; i++) {
+            adapterList.get(i).setVisable(map.get(adapterList.get(i).getId()).isVisible());
+        }
+        adapterList = Sorting.sortToolAppAssignment(this, adapterList);
     }
 
     @Override
@@ -166,7 +175,7 @@ public class ToolSelectionActivity extends CoreActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == TOOL_SELECTION) {
             if (resultCode == RESULT_OK) {
-                mAdapter.refreshEvents(items);
+                mAdapter.refreshEvents(adapterList);
             }
         }
     }
