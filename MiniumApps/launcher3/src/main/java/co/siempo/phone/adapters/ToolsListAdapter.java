@@ -43,10 +43,11 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
     private Context context;
     private int defaultTextColor;
 
-    public ToolsListAdapter(Context context, ArrayList<MainListItem> listItems) {
+    public ToolsListAdapter(Context context, ArrayList<MainListItem>
+            listItems, HashMap<Integer, AppMenu> mapList) {
         this.context = context;
         this.listItems = listItems;
-        map = CoreApplication.getInstance().getToolsSettings();
+        map = mapList;
         TypedValue typedValue = new TypedValue();
         Resources.Theme theme = context.getTheme();
         theme.resolveAttribute(R.attr.icon_color, typedValue, true);
@@ -125,7 +126,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                     if (holder.checkbox.isChecked()) {
                         if (getCountOfCheckTools() > 1) {
                             mainListItem.setVisable(false);
-                            map.get(mainListItem.getId()).setVisible(false);
+//                            map.get(mainListItem.getId()).setVisible(false);
                             bindView(mainListItem, holder, false);
                         }
                     } else {
@@ -136,7 +137,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
 //                                ((ToolSelectionActivity) context).replace(id, mainListItem.getId());
 //                            }
                         mainListItem.setVisable(true);
-                        map.get(mainListItem.getId()).setVisible(true);
+//                        map.get(mainListItem.getId()).setVisible(true);
                         bindView(mainListItem, holder, true);
                         if (map.get(mainListItem.getId()).getApplicationName().equalsIgnoreCase("")) {
                             String hashMapToolSettings = new Gson().toJson(map);

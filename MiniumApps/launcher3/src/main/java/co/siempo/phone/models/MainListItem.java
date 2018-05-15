@@ -85,6 +85,14 @@ public class MainListItem implements Serializable {
         this.drawable = drawable;
     }
 
+    public MainListItem(MainListItem mainListItem) {
+        this.id = mainListItem.getId();
+        this.title = mainListItem.getTitle();
+        this.itemType = mainListItem.getItemType();
+        this.drawable = mainListItem.getDrawable();
+        this.isVisable = mainListItem.isVisable();
+    }
+
     /**
      * This constructor is used for load menu item in apps pane
      *

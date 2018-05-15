@@ -264,6 +264,8 @@ public class DashboardActivity extends CoreActivity {
         currentIndexPaneFragment = 2;
         mPager.setCurrentItem(currentIndexDashboard, false);
         EventBus.getDefault().postSticky(new HomePress(1, 2));
+        boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
+        setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
         loadPane();
         //In case of home press, when app is launched again we need to show
         // this overlay of default launcher if siempo is not set as default
@@ -543,7 +545,7 @@ public class DashboardActivity extends CoreActivity {
         super.onDestroy();
         DashboardActivity.isTextLenghGreater = "";
         currentIndexDashboard = 1;
-        currentIndexPaneFragment = 1;
+        currentIndexPaneFragment = 2;
     }
 
     /**
