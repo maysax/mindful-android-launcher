@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -61,7 +60,6 @@ public class AppAssignmentActivity extends CoreActivity {
     private ImageView imgClear;
     private EditText edtSearch;
     private String class_name;
-    static boolean showAllapps = false;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -76,7 +74,6 @@ public class AppAssignmentActivity extends CoreActivity {
 
     @Override
     protected void onDestroy() {
-        showAllapps = false;
         super.onDestroy();
     }
 
@@ -99,6 +96,7 @@ public class AppAssignmentActivity extends CoreActivity {
         } else {
             finish();
         }
+        initView();
     }
 
     @Override
@@ -108,7 +106,6 @@ public class AppAssignmentActivity extends CoreActivity {
         //Added to refresh if app is marked as non-junk by navigating to Flag
         // Junk Apps directly from this screen
         filterList();
-        initView();
     }
 
     @Override
@@ -160,17 +157,18 @@ public class AppAssignmentActivity extends CoreActivity {
             }
 
             appListAll = new ArrayList<>();
-          /*  for (ResolveInfo resolveInfo : installedPackageList){
-                if(!checkExits(resolveInfo) && !resolveInfo.activityInfo.packageName
-                        .equalsIgnoreCase(getPackageName())){
-                    appListAll.add(resolveInfo);
-                }
-            }*/
             appListAll.addAll(installedPackageList);
             appListAll = Sorting.sortAppAssignment(AppAssignmentActivity.this, appListAll);
+
+            if (showallAppBtn.getVisibility()!=View.VISIBLE) {
+                bindList(appListAll);
+            } else {
+                bindList(appList);
+            }
         } else {
             finish();
         }
+
     }
 
     private ArrayList<ResolveInfo> getAllapp() {
@@ -218,7 +216,6 @@ public class AppAssignmentActivity extends CoreActivity {
             @Override
             public void onClick(View v) {
                 showallAppBtn.setVisibility(View.GONE);
-                showAllapps = true;
                 bindList(appListAll);
             }
         });
@@ -256,12 +253,7 @@ public class AppAssignmentActivity extends CoreActivity {
                 edtSearch.setText("");
             }
         });
-        if (showAllapps) {
-            showAllapps = false;
-            bindList(appListAll);
-        } else {
-            bindList(appList);
-        }
+
     }
 
     private void bindList(ArrayList<ResolveInfo> appList) {
