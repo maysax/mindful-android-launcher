@@ -87,10 +87,8 @@ public class PrefSiempo {
     public static final String IS_CONTACT_UPDATE = "isContactUpdate";
 
     public static final String DETER_AFTER = "deterAfter";
-
+    public static final String LOCK_COUNTER_STATUS = "LOCK_COUNTER_STATUS";
     private static final PrefSiempo ourInstance = new PrefSiempo();
-
-
     public static String HELPFUL_ROBOTS = "HELPFUL_ROBOTS";
     public static String BLOCKED_APPLIST = "BLOCKED_APPLIST";
     public static String MESSENGER_DISABLE_COUNT = "MESSENGER_DISABLE_COUNT";

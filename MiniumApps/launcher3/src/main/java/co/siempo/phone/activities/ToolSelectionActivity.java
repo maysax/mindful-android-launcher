@@ -54,7 +54,7 @@ public class ToolSelectionActivity extends CoreActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.app_junkfood_flagging, menu);
+        getMenuInflater().inflate(R.menu.app_assignment_list, menu);
         MenuItem menuItem = menu.findItem(R.id.item_save);
 //        setTextColorForMenuItem(menuItem, R.color.colorAccent);
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {

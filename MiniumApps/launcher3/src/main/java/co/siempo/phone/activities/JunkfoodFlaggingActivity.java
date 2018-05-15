@@ -167,7 +167,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.app_junkfood_flagging, menu);
+        getMenuInflater().inflate(R.menu.app_assignment_list, menu);
         MenuItem menuItem = menu.findItem(R.id.item_save);
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
