@@ -49,6 +49,7 @@ import co.siempo.phone.event.CheckVersionEvent;
 import co.siempo.phone.event.HomePress;
 import co.siempo.phone.event.NotifyBackgroundChange;
 import co.siempo.phone.event.OnBackPressedEvent;
+import co.siempo.phone.event.ThemeChangeEvent;
 import co.siempo.phone.fragments.FavoritePaneFragment;
 import co.siempo.phone.fragments.IntentionFragment;
 import co.siempo.phone.fragments.JunkFoodPaneFragment;
@@ -103,6 +104,7 @@ public class DashboardActivity extends CoreActivity {
     private Dialog overlayDialog;
     private RelativeLayout linMain;
     private ImageView imgBackground;
+    private Intent starterIntent;
 
     /**
      * @return True if {@link android.service.notification.NotificationListenerService} is enabled.
@@ -188,7 +190,6 @@ public class DashboardActivity extends CoreActivity {
         boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
         setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_dashboard);
         linMain = findViewById(R.id.linMain);
         imgBackground = findViewById(R.id.imgBackground);
@@ -267,8 +268,6 @@ public class DashboardActivity extends CoreActivity {
         currentIndexPaneFragment = 2;
         mPager.setCurrentItem(currentIndexDashboard, false);
         EventBus.getDefault().postSticky(new HomePress(1, 2));
-
-        changeLayoutBackground();
         loadPane();
         //In case of home press, when app is launched again we need to show
         // this overlay of default launcher if siempo is not set as default
@@ -412,7 +411,7 @@ public class DashboardActivity extends CoreActivity {
     public void checkUpgradeVersion() {
         Log.d(TAG, "Active network..");
         connectivityManager = (ConnectivityManager) getSystemService(Context
-                        .CONNECTIVITY_SERVICE);
+                .CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = null;
         if (connectivityManager != null) {
             activeNetwork = connectivityManager.getActiveNetworkInfo();
@@ -429,7 +428,6 @@ public class DashboardActivity extends CoreActivity {
             Log.d(TAG, getString(R.string.nointernetconnection));
         }
     }
-
 
     @Override
     protected void onStop() {
@@ -604,6 +602,21 @@ public class DashboardActivity extends CoreActivity {
         if (notifyBackgroundChange != null && notifyBackgroundChange.isNotify()) {
             changeLayoutBackground();
             EventBus.getDefault().removeStickyEvent(notifyBackgroundChange);
+        }
+
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.BackgroundThread)
+    public void onEvent(ThemeChangeEvent themeChangeEvent) {
+        if (themeChangeEvent != null && themeChangeEvent.isNotify()) {
+            Intent startMain = getIntent();
+            startMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startMain.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            EventBus.getDefault().removeStickyEvent(themeChangeEvent);
+            finish();
+            startActivity(startMain);
+
         }
 
     }
