@@ -159,9 +159,10 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 
     @Override
     protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
         boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
         setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
+        super.onNewIntent(intent);
+
         try {
             stopService(new Intent(this, OverlayService.class));
         } catch (Exception e) {

@@ -185,9 +185,10 @@ public class DashboardActivity extends CoreActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
         setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
+        super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_dashboard);
         linMain = findViewById(R.id.linMain);
         imgBackground = findViewById(R.id.imgBackground);
@@ -259,13 +260,15 @@ public class DashboardActivity extends CoreActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
+        boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
+        setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
         super.onNewIntent(intent);
         currentIndexDashboard = 1;
         currentIndexPaneFragment = 2;
         mPager.setCurrentItem(currentIndexDashboard, false);
         EventBus.getDefault().postSticky(new HomePress(1, 2));
-        boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
-        setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
+
+        changeLayoutBackground();
         loadPane();
         //In case of home press, when app is launched again we need to show
         // this overlay of default launcher if siempo is not set as default

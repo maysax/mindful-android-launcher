@@ -95,6 +95,8 @@ public class TempoHomeFragment extends CoreFragment {
                 }
                 Intent startMain = new Intent(getActivity(),
                         DashboardActivity.class);
+                startMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startMain.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(startMain);
 
