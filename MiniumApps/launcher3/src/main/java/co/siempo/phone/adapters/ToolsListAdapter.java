@@ -43,10 +43,11 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
     private Context context;
     private int defaultTextColor;
 
-    public ToolsListAdapter(Context context, ArrayList<MainListItem> listItems) {
+    public ToolsListAdapter(Context context, ArrayList<MainListItem>
+            listItems, HashMap<Integer, AppMenu> mapList) {
         this.context = context;
         this.listItems = listItems;
-        map = CoreApplication.getInstance().getToolsSettings();
+        map = mapList;
         TypedValue typedValue = new TypedValue();
         Resources.Theme theme = context.getTheme();
         theme.resolveAttribute(R.attr.icon_color, typedValue, true);

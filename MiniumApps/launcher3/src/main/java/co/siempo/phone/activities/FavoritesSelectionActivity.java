@@ -58,6 +58,7 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
     FavoriteFlaggingAdapter junkfoodFlaggingAdapter;
     int firstPosition;
     List<String> installedPackageList;
+    private Set<String> adapterList = new HashSet<>();
     private Toolbar toolbar;
     private ListView listAllApps;
     private PopupMenu popup;
@@ -84,8 +85,11 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
         setContentView(R.layout.activity_favorite_selection);
         initView();
         list = PrefSiempo.getInstance(this).read(PrefSiempo.FAVORITE_APPS, new HashSet<String>());
+        adapterList = new HashSet<>();
+
         junkFoodList = PrefSiempo.getInstance(this).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
         list.removeAll(junkFoodList);
+        adapterList.addAll(list);
 
     }
 
@@ -159,8 +163,32 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                junkFoodList.removeAll(list);
-                PrefSiempo.getInstance(FavoritesSelectionActivity.this).write(PrefSiempo.FAVORITE_APPS, list);
+                junkFoodList.removeAll(adapterList);
+                String jsonListOfSortedFavorites = PrefSiempo.getInstance(FavoritesSelectionActivity.this).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
+                //convert onNoteListChangedJSON array into a List<Long>
+                Gson gson1 = new Gson();
+                List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
+                }.getType());
+
+                for (ListIterator<String> it =
+                     listOfSortFavoritesApps.listIterator(); it.hasNext
+                        (); ) {
+                    String packageName = it.next();
+                    if (!adapterList.contains(packageName)) {
+                        //Used List Iterator to set empty
+                        // value for package name retaining
+                        // the positions of elements
+                        it.set("");
+                    }
+                }
+
+                Gson gson2 = new Gson();
+                String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
+                PrefSiempo.getInstance(FavoritesSelectionActivity.this).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
+
+
+                PrefSiempo.getInstance(FavoritesSelectionActivity.this).write
+                        (PrefSiempo.FAVORITE_APPS, adapterList);
                 PrefSiempo.getInstance(FavoritesSelectionActivity.this).write(PrefSiempo.JUNKFOOD_APPS, junkFoodList);
                 new LoadJunkFoodPane(FavoritesSelectionActivity.this).execute();
                 new LoadFavoritePane(FavoritesSelectionActivity.this).execute();
@@ -277,42 +305,20 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (list.contains(packagename)) {
-                                    list.remove(packagename);
-                                    //get the JSON array of the ordered of sorted customers
-                                    String jsonListOfSortedFavorites = PrefSiempo.getInstance(FavoritesSelectionActivity.this).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
-                                    //convert onNoteListChangedJSON array into a List<Long>
-                                    Gson gson1 = new Gson();
-                                    List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
-                                    }.getType());
+                                if (adapterList.contains(packagename)) {
+                                    adapterList.remove(packagename);
 
-                                    for (ListIterator<String> it =
-                                         listOfSortFavoritesApps.listIterator(); it.hasNext
-                                            (); ) {
-                                        String packageName = it.next();
-                                        if (packagename.equalsIgnoreCase(packageName)) {
-                                            //Used List Iterator to set empty
-                                            // value for package name retaining
-                                            // the positions of elements
-                                            it.set("");
-                                        }
-                                    }
-
-                                    Gson gson2 = new Gson();
-                                    String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
-                                    PrefSiempo.getInstance(FavoritesSelectionActivity.this).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
                                     isLoadFirstTime = false;
                                     //setToolBarText(favoriteList.size());
                                 } else {
 
                                     if (favoriteList != null && favoriteList.size() < 13) {
-                                        list.add(packagename);
+                                        adapterList.add(packagename);
                                         isLoadFirstTime = false;
                                     }
                                     // setToolBarText(favoriteList.size());
                                 }
                                 firstPosition = listAllApps.getFirstVisiblePosition();
-//                                bindData(true);
                                 new FilterApps(true, FavoritesSelectionActivity.this).execute();
                             }
                         });
@@ -408,7 +414,7 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
                             String applicationname = CoreApplication.getInstance()
                                     .getListApplicationName().get(resolveInfo);
                             if (!TextUtils.isEmpty(applicationname)) {
-                                if (list.contains(resolveInfo)) {
+                                if (adapterList.contains(resolveInfo)) {
                                     favoriteList.add(new AppListInfo(resolveInfo, applicationname,
                                             false, false,
                                             true));

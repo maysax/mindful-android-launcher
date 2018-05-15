@@ -64,6 +64,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
     List<String> installedPackageList;
     int firstPosition;
     boolean isClickOnView = true;
+    private Set<String> adapterlist = new HashSet<>();
     private Toolbar toolbar;
     private ListView listAllApps;
     private PopupMenu popup;
@@ -193,6 +194,18 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        favoriteList.removeAll(adapterlist);
+                        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
+                        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write
+                                (PrefSiempo.JUNKFOOD_APPS, adapterlist);
+                        if (adapterlist.size() == 0 && !DashboardActivity.isJunkFoodOpen) {
+                            DashboardActivity.isJunkFoodOpen = true;
+                        }
+                        new LoadFavoritePane(JunkfoodFlaggingActivity.this).execute();
+                        new LoadJunkFoodPane(JunkfoodFlaggingActivity.this).execute();
+                        EventBus.getDefault().postSticky(new NotifySearchRefresh(true));
+                        FirebaseHelper.getInstance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
+
                         finish();
                         JunkfoodFlaggingActivity.this.overridePendingTransition(R
                                 .anim.in_from_right_email, R.anim
@@ -279,7 +292,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
                     String applicationname = CoreApplication.getInstance()
                             .getListApplicationName().get(resolveInfo);
                     if (!TextUtils.isEmpty(applicationname)) {
-                        if (list.contains(resolveInfo)) {
+                        if (adapterlist.contains(resolveInfo)) {
                             flagAppList.add(new AppListInfo(resolveInfo, applicationname, false, false, true));
                         } else {
                             unflageAppList.add(new AppListInfo(resolveInfo, applicationname, false, false, false));
@@ -330,7 +343,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
         }.getType());
 
-        for (String junkString : list) {
+        for (String junkString : adapterlist) {
             if (favlist != null && favlist.contains(junkString)) {
 
                 for (ListIterator<String> it =
@@ -393,10 +406,11 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
                                     handler.postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
-                                            if (list.contains(bindingList.get(positionPopUP).packageName)) {
-                                                list.remove(bindingList.get(positionPopUP).packageName);
+                                            if (adapterlist.contains(bindingList.get
+                                                    (positionPopUP).packageName)) {
+                                                adapterlist.remove(bindingList.get(positionPopUP).packageName);
                                             } else {
-                                                list.add(bindingList.get(positionPopUP).packageName);
+                                                adapterlist.add(bindingList.get(positionPopUP).packageName);
                                             }
                                             firstPosition = listAllApps.getFirstVisiblePosition();
                                             new FilterApps().execute();
@@ -425,7 +439,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         });
         popup.getMenuInflater().inflate(R.menu.junkfood_popup, popup.getMenu());
         MenuItem menuItem = popup.getMenu().findItem(R.id.item_Unflag);
-        menuItem.setTitle(list.contains(bindingList.get(positionPopUP).packageName) ? getString(R.string.unflagapp) : getString(R.string.flag_app));
+        menuItem.setTitle(adapterlist.contains(bindingList.get(positionPopUP).packageName) ? getString(R.string.unflagapp) : getString(R.string.flag_app));
         popup.show();
         popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
             @Override
@@ -482,10 +496,10 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                if (list.contains(bindingList.get(position).packageName)) {
-                                    list.remove(bindingList.get(position).packageName);
+                                if (adapterlist.contains(bindingList.get(position).packageName)) {
+                                    adapterlist.remove(bindingList.get(position).packageName);
                                 } else {
-                                    list.add(bindingList.get(position).packageName);
+                                    adapterlist.add(bindingList.get(position).packageName);
                                 }
                                 firstPosition = listAllApps.getFirstVisiblePosition();
                                 new FilterApps().execute();
@@ -520,6 +534,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         favoriteList = PrefSiempo.getInstance(this).read(PrefSiempo.FAVORITE_APPS, new HashSet<String>());
         favoriteList.removeAll(list);
         PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
+        adapterlist.addAll(list);
         loadApps();
 
     }
@@ -527,16 +542,6 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
     @Override
     protected void onPause() {
         super.onPause();
-        favoriteList.removeAll(list);
-        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
-        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.JUNKFOOD_APPS, list);
-        if (list.size() == 0 && !DashboardActivity.isJunkFoodOpen) {
-            DashboardActivity.isJunkFoodOpen = true;
-        }
-        new LoadFavoritePane(JunkfoodFlaggingActivity.this).execute();
-        new LoadJunkFoodPane(JunkfoodFlaggingActivity.this).execute();
-        EventBus.getDefault().postSticky(new NotifySearchRefresh(true));
-        FirebaseHelper.getInstance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
 
     }
 
@@ -583,7 +588,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
                     String applicationname = CoreApplication.getInstance()
                             .getListApplicationName().get(resolveInfo);
                     if (!TextUtils.isEmpty(applicationname)) {
-                        if (list.contains(resolveInfo)) {
+                        if (adapterlist.contains(resolveInfo)) {
                             flagAppList.add(new AppListInfo(resolveInfo, applicationname, false, false, true));
                         } else {
                             unflageAppList.add(new AppListInfo(resolveInfo, applicationname, false, false, false));

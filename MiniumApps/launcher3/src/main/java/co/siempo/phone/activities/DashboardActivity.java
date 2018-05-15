@@ -542,7 +542,7 @@ public class DashboardActivity extends CoreActivity {
         super.onDestroy();
         DashboardActivity.isTextLenghGreater = "";
         currentIndexDashboard = 1;
-        currentIndexPaneFragment = 1;
+        currentIndexPaneFragment = 2;
     }
 
     /**

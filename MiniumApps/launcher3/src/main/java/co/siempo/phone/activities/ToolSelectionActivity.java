@@ -131,10 +131,7 @@ public class ToolSelectionActivity extends CoreActivity {
     protected void onPause() {
         super.onPause();
         if (mAdapter != null) {
-//            PrefSiempo.getInstance(ToolSelectionActivity.this).write(PrefSiempo.TOOLS_SETTING, new Gson().toJson(mAdapter.getMap()));
-            //Todo code for assign app retaining pending
-            PrefSiempo.getInstance(ToolSelectionActivity.this).write
-                    (PrefSiempo.TOOLS_SETTING, new Gson().toJson(map));
+            PrefSiempo.getInstance(ToolSelectionActivity.this).write(PrefSiempo.TOOLS_SETTING, new Gson().toJson(mAdapter.getMap()));
             EventBus.getDefault().postSticky(new NotifyBottomView(true));
             EventBus.getDefault().postSticky(new NotifyToolView(true));
         }
@@ -151,7 +148,7 @@ public class ToolSelectionActivity extends CoreActivity {
         filterListData();
         mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new ToolsListAdapter(this, adapterList);
+        mAdapter = new ToolsListAdapter(this, adapterList, map);
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
     }
