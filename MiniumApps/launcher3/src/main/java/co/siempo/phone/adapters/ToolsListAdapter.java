@@ -125,7 +125,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                     if (holder.checkbox.isChecked()) {
                         if (getCountOfCheckTools() > 1) {
                             mainListItem.setVisable(false);
-                            map.get(mainListItem.getId()).setVisible(false);
+//                            map.get(mainListItem.getId()).setVisible(false);
                             bindView(mainListItem, holder, false);
                         }
                     } else {
@@ -136,7 +136,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
 //                                ((ToolSelectionActivity) context).replace(id, mainListItem.getId());
 //                            }
                         mainListItem.setVisable(true);
-                        map.get(mainListItem.getId()).setVisible(true);
+//                        map.get(mainListItem.getId()).setVisible(true);
                         bindView(mainListItem, holder, true);
                         if (map.get(mainListItem.getId()).getApplicationName().equalsIgnoreCase("")) {
                             String hashMapToolSettings = new Gson().toJson(map);
