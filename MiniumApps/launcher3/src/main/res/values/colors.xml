@@ -25,6 +25,7 @@
     <color name="black_95">#F2000000</color>
     <color name="black_85">#DD000000</color>
     <color name="black_80">#CC000000</color>
+    <color name="black_pane">#cc101010</color>
     <color name="black_50">#80000000</color>
     <color name="black_10">#1A000000</color>
     <color name="black_05">#0E000000</color>
@@ -154,7 +155,7 @@
     <color name="blue_light_hint">#8A42A4FF</color>
     <color name="junk_text_light">#61000000</color>
     <color name="junk_text_dark">#99FFFFFF</color>
-    <color name="junk_pane">#262626</color>
+    <color name="junk_pane">#151414</color>
     <color name="junk_pane_light">#ffffff</color>
     <color name="pane_light">#BBFFFFFF</color>
     <color name="pane_dark">#CC000000</color>
