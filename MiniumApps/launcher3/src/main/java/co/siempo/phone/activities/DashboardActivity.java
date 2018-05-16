@@ -37,7 +37,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.util.Objects;
 import java.util.concurrent.RejectedExecutionException;
@@ -347,9 +346,6 @@ public class DashboardActivity extends CoreActivity {
                     Log.d("Firebase", "Intention Start");
                     startTime = System.currentTimeMillis();
                 }
-
-                changeColorOfStatusbar(i);
-
                 currentIndexDashboard = i;
             }
 
@@ -369,26 +365,6 @@ public class DashboardActivity extends CoreActivity {
         }
 
 
-    }
-
-    void changeColorOfStatusbar(int pos) {
-        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-// set the transparent color of the status bar, 20% darker
-//        if (pos == 0) {
-//// enable status bar tint
-//            tintManager.setStatusBarTintEnabled(true);
-//// enable navigation bar tint
-//            tintManager.setNavigationBarTintEnabled(true);
-//
-//            tintManager.setStatusBarTintColor(R.color.black);
-//        } else {
-            // enable status bar tint
-            tintManager.setStatusBarTintEnabled(true);
-// enable navigation bar tint
-            tintManager.setNavigationBarTintEnabled(true);
-
-            tintManager.setStatusBarTintColor(R.color.transparent);
-//        }
     }
 
     private void loadPane() {
