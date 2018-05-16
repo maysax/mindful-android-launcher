@@ -62,7 +62,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
     }
 
     public void refreshEvents(List<MainListItem> listItems1) {
-        map = CoreApplication.getInstance().getToolsSettings();
+//        map = CoreApplication.getInstance().getToolsSettings();
         listItems = new ArrayList<>();
         listItems.addAll(listItems1);
         notifyDataSetChanged();

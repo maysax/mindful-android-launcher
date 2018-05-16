@@ -50,7 +50,7 @@
         <item name="rounded_hint_color">@color/blue_light_hint</item>
         <item name="junk_text">@color/junk_text_light</item>
         <item name="junk_top">@color/background_white</item>
-
+        <item name="status_bar_pane">@color/pane_light</item>
 
     </style>
 
@@ -79,7 +79,7 @@
         <item name="android:actionMenuTextColor">@color/white</item>
         <item name="top_doc">@drawable/top_dock_gradient</item>
         <item name="top_date_color">@color/trans_black_date</item>
-        <item name="pane_color">@color/black_80</item>
+        <item name="pane_color">@color/black_pane</item>
         <item name="indicator_active">@color/indicator_active_dark</item>
         <item name="indicator_inactive">@color/indicator_inactive_dark</item>
         <item name="txt_content_color">@color/settings_content_dark</item>
@@ -105,6 +105,7 @@
         <item name="rounded_hint_color">@color/blue_dark_hint</item>
         <item name="junk_text">@color/junk_text_dark</item>
         <item name="junk_top">@color/junk_pane</item>
+        <item name="status_bar_pane">@color/pane_dark</item>
 
 
     </style>
