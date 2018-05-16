@@ -149,6 +149,7 @@ public class PaneFragment extends CoreFragment {
     private View blueLineDividerBottom;
     private int backGroundColor;
     private int statusBarColorJunk;
+    private int statusBarColorPane;
     private LinearLayout linMain;
     private boolean firstTimeLoad = true;
 
@@ -179,6 +180,10 @@ public class PaneFragment extends CoreFragment {
         backGroundColor = typedValue.resourceId;
         theme.resolveAttribute(R.attr.junk_top, typedValue, true);
         statusBarColorJunk = typedValue.data;
+        theme.resolveAttribute(R.attr.status_bar_pane, typedValue, true);
+        statusBarColorPane=typedValue.data;
+
+
         bindView();
         Log.d("Test", "P2");
 
@@ -203,7 +208,7 @@ public class PaneFragment extends CoreFragment {
             mWindow.setStatusBarColor(statusBarColorJunk);
         } else {
             if (null != mWindow) {
-                mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
+                mWindow.setStatusBarColor(statusBarColorPane);
             }
         }
         if (!isVisibleToUser && null != imageClear && linSearchList != null &&
@@ -270,7 +275,7 @@ public class PaneFragment extends CoreFragment {
                 () && DashboardActivity.currentIndexDashboard == 0) {
             mWindow.setStatusBarColor(statusBarColorJunk);
         } else {
-            mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
+            mWindow.setStatusBarColor(statusBarColorPane);
         }
     }
 
@@ -537,7 +542,7 @@ public class PaneFragment extends CoreFragment {
                     searchDoc.setVisibility(View.VISIBLE);
                     junkDoc.setVisibility(View.GONE);
                     // finally change the color
-                    mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
+                    mWindow.setStatusBarColor(statusBarColorPane);
                 }
 
                 //Indicator to be set here so that when coming from another

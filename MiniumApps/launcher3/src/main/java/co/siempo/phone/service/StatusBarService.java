@@ -59,7 +59,6 @@ public class StatusBarService extends Service {
     private AppInstallUninstall appInstallUninstall;
     private Vibrator vibrator;
     private CountDownTimer countDownTimer;
-    ;
     private UserPresentBroadcastReceiver userPresentBroadcastReceiver;
 
 

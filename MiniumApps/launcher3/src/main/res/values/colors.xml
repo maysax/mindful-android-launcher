@@ -157,6 +157,8 @@
     <color name="junk_text_dark">#99FFFFFF</color>
     <color name="junk_pane">#151414</color>
     <color name="junk_pane_light">#ffffff</color>
+    <color name="pane_light">#BBFFFFFF</color>
+    <color name="pane_dark">#CC000000</color>
 
 
 </resources>
