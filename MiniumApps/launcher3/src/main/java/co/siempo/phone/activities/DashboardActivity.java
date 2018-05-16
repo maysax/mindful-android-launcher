@@ -187,8 +187,8 @@ public class DashboardActivity extends CoreActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
-        setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
+//        boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
+//        setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         linMain = findViewById(R.id.linMain);
@@ -261,8 +261,8 @@ public class DashboardActivity extends CoreActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
-        setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
+//        boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
+//        setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
         super.onNewIntent(intent);
         currentIndexDashboard = 1;
         currentIndexPaneFragment = 2;

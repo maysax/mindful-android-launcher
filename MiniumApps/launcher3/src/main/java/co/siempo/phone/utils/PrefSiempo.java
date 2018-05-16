@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -252,7 +253,11 @@ public class PrefSiempo {
      * @param defValue user provided default value
      */
     public Set<String> read(String key, Set<String> defValue) {
-        return sharedPreferences.getStringSet(key, defValue);
+
+        Set<String> sharedSet = new HashSet<>(sharedPreferences.getStringSet
+                (key, defValue));
+
+        return sharedSet;
     }
 
     /**
