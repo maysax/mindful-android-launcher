@@ -245,6 +245,7 @@ public class PaneFragment extends CoreFragment {
         //Added as a part of SSA-1669
         if (isVisibleToUser && firstTimeLoad) {
             bindBottomDock();
+            bindViewPager();
             firstTimeLoad = false;
         }
     }
