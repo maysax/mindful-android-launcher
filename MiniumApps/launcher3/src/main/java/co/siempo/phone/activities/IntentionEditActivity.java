@@ -22,7 +22,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -97,6 +96,7 @@ public class IntentionEditActivity extends CoreActivity implements View.OnClickL
             imgClear.setVisibility(View.VISIBLE);
         } else {
             imgClear.setVisibility(View.GONE);
+            txtHelp();
         }
 
         edtIntention.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -140,7 +140,7 @@ public class IntentionEditActivity extends CoreActivity implements View.OnClickL
                 if (PrefSiempo.getInstance(IntentionEditActivity.this).read(PrefSiempo.DEFAULT_INTENTION, "").equalsIgnoreCase(s.toString())) {
                     txtSave.setVisibility(View.GONE);
                 } else {
-                    strIntentField = s.toString();
+                    strIntentField = s.toString().trim();
                     txtSave.setVisibility(View.VISIBLE);
                 }
             }
