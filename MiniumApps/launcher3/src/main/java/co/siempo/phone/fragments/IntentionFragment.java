@@ -87,6 +87,16 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         } else {
             if (imgPullTab != null) imgPullTab.setVisibility(View.VISIBLE);
         }
+        if (mWindow != null) {
+            mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+            mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+            // finally change the color
+            mWindow.setStatusBarColor(ContextCompat.getColor(getActivity(), R.color.transparent));
+
+        }
     }
 
     private void initView(View view) {
@@ -102,14 +112,6 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         cardView = view.findViewById(R.id.cardView);
         cardView.setOnClickListener(this);
 
-        // clear FLAG_TRANSLUCENT_STATUS flag:
-        if (null != mWindow) {
-            mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-            mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            defaultStatusBarColor = mWindow.getStatusBarColor();
-        }
         hideView();
     }
 
