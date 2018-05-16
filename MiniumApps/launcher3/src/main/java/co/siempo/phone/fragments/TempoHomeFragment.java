@@ -1,6 +1,7 @@
 package co.siempo.phone.fragments;
 
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -16,9 +17,9 @@ import org.androidannotations.annotations.ViewById;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.ChooseBackgroundActivity;
-import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.NotifyBackgroundChange;
+import co.siempo.phone.event.ThemeChangeEvent;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.EventBus;
@@ -88,19 +89,14 @@ public class TempoHomeFragment extends CoreFragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 PrefSiempo.getInstance(context).write(PrefSiempo
                         .IS_DARK_THEME, isChecked);
-                if (isChecked) {
-                    getActivity().setTheme(R.style.SiempoAppThemeDark);
-                } else {
-                    getActivity().setTheme(R.style.SiempoAppTheme);
-                }
-                Intent startMain = new Intent(getActivity(),
-                        DashboardActivity.class);
-                startMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startMain.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(startMain);
-
-
+                EventBus.getDefault().postSticky(new ThemeChangeEvent(true));
+                android.os.Handler handler = new android.os.Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getActivity().finish();
+                    }
+                }, 60);
             }
         });
         switchCustomBackground.setOnClickListener(new View.OnClickListener() {

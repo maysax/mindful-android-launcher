@@ -114,7 +114,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
         setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
         super.onCreate(savedInstanceState);
-
         connectInAppService();
         this.setVolumeControlStream(AudioManager.STREAM_SYSTEM);
         windowManager = (WindowManager) getBaseContext().getSystemService(Context.WINDOW_SERVICE);
@@ -162,7 +161,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
         setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
         super.onNewIntent(intent);
-
         try {
             stopService(new Intent(this, OverlayService.class));
         } catch (Exception e) {
