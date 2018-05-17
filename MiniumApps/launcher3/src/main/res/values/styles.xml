@@ -51,6 +51,8 @@
         <item name="junk_text">@color/junk_text_light</item>
         <item name="junk_top">@color/background_white</item>
         <item name="status_bar_pane">@color/pane_light</item>
+        <item name="navigation_bar_pane">@color/black</item>
+
 
     </style>
 
@@ -106,6 +108,7 @@
         <item name="junk_text">@color/junk_text_dark</item>
         <item name="junk_top">@color/junk_pane</item>
         <item name="status_bar_pane">@color/pane_dark</item>
+        <item name="navigation_bar_pane">@color/transparent</item>
 
 
     </style>
