@@ -383,8 +383,8 @@ public class PaneFragment extends CoreFragment {
         try {
             if (PrefSiempo.getInstance(context).read(PrefSiempo
                     .APPLAND_TOUR_SEEN, false) && PrefSiempo.getInstance(context).read(PrefSiempo
-                    .IS_AUTOSCROLL, true) && pagerPane
-                    .getCurrentItem() == 0) {
+                    .IS_AUTOSCROLL, true) && (pagerPane
+                    .getCurrentItem() == 0 || pagerPane.getCurrentItem()==1)) {
 
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
