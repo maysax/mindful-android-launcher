@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.ColorRes;
@@ -90,8 +91,10 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         if (read) {
             getWindow().setStatusBarColor(getResources().getColor(R.color.black));
         } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             getWindow().setStatusBarColor(getResources().getColor(R.color.white));
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            getWindow().getDecorView().setSystemUiVisibility(View
+                    .SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);}
         }
     }
 
