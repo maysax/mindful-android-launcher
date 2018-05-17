@@ -249,6 +249,9 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
             return;
 
         }
+        if (adapterlist.size() == 0 && !DashboardActivity.isJunkFoodOpen) {
+            DashboardActivity.isJunkFoodOpen = true;
+        }
         JunkfoodFlaggingActivity.this.overridePendingTransition(R
                 .anim.in_from_right_email, R.anim
                 .out_to_left_email);
