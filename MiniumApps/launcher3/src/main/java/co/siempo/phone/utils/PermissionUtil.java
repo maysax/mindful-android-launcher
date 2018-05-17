@@ -74,7 +74,8 @@ public class PermissionUtil {
                         .WRITE_EXTERNAL_STORAGE) && hasAppPermissions
                         (Manifest.permission.READ_EXTERNAL_STORAGE);
             case LOCATION_PERMISSION:
-                return hasAppPermissions(Manifest.permission.ACCESS_FINE_LOCATION);
+                return hasAppPermissions(Manifest.permission.ACCESS_FINE_LOCATION) &&
+                        hasAppPermissions(Manifest.permission.ACCESS_FINE_LOCATION);
 
 
         }
