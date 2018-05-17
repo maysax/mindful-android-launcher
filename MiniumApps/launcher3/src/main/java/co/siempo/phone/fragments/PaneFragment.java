@@ -181,7 +181,7 @@ public class PaneFragment extends CoreFragment {
         theme.resolveAttribute(R.attr.junk_top, typedValue, true);
         statusBarColorJunk = typedValue.data;
         theme.resolveAttribute(R.attr.status_bar_pane, typedValue, true);
-        statusBarColorPane=typedValue.data;
+        statusBarColorPane = typedValue.data;
 
 
         bindView();
@@ -384,7 +384,7 @@ public class PaneFragment extends CoreFragment {
             if (PrefSiempo.getInstance(context).read(PrefSiempo
                     .APPLAND_TOUR_SEEN, false) && PrefSiempo.getInstance(context).read(PrefSiempo
                     .IS_AUTOSCROLL, true) && (pagerPane
-                    .getCurrentItem() == 0 || pagerPane.getCurrentItem()==1)) {
+                    .getCurrentItem() == 0 || pagerPane.getCurrentItem() == 1)) {
 
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
@@ -411,15 +411,17 @@ public class PaneFragment extends CoreFragment {
     private void bindBottomDock() {
 
         mLayoutManager = new GridLayoutManager(getActivity(), 4);
-        recyclerViewBottomDoc.setLayoutManager(mLayoutManager);
-        if (itemDecoration != null) {
-            recyclerViewBottomDoc.removeItemDecoration(itemDecoration);
+        if (null != mLayoutManager) {
+            recyclerViewBottomDoc.setLayoutManager(mLayoutManager);
+            if (itemDecoration != null) {
+                recyclerViewBottomDoc.removeItemDecoration(itemDecoration);
+            }
+            itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_10);
+            recyclerViewBottomDoc.addItemDecoration(itemDecoration);
+            items = CoreApplication.getInstance().getToolBottomItemsList();
+            mAdapter = new ToolsMenuAdapter(getActivity(), CoreApplication.getInstance().isHideIconBranding(), true, items);
+            recyclerViewBottomDoc.setAdapter(mAdapter);
         }
-        itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_10);
-        recyclerViewBottomDoc.addItemDecoration(itemDecoration);
-        items = CoreApplication.getInstance().getToolBottomItemsList();
-        mAdapter = new ToolsMenuAdapter(getActivity(), CoreApplication.getInstance().isHideIconBranding(), true, items);
-        recyclerViewBottomDoc.setAdapter(mAdapter);
     }
 
     private void getColorOfStatusBar() {
