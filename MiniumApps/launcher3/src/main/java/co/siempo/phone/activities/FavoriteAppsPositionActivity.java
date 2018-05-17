@@ -85,6 +85,13 @@ public class FavoriteAppsPositionActivity extends CoreActivity implements OnFavo
                     .transparent));
         }
         StatusBarUtil.setTranslucent(this);
+        boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
+        if (read) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.black));
+        } else {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.white));
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
     }
 
 

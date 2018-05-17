@@ -78,18 +78,21 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
             Bitmap bitmap = BitmapFactory.decodeFile(filePath);
             BitmapDrawable ob = new BitmapDrawable(getResources(), bitmap);
             //Code for Applying background
-
             relMain.setBackground(ob);
             linMain.setBackgroundColor(ContextCompat.getColor(this, R.color
                     .trans_black_bg));
-
-
         } else {
             linMain.setBackgroundColor(ContextCompat.getColor(this, R.color
                     .transparent));
         }
         StatusBarUtil.setTransparent(this);
-
+        boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
+        if (read) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.black));
+        } else {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.white));
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
     }
 
     @Override
