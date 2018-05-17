@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.jaeger.library.StatusBarUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -87,6 +88,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
             linMain.setBackgroundColor(ContextCompat.getColor(this, R.color
                     .transparent));
         }
+        StatusBarUtil.setTransparent(this);
 
     }
 

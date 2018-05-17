@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.jaeger.library.StatusBarUtil;
 
 import java.util.ArrayList;
 
@@ -83,6 +84,7 @@ public class FavoriteAppsPositionActivity extends CoreActivity implements OnFavo
             linMain.setBackgroundColor(ContextCompat.getColor(this, R.color
                     .transparent));
         }
+        StatusBarUtil.setTranslucent(this);
     }
 
 

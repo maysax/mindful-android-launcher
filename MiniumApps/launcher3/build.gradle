@@ -149,7 +149,7 @@ dependencies {
     implementation 'com.blankj:utilcode:1.5.0'
     annotationProcessor "org.androidannotations:androidannotations:$annotationsVersion"
     implementation "com.amitshekhar.android:android-networking:$fastAndroidNetworkingVersion"
-    compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
+    compile 'com.jaeger.statusbarutil:library:1.4.0'
 
 }
 greendao {
