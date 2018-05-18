@@ -92,9 +92,10 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
             getWindow().setStatusBarColor(getResources().getColor(R.color.black));
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.white));
-            getWindow().getDecorView().setSystemUiVisibility(View
-                    .SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);}
+                getWindow().setStatusBarColor(getResources().getColor(R.color.white));
+                getWindow().getDecorView().setSystemUiVisibility(View
+                        .SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            }
         }
     }
 

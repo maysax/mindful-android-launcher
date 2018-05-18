@@ -1270,16 +1270,6 @@ public class PackageUtil {
         return junkListItems;
     }
 
-    public static class HoursComparator implements Comparator<AlarmData> {
-        @Override
-        public int compare(AlarmData o1, AlarmData o2) {
-            if (o1.getHours() == o2.getHours()) {
-                return o1.getMinute() - o2.getMinute();
-            }
-            return o1.getHours() - o2.getHours();
-        }
-    }
-
     public static int forTwoHours(int hour) {
         ArrayList<Integer> everyTwoHourList = new ArrayList<>(Arrays.asList(0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22));
         if (hour >= 22) {
@@ -1306,5 +1296,15 @@ public class PackageUtil {
             }
         }
         return 0;
+    }
+
+    public static class HoursComparator implements Comparator<AlarmData> {
+        @Override
+        public int compare(AlarmData o1, AlarmData o2) {
+            if (o1.getHours() == o2.getHours()) {
+                return o1.getMinute() - o2.getMinute();
+            }
+            return o1.getHours() - o2.getHours();
+        }
     }
 }

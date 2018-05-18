@@ -198,7 +198,6 @@ public class DashboardActivity extends CoreActivity {
 //        w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
 
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         linMain = findViewById(R.id.linMain);
@@ -295,9 +294,9 @@ public class DashboardActivity extends CoreActivity {
         // this overlay of default launcher if siempo is not set as default
         // launcher
         showOverlayOfDefaultLauncher();
-        if(read){
+        if (read) {
             getWindow().setNavigationBarColor(getResources().getColor(R.color.transparent));
-        }else{
+        } else {
             getWindow().setNavigationBarColor(getResources().getColor(R.color.black));
         }
     }
