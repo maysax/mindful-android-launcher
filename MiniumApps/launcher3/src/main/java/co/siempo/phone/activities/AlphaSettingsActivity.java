@@ -335,6 +335,7 @@ public class AlphaSettingsActivity extends CoreActivity {
                                 (AlphaSettingsActivity.this,
                                         REQUEST_CHECK_SETTINGS);
                     } catch (IntentSender.SendIntentException sendEx) {
+                        sendEx.printStackTrace();
                     }
                 }
             }
