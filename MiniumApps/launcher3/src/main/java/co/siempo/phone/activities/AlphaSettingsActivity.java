@@ -56,7 +56,6 @@ import static co.siempo.phone.activities.DashboardActivity.IS_FROM_HOME;
  * Created by hardik on 17/8/17.
  */
 
-
 @EActivity(R.layout.activity_siempo_alpha_settings)
 public class AlphaSettingsActivity extends CoreActivity {
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
