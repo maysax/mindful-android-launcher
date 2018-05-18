@@ -149,6 +149,7 @@ public class PaneFragment extends CoreFragment {
     private View blueLineDividerBottom;
     private int backGroundColor;
     private int statusBarColorJunk;
+    private int statusBarColorPane;
     private LinearLayout linMain;
     private boolean firstTimeLoad = true;
 
@@ -179,6 +180,10 @@ public class PaneFragment extends CoreFragment {
         backGroundColor = typedValue.resourceId;
         theme.resolveAttribute(R.attr.junk_top, typedValue, true);
         statusBarColorJunk = typedValue.data;
+        theme.resolveAttribute(R.attr.status_bar_pane, typedValue, true);
+        statusBarColorPane = typedValue.data;
+
+
         bindView();
         Log.d("Test", "P2");
 
@@ -203,7 +208,7 @@ public class PaneFragment extends CoreFragment {
             mWindow.setStatusBarColor(statusBarColorJunk);
         } else {
             if (null != mWindow) {
-                mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
+                mWindow.setStatusBarColor(statusBarColorPane);
             }
         }
         if (!isVisibleToUser && null != imageClear && linSearchList != null &&
@@ -245,6 +250,7 @@ public class PaneFragment extends CoreFragment {
         //Added as a part of SSA-1669
         if (isVisibleToUser && firstTimeLoad) {
             bindBottomDock();
+            bindViewPager();
             firstTimeLoad = false;
         }
     }
@@ -269,7 +275,7 @@ public class PaneFragment extends CoreFragment {
                 () && DashboardActivity.currentIndexDashboard == 0) {
             mWindow.setStatusBarColor(statusBarColorJunk);
         } else {
-            mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
+            mWindow.setStatusBarColor(statusBarColorPane);
         }
     }
 
@@ -377,8 +383,8 @@ public class PaneFragment extends CoreFragment {
         try {
             if (PrefSiempo.getInstance(context).read(PrefSiempo
                     .APPLAND_TOUR_SEEN, false) && PrefSiempo.getInstance(context).read(PrefSiempo
-                    .IS_AUTOSCROLL, true) && pagerPane
-                    .getCurrentItem() == 0) {
+                    .IS_AUTOSCROLL, true) && (pagerPane
+                    .getCurrentItem() == 0 || pagerPane.getCurrentItem() == 1)) {
 
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
@@ -405,15 +411,17 @@ public class PaneFragment extends CoreFragment {
     private void bindBottomDock() {
 
         mLayoutManager = new GridLayoutManager(getActivity(), 4);
-        recyclerViewBottomDoc.setLayoutManager(mLayoutManager);
-        if (itemDecoration != null) {
-            recyclerViewBottomDoc.removeItemDecoration(itemDecoration);
+        if (null != mLayoutManager) {
+            recyclerViewBottomDoc.setLayoutManager(mLayoutManager);
+            if (itemDecoration != null) {
+                recyclerViewBottomDoc.removeItemDecoration(itemDecoration);
+            }
+            itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_10);
+            recyclerViewBottomDoc.addItemDecoration(itemDecoration);
+            items = CoreApplication.getInstance().getToolBottomItemsList();
+            mAdapter = new ToolsMenuAdapter(getActivity(), CoreApplication.getInstance().isHideIconBranding(), true, items);
+            recyclerViewBottomDoc.setAdapter(mAdapter);
         }
-        itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_10);
-        recyclerViewBottomDoc.addItemDecoration(itemDecoration);
-        items = CoreApplication.getInstance().getToolBottomItemsList();
-        mAdapter = new ToolsMenuAdapter(getActivity(), CoreApplication.getInstance().isHideIconBranding(), true, items);
-        recyclerViewBottomDoc.setAdapter(mAdapter);
     }
 
     private void getColorOfStatusBar() {
@@ -536,7 +544,7 @@ public class PaneFragment extends CoreFragment {
                     searchDoc.setVisibility(View.VISIBLE);
                     junkDoc.setVisibility(View.GONE);
                     // finally change the color
-                    mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
+                    mWindow.setStatusBarColor(statusBarColorPane);
                 }
 
                 //Indicator to be set here so that when coming from another

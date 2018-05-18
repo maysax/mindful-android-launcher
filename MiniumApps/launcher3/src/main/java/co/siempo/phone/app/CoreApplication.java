@@ -28,7 +28,6 @@ import android.util.Log;
 import android.util.LruCache;
 
 import com.androidnetworking.AndroidNetworking;
-import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -58,7 +57,6 @@ import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_BROWSER;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_CALENDAR;
@@ -106,6 +104,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     private ArrayList<MainListItem> favoriteItemsList = new ArrayList<>();
     private boolean isHideIconBranding = true;
     private boolean isRandomize = true;
+    private CrashlyticsCore crashlyticsCore;
 
     public static synchronized CoreApplication getInstance() {
         return sInstance;
@@ -198,7 +197,7 @@ public abstract class CoreApplication extends MultiDexApplication {
                     Settings.Secure.ANDROID_ID);
             return strDeviceId;
         } catch (Exception e) {
-            strDeviceId  = android.provider.Settings.Secure.ANDROID_ID;
+            strDeviceId = android.provider.Settings.Secure.ANDROID_ID;
             return strDeviceId;
         }
     }
@@ -206,7 +205,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     protected void init() {
         // set initial configurations here
         configTracer();
-        configCalligraphy();
+//        configCalligraphy();
         configFabric();
         configIconify();
         configureLifecycle();
@@ -394,15 +393,15 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     private void configCalligraphy() {
-        CalligraphyConfig
-                .initDefault(new CalligraphyConfig.Builder()
-                        .setDefaultFontPath(getString(FontUtils.DEFAULT_FONT_PATH_RES))
-                        .setFontAttrId(R.attr.fontPath)
-                        .build());
+//        CalligraphyConfig
+//                .initDefault(new CalligraphyConfig.Builder()
+//                        .setDefaultFontPath(getString(FontUtils.DEFAULT_FONT_PATH_RES))
+//                        .setFontAttrId(R.attr.fontPath)
+//                        .build());
     }
 
     private void configFabric() {
-        CrashlyticsCore crashlyticsCore = new CrashlyticsCore.Builder()
+        crashlyticsCore = new CrashlyticsCore.Builder()
                 .disabled(BuildConfig.DEBUG)
                 .build();
         final Fabric fabric = new Fabric.Builder(this)
@@ -412,7 +411,13 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     public void logException(Throwable e) {
-        Crashlytics.logException(e);
+        try {
+            if (null != crashlyticsCore) {
+                crashlyticsCore.logException(e);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void configIconify() {
@@ -842,6 +847,45 @@ public abstract class CoreApplication extends MultiDexApplication {
         return mMemoryCache.get(key);
     }
 
+    public void downloadSiempoImages() {
+        File folderSiempoImage = new File(Environment.getExternalStorageDirectory() +
+                "/Siempo images");
+        if (!folderSiempoImage.exists()) {
+            folderSiempoImage.mkdirs();
+        }
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context
+                .CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = null;
+        if (connectivityManager != null) {
+            activeNetwork = connectivityManager.getActiveNetworkInfo();
+        }
+        if (activeNetwork != null) {
+            ArrayList<String> listImageName = new ArrayList<>(Arrays.asList(folderSiempoImage.list()));
+            String[] list = getResources().getStringArray(R.array.siempo_images);
+            DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+            for (String strUrl : list) {
+                String fileName = strUrl.substring(strUrl.lastIndexOf('/') + 1, strUrl.length());
+                String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
+                if (listImageName.contains(fileName)) {
+                    Log.d("File Exists", fileName);
+                } else {
+                    Uri Download_Uri = Uri.parse(strUrl);
+                    DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
+                    request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+                    request.setAllowedOverRoaming(false);
+                    request.setTitle("Downloading " + fileName);
+                    request.setDescription("Downloading " + fileName);
+                    request.setVisibleInDownloadsUi(false);
+                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
+                    request.setDestinationInExternalPublicDir("/Siempo images", fileName);
+                    if (downloadManager != null) {
+                        long refid = downloadManager.enqueue(request);
+                    }
+                }
+            }
+        }
+    }
+
     private class LoadApplications extends AsyncTask<Object, Object, Set<String>> {
 
         @Override
@@ -891,45 +935,6 @@ public abstract class CoreApplication extends MultiDexApplication {
             super.onPostExecute(applicationInfos);
             setPackagesList(applicationInfos);
             EventBus.getDefault().post(new AppInstalledEvent(true));
-        }
-    }
-
-    public void downloadSiempoImages() {
-        File folderSiempoImage = new File(Environment.getExternalStorageDirectory() +
-                "/Siempo images");
-        if (!folderSiempoImage.exists()) {
-              folderSiempoImage.mkdirs();
-        }
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context
-                .CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = null;
-        if (connectivityManager != null) {
-            activeNetwork = connectivityManager.getActiveNetworkInfo();
-        }
-        if (activeNetwork != null) {
-            ArrayList<String> listImageName = new ArrayList<>(Arrays.asList(folderSiempoImage.list()));
-            String[] list = getResources().getStringArray(R.array.siempo_images);
-            DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-            for (String strUrl : list) {
-                String fileName = strUrl.substring(strUrl.lastIndexOf('/') + 1, strUrl.length());
-                String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
-                if (listImageName.contains(fileName)) {
-                    Log.d("File Exists", fileName);
-                } else {
-                    Uri Download_Uri = Uri.parse(strUrl);
-                    DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
-                    request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
-                    request.setAllowedOverRoaming(false);
-                    request.setTitle("Downloading " + fileName);
-                    request.setDescription("Downloading " + fileName);
-                    request.setVisibleInDownloadsUi(false);
-                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
-                    request.setDestinationInExternalPublicDir("/Siempo images", fileName);
-                    if (downloadManager != null) {
-                        long refid = downloadManager.enqueue(request);
-                    }
-                }
-            }
         }
     }
 }

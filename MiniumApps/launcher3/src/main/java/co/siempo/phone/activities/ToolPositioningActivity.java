@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.ColorRes;
@@ -23,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.jaeger.library.StatusBarUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,17 +79,23 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
             Bitmap bitmap = BitmapFactory.decodeFile(filePath);
             BitmapDrawable ob = new BitmapDrawable(getResources(), bitmap);
             //Code for Applying background
-
             relMain.setBackground(ob);
             linMain.setBackgroundColor(ContextCompat.getColor(this, R.color
                     .trans_black_bg));
-
-
         } else {
             linMain.setBackgroundColor(ContextCompat.getColor(this, R.color
                     .transparent));
         }
-
+        StatusBarUtil.setTransparent(this);
+        boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
+        if (read) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.black));
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.white));
+            getWindow().getDecorView().setSystemUiVisibility(View
+                    .SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);}
+        }
     }
 
     @Override

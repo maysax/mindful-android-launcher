@@ -757,12 +757,13 @@ public class PackageUtil {
      * Below function is used to get contact name from contact number store in contact list
      */
     private static String nameFromContactNumber(String number, Context context) {
-
+        String contactName;
+        try {
         Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
         Cursor cursor = context.getContentResolver().query(uri, new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME,
                 ContactsContract.CommonDataKinds.Phone.PHOTO_URI}, null, null, null);
-        String contactName;
-        try {
+
+
             if (cursor != null && cursor.moveToFirst()) {
                 contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
                 cursor.close();

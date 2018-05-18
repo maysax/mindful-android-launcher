@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -25,6 +26,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -189,6 +191,14 @@ public class DashboardActivity extends CoreActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
         setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
+
+        Window w = getWindow(); // in Activity's onCreate() for instance
+        w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+//        w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//        w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         linMain = findViewById(R.id.linMain);
@@ -201,19 +211,31 @@ public class DashboardActivity extends CoreActivity {
         if (startTime == 0) {
             startTime = System.currentTimeMillis();
         }
-        mWindow = getWindow();
-        // clear FLAG_TRANSLUCENT_STATUS flag:
-        if (null != mWindow) {
-            mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-            mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            defaultStatusBarColor = mWindow.getStatusBarColor();
-        }
-        Log.d("Test", "P2");
         permissionUtil = new PermissionUtil(this);
         overlayDialog = new Dialog(this, 0);
         showOverlayOfDefaultLauncher();
+        View decor = w.getDecorView();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !read) {
+            decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
+    }
+
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
+    public int getNavigationBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 
     private void changeLayoutBackground() {
@@ -273,11 +295,29 @@ public class DashboardActivity extends CoreActivity {
         // this overlay of default launcher if siempo is not set as default
         // launcher
         showOverlayOfDefaultLauncher();
+        if(read){
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.transparent));
+        }else{
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.black));
+        }
+    }
+
+    public boolean hasNavBar(Resources resources) {
+        int id = resources.getIdentifier("config_showNavigationBar", "bool", "android");
+        return id > 0 && resources.getBoolean(id);
     }
 
     public void loadViews() {
 
         mPager = findViewById(R.id.pager);
+        linMain = findViewById(R.id.linMain);
+        boolean hasMenuKey = ViewConfiguration.get(this).hasPermanentMenuKey();
+        if (hasNavBar(getResources())) {
+            mPager.setPadding(0, getStatusBarHeight(), 0, getNavigationBarHeight());
+        } else {
+            mPager.setPadding(0, getStatusBarHeight(), 0, 0);
+
+        }
         mPagerAdapter = new DashboardPagerAdapter(getFragmentManager());
         loadPane();
         mPager.setAdapter(mPagerAdapter);
@@ -618,7 +658,6 @@ public class DashboardActivity extends CoreActivity {
             startActivity(startMain);
 
         }
-
     }
 
 

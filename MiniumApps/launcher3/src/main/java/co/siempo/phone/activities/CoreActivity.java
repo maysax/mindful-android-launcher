@@ -432,27 +432,34 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     public class UserPresentBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context arg0, Intent intent) {
-            if (intent != null && intent.getAction() != null && null != arg0) {
-                if (PackageUtil.isSiempoLauncher(arg0) && (intent.getAction()
-                        .equals
-                                (Intent.ACTION_USER_PRESENT) ||
-                        intent.getAction().equals(Intent.ACTION_SCREEN_ON))) {
-                    boolean lockcounterstatus = PrefSiempo.getInstance(CoreActivity.this).read
-                            (PrefSiempo
+            try {
+                if (intent != null && intent.getAction() != null && null != arg0) {
+                    if (PackageUtil.isSiempoLauncher(arg0) && (intent.getAction()
+                            .equals
+                                    (Intent.ACTION_USER_PRESENT) ||
+                            intent.getAction().equals(Intent.ACTION_SCREEN_ON))) {
+                        boolean lockcounterstatus = PrefSiempo.getInstance(CoreActivity.this).read
+                                (PrefSiempo
+                                        .LOCK_COUNTER_STATUS, false);
+                        if (lockcounterstatus) {
+                            DashboardActivity.currentIndexDashboard = 1;
+                            DashboardActivity.currentIndexPaneFragment = 2;
+                            Intent startMain = getIntent();
+                            if (null == startMain) {
+                                startMain = new Intent(Intent.ACTION_MAIN);
+                                startMain.addCategory(Intent.CATEGORY_HOME);
+                            }
+                            startActivity(startMain);
+                            PrefSiempo.getInstance(CoreActivity.this).write(PrefSiempo
                                     .LOCK_COUNTER_STATUS, false);
-                    if (lockcounterstatus) {
-                        DashboardActivity.currentIndexDashboard = 1;
-                        DashboardActivity.currentIndexPaneFragment = 2;
-                        Intent startMain = new Intent(Intent.ACTION_MAIN);
-                        startMain.addCategory(Intent.CATEGORY_HOME);
-                        startActivity(startMain);
-                        PrefSiempo.getInstance(CoreActivity.this).write(PrefSiempo
-                                .LOCK_COUNTER_STATUS, false);
-                    }
-                } else if (PackageUtil.isSiempoLauncher(arg0) && intent.getAction().equals(Intent
-                        .ACTION_SCREEN_OFF)) {
+                        }
+                    } else if (PackageUtil.isSiempoLauncher(arg0) && intent.getAction().equals(Intent
+                            .ACTION_SCREEN_OFF)) {
 
+                    }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
