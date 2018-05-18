@@ -107,8 +107,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_marginLeft="@dimen/dp_5"
-                android:layout_marginRight="@dimen/dp_5"
-                />
+                android:layout_marginRight="@dimen/dp_5" />
         </RelativeLayout>
 
         <LinearLayout
