@@ -300,7 +300,8 @@ public class AlphaSettingsActivity extends CoreActivity {
     //Fetching Location
     private void showLocation() {
         if (locationRequest == null) {
-            locationRequest = new LocationRequest();
+            locationRequest = LocationRequest.create();
+
         }
         LocationSettingsRequest settingsRequest = new LocationSettingsRequest.Builder()
                 .addLocationRequest(locationRequest).build();

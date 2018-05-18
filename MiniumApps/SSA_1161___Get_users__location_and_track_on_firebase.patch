@@ -1,0 +1,564 @@
+Index: MiniumApps/launcher3/src/main/java/co/siempo/phone/activities/AlphaSettingsActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- MiniumApps/launcher3/src/main/java/co/siempo/phone/activities/AlphaSettingsActivity.java	(revision 281f01ec41adaa44eee7e2a5b2e3b8d71d7ae211)
++++ MiniumApps/launcher3/src/main/java/co/siempo/phone/activities/AlphaSettingsActivity.java	(revision )
+@@ -1,8 +1,18 @@
+ package co.siempo.phone.activities;
+ 
++import android.Manifest;
++import android.annotation.SuppressLint;
++import android.app.ProgressDialog;
++import android.content.BroadcastReceiver;
+ import android.content.Context;
+ import android.content.Intent;
++import android.content.IntentFilter;
++import android.content.IntentSender;
++import android.location.Location;
++import android.location.LocationManager;
++import android.os.Build;
+ import android.support.v7.widget.Toolbar;
++import android.util.Log;
+ import android.view.View;
+ import android.widget.ImageView;
+ import android.widget.LinearLayout;
+@@ -10,16 +20,34 @@
+ import android.widget.Switch;
+ import android.widget.TextView;
+ 
++import com.google.android.gms.common.api.GoogleApiClient;
++import com.google.android.gms.common.api.PendingResult;
++import com.google.android.gms.common.api.ResultCallback;
++import com.google.android.gms.common.api.Status;
++import com.google.android.gms.location.FusedLocationProviderClient;
++import com.google.android.gms.location.LocationCallback;
++import com.google.android.gms.location.LocationRequest;
++import com.google.android.gms.location.LocationResult;
++import com.google.android.gms.location.LocationServices;
++import com.google.android.gms.location.LocationSettingsRequest;
++import com.google.android.gms.location.LocationSettingsResult;
++import com.google.android.gms.location.LocationSettingsStates;
++import com.google.android.gms.location.LocationSettingsStatusCodes;
++import com.gun0912.tedpermission.PermissionListener;
++import com.gun0912.tedpermission.TedPermission;
+ import com.joanzapata.iconify.IconDrawable;
+ 
+ import org.androidannotations.annotations.AfterViews;
+ import org.androidannotations.annotations.EActivity;
+ import org.androidannotations.annotations.ViewById;
+ 
++import java.util.ArrayList;
++
+ import co.siempo.phone.R;
+ import co.siempo.phone.app.CoreApplication;
+ import co.siempo.phone.helper.ActivityHelper;
+ import co.siempo.phone.helper.FirebaseHelper;
++import co.siempo.phone.utils.PermissionUtil;
+ import co.siempo.phone.utils.PrefSiempo;
+ 
+ import static co.siempo.phone.activities.DashboardActivity.IS_FROM_HOME;
+@@ -32,10 +60,15 @@
+ @EActivity(R.layout.activity_siempo_alpha_settings)
+ public class AlphaSettingsActivity extends CoreActivity {
+ 
++    private static final int REQUEST_CHECK_SETTINGS = 0x1;
++    private static final String BROADCAST_ACTION = "android.location.PROVIDERS_CHANGED";
++    protected GoogleApiClient mGoogleApiClient;
+     @ViewById
+     ImageView icon_UserId;
+     @ViewById
+     TextView txt_UserId;
++    PermissionUtil permissionUtil;
++    ProgressDialog dialog;
+     private Context context;
+     private long startTime = 0;
+     private LinearLayout ln_suppressedNotifications;
+@@ -46,13 +79,44 @@
+     private ImageView icon_permissions, icon_in_app;
+     private Toolbar toolbar;
+     private LinearLayout linInAppProduct;
++    private RelativeLayout rel_location;
++    private Switch switch_location;
++    private FusedLocationProviderClient mFusedLocationClient;
++    private TextView longitude, latitude;
++    private LocationRequest locationRequest;
++    private BroadcastReceiver gpsLocationReceiver = new BroadcastReceiver() {
++
++        @Override
++        public void onReceive(Context context, Intent intent) {
++            //If Action is Location
++            if (intent.getAction().matches(BROADCAST_ACTION)) {
++                LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
++                //Check if GPS is turned ON or OFF
++                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
++
++                } else {
++                    //If GPS turned OFF show Location Dialog
++                    if (dialog != null) {
++                        dialog.dismiss();
++                    }
++                    switch_location.setChecked(false);
++                    longitude.setVisibility(View.GONE);
++                    latitude.setVisibility(View.GONE);
++                    PrefSiempo.getInstance(context).write(PrefSiempo.LOCATION_STATUS,
++                            false);
++
++                }
++
++            }
++        }
++    };
+ 
+     @AfterViews
+     void afterViews() {
+         initView();
+         onClickEvents();
+-    }
+ 
++    }
+ 
+     public void initView() {
+         toolbar = findViewById(R.id.toolbar);
+@@ -64,12 +128,13 @@
+                 onBackPressed();
+             }
+         });
+-
+         context = AlphaSettingsActivity.this;
+         ln_suppressedNotifications = findViewById(R.id.ln_suppressedNotifications);
+         rel_restrictions = findViewById(R.id.rel_restrictions);
+         switch_alphaRestriction = findViewById(R.id.switch_alphaRestriction);
+         ln_permissions = findViewById(R.id.ln_permissions);
++        rel_location = findViewById(R.id.rel_location);
++        switch_location = findViewById(R.id.switch_location);
+         linInAppProduct = findViewById(R.id.linInAppProduct);
+         icon_SuppressedNotifications = findViewById(R.id.icon_SuppressedNotifications);
+         icon_permissions = findViewById(R.id.icon_permissions);
+@@ -97,6 +162,11 @@
+             switch_alphaRestriction.setChecked(false);
+         }
+ 
++        longitude = findViewById(R.id.longitude);
++        latitude = findViewById(R.id.latitude);
++
++        dialog = new ProgressDialog(AlphaSettingsActivity.this);
++        permissionUtil = new PermissionUtil(this);
+     }
+ 
+     public void onClickEvents() {
+@@ -122,8 +192,6 @@
+         rel_restrictions.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+-
+-
+                 if (switch_alphaRestriction.isChecked()) {
+                     switch_alphaRestriction.setChecked(false);
+                     PrefSiempo.getInstance(context).write(PrefSiempo.JUNK_RESTRICTED,
+@@ -142,23 +210,208 @@
+             public void onClick(View v) {
+                 Intent intent = new Intent(AlphaSettingsActivity.this, InAppItemListActivity.class);
+                 startActivity(intent);
++
+             }
+         });
+-    }
+ 
++        boolean loc_switch_state = PrefSiempo.getInstance(context).read(PrefSiempo.LOCATION_STATUS,
++                false);
++        if (!loc_switch_state) {
++            switch_location.setChecked(false);
++        } else {
++            switch_location.setChecked(true);
++            checkPermissionAndFindLocation();
++        }
++        rel_location.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View v) {
++                if (switch_location.isChecked()) {
++                    switch_location.setChecked(false);
++                    longitude.setVisibility(View.GONE);
++                    latitude.setVisibility(View.GONE);
++                    PrefSiempo.getInstance(context).write(PrefSiempo.LOCATION_STATUS,
++                            false);
++                } else {
++                    checkPermissionAndFindLocation();
++                    PrefSiempo.getInstance(context).write(PrefSiempo.LOCATION_STATUS,
++                            true);
++                }
++            }
++        });
++    }
+ 
+     @Override
+     protected void onPause() {
+         super.onPause();
+         FirebaseHelper.getInstance().logScreenUsageTime(AlphaSettingsActivity.this.getClass().getSimpleName(), startTime);
++        unregisterReceiver(gpsLocationReceiver);
+     }
+ 
+     @Override
+     protected void onResume() {
+         super.onResume();
++        registerReceiver(gpsLocationReceiver, new IntentFilter(BROADCAST_ACTION));
+         startTime = System.currentTimeMillis();
+-//        PackageUtil.checkPermission(this);
++
++        if (!permissionUtil.hasGiven(PermissionUtil.LOCATION_PERMISSION)) {
++            switch_location.setChecked(false);
++        }
+     }
+ 
++    private void checkPermissionAndFindLocation() {
+ 
+-}
++        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !permissionUtil.hasGiven
++                (PermissionUtil.LOCATION_PERMISSION))) {
++            try {
++                TedPermission.with(this)
++                        .setPermissionListener(new PermissionListener() {
++                            @Override
++                            public void onPermissionGranted() {
++                                showLocation();
++                            }
++
++                            @Override
++                            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
++
++                            }
++                        })
++                        .setDeniedMessage(R.string.msg_permission_denied)
++                        .setPermissions(new String[]{
++                                Manifest.permission.ACCESS_COARSE_LOCATION,
++                                Manifest
++                                        .permission
++                                        .ACCESS_FINE_LOCATION, Manifest.permission.INTERNET})
++                        .check();
++            } catch (Exception e) {
++                e.printStackTrace();
++            }
++        } else {
++            showLocation();
++        }
++    }
++
++    private void initGoogleAPIClient() {
++        //Without Google API Client Auto Location Dialog will not work
++        mGoogleApiClient = new GoogleApiClient.Builder(AlphaSettingsActivity.this)
++                .addApi(LocationServices.API)
++                .build();
++        mGoogleApiClient.connect();
++    }
++
++    private void showLocation() {
++        initGoogleAPIClient();
++        locationRequest = new LocationRequest();
++        locationRequest.setInterval(2000);
++        locationRequest.setFastestInterval(1000);
++        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
++        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
++                .addLocationRequest(locationRequest);
++        builder.setAlwaysShow(true);
++
++        PendingResult<LocationSettingsResult> result =
++                LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, builder.build());
++        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
++            @SuppressLint("MissingPermission")
++            @Override
++            public void onResult(LocationSettingsResult result) {
++                final Status status = result.getStatus();
++                final LocationSettingsStates state = result.getLocationSettingsStates();
++                switch (status.getStatusCode()) {
++                    case LocationSettingsStatusCodes.SUCCESS:
++                        // All location settings are satisfied. The client can initialize location
++                        // requests here.
++                        //updateGPSStatus("G-PS is Enabled in your device");
++                        if (dialog != null) {
++                            dialog.show();
++                            dialog.setMessage("Fetching Location");
++                            dialog.setCancelable(false);
++                        }
++                        updateLocationDetail();
++
++                        break;
++                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
++                        // Location settings are not satisfied. But could be fixed by showing the user
++                        // a dialog.
++                        try {
++                            // Show the dialog by calling startResolutionForResult(),
++                            // and check the result in onActivityResult().
++                            status.startResolutionForResult(AlphaSettingsActivity.this, REQUEST_CHECK_SETTINGS);
++                        } catch (IntentSender.SendIntentException e) {
++                            e.printStackTrace();
++                            // Ignore the error.
++                        }
++                        break;
++                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
++                        // Location settings are not satisfied. However, we have no way to fix the
++                        // settings so we won't show the dialog.
++                        break;
++                }
++            }
++        });
++    }
++
++    @SuppressLint("MissingPermission")
++    private void updateLocationDetail() {
++        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
++        LocationCallback mLocationCallback = new LocationCallback() {
++            @Override
++            public void onLocationResult(LocationResult locationResult) {
++                if (locationResult == null) {
++                    return;
++                }
++                for (Location location : locationResult.getLocations()) {
++                    // Update UI with location data
++                    // ...
++                    if (location != null) {
++                        longitude.setText("longitude: " + location.getLongitude());
++                        latitude.setText("latitude: " + location.getLatitude());
++                        switch_location.setChecked(true);
++                        longitude.setVisibility(View.VISIBLE);
++                        latitude.setVisibility(View.VISIBLE);
++                        if (dialog != null) {
++                            dialog.dismiss();
++                        }
++                    } else {
++                        longitude.setText("longitude: Not found");
++                        latitude.setText("latitude: Not found");
++                    }
++                }
++            }
++
++            ;
++        };
++
++        mFusedLocationClient.requestLocationUpdates(locationRequest,
++                mLocationCallback,
++                null);
++
++    }
++
++    @Override
++    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
++        switch (requestCode) {
++            // Check for the integer request code originally supplied to startResolutionForResult().
++            case REQUEST_CHECK_SETTINGS:
++                switch (resultCode) {
++                    case RESULT_OK:
++                        Log.e("Settings", "Result OK");
++                        if (dialog != null) {
++                            dialog.show();
++                            dialog.setMessage("Fetching Location");
++                            dialog.setCancelable(false);
++                        }
++                        updateLocationDetail();
++                        //startLocationUpdates();
++                        break;
++                    case RESULT_CANCELED:
++                        //updateGPSStatus("GPS is Disabled in your device");
++
++                        break;
++                }
++                break;
++        }
++    }
++
++
++}
++
+Index: MiniumApps/launcher3/src/main/java/co/siempo/phone/utils/PermissionUtil.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- MiniumApps/launcher3/src/main/java/co/siempo/phone/utils/PermissionUtil.java	(revision 281f01ec41adaa44eee7e2a5b2e3b8d71d7ae211)
++++ MiniumApps/launcher3/src/main/java/co/siempo/phone/utils/PermissionUtil.java	(revision )
+@@ -74,7 +74,8 @@
+                         .WRITE_EXTERNAL_STORAGE) && hasAppPermissions
+                         (Manifest.permission.READ_EXTERNAL_STORAGE);
+             case LOCATION_PERMISSION:
+-                return hasAppPermissions(Manifest.permission.ACCESS_FINE_LOCATION);
++                return hasAppPermissions(Manifest.permission.ACCESS_FINE_LOCATION) &&
++                        hasAppPermissions(Manifest.permission.ACCESS_FINE_LOCATION);
+ 
+ 
+         }
+Index: MiniumApps/launcher3/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- MiniumApps/launcher3/src/main/AndroidManifest.xml	(revision 281f01ec41adaa44eee7e2a5b2e3b8d71d7ae211)
++++ MiniumApps/launcher3/src/main/AndroidManifest.xml	(revision )
+@@ -10,6 +10,9 @@
+         android:smallScreens="true"
+         android:xlargeScreens="true" />
+ 
++    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
++    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
++    <uses-permission android:name="android.permission.INTERNET" />
+     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+     <uses-permission android:name="android.permission.PREVENT_POWER_KEY" />
+     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+@@ -64,6 +67,9 @@
+     <uses-feature
+         android:name="android.hardware.telephony"
+         android:required="false" />
++    <uses-feature android:name="android.hardware.location.gps" />
++    <uses-feature android:name="android.hardware.location.network" />
++
+ 
+     <application
+         android:name=".app.Launcher3App_"
+Index: MiniumApps/launcher3/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- MiniumApps/launcher3/build.gradle	(revision 281f01ec41adaa44eee7e2a5b2e3b8d71d7ae211)
++++ MiniumApps/launcher3/build.gradle	(revision )
+@@ -149,7 +149,7 @@
+     implementation 'com.blankj:utilcode:1.5.0'
+     annotationProcessor "org.androidannotations:androidannotations:$annotationsVersion"
+     implementation "com.amitshekhar.android:android-networking:$fastAndroidNetworkingVersion"
+-
++    implementation "com.google.android.gms:play-services-location:12.0.0"
+ }
+ greendao {
+     schemaVersion "${databaseVersion}".toInteger()
+Index: MiniumApps/launcher3/src/main/java/co/siempo/phone/utils/PrefSiempo.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- MiniumApps/launcher3/src/main/java/co/siempo/phone/utils/PrefSiempo.java	(revision 281f01ec41adaa44eee7e2a5b2e3b8d71d7ae211)
++++ MiniumApps/launcher3/src/main/java/co/siempo/phone/utils/PrefSiempo.java	(revision )
+@@ -98,7 +98,7 @@
+     public static String APPLAND_TOUR_SEEN = "appland_tour_seen";
+     public static String JUNK_RESTRICTED = "junk_restricted";
+     public static String USER_VOLUME = "user_volume";
+-
++    public static String LOCATION_STATUS = "location_status";
+     private static SharedPreferences sharedPreferences;
+     private static SharedPreferences.Editor editor;
+ 
+Index: MiniumApps/launcher3/src/main/res/layout/activity_siempo_alpha_settings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- MiniumApps/launcher3/src/main/res/layout/activity_siempo_alpha_settings.xml	(revision 281f01ec41adaa44eee7e2a5b2e3b8d71d7ae211)
++++ MiniumApps/launcher3/src/main/res/layout/activity_siempo_alpha_settings.xml	(revision )
+@@ -13,6 +13,7 @@
+         app:titleTextColor="?attr/toolbar_text_color" />
+ 
+     <LinearLayout
++        android:id="@+id/lin_main"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_below="@+id/toolbar"
+@@ -180,6 +181,86 @@
+ 
+         </LinearLayout>
+ 
++        <RelativeLayout
++            android:id="@+id/rel_location"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:layout_marginTop="15dp"
++            android:orientation="horizontal"
++            tools:ignore="UseCompoundDrawables">
++
++            <ImageView
++                android:id="@+id/icon_location"
++                android:layout_width="36dp"
++                android:layout_height="36dp"
++                android:layout_gravity="center_vertical"
++                android:layout_marginStart="15dp"
++                android:contentDescription="@null"
++                android:padding="6dp" />
++
++            <co.siempo.phone.customviews.RobotoRegularTextView
++                android:id="@+id/txt_location"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:layout_centerVertical="true"
++                android:layout_gravity="center_vertical"
++                android:layout_marginStart="15dp"
++                android:layout_toRightOf="@+id/icon_location"
++                android:fontFamily="sans-serif-medium"
++                android:text="@string/title.siempoLocation"
++                android:textSize="14sp" />
++
++            <Switch
++                android:id="@+id/switch_location"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:layout_alignParentEnd="true"
++                android:layout_centerVertical="true"
++                android:layout_gravity="end"
++                android:layout_marginRight="@dimen/dp_5"
++                android:clickable="false" />
++
++        </RelativeLayout>
++
++    </LinearLayout>
++
++
++    <LinearLayout
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:layout_below="@id/lin_main"
++        android:orientation="horizontal">
++
++        <ImageView
++            android:layout_width="36dp"
++            android:layout_height="36dp"
++            android:layout_gravity="center_vertical"
++            android:layout_marginStart="15dp"
++            android:contentDescription="@null"
++            android:padding="6dp" />
++
++        <LinearLayout
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:layout_marginStart="15dp"
++            android:orientation="vertical">
++
++            <co.siempo.phone.customviews.RobotoRegularTextView
++                android:id="@+id/longitude"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:text="longitude"
++                android:textSize="14sp"
++                android:visibility="gone" />
++
++            <co.siempo.phone.customviews.RobotoRegularTextView
++                android:id="@+id/latitude"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:text="latitude"
++                android:textSize="14sp"
++                android:visibility="gone" />
++        </LinearLayout>
+     </LinearLayout>
+ 
+ 
+Index: MiniumApps/launcher3/src/main/res/values/strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- MiniumApps/launcher3/src/main/res/values/strings.xml	(revision 281f01ec41adaa44eee7e2a5b2e3b8d71d7ae211)
++++ MiniumApps/launcher3/src/main/res/values/strings.xml	(revision )
+@@ -18,6 +18,7 @@
+     <string name="title.suppressedNotifications">View Suppressed Notification</string>
+     <string name="title.siempoPermissions">Siempo Permissions</string>
+     <string name="title.siempoRestrictions">Restrictions</string>
++    <string name="title.siempoLocation">Location</string>
+     <string name="title.inbox" tools:ignore="UnusedResources">Google Inbox</string>
+     <string name="title.defaultLauncher">Set default home app</string>
+     <string name="title_tracking" tools:ignore="UnusedResources">Tracking</string>

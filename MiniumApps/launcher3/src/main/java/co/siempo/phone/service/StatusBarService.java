@@ -333,7 +333,7 @@ public class StatusBarService extends Service {
     @SuppressLint("MissingPermission")
     public void getLocation() {
         int timer_time = PrefSiempo.getInstance(context).read(PrefSiempo.LOCATION_TIMER_TIME, 1);
-        locationRequest = new LocationRequest();
+        locationRequest = LocationRequest.create();
         locationRequest.setInterval(timer_time * 60000);
         locationRequest.setFastestInterval(500);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -345,7 +345,7 @@ public class StatusBarService extends Service {
                     if (locationResult == null) {
                         //return;
                         Location mlocation = locationResult.getLastLocation();
-                        EventBus.getDefault().post(new LocationUpdateEvent(mlocation));
+                        EventBus.getDefault().postSticky(new LocationUpdateEvent(mlocation));
                     }
                     for (Location location : locationResult.getLocations()) {
                         // Update UI with location data
@@ -358,8 +358,6 @@ public class StatusBarService extends Service {
 
                     }
                 }
-
-                ;
             };
         }
         mFusedLocationClient.requestLocationUpdates(locationRequest,
