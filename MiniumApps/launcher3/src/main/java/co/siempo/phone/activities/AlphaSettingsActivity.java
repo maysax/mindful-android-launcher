@@ -96,7 +96,7 @@ public class AlphaSettingsActivity extends CoreActivity {
 
                 } else {
                     //If GPS turned OFF show Location Dialog
-                    if (dialog != null) {
+                    if (dialog != null && dialog.isShowing()) {
                         dialog.dismiss();
                     }
                     switch_location.setChecked(false);
