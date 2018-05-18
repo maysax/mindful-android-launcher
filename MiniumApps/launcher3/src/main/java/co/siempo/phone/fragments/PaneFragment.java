@@ -411,7 +411,7 @@ public class PaneFragment extends CoreFragment {
     private void bindBottomDock() {
 
         mLayoutManager = new GridLayoutManager(getActivity(), 4);
-        if (null != mLayoutManager) {
+        if (null != mLayoutManager && null!=recyclerViewBottomDoc) {
             recyclerViewBottomDoc.setLayoutManager(mLayoutManager);
             if (itemDecoration != null) {
                 recyclerViewBottomDoc.removeItemDecoration(itemDecoration);
