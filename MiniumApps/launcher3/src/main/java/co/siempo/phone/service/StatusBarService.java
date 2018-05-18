@@ -347,7 +347,8 @@ public class StatusBarService extends Service {
                         Location mlocation = locationResult.getLastLocation();
                         EventBus.getDefault().postSticky(new LocationUpdateEvent(mlocation));
                     }
-                    for (Location location : locationResult.getLocations()) {
+                    List<Location> locations = locationResult.getLocations();
+                    for (Location location : locations) {
                         // Update UI with location data
                         // ...
                         if (location != null) {

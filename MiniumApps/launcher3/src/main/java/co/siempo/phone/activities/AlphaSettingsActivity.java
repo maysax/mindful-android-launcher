@@ -251,7 +251,7 @@ public class AlphaSettingsActivity extends CoreActivity {
         startTime = System.currentTimeMillis();
         if (!permissionUtil.hasGiven(PermissionUtil.LOCATION_PERMISSION) || (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !locationManager
                 .isProviderEnabled(LocationManager.NETWORK_PROVIDER))) {
-            if (dialog != null) {
+            if (dialog != null && dialog.isShowing()) {
                 dialog.dismiss();
             }
             switch_location.setChecked(false);
@@ -346,7 +346,7 @@ public class AlphaSettingsActivity extends CoreActivity {
     public void LocationUpdateEvent(LocationUpdateEvent event) {
         boolean switch_status = PrefSiempo.getInstance(this).read(PrefSiempo.LOCATION_STATUS, false);
         if (switch_status) {
-            if (dialog != null && event != null) {
+            if (dialog != null && dialog.isShowing() && event != null) {
                 dialog.dismiss();
             }
             longitude.setText("longitude: " + event.getLongitude());
@@ -369,7 +369,7 @@ public class AlphaSettingsActivity extends CoreActivity {
                         showLocation();
                         break;
                     case RESULT_CANCELED:
-                        if (dialog != null) {
+                        if (dialog != null && dialog.isShowing()) {
                             dialog.dismiss();
                         }
                         switch_location.setChecked(false);
