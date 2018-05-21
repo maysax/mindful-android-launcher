@@ -228,7 +228,7 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
                         String applicationname = CoreApplication.getInstance()
                                 .getListApplicationName().get(resolveInfo);
                         if (!TextUtils.isEmpty(applicationname)) {
-                            if (list.contains(resolveInfo)) {
+                            if (adapterList.contains(resolveInfo)) {
                                 favoriteList.add(new AppListInfo(resolveInfo, applicationname,
                                         false, false, true));
                             } else {
