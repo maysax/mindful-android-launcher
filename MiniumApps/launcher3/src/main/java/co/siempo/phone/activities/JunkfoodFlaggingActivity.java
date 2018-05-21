@@ -59,12 +59,12 @@ import de.greenrobot.event.Subscribe;
 public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterView.OnItemClickListener {
     public Set<String> list = new HashSet<>();
     public boolean isLoadFirstTime = true;
+    public Set<String> adapterlist = new HashSet<>();
     Set<String> favoriteList = new HashSet<>();
     JunkfoodFlaggingAdapter junkfoodFlaggingAdapter;
     List<String> installedPackageList;
     int firstPosition;
     boolean isClickOnView = true;
-    private Set<String> adapterlist = new HashSet<>();
     private Toolbar toolbar;
     private ListView listAllApps;
     private PopupMenu popup;

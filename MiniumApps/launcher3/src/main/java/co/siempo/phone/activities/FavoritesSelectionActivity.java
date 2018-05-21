@@ -58,7 +58,7 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
     FavoriteFlaggingAdapter junkfoodFlaggingAdapter;
     int firstPosition;
     List<String> installedPackageList;
-    private Set<String> adapterList = new HashSet<>();
+    public Set<String> adapterList = new HashSet<>();
     private Toolbar toolbar;
     private ListView listAllApps;
     private PopupMenu popup;
@@ -305,7 +305,6 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
                             public void run() {
                                 if (adapterList.contains(packagename)) {
                                     adapterList.remove(packagename);
-
                                     isLoadFirstTime = false;
                                     //setToolBarText(favoriteList.size());
                                 } else {
@@ -465,7 +464,7 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
                     listAllApps.setOnItemClickListener(FavoritesSelectionActivity.this);
                     if (isNotify) {
                         junkfoodFlaggingAdapter.notifyDataSetChanged();
-
+                        edtSearch.setText("");
                         listAllApps.setSelection(firstPosition);
                     }
                 }
