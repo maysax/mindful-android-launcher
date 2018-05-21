@@ -90,6 +90,11 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_junkfood_flagging);
         initView();
+        list = PrefSiempo.getInstance(this).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
+        favoriteList = PrefSiempo.getInstance(this).read(PrefSiempo.FAVORITE_APPS, new HashSet<String>());
+        favoriteList.removeAll(list);
+        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
+        adapterlist.addAll(list);
         Intent intent = getIntent();
         if (intent.getExtras() != null && intent.hasExtra("FromAppMenu")) {
             isFromAppMenu = intent.getBooleanExtra("FromAppMenu", false);
@@ -379,7 +384,8 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
      * @param packagename
      * @param isFlagApp
      */
-    public void showPopUp(final View view, String packagename, final boolean isFlagApp) {
+    public void showPopUp(final View view, final String packagename, final
+    boolean isFlagApp) {
         positionPopUP = 0;
         for (int i = 0; i < bindingList.size(); i++) {
             if (bindingList.get(i).packageName.equalsIgnoreCase(packagename)) {
@@ -409,11 +415,11 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
                                     handler.postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
-                                            if (adapterlist.contains(bindingList.get
-                                                    (positionPopUP).packageName)) {
-                                                adapterlist.remove(bindingList.get(positionPopUP).packageName);
+                                            if (adapterlist.contains
+                                                    (packagename)) {
+                                                adapterlist.remove(packagename);
                                             } else {
-                                                adapterlist.add(bindingList.get(positionPopUP).packageName);
+                                                adapterlist.add(packagename);
                                             }
                                             firstPosition = listAllApps.getFirstVisiblePosition();
                                             new FilterApps().execute();
@@ -432,7 +438,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
                     }
                 } else if (item.getItemId() == R.id.item_Info) {
                     try {
-                        PackageUtil.appSettings(JunkfoodFlaggingActivity.this, bindingList.get(positionPopUP).packageName);
+                        PackageUtil.appSettings(JunkfoodFlaggingActivity.this, packagename);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -442,7 +448,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         });
         popup.getMenuInflater().inflate(R.menu.junkfood_popup, popup.getMenu());
         MenuItem menuItem = popup.getMenu().findItem(R.id.item_Unflag);
-        menuItem.setTitle(adapterlist.contains(bindingList.get(positionPopUP).packageName) ? getString(R.string.unflagapp) : getString(R.string.flag_app));
+        menuItem.setTitle(adapterlist.contains(packagename) ? getString(R.string.unflagapp) : getString(R.string.flag_app));
         popup.show();
         popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
             @Override
@@ -533,11 +539,6 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
     protected void onResume() {
         super.onResume();
         startTime = System.currentTimeMillis();
-        list = PrefSiempo.getInstance(this).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
-        favoriteList = PrefSiempo.getInstance(this).read(PrefSiempo.FAVORITE_APPS, new HashSet<String>());
-        favoriteList.removeAll(list);
-        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
-        adapterlist.addAll(list);
         loadApps();
 
     }
