@@ -154,14 +154,15 @@ public class ToolSelectionActivity extends CoreActivity {
     }
 
     private void filterListData() {
+        //Copy List
         items = new ArrayList<>();
-        adapterList = new ArrayList<>();
-        for (MainListItem item : items) {
-            MainListItem mainListItem = new MainListItem(item);
-            adapterList.add(mainListItem);
+        new MainListItemLoader(this).loadItemsDefaultApp(items);
+        for (int i = 0; i < items.size(); i++) {
+            items.get(i).setVisable(map.get(items.get(i).getId()).isVisible());
         }
 
-
+        //original list which will be edited
+        adapterList = new ArrayList<>();
         new MainListItemLoader(this).loadItemsDefaultApp(adapterList);
         int size = adapterList.size();
         for (int i = 0; i < size; i++) {
@@ -171,7 +172,8 @@ public class ToolSelectionActivity extends CoreActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode,
+                                    int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == TOOL_SELECTION) {
             if (resultCode == RESULT_OK) {
@@ -205,4 +207,16 @@ public class ToolSelectionActivity extends CoreActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        map = mAdapter.getMap();
+        for (MainListItem mainListItem : items) {
+            map.get(mainListItem.getId()).setVisible(mainListItem
+                    .isVisable());
+        }
+        PrefSiempo.getInstance(ToolSelectionActivity.this).write(PrefSiempo.TOOLS_SETTING, new Gson().toJson(map));
+        super.onBackPressed();
+
+
+    }
 }
