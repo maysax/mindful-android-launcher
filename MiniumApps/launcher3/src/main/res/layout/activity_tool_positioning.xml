@@ -8,6 +8,13 @@
                 tools:context="co.siempo.phone.fragments.IntentionFragment">
 
 
+    <ImageView
+        android:id="@+id/imgBackground"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"/>
+
     <LinearLayout
         android:id="@+id/linMain"
         android:layout_width="match_parent"

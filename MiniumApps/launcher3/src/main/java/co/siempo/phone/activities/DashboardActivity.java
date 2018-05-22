@@ -9,12 +9,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,6 +31,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.javiersantos.appupdater.AppUpdaterUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,6 +40,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
 import java.util.Objects;
 import java.util.concurrent.RejectedExecutionException;
 
@@ -198,7 +199,6 @@ public class DashboardActivity extends CoreActivity {
 //        w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
 
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         linMain = findViewById(R.id.linMain);
@@ -244,15 +244,14 @@ public class DashboardActivity extends CoreActivity {
                     .DEFAULT_BAG, "");
             boolean isEnable = PrefSiempo.getInstance(this).read(PrefSiempo
                     .DEFAULT_BAG_ENABLE, false);
-
             if (!TextUtils.isEmpty(filePath) && isEnable) {
-                Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-                BitmapDrawable ob = new BitmapDrawable(getResources(), bitmap);
-                //Code for Applying background
-                if (null != imgBackground) {
-                    imgBackground.setBackground(ob);
-                }
+                Glide.with(this)
+                        .load(Uri.fromFile(new File(filePath))) // Uri of the
+                        // picture
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(imgBackground);
             } else {
+                imgBackground.setImageBitmap(null);
                 imgBackground.setBackground(null);
             }
         } catch (Exception e) {
@@ -295,9 +294,9 @@ public class DashboardActivity extends CoreActivity {
         // this overlay of default launcher if siempo is not set as default
         // launcher
         showOverlayOfDefaultLauncher();
-        if(read){
+        if (read) {
             getWindow().setNavigationBarColor(getResources().getColor(R.color.transparent));
-        }else{
+        } else {
             getWindow().setNavigationBarColor(getResources().getColor(R.color.black));
         }
     }
