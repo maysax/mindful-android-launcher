@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -26,7 +25,7 @@ import co.siempo.phone.R;
 public class OverlayService extends Service {
 
     private WindowManager wm;
-    private View androidHead;
+    private View bottomView;
     private Handler handler;
     private int delay;
     private int heightWindow;
@@ -46,7 +45,7 @@ public class OverlayService extends Service {
     public void onCreate() {
         super.onCreate();
         try {
-            androidHead = ((LayoutInflater) getSystemService(Context
+            bottomView = ((LayoutInflater) getSystemService(Context
                     .LAYOUT_INFLATER_SERVICE)).inflate(R.layout
                     .gray_scale_layout, null);
             wm = (WindowManager) getSystemService(WINDOW_SERVICE);
@@ -88,7 +87,7 @@ public class OverlayService extends Service {
             paramsTop.format = PixelFormat.TRANSLUCENT;
 
             if (null != wm) {
-                wm.addView(androidHead, params);
+                wm.addView(bottomView, params);
                 wm.addView(topView, paramsTop);
             }
             handler = new Handler();
@@ -107,8 +106,8 @@ public class OverlayService extends Service {
                         if (params.height <= heightWindow) {
                             //Increase height of overlay
                             params.height = params.height + minusculeHeight;
-                            androidHead.setLayoutParams(new ViewGroup.LayoutParams(params));
-                            wm.updateViewLayout(androidHead, params);
+                            bottomView.setLayoutParams(new ViewGroup.LayoutParams(params));
+                            wm.updateViewLayout(bottomView, params);
 //                            handler.postDelayed(this, delay);
                         } else {
                             handler.removeCallbacksAndMessages(null);
@@ -118,33 +117,98 @@ public class OverlayService extends Service {
                     }
                 }
             };
-//            handler.postDelayed(runnableViewBottom, delay);
-            topView.setOnTouchListener(new View.OnTouchListener() {
+            topView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    paramsTop.height = 2 * androidHead.getLayoutParams().height;
-                    topView.setLayoutParams(new ViewGroup.LayoutParams
-                            (paramsTop));
-                    wm.updateViewLayout(topView, paramsTop);
-//                    params.height = 0;
-////                    androidHead.getLayoutParams().height = 0;
-//                    androidHead.setLayoutParams(new ViewGroup.LayoutParams
-//                            (params));
-//                    wm.updateViewLayout(androidHead, params);
-
-//
-//
-//                    if (androidHead != null) {
-//
-//                    }
-
-                    return false;
+                public void onClick(View v) {
+                    if (params.height != 0) {
+                        paramsTop.height = 2 * topView.getLayoutParams().height;
+                        topView.setLayoutParams(new ViewGroup.LayoutParams
+                                (paramsTop));
+                        wm.updateViewLayout(topView, paramsTop);
+                        params.height = 0;
+                        if (bottomView.getWindowToken() != null) {
+                            wm.removeView(bottomView);
+                        }
+                    } else {
+                        paramsTop.height = topView.getLayoutParams().height / 2;
+                        topView.setLayoutParams(new ViewGroup.LayoutParams
+                                (paramsTop));
+                        wm.updateViewLayout(topView, paramsTop);
+                        params.height = paramsTop.height;
+                        bottomView.setLayoutParams(new ViewGroup.LayoutParams
+                                (params));
+                        if (bottomView.getWindowToken() != null) {
+                            wm.updateViewLayout(bottomView, params);
+                        } else {
+                            wm.addView(bottomView, params);
+                        }
+                    }
                 }
             });
 
-            androidHead.setOnTouchListener(new View.OnTouchListener() {
+            bottomView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onTouch(View v, MotionEvent event) {
+                public void onClick(View v) {
+                    if (paramsTop.height != 0) {
+
+                        params.height = 2 * bottomView.getLayoutParams().height;
+                        bottomView.setLayoutParams(new ViewGroup.LayoutParams
+                                (params));
+                        wm.updateViewLayout(bottomView, params);
+                        paramsTop.height = 0;
+                        if (topView.getWindowToken() != null) {
+                            wm.removeView(topView);
+                        }
+
+
+                    } else {
+                        params.height = bottomView.getLayoutParams().height / 2;
+                        bottomView.setLayoutParams(new ViewGroup.LayoutParams
+                                (params));
+                        wm.updateViewLayout(bottomView, params);
+                        paramsTop.height = params.height;
+                        topView.setLayoutParams(new ViewGroup.LayoutParams
+                                (paramsTop));
+                        if (topView.getWindowToken() != null) {
+                            wm.updateViewLayout(topView, paramsTop);
+                        } else {
+                            wm.addView(topView, paramsTop);
+                        }
+
+
+                    }
+                }
+            });
+
+
+//            handler.postDelayed(runnableViewBottom, delay);
+//            topView.setOnTouchListener(new View.OnTouchListener() {
+//                @Override
+//                public boolean onTouch(View v, MotionEvent event) {
+//                    paramsTop.height = 2 * bottomView.getLayoutParams().height;
+//                    topView.setLayoutParams(new ViewGroup.LayoutParams
+//                            (paramsTop));
+//                    wm.updateViewLayout(topView, paramsTop);
+//                    params.height = 0;
+////                    bottomView.getLayoutParams().height = 0;
+//                    bottomView.setLayoutParams(new ViewGroup.LayoutParams
+//                            (params));
+//                    wm.updateViewLayout(bottomView, params);
+//
+////
+////
+////                    if (bottomView != null) {
+////
+////                    }
+//
+//                    return false;
+//                }
+//            });
+
+
+//            bottomView.setOnTouchListener(new View.OnTouchListener() {
+//                @Override
+//                public boolean onTouch(View v, MotionEvent event) {
 
 //                    if (!isTopAdded) {
 //                        //splitting logic
@@ -184,20 +248,17 @@ public class OverlayService extends Service {
 //                        }, delay);
 //                    }
 
-                    //Split logic
+            //Split logic
 
-                    paramsTop.height = androidHead.getLayoutParams().height;
-                    topView.setLayoutParams(new ViewGroup.LayoutParams
-                            (paramsTop));
-                    wm.updateViewLayout(topView, paramsTop);
-
-
-                    return false;
-                }
-            });
-
-
-
+//                    paramsTop.height = bottomView.getLayoutParams().height;
+//                    topView.setLayoutParams(new ViewGroup.LayoutParams
+//                            (paramsTop));
+//                    wm.updateViewLayout(topView, paramsTop);
+//
+//
+//                    return false;
+//                }
+//            });
 
 
         } catch (Exception e) {
@@ -218,8 +279,8 @@ public class OverlayService extends Service {
 
     private void removeView() {
         try {
-            if (androidHead != null && wm != null) {
-                wm.removeView(androidHead);
+            if (bottomView != null && wm != null) {
+                wm.removeView(bottomView);
                 wm.removeView(topView);
             }
         } catch (Exception e) {
