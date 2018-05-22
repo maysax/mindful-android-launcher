@@ -50,14 +50,12 @@ import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
-import co.siempo.phone.utils.FontUtils;
 import co.siempo.phone.utils.LifecycleHandler;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_BROWSER;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_CALENDAR;
@@ -206,7 +204,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     protected void init() {
         // set initial configurations here
         configTracer();
-        configCalligraphy();
+//        configCalligraphy();
         configFabric();
         configIconify();
         configureLifecycle();
@@ -394,11 +392,11 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     private void configCalligraphy() {
-        CalligraphyConfig
-                .initDefault(new CalligraphyConfig.Builder()
-                        .setDefaultFontPath(getString(FontUtils.DEFAULT_FONT_PATH_RES))
-                        .setFontAttrId(R.attr.fontPath)
-                        .build());
+//        CalligraphyConfig
+//                .initDefault(new CalligraphyConfig.Builder()
+//                        .setDefaultFontPath(getString(FontUtils.DEFAULT_FONT_PATH_RES))
+//                        .setFontAttrId(R.attr.fontPath)
+//                        .build());
     }
 
     private void configFabric() {

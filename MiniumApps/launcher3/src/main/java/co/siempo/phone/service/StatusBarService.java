@@ -1,5 +1,6 @@
 package co.siempo.phone.service;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -8,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
+import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -20,6 +22,11 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -37,8 +44,10 @@ import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBClient;
 import co.siempo.phone.event.AppInstalledEvent;
+import co.siempo.phone.event.LocationUpdateEvent;
 import co.siempo.phone.event.NotifySearchRefresh;
 import co.siempo.phone.event.OnBackPressedEvent;
+import co.siempo.phone.event.StartLocationEvent;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
@@ -59,13 +68,13 @@ public class StatusBarService extends Service {
     private AppInstallUninstall appInstallUninstall;
     private Vibrator vibrator;
     private CountDownTimer countDownTimer;
+    private FusedLocationProviderClient mFusedLocationClient;
+    private LocationRequest locationRequest;
+    private LocationCallback mLocationCallback;
     private UserPresentBroadcastReceiver userPresentBroadcastReceiver;
-
 
     public StatusBarService() {
     }
-
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -75,7 +84,6 @@ public class StatusBarService extends Service {
         registerObserverForAppInstallUninstall();
         EventBus.getDefault().register(this);
         registerTimerReceiver();
-
     }
 
     private void registerTimerReceiver() {
@@ -322,6 +330,58 @@ public class StatusBarService extends Service {
                 .LOCK_COUNTER_STATUS, false);
     }
 
+    @SuppressLint("MissingPermission")
+    public void getLocation() {
+        int timer_time = PrefSiempo.getInstance(context).read(PrefSiempo.LOCATION_TIMER_TIME, 1);
+        locationRequest = LocationRequest.create();
+        locationRequest.setInterval(timer_time * 60000);
+        locationRequest.setFastestInterval(500);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
+        if (mLocationCallback == null) {
+            mLocationCallback = new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    if (locationResult == null) {
+                        //return;
+                        Location mlocation = locationResult.getLastLocation();
+                        EventBus.getDefault().postSticky(new LocationUpdateEvent(mlocation));
+                    }
+                    List<Location> locations = locationResult.getLocations();
+                    for (Location location : locations) {
+                        // Update UI with location data
+                        // ...
+                        if (location != null) {
+                            Log.e("location details", "long: " + location.getLongitude() + "lat: " + location
+                                    .getLatitude());
+                            EventBus.getDefault().postSticky(new LocationUpdateEvent(location));
+                        }
+
+                    }
+                }
+            };
+        }
+        mFusedLocationClient.requestLocationUpdates(locationRequest,
+                mLocationCallback,
+                null);
+    }
+
+    public void stopLocationUpdates() {
+        if (mLocationCallback != null) {
+            mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+        }
+    }
+
+    @Subscribe
+    public void StartLocationEvent(StartLocationEvent event) {
+        boolean isLocationOn = event.getIsLocationOn();
+        if (!isLocationOn) {
+            stopLocationUpdates();
+        } else {
+            getLocation();
+        }
+    }
+
     private class MyObserver extends ContentObserver {
         MyObserver(Handler handler) {
             super(handler);
@@ -400,6 +460,7 @@ public class StatusBarService extends Service {
 
         }
     }
+
     public class UserPresentBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context arg0, Intent intent) {
