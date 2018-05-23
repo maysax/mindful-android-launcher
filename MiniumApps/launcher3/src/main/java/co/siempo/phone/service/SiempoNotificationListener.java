@@ -229,8 +229,14 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         filterByCategory(notification);
                     }
                 } else {
-                    int volume = PrefSiempo.getInstance(this).read(PrefSiempo.USER_VOLUME, audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
-                    audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, volume, 0);
+                    //Check for ringer mode
+                    if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                        int volume = PrefSiempo.getInstance(this).read(PrefSiempo.USER_VOLUME, audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+                        int sound = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM);
+                        if(sound==1) {
+                            audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, volume, 0);
+                        }
+                    }
 
                 }
             }
