@@ -108,7 +108,7 @@ public class OverlayService extends Service {
                     try {
                         if (bottomView.getWindowToken() != null && (bottomView
                                 .getLayoutParams().height != 0)) {
-                            if (params.height <= maxHeightWindow) {
+                            if (params.height + minusculeHeight < maxHeightWindow) {
                                 //Increase height of overlay
                                 params.height = params.height + minusculeHeight;
                                 bottomView.setLayoutParams(new ViewGroup.LayoutParams(params));
@@ -123,7 +123,8 @@ public class OverlayService extends Service {
 
                         if (topView.getWindowToken() != null && topView
                                 .getLayoutParams().height != 0) {
-                            if (paramsTop.height <= maxHeightWindow) {
+                            if (paramsTop.height + minusculeHeight <
+                                    maxHeightWindow) {
                                 //Increase height of overlay
                                 paramsTop.height = paramsTop
                                         .height + minusculeHeight;
