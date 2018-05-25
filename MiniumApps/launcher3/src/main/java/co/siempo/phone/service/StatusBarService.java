@@ -76,6 +76,8 @@ import static co.siempo.phone.utils.NotificationUtils.ANDROID_CHANNEL_ID;
 
 public class StatusBarService extends Service {
 
+    private static int whichPhaseRunning = 0;// 0 for nothing,1 for Grace,2 for cover,3 for break;
+    private static boolean deterUsageRunning = false;
     private Context context;
     private MyObserver myObserver;
     private AppInstallUninstall appInstallUninstall;
@@ -85,15 +87,27 @@ public class StatusBarService extends Service {
     private LocationCallback mLocationCallback;
     private UserPresentBroadcastReceiver userPresentBroadcastReceiver;
     private CountDownTimer countDownTimerGrace, countDownTimerCover, countDownTimerBreak;
-    private static int whichPhaseRunning = 0;// 0 for nothing,1 for Grace,2 for cover,3 for break;
-    private static boolean deterUsageRunning = false;
     private WindowManager wm;
-    private View androidHead;
+    private View bottomView;
+    private int heightWindow;
+    private int maxHeightWindow;
+    private int variableMaxHeightPortrait;
+    private int variableMaxHeightLandscape;
+
+    private int heightWindowLandscape;
+    private int maxHeightWindowLandscape;
+    private View topView;
+    private Runnable runnableViewBottom;
+    private int minusculeHeight;
+    private int minusculeHeightLandscape;
+    private WindowManager.LayoutParams paramsTop;
     private AppChecker appChecker;
     private TextView txtTime, txtCount;
     private LinearLayout linButtons, linProgress;
     private ProgressBar progressBar;
     private boolean isFullScreenView = false;
+    private WindowManager.LayoutParams paramsBottom;
+    private int screenHeightExclusive;
 
 
     public StatusBarService() {
@@ -463,124 +477,6 @@ public class StatusBarService extends Service {
         }
     }
 
-    private class MyObserver extends ContentObserver {
-        MyObserver(Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        public void onChange(boolean selfChange) {
-            this.onChange(selfChange, null);
-        }
-
-        @Override
-        public void onChange(boolean selfChange, Uri uri) {
-            PrefSiempo.getInstance(context).write(PrefSiempo.IS_CONTACT_UPDATE, true);
-//            PackageUtil.contactsUpdateInSearchList(context);
-        }
-    }
-
-    /**
-     * This broadcast is used to determine the application installed/uninstalled and update.
-     */
-    class AppInstallUninstall extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            try {
-                if (intent != null && intent.getAction() != null) {
-                    if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) {
-                        String installPackageName;
-                        if (intent.getData().getEncodedSchemeSpecificPart() != null) {
-                            if (!(intent.getExtras().containsKey(Intent.EXTRA_REPLACING) &&
-                                    intent.getExtras().getBoolean(Intent.EXTRA_REPLACING, false))) {
-                                installPackageName = intent.getData().getEncodedSchemeSpecificPart();
-                                addAppFromBlockedList(installPackageName);
-                                CoreApplication.getInstance().addOrRemoveApplicationInfo(true, installPackageName);
-                                reloadData();
-                            }
-                        }
-                    } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
-                        String uninstallPackageName;
-                        if (intent.getData().getEncodedSchemeSpecificPart() != null) {
-                            if (!(intent.getExtras().containsKey(Intent.EXTRA_REPLACING) &&
-                                    intent.getExtras().getBoolean(Intent.EXTRA_REPLACING, false))) {
-                                uninstallPackageName = intent.getData().getSchemeSpecificPart();
-                                if (!TextUtils.isEmpty(uninstallPackageName)) {
-                                    new DBClient().deleteMsgByPackageName(uninstallPackageName);
-                                    removeAppFromPreference(context, uninstallPackageName);
-                                    removeAppFromBlockedList(uninstallPackageName);
-                                    CoreApplication.getInstance().addOrRemoveApplicationInfo(false, uninstallPackageName);
-                                    reloadData();
-                                }
-                            }
-                        }
-                    } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED)) {
-                        String packageName;
-                        if (intent.getData().getEncodedSchemeSpecificPart() != null) {
-                            packageName = intent.getData().getSchemeSpecificPart();
-                            boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, packageName);
-                            if (isEnable) {
-                                if (!CoreApplication.getInstance().getPackagesList().contains(packageName)) {
-                                    addAppFromBlockedList(packageName);
-                                    CoreApplication.getInstance().addOrRemoveApplicationInfo(true, packageName);
-                                }
-                            } else {
-                                removeAppFromPreference(context, packageName);
-                                removeAppFromBlockedList(packageName);
-                                CoreApplication.getInstance().addOrRemoveApplicationInfo(false, packageName);
-                            }
-                            reloadData();
-                        }
-                    }
-                    PrefSiempo.getInstance(context).write
-                            (PrefSiempo.IS_APP_UPDATED, true);
-                    EventBus.getDefault().post(new AppInstalledEvent(true));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                CoreApplication.getInstance().logException(e);
-            }
-
-        }
-    }
-
-    /**
-     * This broadcast is used to determine the screen on/off flag.
-     */
-
-    public class UserPresentBroadcastReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context arg0, Intent intent) {
-            if (intent != null && intent.getAction() != null && null != arg0) {
-                if (PackageUtil.isSiempoLauncher(arg0) && (intent.getAction()
-                        .equals
-                                (Intent.ACTION_USER_PRESENT) ||
-                        intent.getAction().equals(Intent.ACTION_SCREEN_ON))) {
-
-                    if (countDownTimer != null) {
-                        countDownTimer.cancel();
-                        PrefSiempo.getInstance(context).write(PrefSiempo
-                                .LOCK_COUNTER_STATUS, false);
-                    }
-                    if (countDownTimerBreak != null) {
-                        countDownTimerBreak.cancel();
-                        countDownTimerBreak = null;
-                        deterUsageRunning = false;
-                        isFullScreenView = false;
-                        whichPhaseRunning = 0;
-                        resetAllTimer();
-                        removeView();
-                        PrefSiempo.getInstance(context).write(PrefSiempo.BREAK_TIME, 0L);
-                    }
-                } else if (intent.getAction().equals(Intent
-                        .ACTION_SCREEN_OFF)) {
-                    startLockScreenTimer();
-                }
-            }
-        }
-    }
-
     @Subscribe
     public void reduceOverUsageEvent(ReduceOverUsageEvent reduceOverUsageEvent) {
 //        if (reduceOverUsageEvent.isStartEvent()) {
@@ -789,75 +685,132 @@ public class StatusBarService extends Service {
     private void addOverlayWindow(final int coverTime) {
         try {
             wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-
-            Display display = null;
-            if (wm != null) {
-                display = wm.getDefaultDisplay();
-            }
-            final Point size = new Point();
+            Display display = wm.getDefaultDisplay();
+            Point size = new Point();
             display.getSize(size);
-            final int maxHeightCoverWindow = size.y * 6 / 9;
-            final WindowManager.LayoutParams params = new WindowManager.LayoutParams();
-            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-            params.gravity = Gravity.BOTTOM;
+
+            screenHeightExclusive = (size.y - (getNavigationBarHeight()
+                    + getStatusBarHeight()));
+            heightWindow = (size.y - (getNavigationBarHeight()
+                    + getStatusBarHeight())) * 6 / 9;
+
+            heightWindowLandscape = (size.x) * 6 / 9;
+            maxHeightWindowLandscape = heightWindowLandscape;
+            paramsTop = new WindowManager
+                    .LayoutParams();
+
+            paramsBottom = new WindowManager
+                    .LayoutParams();
+
+            maxHeightWindow = heightWindow;
+            variableMaxHeightPortrait = heightWindow;
+            variableMaxHeightLandscape = heightWindowLandscape;
+            minusculeHeight = screenHeightExclusive / 9;
+            minusculeHeightLandscape = heightWindowLandscape / 9;
+            paramsBottom.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            paramsBottom.height = minusculeHeight;
+            paramsBottom.gravity = Gravity.BOTTOM;
+
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-                params.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
-            } else {
-                params.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+                paramsBottom.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                paramsBottom.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
             }
-            params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
+
+            paramsBottom.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
                     WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-            params.format = PixelFormat.TRANSLUCENT;
+
+            paramsBottom.format = PixelFormat.TRANSLUCENT;
+
+
+            topView = ((LayoutInflater) getSystemService(Context
+                    .LAYOUT_INFLATER_SERVICE)).inflate(R.layout
+                    .gray_scale_layout_reverse, null);
+            paramsTop.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            paramsTop.height = 0;
+            paramsTop.gravity = Gravity.TOP;
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                paramsTop.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                paramsTop.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+            }
+
+            paramsTop.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
+                    WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+
+            paramsTop.format = PixelFormat.TRANSLUCENT;
+
+            display.getSize(size);
+            final int maxHeightCoverWindow = screenHeightExclusive * 6 / 9;
+            paramsBottom = new WindowManager.LayoutParams();
+            paramsBottom.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            paramsBottom.gravity = Gravity.BOTTOM;
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                paramsBottom.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+            } else {
+                paramsBottom.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+            }
+            paramsBottom.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
+                    WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+            paramsBottom.format = PixelFormat.TRANSLUCENT;
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                paramsTop.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                paramsTop.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+            }
 
 
             switch (coverTime) {
                 case 0:
-                    params.height = size.y / 9;
-                    Log.d("DeterUse : Screen 0/9 :", "" + params.height);
+                    paramsBottom.height = screenHeightExclusive / 9;
+                    Log.d("DeterUse : Screen 0/9 :", "" + paramsBottom.height);
                     break;
                 case 1:
-                    params.height = size.y * 2 / 9;
-                    Log.d("DeterUse : Screen 2/9 :", "" + params.height);
+                    paramsBottom.height = screenHeightExclusive * 2 / 9;
+                    Log.d("DeterUse : Screen 2/9 :", "" + paramsBottom.height);
                     break;
                 case 2:
-                    params.height = size.y * 3 / 9;
-                    Log.d("DeterUse : Screen 3/9 :", "" + params.height);
+                    paramsBottom.height = screenHeightExclusive * 3 / 9;
+                    Log.d("DeterUse : Screen 3/9 :", "" + paramsBottom.height);
                     break;
                 case 3:
-                    params.height = size.y * 4 / 9;
-                    Log.d("DeterUse : Screen 4/9 :", "" + params.height);
+                    paramsBottom.height = screenHeightExclusive * 4 / 9;
+                    Log.d("DeterUse : Screen 4/9 :", "" + paramsBottom.height);
                     break;
                 case 4:
-                    params.height = size.y * 5 / 9;
-                    Log.d("DeterUse : Screen 5/9 :", "" + params.height);
+                    paramsBottom.height = screenHeightExclusive * 5 / 9;
+                    Log.d("DeterUse : Screen 5/9 :", "" + paramsBottom.height);
                     break;
                 case 5:
-                    params.height = size.y * 6 / 9;
-                    Log.d("DeterUse : Screen 6/9 :", "" + params.height);
+                    paramsBottom.height = screenHeightExclusive * 6 / 9;
+                    Log.d("DeterUse : Screen 6/9 :", "" + paramsBottom.height);
                     break;
                 case 6:
-                    params.height = ViewGroup.LayoutParams.MATCH_PARENT;
-                    Log.d("DeterUse : Screen 7/9 :", "" + params.height);
+                    paramsBottom.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                    Log.d("DeterUse : Screen 7/9 :", "" + paramsBottom.height);
                     break;
 
             }
 
-            if (androidHead == null) {
-                androidHead = ((LayoutInflater) getSystemService(Context
+            if (bottomView == null) {
+                bottomView = ((LayoutInflater) getSystemService(Context
                         .LAYOUT_INFLATER_SERVICE)).inflate(R.layout
                         .gray_scale_layout, null);
-                txtTime = androidHead.findViewById(R.id.txtTime);
-                linButtons = androidHead.findViewById(R.id.linButtons);
-                linProgress = androidHead.findViewById(R.id.linProgress);
-                progressBar = androidHead.findViewById(R.id.progress);
+                txtTime = bottomView.findViewById(R.id.txtTime);
+                linButtons = bottomView.findViewById(R.id.linButtons);
+                linProgress = bottomView.findViewById(R.id.linProgress);
+                progressBar = bottomView.findViewById(R.id.progress);
                 int value = (int) TimeUnit.MINUTES.toSeconds(PrefSiempo.getInstance(context).read(PrefSiempo.BREAK_PERIOD, 1));
                 progressBar.setMax(value);
-                txtCount = androidHead.findViewById(R.id.txtCount);
+                txtCount = bottomView.findViewById(R.id.txtCount);
                 if (isFullScreenView) {
-                    if (params.height != ViewGroup.LayoutParams.MATCH_PARENT) {
-                        params.height = ViewGroup.LayoutParams.MATCH_PARENT;
-                        androidHead.setLayoutParams(new ViewGroup.LayoutParams(params));
-                        if (wm != null) wm.updateViewLayout(androidHead, params);
+                    if (paramsBottom.height != ViewGroup.LayoutParams.MATCH_PARENT) {
+                        paramsBottom.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                        bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
+                        if (wm != null)
+                            wm.updateViewLayout(bottomView, paramsBottom);
                         if (linButtons != null && linProgress != null) {
                             linProgress.setVisibility(View.VISIBLE);
                             linButtons.setVisibility(View.GONE);
@@ -887,9 +840,10 @@ public class StatusBarService extends Service {
                             countDownTimerCover = null;
                         }
                         PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
-                        params.height = ViewGroup.LayoutParams.MATCH_PARENT;
-                        androidHead.setLayoutParams(new ViewGroup.LayoutParams(params));
-                        if (wm != null) wm.updateViewLayout(androidHead, params);
+                        paramsBottom.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                        bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
+                        if (wm != null)
+                            wm.updateViewLayout(bottomView, paramsBottom);
                         if (linButtons != null && linProgress != null) {
                             linProgress.setVisibility(View.VISIBLE);
                             linButtons.setVisibility(View.GONE);
@@ -898,8 +852,118 @@ public class StatusBarService extends Service {
                     }
                 });
                 if (null != wm) {
-                    wm.addView(androidHead, params);
+                    wm.addView(bottomView, paramsBottom);
+                    wm.addView(topView, paramsTop);
+                    topView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (paramsBottom.height != 0) {
+                                paramsTop.height = topView.getHeight() +
+                                        bottomView.getHeight();
+                                topView.setLayoutParams(new ViewGroup.LayoutParams
+                                        (paramsTop));
+                                wm.updateViewLayout(topView, paramsTop);
+                                paramsBottom.height = 0;
+                                if (bottomView.getWindowToken() != null) {
+                                    wm.removeView(bottomView);
+                                }
+                                variableMaxHeightPortrait = heightWindow;
+                                variableMaxHeightLandscape = heightWindowLandscape;
+                            } else {
+                                if (paramsTop.height != minusculeHeight) {
+                                    paramsTop.height = topView.getHeight() / 2;
+                                    topView.setLayoutParams(new ViewGroup.LayoutParams
+                                            (paramsTop));
+                                    wm.updateViewLayout(topView, paramsTop);
+                                    paramsBottom.height = paramsTop.height;
+                                    bottomView.setLayoutParams(new ViewGroup.LayoutParams
+                                            (paramsBottom));
+                                    if (bottomView.getWindowToken() != null) {
+                                        wm.updateViewLayout(bottomView, paramsBottom);
+                                    } else {
+                                        wm.addView(bottomView, paramsBottom);
+                                    }
+//                        handler.postDelayed(runnableViewBottom, delay);
+                                    variableMaxHeightPortrait = heightWindow / 2;
+                                    variableMaxHeightLandscape = heightWindowLandscape / 2;
+                                } else if (paramsTop.height == minusculeHeight) {
+                                    //code for shifting bottom view to top
+                                    paramsTop.height = 0;
+                                    topView.setLayoutParams(new ViewGroup.LayoutParams
+                                            (paramsTop));
+                                    wm.updateViewLayout(topView, paramsTop);
+                                    paramsBottom.height = minusculeHeight;
+                                    bottomView.setLayoutParams(new ViewGroup.LayoutParams
+                                            (paramsBottom));
+                                    if (bottomView.getWindowToken() != null) {
+                                        wm.updateViewLayout(bottomView, paramsBottom);
+                                    } else {
+                                        wm.addView(bottomView, paramsBottom);
+                                    }
+
+                                }
+                            }
+
+                        }
+                    });
+
+                    bottomView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (paramsTop.height != 0) {
+
+                                paramsBottom.height = topView.getHeight() +
+                                        bottomView.getHeight();
+                                bottomView.setLayoutParams(new ViewGroup.LayoutParams
+                                        (paramsBottom));
+                                wm.updateViewLayout(bottomView, paramsBottom);
+                                paramsTop.height = 0;
+                                if (topView.getWindowToken() != null) {
+                                    wm.removeView(topView);
+                                }
+                                variableMaxHeightPortrait = heightWindow;
+                                variableMaxHeightLandscape = heightWindowLandscape;
+
+                            } else {
+
+                                if (paramsBottom.height != minusculeHeight) {
+                                    paramsBottom.height = bottomView.getHeight() / 2;
+                                    bottomView.setLayoutParams(new ViewGroup.LayoutParams
+                                            (paramsBottom));
+                                    wm.updateViewLayout(bottomView, paramsBottom);
+                                    paramsTop.height = paramsBottom.height;
+                                    topView.setLayoutParams(new ViewGroup.LayoutParams
+                                            (paramsTop));
+                                    if (topView.getWindowToken() != null) {
+                                        wm.updateViewLayout(topView, paramsTop);
+                                    } else {
+                                        wm.addView(topView, paramsTop);
+                                    }
+                                    variableMaxHeightPortrait = heightWindow / 2;
+                                    variableMaxHeightLandscape = heightWindowLandscape / 2;
+                                } else if (paramsBottom.height == minusculeHeight) {
+//                                    //code for shifting bottom view to top
+//                                    paramsBottom.height = 0;
+//                                    bottomView.setLayoutParams(new ViewGroup.LayoutParams
+//                                            (paramsBottom));
+//                                    wm.updateViewLayout(bottomView, paramsBottom);
+//                                    paramsTop.height = minusculeHeight;
+//                                    topView.setLayoutParams(new ViewGroup.LayoutParams
+//                                            (paramsTop));
+//                                    if (topView.getWindowToken() != null) {
+//                                        wm.updateViewLayout(topView, paramsTop);
+//                                    } else {
+//                                        wm.addView(topView, paramsTop);
+//                                    }
+
+                                }
+
+                            }
+                        }
+                    });
                 }
+
+
             } else {
                 try {
                     if (isFullScreenView) {
@@ -913,11 +977,12 @@ public class StatusBarService extends Service {
                             PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
                         }
                     } else {
-                        if (params.height <= maxHeightCoverWindow) {
+                        if (paramsBottom.height <= maxHeightCoverWindow) {
                             //Increase height of overlay
-                            params.height = params.height + (size.y / 9);
-                            androidHead.setLayoutParams(new ViewGroup.LayoutParams(params));
-                            if (wm != null) wm.updateViewLayout(androidHead, params);
+                            paramsBottom.height = paramsBottom.height + (size.y / 9);
+                            bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
+                            if (wm != null)
+                                wm.updateViewLayout(bottomView, paramsBottom);
                         }
                     }
                 } catch (Exception e) {
@@ -934,12 +999,155 @@ public class StatusBarService extends Service {
      */
     private void removeView() {
         try {
-            if (androidHead != null && wm != null) {
-                wm.removeView(androidHead);
-                androidHead = null;
+            if (bottomView != null && wm != null) {
+                wm.removeView(bottomView);
+                bottomView = null;
             }
+
+            if (topView != null && wm != null && topView.getWindowToken()
+                    != null) {
+                wm.removeView(topView);
+                topView = null;
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public int getNavigationBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
+    private class MyObserver extends ContentObserver {
+        MyObserver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            this.onChange(selfChange, null);
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            PrefSiempo.getInstance(context).write(PrefSiempo.IS_CONTACT_UPDATE, true);
+//            PackageUtil.contactsUpdateInSearchList(context);
+        }
+    }
+
+    /**
+     * This broadcast is used to determine the application installed/uninstalled and update.
+     */
+    class AppInstallUninstall extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                if (intent != null && intent.getAction() != null) {
+                    if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) {
+                        String installPackageName;
+                        if (intent.getData().getEncodedSchemeSpecificPart() != null) {
+                            if (!(intent.getExtras().containsKey(Intent.EXTRA_REPLACING) &&
+                                    intent.getExtras().getBoolean(Intent.EXTRA_REPLACING, false))) {
+                                installPackageName = intent.getData().getEncodedSchemeSpecificPart();
+                                addAppFromBlockedList(installPackageName);
+                                CoreApplication.getInstance().addOrRemoveApplicationInfo(true, installPackageName);
+                                reloadData();
+                            }
+                        }
+                    } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
+                        String uninstallPackageName;
+                        if (intent.getData().getEncodedSchemeSpecificPart() != null) {
+                            if (!(intent.getExtras().containsKey(Intent.EXTRA_REPLACING) &&
+                                    intent.getExtras().getBoolean(Intent.EXTRA_REPLACING, false))) {
+                                uninstallPackageName = intent.getData().getSchemeSpecificPart();
+                                if (!TextUtils.isEmpty(uninstallPackageName)) {
+                                    new DBClient().deleteMsgByPackageName(uninstallPackageName);
+                                    removeAppFromPreference(context, uninstallPackageName);
+                                    removeAppFromBlockedList(uninstallPackageName);
+                                    CoreApplication.getInstance().addOrRemoveApplicationInfo(false, uninstallPackageName);
+                                    reloadData();
+                                }
+                            }
+                        }
+                    } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED)) {
+                        String packageName;
+                        if (intent.getData().getEncodedSchemeSpecificPart() != null) {
+                            packageName = intent.getData().getSchemeSpecificPart();
+                            boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, packageName);
+                            if (isEnable) {
+                                if (!CoreApplication.getInstance().getPackagesList().contains(packageName)) {
+                                    addAppFromBlockedList(packageName);
+                                    CoreApplication.getInstance().addOrRemoveApplicationInfo(true, packageName);
+                                }
+                            } else {
+                                removeAppFromPreference(context, packageName);
+                                removeAppFromBlockedList(packageName);
+                                CoreApplication.getInstance().addOrRemoveApplicationInfo(false, packageName);
+                            }
+                            reloadData();
+                        }
+                    }
+                    PrefSiempo.getInstance(context).write
+                            (PrefSiempo.IS_APP_UPDATED, true);
+                    EventBus.getDefault().post(new AppInstalledEvent(true));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                CoreApplication.getInstance().logException(e);
+            }
+
+        }
+    }
+
+    /**
+     * This broadcast is used to determine the screen on/off flag.
+     */
+
+    public class UserPresentBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context arg0, Intent intent) {
+            if (intent != null && intent.getAction() != null && null != arg0) {
+                if (PackageUtil.isSiempoLauncher(arg0) && (intent.getAction()
+                        .equals
+                                (Intent.ACTION_USER_PRESENT) ||
+                        intent.getAction().equals(Intent.ACTION_SCREEN_ON))) {
+
+                    if (countDownTimer != null) {
+                        countDownTimer.cancel();
+                        PrefSiempo.getInstance(context).write(PrefSiempo
+                                .LOCK_COUNTER_STATUS, false);
+                    }
+                    if (countDownTimerBreak != null) {
+                        countDownTimerBreak.cancel();
+                        countDownTimerBreak = null;
+                        deterUsageRunning = false;
+                        isFullScreenView = false;
+                        whichPhaseRunning = 0;
+                        resetAllTimer();
+                        removeView();
+                        PrefSiempo.getInstance(context).write(PrefSiempo.BREAK_TIME, 0L);
+                    }
+                } else if (intent.getAction().equals(Intent
+                        .ACTION_SCREEN_OFF)) {
+                    startLockScreenTimer();
+                }
+            }
         }
     }
 }
