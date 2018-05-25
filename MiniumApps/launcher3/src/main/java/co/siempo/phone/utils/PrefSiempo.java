@@ -110,6 +110,7 @@ public class PrefSiempo {
     public static final String GRACE_TIME = "grace_time";
     public static final String COVER_TIME = "cover_time";
     public static final String BREAK_TIME = "break_time";
+    public static final String IS_SETTINGS_PRESSED = "is_settings_pressed";
 
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
