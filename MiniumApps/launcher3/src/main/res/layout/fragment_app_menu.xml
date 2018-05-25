@@ -25,9 +25,12 @@
                 android:id="@+id/relHideIconBranding"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginRight="@dimen/dp_5"
                 android:layout_marginTop="8dp"
                 android:clickable="true"
-                android:paddingLeft="50dp">
+                android:paddingLeft="50dp"
+                android:focusable="true">
 
                 <co.siempo.phone.customviews.RobotoRegularTextView
                     android:id="@+id/txtTemp"
@@ -81,6 +84,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/relHideIconBranding"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginRight="@dimen/dp_5"
                 android:layout_marginTop="8dp"
                 android:clickable="true"
                 android:paddingLeft="50dp"
@@ -137,10 +142,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/relReduceOveruseScreen"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginRight="@dimen/dp_5"
                 android:layout_marginTop="8dp"
                 android:clickable="true"
                 android:paddingLeft="50dp"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <co.siempo.phone.customviews.RobotoRegularTextView
                     android:id="@+id/txtReduceOveruseFlagged"
@@ -188,12 +195,13 @@
                     android:textSize="14sp" />
             </RelativeLayout>
 
-
             <RelativeLayout
                 android:id="@+id/relJunkFoodmize"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/relReduceOveruseFlagged"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginRight="@dimen/dp_5"
                 android:layout_marginTop="8dp"
                 android:clickable="true"
                 android:paddingLeft="50dp">
@@ -251,6 +259,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/relJunkFoodmize"
                 android:layout_marginBottom="16dp"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginRight="@dimen/dp_5"
                 android:layout_marginTop="8dp"
                 android:clickable="true"
                 android:paddingLeft="50dp">
