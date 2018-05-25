@@ -1,21 +1,36 @@
 package co.siempo.phone.fragments;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.AppOpsManager;
+import android.app.Dialog;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.JunkfoodFlaggingActivity;
@@ -47,19 +62,27 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
     private String[] deter_after_list;
     private int index;
     private String txtOverUseFlag;
-
+    private Dialog overlayDialogPermission;
+    boolean isFromFlag = false;
 
     public AppMenuFragment() {
         // Required empty public constructor
     }
 
-    public static AppMenuFragment newInstance() {
-        return new AppMenuFragment();
+    public static AppMenuFragment newInstance(boolean isFromFlag) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("FlagApp", isFromFlag);
+        AppMenuFragment appMenuFragment = new AppMenuFragment();
+        appMenuFragment.setArguments(bundle);
+        return appMenuFragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            isFromFlag = getArguments().getBoolean("FlagApp");
+        }
     }
 
     @Override
@@ -144,14 +167,25 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
         mRelOverUseFlaggedApp = view.findViewById(R.id.relReduceOveruseFlagged);
         mRelOverUseFlaggedApp.setOnClickListener(this);
         mTxtReduceOveruseFlaggedDes = view.findViewById(R.id.txtReduceOveruseFlaggedDes);
+        if (isFromFlag) {
+            mRelOverUseFlaggedApp.setBackground(getResources().getDrawable(R.drawable.rounded_card));
+
+            int marginInDpLeft = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 50, getResources()
+                            .getDisplayMetrics());
+            int marginInDpBottom = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 5, getResources()
+                            .getDisplayMetrics());
+            mRelOverUseFlaggedApp.setPadding(marginInDpLeft, 0, 0, marginInDpBottom);
+        } else {
+            mRelOverUseFlaggedApp.setBackground(null);
+        }
 
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            default:
-                break;
             case R.id.relJunkFoodmize:
                 if (switchJunkFoodmize.isChecked()) {
                     switchJunkFoodmize.setChecked(false);
@@ -187,9 +221,71 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
                 startActivity(junkFoodFlagIntent);
                 break;
             case R.id.relReduceOveruseFlagged:
-                showDialog();
+                requestUsageStatsPermission();
+                break;
+            default:
+                break;
         }
     }
+
+    void requestUsageStatsPermission() {
+        if (!hasUsageStatsPermission(getActivity())) {
+            startActivityForResult(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), 100);
+        } else {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                if (!Settings.canDrawOverlays(context)) {
+//                    if (null == overlayDialogPermission || !overlayDialogPermission.isShowing())
+//                        showOverLayForDrawingPermission();
+//                } else {
+//                    showDialog();
+//                }
+//            } else {
+            showDialog();
+//            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 100) {
+            if (!hasUsageStatsPermission(getActivity())) {
+                Toast.makeText(getActivity(), R.string.msg_control_access, Toast.LENGTH_SHORT).show();
+            } else {
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    if (!Settings.canDrawOverlays(context)) {
+//                        if (null == overlayDialogPermission || !overlayDialogPermission.isShowing())
+//                            showOverLayForDrawingPermission();
+//                    } else {
+//                        showDialog();
+//                    }
+//                } else {
+                showDialog();
+//                }
+            }
+        } else if (requestCode == 1000) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (!Settings.canDrawOverlays(context)) {
+                    Toast.makeText(getActivity(), R.string.msg_draw_over_app, Toast.LENGTH_SHORT).show();
+                } else {
+                    showDialog();
+                }
+            } else {
+                showDialog();
+            }
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    boolean hasUsageStatsPermission(Context context) {
+        AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+        int mode = 0;
+        if (appOps != null) {
+            mode = appOps.checkOpNoThrow("android:get_usage_stats",
+                    android.os.Process.myUid(), context.getPackageName());
+        }
+        return mode == AppOpsManager.MODE_ALLOWED;
+    }
+
 
     private void showDialog() {
         index = -1;
@@ -273,7 +369,6 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
         FirebaseHelper.getInstance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
     }
 
-
     private void showDialogOnHideIconBranding() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getString(R.string.are_you_sure));
@@ -303,4 +398,81 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(getActivity(), R.color.dialog_blue));
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(getActivity(), R.color.dialog_red));
     }
+
+    private void showOverLayForDrawingPermission() {
+        if (null != getActivity()) {
+            try {
+                getActivity().setRequestedOrientation(ActivityInfo
+                        .SCREEN_ORIENTATION_PORTRAIT);
+                overlayDialogPermission = new Dialog(getActivity(), 0);
+                if (overlayDialogPermission.getWindow() != null)
+                    overlayDialogPermission.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                overlayDialogPermission.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                overlayDialogPermission.setContentView(R.layout
+                        .layout_appland_draw_permission);
+                Window window = overlayDialogPermission.getWindow();
+                // set "origin" to bottom
+                window.setGravity(Gravity.BOTTOM);
+                WindowManager.LayoutParams params = window.getAttributes();
+                window.setAttributes(params);
+                overlayDialogPermission.getWindow().setLayout(WindowManager
+                        .LayoutParams.MATCH_PARENT, WindowManager
+                        .LayoutParams.WRAP_CONTENT);
+                overlayDialogPermission.setCancelable(true);
+                overlayDialogPermission.setCanceledOnTouchOutside(true);
+                overlayDialogPermission.show();
+
+                final ViewFlipper viewFlipperOverlay = overlayDialogPermission
+                        .findViewById(R.id.viewFlipperPermissionDrawOverlay);
+                final Button btnEnable = overlayDialogPermission.findViewById
+                        (R.id.btnEnable);
+
+                final Button btnGotIt = overlayDialogPermission.findViewById
+                        (R.id.btnGotIt);
+                final Button btnLater = overlayDialogPermission.findViewById(R.id.btnLater);
+                btnLater.setText(getString(R.string.cancel));
+                btnLater.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        overlayDialogPermission.dismiss();
+                    }
+                });
+
+                btnEnable.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        viewFlipperOverlay.setInAnimation(context, R.anim
+                                .in_from_right_email);
+                        viewFlipperOverlay.setOutAnimation(context, R.anim
+                                .out_to_left_email);
+                        viewFlipperOverlay.setDisplayedChild(1);
+
+
+                    }
+                });
+
+                btnGotIt.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        overlayDialogPermission.dismiss();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            if (!Settings.canDrawOverlays(context)) {
+                                Intent intent = new Intent(Settings
+                                        .ACTION_MANAGE_OVERLAY_PERMISSION,
+                                        Uri.parse("package:" +
+                                                context.getPackageName()));
+                                startActivityForResult(intent, 1000);
+                            }
+                        }
+                    }
+                });
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
 }

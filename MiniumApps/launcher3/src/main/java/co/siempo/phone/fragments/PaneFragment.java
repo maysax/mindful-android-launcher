@@ -57,6 +57,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.activities.JunkfoodFlaggingActivity;
+import co.siempo.phone.activities.SettingsActivity_;
 import co.siempo.phone.adapters.MainListAdapter;
 import co.siempo.phone.adapters.PanePagerAdapter;
 import co.siempo.phone.adapters.ToolsMenuAdapter;
@@ -411,7 +412,7 @@ public class PaneFragment extends CoreFragment {
     private void bindBottomDock() {
 
         mLayoutManager = new GridLayoutManager(getActivity(), 4);
-        if (null != recyclerViewBottomDoc) {
+        if (null != mLayoutManager && recyclerViewBottomDoc != null) {
             recyclerViewBottomDoc.setLayoutManager(mLayoutManager);
             if (itemDecoration != null) {
                 recyclerViewBottomDoc.removeItemDecoration(itemDecoration);
@@ -482,17 +483,15 @@ public class PaneFragment extends CoreFragment {
                                 //Show overlay for draw over other apps permission
 
 
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                    if (!Settings.canDrawOverlays(context) &&
-                                            PrefSiempo.getInstance(context).read
-                                                    (PrefSiempo.JUNK_RESTRICTED,
-                                                            false)) {
-                                        if (null == overlayDialogPermission ||
-                                                !overlayDialogPermission.isShowing()) {
-                                            showOverLayForDrawingPermission();
-                                        }
-                                    }
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (!Settings.canDrawOverlays(context) &&
+                                        PrefSiempo.getInstance(context).read
+                                                (PrefSiempo.DETER_AFTER,
+                                                        -1) != -1) {
+                                    if (null == overlayDialogPermission || !overlayDialogPermission.isShowing())
+                                        showOverLayForDrawingPermission();
                                 }
+                            }
 
 
                             }
@@ -1054,9 +1053,19 @@ public class PaneFragment extends CoreFragment {
                         .findViewById(R.id.viewFlipperPermissionDrawOverlay);
                 final Button btnEnable = overlayDialogPermission.findViewById
                         (R.id.btnEnable);
+                final Button btnLater = overlayDialogPermission.findViewById
+                        (R.id.btnLater);
 
                 final Button btnGotIt = overlayDialogPermission.findViewById
                         (R.id.btnGotIt);
+                btnLater.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), SettingsActivity_.class);
+                        intent.putExtra("FlagApp", true);
+                        startActivity(intent);
+                    }
+                });
 
                 btnEnable.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1070,7 +1079,6 @@ public class PaneFragment extends CoreFragment {
 
                     }
                 });
-
                 btnGotIt.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -1173,8 +1181,6 @@ public class PaneFragment extends CoreFragment {
                 listView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 listView.requestLayout();
             }
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1184,12 +1190,12 @@ public class PaneFragment extends CoreFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1000) {
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (Settings.canDrawOverlays(context)) {
                     Toast.makeText(context, R.string.success_msg, Toast
                             .LENGTH_SHORT).show();
-
+                    if (overlayDialogPermission != null && overlayDialogPermission.isShowing())
+                        overlayDialogPermission.dismiss();
                 }
             }
         }
