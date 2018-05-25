@@ -42,10 +42,10 @@ import co.siempo.phone.app.Config;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.DownloadApkEvent;
 import co.siempo.phone.event.JunkAppOpenEvent;
+import co.siempo.phone.event.ReduceOverUsageEvent;
 import co.siempo.phone.helper.Validate;
 import co.siempo.phone.interfaces.NFCInterface;
 import co.siempo.phone.log.Tracer;
-import co.siempo.phone.service.OverlayService;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.EventBus;
@@ -148,12 +148,14 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     protected void onResume() {
         super.onResume();
         isOnStopCalled = false;
-        try {
-            Intent intent = new Intent(this, OverlayService.class);
-            stopService(intent);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        EventBus.getDefault().post(new ReduceOverUsageEvent(false));
+//        try {
+//            Intent intent = new Intent(this, OverlayService.class);
+//            stopService(intent);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
     }
 
     @Override
@@ -161,11 +163,12 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
         setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
         super.onNewIntent(intent);
-        try {
-            stopService(new Intent(this, OverlayService.class));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        EventBus.getDefault().post(new ReduceOverUsageEvent(false));
+//        try {
+//            stopService(new Intent(this, OverlayService.class));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void loadDialog() {
@@ -404,18 +407,18 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     public void onEvent(JunkAppOpenEvent junkAppOpenEvent) {
         if (junkAppOpenEvent != null && junkAppOpenEvent.isNotify()) {
             try {
-                if (PackageUtil.isSiempoLauncher(this) && PrefSiempo
-                        .getInstance(this).read
-                                (PrefSiempo.JUNK_RESTRICTED,
-                                        false)) {
-                    Intent intent = new Intent(this, OverlayService.class);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings
-                            .canDrawOverlays(this)) {
-                        startService(intent);
-                    } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                        startService(intent);
-                    }
-                }
+//                if (PackageUtil.isSiempoLauncher(this) && PrefSiempo
+//                        .getInstance(this).read
+//                                (PrefSiempo.JUNK_RESTRICTED,
+//                                        false)) {
+//                    Intent intent = new Intent(this, OverlayService.class);
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings
+//                            .canDrawOverlays(this)) {
+//                        startService(intent);
+//                    } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+//                        startService(intent);
+//                    }
+//                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

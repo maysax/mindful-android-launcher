@@ -50,7 +50,7 @@ android {
     productFlavors {
         alpha {
             dimension "Siempo"
-            versionCode 11801
+            versionCode 11802
             versionName "${0}.${0}.${11}.${8}-${buildTime}"
         }
         beta {
@@ -149,7 +149,7 @@ dependencies {
     annotationProcessor "org.androidannotations:androidannotations:$annotationsVersion"
     implementation "com.amitshekhar.android:android-networking:$fastAndroidNetworkingVersion"
     compile 'com.jaeger.statusbarutil:library:1.4.0'
-
+    compile 'com.rvalerio:fgchecker:1.1.0'
 }
 greendao {
     schemaVersion "${databaseVersion}".toInteger()
