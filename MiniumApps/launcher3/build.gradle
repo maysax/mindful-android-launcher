@@ -51,12 +51,12 @@ android {
         alpha {
             dimension "Siempo"
             versionCode 11802
-            versionName "${0}.${0}.${11}.${8}-${buildTime}"
+            versionName "${0}.${0}.${11}.${8}"
         }
         beta {
             dimension "Siempo"
-            versionCode 11811
-            versionName "${0}.${1}.${3}.${0}-${buildTime}"
+            versionCode 11813
+            versionName "${0}.${1}.${3}.${2}"
         }
     }
 
