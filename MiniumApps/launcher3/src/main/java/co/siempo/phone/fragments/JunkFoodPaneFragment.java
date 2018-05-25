@@ -61,13 +61,13 @@ public class JunkFoodPaneFragment extends CoreFragment {
     @Override
     public void setMenuVisibility(boolean menuVisible) {
         super.setMenuVisibility(menuVisible);
-        if (CoreApplication.getInstance().isRandomize()) {
+       /* if (CoreApplication.getInstance().isRandomize()) {
             Collections.shuffle(CoreApplication.getInstance().getJunkFoodList());
-            items = CoreApplication.getInstance().getJunkFoodList();
+            items = CoreApplication.getInstance().getJunkFoodList();*/
             if (mAdapter != null) {
                 mAdapter.setMainListItemList(items, CoreApplication.getInstance().isHideIconBranding());
             }
-        }
+        // }
     }
 
 
@@ -110,7 +110,12 @@ public class JunkFoodPaneFragment extends CoreFragment {
             if (recyclerView != null) {
                 recyclerView.scrollToPosition(0);
             }
+            if (CoreApplication.getInstance().isRandomize()) {
+                Collections.shuffle(CoreApplication.getInstance().getJunkFoodList());
+                items = CoreApplication.getInstance().getJunkFoodList();
+            }
         }
+
     }
 
 

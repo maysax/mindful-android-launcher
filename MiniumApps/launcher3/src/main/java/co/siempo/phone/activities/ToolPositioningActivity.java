@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -19,13 +20,17 @@ import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.jaeger.library.StatusBarUtil;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -64,6 +69,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
     private LinearLayout linearTop;
     private long startTime = 0;
     private RelativeLayout relMain;
+    private ImageView imgBackground;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,20 +77,34 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         setContentView(R.layout.activity_tool_positioning);
         relMain = findViewById(R.id.relMain);
         linMain = findViewById(R.id.linMain);
+        imgBackground = findViewById(R.id.imgBackground);
         String filePath = PrefSiempo.getInstance(this).read(PrefSiempo
                 .DEFAULT_BAG, "");
-        if (!TextUtils.isEmpty(filePath)) {
+
+        try {
+            if (!TextUtils.isEmpty(filePath)) {
 
 
-            Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-            BitmapDrawable ob = new BitmapDrawable(getResources(), bitmap);
-            //Code for Applying background
-            relMain.setBackground(ob);
-            linMain.setBackgroundColor(ContextCompat.getColor(this, R.color
-                    .trans_black_bg));
-        } else {
-            linMain.setBackgroundColor(ContextCompat.getColor(this, R.color
-                    .transparent));
+//                Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+//                BitmapDrawable ob = new BitmapDrawable(getResources(), bitmap);
+//                relMain.setBackground(ob);
+                //Code for Applying background
+                Glide.with(this)
+                        .load(Uri.fromFile(new File(filePath))) // Uri of the
+                        // picture
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(imgBackground);
+                linMain.setBackgroundColor(ContextCompat.getColor(this, R.color
+                        .trans_black_bg));
+            } else {
+
+                imgBackground.setImageBitmap(null);
+                imgBackground.setBackground(null);
+                linMain.setBackgroundColor(ContextCompat.getColor(this, R.color
+                        .transparent));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         StatusBarUtil.setTransparent(this);
         boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);

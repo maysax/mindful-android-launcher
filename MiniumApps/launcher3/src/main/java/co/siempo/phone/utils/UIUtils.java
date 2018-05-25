@@ -214,6 +214,13 @@ public class UIUtils {
 
     }
 
+    public static float getScreenWidth(Activity activity) {
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        return (float) displaymetrics.widthPixels;
+
+    }
+
     public static void showKeyboard(EditText editText) {
         try {
             if (editText != null) {

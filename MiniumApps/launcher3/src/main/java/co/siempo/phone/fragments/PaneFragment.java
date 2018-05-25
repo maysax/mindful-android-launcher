@@ -1191,6 +1191,7 @@ public class PaneFragment extends CoreFragment {
                 if (Settings.canDrawOverlays(context)) {
                     Toast.makeText(context, R.string.success_msg, Toast
                             .LENGTH_SHORT).show();
+
                 }
             }
         }
