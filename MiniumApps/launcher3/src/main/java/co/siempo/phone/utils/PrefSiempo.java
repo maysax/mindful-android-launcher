@@ -89,6 +89,7 @@ public class PrefSiempo {
 
 
     public static final String LOCK_COUNTER_STATUS = "LOCK_COUNTER_STATUS";
+    public static final String LOCATION_TIMER_TIME = "LOCATION_TIMER_TIME";
     private static final PrefSiempo ourInstance = new PrefSiempo();
     public static String HELPFUL_ROBOTS = "HELPFUL_ROBOTS";
     public static String BLOCKED_APPLIST = "BLOCKED_APPLIST";
@@ -100,6 +101,7 @@ public class PrefSiempo {
     public static String APPLAND_TOUR_SEEN = "appland_tour_seen";
     public static String JUNK_RESTRICTED = "junk_restricted";
     public static String USER_VOLUME = "user_volume";
+    public static String LOCATION_STATUS = "location_status";
 
 
     //Preference for DeterUser

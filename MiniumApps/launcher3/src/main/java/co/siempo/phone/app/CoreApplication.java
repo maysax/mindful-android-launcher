@@ -50,7 +50,6 @@ import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
-import co.siempo.phone.utils.FontUtils;
 import co.siempo.phone.utils.LifecycleHandler;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;

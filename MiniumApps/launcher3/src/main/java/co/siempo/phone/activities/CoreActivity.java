@@ -327,9 +327,9 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     }
 
     /**
-     * Load Fragment on top of other fragments
      *
      * @param fragment
+     * @param containerViewId
      */
     public void loadChildFragment(Fragment fragment, int containerViewId) {
         Validate.notNull(fragment);

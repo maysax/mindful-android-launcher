@@ -2,6 +2,7 @@ package co.siempo.phone.customviews;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 
 /**
@@ -17,7 +18,14 @@ public class LockEditText extends android.support.v7.widget.AppCompatEditText {
 
     @Override
     public boolean onKeyPreIme(int keyCode, KeyEvent event) {
-        return true;
+        if (keyCode == KeyEvent.KEYCODE_BACK &&
+                event.getAction() == KeyEvent.ACTION_UP) {
+            Log.e("onKeyPreIme ", "" + event);
+            return true;
+        } else {
+            return false;
+        }
+        //Log.e("onKeyPreIme ",""+event);
     }
 
 }

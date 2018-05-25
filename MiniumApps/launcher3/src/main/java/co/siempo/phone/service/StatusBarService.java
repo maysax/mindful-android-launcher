@@ -1,5 +1,6 @@
 package co.siempo.phone.service;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -10,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
+import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -30,6 +32,11 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.rvalerio.fgchecker.AppChecker;
@@ -49,9 +56,11 @@ import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBClient;
 import co.siempo.phone.event.AppInstalledEvent;
+import co.siempo.phone.event.LocationUpdateEvent;
 import co.siempo.phone.event.NotifySearchRefresh;
 import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.event.ReduceOverUsageEvent;
+import co.siempo.phone.event.StartLocationEvent;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
@@ -71,6 +80,9 @@ public class StatusBarService extends Service {
     private MyObserver myObserver;
     private AppInstallUninstall appInstallUninstall;
     private CountDownTimer countDownTimer;
+    private FusedLocationProviderClient mFusedLocationClient;
+    private LocationRequest locationRequest;
+    private LocationCallback mLocationCallback;
     private UserPresentBroadcastReceiver userPresentBroadcastReceiver;
     private CountDownTimer countDownTimerGrace, countDownTimerCover, countDownTimerBreak;
     private static int whichPhaseRunning = 0;// 0 for nothing,1 for Grace,2 for cover,3 for break;
@@ -83,6 +95,7 @@ public class StatusBarService extends Service {
     private ProgressBar progressBar;
     private boolean isFullScreenView = false;
 
+
     public StatusBarService() {
     }
 
@@ -94,7 +107,6 @@ public class StatusBarService extends Service {
         registerObserverForContact();
         registerObserverForAppInstallUninstall();
         registerReceiverScreenLock();
-
         appChecker = new AppChecker();
         AppChecker.Listener deterUse = new AppChecker.Listener() {
             @Override
@@ -133,7 +145,6 @@ public class StatusBarService extends Service {
         appChecker.whenAny(deterUse);
         appChecker.timeout(1000);
         appChecker.start(context);
-
     }
 
     /**
@@ -393,6 +404,65 @@ public class StatusBarService extends Service {
     /**
      * This observer is used to determine the contact add/delete/update.
      */
+    public void stopTimer() {
+        countDownTimer.cancel();
+
+        PrefSiempo.getInstance(this).write(PrefSiempo
+                .LOCK_COUNTER_STATUS, false);
+    }
+
+    @SuppressLint("MissingPermission")
+    public void getLocation() {
+        int timer_time = PrefSiempo.getInstance(context).read(PrefSiempo.LOCATION_TIMER_TIME, 1);
+        locationRequest = LocationRequest.create();
+        locationRequest.setInterval(timer_time * 60000);
+        locationRequest.setFastestInterval(500);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
+        if (mLocationCallback == null) {
+            mLocationCallback = new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    if (locationResult == null) {
+                        //return;
+                        Location mlocation = locationResult.getLastLocation();
+                        EventBus.getDefault().postSticky(new LocationUpdateEvent(mlocation));
+                    }
+                    List<Location> locations = locationResult.getLocations();
+                    for (Location location : locations) {
+                        // Update UI with location data
+                        // ...
+                        if (location != null) {
+                            Log.e("location details", "long: " + location.getLongitude() + "lat: " + location
+                                    .getLatitude());
+                            EventBus.getDefault().postSticky(new LocationUpdateEvent(location));
+                        }
+
+                    }
+                }
+            };
+        }
+        mFusedLocationClient.requestLocationUpdates(locationRequest,
+                mLocationCallback,
+                null);
+    }
+
+    public void stopLocationUpdates() {
+        if (mLocationCallback != null) {
+            mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+        }
+    }
+
+    @Subscribe
+    public void StartLocationEvent(StartLocationEvent event) {
+        boolean isLocationOn = event.getIsLocationOn();
+        if (!isLocationOn) {
+            stopLocationUpdates();
+        } else {
+            getLocation();
+        }
+    }
+
     private class MyObserver extends ContentObserver {
         MyObserver(Handler handler) {
             super(handler);
@@ -478,6 +548,7 @@ public class StatusBarService extends Service {
     /**
      * This broadcast is used to determine the screen on/off flag.
      */
+
     public class UserPresentBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context arg0, Intent intent) {

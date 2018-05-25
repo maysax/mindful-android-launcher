@@ -141,6 +141,7 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
                         }
                     } else {
                         if (null != item) {
+                            map.get(id).setVisible(true);
                             if (map.get(id).getApplicationName().equalsIgnoreCase(item.activityInfo.packageName)) {
                                 isSameApp = true;
                             } else {

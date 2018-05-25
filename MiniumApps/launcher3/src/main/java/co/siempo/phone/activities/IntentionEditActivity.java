@@ -37,6 +37,7 @@ import co.siempo.phone.utils.UIUtils;
 
 public class IntentionEditActivity extends CoreActivity implements View.OnClickListener {
 
+    CardView top;
     private TextView txtSave;
     private Toolbar toolbar;
     private TextView hint;
@@ -51,7 +52,6 @@ public class IntentionEditActivity extends CoreActivity implements View.OnClickL
     private RelativeLayout pauseContainer;
     private String strIntentField;
     private long startTime = 0;
-    CardView top;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
