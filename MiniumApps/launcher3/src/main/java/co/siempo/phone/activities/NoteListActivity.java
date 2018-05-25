@@ -158,7 +158,6 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
                 else {
                     try {
                         notes.put(position, newFavourite);
-
                     } catch (JSONException e) {
                         CoreApplication.getInstance().logException(e);
                         e.printStackTrace();
@@ -174,14 +173,33 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
                     newFavourite.put(NOTE_FAVOURED, false);
                     notes.put(position, newFavourite);
 
+                    JSONArray newArrFav = new JSONArray();
+                    JSONArray newArrunFAv = new JSONArray();
+                    for (int i = 0; i < notes.length(); i++) {
+                        JSONObject note = notes.getJSONObject(i);
+                        String val = String.valueOf(note.get(NOTE_FAVOURED));
+                        if (val.equalsIgnoreCase("true")) {
+                            newArrFav.put(notes.get(i));
+                        } else {
+                            newArrunFAv.put(notes.get(i));
+                        }
+                    }
+                    try {
+                        for (int i = 0; i < newArrunFAv.length(); i++) {
+                            JSONObject jsonObject = newArrunFAv.getJSONObject(i);
+                            newArrFav.put(jsonObject);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    notes = newArrFav;
+                    adapter.setAdapterData(notes);
+                    adapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     CoreApplication.getInstance().logException(e);
                     e.printStackTrace();
                 }
-
-                adapter.notifyDataSetChanged();
             }
-
             // Save notes to local file
             saveData(localPath, notes);
         }
