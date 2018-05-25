@@ -18,6 +18,7 @@
     <string name="title.suppressedNotifications">View Suppressed Notification</string>
     <string name="title.siempoPermissions">Siempo Permissions</string>
     <string name="title.siempoRestrictions">Restrictions</string>
+    <string name="title.siempoLocation">Location</string>
     <string name="title.inbox" tools:ignore="UnusedResources">Google Inbox</string>
     <string name="title.defaultLauncher">Set default home app</string>
     <string name="title_tracking" tools:ignore="UnusedResources">Tracking</string>
@@ -236,6 +237,7 @@
     <string name="permission_proceed_text">Press Continue to proceed</string>
     <string name="btn_continue">Continue</string>
     <string name="btn_enable">Enable</string>
+    <string name="btn_viewall_installed">Show all installed apps</string>
     <string name="btn_next">Next</string>
     <string name="btn_got">Got it</string>
     <string name="to_help_you_storage">"To help you understand your current phone habits, Siempo needs permission to store information on this device. We do not read your private files or collect information about files on your device."</string>
@@ -288,7 +290,7 @@
     <string name="feedback_success_message">Thank you for your feedback! We read every message, and we try to respond to them as soon as we can. We\'re a small team, so please be patient with us.</string>
 
 
-    <string name="cancel">CANCEL</string>
+    <string name="cancel" tools:ignore="ButtonCase">CANCEL</string>
     <string name="strcontinue">CONTINUE</string>
     <string name="gotit">GOT IT</string>
     <string name="remove">REMOVE</string>
@@ -307,6 +309,7 @@
     <string name="message4"><b>Sample intentions:</b>\nKeep my phone locked\nFocus on family\nEat healthy foods</string>
     <string name="save">SAVE</string>
     <string name="what_s_your_intention">What\'s your intention?</string>
+    <string name="your_intention">Your Intention:</string>
     <string name="type_a_few_words">Type a few words</string>
     <string name="close">CLOSE</string>
     <string name="next">NEXT</string>
@@ -319,6 +322,7 @@
     <string name="dark_theme_text">"Backgrounds will be dark while icons &amp; text will be light."</string>
     <string name="homescreen">Customize appearance</string>
     <string name="app_menus">Reduce app usage</string>
+    <string name="choose_background">Choose background</string>
     <string name="msg_no_apps">You haven\'t moved any apps into this category.</string>
     <string name="search_hint">Find app, send message, or save note</string>
     <string name="notification_interrupt_title">Select apps that may interrupt you</string>
@@ -423,13 +427,14 @@
     <string name="reduce_overuse_screen_description_setting">Your daily screen-time limit starts high and gradually decreases. After reaching your limit each day, you will be gently detered from using non-essential apps.</string>
     <string name="iconbranding_description_setting">App icon logos are replaced with less enticing images and patterns.</string>
     <string name="assign_an_app">Assign an app to </string>
-    <string name="title_flagging_screen">Flag apps</string>
+    <string name="title_flagging_screen">Flag apps to use them less</string>
     <string name="all_other_installed_apps">All other installed apps</string>
     <string name="tap_apps_below_to_move_them_into_this_section">Tap apps below to move them into this section.</string>
     <string name="tap_apps_above_to_move_them_into_this_section">Tap apps above to move them into this section.</string>
     <string name="str_frequently_used_apps">Frequently used apps</string>
     <string name="msg_congratulations">Congratulations!</string>
-    <string name="flag_app">Apps you want to use less</string>
+    <string name="flag_app">Flag this app to use it less</string>
+    <string name="flag_app_cell">Apps you want to use less</string>
     <string name="flag_app_first_time">Flag apps to use them less</string>
     <string name="unflagapp">Un-flag this app</string>
     <string name="favorite_menu_unselect">Unselect as frequently used</string>
@@ -438,6 +443,7 @@
     <string name="msg_flage_save_dialog">You\'ve taken an important step towards reducing the use of apps that can make you feel bad when you overuse them.</string>
     <string name="flag_first_time_install">When you flag an app, Siempo will gently discourage you from over-using it. We\'ve flagged some apps that most users say they want to use less.  You can change these flags now or later.</string>
     <string name="msg_flag_first_time">Most users report that the more apps they flag, the less they use their phones.  Flagging will make these apps just a bit harder to launch and use unintentionally.</string>
+    <string name="msg_hide_icon_branding">Most users report that branded app logos entice them to spend more time on their phones than they intend to.</string>
     <string name="str_blank_validation_below">Taps apps below to move them into this section</string>
     <string name="str_blank_validation_above">Taps apps above to move them into this section</string>
     <string name="yes_unhide">YES, UNHIDE</string>
@@ -498,6 +504,13 @@
     <string name="choose_app_flag_desc">Flag any apps that you want to use less. </string>
     <string name="choose_app_flag">Choose apps to flag</string>
     <string name="custom_background_image_title">Custom background image</string>
+    <string name="update_background">Update background?</string>
+    <string name="current_background">Current background</string>
+    <string name="my_images">My images</string>
+    <string name="siempo_images">Siempo images</string>
+    <string name="filter_apps">"Filter apps…"</string>
+    <string name="no_apps">No apps match that input text</string>
+    <string name="no_mattched_text">No apps match that input text</string>
 
 
     <string-array name="in_app_items_subscription">
@@ -523,6 +536,16 @@
         <item>10 minutes</item>
         <item>15 minutes</item>
         <item>disable</item>
+    </string-array>
+    <string-array name="siempo_images">
+        <item>http://34.193.40.200:8001/siempo/siempo_background_image/beach_alexey-marchenko.jpg</item>
+        <item>http://34.193.40.200:8001/siempo/siempo_background_image/humingbird_james-wainscoat.jpg</item>
+        <item>http://34.193.40.200:8001/siempo/siempo_background_image/lotus-saffu.jpg</item>
+        <item>http://34.193.40.200:8001/siempo/siempo_background_image/redwoods-victoria_palacios.jpg</item>
+        <item>http://34.193.40.200:8001/siempo/siempo_background_image/stars_paul-gilmore.jpg</item>
+        <item>http://34.193.40.200:8001/siempo/siempo_background_image/sunset_igor-kasalovic.jpg</item>
+        <item>http://34.193.40.200:8001/siempo/siempo_background_image/swirls_adrien-ledoux.jpg</item>
+        <item>http://34.193.40.200:8001/siempo/siempo_background_image/window-paula_borowska.jpg</item>
     </string-array>
 
 </resources>

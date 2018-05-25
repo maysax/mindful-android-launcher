@@ -7,39 +7,39 @@
     <Preference
         android:key="@string/home_key"
         android:summary="@string/device_settings_summary"
-        android:title="@string/pref_home"></Preference>
+        android:title="@string/pref_home" />
 
     <Preference
         android:key="@string/display_key"
-        android:title="@string/pref_display"></Preference>
+        android:title="@string/pref_display" />
 
     <Preference
         android:key="@string/sound_key"
-        android:title="@string/pref_notification"></Preference>
+        android:title="@string/pref_notification" />
 
     <Preference
         android:key="@string/apps_key"
-        android:title="@string/pref_apps"></Preference>
+        android:title="@string/pref_apps" />
 
     <Preference
         android:key="@string/memory_card_setting_key"
-        android:title="@string/pref_storage_usb"></Preference>
+        android:title="@string/pref_storage_usb" />
 
     <Preference
         android:key="@string/key_battery"
-        android:title="@string/pref_battery"></Preference>
+        android:title="@string/pref_battery" />
 
     <Preference
         android:key="@string/key_memory"
-        android:title="@string/pref_memory"></Preference>
+        android:title="@string/pref_memory" />
 
     <Preference
         android:key="@string/key_user_setting"
-        android:title="@string/pref_users"></Preference>
+        android:title="@string/pref_users" />
 
     <Preference
         android:key="@string/key_tap_pay"
-        android:title="@string/pref_tap_pay"></Preference>
+        android:title="@string/pref_tap_pay" />
 
 
 </PreferenceScreen>

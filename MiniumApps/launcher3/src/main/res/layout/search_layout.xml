@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
 
     <com.eyeem.chips.ChipsEditText
         android:id="@+id/txtSearchBox"
@@ -21,7 +21,7 @@
         android:minLines="1"
         android:padding="8dp"
         android:text=""
-        android:textColor="@color/text.primary"
+        android:textColorHint="?attr/hint_color"
         android:textSize="@dimen/text.size.medium">
 
 
@@ -40,6 +40,6 @@
         android:paddingStart="4dp"
         android:src="@drawable/ic_close_blue"
         android:visibility="gone"
-        tools:ignore="UnusedIds" />
+        tools:ignore="UnusedIds"/>
 
 </LinearLayout>

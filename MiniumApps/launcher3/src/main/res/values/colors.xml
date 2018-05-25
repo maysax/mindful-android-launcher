@@ -1,30 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#FBFBFA</color>
+    <color name="colorPrimaryDark">#000000</color>
     <!--<color name="colorAccent">#331749</color>-->
     <color name="colorAccent">#448AFF</color>
     <color name="menu_circle">#F3F3F3</color>
     <color name="dim_foreground_dark_inverse">#323232</color>
     "
     <color name="toolbar_bg">#EEEEEE</color>
+    <color name="toolbar_bg_dark">#212121</color>
     <color name="layout_bg">#F3F3F3</color>
     <color name="errorColor">#EA3D85</color>
 
 
     <!--colors new added for design-->
     <color name="indicator_inactive">#3342A4FF</color>
+    <color name="indicator_inactive_dark">#CC42A4FF</color>
     <color name="indicator_active">#33000000</color>
+    <color name="indicator_active_dark">#80FFFFFF</color>
 
     <!--color used in notes-->
     <color name="drop_shadow_grey">#87737373</color>
 
     <color name="black_95">#F2000000</color>
+    <color name="black_85">#DD000000</color>
     <color name="black_80">#CC000000</color>
+    <color name="black_pane">#cc101010</color>
     <color name="black_50">#80000000</color>
     <color name="black_10">#1A000000</color>
     <color name="black_05">#0E000000</color>
     <color name="dialog_red">#FF4291</color>
     <color name="dialog_blue">#42A4FF</color>
+    <color name="dialog_blue_alpha">#3342A4FF</color>
     <color name="dialog_message">#8A000000</color>
     <color name="dialog_title">#DE000000</color>
     <color name="bottom_doc">#E8E8E8</color>
@@ -33,6 +40,8 @@
     <color name="appland_contact_black">#CC000000</color>
     <color name="appland_date">#8A000000</color>
     <color name="bg_junk_apps_top_dock">#42A4FF</color>
+    <color name="divider_dark_tools">#FFFFFF</color>
+    <color name="divider_light_tools">#1A000000</color>
 
     <string-array name="colours" translatable="false">
         <item>#44A1EB</item> <!-- blue -->
@@ -91,6 +100,7 @@
 
     <!-- Material core colors -->
     <color name="material.core.red">#f44336</color>
+    <color name="red">#ff0000</color>
     <color name="material.core.blue">#2196F3</color>
     <color name="material.core.cyan">#00BCD4</color>
     <color name="material.core.orange">#FF9800</color>
@@ -98,6 +108,14 @@
     <!-- Android core colors for easy access -->
     <color name="dialog_text">#202020</color>
     <color name="white">@android:color/white</color>
+    <color name="white_dark">#CCFFFFFF</color>
+    <color name="dark_window">#333333</color>
+    <color name="trans_black">#DDFFFFFF</color>
+    <color name="trans_black_date">#8AFFFFFF</color>
+    <color name="trans_black_bg">#80FFFFFF</color>
+    <color name="trans_white_bg_pane">#80000000</color>
+    <color name="trans_white_bg">#CC000000</color>
+    <color name="trans_white">#CC000000</color>
     <color name="black">@android:color/black</color>
     <color name="shadow">#727272</color>
     <color name="transparent">@android:color/transparent</color>
@@ -110,16 +128,37 @@
     <!-- Complementary colors -->
 
 
-    <color name="section_title_bg">#666666</color>
+    <color name="section_title_bg">#9C9C9C</color>
     <color name="section_title_text">#57000000</color>
-    <color name="forground">#26E81313</color>
-    <color name="flageapp_header">#E81313</color>
+    <color name="forground_dark">#80FF0000</color>
+    <color name="forground_light">#26E81313</color>
+    <color name="flageapp_header">#FF0000</color>
     <color name="unflageapp_header">#666666</color>
     <color name="bg_permissionscreenstatusbar">#E5E5E5</color>
     <color name="bg_permissionscreen">#F2F2F2</color>
     <color name="bg_button">#33000000</color>
     <color name="settings_title_black">#DE000000</color>
     <color name="settings_content_black">#8B000000</color>
+    <color name="settings_content_dark">#B2FFFFFF</color>
+    <color name="popup">#444444</color>
+    <color name="popup_white">#FAFAFA</color>
+    <color name="background_white">#E5E5E5</color>
+    <color name="hint_white">#61000000</color>
+    <color name="hint_dark">#D642A4FF</color>
+    <color name="pull_light">#99000000</color>
+    <color name="pull_dark">#99FFFFFF</color>
+    <color name="divider_light">#1F000000</color>
+    <color name="divider_dark">#40FFFFFF</color>
+    <color name="blue_light">#3342A4FF</color>
+    <color name="blue_dark">#CC42A4FF</color>
+    <color name="blue_dark_hint">#D642A4FF</color>
+    <color name="blue_light_hint">#8A42A4FF</color>
+    <color name="junk_text_light">#61000000</color>
+    <color name="junk_text_dark">#99FFFFFF</color>
+    <color name="junk_pane">#151414</color>
+    <color name="junk_pane_light">#ffffff</color>
+    <color name="pane_light">#BBFFFFFF</color>
+    <color name="pane_dark">#CC000000</color>
 
 
 </resources>

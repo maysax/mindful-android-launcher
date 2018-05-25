@@ -69,27 +69,16 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
         if (recyclerView.getLayoutManager() instanceof GridLayoutManager) {
             final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
             final int swipeFlags = 0;
-//            if (oldMenuFragment == null) {
-//                return makeMovementFlags(dragFlags, swipeFlags);
-//            } else {
             return makeMovementFlags(dragFlags, 0);
-//            }
         } else {
             final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
             final int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
-//            if (oldMenuFragment == null) {
-//                return makeMovementFlags(dragFlags, swipeFlags);
-//            } else {
             return makeMovementFlags(dragFlags, 0);
-//            }
         }
     }
 
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder source, RecyclerView.ViewHolder target) {
-//        if (source.getItemViewType() != target.getItemViewType()) {
-//            return false;
-//        }
         int fromPosition = source.getAdapterPosition();
         int toPosition = target.getAdapterPosition();
 
@@ -128,7 +117,6 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
             int top = itemView.getTop() + itemView.getHeight() / 2 - r;
             int bottom = itemView.getBottom() - itemView.getHeight() / 2 + r;
 
-//          d.setBounds(itemView.getLeft(), itemView.getTop(), (int) dx, itemView.getBottom());
             if (d != null) {
                 d.setBounds(left, top, right, bottom);
             }

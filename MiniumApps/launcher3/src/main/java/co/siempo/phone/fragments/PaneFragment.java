@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -13,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,6 +22,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -141,6 +144,14 @@ public class PaneFragment extends CoreFragment {
     private CircleIndicator indicator;
     private Dialog overlayDialog;
     private Dialog overlayDialogPermission;
+    private View junkDoc;
+    private View searchDoc;
+    private View blueLineDividerBottom;
+    private int backGroundColor;
+    private int statusBarColorJunk;
+    private int statusBarColorPane;
+    private LinearLayout linMain;
+    private boolean firstTimeLoad = true;
 
     public PaneFragment() {
         // Required empty public constructor
@@ -154,6 +165,7 @@ public class PaneFragment extends CoreFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_pane, container, false);
+        linMain = rootView.findViewById(R.id.linMain);
         Log.d("Test", "P1");
         context = (CoreActivity) getActivity();
         getColorOfStatusBar();
@@ -162,9 +174,19 @@ public class PaneFragment extends CoreFragment {
 
         mediator = new MainFragmentMediator(PaneFragment.this);
         mediator.loadData();
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(R.attr.junk_top, typedValue, true);
+        backGroundColor = typedValue.resourceId;
+        theme.resolveAttribute(R.attr.junk_top, typedValue, true);
+        statusBarColorJunk = typedValue.data;
+        theme.resolveAttribute(R.attr.status_bar_pane, typedValue, true);
+        statusBarColorPane = typedValue.data;
+
 
         bindView();
         Log.d("Test", "P2");
+
         return rootView;
     }
 
@@ -180,14 +202,13 @@ public class PaneFragment extends CoreFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        //Changing the status bar default value on page change from dashboard
-        // to direct Junk Food pane
+//        Changing the status bar default value on page change from dashboard
+//         to direct Junk Food pane
         if (isVisibleToUser && null != mWindow && pagerPane != null && pagerPane.getCurrentItem() == 0) {
-            mWindow.setStatusBarColor(getResources().getColor(R.color
-                    .appland_blue_bright));
+            mWindow.setStatusBarColor(statusBarColorJunk);
         } else {
             if (null != mWindow) {
-                mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
+                mWindow.setStatusBarColor(statusBarColorPane);
             }
         }
         if (!isVisibleToUser && null != imageClear && linSearchList != null &&
@@ -226,7 +247,12 @@ public class PaneFragment extends CoreFragment {
             overlayDialogPermission.dismiss();
         }
 
-
+        //Added as a part of SSA-1669
+        if (isVisibleToUser && firstTimeLoad) {
+            bindBottomDock();
+            bindViewPager();
+            firstTimeLoad = false;
+        }
     }
 
     public void loadView() {
@@ -247,10 +273,9 @@ public class PaneFragment extends CoreFragment {
     private void changeColorOfStatusBar() {
         if (pagerPane != null && pagerPane.getCurrentItem() == 0 && isVisible
                 () && DashboardActivity.currentIndexDashboard == 0) {
-            mWindow.setStatusBarColor(getResources().getColor(R.color
-                    .appland_blue_bright));
+            mWindow.setStatusBarColor(statusBarColorJunk);
         } else {
-            mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
+            mWindow.setStatusBarColor(statusBarColorPane);
         }
     }
 
@@ -270,6 +295,8 @@ public class PaneFragment extends CoreFragment {
 
     private void initView(View view) {
         linTopDoc = view.findViewById(R.id.linTopDoc);
+        junkDoc = view.findViewById(R.id.junk_doc);
+        searchDoc = view.findViewById(R.id.search_doc);
         linPane = view.findViewById(R.id.linPane);
         recyclerViewBottomDoc = rootView.findViewById(R.id.recyclerViewBottomDoc);
         edtSearchToolsRounded = view.findViewById(R.id.edtSearchTools);
@@ -280,12 +307,13 @@ public class PaneFragment extends CoreFragment {
             e.printStackTrace();
         }
         blueLineDivider = view.findViewById(R.id.blueLineView);
+        blueLineDividerBottom = view.findViewById(R.id.blueLineViewBottom);
         cardViewEdtSearch = view.findViewById(R.id.cardViewEdtSearch);
         searchLayout = view.findViewById(R.id.edtSearchListView);
         relSearchTools = view.findViewById(R.id.relSearchTools);
         txtTopDockDate = view.findViewById(R.id.txtTopDockDate);
-        txtIntentionLabelJunkPane = view.findViewById(R.id.txtIntentionLabelJunkPane);
-        txtIntention = view.findViewById(R.id.txtIntention);
+        txtIntentionLabelJunkPane = junkDoc.findViewById(R.id.txtIntentionLabelJunkPane);
+        txtIntention = junkDoc.findViewById(R.id.txtIntention);
         linBottomDoc = view.findViewById(R.id.linBottomDoc);
         linSearchList = view.findViewById(R.id.linSearchList);
         listView = view.findViewById(R.id.listView);
@@ -310,6 +338,22 @@ public class PaneFragment extends CoreFragment {
     @Override
     public void onResume() {
         super.onResume();
+        String filePath = PrefSiempo.getInstance(context).read(PrefSiempo
+                .DEFAULT_BAG, "");
+        if (!TextUtils.isEmpty(filePath)) {
+
+            TypedValue typedValue = new TypedValue();
+            Resources.Theme theme = context.getTheme();
+            theme.resolveAttribute(R.attr.image_alpha, typedValue, true);
+            int drawableId = typedValue.resourceId;
+            linMain.setBackgroundColor(ContextCompat.getColor(context,
+                    drawableId));
+
+
+        } else {
+            linMain.setBackgroundColor(ContextCompat.getColor(context, R.color
+                    .transparent));
+        }
         getActivity().registerReceiver(mKeyBoardReceiver, new IntentFilter(Utils
                 .KEYBOARD_ACTION));
         pagerPane.setAlpha(1);
@@ -339,8 +383,8 @@ public class PaneFragment extends CoreFragment {
         try {
             if (PrefSiempo.getInstance(context).read(PrefSiempo
                     .APPLAND_TOUR_SEEN, false) && PrefSiempo.getInstance(context).read(PrefSiempo
-                    .IS_AUTOSCROLL, true) && pagerPane
-                    .getCurrentItem() == 0) {
+                    .IS_AUTOSCROLL, true) && (pagerPane
+                    .getCurrentItem() == 0 || pagerPane.getCurrentItem() == 1)) {
 
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
@@ -367,15 +411,17 @@ public class PaneFragment extends CoreFragment {
     private void bindBottomDock() {
 
         mLayoutManager = new GridLayoutManager(getActivity(), 4);
-        recyclerViewBottomDoc.setLayoutManager(mLayoutManager);
-        if (itemDecoration != null) {
-            recyclerViewBottomDoc.removeItemDecoration(itemDecoration);
+        if (null != recyclerViewBottomDoc) {
+            recyclerViewBottomDoc.setLayoutManager(mLayoutManager);
+            if (itemDecoration != null) {
+                recyclerViewBottomDoc.removeItemDecoration(itemDecoration);
+            }
+            itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_10);
+            recyclerViewBottomDoc.addItemDecoration(itemDecoration);
+            items = CoreApplication.getInstance().getToolBottomItemsList();
+            mAdapter = new ToolsMenuAdapter(getActivity(), CoreApplication.getInstance().isHideIconBranding(), true, items);
+            recyclerViewBottomDoc.setAdapter(mAdapter);
         }
-        itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_10);
-        recyclerViewBottomDoc.addItemDecoration(itemDecoration);
-        items = CoreApplication.getInstance().getToolBottomItemsList();
-        mAdapter = new ToolsMenuAdapter(getActivity(), CoreApplication.getInstance().isHideIconBranding(), true, items);
-        recyclerViewBottomDoc.setAdapter(mAdapter);
     }
 
     private void getColorOfStatusBar() {
@@ -395,146 +441,157 @@ public class PaneFragment extends CoreFragment {
 
     private void bindViewPager() {
         mPagerAdapter = new PanePagerAdapter(getChildFragmentManager());
-        pagerPane.setAdapter(mPagerAdapter);
-        indicator.setViewPager(pagerPane);
-        pagerPane.setOffscreenPageLimit(3);
-        if (DashboardActivity.isJunkFoodOpen) {
-            DashboardActivity.currentIndexPaneFragment = 1;
-            DashboardActivity.isJunkFoodOpen = false;
-        }
-        if (DashboardActivity.currentIndexPaneFragment == -1) {
-            DashboardActivity.currentIndexPaneFragment = 2;
-            DashboardActivity.startTime = System.currentTimeMillis();
-        }
-        //Code for Page change
-        pagerPane.setCurrentItem(DashboardActivity.currentIndexPaneFragment);
-        pagerPane.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {
-                edtSearchToolsRounded.clearFocus();
-                chipsEditText.clearFocus();
+        if (null != pagerPane) {
+            pagerPane.setAdapter(mPagerAdapter);
+            indicator.setViewPager(pagerPane);
+            pagerPane.setOffscreenPageLimit(3);
+            if (DashboardActivity.isJunkFoodOpen) {
+                DashboardActivity.currentIndexPaneFragment = 1;
+                DashboardActivity.isJunkFoodOpen = false;
             }
+            if (DashboardActivity.currentIndexPaneFragment == -1) {
+                DashboardActivity.currentIndexPaneFragment = 2;
+                DashboardActivity.startTime = System.currentTimeMillis();
+            }
+            //Code for Page change
+            pagerPane.setCurrentItem(DashboardActivity.currentIndexPaneFragment);
+            pagerPane.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+                @Override
+                public void onPageScrolled(int i, float v, int i1) {
+                    edtSearchToolsRounded.clearFocus();
+                    chipsEditText.clearFocus();
+                }
 
 
-            @Override
-            public void onPageSelected(int i) {
+                @Override
+                public void onPageSelected(int i) {
 
-                if (i == 0) {
+                    if (i == 0) {
                     /* Junkfood Pane */
-                    if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>()).size() == 0) {
-                        //Applied for smooth transition
-                        pagerPane.setAlpha(0);
-                        Intent intent = new Intent(getActivity(), JunkfoodFlaggingActivity.class);
-                        startActivity(intent);
-                        getActivity().overridePendingTransition(R
-                                .anim.fade_in_junk, R.anim.fade_out_junk);
-                    } else {
-                        if (PrefSiempo.getInstance(context).read(PrefSiempo
-                                .APPLAND_TOUR_SEEN, false)) {
-                            //Show overlay for draw over other apps permission
+                        if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>()).size() == 0) {
+                            //Applied for smooth transition
+                            pagerPane.setAlpha(0);
+                            Intent intent = new Intent(getActivity(), JunkfoodFlaggingActivity.class);
+                            startActivity(intent);
+                            getActivity().overridePendingTransition(R
+                                    .anim.fade_in_junk, R.anim.fade_out_junk);
+                        } else {
+                            if (PrefSiempo.getInstance(context).read(PrefSiempo
+                                    .APPLAND_TOUR_SEEN, false)) {
+                                //Show overlay for draw over other apps permission
 
 
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                if (!Settings.canDrawOverlays(context) &&
-                                        PrefSiempo.getInstance(context).read
-                                                (PrefSiempo.JUNK_RESTRICTED,
-                                                        false)) {
-                                    showOverLayForDrawingPermission();
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    if (!Settings.canDrawOverlays(context) &&
+                                            PrefSiempo.getInstance(context).read
+                                                    (PrefSiempo.JUNK_RESTRICTED,
+                                                            false)) {
+                                        if (null == overlayDialogPermission ||
+                                                !overlayDialogPermission.isShowing()) {
+                                            showOverLayForDrawingPermission();
+                                        }
+                                    }
                                 }
+
+
                             }
 
 
                         }
+                        UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
 
+                        if (linSearchList.getVisibility() == View.VISIBLE) {
+                            linSearchList.setVisibility(View.GONE);
+                            linPane.setAlpha(1);
+                        }
+                        if (linPane.getVisibility() == View.GONE)
+                            linPane.setVisibility(View.VISIBLE);
+                        if (linBottomDoc.getVisibility() == View.GONE)
+                            linBottomDoc.setVisibility(View.VISIBLE);
+                        if (searchLayout.getVisibility() == View.VISIBLE)
+                            searchLayout.setVisibility(View.GONE);
+                        if (cardViewEdtSearch.getVisibility() == View.VISIBLE)
+                            cardViewEdtSearch.setVisibility(View.GONE);
+                        if (relSearchTools.getVisibility() == View.GONE)
+                            relSearchTools.setVisibility(View.VISIBLE);
+                        isSearchVisable = false;
+                        imageClear.setVisibility(View.VISIBLE);
+                        if (searchLayout != null && chipsEditText != null && chipsEditText.getText().toString().length() > 0) {
+                            if (linSearchList.getVisibility() == View.VISIBLE)
+                                searchLayout.txtSearchBox.setText("");
+                        }
 
-                    }
-                    UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
+                        junkFoodAppPane();
+                        blueLineDivider.setVisibility(View.GONE);
+                        mWindow.setStatusBarColor(statusBarColorJunk);
+                        linTopDoc.setElevation(20);
+                        linTopDoc.setBackgroundColor(getResources().getColor(backGroundColor));
+                        searchDoc.setVisibility(View.GONE);
+                        junkDoc.setVisibility(View.VISIBLE);
 
-                    if (linSearchList.getVisibility() == View.VISIBLE) {
-                        linSearchList.setVisibility(View.GONE);
-                        linPane.setAlpha(1);
-                    }
-                    if (linPane.getVisibility() == View.GONE)
-                        linPane.setVisibility(View.VISIBLE);
-                    if (linBottomDoc.getVisibility() == View.GONE)
-                        linBottomDoc.setVisibility(View.VISIBLE);
-                    if (blueLineDivider.getVisibility() == View.GONE)
-                        blueLineDivider.setVisibility(View.VISIBLE);
-                    if (searchLayout.getVisibility() == View.VISIBLE)
-                        searchLayout.setVisibility(View.GONE);
-                    if (cardViewEdtSearch.getVisibility() == View.VISIBLE)
-                        cardViewEdtSearch.setVisibility(View.GONE);
-                    if (relSearchTools.getVisibility() == View.GONE)
-                        relSearchTools.setVisibility(View.VISIBLE);
-                    isSearchVisable = false;
-                    imageClear.setVisibility(View.VISIBLE);
-                    if (searchLayout != null && chipsEditText != null && chipsEditText.getText().toString().length() > 0) {
-                        if (linSearchList.getVisibility() == View.VISIBLE)
-                            searchLayout.txtSearchBox.setText("");
-                    }
-
-                    junkFoodAppPane();
-                    mWindow.setStatusBarColor(getResources().getColor(R.color
-                            .appland_blue_bright));
-                    linTopDoc.setElevation(20);
-
-                } else {
+                    } else {
                     /* Tools and Favourite Pane */
-                    linTopDoc.setElevation(0);
-                    linTopDoc.setBackground(getResources().getDrawable(R
-                            .drawable.top_bar_bg));
-                    txtTopDockDate.setVisibility(View.VISIBLE);
-                    edtSearchToolsRounded.setVisibility(View.VISIBLE);
-                    txtIntention.setVisibility(View.GONE);
-                    txtIntentionLabelJunkPane.setVisibility(View.GONE);
+                        linTopDoc.setElevation(0);
+                        blueLineDivider.setVisibility(View.VISIBLE);
+                        TypedValue typedValue = new TypedValue();
+                        Resources.Theme theme = context.getTheme();
+                        theme.resolveAttribute(R.attr.top_doc, typedValue, true);
+                        int drawableId = typedValue.resourceId;
+                        linTopDoc.setBackgroundColor(getResources().getColor(R
+                                .color.transparent));
+                        linTopDoc.setBackground(getResources().getDrawable(drawableId));
+                        txtTopDockDate.setVisibility(View.VISIBLE);
+                        edtSearchToolsRounded.setVisibility(View.VISIBLE);
+                        txtIntention.setVisibility(View.GONE);
+                        txtIntentionLabelJunkPane.setVisibility(View.GONE);
+                        searchDoc.setVisibility(View.VISIBLE);
+                        junkDoc.setVisibility(View.GONE);
+                        // finally change the color
+                        mWindow.setStatusBarColor(statusBarColorPane);
+                    }
 
-                    // finally change the color
-                    mWindow.setStatusBarColor(DashboardActivity.defaultStatusBarColor);
+                    //Indicator to be set here so that when coming from another
+                    // application, the sliding dots retain the shape as previous
+                    indicator.setViewPager(pagerPane);
+
+                    if (DashboardActivity.currentIndexPaneFragment == 0 && i == 1) {
+                        Log.d("Firebase ", "JunkFood End");
+                        Log.d("Firebase ", "Favorite Start");
+                        FirebaseHelper.getInstance().logScreenUsageTime(JunkFoodPaneFragment.class.getSimpleName(), DashboardActivity.startTime);
+                        DashboardActivity.startTime = System.currentTimeMillis();
+                    } else if (DashboardActivity.currentIndexPaneFragment == 1 && i == 2) {
+                        Log.d("Firebase ", "Favorite End");
+                        Log.d("Firebase ", "Tools Start");
+                        FirebaseHelper.getInstance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), DashboardActivity.startTime);
+                        DashboardActivity.startTime = System.currentTimeMillis();
+                    } else if (DashboardActivity.currentIndexPaneFragment == 2 && i == 1) {
+                        Log.d("Firebase ", "Tools End");
+                        Log.d("Firebase ", "Favorite Start");
+                        FirebaseHelper.getInstance().logScreenUsageTime(ToolsPaneFragment.class.getSimpleName(), DashboardActivity.startTime);
+                        DashboardActivity.startTime = System.currentTimeMillis();
+                    } else if (DashboardActivity.currentIndexPaneFragment == 1 && i == 0) {
+                        Log.d("Firebase ", "Favorite End");
+                        Log.d("Firebase ", "JunkFood Start");
+                        FirebaseHelper.getInstance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), DashboardActivity.startTime);
+                        DashboardActivity.startTime = System.currentTimeMillis();
+                    }
+                    DashboardActivity.currentIndexPaneFragment = i;
+                    //Make the junk food pane visible
                 }
 
-                //Indicator to be set here so that when coming from another
-                // application, the sliding dots retain the shape as previous
-                indicator.setViewPager(pagerPane);
-
-                if (DashboardActivity.currentIndexPaneFragment == 0 && i == 1) {
-                    Log.d("Firebase ", "JunkFood End");
-                    Log.d("Firebase ", "Favorite Start");
-                    FirebaseHelper.getInstance().logScreenUsageTime(JunkFoodPaneFragment.class.getSimpleName(), DashboardActivity.startTime);
-                    DashboardActivity.startTime = System.currentTimeMillis();
-                } else if (DashboardActivity.currentIndexPaneFragment == 1 && i == 2) {
-                    Log.d("Firebase ", "Favorite End");
-                    Log.d("Firebase ", "Tools Start");
-                    FirebaseHelper.getInstance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), DashboardActivity.startTime);
-                    DashboardActivity.startTime = System.currentTimeMillis();
-                } else if (DashboardActivity.currentIndexPaneFragment == 2 && i == 1) {
-                    Log.d("Firebase ", "Tools End");
-                    Log.d("Firebase ", "Favorite Start");
-                    FirebaseHelper.getInstance().logScreenUsageTime(ToolsPaneFragment.class.getSimpleName(), DashboardActivity.startTime);
-                    DashboardActivity.startTime = System.currentTimeMillis();
-                } else if (DashboardActivity.currentIndexPaneFragment == 1 && i == 0) {
-                    Log.d("Firebase ", "Favorite End");
-                    Log.d("Firebase ", "JunkFood Start");
-                    FirebaseHelper.getInstance().logScreenUsageTime(FavoritePaneFragment.class.getSimpleName(), DashboardActivity.startTime);
-                    DashboardActivity.startTime = System.currentTimeMillis();
+                @Override
+                public void onPageScrollStateChanged(int i) {
                 }
-                DashboardActivity.currentIndexPaneFragment = i;
-                //Make the junk food pane visible
-            }
+            });
 
-            @Override
-            public void onPageScrollStateChanged(int i) {
+            if (DashboardActivity.currentIndexPaneFragment == 0) {
+                junkFoodAppPane();
             }
-        });
-
-        if (DashboardActivity.currentIndexPaneFragment == 0) {
-            junkFoodAppPane();
         }
     }
 
     private void junkFoodAppPane() {
-        linTopDoc.setBackgroundColor(getResources().getColor(R.color
-                .bg_junk_apps_top_dock));
         txtTopDockDate.setVisibility(View.GONE);
         searchLayout.setVisibility(View.GONE);
         edtSearchToolsRounded.setVisibility(View.GONE);
@@ -614,14 +671,24 @@ public class PaneFragment extends CoreFragment {
     public void hidePaneAndBottomView(final Context context) {
         linPane.setVisibility(View.GONE);
         linBottomDoc.setVisibility(View.GONE);
+        blueLineDivider.setVisibility(View.GONE);
+        blueLineDividerBottom.setVisibility(View.GONE);
         searchListVisible(context);
     }
 
     public void showPaneAndBottomView(final Context context) {
         linSearchList.setVisibility(View.GONE);
         linPane.setVisibility(View.VISIBLE);
+        blueLineDivider.setVisibility(View.VISIBLE);
+        blueLineDividerBottom.setVisibility(View.VISIBLE);
         linBottomDoc.setVisibility(View.VISIBLE);
         isSearchVisable = false;
+
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(R.attr.top_doc, typedValue, true);
+        int color = typedValue.resourceId;
+        linTopDoc.setBackgroundResource(color);
         FirebaseHelper.getInstance().logScreenUsageTime(FirebaseHelper.SEARCH_PANE, DashboardActivity.startTime);
         DashboardActivity.startTime = System.currentTimeMillis();
     }
@@ -642,6 +709,8 @@ public class PaneFragment extends CoreFragment {
 
     public void searchListVisible(Context context) {
         linSearchList.setVisibility(View.VISIBLE);
+
+        linSearchList.setBackgroundColor(getResources().getColor(backGroundColor));
         isSearchVisable = true;
         imageClear.setVisibility(View.VISIBLE);
         if (DashboardActivity.currentIndexDashboard == 0) {
@@ -684,6 +753,11 @@ public class PaneFragment extends CoreFragment {
                 cardViewEdtSearch.setVisibility(View.GONE);
                 relSearchTools.setVisibility(View.VISIBLE);
                 linSearchList.setVisibility(View.GONE);
+                TypedValue typedValue = new TypedValue();
+                Resources.Theme theme = context.getTheme();
+                theme.resolveAttribute(R.attr.top_doc, typedValue, true);
+                int color = typedValue.resourceId;
+                linTopDoc.setBackgroundResource(color);
                 linBottomDoc.setVisibility(View.VISIBLE);
                 linPane.setVisibility(View.VISIBLE);
                 isSearchVisable = false;
@@ -1037,7 +1111,6 @@ public class PaneFragment extends CoreFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (router != null && searchLayout != null && searchLayout.getTxtSearchBox() != null) {
                     mediator.listItemClicked(router, position, searchLayout.getTxtSearchBox().getStrText());
-//                    imageClear.performClick();
                 }
             }
         });

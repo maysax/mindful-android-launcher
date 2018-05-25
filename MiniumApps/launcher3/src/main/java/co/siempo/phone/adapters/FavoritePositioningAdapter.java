@@ -188,7 +188,8 @@ public class FavoritePositioningAdapter extends RecyclerView.Adapter<FavoritePos
             ItemTouchHelperViewHolder {
         public View layout;
         // each data item is just a string in this case
-        ImageView imgView, imgAppIcon, imgUnderLine;
+        ImageView imgView, imgAppIcon;
+        View imgUnderLine;
         TextView text, txtAppTextImage;
         TextView textDefaultApp;
         RelativeLayout relMenu;

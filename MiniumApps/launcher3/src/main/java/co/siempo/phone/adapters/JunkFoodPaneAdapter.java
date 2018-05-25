@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -62,7 +61,8 @@ public class JunkFoodPaneAdapter extends RecyclerView.Adapter<JunkFoodPaneAdapte
         LayoutInflater inflater = LayoutInflater.from(
                 parent.getContext());
         View v =
-                inflater.inflate(R.layout.list_application_item_grid, parent, false);
+                inflater.inflate(R.layout.list_application_item_grid_junk,
+                        parent, false);
         // set the view's size, margins, paddings and layout parameters
         return new ViewHolder(v);
     }
@@ -78,11 +78,8 @@ public class JunkFoodPaneAdapter extends RecyclerView.Adapter<JunkFoodPaneAdapte
             holder.txtAppTextImage.setVisibility(View.VISIBLE);
             holder.imgAppIcon.setVisibility(View.GONE);
             holder.imgUnderLine.setVisibility(View.VISIBLE);
-            holder.imgUnderLine.setImageResource(R.drawable.letter_bottom_border_junkfood);
             String fontPath = "fonts/robotocondensedregular.ttf";
             if (!TextUtils.isEmpty(applicationName)) {
-                holder.text.setTextColor(ContextCompat.getColor(context, R.color.junkfood_text_and_underlinecolor));
-                holder.txtAppTextImage.setTextColor(ContextCompat.getColor(context, R.color.junkfood_text_and_underlinecolor));
                 holder.txtAppTextImage.setText("" + applicationName.toUpperCase().charAt(0));
             }
             // Loading Font Face
@@ -105,7 +102,6 @@ public class JunkFoodPaneAdapter extends RecyclerView.Adapter<JunkFoodPaneAdapte
             }
 
 
-//            holder.imgAppIcon.setImageDrawable(CoreApplication.getInstance().getApplicationIconFromPackageName(item));
         }
 
         holder.linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
@@ -142,7 +138,9 @@ public class JunkFoodPaneAdapter extends RecyclerView.Adapter<JunkFoodPaneAdapte
         // each data item is just a string in this case
         public View layout;
         // each data item is just a string in this case
-        ImageView imgView, imgAppIcon, imgUnderLine;
+        ImageView imgView, imgAppIcon;
+
+        View imgUnderLine;
         TextView text, txtAppTextImage;
         TextView textDefaultApp;
         RelativeLayout relMenu;

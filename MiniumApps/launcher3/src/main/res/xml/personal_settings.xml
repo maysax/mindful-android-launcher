@@ -7,22 +7,22 @@
     <Preference
         android:key="@string/location_key"
         android:summary="@string/location_settings_summary"
-        android:title="@string/pref_location"></Preference>
+        android:title="@string/pref_location" />
 
     <Preference
         android:key="@string/security_key"
-        android:title="@string/pref_security"></Preference>
+        android:title="@string/pref_security" />
 
     <Preference
         android:key="@string/account_key"
-        android:title="@string/pref_accounts"></Preference>
+        android:title="@string/pref_accounts" />
 
     <Preference
         android:key="@string/pref_language_key"
-        android:title="@string/pref_language_input"></Preference>
+        android:title="@string/pref_language_input" />
 
     <Preference
         android:key="@string/backup_key"
-        android:title="@string/pref_backup_reset"></Preference>
+        android:title="@string/pref_backup_reset" />
 
 </PreferenceScreen>

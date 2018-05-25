@@ -5,17 +5,14 @@
     android:id="@+id/activity_pause"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/layout_bg"
     android:orientation="vertical"
     tools:ignore="UnusedIds">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/layout_bg"
-        android:elevation="@dimen/dp_5"
-        android:minHeight="?android:attr/actionBarSize" />
+        style="@style/toolbar_style"
+        app:navigationIcon="@drawable/ic_arrow_back_blue_24dp"
+        app:titleTextColor="?attr/toolbar_text_color" />
 
 
     <android.support.design.widget.TextInputLayout
@@ -26,11 +23,10 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="30dp"
-        android:background="@color/layout_bg"
         android:hint="@string/lbl_email"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
-        android:textColorHint="@color/errorColor"
+        android:textColorHint="@color/colorAccent"
         android:visibility="gone"
         app:errorTextAppearance="@style/error_appearance">
 
@@ -66,7 +62,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:background="@color/layout_bg"
         android:paddingLeft="8dp"
         android:paddingRight="8dp">
 
@@ -75,7 +70,6 @@
             android:id="@+id/feedbackType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/layout_bg"
             android:spinnerMode="dropdown" />
 
         <ImageView
@@ -101,7 +95,6 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="20dp"
-        android:background="@color/layout_bg"
         android:padding="8dp">
 
         <EditText
@@ -109,7 +102,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
-            android:background="@drawable/edittext"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:gravity="top"

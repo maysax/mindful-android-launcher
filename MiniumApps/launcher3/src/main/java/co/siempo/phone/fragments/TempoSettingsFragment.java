@@ -1,6 +1,5 @@
 package co.siempo.phone.fragments;
 
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -34,8 +33,6 @@ public class TempoSettingsFragment extends CoreFragment {
     RelativeLayout relAlphaSettings;
     @ViewById
     TextView titleActionBar;
-    //    @Pref
-//    Launcher3Prefs_ launcherPrefs;
 
     public TempoSettingsFragment() {
         // Required empty public constructor
@@ -45,8 +42,6 @@ public class TempoSettingsFragment extends CoreFragment {
     void afterViews() {
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
         toolbar.setTitle(R.string.settings);
-        toolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color
-                .colorAccent));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,7 +67,6 @@ public class TempoSettingsFragment extends CoreFragment {
 
     @Click
     void relHome() {
-
         ((CoreActivity) getActivity()).loadChildFragment(TempoHomeFragment_.builder()
                 .build(), R.id.tempoView);
     }

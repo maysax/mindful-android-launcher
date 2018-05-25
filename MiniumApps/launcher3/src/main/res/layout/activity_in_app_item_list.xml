@@ -9,11 +9,9 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/toolbar_bg"
-        android:elevation="@dimen/dp_5"
-        android:minHeight="?android:attr/actionBarSize" />
+        style="@style/toolbar_style"
+        app:navigationIcon="@drawable/ic_arrow_back_blue_24dp"
+        app:titleTextColor="?attr/toolbar_text_color" />
 
     <RelativeLayout
         android:layout_width="match_parent"

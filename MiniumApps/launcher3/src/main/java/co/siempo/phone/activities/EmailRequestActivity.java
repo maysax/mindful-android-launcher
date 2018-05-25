@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -61,15 +62,15 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
         permissionUtil = new PermissionUtil(this);
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(getResources().getColor(R.color.bg_permissionscreenstatusbar));
         View decor = window.getDecorView();
-        decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            window.setStatusBarColor(ContextCompat.getColor(this, R.color.white));
+            decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }else{
+            // Download siempo images
+            CoreApplication.getInstance().downloadSiempoImages();
+        }
         initView();
-//        if (Build.VERSION.SDK_INT >= 23) {
-//            if (!permissionUtil.hasGiven(PermissionUtil.ACCOUNT_PERMISSION)) {
-//                askForPermission(new String[]{android.Manifest.permission.GET_ACCOUNTS});
-//            }
-//        }
     }
 
     private void initView() {
@@ -122,18 +123,6 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                if (!TextUtils.isEmpty(autoCompleteTextViewEmail.getText().toString())) {
-//                    String val_email = autoCompleteTextViewEmail.getText().toString().trim();
-//                    boolean isValidEmail = UIUtils.isValidEmail(val_email);
-//                    if (isValidEmail) {
-//                        txtErrorMessage.setVisibility(View.INVISIBLE);
-//                    } else {
-//
-//                        txtErrorMessage.setVisibility(View.VISIBLE);
-//                    }
-//                } else {
-//                    txtErrorMessage.setVisibility(View.INVISIBLE);
-//                }
             }
 
             @Override
@@ -181,6 +170,8 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
                                 .setPermissionListener(new PermissionListener() {
                                     @Override
                                     public void onPermissionGranted() {
+                                        // Download siempo images
+                                        CoreApplication.getInstance().downloadSiempoImages();
                                         finish();
                                     }
 
@@ -227,7 +218,10 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
             try {
                 connectivityManager = (ConnectivityManager) getSystemService(Context
                         .CONNECTIVITY_SERVICE);
-                NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+                NetworkInfo activeNetwork = null;
+                if (connectivityManager != null) {
+                    activeNetwork = connectivityManager.getActiveNetworkInfo();
+                }
                 if (activeNetwork != null) {
                     new MailChimpOperation().execute(strEmail);
                     storeDataToFirebase(CoreApplication.getInstance().getDeviceId(), strEmail);
@@ -267,7 +261,6 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
         }
 
     }
-
 
 
 }

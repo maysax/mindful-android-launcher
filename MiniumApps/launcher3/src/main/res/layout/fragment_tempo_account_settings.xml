@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
               android:id="@+id/activity_account_setting"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/layout_bg">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -13,11 +13,9 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/toolbar_bg"
-            android:elevation="@dimen/dp_5"
-            android:minHeight="?android:attr/actionBarSize"/>
+            style="@style/toolbar_style"
+            app:navigationIcon="@drawable/ic_arrow_back_blue_24dp"
+            app:titleTextColor="?attr/toolbar_text_color" />
 
         <ScrollView
             android:layout_width="wrap_content"
@@ -51,7 +49,6 @@
                         android:paddingRight="8dp"
                         android:paddingTop="4dp"
                         android:text="@string/lbl_purchaseSiempo"
-                        android:textColor="@color/settings_title_black"
                         android:textSize="16sp"
                         />
 
@@ -68,7 +65,6 @@
                         android:paddingRight="8dp"
                         android:paddingTop="2dp"
                         android:text="@string/lbl_freeTrial"
-                        android:textColor="@color/settings_content_black"
                         android:textSize="14sp"
                         />
                 </RelativeLayout>
@@ -95,7 +91,7 @@
                         android:paddingRight="8dp"
                         android:paddingTop="4dp"
                         android:text="@string/lbl_updateEmail"
-                        android:textColor="@color/settings_title_black"
+                        android:textColor="?attr/txt_content_title"
                         android:textSize="16sp"
                         />
 
@@ -112,7 +108,7 @@
                         android:paddingRight="8dp"
                         android:paddingTop="2dp"
                         android:text="@string/lbl_updateEmailDescription"
-                        android:textColor="@color/settings_content_black"
+                        android:textColor="?attr/txt_content_color"
                         android:textSize="14sp"
                         />
                 </RelativeLayout>
@@ -139,7 +135,7 @@
                         android:paddingRight="8dp"
                         android:paddingTop="4dp"
                         android:text="@string/lbl_exitSiempo"
-                        android:textColor="@color/settings_title_black"
+                        android:textColor="?attr/txt_content_title"
                         android:textSize="16sp"
                         />
 
@@ -156,7 +152,7 @@
                         android:paddingRight="8dp"
                         android:paddingTop="2dp"
                         android:text="@string/lbl_switchSiempo"
-                        android:textColor="@color/settings_content_black"
+                        android:textColor="?attr/txt_content_color"
                         android:textSize="14sp"/>
                 </RelativeLayout>
 
@@ -177,14 +173,13 @@
 
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
-
                         android:lineSpacingExtra="5sp"
                         android:paddingBottom="2dp"
                         android:paddingLeft="8dp"
                         android:paddingRight="8dp"
                         android:paddingTop="4dp"
                         android:text="@string/lbl_analytics"
-                        android:textColor="@color/settings_title_black"
+                        android:textColor="?attr/txt_content_title"
                         android:textSize="16sp"/>
 
                     <LinearLayout
@@ -197,7 +192,7 @@
 
                         <co.siempo.phone.customviews.RobotoRegularTextView
                             android:id="@+id/txt_analytics_description"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="16dp"
                             android:layout_marginRight="16dp"
@@ -208,7 +203,7 @@
                             android:paddingRight="8dp"
                             android:paddingTop="2dp"
                             android:text="@string/lbl_analytics_description"
-                            android:textColor="@color/settings_content_black"
+                            android:textColor="?attr/txt_content_color"
                             android:textSize="14sp"/>
 
                         <Switch
@@ -248,7 +243,6 @@
                             android:paddingRight="8dp"
                             android:paddingTop="2dp"
                             android:text="@string/lbl_analytics_description2"
-                            android:textColor="@color/settings_content_black"
                             android:textSize="14sp"
                             tools:ignore="InefficientWeight"/>
 
@@ -265,8 +259,7 @@
                             android:paddingTop="2dp"
                             android:text="@string/privacypolicy_link"
                             android:textColor="@color/dialog_blue"
-                            android:textSize="14sp"
-                           />
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                     <Switch

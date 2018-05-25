@@ -24,6 +24,7 @@ public class AppListInfo {
     public boolean isShowHeader = false;
     public boolean isShowTitle = false;
     public boolean isFlagApp = false;
+    public String applicationName;
 
     public AppListInfo(String packageName, boolean isShowHeader, boolean isShowTitle, boolean isFlagApp) {
         this.packageName = packageName;
@@ -32,6 +33,20 @@ public class AppListInfo {
         this.isFlagApp = isFlagApp;
     }
 
+    public AppListInfo(String packageName, String applicationName, boolean isShowHeader, boolean isShowTitle, boolean isFlagApp) {
+        this.packageName = packageName;
+        this.applicationName = applicationName;
+        this.isShowHeader = isShowHeader;
+        this.isShowTitle = isShowTitle;
+        this.isFlagApp = isFlagApp;
+    }
+
     public AppListInfo() {
+    }
+
+    @Override
+    public String toString() {
+        return "packageName : " + packageName + " applicationName " + applicationName + " isShowHeader" + isShowHeader + " "
+                + "isShowTitle " + isShowTitle + " isFlagApp " + isFlagApp;
     }
 }

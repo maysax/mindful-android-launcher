@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/activity_pause"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_pause"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -12,11 +13,9 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/toolbar_bg"
-            android:elevation="@dimen/dp_5"
-            android:minHeight="?android:attr/actionBarSize"/>
+            style="@style/toolbar_style"
+            app:navigationIcon="@drawable/ic_arrow_back_blue_24dp"
+            app:titleTextColor="?attr/toolbar_text_color" />
 
         <RelativeLayout
             android:id="@+id/relAllowSpecificApps"
@@ -37,9 +36,8 @@
                 android:lineSpacingExtra="5sp"
                 android:padding="8dp"
                 android:text="@string/disable_intentions"
-                android:textColor="@color/settings_title_black"
-                android:textSize="16sp"
-                />
+                android:textColor="?attr/txt_content_title"
+                android:textSize="16sp" />
 
             <Switch
                 android:id="@+id/switchDisableIntentionsControls"
@@ -47,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/txtDisableNotificationControls"
-                android:layout_marginRight="8dp"/>
+                android:layout_marginRight="8dp" />
 
 
             <co.siempo.phone.customviews.RobotoRegularTextView
@@ -64,8 +62,8 @@
                 android:paddingRight="8dp"
                 android:paddingTop="0dp"
                 android:text="@string/when_intentions_are_disabled_your_home_screen_will_be_blank"
-                android:textColor="@color/settings_content_black"
-                android:textSize="14sp"/>
+                android:textColor="?attr/txt_content_color"
+                android:textSize="14sp" />
 
         </RelativeLayout>
 
@@ -75,7 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/relAllowSpecificApps"
-            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_8"
             android:clickable="true"
             android:paddingLeft="50dp">
 
@@ -89,9 +87,8 @@
                 android:lineSpacingExtra="5sp"
                 android:padding="8dp"
                 android:text="@string/dark_theme"
-                android:textColor="@color/settings_title_black"
-                android:textSize="16sp"
-                />
+                android:textColor="?attr/txt_content_title"
+                android:textSize="16sp" />
 
             <Switch
                 android:id="@+id/switchDarkTheme"
@@ -99,7 +96,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/txtDarkTheme"
-                android:layout_marginRight="8dp"/>
+                android:layout_marginRight="8dp" />
 
 
             <co.siempo.phone.customviews.RobotoRegularTextView
@@ -116,8 +113,8 @@
                 android:paddingRight="8dp"
                 android:paddingTop="0dp"
                 android:text="@string/dark_theme_text"
-                android:textColor="@color/settings_content_black"
-                android:textSize="14sp"/>
+                android:textColor="?attr/txt_content_color"
+                android:textSize="14sp" />
 
         </RelativeLayout>
 
@@ -126,7 +123,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/relDarkTheme"
-            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_8"
             android:clickable="true"
             android:paddingLeft="50dp">
 
@@ -138,12 +135,12 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="8dp"
+                android:layout_toLeftOf="@+id/switchCustomBackground"
                 android:lineSpacingExtra="5sp"
                 android:padding="8dp"
                 android:text="@string/custom_background_image_title"
-                android:textColor="@color/settings_title_black"
-                android:textSize="16sp"
-                />
+                android:textColor="?attr/txt_content_title"
+                android:textSize="16sp" />
 
             <Switch
                 android:id="@+id/switchCustomBackground"
@@ -152,7 +149,8 @@
                 android:layout_alignBaseline="@+id/txtCustomBackground"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="8dp"/>
+                android:layout_marginRight="8dp"
+                android:clickable="false" />
 
 
         </RelativeLayout>

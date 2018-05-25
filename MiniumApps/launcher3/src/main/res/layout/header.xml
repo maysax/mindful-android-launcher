@@ -12,6 +12,5 @@
         android:paddingLeft="55dp"
         android:paddingRight="55dp"
         android:text="@string/flag_app"
-        android:textColor="@color/white"
         android:textSize="20sp" />
 </LinearLayout>

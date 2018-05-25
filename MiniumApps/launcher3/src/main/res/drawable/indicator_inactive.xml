@@ -3,8 +3,8 @@
     android:shape="oval">
     <gradient
         android:angle="270"
-        android:endColor="@color/indicator_inactive"
-        android:startColor="@color/indicator_inactive" />
+        android:endColor="?attr/indicator_inactive"
+        android:startColor="?attr/indicator_inactive" />
     <size
         android:width="100dp"
         android:height="100dp" />

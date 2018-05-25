@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -58,6 +59,12 @@ public class PrefSiempo {
 
     // used for Allow peaking.
     public static final String ALLOW_PEAKING = "Allowpeaking";
+    public static final String IS_DARK_THEME = "isDarkTheme";
+
+
+    // used for default background.
+    public static final String DEFAULT_BAG = "default_back";
+    public static final String DEFAULT_BAG_ENABLE = "default_e";
 
 
     //Launcher 3 preferences
@@ -81,10 +88,9 @@ public class PrefSiempo {
     public static final String IS_CONTACT_UPDATE = "isContactUpdate";
 
     public static final String DETER_AFTER = "deterAfter";
-
+    public static final String LOCK_COUNTER_STATUS = "LOCK_COUNTER_STATUS";
+    public static final String LOCATION_TIMER_TIME = "LOCATION_TIMER_TIME";
     private static final PrefSiempo ourInstance = new PrefSiempo();
-
-
     public static String HELPFUL_ROBOTS = "HELPFUL_ROBOTS";
     public static String BLOCKED_APPLIST = "BLOCKED_APPLIST";
     public static String MESSENGER_DISABLE_COUNT = "MESSENGER_DISABLE_COUNT";
@@ -94,7 +100,8 @@ public class PrefSiempo {
     public static String USER_SEEN_EMAIL_REQUEST = "user_seen_email_request";
     public static String APPLAND_TOUR_SEEN = "appland_tour_seen";
     public static String JUNK_RESTRICTED = "junk_restricted";
-
+    public static String USER_VOLUME = "user_volume";
+    public static String LOCATION_STATUS = "location_status";
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
 
@@ -247,7 +254,11 @@ public class PrefSiempo {
      * @param defValue user provided default value
      */
     public Set<String> read(String key, Set<String> defValue) {
-        return sharedPreferences.getStringSet(key, defValue);
+
+        Set<String> sharedSet = new HashSet<>(sharedPreferences.getStringSet
+                (key, defValue));
+
+        return sharedSet;
     }
 
     /**

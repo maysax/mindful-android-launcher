@@ -214,6 +214,13 @@ public class UIUtils {
 
     }
 
+    public static float getScreenWidth(Activity activity) {
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        return (float) displaymetrics.widthPixels;
+
+    }
+
     public static void showKeyboard(EditText editText) {
         try {
             if (editText != null) {
@@ -396,7 +403,8 @@ public class UIUtils {
      */
     public static void applyDim(@NonNull ViewGroup parent, float dimAmount) {
         //Drawable dim = new ColorDrawable(Color.BLACK);
-        Drawable dim = new ColorDrawable(parent.getContext().getResources().getColor(R.color.shadow));
+        Drawable dim = new ColorDrawable(parent.getContext().getResources()
+                .getColor(R.color.black));
         dim.setBounds(0, 0, parent.getWidth(), parent.getHeight());
         dim.setAlpha((int) (255 * dimAmount));
 

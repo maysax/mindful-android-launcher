@@ -47,7 +47,6 @@
                     android:gravity="left"
                     android:padding="@dimen/dp_5"
                     android:text="@string/welcome_to_tool"
-                    android:textColor="@color/black"
                     android:textSize="18sp"
                     android:visibility="visible"/>
 
@@ -68,7 +67,6 @@
                         android:paddingLeft="@dimen/dp_16"
                         android:paddingRight="@dimen/dp_5"
                         android:text="@string/from_this_tools"
-                        android:textColor="#8A000000"
                         android:textSize="16sp"
                         android:visibility="visible"/>
 
@@ -80,7 +78,6 @@
                         android:paddingLeft="@dimen/dp_16"
                         android:paddingRight="@dimen/dp_5"
                         android:text="@string/favorite_message"
-                        android:textColor="#8A000000"
                         android:textSize="16sp"
                         android:visibility="visible"/>
 
@@ -94,7 +91,6 @@
                         android:paddingLeft="@dimen/dp_16"
                         android:paddingRight="@dimen/dp_5"
                         android:text="@string/flagged_message"
-                        android:textColor="#8A000000"
                         android:textSize="16sp"
                         android:visibility="visible"/>
 
@@ -131,7 +127,6 @@
                     android:paddingLeft="@dimen/dp_16"
                     android:paddingRight="@dimen/dp_5"
                     android:text="1 of 3"
-                    android:textColor="#C2C2C2"
                     android:textSize="14sp"/>
 
             </RelativeLayout>

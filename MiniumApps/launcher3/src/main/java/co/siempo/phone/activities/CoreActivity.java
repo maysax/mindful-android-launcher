@@ -30,7 +30,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
 
@@ -61,7 +60,6 @@ import de.greenrobot.event.Subscribe;
 
 @EActivity
 public abstract class CoreActivity extends AppCompatActivity implements NFCInterface {
-
 
     public static File localPath, backupPath;
     public int currentIndex = 0;
@@ -108,15 +106,16 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             return defaultLauncherStr.equals(context.getPackageName());
         }
         return false;
-
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
+        boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
+        setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
         super.onCreate(savedInstanceState);
         connectInAppService();
         this.setVolumeControlStream(AudioManager.STREAM_SYSTEM);
-        //onCreateAnimation(savedInstanceState);
         windowManager = (WindowManager) getBaseContext().getSystemService(Context.WINDOW_SERVICE);
 
         mRecevier = new InnerRecevier();
@@ -124,6 +123,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_USER_PRESENT);
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        intentFilter.addAction(Intent.ACTION_SCREEN_ON);
         userPresentBroadcastReceiver = new UserPresentBroadcastReceiver();
         registerReceiver(userPresentBroadcastReceiver, intentFilter);
 
@@ -154,11 +154,12 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
+        boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
+        setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
         super.onNewIntent(intent);
         try {
             stopService(new Intent(this, OverlayService.class));
@@ -266,8 +267,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         EventBus.getDefault().unregister(this);
         try {
             if (Config.isNotificationAlive) {
-                //EventBus.getDefault().post(new NotificationTrayEvent(false));
-                //this.getFragmentManager().beginTransaction().remove(NotificationFragment.this).commit();
                 getFragmentManager().beginTransaction().
                         remove(getFragmentManager().findFragmentById(R.id.mainView)).commit();
                 Config.isNotificationAlive = false;
@@ -277,7 +276,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             e.printStackTrace();
         }
         isOnStopCalled = true;
-
         super.onStop();
     }
 
@@ -302,8 +300,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                 e.printStackTrace();
             }
         }
-
-
     }
 
     /**
@@ -328,9 +324,9 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     }
 
     /**
-     * Load Fragment on top of other fragments
      *
      * @param fragment
+     * @param containerViewId
      */
     public void loadChildFragment(Fragment fragment, int containerViewId) {
         Validate.notNull(fragment);
@@ -434,22 +430,38 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
      * when it comes back we have to show launcher dialog,toottip window.
      */
     public class UserPresentBroadcastReceiver extends BroadcastReceiver {
-
         @Override
         public void onReceive(Context arg0, Intent intent) {
-            if (intent != null && intent.getAction() != null && null != arg0) {
-                if (PackageUtil.isSiempoLauncher(arg0) && (intent.getAction()
-                        .equals
-                                (Intent.ACTION_USER_PRESENT) ||
-                        intent.getAction().equals(Intent.ACTION_SCREEN_ON))) {
-                    Intent startMain = new Intent(Intent.ACTION_MAIN);
-                    startMain.addCategory(Intent.CATEGORY_HOME);
-                    startActivity(startMain);
-                } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+            try {
+                if (intent != null && intent.getAction() != null && null != arg0) {
+                    if (PackageUtil.isSiempoLauncher(arg0) && (intent.getAction()
+                            .equals
+                                    (Intent.ACTION_USER_PRESENT) ||
+                            intent.getAction().equals(Intent.ACTION_SCREEN_ON))) {
+                        boolean lockcounterstatus = PrefSiempo.getInstance(CoreActivity.this).read
+                                (PrefSiempo
+                                        .LOCK_COUNTER_STATUS, false);
+                        if (lockcounterstatus) {
+                            DashboardActivity.currentIndexDashboard = 1;
+                            DashboardActivity.currentIndexPaneFragment = 2;
+                            Intent startMain = getIntent();
+                            if (null == startMain) {
+                                startMain = new Intent(Intent.ACTION_MAIN);
+                                startMain.addCategory(Intent.CATEGORY_HOME);
+                            }
+                            startActivity(startMain);
+                            PrefSiempo.getInstance(CoreActivity.this).write(PrefSiempo
+                                    .LOCK_COUNTER_STATUS, false);
+                        }
+                    } else if (PackageUtil.isSiempoLauncher(arg0) && intent.getAction().equals(Intent
+                            .ACTION_SCREEN_OFF)) {
+
+                    }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
-
     }
 
     class InnerRecevier extends BroadcastReceiver {
@@ -467,13 +479,10 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                     if (!state.equalsIgnoreCase(SYSTEM_DIALOG_REASON_RECENT_APPS) && reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
                         DashboardActivity.currentIndexDashboard = 1;
                         DashboardActivity.currentIndexPaneFragment = 2;
-//                        EventBus.getDefault().post(new HomePress(1, 2));
                     }
                     state = reason;
                 }
             }
         }
     }
-
-
 }

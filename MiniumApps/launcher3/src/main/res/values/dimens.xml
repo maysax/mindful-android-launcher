@@ -47,4 +47,7 @@
     <dimen name="sp_15">15sp</dimen>
     <dimen name="dp_46">46dp</dimen>
     <dimen name="sp_18">18sp</dimen>
+    <dimen name="width">100dp</dimen>
+    <dimen name="height">100dp</dimen>
+
 </resources>

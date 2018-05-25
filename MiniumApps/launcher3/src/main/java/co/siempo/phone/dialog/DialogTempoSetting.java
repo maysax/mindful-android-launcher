@@ -67,37 +67,40 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
         }
     };
 
-    public DialogTempoSetting(@NonNull Context context) {
-        super(context, R.style.FullScreenDialogStyle);
+
+    public DialogTempoSetting(@NonNull Context context, int dialogStyle) {
+        super(context, dialogStyle);
         this.context = context;
+
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        setContentView(R.layout.activity_tempo);
-        initView();
-        setCancelable(true);
-        setCanceledOnTouchOutside(true);
-        startTime = System.currentTimeMillis();
-        everyTwoHourList.addAll(Arrays.asList(0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22));
-        everyFourHoursList.addAll(Arrays.asList(0, 4, 8, 12, 16, 20));
+        if (null != getWindow()) {
+            getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+            setContentView(R.layout.activity_tempo);
+            initView();
+            setCancelable(true);
+            setCanceledOnTouchOutside(true);
+            startTime = System.currentTimeMillis();
+            everyTwoHourList.addAll(Arrays.asList(0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22));
+            everyFourHoursList.addAll(Arrays.asList(0, 4, 8, 12, 16, 20));
 
-        enableRadioOnPosition(PrefSiempo.getInstance(context).read(PrefSiempo
-                .TEMPO_TYPE, 0), false);
+            enableRadioOnPosition(PrefSiempo.getInstance(context).read(PrefSiempo
+                    .TEMPO_TYPE, 0), false);
 
-        bindOnlyAt();
+            bindOnlyAt();
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Animation in = AnimationUtils.loadAnimation(context, R.anim.fab_scale_up);
-                fabPlay.startAnimation(in);
-                fabPlay.setVisibility(View.VISIBLE);
-            }
-        }, 400);
-
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Animation in = AnimationUtils.loadAnimation(context, R.anim.fab_scale_up);
+                    fabPlay.startAnimation(in);
+                    fabPlay.setVisibility(View.VISIBLE);
+                }
+            }, 400);
+        }
 
     }
 

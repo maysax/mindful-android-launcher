@@ -3,11 +3,9 @@ package co.siempo.phone.fragments;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -68,9 +66,6 @@ public class FeedbackFragment extends CoreFragment {
     String selectedItemText = "";
 
 
-
-
-
     public static boolean isValidMessage(String msg) {
         boolean statusMessage = false;
         return !TextUtils.isEmpty(msg) && msg.length() >= 8 && (msg.contains(" ") || msg.contains("\n"));
@@ -83,7 +78,9 @@ public class FeedbackFragment extends CoreFragment {
             display = wm.getDefaultDisplay();
         }
         DisplayMetrics metrics = new DisplayMetrics();
-        display.getMetrics(metrics);
+        if (display != null) {
+            display.getMetrics(metrics);
+        }
         int width = metrics.widthPixels;
         int height = metrics.heightPixels;
 
@@ -104,7 +101,6 @@ public class FeedbackFragment extends CoreFragment {
                         if (!TextUtils.isEmpty(edt_email.getText().toString().trim())) {
                             PrefSiempo.getInstance(context).write(PrefSiempo
                                     .USER_EMAILID, edt_email.getText().toString().trim());
-//                            droidPrefs_.userEmailId().put(edt_email.getText().toString().trim());
                         }
                         try {
                             String version = "";
@@ -126,7 +122,6 @@ public class FeedbackFragment extends CoreFragment {
                                     ", Version - " + version;
 
 
-                            long currentTimeMills = System.currentTimeMillis();
 
 
                             //Creating SendMail object
@@ -156,8 +151,6 @@ public class FeedbackFragment extends CoreFragment {
         });
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
         toolbar.setTitle(R.string.feedback);
-        toolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color
-                .colorAccent));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -194,7 +187,6 @@ public class FeedbackFragment extends CoreFragment {
                                         @NonNull ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView tv = (TextView) view;
-                tv.setTextColor(Color.BLACK);
                 return view;
             }
         };

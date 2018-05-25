@@ -1,0 +1,592 @@
+Index: MiniumApps/launcher3/src/main/java/co/siempo/phone/fragments/TempoHomeFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- MiniumApps/launcher3/src/main/java/co/siempo/phone/fragments/TempoHomeFragment.java	(revision 074a92b33be46476c253f7732ec8021cd780b1b1)
++++ MiniumApps/launcher3/src/main/java/co/siempo/phone/fragments/TempoHomeFragment.java	(revision )
+@@ -1,6 +1,7 @@
+ package co.siempo.phone.fragments;
+
+ import android.app.FragmentManager;
++import android.content.Intent;
+ import android.support.v4.content.ContextCompat;
+ import android.support.v7.widget.Toolbar;
+ import android.view.View;
+@@ -14,6 +15,7 @@
+ import org.androidannotations.annotations.ViewById;
+
+ import co.siempo.phone.R;
++import co.siempo.phone.activities.ChooseBackgroundActivity;
+ import co.siempo.phone.utils.PrefSiempo;
+
+ @EFragment(R.layout.fragment_tempo_home)
+@@ -70,13 +72,13 @@
+
+     @Click
+     void relAllowSpecificApps() {
+-
+         switchDisableIntentionsControls.performClick();
+     }
+
+     @Click
+     void relCustomBackground() {
+         switchCustomBackground.performClick();
++        startActivity(new Intent(context, ChooseBackgroundActivity.class));
+     }
+
+     @Click
+Index: MiniumApps/launcher3/src/main/res/layout/activity_choose_background.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- MiniumApps/launcher3/src/main/res/layout/activity_choose_background.xml	(revision )
++++ MiniumApps/launcher3/src/main/res/layout/activity_choose_background.xml	(revision )
+@@ -0,0 +1,31 @@
++<?xml version="1.0" encoding="utf-8"?>
++<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    tools:context="co.siempo.phone.activities.ChooseBackgroundActivity">
++
++    <android.support.v7.widget.Toolbar
++        android:id="@+id/toolbar"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:background="@color/toolbar_bg"
++        android:elevation="@dimen/dp_5"
++        android:minHeight="?android:attr/actionBarSize" />
++
++    <GridView
++        android:id="@+id/gridview"
++        android:layout_width="match_parent"
++        android:layout_height="match_parent"
++        android:layout_alignParentStart="true"
++        android:layout_below="@+id/toolbar"
++        android:layout_marginBottom="@dimen/dp_4"
++        android:layout_marginLeft="@dimen/dp_4"
++        android:layout_marginRight="@dimen/dp_4"
++        android:layout_marginTop="@dimen/dp_8"
++        android:horizontalSpacing="4dp"
++        android:numColumns="2"
++        android:stretchMode="columnWidth"
++        android:verticalSpacing="4dp" />
++
++</RelativeLayout>
+Index: MiniumApps/launcher3/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- MiniumApps/launcher3/src/main/AndroidManifest.xml	(revision 074a92b33be46476c253f7732ec8021cd780b1b1)
++++ MiniumApps/launcher3/src/main/AndroidManifest.xml	(revision )
+@@ -1,69 +1,69 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+-          xmlns:tools="http://schemas.android.com/tools"
+-          package="co.siempo.phone">
++    xmlns:tools="http://schemas.android.com/tools"
++    package="co.siempo.phone">
+
+     <supports-screens
+         android:anyDensity="true"
+         android:largeScreens="true"
+         android:normalScreens="true"
+         android:smallScreens="true"
+-        android:xlargeScreens="true"/>
++        android:xlargeScreens="true" />
+
+-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+-    <uses-permission android:name="android.permission.PREVENT_POWER_KEY"/>
+-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+-    <uses-permission android:name="android.permission.BLUETOOTH"/>
+-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+-    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
+-    <uses-permission android:name="android.permission.READ_CALL_LOG"/>
+-    <uses-permission android:name="android.permission.WRITE_CALL_LOG"/>
+-    <uses-permission android:name="android.permission.CALL_PHONE"/>
+-    <uses-permission android:name="android.permission.SEND_SMS"/>
+-    <uses-permission android:name="android.permission.READ_SMS"/>
+-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+-    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
+-    <uses-permission android:name="android.permission.VIBRATE"/>
+-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+-    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+-    <uses-permission android:name="android.permission.NFC"/>
+-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
++    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
++    <uses-permission android:name="android.permission.PREVENT_POWER_KEY" />
++    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
++    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
++    <uses-permission android:name="android.permission.BLUETOOTH" />
++    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
++    <uses-permission android:name="android.permission.READ_CONTACTS" />
++    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
++    <uses-permission android:name="android.permission.READ_CALL_LOG" />
++    <uses-permission android:name="android.permission.WRITE_CALL_LOG" />
++    <uses-permission android:name="android.permission.CALL_PHONE" />
++    <uses-permission android:name="android.permission.SEND_SMS" />
++    <uses-permission android:name="android.permission.READ_SMS" />
++    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
++    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
++    <uses-permission android:name="android.permission.VIBRATE" />
++    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
++    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
++    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
++    <uses-permission android:name="android.permission.NFC" />
++    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+     <!-- Becoming default SMS app -->
+-    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+-    <uses-permission android:name="android.permission.WRITE_SMS"/>
+-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+-    <uses-permission android:name="com.android.vending.BILLING"/>
++    <uses-permission android:name="android.permission.RECEIVE_SMS" />
++    <uses-permission android:name="android.permission.WRITE_SMS" />
++    <uses-permission android:name="android.permission.WAKE_LOCK" />
++    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
++    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
++    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
++    <uses-permission android:name="com.android.vending.BILLING" />
+
+     <uses-feature
+         android:name="android.hardware.camera"
+-        android:required="false"/>
++        android:required="false" />
+     <uses-feature
+         android:name="android.hardware.camera.autofocus"
+-        android:required="false"/>
++        android:required="false" />
+
+-    <uses-permission android:name="android.permission.FLASHLIGHT"/>
++    <uses-permission android:name="android.permission.FLASHLIGHT" />
+     <uses-permission
+         android:name="android.permission.WRITE_SETTINGS"
+-        tools:ignore="ProtectedPermissions"/>
++        tools:ignore="ProtectedPermissions" />
+
+     <!-- TODO: using it for flow, we might not need this -->
+     <uses-permission
+         android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
+-        tools:ignore="ProtectedPermissions"/>
+-    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
++        tools:ignore="ProtectedPermissions" />
++    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+
+     <uses-feature
+         android:name="android.hardware.nfc"
+-        android:required="false"/>
++        android:required="false" />
+     <uses-feature
+         android:name="android.hardware.telephony"
+-        android:required="false"/>
++        android:required="false" />
+
+     <application
+         android:name=".app.Launcher3App_"
+@@ -78,17 +78,17 @@
+         <!-- Fabric configuration -->
+         <meta-data
+             android:name="io.fabric.ApiKey"
+-            android:value="6a700e064d3ba9dbf81d871dd3c0b3081ab158f7"/>
++            android:value="6a700e064d3ba9dbf81d871dd3c0b3081ab158f7" />
+
+         <activity
+             android:name=".launcher.FakeLauncherActivity"
+             android:enabled="false"
+             android:screenOrientation="portrait">
+             <intent-filter>
+-                <action android:name="android.intent.action.MAIN"/>
++                <action android:name="android.intent.action.MAIN" />
+
+-                <category android:name="android.intent.category.HOME"/>
+-                <category android:name="android.intent.category.DEFAULT"/>
++                <category android:name="android.intent.category.HOME" />
++                <category android:name="android.intent.category.DEFAULT" />
+             </intent-filter>
+         </activity>
+
+@@ -97,7 +97,7 @@
+             android:label="@string/app_name"
+             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+             <intent-filter>
+-                <action android:name="android.service.notification.NotificationListenerService"/>
++                <action android:name="android.service.notification.NotificationListenerService" />
+             </intent-filter>
+         </service>
+
+@@ -105,9 +105,9 @@
+             android:name=".receivers.CallReceiver"
+             android:enabled="true">
+             <intent-filter>
+-                <action android:name="android.intent.action.PHONE_STATE"/>
+-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+-                <action android:name="android.intent.action.NEW_OUTGOING_CALL"/>
++                <action android:name="android.intent.action.PHONE_STATE" />
++                <action android:name="android.intent.action.BOOT_COMPLETED" />
++                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+             </intent-filter>
+         </receiver>
+         <receiver
+@@ -116,61 +116,59 @@
+             android:exported="true"
+             android:permission="android.permission.BROADCAST_SMS">
+             <intent-filter android:priority="2147483647">
+-                <action android:name="android.provider.Telephony.SMS_DELIVER"/>
+-                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
++                <action android:name="android.provider.Telephony.SMS_DELIVER" />
++                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+             </intent-filter>
+         </receiver>
+
+         <activity
+             android:name=".ui.UpdateActivity_"
+-            android:screenOrientation="portrait"/>
++            android:screenOrientation="portrait" />
+         <activity
+             android:name=".activities.AlphaSettingsActivity_"
+-            android:screenOrientation="portrait"/>
++            android:screenOrientation="portrait" />
+
+         <service
+             android:name=".service.StatusBarService"
+             android:enabled="true"
+-            android:exported="false"/>
++            android:exported="false" />
+
+         <activity
+             android:name=".activities.SuppressNotificationActivity"
+-            android:screenOrientation="portrait"/>
++            android:screenOrientation="portrait" />
+         <activity
+             android:name=".activities.SiempoPermissionActivity_"
+-            android:screenOrientation="portrait"/>
++            android:screenOrientation="portrait" />
+         <activity
+             android:name=".activities.SettingsActivity_"
+-            android:screenOrientation="portrait"/>
++            android:screenOrientation="portrait" />
+         <activity
+             android:name=".activities.NotificationActivity"
+-            android:screenOrientation="portrait"/>
++            android:screenOrientation="portrait" />
+         <activity
+             android:name=".activities.HelpActivity"
+-            android:screenOrientation="portrait"/>
++            android:screenOrientation="portrait" />
+         <activity
+             android:name=".activities.IntentionEditActivity"
+-            android:windowSoftInputMode="stateAlwaysVisible"/>
++            android:windowSoftInputMode="stateAlwaysVisible" />
+
+         <receiver android:name=".service.AlarmBroadcast">
+             <intent-filter>
+-                <action android:name="co.siempo.phone.ACTION_ALARM"/>
+-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
++                <action android:name="co.siempo.phone.ACTION_ALARM" />
++                <action android:name="android.intent.action.BOOT_COMPLETED" />
+             </intent-filter>
+         </receiver>
+
+-        <service android:name=".service.AlarmService"/>
++        <service android:name=".service.AlarmService" />
+         <service
+             android:name=".service.OverlayService"
+             android:enabled="true"
+             android:exported="true"
+-            android:label="@string/app_name"
+-            >
+-        </service>
++            android:label="@string/app_name"></service>
+
+         <receiver android:name=".receivers.BootReceiver">
+             <intent-filter>
+-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
++                <action android:name="android.intent.action.BOOT_COMPLETED" />
+             </intent-filter>
+         </receiver>
+
+@@ -189,13 +187,13 @@
+             android:theme="@style/SiempoAppTheme"
+             android:windowSoftInputMode="adjustPan|adjustResize">
+             <intent-filter>
+-                <action android:name="android.intent.action.MAIN"/>
++                <action android:name="android.intent.action.MAIN" />
+
+-                <category android:name="android.intent.category.HOME"/>
+-                <category android:name="android.intent.category.DEFAULT"/>
+-                <category android:name="android.intent.category.LAUNCHER"/>
+-                <category android:name="android.intent.category.MONKEY"/>
+-                <category android:name="RUN_AT_BOOT"/>
++                <category android:name="android.intent.category.HOME" />
++                <category android:name="android.intent.category.DEFAULT" />
++                <category android:name="android.intent.category.LAUNCHER" />
++                <category android:name="android.intent.category.MONKEY" />
++                <category android:name="RUN_AT_BOOT" />
+             </intent-filter>
+         </activity>
+         <activity
+@@ -203,7 +201,7 @@
+             android:configChanges="orientation|screenSize"
+             android:label="@string/app_name"
+             android:screenOrientation="portrait"
+-            android:theme="@style/CoreTheme"/>
++            android:theme="@style/CoreTheme" />
+         <activity
+             android:name=".activities.NotesEditActivity"
+             android:configChanges="orientation|screenSize"
+@@ -213,7 +211,7 @@
+             android:theme="@style/CoreTheme">
+             <meta-data
+                 android:name="android.support.PARENT_ACTIVITY"
+-                android:value=".activities.NotesEditActivity"/>
++                android:value=".activities.NotesEditActivity" />
+         </activity>
+
+         <receiver
+@@ -222,52 +220,53 @@
+             android:exported="true"
+             tools:ignore="ExportedReceiver">
+             <intent-filter>
+-                <action android:name="minium.co.notes.CREATE_NOTES"/>
++                <action android:name="minium.co.notes.CREATE_NOTES" />
+             </intent-filter>
+             <intent-filter>
+-                <action android:name="minium.co.notes.EDIT_NOTES"/>
++                <action android:name="minium.co.notes.EDIT_NOTES" />
+             </intent-filter>
+         </receiver>
+
+         <activity
+             android:name="com.evernote.client.android.EvernoteOAuthActivity"
+-            android:screenOrientation="portrait"/>
++            android:screenOrientation="portrait" />
+         <activity
+             android:name="com.evernote.client.android.login.EvernoteLoginActivity"
+-            android:screenOrientation="portrait"/>
++            android:screenOrientation="portrait" />
+         <activity
+             android:name=".activities.AppAssignmentActivity"
+-            android:screenOrientation="portrait"/>
++            android:screenOrientation="portrait" />
+         <!-- <activity -->
+         <!-- android:name=".fragments.PaneFragment" -->
+         <!-- android:screenOrientation="portrait" /> -->
+         <activity
+             android:name=".activities.JunkfoodFlaggingActivity"
+-            android:screenOrientation="portrait"/>
++            android:screenOrientation="portrait" />
+         <activity
+             android:name=".activities.FavoritesSelectionActivity"
+-            android:screenOrientation="portrait"/>
++            android:screenOrientation="portrait" />
+         <activity
+             android:name=".activities.ToolPositioningActivity"
+-            android:screenOrientation="portrait"/>
++            android:screenOrientation="portrait" />
+         <activity
+             android:name=".activities.FavoriteAppsPositionActivity"
+-            android:screenOrientation="portrait"/>
++            android:screenOrientation="portrait" />
+         <activity
+             android:name=".activities.ToolSelectionActivity"
+-            android:screenOrientation="portrait"/>
++            android:screenOrientation="portrait" />
+         <activity
+             android:name=".activities.PrivacyPolicyActivity"
+-            android:screenOrientation="portrait"/>
++            android:screenOrientation="portrait" />
+         <activity
+             android:name=".activities.EmailRequestActivity"
+-            android:screenOrientation="portrait"/>
++            android:screenOrientation="portrait" />
+         <activity
+             android:name=".activities.EnableTempoActivity"
+-            android:screenOrientation="portrait"/>
++            android:screenOrientation="portrait" />
+         <activity
+             android:name=".activities.InAppItemListActivity"
+-            android:screenOrientation="portrait"></activity>
++            android:screenOrientation="portrait" />
++        <activity android:name=".activities.ChooseBackgroundActivity"></activity>
+     </application>
+
+-</manifest>
+\ No newline at end of file
++</manifest>
+Index: MiniumApps/launcher3/src/main/java/co/siempo/phone/models/ImageItem.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- MiniumApps/launcher3/src/main/java/co/siempo/phone/models/ImageItem.java	(revision )
++++ MiniumApps/launcher3/src/main/java/co/siempo/phone/models/ImageItem.java	(revision )
+@@ -0,0 +1,17 @@
++package co.siempo.phone.models;
++
++import android.graphics.Bitmap;
++
++/**
++ * Created by parth on 4/5/18.
++ */
++
++public class ImageItem {
++    public final String name;
++    public final Bitmap drawableId;
++
++    public ImageItem(String name, Bitmap drawableId) {
++        this.name = name;
++        this.drawableId = drawableId;
++    }
++}
+Index: MiniumApps/launcher3/src/main/java/co/siempo/phone/activities/ChooseBackgroundActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- MiniumApps/launcher3/src/main/java/co/siempo/phone/activities/ChooseBackgroundActivity.java	(revision )
++++ MiniumApps/launcher3/src/main/java/co/siempo/phone/activities/ChooseBackgroundActivity.java	(revision )
+@@ -0,0 +1,82 @@
++package co.siempo.phone.activities;
++
++import android.app.Activity;
++import android.database.Cursor;
++import android.graphics.Bitmap;
++import android.graphics.BitmapFactory;
++import android.net.Uri;
++import android.os.Bundle;
++import android.provider.MediaStore;
++import android.support.v4.content.ContextCompat;
++import android.support.v7.widget.Toolbar;
++import android.view.View;
++import android.widget.GridView;
++
++import java.util.ArrayList;
++
++import co.siempo.phone.R;
++import co.siempo.phone.adapters.BackgroundItemAdapter;
++import co.siempo.phone.models.ImageItem;
++
++public class ChooseBackgroundActivity extends CoreActivity {
++    private Toolbar toolbar;
++    private GridView gridView;
++    private ArrayList<ImageItem> mItems;
++
++    @Override
++    protected void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        setContentView(R.layout.activity_choose_background);
++        toolbar = findViewById(R.id.toolbar);
++        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
++        toolbar.setTitle(R.string.choose_background);
++        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
++                .colorAccent));
++        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View v) {
++                onBackPressed();
++            }
++        });
++        int number_of_images = getAllShownImagesPath(this).size() - 1;
++        String first_image = getAllShownImagesPath(this).get(number_of_images);
++
++        Bitmap myBitmap = BitmapFactory.decodeFile(first_image);
++        mItems = new ArrayList<>();
++
++        mItems.add(new ImageItem("Current Background", myBitmap));
++        mItems.add(new ImageItem("My images", myBitmap));
++        mItems.add(new ImageItem("Siempo images", myBitmap));
++
++        GridView gridView = (GridView) findViewById(R.id.gridview);
++
++        gridView.setAdapter(new BackgroundItemAdapter(this, mItems));
++
++    }
++
++    private ArrayList<String> getAllShownImagesPath(Activity activity) {
++        Uri uri;
++        Cursor cursor;
++        int column_index_data, column_index_folder_name;
++        ArrayList<String> listOfAllImages = new ArrayList<String>();
++        String absolutePathOfImage = null;
++        uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
++
++        String[] projection = {MediaStore.MediaColumns.DATA,
++                MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
++
++        cursor = activity.getContentResolver().query(uri, projection, null,
++                null, null);
++
++        column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
++        column_index_folder_name = cursor
++                .getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
++        while (cursor.moveToNext()) {
++            absolutePathOfImage = cursor.getString(column_index_data);
++            listOfAllImages.add(absolutePathOfImage);
++        }
++        return listOfAllImages;
++    }
++
++}
++
+Index: MiniumApps/launcher3/src/main/res/values/strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- MiniumApps/launcher3/src/main/res/values/strings.xml	(revision 074a92b33be46476c253f7732ec8021cd780b1b1)
++++ MiniumApps/launcher3/src/main/res/values/strings.xml	(revision )
+@@ -102,7 +102,7 @@
+         <item>3</item>
+     </string-array>
+
+-    <string-array name="multi_select_list_preference_default_value" tools:ignore="UnusedResources"/>
++    <string-array name="multi_select_list_preference_default_value" tools:ignore="UnusedResources" />
+
+     <string name="pref_title_system_sync_settings">System sync settings</string>
+
+@@ -319,6 +319,7 @@
+     <string name="dark_theme_text">"Backgrounds will be dark while icons &amp; text will be light."</string>
+     <string name="homescreen">Customize appearance</string>
+     <string name="app_menus">Reduce app usage</string>
++    <string name="choose_background">Choose background</string>
+     <string name="msg_no_apps">You haven\'t moved any apps into this category.</string>
+     <string name="search_hint">Find app, send message, or save note</string>
+     <string name="notification_interrupt_title">Select apps that may interrupt you</string>
+Index: MiniumApps/launcher3/src/main/java/co/siempo/phone/app/CoreApplication.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- MiniumApps/launcher3/src/main/java/co/siempo/phone/app/CoreApplication.java	(revision 074a92b33be46476c253f7732ec8021cd780b1b1)
++++ MiniumApps/launcher3/src/main/java/co/siempo/phone/app/CoreApplication.java	(revision )
+@@ -191,7 +191,7 @@
+         // set initial configurations here
+         configTracer();
+         configCalligraphy();
+         configFabric();
+         configIconify();
+         configureLifecycle();
+         configureNetworking();
+Index: MiniumApps/launcher3/src/main/res/values/dimens.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- MiniumApps/launcher3/src/main/res/values/dimens.xml	(revision 074a92b33be46476c253f7732ec8021cd780b1b1)
++++ MiniumApps/launcher3/src/main/res/values/dimens.xml	(revision )
+@@ -47,4 +47,7 @@
+     <dimen name="sp_15">15sp</dimen>
+     <dimen name="dp_46">46dp</dimen>
+     <dimen name="sp_18">18sp</dimen>
++    <dimen name="width">100dp</dimen>
++    <dimen name="height">100dp</dimen>
++
+ </resources>

@@ -1,9 +1,11 @@
 package co.siempo.phone.adapters;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -133,8 +135,13 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
 
 
         if (position + 4 >= arrayList.size()) {
-            holder.relMenu.setBackgroundColor(context.getResources().getColor
-                    (R.color.bottom_doc));
+            TypedValue typedValue = new TypedValue();
+            Resources.Theme theme = context.getTheme();
+            theme.resolveAttribute(R.attr.bottom_doc, typedValue, true);
+            int drawable = typedValue.resourceId;
+
+            holder.relMenu.setBackgroundResource(drawable);
+
         } else {
             holder.relMenu.setBackgroundColor(context.getResources().getColor
                     (R.color.transparent));
@@ -153,6 +160,19 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
         });
 
         holder.icon.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (holder.linearLayout.getVisibility() == View.VISIBLE) {
+                    if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                        mDragStartListener.onStartDrag(holder);
+                    }
+                }
+                return false;
+            }
+        });
+
+
+        holder.text.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (holder.linearLayout.getVisibility() == View.VISIBLE) {

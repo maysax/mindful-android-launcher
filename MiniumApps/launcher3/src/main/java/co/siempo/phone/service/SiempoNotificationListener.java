@@ -219,6 +219,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                 int sound = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM);
                                 if (sound != 1) {
                                     volumeLevel = sound;
+                                    PrefSiempo.getInstance(this).write(PrefSiempo.USER_VOLUME, audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
                                     Log.d("Rajesh:audioManager", "" + sound);
                                     audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
                                     Log.d("Rajesh:audioManager : ", "" + audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
@@ -227,6 +228,16 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         }
                         filterByCategory(notification);
                     }
+                } else {
+                    //Check for ringer mode
+                    if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                        int volume = PrefSiempo.getInstance(this).read(PrefSiempo.USER_VOLUME, audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+                        int sound = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM);
+                        if(sound==1) {
+                            audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, volume, 0);
+                        }
+                    }
+
                 }
             }
         }
@@ -977,10 +988,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
         }
         int lastParenthesiIndex = title.lastIndexOf("(");
         int lastEndParenthesisIndex = title.lastIndexOf(")");
-        if (true) {
-            return "CODE_IGNORE_ME";
-        }
-        return title;
+        return "CODE_IGNORE_ME";
     }
 
     private String removeColFromTitle(String title) {

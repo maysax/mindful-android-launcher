@@ -5,9 +5,11 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -17,6 +19,8 @@ import android.transition.Transition;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,6 +37,7 @@ import co.siempo.phone.utils.UIUtils;
 
 public class IntentionEditActivity extends CoreActivity implements View.OnClickListener {
 
+    CardView top;
     private TextView txtSave;
     private Toolbar toolbar;
     private TextView hint;
@@ -48,7 +53,6 @@ public class IntentionEditActivity extends CoreActivity implements View.OnClickL
     private String strIntentField;
     private long startTime = 0;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +62,13 @@ public class IntentionEditActivity extends CoreActivity implements View.OnClickL
         Transition returnTrans = new Slide();
         getWindow().setReturnTransition(returnTrans);
         setContentView(R.layout.activity_intention_edit);
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(getResources().getColor(R.color.bg_permissionscreenstatusbar));
+        View decor = window.getDecorView();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
         initView();
         bindView();
     }
@@ -85,6 +96,7 @@ public class IntentionEditActivity extends CoreActivity implements View.OnClickL
             imgClear.setVisibility(View.VISIBLE);
         } else {
             imgClear.setVisibility(View.GONE);
+            txtHelp();
         }
 
         edtIntention.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -128,7 +140,7 @@ public class IntentionEditActivity extends CoreActivity implements View.OnClickL
                 if (PrefSiempo.getInstance(IntentionEditActivity.this).read(PrefSiempo.DEFAULT_INTENTION, "").equalsIgnoreCase(s.toString())) {
                     txtSave.setVisibility(View.GONE);
                 } else {
-                    strIntentField = s.toString();
+                    strIntentField = s.toString().trim();
                     txtSave.setVisibility(View.VISIBLE);
                 }
             }
@@ -150,11 +162,18 @@ public class IntentionEditActivity extends CoreActivity implements View.OnClickL
     }
 
     private void runAnimation() {
+        ViewGroup.MarginLayoutParams layoutParams =
+                (ViewGroup.MarginLayoutParams) top.getLayoutParams();
+        layoutParams.setMargins(0, 0, 0, 0);
+        top.requestLayout();
+        top.setCardElevation(0);
+        top.setRadius(0);
         toolbar.animate().alpha(0.0f).setDuration(200);
-        hint.animate().alpha(0.0f).setDuration(200);
+//        hint.animate().alpha(0.0f).setDuration(200);
         imgClear.animate().alpha(0.0f).setDuration(200);
         linHelpWindow.animate().alpha(0.0f).setDuration(200);
-        hint.setVisibility(View.GONE);
+        hint.setText(getString(R.string.your_intention));
+//        hint.setVisibility(View.GONE);
 
         imgClear.setVisibility(View.GONE);
         edtIntention.setFocusable(false);
@@ -171,7 +190,8 @@ public class IntentionEditActivity extends CoreActivity implements View.OnClickL
             }
         });
         int from = getWindow().getNavigationBarColor();
-        int to = ContextCompat.getColor(this, R.color.colorAccent); // new color to animate to
+        int to = ContextCompat.getColor(this, R.color.dialog_blue); // new color to
+        // animate to
 
         ValueAnimator colorAnimation = ValueAnimator.ofArgb(from, to);
         colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -288,6 +308,7 @@ public class IntentionEditActivity extends CoreActivity implements View.OnClickL
         txtTwo.setOnClickListener(this);
         linHelpWindow = findViewById(R.id.linHelpWindow);
         pauseContainer = findViewById(R.id.pauseContainer);
+        top = findViewById(R.id.top);
     }
 
     @Override

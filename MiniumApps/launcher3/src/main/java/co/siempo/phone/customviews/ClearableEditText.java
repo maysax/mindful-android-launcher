@@ -113,7 +113,9 @@ public class ClearableEditText extends AppCompatEditText implements TextWatcher 
             event.setAction(MotionEvent.ACTION_CANCEL);
             showClearIcon(false);
             InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(getWindowToken(), 0);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(getWindowToken(), 0);
+            }
             this.clearFocus();
             return false;
         }
