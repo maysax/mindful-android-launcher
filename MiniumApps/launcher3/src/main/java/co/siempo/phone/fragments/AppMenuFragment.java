@@ -39,6 +39,7 @@ import co.siempo.phone.event.NotifyBottomView;
 import co.siempo.phone.event.NotifyFavortieView;
 import co.siempo.phone.event.NotifyJunkFoodView;
 import co.siempo.phone.event.NotifyToolView;
+import co.siempo.phone.event.ReduceOverUsageEvent;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.EventBus;
@@ -134,8 +135,12 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fm = getFragmentManager();
-                fm.popBackStack();
+                if (isFromFlag) {
+                    getActivity().finish();
+                } else {
+                    FragmentManager fm = getFragmentManager();
+                    fm.popBackStack();
+                }
             }
         });
 
@@ -349,7 +354,7 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
                                     .reduce_overuse_Flagged_description_setting), "<font " +
                                     "color='#42A4FF'>" + deter_after_list[2] + "</font>");
                         }
-
+                        EventBus.getDefault().post(new ReduceOverUsageEvent(true));
                         mTxtReduceOveruseFlaggedDes.setText(Html.fromHtml(txtOverUseFlag));
                     }
                 })

@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -52,6 +53,9 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import co.siempo.phone.R;
+import co.siempo.phone.activities.AppAssignmentActivity;
+import co.siempo.phone.activities.DashboardActivity;
+import co.siempo.phone.activities.SettingsActivity_;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBClient;
@@ -61,7 +65,10 @@ import co.siempo.phone.event.NotifySearchRefresh;
 import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.event.ReduceOverUsageEvent;
 import co.siempo.phone.event.StartLocationEvent;
+import co.siempo.phone.helper.ActivityHelper;
+import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.models.AppMenu;
+import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
@@ -102,7 +109,7 @@ public class StatusBarService extends Service {
     private int minusculeHeightLandscape;
     private WindowManager.LayoutParams paramsTop;
     private AppChecker appChecker;
-    private TextView txtTime, txtCount;
+    private TextView txtTime, txtCount, txtSettings, txtWellness;
     private LinearLayout linButtons, linProgress;
     private ProgressBar progressBar;
     private boolean isFullScreenView = false;
@@ -552,11 +559,11 @@ public class StatusBarService extends Service {
 
     @Subscribe
     public void reduceOverUsageEvent(ReduceOverUsageEvent reduceOverUsageEvent) {
-//        if (reduceOverUsageEvent.isStartEvent()) {
-//            resetAllTimer();
-//        } else {
-////            removeView();
-//        }
+        if (reduceOverUsageEvent.isStartEvent()) {
+            resetAllTimer();
+        } else {
+//            removeView();
+        }
     }
 
     /**
@@ -904,9 +911,12 @@ public class StatusBarService extends Service {
                 linButtons = bottomView.findViewById(R.id.linButtons);
                 linProgress = bottomView.findViewById(R.id.linProgress);
                 progressBar = bottomView.findViewById(R.id.progress);
+                progressBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(context, R.color.appland_blue_bright), PorterDuff.Mode.SRC_IN);
                 int value = (int) TimeUnit.MINUTES.toSeconds(PrefSiempo.getInstance(context).read(PrefSiempo.BREAK_PERIOD, 1));
                 progressBar.setMax(value);
                 txtCount = bottomView.findViewById(R.id.txtCount);
+                txtWellness = bottomView.findViewById(R.id.txtWellness);
+                txtSettings = bottomView.findViewById(R.id.txtSettings);
                 if (isFullScreenView) {
                     if (paramsBottom.height != ViewGroup.LayoutParams.MATCH_PARENT) {
                         paramsBottom.height = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -953,6 +963,47 @@ public class StatusBarService extends Service {
                         startTimerForBreakPeriod();
                     }
                 });
+                if (txtSettings != null) {
+                    if (!isSettingPressed) {
+                        txtSettings.setText(getResources().getString(R.string.settings));
+                        txtSettings.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.settings_overlay), null, null, null);
+                    } else {
+                        txtSettings.setText(getResources().getString(R.string.notes));
+                        txtSettings.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.notes_overlay), null, null, null);
+                    }
+                }
+                txtSettings.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (txtSettings.getText().toString().equalsIgnoreCase(getResources().getString(R.string.settings))) {
+                            PrefSiempo.getInstance(context).write(PrefSiempo.IS_SETTINGS_PRESSED, true);
+                            Intent intent = new Intent(context, SettingsActivity_.class);
+                            intent.putExtra("FlagApp", true);
+                            startActivity(intent);
+                        } else {
+                            new ActivityHelper(context).openNotesApp(false);
+                        }
+                    }
+                });
+                txtWellness.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        HashMap<Integer, AppMenu> map = CoreApplication.getInstance().getToolsSettings();
+                        if (map.get(MainListItemLoader.TOOLS_WELLNESS).getApplicationName().equalsIgnoreCase("")) {
+                            MainListItem item = new MainListItem(MainListItemLoader.TOOLS_WELLNESS, context.getResources()
+                                    .getString(R.string.title_wellness), R.drawable
+                                    .ic_vector_wellness);
+                            Intent intent = new Intent(context, AppAssignmentActivity.class);
+                            intent.putExtra(Constants.INTENT_MAINLISTITEM, item);
+                            intent.putExtra("class_name", DashboardActivity.class.getSimpleName
+                                    ().toString());
+                            context.startActivity(intent);
+                        } else {
+                            new ActivityHelper(context).openAppWithPackageName(map.get(10).getApplicationName());
+                        }
+                    }
+                });
+
                 if (null != wm) {
                     wm.addView(bottomView, paramsBottom);
 //                    wm.addView(topView, paramsTop);
@@ -1030,6 +1081,15 @@ public class StatusBarService extends Service {
                                 wm.updateViewLayout(topView, paramsTop);
                             }
 
+                        }
+                    }
+                    if (txtSettings != null) {
+                        if (!isSettingPressed) {
+                            txtSettings.setText(getResources().getString(R.string.settings));
+                            txtSettings.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.settings_overlay), null, null, null);
+                        } else {
+                            txtSettings.setText(getResources().getString(R.string.notes));
+                            txtSettings.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.notes_overlay), null, null, null);
                         }
                     }
                 } catch (Exception e) {

@@ -32,7 +32,7 @@
         android:gravity="bottom"
         android:paddingBottom="@dimen/dp_10"
         android:paddingTop="@dimen/dp_10"
-        android:visibility="gone"
+        android:visibility="visible"
         android:weightSum="3"
         android:baselineAligned="false">
 
