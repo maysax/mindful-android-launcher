@@ -52,13 +52,13 @@ import de.greenrobot.event.Subscribe;
 public class FavoritesSelectionActivity extends CoreActivity implements AdapterView.OnItemClickListener {
 
     public Set<String> list = new HashSet<>();
+    public Set<String> adapterList = new HashSet<>();
     //Junk list removal will be needed here as we need to remove the
     //junk-flagged app from other app list which cn be marked as favorite
     Set<String> junkFoodList = new HashSet<>();
     FavoriteFlaggingAdapter junkfoodFlaggingAdapter;
     int firstPosition;
     List<String> installedPackageList;
-    public Set<String> adapterList = new HashSet<>();
     private Toolbar toolbar;
     private ListView listAllApps;
     private PopupMenu popup;
@@ -222,7 +222,7 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
             bindingList = new ArrayList<>();
 
             for (String resolveInfo : installedPackageList) {
-                if (!resolveInfo.equalsIgnoreCase(getPackageName())) {
+                if (resolveInfo != null && !resolveInfo.equalsIgnoreCase(getPackageName())) {
                     boolean isEnable = UIUtils.isAppInstalledAndEnabled(this, resolveInfo);
                     if (isEnable) {
                         String applicationname = CoreApplication.getInstance()

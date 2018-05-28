@@ -4,9 +4,11 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,6 +34,7 @@ public class UpdateBackgroundActivity extends CoreActivity {
     private Toolbar toolbar;
     private PermissionUtil permissionUtil;
     private ImageView imageView;
+    private CircularProgressDrawable circularProgressDrawable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +52,13 @@ public class UpdateBackgroundActivity extends CoreActivity {
         setSupportActionBar(toolbar);
         Intent imageIntent = getIntent();
         imageView = findViewById(R.id.imageView);
+        circularProgressDrawable = new CircularProgressDrawable(this);
+        circularProgressDrawable.setStrokeWidth(8f);
+        circularProgressDrawable.setCenterRadius(80f);
+        circularProgressDrawable.setColorSchemeColors(Color.parseColor("#448AFF"));
+        circularProgressDrawable.start();
 
-        if (imageIntent.getExtras() != null && imageIntent.hasExtra("imageUri")) ;
+        if (imageIntent.getExtras() != null && imageIntent.hasExtra("imageUri"))
         {
             strImage = imageIntent.getExtras().getString("imageUri");
             checkPermissionAndDisplay(this, strImage);
@@ -67,6 +75,7 @@ public class UpdateBackgroundActivity extends CoreActivity {
                             public void onPermissionGranted() {
                                 Glide.with(context)
                                         .load(Uri.fromFile(new File(strImage)))
+                                        .placeholder(circularProgressDrawable)
                                         .into(imageView);
                             }
 
@@ -91,6 +100,7 @@ public class UpdateBackgroundActivity extends CoreActivity {
         } else {
             Glide.with(context)
                     .load(Uri.fromFile(new File(strImage)))
+                    .placeholder(circularProgressDrawable)
                     .into(imageView);
         }
     }

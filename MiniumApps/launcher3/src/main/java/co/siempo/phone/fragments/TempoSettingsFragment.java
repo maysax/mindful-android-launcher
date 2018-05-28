@@ -74,7 +74,7 @@ public class TempoSettingsFragment extends CoreFragment {
 
     @Click
     void relAppMenu() {
-        ((CoreActivity) getActivity()).loadChildFragment(AppMenuFragment.newInstance(), R.id.tempoView);
+        ((CoreActivity) getActivity()).loadChildFragment(AppMenuFragment.newInstance(false), R.id.tempoView);
     }
 
     @Click
