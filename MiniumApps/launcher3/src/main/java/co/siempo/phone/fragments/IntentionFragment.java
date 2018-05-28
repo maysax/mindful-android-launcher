@@ -210,6 +210,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                 showOverflowDialog();
                 break;
             case R.id.cardView:
+//                EventBus.getDefault().post(new ReduceOverUsageEvent(true));
                 if (null != getActivity()) {
                     Intent intent = new Intent(getActivity(), IntentionEditActivity.class);
                     startActivity(intent);
