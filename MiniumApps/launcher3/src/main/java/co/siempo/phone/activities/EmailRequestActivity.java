@@ -189,8 +189,6 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
 
 }
