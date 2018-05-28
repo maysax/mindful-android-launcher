@@ -1,12 +1,15 @@
 package co.siempo.phone.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
+import android.support.v4.widget.CircularProgressDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -18,9 +21,6 @@ import java.util.List;
 import co.siempo.phone.R;
 import co.siempo.phone.models.ImageItem;
 
-/**
- * Created by parth on 3/5/18.
- */
 
 public final class BackgroundItemAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
@@ -70,9 +70,20 @@ public final class BackgroundItemAdapter extends BaseAdapter {
             viewHolder.imageText.setVisibility(View.VISIBLE);
             viewHolder.imageText.setText(item.name);
         }
+        ProgressBar progressBar = new ProgressBar(context);
+        progressBar.setVisibility(View.VISIBLE);
+
+        CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(context);
+        circularProgressDrawable.setStrokeWidth(8f);
+        circularProgressDrawable.setCenterRadius(50f);
+        circularProgressDrawable.setColorSchemeColors(Color.parseColor("#448AFF"));
+        circularProgressDrawable.start();
+
         Glide.with(context)
                 .load(Uri.fromFile(new File(item.getDrawableId().get(0))))
+                .placeholder(circularProgressDrawable)
                 .into(viewHolder.mImage);
+
         return convertView;
     }
 
