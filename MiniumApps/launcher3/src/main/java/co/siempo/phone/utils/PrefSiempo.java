@@ -87,7 +87,7 @@ public class PrefSiempo {
     public static final String USER_EMAILID = "userEmailId";
     public static final String IS_CONTACT_UPDATE = "isContactUpdate";
 
-    public static final String DETER_AFTER = "deterAfter";
+
     public static final String LOCK_COUNTER_STATUS = "LOCK_COUNTER_STATUS";
     public static final String LOCATION_TIMER_TIME = "LOCATION_TIMER_TIME";
     private static final PrefSiempo ourInstance = new PrefSiempo();
@@ -102,6 +102,16 @@ public class PrefSiempo {
     public static String JUNK_RESTRICTED = "junk_restricted";
     public static String USER_VOLUME = "user_volume";
     public static String LOCATION_STATUS = "location_status";
+
+
+    //Preference for DeterUser
+    public static final String DETER_AFTER = "deterAfter";
+    public static final String BREAK_PERIOD = "break_period";
+    public static final String GRACE_TIME = "grace_time";
+    public static final String COVER_TIME = "cover_time";
+    public static final String BREAK_TIME = "break_time";
+    public static final String IS_SETTINGS_PRESSED = "is_settings_pressed";
+
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
 
@@ -195,7 +205,7 @@ public class PrefSiempo {
      * @param key   name to store in preference
      * @param value user provided value
      */
-    public void write(String key, long value) {
+    public synchronized void write(String key, long value) {
         editor.putLong(key, value);
         editor.apply();
     }
