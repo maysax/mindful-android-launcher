@@ -48,7 +48,6 @@ public class SmsReceiver extends BroadcastReceiver {
                 Tracer.d("SmsReceiver: onReceive" + bundle.toString());
                 Object messages[] = (Object[]) bundle.get("pdus");
                 SmsMessage smsMessage[] = new SmsMessage[messages.length];
-
                 for (int n = 0; n < messages.length; n++) {
                     smsMessage[n] = SmsMessage.createFromPdu((byte[]) messages[n]);
                 }
@@ -59,7 +58,9 @@ public class SmsReceiver extends BroadcastReceiver {
                 } else {
                     StringBuilder bodyText = new StringBuilder();
                     for (SmsMessage message : smsMessage) {
-                        bodyText.append(message.getMessageBody());
+                        if (message != null) {
+                            bodyText.append(message.getMessageBody());
+                        }
                     }
                     mBody = bodyText.toString();
                 }
