@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -27,6 +28,7 @@ import java.util.TreeSet;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.BackgroundItemAdapter;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.ImageItem;
 import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.PrefSiempo;
@@ -98,6 +100,7 @@ public class ChooseBackgroundActivity extends CoreActivity {
 
             @Override
             protected ArrayList<ImageItem> doInBackground(String... strings) {
+                CoreApplication.getInstance().downloadSiempoImages();
                 if (!strDefault.equalsIgnoreCase("")) {
                     ArrayList<String> list = new ArrayList<>();
                     list.add(strDefault);
@@ -202,9 +205,11 @@ public class ChooseBackgroundActivity extends CoreActivity {
                     .this, mainItemList);
             mImageGridview.setAdapter(backgroundItemAdapter);
         } else {
+            Log.e("Finishing Activity", "Finish called");
             finish();
         }
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -263,7 +268,8 @@ public class ChooseBackgroundActivity extends CoreActivity {
 
                             @Override
                             public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-
+                                Log.e("OnBackPress", "onBackPress Called");
+                                onBackPressed();
                             }
                         })
                         .setDeniedMessage(R.string.msg_permission_denied)
@@ -354,5 +360,6 @@ public class ChooseBackgroundActivity extends CoreActivity {
 
         return resultIAV1;
     }
+
 }
 

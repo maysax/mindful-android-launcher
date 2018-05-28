@@ -156,6 +156,7 @@ public class StatusBarService extends Service {
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
+        unregisterReceiver(userPresentBroadcastReceiver);
         if (myObserver != null)
             getContentResolver().unregisterContentObserver(myObserver);
         if (appInstallUninstall != null)
