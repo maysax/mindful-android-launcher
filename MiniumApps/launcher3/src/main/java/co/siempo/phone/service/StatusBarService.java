@@ -108,6 +108,9 @@ public class StatusBarService extends Service {
     private boolean isFullScreenView = false;
     private WindowManager.LayoutParams paramsBottom;
     private int screenHeightExclusive;
+    private Display display;
+    private Point size;
+    private int maxHeightCoverWindow;
 
 
     public StatusBarService() {
@@ -122,6 +125,76 @@ public class StatusBarService extends Service {
         registerObserverForAppInstallUninstall();
         registerReceiverScreenLock();
         appChecker = new AppChecker();
+        wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+        display = wm.getDefaultDisplay();
+        size = new Point();
+        display.getSize(size);
+
+        screenHeightExclusive = (size.y - (getNavigationBarHeight()
+                + getStatusBarHeight()));
+        heightWindow = (size.y - (getNavigationBarHeight()
+                + getStatusBarHeight())) * 6 / 9;
+
+        heightWindowLandscape = (size.x) * 6 / 9;
+        maxHeightWindowLandscape = heightWindowLandscape;
+        paramsTop = new WindowManager
+                .LayoutParams();
+
+        paramsBottom = new WindowManager
+                .LayoutParams();
+
+        maxHeightWindow = heightWindow;
+        variableMaxHeightPortrait = heightWindow;
+        variableMaxHeightLandscape = heightWindowLandscape;
+        minusculeHeight = screenHeightExclusive / 9;
+        minusculeHeightLandscape = heightWindowLandscape / 9;
+        paramsBottom.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        paramsBottom.height = minusculeHeight;
+        paramsBottom.gravity = Gravity.BOTTOM;
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            paramsBottom.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            paramsBottom.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        }
+
+        paramsBottom.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
+                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+
+        paramsBottom.format = PixelFormat.TRANSLUCENT;
+
+
+        topView = ((LayoutInflater) getSystemService(Context
+                .LAYOUT_INFLATER_SERVICE)).inflate(R.layout
+                .gray_scale_layout_reverse, null);
+        paramsTop.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        paramsTop.height = 0;
+        paramsTop.gravity = Gravity.TOP;
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            paramsTop.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            paramsTop.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        }
+
+        paramsTop.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
+                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+
+        paramsTop.format = PixelFormat.TRANSLUCENT;
+
+        display.getSize(size);
+        maxHeightCoverWindow = screenHeightExclusive * 6 / 9;
+        paramsBottom = new WindowManager.LayoutParams();
+        paramsBottom.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        paramsBottom.gravity = Gravity.BOTTOM;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            paramsBottom.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+        } else {
+            paramsBottom.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        }
+        paramsBottom.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
+                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        paramsBottom.format = PixelFormat.TRANSLUCENT;
         AppChecker.Listener deterUse = new AppChecker.Listener() {
             @Override
             public void onForeground(String process) {
@@ -684,85 +757,70 @@ public class StatusBarService extends Service {
      */
     private void addOverlayWindow(final int coverTime) {
         try {
-            wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-            Display display = wm.getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
 
-            screenHeightExclusive = (size.y - (getNavigationBarHeight()
-                    + getStatusBarHeight()));
-            heightWindow = (size.y - (getNavigationBarHeight()
-                    + getStatusBarHeight())) * 6 / 9;
+            if (wm != null && topView != null && topView.getWindowToken() ==
+                    null) {
+                wm.addView(topView, paramsTop);
+                topView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (paramsBottom.height != 0 && topView
+                                .getWindowToken() != null) {
+                            paramsTop.height = topView.getHeight() +
+                                    bottomView.getHeight();
+                            topView.setLayoutParams(new ViewGroup.LayoutParams
+                                    (paramsTop));
+                            wm.updateViewLayout(topView, paramsTop);
+                            paramsBottom.height = 0;
+                            if (bottomView.getWindowToken() != null) {
+                                wm.removeView(bottomView);
+                            }
+                            variableMaxHeightPortrait = heightWindow;
+                            variableMaxHeightLandscape = heightWindowLandscape;
+                        } else if (topView
+                                .getWindowToken() != null) {
+                            if (paramsTop.height != minusculeHeight) {
+                                paramsTop.height = topView.getHeight() / 2;
+                                topView.setLayoutParams(new ViewGroup.LayoutParams
+                                        (paramsTop));
+                                wm.updateViewLayout(topView, paramsTop);
+                                paramsBottom.height = paramsTop.height;
+                                bottomView.setLayoutParams(new ViewGroup.LayoutParams
+                                        (paramsBottom));
+                                if (bottomView.getWindowToken() != null) {
+                                    wm.updateViewLayout(bottomView, paramsBottom);
+                                } else {
+                                    wm.addView(bottomView, paramsBottom);
+                                }
+                                variableMaxHeightPortrait = heightWindow / 2;
+                                variableMaxHeightLandscape = heightWindowLandscape / 2;
+                            } else if (paramsTop.height == minusculeHeight) {
+                                //code for shifting bottom view to top
+                                paramsTop.height = 0;
+                                topView.setLayoutParams(new ViewGroup.LayoutParams
+                                        (paramsTop));
+                                wm.updateViewLayout(topView, paramsTop);
+                                paramsBottom.height = minusculeHeight;
+                                bottomView.setLayoutParams(new ViewGroup.LayoutParams
+                                        (paramsBottom));
+                                if (bottomView.getWindowToken() != null) {
+                                    wm.updateViewLayout(bottomView, paramsBottom);
+                                } else {
+                                    wm.addView(bottomView, paramsBottom);
+                                }
 
-            heightWindowLandscape = (size.x) * 6 / 9;
-            maxHeightWindowLandscape = heightWindowLandscape;
-            paramsTop = new WindowManager
-                    .LayoutParams();
+                            }
+                        }
 
-            paramsBottom = new WindowManager
-                    .LayoutParams();
+                    }
+                });
 
-            maxHeightWindow = heightWindow;
-            variableMaxHeightPortrait = heightWindow;
-            variableMaxHeightLandscape = heightWindowLandscape;
-            minusculeHeight = screenHeightExclusive / 9;
-            minusculeHeightLandscape = heightWindowLandscape / 9;
-            paramsBottom.width = ViewGroup.LayoutParams.MATCH_PARENT;
-            paramsBottom.height = minusculeHeight;
-            paramsBottom.gravity = Gravity.BOTTOM;
-
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-                paramsBottom.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                paramsBottom.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-            }
-
-            paramsBottom.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
-                    WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-
-            paramsBottom.format = PixelFormat.TRANSLUCENT;
-
-
-            topView = ((LayoutInflater) getSystemService(Context
-                    .LAYOUT_INFLATER_SERVICE)).inflate(R.layout
-                    .gray_scale_layout_reverse, null);
-            paramsTop.width = ViewGroup.LayoutParams.MATCH_PARENT;
-            paramsTop.height = 0;
-            paramsTop.gravity = Gravity.TOP;
-
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-                paramsTop.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                paramsTop.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-            }
-
-            paramsTop.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
-                    WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-
-            paramsTop.format = PixelFormat.TRANSLUCENT;
-
-            display.getSize(size);
-            final int maxHeightCoverWindow = screenHeightExclusive * 6 / 9;
-            paramsBottom = new WindowManager.LayoutParams();
-            paramsBottom.width = ViewGroup.LayoutParams.MATCH_PARENT;
-            paramsBottom.gravity = Gravity.BOTTOM;
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-                paramsBottom.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
-            } else {
-                paramsBottom.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-            }
-            paramsBottom.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
-                    WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-            paramsBottom.format = PixelFormat.TRANSLUCENT;
-
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-                paramsTop.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                paramsTop.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
             }
 
 
             switch (coverTime) {
+
+
                 case 0:
                     paramsBottom.height = screenHeightExclusive / 9;
                     Log.d("DeterUse : Screen 0/9 :", "" + paramsBottom.height);
@@ -772,19 +830,62 @@ public class StatusBarService extends Service {
                     Log.d("DeterUse : Screen 2/9 :", "" + paramsBottom.height);
                     break;
                 case 2:
-                    paramsBottom.height = screenHeightExclusive * 3 / 9;
-                    Log.d("DeterUse : Screen 3/9 :", "" + paramsBottom.height);
+                    if (topView != null && topView.getHeight() != 0 &&
+                            (bottomView == null || bottomView.getHeight() == 0)) {
+                        paramsTop.height = screenHeightExclusive * 3 / 9;
+                    } else if (topView != null && topView.getHeight() != 0 &&
+                            bottomView != null && bottomView.getHeight() != 0) {
+                        paramsTop.height = (screenHeightExclusive * 3 / 9) / 2;
+                        paramsBottom.height = (screenHeightExclusive * 3 / 9) / 2;
+                    } else if (bottomView != null && bottomView.getHeight() != 0 &&
+                            (topView == null || bottomView.getHeight() == 0)) {
+                        paramsBottom.height = screenHeightExclusive * 3 / 9;
+                    }
+//                    paramsBottom.height = screenHeightExclusive * 3 / 9;
                     break;
                 case 3:
-                    paramsBottom.height = screenHeightExclusive * 4 / 9;
+                    if (topView != null && topView.getHeight() != 0 &&
+                            (bottomView == null || bottomView.getHeight() == 0)) {
+                        paramsTop.height = screenHeightExclusive * 4 / 9;
+                    } else if (topView != null && topView.getHeight() != 0 &&
+                            bottomView != null && bottomView.getHeight() != 0) {
+                        paramsTop.height = (screenHeightExclusive * 4 / 9) / 2;
+                        paramsBottom.height = (screenHeightExclusive * 4 / 9) / 2;
+                    } else if (bottomView != null && bottomView.getHeight() != 0 &&
+                            (topView == null || bottomView.getHeight() == 0)) {
+                        paramsBottom.height = screenHeightExclusive * 4 / 9;
+                    }
+//                    paramsBottom.height = screenHeightExclusive * 4 / 9;
                     Log.d("DeterUse : Screen 4/9 :", "" + paramsBottom.height);
                     break;
                 case 4:
-                    paramsBottom.height = screenHeightExclusive * 5 / 9;
+                    if (topView != null && topView.getHeight() != 0 &&
+                            (bottomView == null || bottomView.getHeight() == 0)) {
+                        paramsTop.height = screenHeightExclusive * 5 / 9;
+                    } else if (topView != null && topView.getHeight() != 0 &&
+                            bottomView != null && bottomView.getHeight() != 0) {
+                        paramsTop.height = (screenHeightExclusive * 5 / 9) / 2;
+                        paramsBottom.height = (screenHeightExclusive * 5 / 9) / 2;
+                    } else if (bottomView != null && bottomView.getHeight() != 0 &&
+                            (topView == null || bottomView.getHeight() == 0)) {
+                        paramsBottom.height = screenHeightExclusive * 5 / 9;
+                    }
+//                    paramsBottom.height = screenHeightExclusive * 5 / 9;
                     Log.d("DeterUse : Screen 5/9 :", "" + paramsBottom.height);
                     break;
                 case 5:
-                    paramsBottom.height = screenHeightExclusive * 6 / 9;
+                    if (topView != null && topView.getHeight() != 0 &&
+                            (bottomView == null || bottomView.getHeight() == 0)) {
+                        paramsTop.height = screenHeightExclusive * 6 / 9;
+                    } else if (topView != null && topView.getHeight() != 0 &&
+                            bottomView != null && bottomView.getHeight() != 0) {
+                        paramsTop.height = (screenHeightExclusive * 6 / 9) / 2;
+                        paramsBottom.height = (screenHeightExclusive * 6 / 9) / 2;
+                    } else if (bottomView != null && bottomView.getHeight() != 0 &&
+                            (topView == null || bottomView.getHeight() == 0)) {
+                        paramsBottom.height = screenHeightExclusive * 6 / 9;
+                    }
+//                    paramsBottom.height = screenHeightExclusive * 6 / 9;
                     Log.d("DeterUse : Screen 6/9 :", "" + paramsBottom.height);
                     break;
                 case 6:
@@ -793,6 +894,7 @@ public class StatusBarService extends Service {
                     break;
 
             }
+
 
             if (bottomView == null) {
                 bottomView = ((LayoutInflater) getSystemService(Context
@@ -853,64 +955,16 @@ public class StatusBarService extends Service {
                 });
                 if (null != wm) {
                     wm.addView(bottomView, paramsBottom);
-                    wm.addView(topView, paramsTop);
-                    topView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (paramsBottom.height != 0) {
-                                paramsTop.height = topView.getHeight() +
-                                        bottomView.getHeight();
-                                topView.setLayoutParams(new ViewGroup.LayoutParams
-                                        (paramsTop));
-                                wm.updateViewLayout(topView, paramsTop);
-                                paramsBottom.height = 0;
-                                if (bottomView.getWindowToken() != null) {
-                                    wm.removeView(bottomView);
-                                }
-                                variableMaxHeightPortrait = heightWindow;
-                                variableMaxHeightLandscape = heightWindowLandscape;
-                            } else {
-                                if (paramsTop.height != minusculeHeight) {
-                                    paramsTop.height = topView.getHeight() / 2;
-                                    topView.setLayoutParams(new ViewGroup.LayoutParams
-                                            (paramsTop));
-                                    wm.updateViewLayout(topView, paramsTop);
-                                    paramsBottom.height = paramsTop.height;
-                                    bottomView.setLayoutParams(new ViewGroup.LayoutParams
-                                            (paramsBottom));
-                                    if (bottomView.getWindowToken() != null) {
-                                        wm.updateViewLayout(bottomView, paramsBottom);
-                                    } else {
-                                        wm.addView(bottomView, paramsBottom);
-                                    }
-//                        handler.postDelayed(runnableViewBottom, delay);
-                                    variableMaxHeightPortrait = heightWindow / 2;
-                                    variableMaxHeightLandscape = heightWindowLandscape / 2;
-                                } else if (paramsTop.height == minusculeHeight) {
-                                    //code for shifting bottom view to top
-                                    paramsTop.height = 0;
-                                    topView.setLayoutParams(new ViewGroup.LayoutParams
-                                            (paramsTop));
-                                    wm.updateViewLayout(topView, paramsTop);
-                                    paramsBottom.height = minusculeHeight;
-                                    bottomView.setLayoutParams(new ViewGroup.LayoutParams
-                                            (paramsBottom));
-                                    if (bottomView.getWindowToken() != null) {
-                                        wm.updateViewLayout(bottomView, paramsBottom);
-                                    } else {
-                                        wm.addView(bottomView, paramsBottom);
-                                    }
-
-                                }
-                            }
-
-                        }
-                    });
+//                    wm.addView(topView, paramsTop);
 
                     bottomView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (paramsTop.height != 0) {
+                            if (topView != null && topView.getWindowToken() !=
+                                    null
+                                    &&
+                                    topView.getHeight() !=
+                                            0) {
 
                                 paramsBottom.height = topView.getHeight() +
                                         bottomView.getHeight();
@@ -941,23 +995,7 @@ public class StatusBarService extends Service {
                                     }
                                     variableMaxHeightPortrait = heightWindow / 2;
                                     variableMaxHeightLandscape = heightWindowLandscape / 2;
-                                } else if (paramsBottom.height == minusculeHeight) {
-//                                    //code for shifting bottom view to top
-//                                    paramsBottom.height = 0;
-//                                    bottomView.setLayoutParams(new ViewGroup.LayoutParams
-//                                            (paramsBottom));
-//                                    wm.updateViewLayout(bottomView, paramsBottom);
-//                                    paramsTop.height = minusculeHeight;
-//                                    topView.setLayoutParams(new ViewGroup.LayoutParams
-//                                            (paramsTop));
-//                                    if (topView.getWindowToken() != null) {
-//                                        wm.updateViewLayout(topView, paramsTop);
-//                                    } else {
-//                                        wm.addView(topView, paramsTop);
-//                                    }
-
                                 }
-
                             }
                         }
                     });
@@ -979,10 +1017,19 @@ public class StatusBarService extends Service {
                     } else {
                         if (paramsBottom.height <= maxHeightCoverWindow) {
                             //Increase height of overlay
-                            paramsBottom.height = paramsBottom.height + (size.y / 9);
+                            //Commneted below line as height of bottom view
+                            // was increasing way to much
+//                            paramsBottom.height = paramsBottom.height + (size.y / 9);
                             bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
-                            if (wm != null)
+                            if (wm != null) {
                                 wm.updateViewLayout(bottomView, paramsBottom);
+                            }
+                            if (topView != null && topView.getWindowToken() != null) {
+                                topView.setLayoutParams(new ViewGroup.LayoutParams
+                                        (paramsTop));
+                                wm.updateViewLayout(topView, paramsTop);
+                            }
+
                         }
                     }
                 } catch (Exception e) {
