@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
@@ -24,6 +23,7 @@ import java.util.ArrayList;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.ChooseBackgroundActivity;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.NotifyBackgroundChange;
 import co.siempo.phone.event.ThemeChangeEvent;
 import co.siempo.phone.helper.FirebaseHelper;
@@ -136,8 +136,6 @@ public class TempoHomeFragment extends CoreFragment {
 
             }
         });
-
-        //   CoreApplication.getInstance().downloadSiempoImages();
     }
 
     @Click
@@ -148,11 +146,9 @@ public class TempoHomeFragment extends CoreFragment {
     @Click
     void relCustomBackground() {
         checkPermissionsForBackground();
-        //startActivity(new Intent(context, ChooseBackgroundActivity.class));
     }
 
     private void checkPermissionsForBackground() {
-        //permissionUtil = new PermissionUtil(context);
         if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !permissionUtil.hasGiven
                 (PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION))) {
             try {
@@ -160,6 +156,7 @@ public class TempoHomeFragment extends CoreFragment {
                         .setPermissionListener(new PermissionListener() {
                             @Override
                             public void onPermissionGranted() {
+                                CoreApplication.getInstance().downloadSiempoImages();
                                 startActivity(new Intent(getActivity(), ChooseBackgroundActivity.class));
                             }
 
@@ -179,13 +176,13 @@ public class TempoHomeFragment extends CoreFragment {
                 e.printStackTrace();
             }
         } else {
+            CoreApplication.getInstance().downloadSiempoImages();
             startActivity(new Intent(getActivity(), ChooseBackgroundActivity.class));
         }
     }
 
     @Override
     public void onResume() {
-        Log.e("onResume", "TempoFragment");
         super.onResume();
         String strImage = PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_BAG, "");
         boolean isEnable = PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_BAG_ENABLE, false);

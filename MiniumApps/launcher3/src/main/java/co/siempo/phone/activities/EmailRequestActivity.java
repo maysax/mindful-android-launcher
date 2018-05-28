@@ -60,9 +60,6 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.white));
             decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        }else{
-            // Download siempo images
-            CoreApplication.getInstance().downloadSiempoImages();
         }
         initView();
     }
@@ -91,14 +88,9 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
         //btnEnable.setOnClickListener(this);
         if (PrefSiempo.getInstance(this).read(PrefSiempo
                 .USER_SEEN_EMAIL_REQUEST, false)) {
-            // viewFlipperEmail.setDisplayedChild(1);
-            //relPrivacyEmail.setVisibility(View.GONE);
-
-        } else {
             viewFlipperEmail.setDisplayedChild(0);
             relPrivacyEmail.setVisibility(View.VISIBLE);
         }
-
         try {
             Typeface myTypefaceregular = Typeface.createFromAsset(getAssets(), "fonts/robotocondensedregular.ttf");
             Typeface myTypefacemedium = Typeface.createFromAsset(getAssets(), "fonts/robotomedium.ttf");
