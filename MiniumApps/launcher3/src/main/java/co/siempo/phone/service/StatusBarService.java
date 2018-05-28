@@ -764,7 +764,7 @@ public class StatusBarService extends Service {
      */
     private void addOverlayWindow(final int coverTime) {
         try {
-
+            boolean isSettingPressed = PrefSiempo.getInstance(context).read(PrefSiempo.IS_SETTINGS_PRESSED, false);
             if (wm != null && topView != null && topView.getWindowToken() ==
                     null) {
                 wm.addView(topView, paramsTop);
