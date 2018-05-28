@@ -171,7 +171,6 @@ public class AppAssignmentActivity extends CoreActivity {
         } else {
             finish();
         }
-
     }
 
     private ArrayList<ResolveInfo> getAllapp() {
