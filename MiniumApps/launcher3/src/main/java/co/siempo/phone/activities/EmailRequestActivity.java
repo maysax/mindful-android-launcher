@@ -34,7 +34,6 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.UserModel;
 import co.siempo.phone.service.MailChimpOperation;
-import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 
@@ -43,7 +42,6 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
     private Button btnNotNow, btnContinue;
     private TextView txtPrivacy, txtErrorMessage;
     private TextInputEditText autoCompleteTextViewEmail;
-    private PermissionUtil permissionUtil;
     private CardView cardCenter;
     private RelativeLayout relPrivacyEmail;
     private ViewFlipper viewFlipperEmail;
@@ -53,7 +51,6 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email_request);
-        permissionUtil = new PermissionUtil(this);
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         View decor = window.getDecorView();
@@ -85,7 +82,6 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
         btnNotNow.setOnClickListener(this);
         btnContinue.setOnClickListener(this);
         txtErrorMessage.setVisibility(View.INVISIBLE);
-        //btnEnable.setOnClickListener(this);
         if (PrefSiempo.getInstance(this).read(PrefSiempo
                 .USER_SEEN_EMAIL_REQUEST, false)) {
             viewFlipperEmail.setDisplayedChild(0);
@@ -147,15 +143,6 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
                 break;
         }
     }
-
-    private void flipView() {
-        UIUtils.hideSoftKeyboard(this, getWindow().getDecorView().getWindowToken());
-        relPrivacyEmail.setVisibility(View.GONE);
-        viewFlipperEmail.setInAnimation(this, R.anim.in_from_right_email);
-        viewFlipperEmail.setOutAnimation(this, R.anim.out_to_left_email);
-        //viewFlipperEmail.showNext();
-    }
-
     private void sendEvent() {
         String strEmail = autoCompleteTextViewEmail.getText().toString().trim();
         boolean isValidEmail = UIUtils.isValidEmail(strEmail);
@@ -177,11 +164,6 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
             } catch (Exception e) {
                 e.printStackTrace();
             }
-           /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)) {
-                flipView();
-            } else {
-                finish();
-            }*/
         } else {
             autoCompleteTextViewEmail.requestFocus();
             txtErrorMessage.setVisibility(View.VISIBLE);

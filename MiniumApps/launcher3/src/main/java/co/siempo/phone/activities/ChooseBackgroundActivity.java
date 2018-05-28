@@ -100,7 +100,6 @@ public class ChooseBackgroundActivity extends CoreActivity {
 
             @Override
             protected ArrayList<ImageItem> doInBackground(String... strings) {
-                CoreApplication.getInstance().downloadSiempoImages();
                 if (!strDefault.equalsIgnoreCase("")) {
                     ArrayList<String> list = new ArrayList<>();
                     list.add(strDefault);
@@ -263,6 +262,7 @@ public class ChooseBackgroundActivity extends CoreActivity {
                         .setPermissionListener(new PermissionListener() {
                             @Override
                             public void onPermissionGranted() {
+                                CoreApplication.getInstance().downloadSiempoImages();
                                 bindGridView();
                             }
 
@@ -283,6 +283,7 @@ public class ChooseBackgroundActivity extends CoreActivity {
                 e.printStackTrace();
             }
         } else {
+            CoreApplication.getInstance().downloadSiempoImages();
             bindGridView();
         }
     }
