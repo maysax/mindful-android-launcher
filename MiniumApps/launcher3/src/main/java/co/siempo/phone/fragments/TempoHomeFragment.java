@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
@@ -53,6 +54,7 @@ public class TempoHomeFragment extends CoreFragment {
 
     @ViewById
     RelativeLayout relDarkTheme;
+
     private PermissionUtil permissionUtil;
 
     public TempoHomeFragment() {
@@ -63,7 +65,9 @@ public class TempoHomeFragment extends CoreFragment {
     @AfterViews
     void afterViews() {
         // Download siempo images
-        permissionUtil = new PermissionUtil(getActivity());
+        if (permissionUtil == null) {
+            permissionUtil = new PermissionUtil(getActivity());
+        }
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
         toolbar.setTitle(R.string.homescreen);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -73,18 +77,19 @@ public class TempoHomeFragment extends CoreFragment {
                 fm.popBackStack();
             }
         });
-        switchDisableIntentionsControls.setChecked(PrefSiempo.getInstance(context).read(PrefSiempo.IS_INTENTION_ENABLE, false));
+        switchDisableIntentionsControls.setChecked(PrefSiempo.getInstance(getActivity()).read(PrefSiempo
+                .IS_INTENTION_ENABLE, false));
         switchDisableIntentionsControls.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                PrefSiempo.getInstance(context).write(PrefSiempo
+                PrefSiempo.getInstance(getActivity()).write(PrefSiempo
                         .IS_INTENTION_ENABLE, isChecked);
                 FirebaseHelper.getInstance().logIntention_IconBranding_Randomize(FirebaseHelper.INTENTIONS, isChecked ? 1 : 0);
 
             }
         });
 
-        if (PrefSiempo.getInstance(context).read(PrefSiempo
+        if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo
                 .IS_DARK_THEME, false)) {
             switchDarkTheme.setChecked(true);
         } else {
@@ -94,7 +99,7 @@ public class TempoHomeFragment extends CoreFragment {
         switchDarkTheme.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                PrefSiempo.getInstance(context).write(PrefSiempo
+                PrefSiempo.getInstance(getActivity()).write(PrefSiempo
                         .IS_DARK_THEME, isChecked);
                 EventBus.getDefault().postSticky(new ThemeChangeEvent(true));
                 android.os.Handler handler = new android.os.Handler();
@@ -131,6 +136,7 @@ public class TempoHomeFragment extends CoreFragment {
 
             }
         });
+
         //   CoreApplication.getInstance().downloadSiempoImages();
     }
 
@@ -150,11 +156,11 @@ public class TempoHomeFragment extends CoreFragment {
         if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !permissionUtil.hasGiven
                 (PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION))) {
             try {
-                TedPermission.with(context)
+                TedPermission.with(getActivity())
                         .setPermissionListener(new PermissionListener() {
                             @Override
                             public void onPermissionGranted() {
-                                startActivity(new Intent(context, ChooseBackgroundActivity.class));
+                                startActivity(new Intent(getActivity(), ChooseBackgroundActivity.class));
                             }
 
                             @Override
@@ -167,34 +173,36 @@ public class TempoHomeFragment extends CoreFragment {
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                                 Manifest
                                         .permission
-                                        .READ_EXTERNAL_STORAGE,})
+                                        .READ_EXTERNAL_STORAGE})
                         .check();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
-            startActivity(new Intent(context, ChooseBackgroundActivity.class));
+            startActivity(new Intent(getActivity(), ChooseBackgroundActivity.class));
         }
     }
 
     @Override
     public void onResume() {
+        Log.e("onResume", "TempoFragment");
         super.onResume();
         String strImage = PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_BAG, "");
         boolean isEnable = PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_BAG_ENABLE, false);
+        boolean isPermission = permissionUtil.hasGiven(PermissionUtil
+                .WRITE_EXTERNAL_STORAGE_PERMISSION);
         if (isEnable
-                && !TextUtils.isEmpty(strImage)) {
+                && !TextUtils.isEmpty(strImage) && isPermission) {
             switchCustomBackground.setChecked(true);
-        } else if (!isEnable && TextUtils.isEmpty(strImage)) {
+        } else if (!isEnable && TextUtils.isEmpty(strImage) && !isPermission) {
             switchCustomBackground.setChecked(false);
             PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_BAG_ENABLE, false);
         }
     }
 
+
     @Click
     void relDarkTheme() {
         switchDarkTheme.performClick();
     }
-
-
 }

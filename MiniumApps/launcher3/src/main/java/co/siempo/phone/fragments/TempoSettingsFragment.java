@@ -1,5 +1,6 @@
 package co.siempo.phone.fragments;
 
+import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -92,5 +93,13 @@ public class TempoSettingsFragment extends CoreFragment {
         new ActivityHelper(context).openSiempoAlphaSettingsApp();
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
 
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+    }
 }

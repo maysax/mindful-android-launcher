@@ -269,7 +269,7 @@ public class ChooseBackgroundActivity extends CoreActivity {
                             @Override
                             public void onPermissionDenied(ArrayList<String> deniedPermissions) {
                                 Log.e("OnBackPress", "onBackPress Called");
-                                onBackPressed();
+                                finish();
                             }
                         })
                         .setDeniedMessage(R.string.msg_permission_denied)
