@@ -152,6 +152,9 @@ public class AppAssignmentActivity extends CoreActivity {
                         }
                     }
                 }
+                if (showallAppBtn != null) {
+                    showallAppBtn.setVisibility(View.GONE);
+                }
             } else {
                 appList = CoreApplication.getInstance().getApplicationByCategory(mainListItem.getId());
             }
