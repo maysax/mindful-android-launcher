@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
@@ -183,11 +184,6 @@ public class PaneFragment extends CoreFragment {
         statusBarColorJunk = typedValue.data;
         theme.resolveAttribute(R.attr.status_bar_pane, typedValue, true);
         statusBarColorPane = typedValue.data;
-
-
-        bindView();
-        Log.d("Test", "P2");
-
         return rootView;
     }
 
@@ -252,7 +248,6 @@ public class PaneFragment extends CoreFragment {
         if (isVisibleToUser && firstTimeLoad) {
             if (getView() != null) {
                 bindBottomDock();
-                bindViewPager();
                 firstTimeLoad = false;
             }
         }
@@ -329,12 +324,15 @@ public class PaneFragment extends CoreFragment {
         chipsEditText.clearFocus();
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        bindView();
+    }
+
     private void bindView() {
         bindViewPager();
-
         bindBottomDock();
-
-
         bindSearchView();
     }
 
@@ -421,7 +419,7 @@ public class PaneFragment extends CoreFragment {
     private void bindBottomDock() {
 
         mLayoutManager = new GridLayoutManager(getActivity(), 4);
-        if (null != mLayoutManager && null != recyclerViewBottomDoc) {
+        if (null != recyclerViewBottomDoc) {
             recyclerViewBottomDoc.setLayoutManager(mLayoutManager);
             if (itemDecoration != null) {
                 recyclerViewBottomDoc.removeItemDecoration(itemDecoration);
