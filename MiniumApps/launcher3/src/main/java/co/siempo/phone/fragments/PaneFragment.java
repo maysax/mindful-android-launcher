@@ -124,9 +124,9 @@ public class PaneFragment extends CoreFragment {
     BroadcastReceiver mKeyBoardReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (null!=intent && null!=intent.getAction() && intent.getAction().equals
+            if (null != intent && null != intent.getAction() && intent.getAction().equals
                     (Utils
-                    .KEYBOARD_ACTION)) {
+                            .KEYBOARD_ACTION)) {
                 if (intent.getBooleanExtra(Utils.ACTION, false)) {
                     updateListViewLayout(true);
                 } else {
@@ -186,8 +186,13 @@ public class PaneFragment extends CoreFragment {
         statusBarColorJunk = typedValue.data;
         theme.resolveAttribute(R.attr.status_bar_pane, typedValue, true);
         statusBarColorPane = typedValue.data;
-        bindView();
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        bindView();
     }
 
     @Override
@@ -247,11 +252,10 @@ public class PaneFragment extends CoreFragment {
             overlayDialogPermission.dismiss();
         }
 
-        //Added as a part of SSA-1669
+//        Added as a part of SSA-1669
         if (isVisibleToUser && firstTimeLoad) {
             if (getView() != null) {
                 bindBottomDock();
-                bindViewPager();
                 firstTimeLoad = false;
             }
         }
@@ -420,7 +424,7 @@ public class PaneFragment extends CoreFragment {
     private void bindBottomDock() {
 
         mLayoutManager = new GridLayoutManager(getActivity(), 4);
-        if (null != mLayoutManager && null != recyclerViewBottomDoc) {
+        if (null != recyclerViewBottomDoc) {
             recyclerViewBottomDoc.setLayoutManager(mLayoutManager);
             if (itemDecoration != null) {
                 recyclerViewBottomDoc.removeItemDecoration(itemDecoration);
@@ -951,7 +955,7 @@ public class PaneFragment extends CoreFragment {
                 getActivity().setRequestedOrientation(ActivityInfo
                         .SCREEN_ORIENTATION_PORTRAIT);
                 overlayDialog = new Dialog(getActivity(), 0);
-                if (overlayDialogPermission.getWindow() != null) {
+                if (overlayDialog.getWindow() != null) {
                     overlayDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 }
                 overlayDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
