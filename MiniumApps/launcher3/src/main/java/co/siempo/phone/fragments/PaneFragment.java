@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
@@ -183,12 +184,19 @@ public class PaneFragment extends CoreFragment {
         statusBarColorJunk = typedValue.data;
         theme.resolveAttribute(R.attr.status_bar_pane, typedValue, true);
         statusBarColorPane = typedValue.data;
-
-
-        bindView();
-        Log.d("Test", "P2");
-
         return rootView;
+    }
+
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        bindView();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -248,12 +256,14 @@ public class PaneFragment extends CoreFragment {
             overlayDialogPermission.dismiss();
         }
 
-        //Added as a part of SSA-1669
-        if (isVisibleToUser && firstTimeLoad) {
-            bindBottomDock();
-            bindViewPager();
-            firstTimeLoad = false;
-        }
+//        //Added as a part of SSA-1669
+//        if (isVisibleToUser && firstTimeLoad) {
+//            if (getView() != null) {
+//                bindBottomDock();
+//                bindViewPager();
+//                firstTimeLoad = false;
+//            }
+//        }
     }
 
     public void loadView() {
@@ -448,8 +458,8 @@ public class PaneFragment extends CoreFragment {
     }
 
     private void bindViewPager() {
-        mPagerAdapter = new PanePagerAdapter(getChildFragmentManager());
         if (null != pagerPane) {
+            mPagerAdapter = new PanePagerAdapter(getChildFragmentManager());
             pagerPane.setAdapter(mPagerAdapter);
             indicator.setViewPager(pagerPane);
             pagerPane.setOffscreenPageLimit(2);
@@ -491,15 +501,15 @@ public class PaneFragment extends CoreFragment {
                                     //Show overlay for draw over other apps permission
 
 
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                    if (!Settings.canDrawOverlays(context) &&
-                                            PrefSiempo.getInstance(context).read
-                                                    (PrefSiempo.DETER_AFTER,
-                                                            -1) != -1) {
-                                        if (null == overlayDialogPermission || !overlayDialogPermission.isShowing())
-                                            showOverLayForDrawingPermission();
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                        if (!Settings.canDrawOverlays(context) &&
+                                                PrefSiempo.getInstance(context).read
+                                                        (PrefSiempo.DETER_AFTER,
+                                                                -1) != -1) {
+                                            if (null == overlayDialogPermission || !overlayDialogPermission.isShowing())
+                                                showOverLayForDrawingPermission();
+                                        }
                                     }
-                                }
 
 
                                 }
