@@ -31,8 +31,10 @@ public class PrivacyPolicyActivity extends CoreActivity {
                 onBackPressed();
             }
         });
-        web_Faq = findViewById(R.id.web_Faq);
+        //Changed for SSA-1761 Fatal Exception: java.lang.RuntimeException: Unable to start activity ComponentInfo
+        //web_Faq = findViewById(R.id.web_Faq);
         try {
+            web_Faq = findViewById(R.id.web_Faq);
             web_Faq.getSettings().setJavaScriptEnabled(true);
             web_Faq.loadUrl("http://www.getsiempo.com/app/pp.html");
             web_Faq.setBackgroundColor(Color.TRANSPARENT);
