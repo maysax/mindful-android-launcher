@@ -332,12 +332,10 @@ public class PaneFragment extends CoreFragment {
         chipsEditText.clearFocus();
     }
 
+
     private void bindView() {
         bindViewPager();
-
         bindBottomDock();
-
-
         bindSearchView();
     }
 
@@ -1004,8 +1002,9 @@ public class PaneFragment extends CoreFragment {
                                 viewFlipper.setDisplayedChild(1);
                                 txtToolsTitle.setText(R.string.frequently_used_title);
                                 txtNext.setText("2 of 3");
-                                pagerPane.setCurrentItem(1);
-
+                                if (isAdded()) {
+                                    pagerPane.setCurrentItem(1);
+                                }
                                 break;
                             case 1:
                                 viewFlipper.setInAnimation(context, R.anim
