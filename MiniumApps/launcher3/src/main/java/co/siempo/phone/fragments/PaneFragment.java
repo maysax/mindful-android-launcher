@@ -952,7 +952,7 @@ public class PaneFragment extends CoreFragment {
                 getActivity().setRequestedOrientation(ActivityInfo
                         .SCREEN_ORIENTATION_PORTRAIT);
                 overlayDialog = new Dialog(getActivity(), 0);
-                if (overlayDialogPermission.getWindow() != null) {
+                if (overlayDialog.getWindow() != null) {
                     overlayDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 }
                 overlayDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
