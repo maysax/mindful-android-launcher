@@ -491,15 +491,15 @@ public class PaneFragment extends CoreFragment {
                                     //Show overlay for draw over other apps permission
 
 
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                        if (!Settings.canDrawOverlays(context) &&
-                                                PrefSiempo.getInstance(context).read
-                                                        (PrefSiempo.DETER_AFTER,
-                                                                -1) != -1) {
-                                            if (null == overlayDialogPermission || !overlayDialogPermission.isShowing())
-                                                showOverLayForDrawingPermission();
-                                        }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    if (!Settings.canDrawOverlays(context) &&
+                                            PrefSiempo.getInstance(context).read
+                                                    (PrefSiempo.DETER_AFTER,
+                                                            -1) != -1) {
+                                        if (null == overlayDialogPermission || !overlayDialogPermission.isShowing())
+                                            showOverLayForDrawingPermission();
                                     }
+                                }
 
 
                                 }
