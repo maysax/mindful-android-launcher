@@ -152,6 +152,9 @@ public class AppAssignmentActivity extends CoreActivity {
                         }
                     }
                 }
+                if (showallAppBtn != null) {
+                    showallAppBtn.setVisibility(View.GONE);
+                }
             } else {
                 appList = CoreApplication.getInstance().getApplicationByCategory(mainListItem.getId());
             }
@@ -168,7 +171,6 @@ public class AppAssignmentActivity extends CoreActivity {
         } else {
             finish();
         }
-
     }
 
     private ArrayList<ResolveInfo> getAllapp() {

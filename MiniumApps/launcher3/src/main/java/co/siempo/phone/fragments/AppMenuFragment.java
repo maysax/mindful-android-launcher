@@ -48,6 +48,7 @@ import de.greenrobot.event.EventBus;
 public class AppMenuFragment extends CoreFragment implements View.OnClickListener {
 
 
+    boolean isFromFlag = false;
     private View view;
     private Toolbar toolbar;
     private RelativeLayout relJunkFoodmize;
@@ -64,7 +65,6 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
     private int index;
     private String txtOverUseFlag;
     private Dialog overlayDialogPermission;
-    boolean isFromFlag = false;
 
     public AppMenuFragment() {
         // Required empty public constructor

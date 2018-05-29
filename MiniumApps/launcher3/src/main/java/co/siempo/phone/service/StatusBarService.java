@@ -83,6 +83,8 @@ import static co.siempo.phone.utils.NotificationUtils.ANDROID_CHANNEL_ID;
 
 public class StatusBarService extends Service {
 
+    private static int whichPhaseRunning = 0;// 0 for nothing,1 for Grace,2 for cover,3 for break;
+    private static boolean deterUsageRunning = false;
     private Context context;
     private MyObserver myObserver;
     private AppInstallUninstall appInstallUninstall;
@@ -92,8 +94,6 @@ public class StatusBarService extends Service {
     private LocationCallback mLocationCallback;
     private UserPresentBroadcastReceiver userPresentBroadcastReceiver;
     private CountDownTimer countDownTimerGrace, countDownTimerCover, countDownTimerBreak;
-    private static int whichPhaseRunning = 0;// 0 for nothing,1 for Grace,2 for cover,3 for break;
-    private static boolean deterUsageRunning = false;
     private WindowManager wm;
     private View androidHead;
     private AppChecker appChecker;
@@ -227,6 +227,7 @@ public class StatusBarService extends Service {
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
+        unregisterReceiver(userPresentBroadcastReceiver);
         if (myObserver != null)
             getContentResolver().unregisterContentObserver(myObserver);
         if (appInstallUninstall != null)
@@ -467,124 +468,6 @@ public class StatusBarService extends Service {
             stopLocationUpdates();
         } else {
             getLocation();
-        }
-    }
-
-    private class MyObserver extends ContentObserver {
-        MyObserver(Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        public void onChange(boolean selfChange) {
-            this.onChange(selfChange, null);
-        }
-
-        @Override
-        public void onChange(boolean selfChange, Uri uri) {
-            PrefSiempo.getInstance(context).write(PrefSiempo.IS_CONTACT_UPDATE, true);
-//            PackageUtil.contactsUpdateInSearchList(context);
-        }
-    }
-
-    /**
-     * This broadcast is used to determine the application installed/uninstalled and update.
-     */
-    class AppInstallUninstall extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            try {
-                if (intent != null && intent.getAction() != null) {
-                    if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) {
-                        String installPackageName;
-                        if (intent.getData().getEncodedSchemeSpecificPart() != null) {
-                            if (!(intent.getExtras().containsKey(Intent.EXTRA_REPLACING) &&
-                                    intent.getExtras().getBoolean(Intent.EXTRA_REPLACING, false))) {
-                                installPackageName = intent.getData().getEncodedSchemeSpecificPart();
-                                addAppFromBlockedList(installPackageName);
-                                CoreApplication.getInstance().addOrRemoveApplicationInfo(true, installPackageName);
-                                reloadData();
-                            }
-                        }
-                    } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
-                        String uninstallPackageName;
-                        if (intent.getData().getEncodedSchemeSpecificPart() != null) {
-                            if (!(intent.getExtras().containsKey(Intent.EXTRA_REPLACING) &&
-                                    intent.getExtras().getBoolean(Intent.EXTRA_REPLACING, false))) {
-                                uninstallPackageName = intent.getData().getSchemeSpecificPart();
-                                if (!TextUtils.isEmpty(uninstallPackageName)) {
-                                    new DBClient().deleteMsgByPackageName(uninstallPackageName);
-                                    removeAppFromPreference(context, uninstallPackageName);
-                                    removeAppFromBlockedList(uninstallPackageName);
-                                    CoreApplication.getInstance().addOrRemoveApplicationInfo(false, uninstallPackageName);
-                                    reloadData();
-                                }
-                            }
-                        }
-                    } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED)) {
-                        String packageName;
-                        if (intent.getData().getEncodedSchemeSpecificPart() != null) {
-                            packageName = intent.getData().getSchemeSpecificPart();
-                            boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, packageName);
-                            if (isEnable) {
-                                if (!CoreApplication.getInstance().getPackagesList().contains(packageName)) {
-                                    addAppFromBlockedList(packageName);
-                                    CoreApplication.getInstance().addOrRemoveApplicationInfo(true, packageName);
-                                }
-                            } else {
-                                removeAppFromPreference(context, packageName);
-                                removeAppFromBlockedList(packageName);
-                                CoreApplication.getInstance().addOrRemoveApplicationInfo(false, packageName);
-                            }
-                            reloadData();
-                        }
-                    }
-                    PrefSiempo.getInstance(context).write
-                            (PrefSiempo.IS_APP_UPDATED, true);
-                    EventBus.getDefault().post(new AppInstalledEvent(true));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                CoreApplication.getInstance().logException(e);
-            }
-
-        }
-    }
-
-    /**
-     * This broadcast is used to determine the screen on/off flag.
-     */
-
-    public class UserPresentBroadcastReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context arg0, Intent intent) {
-            if (intent != null && intent.getAction() != null && null != arg0) {
-                if (PackageUtil.isSiempoLauncher(arg0) && (intent.getAction()
-                        .equals
-                                (Intent.ACTION_USER_PRESENT) ||
-                        intent.getAction().equals(Intent.ACTION_SCREEN_ON))) {
-
-                    if (countDownTimer != null) {
-                        countDownTimer.cancel();
-                        PrefSiempo.getInstance(context).write(PrefSiempo
-                                .LOCK_COUNTER_STATUS, false);
-                    }
-                    if (countDownTimerBreak != null) {
-                        countDownTimerBreak.cancel();
-                        countDownTimerBreak = null;
-                        deterUsageRunning = false;
-                        isFullScreenView = false;
-                        whichPhaseRunning = 0;
-                        resetAllTimer();
-                        removeView();
-                        PrefSiempo.getInstance(context).write(PrefSiempo.BREAK_TIME, 0L);
-                    }
-                } else if (intent.getAction().equals(Intent
-                        .ACTION_SCREEN_OFF)) {
-                    startLockScreenTimer();
-                }
-            }
         }
     }
 
@@ -1000,6 +883,124 @@ public class StatusBarService extends Service {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private class MyObserver extends ContentObserver {
+        MyObserver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            this.onChange(selfChange, null);
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            PrefSiempo.getInstance(context).write(PrefSiempo.IS_CONTACT_UPDATE, true);
+//            PackageUtil.contactsUpdateInSearchList(context);
+        }
+    }
+
+    /**
+     * This broadcast is used to determine the application installed/uninstalled and update.
+     */
+    class AppInstallUninstall extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                if (intent != null && intent.getAction() != null) {
+                    if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) {
+                        String installPackageName;
+                        if (intent.getData().getEncodedSchemeSpecificPart() != null) {
+                            if (!(intent.getExtras().containsKey(Intent.EXTRA_REPLACING) &&
+                                    intent.getExtras().getBoolean(Intent.EXTRA_REPLACING, false))) {
+                                installPackageName = intent.getData().getEncodedSchemeSpecificPart();
+                                addAppFromBlockedList(installPackageName);
+                                CoreApplication.getInstance().addOrRemoveApplicationInfo(true, installPackageName);
+                                reloadData();
+                            }
+                        }
+                    } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
+                        String uninstallPackageName;
+                        if (intent.getData().getEncodedSchemeSpecificPart() != null) {
+                            if (!(intent.getExtras().containsKey(Intent.EXTRA_REPLACING) &&
+                                    intent.getExtras().getBoolean(Intent.EXTRA_REPLACING, false))) {
+                                uninstallPackageName = intent.getData().getSchemeSpecificPart();
+                                if (!TextUtils.isEmpty(uninstallPackageName)) {
+                                    new DBClient().deleteMsgByPackageName(uninstallPackageName);
+                                    removeAppFromPreference(context, uninstallPackageName);
+                                    removeAppFromBlockedList(uninstallPackageName);
+                                    CoreApplication.getInstance().addOrRemoveApplicationInfo(false, uninstallPackageName);
+                                    reloadData();
+                                }
+                            }
+                        }
+                    } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_CHANGED)) {
+                        String packageName;
+                        if (intent.getData().getEncodedSchemeSpecificPart() != null) {
+                            packageName = intent.getData().getSchemeSpecificPart();
+                            boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, packageName);
+                            if (isEnable) {
+                                if (!CoreApplication.getInstance().getPackagesList().contains(packageName)) {
+                                    addAppFromBlockedList(packageName);
+                                    CoreApplication.getInstance().addOrRemoveApplicationInfo(true, packageName);
+                                }
+                            } else {
+                                removeAppFromPreference(context, packageName);
+                                removeAppFromBlockedList(packageName);
+                                CoreApplication.getInstance().addOrRemoveApplicationInfo(false, packageName);
+                            }
+                            reloadData();
+                        }
+                    }
+                    PrefSiempo.getInstance(context).write
+                            (PrefSiempo.IS_APP_UPDATED, true);
+                    EventBus.getDefault().post(new AppInstalledEvent(true));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                CoreApplication.getInstance().logException(e);
+            }
+
+        }
+    }
+
+    /**
+     * This broadcast is used to determine the screen on/off flag.
+     */
+
+    public class UserPresentBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context arg0, Intent intent) {
+            if (intent != null && intent.getAction() != null && null != arg0) {
+                if (PackageUtil.isSiempoLauncher(arg0) && (intent.getAction()
+                        .equals
+                                (Intent.ACTION_USER_PRESENT) ||
+                        intent.getAction().equals(Intent.ACTION_SCREEN_ON))) {
+
+                    if (countDownTimer != null) {
+                        countDownTimer.cancel();
+                        PrefSiempo.getInstance(context).write(PrefSiempo
+                                .LOCK_COUNTER_STATUS, false);
+                    }
+                    if (countDownTimerBreak != null) {
+                        countDownTimerBreak.cancel();
+                        countDownTimerBreak = null;
+                        deterUsageRunning = false;
+                        isFullScreenView = false;
+                        whichPhaseRunning = 0;
+                        resetAllTimer();
+                        removeView();
+                        PrefSiempo.getInstance(context).write(PrefSiempo.BREAK_TIME, 0L);
+                    }
+                } else if (intent.getAction().equals(Intent
+                        .ACTION_SCREEN_OFF)) {
+                    startLockScreenTimer();
+                }
+            }
         }
     }
 }

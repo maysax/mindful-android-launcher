@@ -483,15 +483,15 @@ public class PaneFragment extends CoreFragment {
                                 //Show overlay for draw over other apps permission
 
 
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                if (!Settings.canDrawOverlays(context) &&
-                                        PrefSiempo.getInstance(context).read
-                                                (PrefSiempo.DETER_AFTER,
-                                                        -1) != -1) {
-                                    if (null == overlayDialogPermission || !overlayDialogPermission.isShowing())
-                                        showOverLayForDrawingPermission();
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    if (!Settings.canDrawOverlays(context) &&
+                                            PrefSiempo.getInstance(context).read
+                                                    (PrefSiempo.DETER_AFTER,
+                                                            -1) != -1) {
+                                        if (null == overlayDialogPermission || !overlayDialogPermission.isShowing())
+                                            showOverLayForDrawingPermission();
+                                    }
                                 }
-                            }
 
 
                             }
@@ -1262,16 +1262,20 @@ public class PaneFragment extends CoreFragment {
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2,
                                    float velocityX, float velocityY) {
-                float distanceX = e2.getX() - e1.getX();
-                float distanceY = e2.getY() - e1.getY();
-                if (Math.abs(distanceX) > Math.abs(distanceY)
-                        && Math.abs(distanceX) > SWIPE_THRESHOLD
-                        && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                    if (distanceX > 0)
-                        onSwipeRight(getPostion(e1));
-                    else
-                        onSwipeLeft(getPostion(e1));
-                    return true;
+                try {
+                    float distanceX = e2.getX() - e1.getX();
+                    float distanceY = e2.getY() - e1.getY();
+                    if (Math.abs(distanceX) > Math.abs(distanceY)
+                            && Math.abs(distanceX) > SWIPE_THRESHOLD
+                            && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                        if (distanceX > 0)
+                            onSwipeRight(getPostion(e1));
+                        else
+                            onSwipeLeft(getPostion(e1));
+                        return true;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 return false;
             }

@@ -29,8 +29,8 @@
                 android:layout_marginRight="@dimen/dp_5"
                 android:layout_marginTop="8dp"
                 android:clickable="true"
-                android:paddingLeft="50dp"
-                android:focusable="true">
+                android:focusable="true"
+                android:paddingLeft="50dp">
 
                 <co.siempo.phone.customviews.RobotoRegularTextView
                     android:id="@+id/txtTemp"
