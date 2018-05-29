@@ -342,7 +342,13 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
         toolbar.inflateMenu(R.menu.menu_main);
 
         // Set an OnMenuItemClickListener to handle menu item clicks
-        toolbar.setOnMenuItemClickListener(this);
+        //toolbar.setOnMenuItemClickListener(this);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         Menu menu = toolbar.getMenu();
 
