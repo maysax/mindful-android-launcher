@@ -452,14 +452,29 @@ public abstract class CoreApplication extends MultiDexApplication {
      * @return application name
      */
     public String getApplicationNameFromPackageName(String packageName) {
-        PackageManager packageManager = getPackageManager();
-        ApplicationInfo applicationInfo = null;
+        String applicationname = null;
         try {
-            applicationInfo = packageManager.getApplicationInfo(packageName, 0);
-        } catch (final PackageManager.NameNotFoundException e) {
+            if (TextUtils.isEmpty(getListApplicationName().get(packageName))) {
+                PackageManager packageManager = getPackageManager();
+                ApplicationInfo applicationInfo = null;
+                try {
+                    applicationInfo = packageManager.getApplicationInfo(packageName, 0);
+                    applicationInfo.loadLabel(getPackageManager());
+                } catch (final PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+                if (applicationInfo.loadLabel(packageManager) == null) {
+                    applicationname = (String) (applicationInfo != null ? packageManager.getApplicationLabel(applicationInfo) : "");
+                } else {
+                    applicationname = applicationInfo.loadLabel(packageManager).toString();
+                }
+            } else {
+                applicationname = getListApplicationName().get(packageName);
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return (String) (applicationInfo != null ? packageManager.getApplicationLabel(applicationInfo) : "");
+        return applicationname;
     }
 
     /**
@@ -909,15 +924,21 @@ public abstract class CoreApplication extends MultiDexApplication {
                             addBitmapToMemoryCache(packageName, bitmap);
                         }
                         applist.add(packageName);
+
                         PackageManager packageManager = getPackageManager();
-                        ApplicationInfo applicationInfo = null;
-                        try {
-                            applicationInfo = packageManager.getApplicationInfo(packageName, 0);
-                        } catch (final PackageManager.NameNotFoundException e) {
-                            e.printStackTrace();
+                        String applicationName = appInfo.loadLabel(packageManager).toString();
+                        if (applicationName == null) {
+                            ApplicationInfo applicationInfo = null;
+                            try {
+                                applicationInfo = packageManager.getApplicationInfo(packageName, 0);
+                            } catch (final PackageManager.NameNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                            String applicationNameTemp = (String) (applicationInfo != null ? packageManager.getApplicationLabel(applicationInfo) : "");
+                            getListApplicationName().put(packageName, applicationNameTemp);
+                        } else {
+                            getListApplicationName().put(packageName, applicationName);
                         }
-                        String applicationName = (String) (applicationInfo != null ? packageManager.getApplicationLabel(applicationInfo) : "");
-                        getListApplicationName().put(packageName, applicationName);
                     }
 
                 } catch (Exception e) {
