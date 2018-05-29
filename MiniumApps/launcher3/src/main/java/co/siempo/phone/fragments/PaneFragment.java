@@ -452,7 +452,7 @@ public class PaneFragment extends CoreFragment {
         if (null != pagerPane) {
             pagerPane.setAdapter(mPagerAdapter);
             indicator.setViewPager(pagerPane);
-            pagerPane.setOffscreenPageLimit(3);
+            pagerPane.setOffscreenPageLimit(2);
             if (DashboardActivity.isJunkFoodOpen) {
                 DashboardActivity.currentIndexPaneFragment = 1;
                 DashboardActivity.isJunkFoodOpen = false;

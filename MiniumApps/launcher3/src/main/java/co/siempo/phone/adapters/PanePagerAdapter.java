@@ -4,6 +4,8 @@ package co.siempo.phone.adapters;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentPagerAdapter;
+import android.view.View;
+import android.view.ViewGroup;
 
 import co.siempo.phone.fragments.FavoritePaneFragment;
 import co.siempo.phone.fragments.JunkFoodPaneFragment;
@@ -48,5 +50,11 @@ public class PanePagerAdapter extends FragmentPagerAdapter {
     public int getCount() {
         return 3;
     }
+
+
+//    @Override
+//    public void destroyItem(ViewGroup viewPager, int position, Object object) {
+//        viewPager.removeView((View) object);
+//    }
 }
 

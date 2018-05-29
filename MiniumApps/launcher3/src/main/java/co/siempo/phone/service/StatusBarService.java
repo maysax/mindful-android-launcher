@@ -780,7 +780,21 @@ public class StatusBarService extends Service {
                     Log.d("DeterUse : Screen 0/9 :", "" + paramsBottom.height);
                     break;
                 case 1:
-                    paramsBottom.height = screenHeightExclusive * 2 / 9;
+                    if (topView != null && topView.getHeight() != 0 &&
+                            (bottomView == null || bottomView.getWindowToken
+                                    () == null || bottomView.getHeight() == 0)) {
+                        paramsTop.height = screenHeightExclusive * 2 / 9;
+                    } else if (topView != null && topView.getHeight() != 0 &&
+                            bottomView != null && bottomView.getHeight() != 0) {
+                        paramsTop.height = (screenHeightExclusive * 2 / 9) / 2;
+                        paramsBottom.height = (screenHeightExclusive * 2 / 9)
+                                / 2;
+                    } else if (bottomView != null && bottomView.getHeight() != 0 &&
+                            (topView == null || topView.getWindowToken() ==
+                                    null)) {
+                        paramsBottom.height = screenHeightExclusive * 2 / 9;
+                    }
+
                     Log.d("DeterUse : Screen 2/9 :", "" + paramsBottom.height);
                     break;
                 case 2:
@@ -1257,12 +1271,14 @@ public class StatusBarService extends Service {
                     () != null) {
                 wm.removeView(bottomView);
                 bottomView = null;
+                paramsBottom.height=0;
             }
 
             if (topView != null && wm != null && topView.getWindowToken()
                     != null) {
                 wm.removeView(topView);
                 topView = null;
+                paramsTop.height=0;
             }
 
         } catch (Exception e) {
