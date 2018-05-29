@@ -229,6 +229,7 @@
     <string name="location_permission">Location</string>
     <string name="notificationAccess">Notification access</string>
     <string name="draw_overlay">Draw over other Apps</string>
+    <string name="control_access_usage">Usage Access Settings</string>
     <string name="permission_title">"Please enable the following permission(s) to allow the Siempo to work correctly:"</string>
     <string name="permission_siempo_alpha_title">"Siempo is using following permissions\n"</string>
     <string name="grant_all_to_proceed_text">Please grant all the permissions to proceed</string>
