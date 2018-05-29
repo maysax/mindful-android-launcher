@@ -1,6 +1,5 @@
 package co.siempo.phone.activities;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -30,16 +29,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
-
-import java.util.ArrayList;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.UserModel;
 import co.siempo.phone.service.MailChimpOperation;
-import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 
@@ -48,10 +42,8 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
     private Button btnNotNow, btnContinue;
     private TextView txtPrivacy, txtErrorMessage;
     private TextInputEditText autoCompleteTextViewEmail;
-    private PermissionUtil permissionUtil;
     private CardView cardCenter;
     private RelativeLayout relPrivacyEmail;
-    private Button btnEnable;
     private ViewFlipper viewFlipperEmail;
     private TextInputLayout inputEmail;
 
@@ -59,16 +51,12 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email_request);
-        permissionUtil = new PermissionUtil(this);
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         View decor = window.getDecorView();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.white));
             decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        }else{
-            // Download siempo images
-            CoreApplication.getInstance().downloadSiempoImages();
         }
         initView();
     }
@@ -77,7 +65,7 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
         btnNotNow = findViewById(R.id.btnNotNow);
         btnContinue = findViewById(R.id.btnContinue);
         cardCenter = findViewById(R.id.cardCenter);
-        btnEnable = findViewById(R.id.btnEnable);
+
         relPrivacyEmail = findViewById(R.id.relPrivacyEmail);
         viewFlipperEmail = findViewById(R.id.viewFlipperEmail);
 
@@ -94,17 +82,11 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
         btnNotNow.setOnClickListener(this);
         btnContinue.setOnClickListener(this);
         txtErrorMessage.setVisibility(View.INVISIBLE);
-        btnEnable.setOnClickListener(this);
         if (PrefSiempo.getInstance(this).read(PrefSiempo
                 .USER_SEEN_EMAIL_REQUEST, false)) {
-            viewFlipperEmail.setDisplayedChild(1);
-            relPrivacyEmail.setVisibility(View.GONE);
-
-        } else {
             viewFlipperEmail.setDisplayedChild(0);
             relPrivacyEmail.setVisibility(View.VISIBLE);
         }
-
         try {
             Typeface myTypefaceregular = Typeface.createFromAsset(getAssets(), "fonts/robotocondensedregular.ttf");
             Typeface myTypefacemedium = Typeface.createFromAsset(getAssets(), "fonts/robotomedium.ttf");
@@ -152,62 +134,15 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
                 break;
             case R.id.btnNotNow:
                 PrefSiempo.getInstance(this).write(PrefSiempo.USER_SEEN_EMAIL_REQUEST, true);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)) {
-                    flipView();
-                } else {
-                    finish();
-                }
+                finish();
                 break;
             case R.id.btnContinue:
                 sendEvent();
-                break;
-            case R.id.btnEnable:
-                if (!permissionUtil.hasGiven(PermissionUtil
-                        .WRITE_EXTERNAL_STORAGE_PERMISSION)) {
-
-                    try {
-                        TedPermission.with(this)
-                                .setPermissionListener(new PermissionListener() {
-                                    @Override
-                                    public void onPermissionGranted() {
-                                        // Download siempo images
-                                        CoreApplication.getInstance().downloadSiempoImages();
-                                        finish();
-                                    }
-
-                                    @Override
-                                    public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-
-                                    }
-                                })
-                                .setDeniedMessage(R.string.msg_permission_denied)
-                                .setPermissions(new String[]{
-
-                                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                        Manifest
-                                                .permission
-                                                .READ_EXTERNAL_STORAGE,})
-                                .check();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    finish();
-                }
                 break;
             default:
                 break;
         }
     }
-
-    private void flipView() {
-        UIUtils.hideSoftKeyboard(this, getWindow().getDecorView().getWindowToken());
-        relPrivacyEmail.setVisibility(View.GONE);
-        viewFlipperEmail.setInAnimation(this, R.anim.in_from_right_email);
-        viewFlipperEmail.setOutAnimation(this, R.anim.out_to_left_email);
-        viewFlipperEmail.showNext();
-    }
-
     private void sendEvent() {
         String strEmail = autoCompleteTextViewEmail.getText().toString().trim();
         boolean isValidEmail = UIUtils.isValidEmail(strEmail);
@@ -228,11 +163,6 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)) {
-                flipView();
-            } else {
-                finish();
             }
         } else {
             autoCompleteTextViewEmail.requestFocus();
@@ -259,8 +189,6 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
 
 }
