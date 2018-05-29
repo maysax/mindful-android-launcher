@@ -217,6 +217,11 @@ public class SiempoPermissionActivity extends CoreActivity {
                 tblNotification.setVisibility(View.VISIBLE);
                 tblSMS.setVisibility(View.GONE);
             }
+            if (hasUsageStatsPermission(this)) {
+                tblControlAccessUsage.setVisibility(View.VISIBLE);
+            } else {
+                tblControlAccessUsage.setVisibility(View.GONE);
+            }
         } else {
             switchContactPermission.setVisibility(View.GONE);
             switchCallPermission.setVisibility(View.GONE);
