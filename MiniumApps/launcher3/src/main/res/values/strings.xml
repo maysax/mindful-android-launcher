@@ -499,7 +499,7 @@
     <string name="launcher_text">On the next screen: \nTap the circle, then tap the back arrow.</string>
     <string name="permission_msg_enable_tempo">Tempo needs permission \nto perform these tasks:</string>
     <string name="reduce_overuse_flagged">Reduce overuse of flagged apps</string>
-    <string name="reduce_overuse_Flagged_description_setting">You will be gently detered from using flagged apps after 5 minutes of use. Unrestriced use will be restored after any %s  break from flagged apps.</string>
+    <string name="reduce_overuse_Flagged_description_setting">You will be gently deterred from using flagged apps after 5 minutes of use. Unrestricted use will be restored after any %s  break from flagged apps.</string>
     <string name="choose_app_flag_desc">Flag any apps that you want to use less. </string>
     <string name="choose_app_flag">Choose apps to flag</string>
     <string name="custom_background_image_title">Custom background image</string>
