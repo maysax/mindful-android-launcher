@@ -161,6 +161,10 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
      * load system apps and filter the application for junkfood and normal.
      */
     private void loadApps() {
+        if (PrefSiempo.getInstance(this).read(PrefSiempo.IS_JUNKFOOD_FIRSTTIME, true)) {
+            PrefSiempo.getInstance(this).write(PrefSiempo.IS_JUNKFOOD_FIRSTTIME, false);
+            showFirstTimeDialog();
+        }
         List<String> installedPackageListLocal = CoreApplication.getInstance().getPackagesList();
         Log.d("Junkfood", "" + installedPackageListLocal.size());
         installedPackageListLocal.remove(Constants.SETTINGS_APP_PACKAGE);
@@ -178,10 +182,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         installedPackageList = appList;
 //        new FilterApps(false).execute();
         bindData();
-        if (PrefSiempo.getInstance(this).read(PrefSiempo.IS_JUNKFOOD_FIRSTTIME, true)) {
-            PrefSiempo.getInstance(this).write(PrefSiempo.IS_JUNKFOOD_FIRSTTIME, false);
-            showFirstTimeDialog();
-        }
+
     }
 
     private List<String> getToolsAppList() {
