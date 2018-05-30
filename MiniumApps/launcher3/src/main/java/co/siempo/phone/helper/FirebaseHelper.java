@@ -257,7 +257,7 @@ public class FirebaseHelper {
         Bundle bundle = new Bundle();
         bundle.putInt(DETER_TIME, time_selected);
         Tracer.i("Firebase:" + DETER_OVER_USE + ": " + bundle.toString());
-//        getFirebaseAnalytics().logEvent(DETER_OVER_USE, bundle);
+        getFirebaseAnalytics().logEvent(DETER_OVER_USE, bundle);
     }
 
     /**
@@ -282,7 +282,7 @@ public class FirebaseHelper {
         Bundle bundle = new Bundle();
         bundle.putLong(TIME_SPENT, usage_time);
         Tracer.i("Firebase:" + JUNKFOOD_USAGE_COVER + ": " + bundle.toString());
-//        getFirebaseAnalytics().logEvent(JUNKFOOD_USAGE, bundle);
+        getFirebaseAnalytics().logEvent(JUNKFOOD_USAGE, bundle);
     }
 
 }
