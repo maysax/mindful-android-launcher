@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Set;
 
 import co.siempo.phone.R;
@@ -48,6 +49,7 @@ import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.NotifySearchRefresh;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.models.AppListInfo;
+import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.service.LoadFavoritePane;
 import co.siempo.phone.service.LoadJunkFoodPane;
 import co.siempo.phone.utils.PackageUtil;
@@ -91,15 +93,16 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         setContentView(R.layout.activity_junkfood_flagging);
         initView();
         list = PrefSiempo.getInstance(this).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
-        favoriteList = PrefSiempo.getInstance(this).read(PrefSiempo.FAVORITE_APPS, new HashSet<String>());
+        favoriteList = PrefSiempo.getInstance(this).read(PrefSiempo.FAVORITE_APPS, new
+                HashSet<String>());
         favoriteList.removeAll(list);
-        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
+        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS,
+                favoriteList);
         adapterlist.addAll(list);
         Intent intent = getIntent();
         if (intent.getExtras() != null && intent.hasExtra("FromAppMenu")) {
             isFromAppMenu = intent.getBooleanExtra("FromAppMenu", false);
         }
-
     }
 
 
@@ -161,6 +164,14 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         Log.d("Junkfood", "" + installedPackageListLocal.size());
         installedPackageList = new ArrayList<>();
         List<String> appList = new ArrayList<>(installedPackageListLocal);
+        favoriteList = PrefSiempo.getInstance(this).read(PrefSiempo.FAVORITE_APPS, new HashSet<String>());
+        List<String> ToolsAppList = getToolsAppList();
+
+        //Adding for ToolAppList
+        if (ToolsAppList != null && favoriteList != null) {
+            appList.removeAll(ToolsAppList);
+            appList.removeAll(favoriteList);
+        }
 
         installedPackageList = appList;
 //        new FilterApps(false).execute();
@@ -169,6 +180,23 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
             PrefSiempo.getInstance(this).write(PrefSiempo.IS_JUNKFOOD_FIRSTTIME, false);
             showFirstTimeDialog();
         }
+    }
+
+    private List<String> getToolsAppList() {
+        Set<AppMenu> assignedToolListSet = new HashSet<>();
+        if (null != CoreApplication.getInstance() && null != CoreApplication
+                .getInstance().getToolsSettings()) {
+            for (Map.Entry<Integer, AppMenu> entry : CoreApplication.getInstance().getToolsSettings().entrySet()) {
+                assignedToolListSet.add(entry.getValue());
+            }
+        }
+        List<String> appToolList = new ArrayList<>();
+        for (AppMenu ToolMenuAppList : assignedToolListSet) {
+            if (ToolMenuAppList.getApplicationName() != null) {
+                appToolList.add(ToolMenuAppList.getApplicationName());
+            }
+        }
+        return appToolList;
     }
 
     @Override
