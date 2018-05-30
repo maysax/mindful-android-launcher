@@ -2,7 +2,9 @@ package co.siempo.phone.activities;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.AppOpsManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.provider.Settings;
@@ -50,6 +52,8 @@ public class SiempoPermissionActivity extends CoreActivity {
     @ViewById
     Switch switchOverlayAccess;
     @ViewById
+    Switch switchControlAccessUsage;
+    @ViewById
     Button btnContinue;
     @ViewById
     TextView txtPermissionLabel;
@@ -67,6 +71,8 @@ public class SiempoPermissionActivity extends CoreActivity {
     TableRow tblDrawOverlay;
     @ViewById
     TableRow tblStorage;
+    @ViewById
+    TableRow tblControlAccessUsage;
     PermissionListener permissionlistener = new PermissionListener() {
         @Override
         public void onPermissionGranted() {
@@ -211,6 +217,11 @@ public class SiempoPermissionActivity extends CoreActivity {
                 tblNotification.setVisibility(View.VISIBLE);
                 tblSMS.setVisibility(View.GONE);
             }
+            if (hasUsageStatsPermission(this)) {
+                tblControlAccessUsage.setVisibility(View.VISIBLE);
+            } else {
+                tblControlAccessUsage.setVisibility(View.GONE);
+            }
         } else {
             switchContactPermission.setVisibility(View.GONE);
             switchCallPermission.setVisibility(View.GONE);
@@ -219,6 +230,8 @@ public class SiempoPermissionActivity extends CoreActivity {
             switchNotificationAccess.setVisibility(View.GONE);
             switchOverlayAccess.setVisibility(View.GONE);
             btnContinue.setVisibility(View.GONE);
+            switchControlAccessUsage.setVisibility(View.GONE);
+
 //            if (permissionUtil.hasGiven(PermissionUtil.LOCATION_PERMISSION)) {
 //                tblLocation.setVisibility(View.VISIBLE);
 //            } else {
@@ -249,6 +262,11 @@ public class SiempoPermissionActivity extends CoreActivity {
                 }
             }
 
+            if (hasUsageStatsPermission(this)) {
+                tblControlAccessUsage.setVisibility(View.VISIBLE);
+            } else {
+                tblControlAccessUsage.setVisibility(View.GONE);
+            }
 
         }
         if (isFromHome &&
@@ -257,6 +275,18 @@ public class SiempoPermissionActivity extends CoreActivity {
                 permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) {
             finish();
         }
+    }
+
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    boolean hasUsageStatsPermission(Context context) {
+        AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+        int mode = 0;
+        if (appOps != null) {
+            mode = appOps.checkOpNoThrow("android:get_usage_stats",
+                    android.os.Process.myUid(), context.getPackageName());
+        }
+        return mode == AppOpsManager.MODE_ALLOWED;
     }
 
     @TargetApi(22)

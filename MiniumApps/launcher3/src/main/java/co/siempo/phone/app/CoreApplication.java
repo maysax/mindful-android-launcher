@@ -454,26 +454,29 @@ public abstract class CoreApplication extends MultiDexApplication {
     public String getApplicationNameFromPackageName(String packageName) {
         String applicationname = null;
         try {
-            if (TextUtils.isEmpty(getListApplicationName().get(packageName))) {
-                PackageManager packageManager = getPackageManager();
-                ApplicationInfo applicationInfo = null;
-                try {
-                    applicationInfo = packageManager.getApplicationInfo(packageName, 0);
-                    applicationInfo.loadLabel(getPackageManager());
-                } catch (final PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                }
-                if (applicationInfo.loadLabel(packageManager) == null) {
-                    applicationname = (String) (applicationInfo != null ? packageManager.getApplicationLabel(applicationInfo) : "");
+            if (packageName != null && !packageName.equalsIgnoreCase("")) {
+                if (TextUtils.isEmpty(getListApplicationName().get(packageName))) {
+                    PackageManager packageManager = getPackageManager();
+                    ApplicationInfo applicationInfo = null;
+                    try {
+                        applicationInfo = packageManager.getApplicationInfo(packageName, 0);
+                        applicationInfo.loadLabel(getPackageManager());
+                    } catch (final PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    if (applicationInfo.loadLabel(packageManager) == null) {
+                        applicationname = (String) (applicationInfo != null ? packageManager.getApplicationLabel(applicationInfo) : "");
+                    } else {
+                        applicationname = applicationInfo.loadLabel(packageManager).toString();
+                    }
                 } else {
-                    applicationname = applicationInfo.loadLabel(packageManager).toString();
+                    applicationname = getListApplicationName().get(packageName);
                 }
-            } else {
-                applicationname = getListApplicationName().get(packageName);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return applicationname;
     }
 

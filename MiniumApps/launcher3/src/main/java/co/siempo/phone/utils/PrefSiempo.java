@@ -110,6 +110,11 @@ public class PrefSiempo {
     public static String JUNK_RESTRICTED = "junk_restricted";
     public static String USER_VOLUME = "user_volume";
     public static String LOCATION_STATUS = "location_status";
+    public static String JUNKFOOD_USAGE_TIME = "junkfood_usage_time";
+    public static String JUNKFOOD_USAGE_COVER_TIME = "junkfood_usage_cover_time";
+    public static String CURRENT_DATE = "current_date";
+
+
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
 

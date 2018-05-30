@@ -30,6 +30,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -520,21 +521,25 @@ public class DashboardActivity extends CoreActivity {
     @Subscribe
     public void checkVersionEvent(CheckVersionEvent event) {
         Log.d(TAG, "Check Version event...");
-        if (event.getVersionName() != null && event.getVersionName().equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
-            if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
-                Tracer.i("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
-                showUpdateDialog(CheckVersionEvent.ALPHA);
-                appUpdaterUtils = null;
-            } else {
-                ApiClient_.getInstance_(this).checkAppVersion(CheckVersionEvent.BETA);
-            }
+        if (event.getVersion() == -1000) {
+            Toast.makeText(this, getString(R.string.msg_internet), Toast.LENGTH_SHORT).show();
         } else {
-            if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
-                Tracer.i("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
-                showUpdateDialog(CheckVersionEvent.BETA);
-                appUpdaterUtils = null;
+            if (event.getVersionName() != null && event.getVersionName().equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
+                if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
+                    Tracer.i("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
+                    showUpdateDialog(CheckVersionEvent.ALPHA);
+                    appUpdaterUtils = null;
+                } else {
+                    ApiClient_.getInstance_(this).checkAppVersion(CheckVersionEvent.BETA);
+                }
             } else {
-                Tracer.i("Installed version: " + "Up to date.");
+                if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
+                    Tracer.i("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
+                    showUpdateDialog(CheckVersionEvent.BETA);
+                    appUpdaterUtils = null;
+                } else {
+                    Tracer.i("Installed version: " + "Up to date.");
+                }
             }
         }
     }

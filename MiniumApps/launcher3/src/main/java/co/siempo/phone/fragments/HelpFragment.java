@@ -212,41 +212,49 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
     public void checkVersionEvent(CheckVersionEvent event) {
         Log.d(TAG, "Check Version event...");
         if (null != mActivity) {
+            if (event.getVersion() == -1000) {
+                Toast.makeText(mActivity, getString(R.string.msg_internet), Toast.LENGTH_SHORT)
+                        .show();
+                if (progressDialog != null && progressDialog.isShowing()) {
+                    progressDialog.dismiss();
 
-
-            if (event.getVersionName() != null && event.getVersionName().equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
-
-                if (event.getVersion() > UIUtils.getCurrentVersionCode(mActivity)) {
-                    Tracer.d("Installed version: " + UIUtils
-                            .getCurrentVersionCode(mActivity) + " Found: " + event
-                            .getVersion());
-                    if (null != progressDialog && progressDialog.isShowing()) {
-                        progressDialog.dismiss();
-                    }
-                    showUpdateDialog(CheckVersionEvent.ALPHA);
-
-                } else {
-                    ApiClient_.getInstance_(mActivity).checkAppVersion(CheckVersionEvent
-                            .BETA);
                 }
-
             } else {
-                if (event.getVersion() > UIUtils.getCurrentVersionCode(mActivity)) {
-                    Tracer.d("Installed version: " + UIUtils
-                            .getCurrentVersionCode(mActivity) + " Found: " + event
-                            .getVersion());
-                    if (null != progressDialog && progressDialog.isShowing()) {
-                        progressDialog.dismiss();
+
+                if (event.getVersionName() != null && event.getVersionName().equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
+
+                    if (event.getVersion() > UIUtils.getCurrentVersionCode(mActivity)) {
+                        Tracer.d("Installed version: " + UIUtils
+                                .getCurrentVersionCode(mActivity) + " Found: " + event
+                                .getVersion());
+                        if (null != progressDialog && progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
+                        showUpdateDialog(CheckVersionEvent.ALPHA);
+
+                    } else {
+                        ApiClient_.getInstance_(mActivity).checkAppVersion(CheckVersionEvent
+                                .BETA);
                     }
-                    showUpdateDialog(CheckVersionEvent.BETA);
+
                 } else {
-                    if (null != progressDialog && progressDialog.isShowing()) {
-                        progressDialog.dismiss();
-                    }
-                    Tracer.d("Installed version: " + "Up to date.");
-                    if (null != mActivity) {
-                        Toast.makeText(mActivity, "App is up to date", Toast
-                                .LENGTH_SHORT).show();
+                    if (event.getVersion() > UIUtils.getCurrentVersionCode(mActivity)) {
+                        Tracer.d("Installed version: " + UIUtils
+                                .getCurrentVersionCode(mActivity) + " Found: " + event
+                                .getVersion());
+                        if (null != progressDialog && progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
+                        showUpdateDialog(CheckVersionEvent.BETA);
+                    } else {
+                        if (null != progressDialog && progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
+                        Tracer.d("Installed version: " + "Up to date.");
+                        if (null != mActivity) {
+                            Toast.makeText(mActivity, "App is up to date", Toast
+                                    .LENGTH_SHORT).show();
+                        }
                     }
                 }
             }

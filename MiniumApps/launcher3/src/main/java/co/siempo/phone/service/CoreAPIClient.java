@@ -50,9 +50,9 @@ public abstract class CoreAPIClient {
     public void checkAppVersion(String versionFor) {
         try {
             OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
-                    .connectTimeout(60, TimeUnit.SECONDS)
-                    .readTimeout(60, TimeUnit.SECONDS)
-                    .writeTimeout(60, TimeUnit.SECONDS)
+                    .connectTimeout(30, TimeUnit.SECONDS)
+                    .readTimeout(30, TimeUnit.SECONDS)
+                    .writeTimeout(30, TimeUnit.SECONDS)
                     .build();
             if (versionFor.equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
                 AndroidNetworking.get(String.format(Locale.US, "%s/%s/version", AWS_HOST, getAppName()))

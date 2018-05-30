@@ -45,7 +45,9 @@ import com.google.gson.reflect.TypeToken;
 import com.rvalerio.fgchecker.AppChecker;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -68,6 +70,7 @@ import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.event.ReduceOverUsageEvent;
 import co.siempo.phone.event.StartLocationEvent;
 import co.siempo.phone.helper.ActivityHelper;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
@@ -130,6 +133,10 @@ public class StatusBarService extends Service {
     private String strCoverMessage = "";
     private boolean isCoverTapped = false;
 
+    long spentTimeJunkFood = 0L;
+    long startTimeJunkFood = 0L;
+    private DateChangeReceiver dateChangeReceiver;
+    Calendar calendar;
 
     public StatusBarService() {
     }
@@ -138,10 +145,14 @@ public class StatusBarService extends Service {
     public void onCreate() {
         super.onCreate();
         context = this;
+        calendar = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        String formattedDate = df.format(calendar.getTime());
+        PrefSiempo.getInstance(context).write(PrefSiempo.CURRENT_DATE, formattedDate);
         EventBus.getDefault().register(this);
         registerObserverForContact();
         registerObserverForAppInstallUninstall();
-        registerReceiverScreenLock();
+        registerReceiverScreenLockAndDateChange();
         appChecker = new AppChecker();
         wm = (WindowManager) getSystemService(WINDOW_SERVICE);
         display = wm.getDefaultDisplay();
@@ -220,7 +231,18 @@ public class StatusBarService extends Service {
                         if (set.contains(process)) {
 //                            Log.d("DeterUse", "PackageName: " + process);
                             startOverUser();
+                            if (spentTimeJunkFood == 0L) {
+                                startTimeJunkFood = System.currentTimeMillis();
+                            }
                         } else {
+                            if (startTimeJunkFood != 0L) {
+                                spentTimeJunkFood = System.currentTimeMillis() - startTimeJunkFood;
+                                long totalSpentTime = PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_USAGE_TIME, 0L) + spentTimeJunkFood;
+                                PrefSiempo.getInstance(context).write(PrefSiempo.JUNKFOOD_USAGE_TIME, totalSpentTime);
+                                Log.d("SpentTime", "SpentTimeJunkFood" + spentTimeJunkFood + "    totalSpentTime" + totalSpentTime);
+                                spentTimeJunkFood = 0L;
+                                startTimeJunkFood = 0L;
+                            }
                             if (!set.contains(process) && deterUsageRunning) {
                                 removeView();
                                 if (whichPhaseRunning != 0) {
@@ -252,13 +274,18 @@ public class StatusBarService extends Service {
     /**
      * Register the reciver for the screen lock.
      */
-    private void registerReceiverScreenLock() {
+    private void registerReceiverScreenLockAndDateChange() {
         userPresentBroadcastReceiver = new UserPresentBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_USER_PRESENT);
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
         intentFilter.addAction(Intent.ACTION_SCREEN_ON);
         registerReceiver(userPresentBroadcastReceiver, intentFilter);
+
+        dateChangeReceiver = new DateChangeReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_TIME_CHANGED);
+        registerReceiver(dateChangeReceiver, filter);
     }
 
     @Override
@@ -288,6 +315,8 @@ public class StatusBarService extends Service {
         intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
         intentFilter.addDataScheme("package");
         registerReceiver(appInstallUninstall, intentFilter);
+
+
     }
 
     /**
@@ -327,6 +356,8 @@ public class StatusBarService extends Service {
             getContentResolver().unregisterContentObserver(myObserver);
         if (appInstallUninstall != null)
             unregisterReceiver(appInstallUninstall);
+        if (dateChangeReceiver != null)
+            unregisterReceiver(dateChangeReceiver);
         if (appChecker != null) appChecker.stop();
         super.onDestroy();
     }
@@ -683,6 +714,9 @@ public class StatusBarService extends Service {
 
                 Log.d("DeterUse : Cover", "" + minutes + ":" + seconds);
                 PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, completedTime);
+                // store data in firebase how much time user spent with cover period.
+                long coverTimeSpent = PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_USAGE_COVER_TIME, 0L);
+                PrefSiempo.getInstance(context).write(PrefSiempo.JUNKFOOD_USAGE_COVER_TIME, coverTimeSpent + completedTime);
 
                 if (seconds == 0 && minutes == 0) {
                     addOverlayWindow(0);
@@ -1634,5 +1668,70 @@ public class StatusBarService extends Service {
     }
 
 
+    public class UserPresentBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context arg0, Intent intent) {
+            if (intent != null && intent.getAction() != null && null != arg0) {
+                if (PackageUtil.isSiempoLauncher(arg0)) {
+                    if (intent.getAction().equals(Intent.ACTION_USER_PRESENT) ||
+                            intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+                        if (countDownTimer != null) {
+                            countDownTimer.cancel();
+                            PrefSiempo.getInstance(context).write(PrefSiempo
+                                    .LOCK_COUNTER_STATUS, false);
+                        }
+                        if (countDownTimerBreak != null) {
+                            countDownTimerBreak.cancel();
+                            countDownTimerBreak = null;
+                            deterUsageRunning = false;
+                            isFullScreenView = false;
+                            whichPhaseRunning = 0;
+                            resetAllTimer();
+                            removeView();
+                            PrefSiempo.getInstance(context).write(PrefSiempo.BREAK_TIME, 0L);
+                        }
+                    } else if (intent.getAction().equals(Intent
+                            .ACTION_SCREEN_OFF)) {
+                        startLockScreenTimer();
+                    }
+
+                }
+            }
+        }
+    }
+
+    class DateChangeReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                if (PackageUtil.isSiempoLauncher(context)) {
+                    if (intent.getAction().equals(Intent.ACTION_TIME_CHANGED)) {
+                        String storedDate = PrefSiempo.getInstance(context).read(PrefSiempo.CURRENT_DATE, "");
+                        calendar = Calendar.getInstance();
+                        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+                        String formattedDate = df.format(calendar.getTime());
+
+                        if (!storedDate.equalsIgnoreCase("") && !storedDate.equalsIgnoreCase(formattedDate)) {
+                            long spentTime = PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_USAGE_TIME, 0L);
+                            long spentTimeWithCover = PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_USAGE_COVER_TIME, 0L);
+
+                            if (spentTime != 0) {
+                                FirebaseHelper.getInstance().logJunkFoodUsageTime(spentTime);
+                                PrefSiempo.getInstance(context).write(PrefSiempo.JUNKFOOD_USAGE_TIME, 0L);
+                            }
+
+                            if (spentTimeWithCover != 0) {
+                                FirebaseHelper.getInstance().logJunkFoodUsageTimeWithCover(spentTimeWithCover);
+                                PrefSiempo.getInstance(context).write(PrefSiempo.JUNKFOOD_USAGE_COVER_TIME, 0L);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
 

@@ -148,6 +148,23 @@
                     android:layout_height="wrap_content" />
 
             </TableRow>
+            <TableRow
+                android:id="@+id/tblControlAccessUsage"
+                android:layout_marginTop="16dp"
+                android:visibility="gone">
+
+                <co.siempo.phone.customviews.RobotoCondensedTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/control_access_usage"
+                    android:textSize="@dimen/text.size.large" />
+
+                <Switch
+                    android:id="@+id/switchControlAccessUsage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </TableRow>
 
 
         </TableLayout>
