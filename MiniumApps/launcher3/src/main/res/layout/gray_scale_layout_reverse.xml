@@ -164,7 +164,7 @@
             android:layout_marginRight="@dimen/dp_10"
             android:max="60"
             android:progress="1"
-            android:visibility="gone" />
+            android:visibility="visible" />
     </LinearLayout>
 
 

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.database.ContentObserver;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
@@ -32,6 +33,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -123,6 +125,10 @@ public class StatusBarService extends Service {
     private int maxHeightCoverWindow;
     private boolean isTopViewVisible = false;
     private boolean isBottomViewVisible = true;
+    private TextView txtMessageBottom;
+    private TextView txtMessageTop;
+    private String strCoverMessage = "";
+    private boolean isCoverTapped = false;
 
 
     public StatusBarService() {
@@ -163,6 +169,7 @@ public class StatusBarService extends Service {
         paramsBottom.width = ViewGroup.LayoutParams.MATCH_PARENT;
         paramsBottom.height = minusculeHeight;
         paramsBottom.gravity = Gravity.BOTTOM;
+        paramsBottom.screenOrientation = Configuration.ORIENTATION_PORTRAIT;
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             paramsBottom.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
@@ -177,6 +184,7 @@ public class StatusBarService extends Service {
         paramsTop.width = ViewGroup.LayoutParams.MATCH_PARENT;
         paramsTop.height = 0;
         paramsTop.gravity = Gravity.TOP;
+        paramsTop.screenOrientation = Configuration.ORIENTATION_PORTRAIT;
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             paramsTop.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
@@ -734,6 +742,11 @@ public class StatusBarService extends Service {
                 if (wm != null && linProgress != null && txtCount != null) {
                     txtCount.setText("" + seconds);
                     progressBar.setProgress(seconds);
+                    if (linProgressTop != null && linProgressTop.getVisibility()
+                            == View.VISIBLE) {
+                        txtCountTop.setText("" + seconds);
+                        progressBarTop.setProgress(seconds);
+                    }
                 }
             }
 
@@ -746,6 +759,14 @@ public class StatusBarService extends Service {
                 deterUsageRunning = false;
                 isFullScreenView = false;
                 whichPhaseRunning = 0;
+                linProgress.setVisibility(View.GONE);
+                linProgressTop.setVisibility(View.GONE);
+                if (isBottomViewVisible) {
+                    paramsBottom.height = minusculeHeight;
+                }
+                if (isTopViewVisible) {
+                    paramsTop.height = minusculeHeight;
+                }
                 resetAllTimer();
                 removeView();
             }
@@ -790,7 +811,6 @@ public class StatusBarService extends Service {
 
                 case 0:
                     paramsBottom.height = screenHeightExclusive / 9;
-                    Log.d("DeterUse : Screen 0/9 :", "" + paramsBottom.height);
                     break;
                 case 1:
                     if (isBottomViewVisible && !isTopViewVisible) {
@@ -871,6 +891,7 @@ public class StatusBarService extends Service {
                 int value = (int) TimeUnit.MINUTES.toSeconds(PrefSiempo.getInstance(context).read(PrefSiempo.BREAK_PERIOD, 1));
                 progressBarTop.setMax(value);
                 txtCountTop = topView.findViewById(R.id.txtCount);
+                txtMessageTop = topView.findViewById(R.id.txtMessage);
                 txtWellnessTop = topView.findViewById(R.id.txtWellness);
                 txtSettingsTop = topView.findViewById(R.id.txtSettings);
 
@@ -892,11 +913,15 @@ public class StatusBarService extends Service {
                         bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
                         if (wm != null)
                             wm.updateViewLayout(topView, paramsTop);
-                        if (linButtons != null && linProgress != null) {
-                            linProgress.setVisibility(View.VISIBLE);
-                            linButtons.setVisibility(View.GONE);
+                        if (linButtonsTop != null && linProgressTop != null) {
+                            linProgressTop.setVisibility(View.VISIBLE);
+                            linButtonsTop.setVisibility(View.GONE);
                         }
                         startTimerForBreakPeriod();
+                        PrefSiempo.getInstance(context).write
+                                (PrefSiempo.IS_BREAK_TIME_PRESSED, true);
+
+
                     }
                 });
                 if (txtSettingsTop != null) {
@@ -945,63 +970,67 @@ public class StatusBarService extends Service {
                     topView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (paramsBottom.height != 0 && topView
-                                    .getWindowToken() != null) {
-                                paramsTop.height = topView.getHeight() +
-                                        bottomView.getHeight();
-                                topView.setLayoutParams(new ViewGroup.LayoutParams
-                                        (paramsTop));
-                                wm.updateViewLayout(topView, paramsTop);
-                                paramsBottom.height = 0;
-                                isBottomViewVisible = false;
-                                isTopViewVisible = true;
-                                if (bottomView.getWindowToken() != null) {
-                                    wm.removeView(bottomView);
-                                }
-                                variableMaxHeightPortrait = heightWindow;
-                                variableMaxHeightLandscape = heightWindowLandscape;
-                                linButtonsTop.setVisibility(View.VISIBLE);
-                            } else if (topView
-                                    .getWindowToken() != null) {
-                                if (paramsTop.height != minusculeHeight) {
-                                    paramsTop.height = topView.getHeight() / 2;
+                            if (!isFullScreenView) {
+                                if (paramsBottom.height != 0 && topView
+                                        .getWindowToken() != null && isBottomViewVisible) {
+                                    paramsTop.height = topView.getHeight() +
+                                            bottomView.getHeight();
                                     topView.setLayoutParams(new ViewGroup.LayoutParams
                                             (paramsTop));
                                     wm.updateViewLayout(topView, paramsTop);
-                                    paramsBottom.height = paramsTop.height;
-                                    bottomView.setLayoutParams(new ViewGroup.LayoutParams
-                                            (paramsBottom));
-                                    if (bottomView.getWindowToken() != null) {
-                                        wm.updateViewLayout(bottomView, paramsBottom);
-                                    } else {
-                                        wm.addView(bottomView, paramsBottom);
-                                    }
-                                    isBottomViewVisible = true;
+                                    paramsBottom.height = 0;
+                                    isBottomViewVisible = false;
                                     isTopViewVisible = true;
-                                    variableMaxHeightPortrait = heightWindow / 2;
-                                    variableMaxHeightLandscape = heightWindowLandscape / 2;
-                                    linButtonsTop.setVisibility(View.GONE);
-                                } else if (paramsTop.height == minusculeHeight) {
-                                    //code for shifting bottom view to top
-                                    paramsTop.height = 0;
-                                    topView.setLayoutParams(new ViewGroup.LayoutParams
-                                            (paramsTop));
-                                    wm.updateViewLayout(topView, paramsTop);
-                                    paramsBottom.height = minusculeHeight;
-                                    isBottomViewVisible = true;
-                                    isTopViewVisible = false;
-                                    bottomView.setLayoutParams(new ViewGroup.LayoutParams
-                                            (paramsBottom));
                                     if (bottomView.getWindowToken() != null) {
-                                        wm.updateViewLayout(bottomView, paramsBottom);
-                                    } else {
-                                        wm.addView(bottomView, paramsBottom);
+                                        wm.removeView(bottomView);
                                     }
-                                    linButtonsTop.setVisibility(View.GONE);
-
+                                    variableMaxHeightPortrait = heightWindow;
+                                    variableMaxHeightLandscape = heightWindowLandscape;
+                                    linButtonsTop.setVisibility(View.VISIBLE);
+                                } else if (topView
+                                        .getWindowToken() != null &&
+                                        !isBottomViewVisible) {
+                                    if (paramsTop.height != minusculeHeight) {
+                                        paramsTop.height = topView.getHeight() / 2;
+                                        topView.setLayoutParams(new ViewGroup.LayoutParams
+                                                (paramsTop));
+                                        wm.updateViewLayout(topView, paramsTop);
+                                        paramsBottom.height = paramsTop.height;
+                                        bottomView.setLayoutParams(new ViewGroup.LayoutParams
+                                                (paramsBottom));
+                                        if (bottomView.getWindowToken() != null) {
+                                            wm.updateViewLayout(bottomView, paramsBottom);
+                                        } else {
+                                            wm.addView(bottomView, paramsBottom);
+                                        }
+                                        isBottomViewVisible = true;
+                                        isTopViewVisible = true;
+                                        variableMaxHeightPortrait = heightWindow / 2;
+                                        variableMaxHeightLandscape = heightWindowLandscape / 2;
+                                        linButtonsTop.setVisibility(View.GONE);
+                                        linButtons.setVisibility(View.VISIBLE);
+                                    } else if (paramsTop.height == minusculeHeight) {
+                                        //code for shifting bottom view to top
+                                        paramsTop.height = 0;
+                                        topView.setLayoutParams(new ViewGroup.LayoutParams
+                                                (paramsTop));
+                                        wm.updateViewLayout(topView, paramsTop);
+                                        paramsBottom.height = minusculeHeight;
+                                        isBottomViewVisible = true;
+                                        isTopViewVisible = false;
+                                        bottomView.setLayoutParams(new ViewGroup.LayoutParams
+                                                (paramsBottom));
+                                        if (bottomView.getWindowToken() != null) {
+                                            wm.updateViewLayout(bottomView, paramsBottom);
+                                        } else {
+                                            wm.addView(bottomView, paramsBottom);
+                                        }
+                                        linButtonsTop.setVisibility(View.GONE);
+                                        linButtons.setVisibility(View.VISIBLE);
+                                    }
                                 }
-                            }
 
+                            }
                         }
                     });
 
@@ -1022,6 +1051,9 @@ public class StatusBarService extends Service {
                             PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
                         }
                     } else {
+                        if (linButtonsTop != null && linProgressTop != null) {
+                            linProgressTop.setVisibility(View.GONE);
+                        }
                         if (paramsTop.height <= maxHeightCoverWindow) {
                             if (topView != null && topView.getWindowToken() != null) {
                                 topView.setLayoutParams(new ViewGroup.LayoutParams
@@ -1064,6 +1096,7 @@ public class StatusBarService extends Service {
                 int value = (int) TimeUnit.MINUTES.toSeconds(PrefSiempo.getInstance(context).read(PrefSiempo.BREAK_PERIOD, 1));
                 progressBar.setMax(value);
                 txtCount = bottomView.findViewById(R.id.txtCount);
+                txtMessageBottom = bottomView.findViewById(R.id.txtMessage);
                 txtWellness = bottomView.findViewById(R.id.txtWellness);
                 txtSettings = bottomView.findViewById(R.id.txtSettings);
                 if (isFullScreenView) {
@@ -1082,12 +1115,12 @@ public class StatusBarService extends Service {
                             PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
                         }
                     }
-                    if (linButtons != null) {
-                        linButtons.setVisibility(View.GONE);
-                    }
-                    if (linProgress != null) {
-                        linProgress.setVisibility(View.VISIBLE);
-                    }
+//                    if (linButtons != null) {
+//                        linButtons.setVisibility(View.GONE);
+//                    }
+//                    if (linProgress != null) {
+//                        linProgress.setVisibility(View.VISIBLE);
+//                    }
                 } else {
                     if (linButtons != null)
                         linButtons.setVisibility(View.VISIBLE);
@@ -1110,6 +1143,8 @@ public class StatusBarService extends Service {
                             linButtons.setVisibility(View.GONE);
                         }
                         startTimerForBreakPeriod();
+                        PrefSiempo.getInstance(context).write
+                                (PrefSiempo.IS_BREAK_TIME_PRESSED, true);
                     }
                 });
                 if (txtSettings != null) {
@@ -1160,47 +1195,65 @@ public class StatusBarService extends Service {
                     bottomView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (topView != null && topView.getWindowToken() !=
-                                    null
-                                    &&
-                                    topView.getHeight() !=
-                                            0) {
+                            if (!isFullScreenView) {
+                                if (topView != null && topView.getWindowToken() !=
+                                        null
+                                        &&
+                                        topView.getHeight() !=
+                                                0) {
 
-                                paramsBottom.height = topView.getHeight() +
-                                        bottomView.getHeight();
-                                bottomView.setLayoutParams(new ViewGroup.LayoutParams
-                                        (paramsBottom));
-                                wm.updateViewLayout(bottomView, paramsBottom);
-                                paramsTop.height = 0;
-                                isBottomViewVisible = true;
-                                isTopViewVisible = false;
-                                if (topView.getWindowToken() != null) {
-                                    wm.removeView(topView);
-                                }
-                                variableMaxHeightPortrait = heightWindow;
-                                variableMaxHeightLandscape = heightWindowLandscape;
-
-                            } else {
-
-                                if (paramsBottom.height != minusculeHeight) {
-                                    paramsBottom.height = bottomView.getHeight() / 2;
+                                    paramsBottom.height = topView.getHeight() +
+                                            bottomView.getHeight();
                                     bottomView.setLayoutParams(new ViewGroup.LayoutParams
                                             (paramsBottom));
                                     wm.updateViewLayout(bottomView, paramsBottom);
-                                    paramsTop.height = paramsBottom.height;
-                                    if (null != topView) {
-                                        topView.setLayoutParams(new ViewGroup.LayoutParams
-                                                (paramsTop));
-                                        if (topView.getWindowToken() != null) {
-                                            wm.updateViewLayout(topView, paramsTop);
-                                        } else {
-                                            wm.addView(topView, paramsTop);
-                                        }
-                                    }
-                                    variableMaxHeightPortrait = heightWindow / 2;
-                                    variableMaxHeightLandscape = heightWindowLandscape / 2;
+                                    paramsTop.height = 0;
                                     isBottomViewVisible = true;
-                                    isTopViewVisible = true;
+                                    isTopViewVisible = false;
+                                    if (topView.getWindowToken() != null) {
+                                        wm.removeView(topView);
+                                    }
+                                    variableMaxHeightPortrait = heightWindow;
+                                    variableMaxHeightLandscape = heightWindowLandscape;
+                                    if (txtMessageTop.getVisibility() == View.VISIBLE) {
+                                        txtMessageTop.setVisibility(View.GONE);
+
+                                    }
+                                    txtMessageBottom.setVisibility(View.VISIBLE);
+
+                                } else {
+
+                                    if (paramsBottom.height != minusculeHeight) {
+                                        paramsBottom.height = bottomView.getHeight() / 2;
+                                        isCoverTapped = true;
+                                        bottomView.setLayoutParams(new ViewGroup.LayoutParams
+                                                (paramsBottom));
+                                        wm.updateViewLayout(bottomView, paramsBottom);
+
+                                        if (paramsBottom
+                                                .height == screenHeightExclusive * 2 / 9) {
+                                            strCoverMessage = "Ready for a break? " +
+                                                    "Tap the clock icon.";
+                                        }
+                                        paramsTop.height = paramsBottom.height;
+                                        if (null != topView) {
+                                            topView.setLayoutParams(new ViewGroup.LayoutParams
+                                                    (paramsTop));
+                                            if (topView.getWindowToken() != null) {
+                                                wm.updateViewLayout(topView, paramsTop);
+                                            } else {
+                                                wm.addView(topView, paramsTop);
+                                            }
+                                        }
+                                        if (txtMessageBottom.getVisibility() == View.VISIBLE) {
+                                            txtMessageTop.setVisibility(View.VISIBLE);
+                                            txtMessageBottom.setVisibility(View.GONE);
+                                        }
+                                        variableMaxHeightPortrait = heightWindow / 2;
+                                        variableMaxHeightLandscape = heightWindowLandscape / 2;
+                                        isBottomViewVisible = true;
+                                        isTopViewVisible = true;
+                                    }
                                 }
                             }
                         }
@@ -1255,6 +1308,140 @@ public class StatusBarService extends Service {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        //Code for messages
+        switch (coverTime) {
+            case 0:
+                if (null != txtMessageTop && txtMessageTop.getVisibility() == View.VISIBLE) {
+                    txtMessageTop.setVisibility(View.GONE);
+                }
+
+                if (null != txtMessageBottom && txtMessageBottom.getVisibility() == View.VISIBLE) {
+                    txtMessageBottom.setVisibility(View.GONE);
+                }
+                break;
+            case 1:
+                if (isBottomViewVisible && !isTopViewVisible) {
+                    if (!isCoverTapped) {
+                        strCoverMessage = "Tap anywhere on this cover to move it.";
+                    } else {
+                        if (PrefSiempo.getInstance(context).read(PrefSiempo
+                                .IS_BREAK_TIME_PRESSED, false)) {
+                            strCoverMessage = "Taking breaks from flagged " +
+                                    "apps helps you use them less.";
+                        } else {
+                            strCoverMessage = "Ready for a break? " +
+                                    "Tap the clock icon.";
+                        }
+                    }
+                    txtMessageBottom.setVisibility(View.VISIBLE);
+                    txtMessageTop.setVisibility(View.GONE);
+                } else if (isBottomViewVisible && isTopViewVisible) {
+                    if (PrefSiempo.getInstance(context).read(PrefSiempo
+                            .IS_BREAK_TIME_PRESSED, false)) {
+                        strCoverMessage = "Taking breaks from flagged " +
+                                "apps helps you use them less.";
+                    } else {
+                        strCoverMessage = "Ready for a break? " +
+                                "Tap the clock icon.";
+                    }
+                    txtMessageBottom.setVisibility(View.GONE);
+                    txtMessageTop.setVisibility(View.VISIBLE);
+                } else if (!isBottomViewVisible && isTopViewVisible) {
+                    txtMessageTop.setVisibility(View.VISIBLE);
+                    txtMessageBottom.setVisibility(View.GONE);
+                    if (PrefSiempo.getInstance(context).read(PrefSiempo
+                            .IS_BREAK_TIME_PRESSED, false)) {
+                        strCoverMessage = "Taking breaks from flagged " +
+                                "apps helps you use them less.";
+                    } else {
+                        strCoverMessage = "Ready for a break? " +
+                                "Tap the clock icon.";
+                    }
+                }
+
+                break;
+            case 2:
+                String strIntention = PrefSiempo.getInstance(context).read
+                        (PrefSiempo.DEFAULT_INTENTION, "");
+                if (TextUtils.isEmpty(strIntention)) {
+                    strCoverMessage = "Ready for a break? " +
+                            "Tap the clock icon.";
+                } else {
+                    strCoverMessage = "Your intention: " + strIntention;
+                }
+
+                if (isBottomViewVisible && !isTopViewVisible) {
+                    txtMessageBottom.setVisibility(View.VISIBLE);
+                    txtMessageTop.setVisibility(View.GONE);
+                } else if (isBottomViewVisible && isTopViewVisible) {
+                    txtMessageBottom.setVisibility(View.GONE);
+                    txtMessageTop.setVisibility(View.VISIBLE);
+                } else if (!isBottomViewVisible && isTopViewVisible) {
+                    txtMessageTop.setVisibility(View.VISIBLE);
+                    txtMessageBottom.setVisibility(View.GONE);
+                }
+
+
+                break;
+            case 3:
+
+                strCoverMessage = "Let your intention be your \n" +
+                        "guide.  We believe in you!";
+                if (isBottomViewVisible && !isTopViewVisible) {
+                    txtMessageBottom.setVisibility(View.VISIBLE);
+                    txtMessageTop.setVisibility(View.GONE);
+                } else if (isBottomViewVisible && isTopViewVisible) {
+                    txtMessageBottom.setVisibility(View.GONE);
+                    txtMessageTop.setVisibility(View.VISIBLE);
+                } else if (!isBottomViewVisible && isTopViewVisible) {
+                    txtMessageTop.setVisibility(View.VISIBLE);
+                    txtMessageBottom.setVisibility(View.GONE);
+                }
+                break;
+            case 4:
+                strCoverMessage = "Reminder:  reflect on how \n" +
+                        "this app makes you feel.";
+                if (isBottomViewVisible && !isTopViewVisible) {
+                    txtMessageBottom.setVisibility(View.VISIBLE);
+                    txtMessageTop.setVisibility(View.GONE);
+                } else if (isBottomViewVisible && isTopViewVisible) {
+                    txtMessageBottom.setVisibility(View.GONE);
+                    txtMessageTop.setVisibility(View.VISIBLE);
+                } else if (!isBottomViewVisible && isTopViewVisible) {
+                    txtMessageTop.setVisibility(View.VISIBLE);
+                    txtMessageBottom.setVisibility(View.GONE);
+                }
+                break;
+            case 5:
+                strCoverMessage = "Take a one minute break at \n" +
+                        "any time to remove this cover.";
+                if (isBottomViewVisible && !isTopViewVisible) {
+                    txtMessageBottom.setVisibility(View.VISIBLE);
+                    txtMessageTop.setVisibility(View.GONE);
+                } else if (isBottomViewVisible && isTopViewVisible) {
+                    txtMessageBottom.setVisibility(View.GONE);
+                    txtMessageTop.setVisibility(View.VISIBLE);
+                } else if (!isBottomViewVisible && isTopViewVisible) {
+                    txtMessageTop.setVisibility(View.VISIBLE);
+                    txtMessageBottom.setVisibility(View.GONE);
+                }
+                break;
+            case 6:
+                txtMessageTop.setVisibility(View.GONE);
+                txtMessageBottom.setVisibility(View.GONE);
+                break;
+
+        }
+
+        if (null != txtMessageBottom) {
+            txtMessageBottom.setText(strCoverMessage);
+        }
+        if (null != txtMessageTop) {
+            txtMessageTop.setText(strCoverMessage);
+        }
+
+
     }
 
     /**
@@ -1299,6 +1486,34 @@ public class StatusBarService extends Service {
         return result;
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+
+        // Checks whether a hardware keyboard is available
+        if (newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO) {
+            if (isBottomViewVisible && bottomView != null && bottomView
+                    .getWindowToken() != null) {
+                paramsBottom.gravity = Gravity.CENTER;
+                if (null != wm) {
+                    wm.updateViewLayout(bottomView, paramsBottom);
+                }
+
+            }
+            Toast.makeText(this, "keyboard visible", Toast.LENGTH_SHORT).show();
+        } else if (newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_YES) {
+            if (isBottomViewVisible && bottomView != null && bottomView
+                    .getWindowToken() != null) {
+                paramsBottom.gravity = Gravity.BOTTOM;
+                if (null != wm) {
+                    wm.updateViewLayout(bottomView, paramsBottom);
+                }
+
+            }
+            Toast.makeText(this, "keyboard hidden", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     /**
      * This broadcast is used to determine the screen on/off flag.

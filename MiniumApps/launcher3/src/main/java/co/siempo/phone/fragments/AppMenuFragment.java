@@ -173,7 +173,8 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
         mRelOverUseFlaggedApp.setOnClickListener(this);
         mTxtReduceOveruseFlaggedDes = view.findViewById(R.id.txtReduceOveruseFlaggedDes);
         if (isFromFlag) {
-            mRelOverUseFlaggedApp.setBackground(getResources().getDrawable(R.drawable.rounded_card));
+            mRelOverUseFlaggedApp.setBackground(getResources().getDrawable(R
+                    .drawable.rounded_card_app_menu));
 
             int marginInDpLeft = (int) TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_DIP, 50, getResources()
