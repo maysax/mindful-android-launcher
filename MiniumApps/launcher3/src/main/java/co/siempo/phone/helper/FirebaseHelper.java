@@ -111,6 +111,7 @@ public class FirebaseHelper {
 
     /**
      * Used fot Tool/App used by user from either IF or 3 panes.
+     * Here we user is not assign any application firebase default shows not set event to analytics.
      * from = 0 for Tool Pane.
      * from = 1 for Favorite Pane
      * from = 2 for Junkfood Pane
@@ -282,7 +283,7 @@ public class FirebaseHelper {
         Bundle bundle = new Bundle();
         bundle.putLong(TIME_SPENT, usage_time);
         Tracer.i("Firebase:" + JUNKFOOD_USAGE_COVER + ": " + bundle.toString());
-        getFirebaseAnalytics().logEvent(JUNKFOOD_USAGE, bundle);
+        getFirebaseAnalytics().logEvent(JUNKFOOD_USAGE_COVER, bundle);
     }
 
 }
