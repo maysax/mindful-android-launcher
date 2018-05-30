@@ -90,6 +90,9 @@ public class StatusBarService extends Service {
 
     private static int whichPhaseRunning = 0;// 0 for nothing,1 for Grace,2 for cover,3 for break;
     private static boolean deterUsageRunning = false;
+    long spentTimeJunkFood = 0L;
+    long startTimeJunkFood = 0L;
+    Calendar calendar;
     private Context context;
     private MyObserver myObserver;
     private AppInstallUninstall appInstallUninstall;
@@ -105,7 +108,6 @@ public class StatusBarService extends Service {
     private int maxHeightWindow;
     private int variableMaxHeightPortrait;
     private int variableMaxHeightLandscape;
-
     private int heightWindowLandscape;
     private int maxHeightWindowLandscape;
     private View topView;
@@ -132,11 +134,7 @@ public class StatusBarService extends Service {
     private TextView txtMessageTop;
     private String strCoverMessage = "";
     private boolean isCoverTapped = false;
-
-    long spentTimeJunkFood = 0L;
-    long startTimeJunkFood = 0L;
     private DateChangeReceiver dateChangeReceiver;
-    Calendar calendar;
 
     public StatusBarService() {
     }
@@ -1549,41 +1547,6 @@ public class StatusBarService extends Service {
         }
     }
 
-    /**
-     * This broadcast is used to determine the screen on/off flag.
-     */
-
-    public class UserPresentBroadcastReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context arg0, Intent intent) {
-            if (intent != null && intent.getAction() != null && null != arg0) {
-                if (PackageUtil.isSiempoLauncher(arg0) && (intent.getAction()
-                        .equals
-                                (Intent.ACTION_USER_PRESENT) ||
-                        intent.getAction().equals(Intent.ACTION_SCREEN_ON))) {
-
-                    if (countDownTimer != null) {
-                        countDownTimer.cancel();
-                        PrefSiempo.getInstance(context).write(PrefSiempo
-                                .LOCK_COUNTER_STATUS, false);
-                    }
-                    if (countDownTimerBreak != null) {
-                        countDownTimerBreak.cancel();
-                        countDownTimerBreak = null;
-                        deterUsageRunning = false;
-                        isFullScreenView = false;
-                        whichPhaseRunning = 0;
-                        resetAllTimer();
-                        removeView();
-                        PrefSiempo.getInstance(context).write(PrefSiempo.BREAK_TIME, 0L);
-                    }
-                } else if (intent.getAction().equals(Intent
-                        .ACTION_SCREEN_OFF)) {
-                    startLockScreenTimer();
-                }
-            }
-        }
-    }
 
     private class MyObserver extends ContentObserver {
         MyObserver(Handler handler) {
