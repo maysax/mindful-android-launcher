@@ -44,6 +44,7 @@ import java.util.Set;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.JunkfoodFlaggingAdapter;
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.NotifySearchRefresh;
@@ -160,26 +161,28 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
      * load system apps and filter the application for junkfood and normal.
      */
     private void loadApps() {
+        if (PrefSiempo.getInstance(this).read(PrefSiempo.IS_JUNKFOOD_FIRSTTIME, true)) {
+            PrefSiempo.getInstance(this).write(PrefSiempo.IS_JUNKFOOD_FIRSTTIME, false);
+            showFirstTimeDialog();
+        }
         List<String> installedPackageListLocal = CoreApplication.getInstance().getPackagesList();
         Log.d("Junkfood", "" + installedPackageListLocal.size());
+        installedPackageListLocal.remove(Constants.SETTINGS_APP_PACKAGE);
         installedPackageList = new ArrayList<>();
         List<String> appList = new ArrayList<>(installedPackageListLocal);
         favoriteList = PrefSiempo.getInstance(this).read(PrefSiempo.FAVORITE_APPS, new HashSet<String>());
-        List<String> ToolsAppList = getToolsAppList();
+        List<String> toolsAppList = getToolsAppList();
 
         //Adding for ToolAppList
-        if (ToolsAppList != null && favoriteList != null) {
-            appList.removeAll(ToolsAppList);
+        if (toolsAppList != null && favoriteList != null) {
+            appList.removeAll(toolsAppList);
             appList.removeAll(favoriteList);
         }
 
         installedPackageList = appList;
 //        new FilterApps(false).execute();
         bindData();
-        if (PrefSiempo.getInstance(this).read(PrefSiempo.IS_JUNKFOOD_FIRSTTIME, true)) {
-            PrefSiempo.getInstance(this).write(PrefSiempo.IS_JUNKFOOD_FIRSTTIME, false);
-            showFirstTimeDialog();
-        }
+
     }
 
     private List<String> getToolsAppList() {
@@ -191,9 +194,9 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
             }
         }
         List<String> appToolList = new ArrayList<>();
-        for (AppMenu ToolMenuAppList : assignedToolListSet) {
-            if (ToolMenuAppList.getApplicationName() != null) {
-                appToolList.add(ToolMenuAppList.getApplicationName());
+        for (AppMenu toolsMenuApp : assignedToolListSet) {
+            if (toolsMenuApp.getApplicationName() != null) {
+                appToolList.add(toolsMenuApp.getApplicationName());
             }
         }
         return appToolList;
