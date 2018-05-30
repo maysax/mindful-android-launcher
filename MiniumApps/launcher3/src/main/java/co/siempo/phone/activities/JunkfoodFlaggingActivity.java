@@ -43,6 +43,7 @@ import java.util.Set;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.JunkfoodFlaggingAdapter;
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.NotifySearchRefresh;
@@ -160,6 +161,8 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
         List<String> installedPackageListLocal = CoreApplication.getInstance().getPackagesList();
         Log.d("Junkfood", "" + installedPackageListLocal.size());
         installedPackageList = new ArrayList<>();
+        int i = installedPackageListLocal.indexOf(Constants.SETTINGS_APP_PACKAGE);
+        installedPackageListLocal.remove(i);
         List<String> appList = new ArrayList<>(installedPackageListLocal);
 
         installedPackageList = appList;
