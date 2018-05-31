@@ -3,6 +3,7 @@ package co.siempo.phone.activities;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -327,7 +328,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     }
 
     /**
-     *
      * @param fragment
      * @param containerViewId
      */
@@ -447,18 +447,17 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                         if (lockcounterstatus) {
                             DashboardActivity.currentIndexDashboard = 1;
                             DashboardActivity.currentIndexPaneFragment = 2;
-                            Intent startMain = getIntent();
-                            if (null == startMain) {
-                                startMain = new Intent(Intent.ACTION_MAIN);
+                            try {
+                                Intent startMain = new Intent(Intent.ACTION_MAIN);
                                 startMain.addCategory(Intent.CATEGORY_HOME);
+                                startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(startMain);
+                            } catch (ActivityNotFoundException e) {
+                                e.printStackTrace();
                             }
-                            startActivity(startMain);
                             PrefSiempo.getInstance(CoreActivity.this).write(PrefSiempo
                                     .LOCK_COUNTER_STATUS, false);
                         }
-                    } else if (PackageUtil.isSiempoLauncher(arg0) && intent.getAction().equals(Intent
-                            .ACTION_SCREEN_OFF)) {
-
                     }
                 }
             } catch (Exception e) {
