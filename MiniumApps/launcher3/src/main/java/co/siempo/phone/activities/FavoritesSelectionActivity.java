@@ -86,7 +86,6 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
         initView();
         list = PrefSiempo.getInstance(this).read(PrefSiempo.FAVORITE_APPS, new HashSet<String>());
         adapterList = new HashSet<>();
-
         junkFoodList = PrefSiempo.getInstance(this).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
         list.removeAll(junkFoodList);
         adapterList.addAll(list);
@@ -436,6 +435,10 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
                 }
                 favoriteList = Sorting.sortApplication(favoriteList);
                 bindingList.addAll(favoriteList);
+               /* if(bindingList.size()==0){
+                    bindingList.add(new AppListInfo(Constants.SETTINGS_APP_PACKAGE,"Settings",
+                            true,false,false));
+                }*/
 
                 if (unfavoriteList.size() == 0) {
                     unfavoriteList.add(new AppListInfo("", "", true, true, false));
