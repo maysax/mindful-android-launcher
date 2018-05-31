@@ -17,7 +17,6 @@ public class Constants {
 
 
     public static final String GOOGLE_CALENDAR_PACKAGES = "com.google.android.calendar";
-    public static final String TELEGRAM_PACKAGES = "org.telegram.messenger";
     //Packages to be added by default in junk food app
     public static final String FACEBOOK_PACKAGE = "com.facebook.katana";
     public static final String SNAP_PACKAGE = "com.snapchat.android";

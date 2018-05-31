@@ -233,7 +233,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
                         int volume = PrefSiempo.getInstance(this).read(PrefSiempo.USER_VOLUME, audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
                         int sound = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM);
-                        if (sound == 1) {
+                        if(sound==1) {
                             audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, volume, 0);
                         }
                     }
@@ -391,11 +391,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
             Tracer.d("SiempoNotificationListener:parseWhatsappMessage");
             parseWhatsappMessage(statusBarNotification, strPackageName, date, data, icon, largeIcon);
 
-        }
-        //Parse the Telegram.
-        else if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.TELEGRAM_PACKAGES)) {
-            Tracer.d("SiempoNotificationListener:parseGoogleCalender");
-            parseTelegramMessenger(statusBarNotification, strPackageName, strTitle, strText, date, icon, largeIcon);
         }
         //Parse the Google Calendar
         else if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.GOOGLE_CALENDAR_PACKAGES)) {
@@ -698,58 +693,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
             CoreApplication.getInstance().logException(e);
         }
     }
-
-    private void parseTelegramMessenger(StatusBarNotification statusBarNotification, String strPackageName, String strTitle, String strText, Date date, int icon, byte[] largeIcon) {
-        try {
-            DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
-            TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
-            if (strTitle != null && strText != null && !strText.equalsIgnoreCase("") && !strTitle.contains("Telegram")) {
-                strTitle = checkTextContainForTelegram(strTitle);
-                TableNotificationSms notificationSms
-                        = DBUtility.getNotificationDao().queryBuilder()
-                        .where(TableNotificationSmsDao.Properties.PackageName.eq(strPackageName),
-                                TableNotificationSmsDao.Properties._contact_title.eq(strTitle),
-                                TableNotificationSmsDao.Properties.Notification_type.eq(NotificationUtility.NOTIFICATION_TYPE_EVENT))
-                        .unique();
-                if (notificationSms == null) {
-                    notificationSms = new TableNotificationSms();
-                    notificationSms.set_contact_title(strTitle);
-                    notificationSms.set_message(strText);
-                    notificationSms.set_date(date);
-                    notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                    notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
-                    notificationSms.setPackageName(strPackageName);
-                    notificationSms.setApp_icon(icon);
-                    notificationSms.setUser_icon(largeIcon);
-                    notificationSms.setNotification_id(statusBarNotification.getId());
-                    long id = smsDao.insert(notificationSms);
-                    notificationSms.setId(id);
-                } else {
-                    notificationSms.setPackageName(strPackageName);
-                    notificationSms.set_date(date);
-                    notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                    notificationSms.set_message(strText);
-                    notificationSms.set_contact_title(strTitle);
-                    smsDao.update(notificationSms);
-                }
-            }
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            Tracer.d("SiempoNotificationListener:parseFacebookMessenger" + e.getMessage());
-            CoreApplication.getInstance().logException(e);
-        }
-    }
-
-    private String checkTextContainForTelegram(String strTitle) {
-        String title = strTitle;
-        if (strTitle.endsWith("message)") || strTitle.endsWith("messages)")) {
-            title = strTitle.substring(0, strTitle.indexOf("("));
-        }
-        return title;
-    }
-
 
     private void parseFacebook(StatusBarNotification statusBarNotification, String strPackageName, String strTitle, String strText, Date date, int icon, byte[] largeIcon) {
         try {
