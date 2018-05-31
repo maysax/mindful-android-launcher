@@ -124,7 +124,9 @@ public class PaneFragment extends CoreFragment {
     BroadcastReceiver mKeyBoardReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(Utils.KEYBOARD_ACTION)) {
+            if (null != intent && null != intent.getAction() && intent.getAction().equals
+                    (Utils
+                            .KEYBOARD_ACTION)) {
                 if (intent.getBooleanExtra(Utils.ACTION, false)) {
                     updateListViewLayout(true);
                 } else {
@@ -188,6 +190,12 @@ public class PaneFragment extends CoreFragment {
     }
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        bindView();
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
@@ -244,7 +252,7 @@ public class PaneFragment extends CoreFragment {
             overlayDialogPermission.dismiss();
         }
 
-        //Added as a part of SSA-1669
+//        Added as a part of SSA-1669
         if (isVisibleToUser && firstTimeLoad) {
             if (getView() != null) {
                 bindBottomDock();
@@ -324,11 +332,6 @@ public class PaneFragment extends CoreFragment {
         chipsEditText.clearFocus();
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        bindView();
-    }
 
     private void bindView() {
         bindViewPager();
@@ -1002,7 +1005,6 @@ public class PaneFragment extends CoreFragment {
                                 if (isAdded()) {
                                     pagerPane.setCurrentItem(1);
                                 }
-
                                 break;
                             case 1:
                                 viewFlipper.setInAnimation(context, R.anim

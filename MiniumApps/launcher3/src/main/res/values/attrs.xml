@@ -41,6 +41,7 @@
         <attr name="pull_tab" format="color"/>
         <attr name="chevron_junk" format="color"/>
         <attr name="icon_color_reverse" format="color"/>
+        <attr name="icon_color_menu" format="color"/>
         <attr name="txt_content_color" format="color"/>
         <attr name="pop_up_color" format="color"/>
         <attr name="txt_content_title" format="color"/>

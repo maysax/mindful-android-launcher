@@ -393,10 +393,10 @@ public class MainFragmentMediator {
         @Override
         protected List<MainListItem> doInBackground(String... strings) {
             try {
-                loadActions();
-                loadContacts();
-                loadDefaults();
-                items = PackageUtil.getListWithMostRecentData(items, context);
+                    loadActions();
+                    loadContacts();
+                    loadDefaults();
+                    items = PackageUtil.getListWithMostRecentData(items, context);
             } catch (Exception e) {
                 e.printStackTrace();
             }
