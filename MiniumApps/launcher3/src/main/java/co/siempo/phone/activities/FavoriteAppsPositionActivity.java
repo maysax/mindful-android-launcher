@@ -160,7 +160,8 @@ public class FavoriteAppsPositionActivity extends CoreActivity implements OnFavo
         toolbar.setTitle(R.string.editing_frequently_apps);
         setSupportActionBar(toolbar);
         items = new ArrayList<>();
-        items = PackageUtil.getFavoriteList(this, true);
+        //Changed for SSA-1770 binding items for not empty FavList.
+        items = PackageUtil.getFavoriteList(this, false);
 
         recyclerView = findViewById(R.id.recyclerView);
         txtSelectTools = findViewById(R.id.txtSelectTools);

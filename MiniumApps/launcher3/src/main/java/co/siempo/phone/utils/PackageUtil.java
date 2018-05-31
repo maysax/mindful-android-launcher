@@ -846,7 +846,13 @@ public class PackageUtil {
         }
     }
 
-
+    /**
+     * Changes for SSA-1770-Changes
+     *
+     * @param context
+     * @param isFalse-check Whether list is fetched for empty FavItemsList or not.
+     * @return
+     */
     public static ArrayList<MainListItem> getFavoriteList(Context context, boolean isFalse) {
 
         ArrayList<MainListItem> sortedFavoriteList = new ArrayList<>();
@@ -859,7 +865,7 @@ public class PackageUtil {
                     listOfSortFavoritesApps = syncFavoriteList(jsonListOfSortedFavorites, context);
                     sortedFavoriteList = sortFavoriteAppsByPosition(listOfSortFavoritesApps, appList, context);
                 } else {
-                    if (!isFalse) {
+                    if (isFalse) {
                         sortedFavoriteList = addDefaultFavoriteAppsSetting(context, appList);
                     } else {
                         sortedFavoriteList = addDefaultFavoriteApps(context, appList);
