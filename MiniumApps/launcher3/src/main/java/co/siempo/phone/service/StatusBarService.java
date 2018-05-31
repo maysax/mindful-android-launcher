@@ -210,17 +210,7 @@ public class StatusBarService extends Service {
 
         display.getSize(size);
         maxHeightCoverWindow = screenHeightExclusive * 6 / 9;
-        paramsBottom = new WindowManager.LayoutParams();
-        paramsBottom.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        paramsBottom.gravity = Gravity.BOTTOM;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            paramsBottom.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
-        } else {
-            paramsBottom.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-        }
-        paramsBottom.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
-                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-        paramsBottom.format = PixelFormat.TRANSLUCENT;
+
         AppChecker.Listener deterUse = new AppChecker.Listener() {
             @Override
             public void onForeground(String process) {
@@ -269,6 +259,7 @@ public class StatusBarService extends Service {
         appChecker.whenAny(deterUse);
         appChecker.timeout(1000);
         appChecker.start(context);
+
     }
 
     /**
@@ -951,7 +942,7 @@ public class StatusBarService extends Service {
                         break;
                     case 2:
                         if (isBottomViewVisible && !isTopViewVisible) {
-                                paramsBottom.height = heightWindowLandscapeExclusive * 3 / 9;
+                            paramsBottom.height = heightWindowLandscapeExclusive * 3 / 9;
                         } else if (isBottomViewVisible && isTopViewVisible) {
                             paramsTop.height = (heightWindowLandscapeExclusive * 3 / 9) / 2;
                             paramsBottom.height = (heightWindowLandscapeExclusive * 3 / 9) / 2;
@@ -1351,9 +1342,11 @@ public class StatusBarService extends Service {
 
 
                                     if ((!isLandscape && paramsBottom.height !=
-                                            minusculeHeight) || (isLandscape
+                                            (size.y - (getNavigationBarHeight()
+                                                    + getStatusBarHeight())) / 9)
+                                            || (isLandscape
                                             && paramsBottom.height !=
-                                            size.x/9)) {
+                                            size.x / 9)) {
                                         paramsBottom.height = bottomView.getHeight() / 2;
                                         isCoverTapped = true;
                                         bottomView.setLayoutParams(new ViewGroup.LayoutParams
@@ -1738,7 +1731,6 @@ public class StatusBarService extends Service {
         }
     }
 
-
     public class UserPresentBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context arg0, Intent intent) {
@@ -1804,5 +1796,7 @@ public class StatusBarService extends Service {
             }
         }
     }
+
+
 }
 
