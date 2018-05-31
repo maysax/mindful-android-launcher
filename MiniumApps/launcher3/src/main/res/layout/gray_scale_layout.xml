@@ -17,7 +17,7 @@
         android:layout_marginRight="@dimen/dp_10"
         android:background="@drawable/transparent_bg_rounded"
         android:gravity="center|left"
-        android:padding="@dimen/dp_15"
+        android:padding="@dimen/dp_5"
         android:text="@string/take_a_one_minute_break_at_nany_time_to_remove_this_cover"
         android:textColor="@color/white"
         android:visibility="gone"/>

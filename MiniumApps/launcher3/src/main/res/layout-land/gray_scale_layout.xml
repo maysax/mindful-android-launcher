@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="40dp"
                 android:background="#42A4FF"
                 android:orientation="vertical">
 
@@ -32,8 +32,8 @@
         android:layout_gravity="bottom"
         android:baselineAligned="false"
         android:gravity="bottom"
-        android:paddingBottom="@dimen/dp_10"
-        android:paddingTop="@dimen/dp_10"
+        android:paddingBottom="@dimen/dp_5"
+        android:paddingTop="@dimen/dp_5"
         android:visibility="visible"
         android:weightSum="3">
 
@@ -46,20 +46,22 @@
             android:background="@drawable/rounded_card"
             android:gravity="center"
             android:paddingBottom="@dimen/dp_5"
+            android:paddingTop="@dimen/dp_5"
             android:paddingLeft="@dimen/dp_5"
             android:paddingRight="@dimen/dp_5"
-            android:paddingTop="@dimen/dp_5">
+            >
 
             <TextView
                 android:id="@+id/txtTime"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:drawableLeft="@drawable/clock"
                 android:drawablePadding="@dimen/dp_5"
                 android:gravity="center"
                 android:textAllCaps="true"
                 android:textColor="#42A4FF"
+                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textSize="12sp"
                 tools:text="00:00"/>
         </LinearLayout>

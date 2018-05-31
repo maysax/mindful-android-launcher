@@ -794,11 +794,21 @@ public class StatusBarService extends Service {
                 whichPhaseRunning = 0;
                 linProgress.setVisibility(View.GONE);
                 linProgressTop.setVisibility(View.GONE);
+                final boolean isLandscape = getResources().getConfiguration()
+                        .orientation == Configuration.ORIENTATION_LANDSCAPE;
                 if (isBottomViewVisible) {
-                    paramsBottom.height = minusculeHeight;
+                    if (isLandscape) {
+                        paramsBottom.height = minusculeHeightLandscape;
+                    } else {
+                        paramsBottom.height = minusculeHeight;
+                    }
                 }
                 if (isTopViewVisible) {
-                    paramsTop.height = minusculeHeight;
+                    if (isLandscape) {
+                        paramsTop.height = minusculeHeightLandscape;
+                    } else {
+                        paramsTop.height = minusculeHeight;
+                    }
                 }
                 resetAllTimer();
                 removeView();
@@ -1278,7 +1288,9 @@ public class StatusBarService extends Service {
                     public void onClick(View v) {
                         if (txtSettings.getText().toString().equalsIgnoreCase(getResources().getString(R.string.settings))) {
                             PrefSiempo.getInstance(context).write(PrefSiempo.IS_SETTINGS_PRESSED, true);
-                            Intent intent = new Intent(context, SettingsActivity_.class);
+                            Intent intent = new Intent(context,
+                                    SettingsActivity_.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.putExtra("FlagApp", true);
                             startActivity(intent);
                         } else {
@@ -1576,14 +1588,12 @@ public class StatusBarService extends Service {
                     () != null) {
                 wm.removeView(bottomView);
                 bottomView = null;
-//                paramsBottom.height = 0;
             }
 
             if (topView != null && wm != null && topView.getWindowToken()
                     != null) {
                 wm.removeView(topView);
                 topView = null;
-//                paramsTop.height = 0;
             }
 
         } catch (Exception e) {
@@ -1619,6 +1629,7 @@ public class StatusBarService extends Service {
             addOverlayWindow(coverTimeForWindow);
 
         } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
             removeView();
             addOverlayWindow(coverTimeForWindow);
         }
