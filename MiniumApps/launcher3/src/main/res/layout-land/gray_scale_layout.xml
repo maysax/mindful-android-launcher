@@ -17,7 +17,8 @@
         android:layout_marginRight="@dimen/dp_10"
         android:background="@drawable/transparent_bg_rounded"
         android:gravity="center|left"
-        android:padding="@dimen/dp_15"
+        android:padding="@dimen/dp_5"
+        android:textSize="12sp"
         android:text="@string/take_a_one_minute_break_at_nany_time_to_remove_this_cover"
         android:textColor="@color/white"
         android:visibility="gone"/>
@@ -44,10 +45,10 @@
             android:layout_weight="1"
             android:background="@drawable/rounded_card"
             android:gravity="center"
-            android:paddingBottom="@dimen/dp_10"
+            android:paddingBottom="@dimen/dp_5"
             android:paddingLeft="@dimen/dp_5"
             android:paddingRight="@dimen/dp_5"
-            android:paddingTop="@dimen/dp_10">
+            android:paddingTop="@dimen/dp_5">
 
             <TextView
                 android:id="@+id/txtTime"
@@ -59,7 +60,7 @@
                 android:gravity="center"
                 android:textAllCaps="true"
                 android:textColor="#42A4FF"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 tools:text="00:00"/>
         </LinearLayout>
 
@@ -71,10 +72,10 @@
             android:layout_weight="1"
             android:background="@drawable/rounded_card"
             android:gravity="center"
-            android:paddingBottom="@dimen/dp_10"
+            android:paddingBottom="@dimen/dp_5"
             android:paddingLeft="@dimen/dp_5"
             android:paddingRight="@dimen/dp_5"
-            android:paddingTop="@dimen/dp_10">
+            android:paddingTop="@dimen/dp_5">
 
             <TextView
                 android:id="@+id/txtSettings"
@@ -86,7 +87,7 @@
                 android:maxLines="1"
                 android:text="@string/settings"
                 android:textColor="#42A4FF"
-                android:textSize="14sp"/>
+                android:textSize="12sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -98,10 +99,10 @@
             android:layout_weight="1"
             android:background="@drawable/rounded_card"
             android:gravity="center"
-            android:paddingBottom="@dimen/dp_10"
+            android:paddingBottom="@dimen/dp_5"
             android:paddingLeft="@dimen/dp_5"
             android:paddingRight="@dimen/dp_5"
-            android:paddingTop="@dimen/dp_10">
+            android:paddingTop="@dimen/dp_5">
 
             <TextView
                 android:id="@+id/txtWellness"
@@ -113,7 +114,7 @@
                 android:maxLines="1"
                 android:text="@string/wellness"
                 android:textColor="#42A4FF"
-                android:textSize="14sp"/>
+                android:textSize="12sp"/>
         </LinearLayout>
     </LinearLayout>
 
