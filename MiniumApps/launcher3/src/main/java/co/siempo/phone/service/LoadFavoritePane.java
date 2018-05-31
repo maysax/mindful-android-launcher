@@ -2,6 +2,7 @@ package co.siempo.phone.service;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 
@@ -9,6 +10,7 @@ import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.NotifyFavortieView;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.utils.PackageUtil;
+import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -26,7 +28,20 @@ public class LoadFavoritePane extends AsyncTask<String, String, ArrayList<MainLi
     @Override
     protected ArrayList<MainListItem> doInBackground(String... strings) {
         ArrayList<MainListItem> items;
-        items = PackageUtil.getFavoriteList(context);
+        items = PackageUtil.getFavoriteList(context, true);
+        int itemsSize = items.size();
+        int tempFavSize = 0;
+        for (MainListItem favListItems : items) {
+            if (TextUtils.isEmpty(favListItems.getPackageName())) {
+                tempFavSize++;
+            }
+        }
+        if (itemsSize == tempFavSize) {
+            PrefSiempo.getInstance(context).write(PrefSiempo.FAVORITE_SORTED_MENU, "");
+            items = PackageUtil.getFavoriteList(context, false);
+        } else {
+            items = PackageUtil.getFavoriteList(context, true);
+        }
         return items;
     }
 
