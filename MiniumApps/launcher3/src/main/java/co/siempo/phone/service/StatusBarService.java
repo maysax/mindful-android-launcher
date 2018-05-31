@@ -33,7 +33,6 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -135,6 +134,8 @@ public class StatusBarService extends Service {
     private String strCoverMessage = "";
     private boolean isCoverTapped = false;
     private DateChangeReceiver dateChangeReceiver;
+    private int heightWindowLandscapeExclusive;
+    private int coverTimeForWindow;
 
     public StatusBarService() {
     }
@@ -163,6 +164,7 @@ public class StatusBarService extends Service {
                 + getStatusBarHeight())) * 6 / 9;
 
         heightWindowLandscape = (size.x) * 6 / 9;
+        heightWindowLandscapeExclusive = (size.x);
         maxHeightWindowLandscape = heightWindowLandscape;
         paramsTop = new WindowManager
                 .LayoutParams();
@@ -178,7 +180,7 @@ public class StatusBarService extends Service {
         paramsBottom.width = ViewGroup.LayoutParams.MATCH_PARENT;
         paramsBottom.height = minusculeHeight;
         paramsBottom.gravity = Gravity.BOTTOM;
-        paramsBottom.screenOrientation = Configuration.ORIENTATION_PORTRAIT;
+//        paramsBottom.screenOrientation = Configuration.ORIENTATION_PORTRAIT;
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             paramsBottom.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
@@ -193,7 +195,7 @@ public class StatusBarService extends Service {
         paramsTop.width = ViewGroup.LayoutParams.MATCH_PARENT;
         paramsTop.height = 0;
         paramsTop.gravity = Gravity.TOP;
-        paramsTop.screenOrientation = Configuration.ORIENTATION_PORTRAIT;
+//        paramsTop.screenOrientation = Configuration.ORIENTATION_PORTRAIT;
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             paramsTop.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
@@ -641,6 +643,7 @@ public class StatusBarService extends Service {
             } else if (cover_time_completed != 0L && countDownTimerBreak != null) {
 
                 if (cover_time_completed == 5L) {
+                    coverTimeForWindow = 5;
                     addOverlayWindow(5);
                 } else {
                     if (countDownTimerCover != null) {
@@ -654,11 +657,15 @@ public class StatusBarService extends Service {
                     int minutes = (int) (remainingTimeCover / (1000 * 60));
                     int seconds = (int) ((remainingTimeCover / 1000) % 60);
                     Log.d("DeterUse:CoverRemaining", "" + minutes + ":" + seconds);
-                    addOverlayWindow((int) (cover_time_completed / (1000 * 60)));
+                    int coverTime = (int) (cover_time_completed / (1000 * 60));
+                    coverTimeForWindow = coverTime;
+                    addOverlayWindow(coverTime);
+
                     startTimerForCoverPeriod(remainingTimeCover, cover_time_completed);
                 }
             } else if (grace_time_completed == 0L && cover_time_completed == 0L
                     && isFullScreenView && countDownTimerBreak != null) {
+                coverTimeForWindow = 6;
                 addOverlayWindow(6);
             }
 
@@ -717,6 +724,7 @@ public class StatusBarService extends Service {
                 PrefSiempo.getInstance(context).write(PrefSiempo.JUNKFOOD_USAGE_COVER_TIME, coverTimeSpent + completedTime);
 
                 if (seconds == 0 && minutes == 0) {
+                    coverTimeForWindow = 0;
                     addOverlayWindow(0);
                     int deterTime = PrefSiempo.getInstance(context).read(PrefSiempo.DETER_AFTER, -1);
                     String strTime = String.format("%02d", (minutes + deterTime)) + ":" + String.format("%02d", seconds);
@@ -724,6 +732,7 @@ public class StatusBarService extends Service {
                     if (wm != null && txtTimeTop != null) txtTimeTop.setText
                             (strTime);
                 } else if (seconds == 0 && minutes != 0) {
+                    coverTimeForWindow = minutes;
                     addOverlayWindow(minutes);
                     int deterTime = PrefSiempo.getInstance(context).read(PrefSiempo.DETER_AFTER, -1);
                     String strTime = String.format("%02d", (minutes + deterTime)) + ":" + String.format("%02d", seconds);
@@ -745,6 +754,7 @@ public class StatusBarService extends Service {
 //                    countDownTimerCover.cancel();
 //                    countDownTimerCover = null;
 //                }
+                coverTimeForWindow = 5;
                 addOverlayWindow(5);
                 PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 5L);
                 int deterTime = PrefSiempo.getInstance(context).read(PrefSiempo.DETER_AFTER, -1);
@@ -836,78 +846,162 @@ public class StatusBarService extends Service {
     private void addOverlayWindow(final int coverTime) {
         try {
             boolean isSettingPressed = PrefSiempo.getInstance(context).read(PrefSiempo.IS_SETTINGS_PRESSED, false);
+            final boolean isLandscape = getResources().getConfiguration()
+                    .orientation == Configuration.ORIENTATION_LANDSCAPE;
+
+            if (!isLandscape) {
+                switch (coverTime) {
+
+                    case 0:
+
+                        if (isBottomViewVisible && !isTopViewVisible) {
+                            paramsBottom.height = screenHeightExclusive / 9;
+                        } else if (!isBottomViewVisible && isTopViewVisible) {
+                            paramsTop.height = screenHeightExclusive / 9;
+                        }
 
 
-            switch (coverTime) {
+                        break;
+                    case 1:
+                        if (isBottomViewVisible && !isTopViewVisible) {
+                            paramsBottom.height = screenHeightExclusive * 2 / 9;
+                        } else if (isBottomViewVisible && isTopViewVisible) {
+                            paramsTop.height = (screenHeightExclusive * 2 / 9) / 2;
+                            paramsBottom.height = (screenHeightExclusive * 2 / 9)
+                                    / 2;
+                        } else if (!isBottomViewVisible && isTopViewVisible) {
+                            paramsTop.height = screenHeightExclusive * 2 / 9;
+                        }
+
+                        break;
+                    case 2:
+                        if (isBottomViewVisible && !isTopViewVisible) {
+                            paramsBottom.height = screenHeightExclusive * 3 / 9;
+                        } else if (isBottomViewVisible && isTopViewVisible) {
+                            paramsTop.height = (screenHeightExclusive * 3 / 9) / 2;
+                            paramsBottom.height = (screenHeightExclusive * 3 / 9) / 2;
+                        } else if (!isBottomViewVisible && isTopViewVisible) {
+                            paramsTop.height = screenHeightExclusive * 3 / 9;
+                        }
 
 
-                case 0:
-                    paramsBottom.height = screenHeightExclusive / 9;
-                    break;
-                case 1:
-                    if (isBottomViewVisible && !isTopViewVisible) {
-                        paramsBottom.height = screenHeightExclusive * 2 / 9;
-                    } else if (isBottomViewVisible && isTopViewVisible) {
-                        paramsTop.height = (screenHeightExclusive * 2 / 9) / 2;
-                        paramsBottom.height = (screenHeightExclusive * 2 / 9)
-                                / 2;
-                    } else if (!isBottomViewVisible && isTopViewVisible) {
-                        paramsTop.height = screenHeightExclusive * 2 / 9;
-                    }
+                        break;
+                    case 3:
 
-                    break;
-                case 2:
-                    if (isBottomViewVisible && !isTopViewVisible) {
-                        paramsBottom.height = screenHeightExclusive * 3 / 9;
-                    } else if (isBottomViewVisible && isTopViewVisible) {
-                        paramsTop.height = (screenHeightExclusive * 3 / 9) / 2;
-                        paramsBottom.height = (screenHeightExclusive * 3 / 9) / 2;
-                    } else if (!isBottomViewVisible && isTopViewVisible) {
-                        paramsTop.height = screenHeightExclusive * 3 / 9;
-                    }
+                        if (isBottomViewVisible && !isTopViewVisible) {
+                            paramsBottom.height = screenHeightExclusive * 4 / 9;
+                        } else if (isBottomViewVisible && isTopViewVisible) {
+                            paramsTop.height = (screenHeightExclusive * 4 / 9) / 2;
+                            paramsBottom.height = (screenHeightExclusive * 4 / 9)
+                                    / 2;
+                        } else if (!isBottomViewVisible && isTopViewVisible) {
+                            paramsTop.height = screenHeightExclusive * 4 / 9;
+                        }
+                        break;
+                    case 4:
+
+                        if (isBottomViewVisible && !isTopViewVisible) {
+                            paramsBottom.height = screenHeightExclusive * 5 / 9;
+                        } else if (isBottomViewVisible && isTopViewVisible) {
+                            paramsTop.height = (screenHeightExclusive * 5 / 9) / 2;
+                            paramsBottom.height = (screenHeightExclusive * 5 / 9)
+                                    / 2;
+                        } else if (!isBottomViewVisible && isTopViewVisible) {
+                            paramsTop.height = screenHeightExclusive * 5 / 9;
+                        }
+                        break;
+                    case 5:
+
+                        if (isBottomViewVisible && !isTopViewVisible) {
+                            paramsBottom.height = screenHeightExclusive * 6 / 9;
+                        } else if (isBottomViewVisible && isTopViewVisible) {
+                            paramsTop.height = (screenHeightExclusive * 6 / 9) / 2;
+                            paramsBottom.height = (screenHeightExclusive * 6 / 9)
+                                    / 2;
+                        } else if (!isBottomViewVisible && isTopViewVisible) {
+                            paramsTop.height = screenHeightExclusive * 6 / 9;
+                        }
+                        break;
+                    case 6:
+                        paramsBottom.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                        break;
+
+                }
+            } else {
+                switch (coverTime) {
+
+                    case 0:
+                        if (isBottomViewVisible && !isTopViewVisible) {
+                            paramsBottom.height = heightWindowLandscapeExclusive / 9;
+                        } else if (!isBottomViewVisible && isTopViewVisible) {
+                            paramsTop.height = heightWindowLandscapeExclusive / 9;
+                        }
+                        break;
+                    case 1:
+                        if (isBottomViewVisible && !isTopViewVisible) {
+                            paramsBottom.height = heightWindowLandscapeExclusive * 2 / 9;
+                        } else if (isBottomViewVisible && isTopViewVisible) {
+                            paramsTop.height = (heightWindowLandscapeExclusive * 2 / 9) / 2;
+                            paramsBottom.height = (heightWindowLandscapeExclusive * 2 / 9)
+                                    / 2;
+                        } else if (!isBottomViewVisible && isTopViewVisible) {
+                            paramsTop.height = heightWindowLandscapeExclusive * 2 / 9;
+                        }
+
+                        break;
+                    case 2:
+                        if (isBottomViewVisible && !isTopViewVisible) {
+                                paramsBottom.height = heightWindowLandscapeExclusive * 3 / 9;
+                        } else if (isBottomViewVisible && isTopViewVisible) {
+                            paramsTop.height = (heightWindowLandscapeExclusive * 3 / 9) / 2;
+                            paramsBottom.height = (heightWindowLandscapeExclusive * 3 / 9) / 2;
+                        } else if (!isBottomViewVisible && isTopViewVisible) {
+                            paramsTop.height = heightWindowLandscapeExclusive * 3 / 9;
+                        }
 
 
-                    break;
-                case 3:
+                        break;
+                    case 3:
 
-                    if (isBottomViewVisible && !isTopViewVisible) {
-                        paramsBottom.height = screenHeightExclusive * 4 / 9;
-                    } else if (isBottomViewVisible && isTopViewVisible) {
-                        paramsTop.height = (screenHeightExclusive * 4 / 9) / 2;
-                        paramsBottom.height = (screenHeightExclusive * 4 / 9)
-                                / 2;
-                    } else if (!isBottomViewVisible && isTopViewVisible) {
-                        paramsTop.height = screenHeightExclusive * 4 / 9;
-                    }
-                    break;
-                case 4:
+                        if (isBottomViewVisible && !isTopViewVisible) {
+                            paramsBottom.height = heightWindowLandscapeExclusive * 4 / 9;
+                        } else if (isBottomViewVisible && isTopViewVisible) {
+                            paramsTop.height = (heightWindowLandscapeExclusive * 4 / 9) / 2;
+                            paramsBottom.height = (heightWindowLandscapeExclusive * 4 / 9)
+                                    / 2;
+                        } else if (!isBottomViewVisible && isTopViewVisible) {
+                            paramsTop.height = heightWindowLandscapeExclusive * 4 / 9;
+                        }
+                        break;
+                    case 4:
 
-                    if (isBottomViewVisible && !isTopViewVisible) {
-                        paramsBottom.height = screenHeightExclusive * 5 / 9;
-                    } else if (isBottomViewVisible && isTopViewVisible) {
-                        paramsTop.height = (screenHeightExclusive * 5 / 9) / 2;
-                        paramsBottom.height = (screenHeightExclusive * 5 / 9)
-                                / 2;
-                    } else if (!isBottomViewVisible && isTopViewVisible) {
-                        paramsTop.height = screenHeightExclusive * 5 / 9;
-                    }
-                    break;
-                case 5:
+                        if (isBottomViewVisible && !isTopViewVisible) {
+                            paramsBottom.height = heightWindowLandscapeExclusive * 5 / 9;
+                        } else if (isBottomViewVisible && isTopViewVisible) {
+                            paramsTop.height = (heightWindowLandscapeExclusive * 5 / 9) / 2;
+                            paramsBottom.height = (heightWindowLandscapeExclusive * 5 / 9)
+                                    / 2;
+                        } else if (!isBottomViewVisible && isTopViewVisible) {
+                            paramsTop.height = heightWindowLandscapeExclusive * 5 / 9;
+                        }
+                        break;
+                    case 5:
 
-                    if (isBottomViewVisible && !isTopViewVisible) {
-                        paramsBottom.height = screenHeightExclusive * 6 / 9;
-                    } else if (isBottomViewVisible && isTopViewVisible) {
-                        paramsTop.height = (screenHeightExclusive * 6 / 9) / 2;
-                        paramsBottom.height = (screenHeightExclusive * 6 / 9)
-                                / 2;
-                    } else if (!isBottomViewVisible && isTopViewVisible) {
-                        paramsTop.height = screenHeightExclusive * 6 / 9;
-                    }
-                    break;
-                case 6:
-                    paramsBottom.height = ViewGroup.LayoutParams.MATCH_PARENT;
-                    break;
+                        if (isBottomViewVisible && !isTopViewVisible) {
+                            paramsBottom.height = heightWindowLandscapeExclusive * 6 / 9;
+                        } else if (isBottomViewVisible && isTopViewVisible) {
+                            paramsTop.height = (heightWindowLandscapeExclusive * 6 / 9) / 2;
+                            paramsBottom.height = (heightWindowLandscapeExclusive * 6 / 9)
+                                    / 2;
+                        } else if (!isBottomViewVisible && isTopViewVisible) {
+                            paramsTop.height = heightWindowLandscapeExclusive * 6 / 9;
+                        }
+                        break;
+                    case 6:
+                        paramsBottom.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                        break;
 
+                }
             }
 
 
@@ -1255,7 +1349,11 @@ public class StatusBarService extends Service {
 
                                 } else {
 
-                                    if (paramsBottom.height != minusculeHeight) {
+
+                                    if ((!isLandscape && paramsBottom.height !=
+                                            minusculeHeight) || (isLandscape
+                                            && paramsBottom.height !=
+                                            size.x/9)) {
                                         paramsBottom.height = bottomView.getHeight() / 2;
                                         isCoverTapped = true;
                                         bottomView.setLayoutParams(new ViewGroup.LayoutParams
@@ -1522,6 +1620,16 @@ public class StatusBarService extends Service {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
+        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+
+            removeView();
+            addOverlayWindow(coverTimeForWindow);
+
+        } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            removeView();
+            addOverlayWindow(coverTimeForWindow);
+        }
+
 
         // Checks whether a hardware keyboard is available
         if (newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO) {
@@ -1533,7 +1641,7 @@ public class StatusBarService extends Service {
                 }
 
             }
-            Toast.makeText(this, "keyboard visible", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "keyboard visible", Toast.LENGTH_SHORT).show();
         } else if (newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_YES) {
             if (isBottomViewVisible && bottomView != null && bottomView
                     .getWindowToken() != null) {
@@ -1543,7 +1651,7 @@ public class StatusBarService extends Service {
                 }
 
             }
-            Toast.makeText(this, "keyboard hidden", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "keyboard hidden", Toast.LENGTH_SHORT).show();
         }
     }
 
