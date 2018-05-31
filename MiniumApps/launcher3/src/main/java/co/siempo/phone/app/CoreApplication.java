@@ -865,41 +865,48 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     public void downloadSiempoImages() {
-        File folderSiempoImage = new File(Environment.getExternalStorageDirectory() +
-                "/Siempo images");
-        if (!folderSiempoImage.exists()) {
-            folderSiempoImage.mkdirs();
-        }
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context
-                .CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = null;
-        if (connectivityManager != null) {
-            activeNetwork = connectivityManager.getActiveNetworkInfo();
-        }
-        if (activeNetwork != null) {
-            ArrayList<String> listImageName = new ArrayList<>(Arrays.asList(folderSiempoImage.list()));
-            String[] list = getResources().getStringArray(R.array.siempo_images);
-            DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-            for (String strUrl : list) {
-                String fileName = strUrl.substring(strUrl.lastIndexOf('/') + 1, strUrl.length());
-                String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
-                if (listImageName.contains(fileName)) {
-                    Log.d("File Exists", fileName);
-                } else {
-                    Uri Download_Uri = Uri.parse(strUrl);
-                    DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
-                    request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
-                    request.setAllowedOverRoaming(false);
-                    request.setTitle("Downloading " + fileName);
-                    request.setDescription("Downloading " + fileName);
-                    request.setVisibleInDownloadsUi(false);
-                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
-                    request.setDestinationInExternalPublicDir("/Siempo images", fileName);
-                    if (downloadManager != null) {
-                        long refid = downloadManager.enqueue(request);
+        try {
+            File folderSiempoImage = new File(Environment.getExternalStorageDirectory() +
+                    "/Siempo images");
+            if (!folderSiempoImage.exists()) {
+                folderSiempoImage.mkdirs();
+            }
+            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context
+                    .CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = null;
+            if (connectivityManager != null) {
+                activeNetwork = connectivityManager.getActiveNetworkInfo();
+            }
+            if (activeNetwork != null) {
+                if (folderSiempoImage != null && folderSiempoImage.list() != null) {
+                    ArrayList<String> listImageName = new ArrayList<>(Arrays.asList(folderSiempoImage.list()));
+                    String[] list = getResources().getStringArray(R.array.siempo_images);
+                    DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                    for (String strUrl : list) {
+                        String fileName = strUrl.substring(strUrl.lastIndexOf('/') + 1, strUrl.length());
+                        if (listImageName.contains(fileName)) {
+                            Log.d("File Exists", fileName);
+                        } else {
+                            Uri download_Uri = Uri.parse(strUrl);
+                            if (download_Uri != null) {
+                                DownloadManager.Request request = new DownloadManager.Request(download_Uri);
+                                request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+                                request.setAllowedOverRoaming(false);
+                                request.setTitle("Downloading " + fileName);
+                                request.setDescription("Downloading " + fileName);
+                                request.setVisibleInDownloadsUi(false);
+                                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
+                                request.setDestinationInExternalPublicDir("/Siempo images", fileName);
+                                if (downloadManager != null) {
+                                    long refid = downloadManager.enqueue(request);
+                                }
+                            }
+                        }
                     }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
