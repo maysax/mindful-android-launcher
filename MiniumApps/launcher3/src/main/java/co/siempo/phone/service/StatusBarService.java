@@ -138,6 +138,8 @@ public class StatusBarService extends Service {
     private int heightWindowLandscapeExclusive;
     private int coverTimeForWindow;
     boolean isScreenOn = true;
+    public static double latitude = 0;
+    public static double longitude = 0;
 
     public StatusBarService() {
     }
@@ -217,7 +219,7 @@ public class StatusBarService extends Service {
             @Override
             public void onForeground(String process) {
                 if (PackageUtil.isSiempoLauncher(context)) {
-                    new DBClient().deleteMsgByPackageName(process);
+//                    new DBClient().deleteMsgByPackageName(process);
                     Set<String> set = PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
                     int deterTime = PrefSiempo.getInstance(context).read(PrefSiempo.DETER_AFTER, -1);
                     if (deterTime != -1) {
@@ -557,6 +559,8 @@ public class StatusBarService extends Service {
                     if (locationResult == null) {
                         //return;
                         Location mlocation = locationResult.getLastLocation();
+                        latitude = mlocation.getLatitude();
+                        longitude = mlocation.getLongitude();
                         EventBus.getDefault().postSticky(new LocationUpdateEvent(mlocation));
                     }
                     List<Location> locations = locationResult.getLocations();
@@ -566,6 +570,8 @@ public class StatusBarService extends Service {
                         if (location != null) {
                             Log.e("location details", "long: " + location.getLongitude() + "lat: " + location
                                     .getLatitude());
+                            latitude = location.getLatitude();
+                            longitude = location.getLongitude();
                             EventBus.getDefault().postSticky(new LocationUpdateEvent(location));
                         }
 
@@ -1204,21 +1210,21 @@ public class StatusBarService extends Service {
             } else {
                 try {
                     if (isFullScreenView) {
-                            if (paramsTop.height != ViewGroup.LayoutParams.MATCH_PARENT) {
-                                paramsTop.height = ViewGroup.LayoutParams.MATCH_PARENT;
-                                topView.setLayoutParams(new ViewGroup.LayoutParams(paramsTop));
-                                if (wm != null && topView.getWindowToken() != null)
-                                    wm.updateViewLayout(topView, paramsTop);
-                                if (linButtonsTop != null && linProgressTop != null) {
-                                    linProgressTop.setVisibility(View.VISIBLE);
-                                    linButtonsTop.setVisibility(View.GONE);
-                                }
-                                if (countDownTimerCover != null) {
-                                    countDownTimerCover.cancel();
-                                    countDownTimerCover = null;
-                                    PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
-                                }
+                        if (paramsTop.height != ViewGroup.LayoutParams.MATCH_PARENT) {
+                            paramsTop.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                            topView.setLayoutParams(new ViewGroup.LayoutParams(paramsTop));
+                            if (wm != null && topView.getWindowToken() != null)
+                                wm.updateViewLayout(topView, paramsTop);
+                            if (linButtonsTop != null && linProgressTop != null) {
+                                linProgressTop.setVisibility(View.VISIBLE);
+                                linButtonsTop.setVisibility(View.GONE);
                             }
+                            if (countDownTimerCover != null) {
+                                countDownTimerCover.cancel();
+                                countDownTimerCover = null;
+                                PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
+                            }
+                        }
 //                        if (linButtonsTop != null && linProgressTop != null) {
 //                            linProgressTop.setVisibility(View.VISIBLE);
 //                            linButtonsTop.setVisibility(View.GONE);

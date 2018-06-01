@@ -42,6 +42,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.RejectedExecutionException;
 
@@ -69,6 +71,7 @@ import co.siempo.phone.service.LoadJunkFoodPane;
 import co.siempo.phone.service.LoadToolPane;
 import co.siempo.phone.service.MailChimpOperation;
 import co.siempo.phone.service.SiempoNotificationListener_;
+import co.siempo.phone.service.StatusBarService;
 import co.siempo.phone.ui.SiempoViewPager;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PermissionUtil;
@@ -175,19 +178,30 @@ public class DashboardActivity extends CoreActivity {
     private void storeDataToFirebase(String userId, String emailId) {
         try {
             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("users");
-            UserModel user = new UserModel(userId, emailId);
-            mDatabase.child(userId).setValue(user);
-            mDatabase.child(userId).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
+            UserModel user = new UserModel(userId, emailId, StatusBarService.latitude, StatusBarService.longitude);
+            String key = mDatabase.child(userId).getKey();
+            if (key != null) {
+                Map map = new HashMap();
+                map.put("emailId",emailId);
+                map.put("userId",userId);
+                map.put("latitude", StatusBarService.latitude);
+                map.put("longitude", StatusBarService.longitude);
+                mDatabase.child(userId).updateChildren(map);
+            } else {
+                mDatabase.child(userId).setValue(user);
+                mDatabase.child(userId).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.d("Firebase", dataSnapshot.getKey() + "  " + dataSnapshot.getValue(UserModel.class)
+                                .toString());
+                    }
 
-                }
-
-                @Override
-                public void onCancelled(DatabaseError error) {
-                    Log.w("Firebase RealTime", "Failed to read value.", error.toException());
-                }
-            });
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                        Log.w("Firebase RealTime", "Failed to read value.", error.toException());
+                    }
+                });
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

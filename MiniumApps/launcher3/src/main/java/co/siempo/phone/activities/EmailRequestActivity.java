@@ -30,6 +30,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.UserModel;
@@ -143,6 +146,7 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
                 break;
         }
     }
+
     private void sendEvent() {
         String strEmail = autoCompleteTextViewEmail.getText().toString().trim();
         boolean isValidEmail = UIUtils.isValidEmail(strEmail);
@@ -159,8 +163,9 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
                 }
                 if (activeNetwork != null) {
                     new MailChimpOperation().execute(strEmail);
-                    storeDataToFirebase(CoreApplication.getInstance().getDeviceId(), strEmail);
+                    storeDataToFirebase(CoreApplication.getInstance().getDeviceId(), strEmail, 0, 0);
                 }
+                finish();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -170,22 +175,36 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
         }
     }
 
-    private void storeDataToFirebase(String userId, String emailId) {
+    private void storeDataToFirebase(String userId, String emailId, double latitude, double longitude) {
         try {
+
             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("users");
-            UserModel user = new UserModel(userId, emailId);
-            mDatabase.child(userId).setValue(user);
-            mDatabase.child(userId).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
+            UserModel user = new UserModel(userId, emailId, latitude, longitude);
+            String key = mDatabase.child(userId).getKey();
+            if (key != null) {
+                Map map = new HashMap();
+                map.put("emailId",emailId);
+                map.put("userId",userId);
+                map.put("latitude", 0);
+                map.put("longitude", 0);
+                mDatabase.child(userId).updateChildren(map);
+            } else {
+                mDatabase.child(userId).setValue(user);
+                mDatabase.child(userId).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.d("Firebase", dataSnapshot.getKey() + "  " + dataSnapshot.getValue(UserModel.class)
+                                .toString());
+                    }
 
-                }
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                        Log.w("Firebase RealTime", "Failed to read value.", error.toException());
+                    }
+                });
+            }
+            Log.d("Key", mDatabase.child(userId).getKey());
 
-                @Override
-                public void onCancelled(DatabaseError error) {
-                    Log.w("Firebase RealTime", "Failed to read value.", error.toException());
-                }
-            });
         } catch (Exception e) {
             e.printStackTrace();
         }
