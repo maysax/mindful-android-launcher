@@ -58,6 +58,7 @@ import java.util.concurrent.TimeUnit;
 import co.siempo.phone.R;
 import co.siempo.phone.activities.AppAssignmentActivity;
 import co.siempo.phone.activities.DashboardActivity;
+import co.siempo.phone.activities.NoteListActivity;
 import co.siempo.phone.activities.SettingsActivity_;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
@@ -70,6 +71,7 @@ import co.siempo.phone.event.ReduceOverUsageEvent;
 import co.siempo.phone.event.StartLocationEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
@@ -157,7 +159,7 @@ public class StatusBarService extends Service {
         display = wm.getDefaultDisplay();
         size = new Point();
         display.getSize(size);
-
+        removeView();
         screenHeightExclusive = (size.y - (getNavigationBarHeight()
                 + getStatusBarHeight()));
         heightWindow = (size.y - (getNavigationBarHeight()
@@ -350,6 +352,9 @@ public class StatusBarService extends Service {
         if (dateChangeReceiver != null)
             unregisterReceiver(dateChangeReceiver);
         if (appChecker != null) appChecker.stop();
+        resetAllTimer();
+        removeView();
+        Log.d("onDestroy", "Ondestroy");
         super.onDestroy();
     }
 
@@ -579,7 +584,7 @@ public class StatusBarService extends Service {
     }
 
     @Subscribe
-    public void StartLocationEvent(StartLocationEvent event) {
+    public void startLocationEvent(StartLocationEvent event) {
         boolean isLocationOn = event.getIsLocationOn();
         if (!isLocationOn) {
             stopLocationUpdates();
@@ -593,7 +598,8 @@ public class StatusBarService extends Service {
         if (reduceOverUsageEvent.isStartEvent()) {
             resetAllTimer();
         } else {
-//            removeView();
+            resetAllTimer();
+            removeView();
         }
     }
 
@@ -796,20 +802,31 @@ public class StatusBarService extends Service {
                 linProgressTop.setVisibility(View.GONE);
                 final boolean isLandscape = getResources().getConfiguration()
                         .orientation == Configuration.ORIENTATION_LANDSCAPE;
-                if (isBottomViewVisible) {
+                if (isBottomViewVisible && !isTopViewVisible) {
                     if (isLandscape) {
                         paramsBottom.height = minusculeHeightLandscape;
                     } else {
                         paramsBottom.height = minusculeHeight;
                     }
                 }
-                if (isTopViewVisible) {
+                if (isTopViewVisible && !isBottomViewVisible) {
                     if (isLandscape) {
                         paramsTop.height = minusculeHeightLandscape;
                     } else {
                         paramsTop.height = minusculeHeight;
                     }
                 }
+
+                if (isTopViewVisible && isBottomViewVisible) {
+                    if (isLandscape) {
+                        paramsBottom.height = minusculeHeightLandscape / 2;
+                        paramsTop.height = minusculeHeightLandscape / 2;
+                    } else {
+                        paramsBottom.height = minusculeHeight / 2;
+                        paramsTop.height = minusculeHeight / 2;
+                    }
+                }
+                Log.d("remove", "remove");
                 resetAllTimer();
                 removeView();
             }
@@ -1030,23 +1047,25 @@ public class StatusBarService extends Service {
                 txtTimeTop.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        isFullScreenView = true;
-                        if (countDownTimerCover != null) {
-                            countDownTimerCover.cancel();
-                            countDownTimerCover = null;
+                        if (!TextUtils.isEmpty(txtTimeTop.getText().toString())) {
+                            isFullScreenView = true;
+                            if (countDownTimerCover != null) {
+                                countDownTimerCover.cancel();
+                                countDownTimerCover = null;
+                            }
+                            PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
+                            paramsTop.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                            bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
+                            if (wm != null)
+                                wm.updateViewLayout(topView, paramsTop);
+                            if (linButtonsTop != null && linProgressTop != null) {
+                                linProgressTop.setVisibility(View.VISIBLE);
+                                linButtonsTop.setVisibility(View.GONE);
+                            }
+                            startTimerForBreakPeriod();
+                            PrefSiempo.getInstance(context).write
+                                    (PrefSiempo.IS_BREAK_TIME_PRESSED, true);
                         }
-                        PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
-                        paramsTop.height = ViewGroup.LayoutParams.MATCH_PARENT;
-                        bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
-                        if (wm != null)
-                            wm.updateViewLayout(topView, paramsTop);
-                        if (linButtonsTop != null && linProgressTop != null) {
-                            linProgressTop.setVisibility(View.VISIBLE);
-                            linButtonsTop.setVisibility(View.GONE);
-                        }
-                        startTimerForBreakPeriod();
-                        PrefSiempo.getInstance(context).write
-                                (PrefSiempo.IS_BREAK_TIME_PRESSED, true);
 
 
                     }
@@ -1066,10 +1085,23 @@ public class StatusBarService extends Service {
                         if (txtSettingsTop.getText().toString().equalsIgnoreCase(getResources().getString(R.string.settings))) {
                             PrefSiempo.getInstance(context).write(PrefSiempo.IS_SETTINGS_PRESSED, true);
                             Intent intent = new Intent(context, SettingsActivity_.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.putExtra("FlagApp", true);
                             startActivity(intent);
                         } else {
-                            new ActivityHelper(context).openNotesApp(false);
+//                            new ActivityHelper(context).openNotesApp(false);
+
+                            try {
+                                Intent intent = new Intent(context,
+                                        NoteListActivity.class);
+                                intent.putExtra(NoteListActivity
+                                        .EXTRA_OPEN_LATEST, false);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                context.startActivity(intent);
+                            } catch (Exception e) {
+                                CoreApplication.getInstance().logException(e);
+                                Tracer.e(e, e.getMessage());
+                            }
                         }
                     }
                 });
@@ -1082,6 +1114,7 @@ public class StatusBarService extends Service {
                                     .getString(R.string.title_wellness), R.drawable
                                     .ic_vector_wellness);
                             Intent intent = new Intent(context, AppAssignmentActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.putExtra(Constants.INTENT_MAINLISTITEM, item);
                             intent.putExtra("class_name", DashboardActivity.class.getSimpleName
                                     ().toString());
@@ -1230,7 +1263,7 @@ public class StatusBarService extends Service {
                     if (paramsBottom.height != ViewGroup.LayoutParams.MATCH_PARENT) {
                         paramsBottom.height = ViewGroup.LayoutParams.MATCH_PARENT;
                         bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
-                        if (wm != null)
+                        if (wm != null && bottomView.getWindowToken() != null)
                             wm.updateViewLayout(bottomView, paramsBottom);
                         if (linButtons != null && linProgress != null) {
                             linProgress.setVisibility(View.VISIBLE);
@@ -1255,23 +1288,25 @@ public class StatusBarService extends Service {
                 txtTime.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        isFullScreenView = true;
-                        if (countDownTimerCover != null) {
-                            countDownTimerCover.cancel();
-                            countDownTimerCover = null;
+                        if (!TextUtils.isEmpty(txtTime.getText().toString())) {
+                            isFullScreenView = true;
+                            if (countDownTimerCover != null) {
+                                countDownTimerCover.cancel();
+                                countDownTimerCover = null;
+                            }
+                            PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
+                            paramsBottom.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                            bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
+                            if (wm != null)
+                                wm.updateViewLayout(bottomView, paramsBottom);
+                            if (linButtons != null && linProgress != null) {
+                                linProgress.setVisibility(View.VISIBLE);
+                                linButtons.setVisibility(View.GONE);
+                            }
+                            startTimerForBreakPeriod();
+                            PrefSiempo.getInstance(context).write
+                                    (PrefSiempo.IS_BREAK_TIME_PRESSED, true);
                         }
-                        PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
-                        paramsBottom.height = ViewGroup.LayoutParams.MATCH_PARENT;
-                        bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
-                        if (wm != null)
-                            wm.updateViewLayout(bottomView, paramsBottom);
-                        if (linButtons != null && linProgress != null) {
-                            linProgress.setVisibility(View.VISIBLE);
-                            linButtons.setVisibility(View.GONE);
-                        }
-                        startTimerForBreakPeriod();
-                        PrefSiempo.getInstance(context).write
-                                (PrefSiempo.IS_BREAK_TIME_PRESSED, true);
                     }
                 });
                 if (txtSettings != null) {
@@ -1294,7 +1329,20 @@ public class StatusBarService extends Service {
                             intent.putExtra("FlagApp", true);
                             startActivity(intent);
                         } else {
-                            new ActivityHelper(context).openNotesApp(false);
+//                            new ActivityHelper(context).openNotesApp(false);
+
+                            try {
+                                Intent intent = new Intent(context,
+                                        NoteListActivity.class);
+                                intent.putExtra(NoteListActivity
+                                        .EXTRA_OPEN_LATEST, false);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                context.startActivity(intent);
+                            } catch (Exception e) {
+                                CoreApplication.getInstance().logException(e);
+                                Tracer.e(e, e.getMessage());
+                            }
+
                         }
                     }
                 });
@@ -1308,6 +1356,7 @@ public class StatusBarService extends Service {
                                     .ic_vector_wellness);
                             Intent intent = new Intent(context, AppAssignmentActivity.class);
                             intent.putExtra(Constants.INTENT_MAINLISTITEM, item);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.putExtra("class_name", DashboardActivity.class.getSimpleName
                                     ().toString());
                             context.startActivity(intent);
@@ -1596,6 +1645,8 @@ public class StatusBarService extends Service {
                 topView = null;
             }
 
+            bottomView = null;
+            topView = null;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1754,6 +1805,14 @@ public class StatusBarService extends Service {
                             PrefSiempo.getInstance(context).write(PrefSiempo
                                     .LOCK_COUNTER_STATUS, false);
                         }
+                        long breakTime = PrefSiempo.getInstance(context).read
+                                (PrefSiempo
+                                        .BREAK_TIME, 0L);
+//                        if (countDownTimerBreak != null) {
+//                            countDownTimerBreak = null;
+//                            isFullScreenView = true;
+//                            addOverlayWindow(6);
+//                        }
                         if (countDownTimerBreak != null) {
                             countDownTimerBreak.cancel();
                             countDownTimerBreak = null;
@@ -1767,6 +1826,20 @@ public class StatusBarService extends Service {
                     } else if (intent.getAction().equals(Intent
                             .ACTION_SCREEN_OFF)) {
                         startLockScreenTimer();
+//                        if (deterUsageRunning) {
+//                            if (countDownTimerGrace != null) {
+//                                countDownTimerGrace.cancel();
+//                                countDownTimerGrace = null;
+//                            }
+//                            if (countDownTimerCover != null) {
+//                                countDownTimerCover.cancel();
+//                                countDownTimerCover = null;
+//                            }
+//                            if (countDownTimerBreak == null) {
+//                                startTimerForBreakPeriod();
+//                                isFullScreenView = true;
+//                            }
+//                        }
                     }
 
                 }

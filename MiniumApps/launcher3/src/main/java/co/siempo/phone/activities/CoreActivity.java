@@ -43,7 +43,6 @@ import co.siempo.phone.app.Config;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.DownloadApkEvent;
 import co.siempo.phone.event.JunkAppOpenEvent;
-import co.siempo.phone.event.ReduceOverUsageEvent;
 import co.siempo.phone.helper.Validate;
 import co.siempo.phone.interfaces.NFCInterface;
 import co.siempo.phone.log.Tracer;
@@ -149,7 +148,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     protected void onResume() {
         super.onResume();
         isOnStopCalled = false;
-        EventBus.getDefault().post(new ReduceOverUsageEvent(false));
+//        EventBus.getDefault().post(new ReduceOverUsageEvent(false));
 //        try {
 //            Intent intent = new Intent(this, OverlayService.class);
 //            stopService(intent);
@@ -164,7 +163,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
         setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
         super.onNewIntent(intent);
-        EventBus.getDefault().post(new ReduceOverUsageEvent(false));
+//        EventBus.getDefault().post(new ReduceOverUsageEvent(false));
 //        try {
 //            stopService(new Intent(this, OverlayService.class));
 //        } catch (Exception e) {
