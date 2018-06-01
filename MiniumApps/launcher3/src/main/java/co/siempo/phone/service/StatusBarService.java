@@ -139,6 +139,9 @@ public class StatusBarService extends Service {
     private int heightWindowLandscapeExclusive;
     private int coverTimeForWindow;
 
+    public static double latitude = 0;
+    public static double longitude = 0;
+
     public StatusBarService() {
     }
 
@@ -217,7 +220,7 @@ public class StatusBarService extends Service {
             @Override
             public void onForeground(String process) {
                 if (PackageUtil.isSiempoLauncher(context)) {
-                    new DBClient().deleteMsgByPackageName(process);
+//                    new DBClient().deleteMsgByPackageName(process);
                     Set<String> set = PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
                     int deterTime = PrefSiempo.getInstance(context).read(PrefSiempo.DETER_AFTER, -1);
                     if (deterTime != -1) {
@@ -557,6 +560,8 @@ public class StatusBarService extends Service {
                     if (locationResult == null) {
                         //return;
                         Location mlocation = locationResult.getLastLocation();
+                        latitude = mlocation.getLatitude();
+                        longitude = mlocation.getLongitude();
                         EventBus.getDefault().postSticky(new LocationUpdateEvent(mlocation));
                     }
                     List<Location> locations = locationResult.getLocations();
@@ -566,6 +571,8 @@ public class StatusBarService extends Service {
                         if (location != null) {
                             Log.e("location details", "long: " + location.getLongitude() + "lat: " + location
                                     .getLatitude());
+                            latitude = location.getLatitude();
+                            longitude = location.getLongitude();
                             EventBus.getDefault().postSticky(new LocationUpdateEvent(location));
                         }
 
@@ -638,7 +645,7 @@ public class StatusBarService extends Service {
                 int seconds = (int) ((remainingTimeGrace / 1000) % 60);
                 Log.d("DeterUse:GraceRemaining", "" + minutes + ":" + seconds);
                 startTimerForGracePeriod(remainingTimeGrace, grace_time_completed);
-            } else if (cover_time_completed != 0L && countDownTimerBreak != null) {
+            } else if (cover_time_completed != 0L && countDownTimerBreak != null && isScreenOn) {
 
                 if (cover_time_completed == 5L) {
                     coverTimeForWindow = 5;
