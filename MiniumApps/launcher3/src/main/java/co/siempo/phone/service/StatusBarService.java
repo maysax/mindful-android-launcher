@@ -658,8 +658,8 @@ public class StatusBarService extends Service {
                     Log.d("DeterUse:CoverRemaining", "" + minutes + ":" + seconds);
                     int coverTime = (int) (cover_time_completed / (1000 * 60));
                     coverTimeForWindow = coverTime;
+                    isFullScreenView = false;
                     addOverlayWindow(coverTime);
-
                     startTimerForCoverPeriod(remainingTimeCover, cover_time_completed);
                 }
             } else if (grace_time_completed == 0L && cover_time_completed == 0L
@@ -876,14 +876,11 @@ public class StatusBarService extends Service {
                 switch (coverTime) {
 
                     case 0:
-
                         if (isBottomViewVisible && !isTopViewVisible) {
                             paramsBottom.height = screenHeightExclusive / 9;
                         } else if (!isBottomViewVisible && isTopViewVisible) {
                             paramsTop.height = screenHeightExclusive / 9;
                         }
-
-
                         break;
                     case 1:
                         if (isBottomViewVisible && !isTopViewVisible) {
@@ -895,7 +892,6 @@ public class StatusBarService extends Service {
                         } else if (!isBottomViewVisible && isTopViewVisible) {
                             paramsTop.height = screenHeightExclusive * 2 / 9;
                         }
-
                         break;
                     case 2:
                         if (isBottomViewVisible && !isTopViewVisible) {
@@ -952,7 +948,6 @@ public class StatusBarService extends Service {
                 }
             } else {
                 switch (coverTime) {
-
                     case 0:
                         if (isBottomViewVisible && !isTopViewVisible) {
                             paramsBottom.height = heightWindowLandscapeExclusive / 9;
@@ -1206,15 +1201,30 @@ public class StatusBarService extends Service {
             } else {
                 try {
                     if (isFullScreenView) {
-                        if (linButtonsTop != null && linProgressTop != null) {
-                            linProgressTop.setVisibility(View.VISIBLE);
-                            linButtonsTop.setVisibility(View.GONE);
-                        }
-                        if (countDownTimerCover != null) {
-                            countDownTimerCover.cancel();
-                            countDownTimerCover = null;
-                            PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
-                        }
+                            if (paramsTop.height != ViewGroup.LayoutParams.MATCH_PARENT) {
+                                paramsTop.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                                topView.setLayoutParams(new ViewGroup.LayoutParams(paramsTop));
+                                if (wm != null && topView.getWindowToken() != null)
+                                    wm.updateViewLayout(topView, paramsTop);
+                                if (linButtonsTop != null && linProgressTop != null) {
+                                    linProgressTop.setVisibility(View.VISIBLE);
+                                    linButtonsTop.setVisibility(View.GONE);
+                                }
+                                if (countDownTimerCover != null) {
+                                    countDownTimerCover.cancel();
+                                    countDownTimerCover = null;
+                                    PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
+                                }
+                            }
+//                        if (linButtonsTop != null && linProgressTop != null) {
+//                            linProgressTop.setVisibility(View.VISIBLE);
+//                            linButtonsTop.setVisibility(View.GONE);
+//                        }
+//                        if (countDownTimerCover != null) {
+//                            countDownTimerCover.cancel();
+//                            countDownTimerCover = null;
+//                            PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
+//                        }
                     } else {
                         if (linButtonsTop != null && linProgressTop != null) {
                             linProgressTop.setVisibility(View.GONE);
@@ -1280,12 +1290,6 @@ public class StatusBarService extends Service {
                             PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
                         }
                     }
-//                    if (linButtons != null) {
-//                        linButtons.setVisibility(View.GONE);
-//                    }
-//                    if (linProgress != null) {
-//                        linProgress.setVisibility(View.VISIBLE);
-//                    }
                 } else {
                     if (linButtons != null)
                         linButtons.setVisibility(View.VISIBLE);
@@ -1451,15 +1455,38 @@ public class StatusBarService extends Service {
             } else {
                 try {
                     if (isFullScreenView) {
-                        if (linButtons != null && linProgress != null) {
-                            linProgress.setVisibility(View.VISIBLE);
-                            linButtons.setVisibility(View.GONE);
+
+                        if (isFullScreenView) {
+                            if (paramsBottom.height != ViewGroup.LayoutParams.MATCH_PARENT) {
+                                paramsBottom.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                                bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
+                                if (wm != null && bottomView.getWindowToken() != null)
+                                    wm.updateViewLayout(bottomView, paramsBottom);
+                                if (linButtons != null && linProgress != null) {
+                                    linProgress.setVisibility(View.VISIBLE);
+                                    linButtons.setVisibility(View.GONE);
+                                }
+                                if (countDownTimerCover != null) {
+                                    countDownTimerCover.cancel();
+                                    countDownTimerCover = null;
+                                    PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
+                                }
+                            }
+                        } else {
+                            if (linButtons != null)
+                                linButtons.setVisibility(View.VISIBLE);
                         }
-                        if (countDownTimerCover != null) {
-                            countDownTimerCover.cancel();
-                            countDownTimerCover = null;
-                            PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
-                        }
+
+
+//                        if (linButtons != null && linProgress != null) {
+//                            linProgress.setVisibility(View.VISIBLE);
+//                            linButtons.setVisibility(View.GONE);
+//                        }
+//                        if (countDownTimerCover != null) {
+//                            countDownTimerCover.cancel();
+//                            countDownTimerCover = null;
+//                            PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
+//                        }
                     } else {
                         if (paramsBottom.height <= maxHeightCoverWindow) {
                             //Increase height of overlay
@@ -1828,13 +1855,11 @@ public class StatusBarService extends Service {
                             if (countDownTimerGrace != null) {
                                 countDownTimerGrace.cancel();
                                 countDownTimerGrace = null;
-                                isFullScreenView = true;
                                 startTimerForBreakPeriod();
                             }
                             if (countDownTimerCover != null) {
                                 countDownTimerCover.cancel();
                                 countDownTimerCover = null;
-                                isFullScreenView = true;
                                 startTimerForBreakPeriod();
                             }
 //                            if (countDownTimerGrace != null) {
