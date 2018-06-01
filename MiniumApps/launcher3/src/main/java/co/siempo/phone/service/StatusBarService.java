@@ -93,6 +93,7 @@ public class StatusBarService extends Service {
     long spentTimeJunkFood = 0L;
     long startTimeJunkFood = 0L;
     Calendar calendar;
+    boolean isScreenOn = true;
     private Context context;
     private MyObserver myObserver;
     private AppInstallUninstall appInstallUninstall;
@@ -137,7 +138,6 @@ public class StatusBarService extends Service {
     private DateChangeReceiver dateChangeReceiver;
     private int heightWindowLandscapeExclusive;
     private int coverTimeForWindow;
-    boolean isScreenOn = true;
 
     public StatusBarService() {
     }
@@ -637,7 +637,7 @@ public class StatusBarService extends Service {
                 int minutes = (int) (remainingTimeGrace / (1000 * 60));
                 int seconds = (int) ((remainingTimeGrace / 1000) % 60);
                 Log.d("DeterUse:GraceRemaining", "" + minutes + ":" + seconds);
-                startTimerForGracePeriod(remainingTimeGrace);
+                startTimerForGracePeriod(remainingTimeGrace, grace_time_completed);
             } else if (cover_time_completed != 0L && countDownTimerBreak != null) {
 
                 if (cover_time_completed == 5L) {
@@ -1207,21 +1207,21 @@ public class StatusBarService extends Service {
             } else {
                 try {
                     if (isFullScreenView) {
-                            if (paramsTop.height != ViewGroup.LayoutParams.MATCH_PARENT) {
-                                paramsTop.height = ViewGroup.LayoutParams.MATCH_PARENT;
-                                topView.setLayoutParams(new ViewGroup.LayoutParams(paramsTop));
-                                if (wm != null && topView.getWindowToken() != null)
-                                    wm.updateViewLayout(topView, paramsTop);
-                                if (linButtonsTop != null && linProgressTop != null) {
-                                    linProgressTop.setVisibility(View.VISIBLE);
-                                    linButtonsTop.setVisibility(View.GONE);
-                                }
-                                if (countDownTimerCover != null) {
-                                    countDownTimerCover.cancel();
-                                    countDownTimerCover = null;
-                                    PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
-                                }
+                        if (paramsTop.height != ViewGroup.LayoutParams.MATCH_PARENT) {
+                            paramsTop.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                            topView.setLayoutParams(new ViewGroup.LayoutParams(paramsTop));
+                            if (wm != null && topView.getWindowToken() != null)
+                                wm.updateViewLayout(topView, paramsTop);
+                            if (linButtonsTop != null && linProgressTop != null) {
+                                linProgressTop.setVisibility(View.VISIBLE);
+                                linButtonsTop.setVisibility(View.GONE);
                             }
+                            if (countDownTimerCover != null) {
+                                countDownTimerCover.cancel();
+                                countDownTimerCover = null;
+                                PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
+                            }
+                        }
 //                        if (linButtonsTop != null && linProgressTop != null) {
 //                            linProgressTop.setVisibility(View.VISIBLE);
 //                            linButtonsTop.setVisibility(View.GONE);
@@ -1721,15 +1721,22 @@ public class StatusBarService extends Service {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
+
         if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
 
-            removeView();
-            addOverlayWindow(coverTimeForWindow);
+            if ((bottomView != null && bottomView.getWindowToken() != null) ||
+                    (topView != null && topView.getWindowToken() != null)) {
+                removeView();
+                addOverlayWindow(coverTimeForWindow);
+            }
 
         } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
 
-            removeView();
-            addOverlayWindow(coverTimeForWindow);
+            if ((bottomView != null && bottomView.getWindowToken() != null) ||
+                    (topView != null && topView.getWindowToken() != null)) {
+                removeView();
+                addOverlayWindow(coverTimeForWindow);
+            }
         }
 
 
