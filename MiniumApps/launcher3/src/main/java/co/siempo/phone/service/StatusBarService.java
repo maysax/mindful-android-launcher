@@ -93,6 +93,7 @@ public class StatusBarService extends Service {
     long spentTimeJunkFood = 0L;
     long startTimeJunkFood = 0L;
     Calendar calendar;
+    boolean isScreenOn = true;
     private Context context;
     private MyObserver myObserver;
     private AppInstallUninstall appInstallUninstall;
@@ -137,7 +138,6 @@ public class StatusBarService extends Service {
     private DateChangeReceiver dateChangeReceiver;
     private int heightWindowLandscapeExclusive;
     private int coverTimeForWindow;
-    boolean isScreenOn = true;
     public static double latitude = 0;
     public static double longitude = 0;
 
@@ -829,12 +829,15 @@ public class StatusBarService extends Service {
 
                 if (isTopViewVisible && isBottomViewVisible) {
                     if (isLandscape) {
-                        paramsBottom.height = minusculeHeightLandscape / 2;
-                        paramsTop.height = minusculeHeightLandscape / 2;
+                        paramsBottom.height = minusculeHeightLandscape;
+                        paramsTop.height = 0;
+
+
                     } else {
-                        paramsBottom.height = minusculeHeight / 2;
-                        paramsTop.height = minusculeHeight / 2;
+                        paramsBottom.height = minusculeHeight;
+                        paramsTop.height = 0;
                     }
+                    isTopViewVisible = false;
                 }
                 Log.d("remove", "remove");
                 resetAllTimer();
@@ -1668,6 +1671,13 @@ public class StatusBarService extends Service {
             txtMessageTop.setText(strCoverMessage);
         }
 
+        if (coverTime == 5) {
+            int deterTime = PrefSiempo.getInstance(context).read(PrefSiempo
+                    .DETER_AFTER, 0);
+            txtTime.setText("0" + (coverTime + deterTime) + ":00");
+            txtTimeTop.setText("0" + (coverTime + deterTime) + ":00");
+        }
+
 
     }
 
@@ -1717,15 +1727,22 @@ public class StatusBarService extends Service {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
+
         if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
 
-            removeView();
-            addOverlayWindow(coverTimeForWindow);
+            if ((bottomView != null && bottomView.getWindowToken() != null) ||
+                    (topView != null && topView.getWindowToken() != null)) {
+                removeView();
+                addOverlayWindow(coverTimeForWindow);
+            }
 
         } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
 
-            removeView();
-            addOverlayWindow(coverTimeForWindow);
+            if ((bottomView != null && bottomView.getWindowToken() != null) ||
+                    (topView != null && topView.getWindowToken() != null)) {
+                removeView();
+                addOverlayWindow(coverTimeForWindow);
+            }
         }
 
 
