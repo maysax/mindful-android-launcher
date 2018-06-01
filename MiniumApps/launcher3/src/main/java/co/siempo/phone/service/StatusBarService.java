@@ -138,6 +138,7 @@ public class StatusBarService extends Service {
     private DateChangeReceiver dateChangeReceiver;
     private int heightWindowLandscapeExclusive;
     private int coverTimeForWindow;
+
     public static double latitude = 0;
     public static double longitude = 0;
 
