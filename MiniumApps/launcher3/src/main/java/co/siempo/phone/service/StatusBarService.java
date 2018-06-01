@@ -138,6 +138,7 @@ public class StatusBarService extends Service {
     private DateChangeReceiver dateChangeReceiver;
     private int heightWindowLandscapeExclusive;
     private int coverTimeForWindow;
+    boolean isScreenOn = true;
 
     public StatusBarService() {
     }
@@ -217,6 +218,7 @@ public class StatusBarService extends Service {
             @Override
             public void onForeground(String process) {
                 if (PackageUtil.isSiempoLauncher(context)) {
+                    new DBClient().deleteMsgByPackageName(process);
                     Set<String> set = PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
                     int deterTime = PrefSiempo.getInstance(context).read(PrefSiempo.DETER_AFTER, -1);
                     if (deterTime != -1) {
@@ -625,10 +627,10 @@ public class StatusBarService extends Service {
                 int minutes = (int) (deterTimeLong / (1000 * 60));
                 int seconds = (int) ((deterTimeLong / 1000) % 60);
                 Log.d("DeterUse:GraceRemaining", "" + minutes + ":" + seconds);
-                startTimerForGracePeriod(deterTimeLong);
+                startTimerForGracePeriod(deterTimeLong, 0);
             }
         } else {
-            if (grace_time_completed != 0L && countDownTimerBreak != null) {
+            if (grace_time_completed != 0L && countDownTimerBreak != null && isScreenOn) {
                 long remainingTimeGrace = deterTimeLong - grace_time_completed;
                 countDownTimerBreak.cancel();
                 countDownTimerBreak = null;
@@ -636,8 +638,8 @@ public class StatusBarService extends Service {
                 int minutes = (int) (remainingTimeGrace / (1000 * 60));
                 int seconds = (int) ((remainingTimeGrace / 1000) % 60);
                 Log.d("DeterUse:GraceRemaining", "" + minutes + ":" + seconds);
-                startTimerForGracePeriod(remainingTimeGrace);
-            } else if (cover_time_completed != 0L && countDownTimerBreak != null) {
+                startTimerForGracePeriod(remainingTimeGrace, grace_time_completed);
+            } else if (cover_time_completed != 0L && countDownTimerBreak != null && isScreenOn) {
 
                 if (cover_time_completed == 5L) {
                     coverTimeForWindow = 5;
@@ -675,12 +677,13 @@ public class StatusBarService extends Service {
      *
      * @param deterTime how long the timer runs.
      */
-    private void startTimerForGracePeriod(final long deterTime) {
+    private void startTimerForGracePeriod(final long deterTime, final long grace_time_completed) {
         whichPhaseRunning = 1;
+        isFullScreenView = false;
         countDownTimerGrace = new CountDownTimer(deterTime, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                long completedTime = deterTime - millisUntilFinished;
+                long completedTime = (deterTime - millisUntilFinished) + grace_time_completed;
                 int minutes = (int) (completedTime / (1000 * 60));
                 int seconds = (int) ((completedTime / 1000) % 60);
                 Log.d("DeterUse : Grace", "" + minutes + ":" + seconds);
@@ -705,6 +708,7 @@ public class StatusBarService extends Service {
      */
     private void startTimerForCoverPeriod(final long remainingTimeCover, final long cover_time_completed) {
         whichPhaseRunning = 2;
+        isFullScreenView = false;
         Log.d("DeterUse : Cover", "remainingTimeCover" + remainingTimeCover + " cover_time_completed" + cover_time_completed);
         countDownTimerCover = new CountDownTimer(remainingTimeCover, 1000) {
             @Override
@@ -770,6 +774,7 @@ public class StatusBarService extends Service {
      */
     private void startTimerForBreakPeriod() {
         whichPhaseRunning = 3;
+        isFullScreenView = true;
         final int breakPeriod = PrefSiempo.getInstance(context).read(PrefSiempo.BREAK_PERIOD, 1);
         final long breakPeriod1 = breakPeriod * 60000;
         countDownTimerBreak = new CountDownTimer(breakPeriod1, 1000) {
@@ -1371,8 +1376,6 @@ public class StatusBarService extends Service {
 
                 if (null != wm) {
                     wm.addView(bottomView, paramsBottom);
-//                    wm.addView(topView, paramsTop);
-
                     bottomView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -1810,46 +1813,46 @@ public class StatusBarService extends Service {
                 if (PackageUtil.isSiempoLauncher(arg0)) {
                     if (intent.getAction().equals(Intent.ACTION_USER_PRESENT) ||
                             intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+                        isScreenOn = true;
                         if (countDownTimer != null) {
                             countDownTimer.cancel();
                             PrefSiempo.getInstance(context).write(PrefSiempo
                                     .LOCK_COUNTER_STATUS, false);
                         }
-                        long breakTime = PrefSiempo.getInstance(context).read
-                                (PrefSiempo
-                                        .BREAK_TIME, 0L);
 //                        if (countDownTimerBreak != null) {
+//                            countDownTimerBreak.cancel();
 //                            countDownTimerBreak = null;
-//                            isFullScreenView = true;
-//                            addOverlayWindow(6);
+//                            deterUsageRunning = false;
+//                            isFullScreenView = false;
+//                            whichPhaseRunning = 0;
+//                            resetAllTimer();
+//                            removeView();
+//                            PrefSiempo.getInstance(context).write(PrefSiempo.BREAK_TIME, 0L);
 //                        }
-                        if (countDownTimerBreak != null) {
-                            countDownTimerBreak.cancel();
-                            countDownTimerBreak = null;
-                            deterUsageRunning = false;
-                            isFullScreenView = false;
-                            whichPhaseRunning = 0;
-                            resetAllTimer();
-                            removeView();
-                            PrefSiempo.getInstance(context).write(PrefSiempo.BREAK_TIME, 0L);
-                        }
                     } else if (intent.getAction().equals(Intent
                             .ACTION_SCREEN_OFF)) {
+                        isScreenOn = false;
                         startLockScreenTimer();
-//                        if (deterUsageRunning) {
+                        if (deterUsageRunning) {
+
+                            if (countDownTimerGrace != null) {
+                                countDownTimerGrace.cancel();
+                                countDownTimerGrace = null;
+                                isFullScreenView = true;
+                                startTimerForBreakPeriod();
+                            }
+                            if (countDownTimerCover != null) {
+                                countDownTimerCover.cancel();
+                                countDownTimerCover = null;
+                                isFullScreenView = true;
+                                startTimerForBreakPeriod();
+                            }
 //                            if (countDownTimerGrace != null) {
 //                                countDownTimerGrace.cancel();
 //                                countDownTimerGrace = null;
-//                            }
-//                            if (countDownTimerCover != null) {
-//                                countDownTimerCover.cancel();
-//                                countDownTimerCover = null;
-//                            }
-//                            if (countDownTimerBreak == null) {
 //                                startTimerForBreakPeriod();
-//                                isFullScreenView = true;
 //                            }
-//                        }
+                        }
                     }
 
                 }
