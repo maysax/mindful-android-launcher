@@ -12,7 +12,6 @@ import android.content.res.Configuration;
 import android.database.ContentObserver;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
-import android.graphics.PorterDuff;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -138,6 +137,7 @@ public class StatusBarService extends Service {
     private DateChangeReceiver dateChangeReceiver;
     private int heightWindowLandscapeExclusive;
     private int coverTimeForWindow;
+    boolean isScreenOn = true;
 
     public StatusBarService() {
     }
@@ -626,10 +626,10 @@ public class StatusBarService extends Service {
                 int minutes = (int) (deterTimeLong / (1000 * 60));
                 int seconds = (int) ((deterTimeLong / 1000) % 60);
                 Log.d("DeterUse:GraceRemaining", "" + minutes + ":" + seconds);
-                startTimerForGracePeriod(deterTimeLong);
+                startTimerForGracePeriod(deterTimeLong, 0);
             }
         } else {
-            if (grace_time_completed != 0L && countDownTimerBreak != null) {
+            if (grace_time_completed != 0L && countDownTimerBreak != null && isScreenOn) {
                 long remainingTimeGrace = deterTimeLong - grace_time_completed;
                 countDownTimerBreak.cancel();
                 countDownTimerBreak = null;
@@ -657,8 +657,8 @@ public class StatusBarService extends Service {
                     Log.d("DeterUse:CoverRemaining", "" + minutes + ":" + seconds);
                     int coverTime = (int) (cover_time_completed / (1000 * 60));
                     coverTimeForWindow = coverTime;
+                    isFullScreenView = false;
                     addOverlayWindow(coverTime);
-
                     startTimerForCoverPeriod(remainingTimeCover, cover_time_completed);
                 }
             } else if (grace_time_completed == 0L && cover_time_completed == 0L
@@ -676,12 +676,13 @@ public class StatusBarService extends Service {
      *
      * @param deterTime how long the timer runs.
      */
-    private void startTimerForGracePeriod(final long deterTime) {
+    private void startTimerForGracePeriod(final long deterTime, final long grace_time_completed) {
         whichPhaseRunning = 1;
+        isFullScreenView = false;
         countDownTimerGrace = new CountDownTimer(deterTime, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                long completedTime = deterTime - millisUntilFinished;
+                long completedTime = (deterTime - millisUntilFinished) + grace_time_completed;
                 int minutes = (int) (completedTime / (1000 * 60));
                 int seconds = (int) ((completedTime / 1000) % 60);
                 Log.d("DeterUse : Grace", "" + minutes + ":" + seconds);
@@ -706,6 +707,7 @@ public class StatusBarService extends Service {
      */
     private void startTimerForCoverPeriod(final long remainingTimeCover, final long cover_time_completed) {
         whichPhaseRunning = 2;
+        isFullScreenView = false;
         Log.d("DeterUse : Cover", "remainingTimeCover" + remainingTimeCover + " cover_time_completed" + cover_time_completed);
         countDownTimerCover = new CountDownTimer(remainingTimeCover, 1000) {
             @Override
@@ -771,6 +773,7 @@ public class StatusBarService extends Service {
      */
     private void startTimerForBreakPeriod() {
         whichPhaseRunning = 3;
+        isFullScreenView = true;
         final int breakPeriod = PrefSiempo.getInstance(context).read(PrefSiempo.BREAK_PERIOD, 1);
         final long breakPeriod1 = breakPeriod * 60000;
         countDownTimerBreak = new CountDownTimer(breakPeriod1, 1000) {
@@ -875,14 +878,11 @@ public class StatusBarService extends Service {
                 switch (coverTime) {
 
                     case 0:
-
                         if (isBottomViewVisible && !isTopViewVisible) {
                             paramsBottom.height = screenHeightExclusive / 9;
                         } else if (!isBottomViewVisible && isTopViewVisible) {
                             paramsTop.height = screenHeightExclusive / 9;
                         }
-
-
                         break;
                     case 1:
                         if (isBottomViewVisible && !isTopViewVisible) {
@@ -894,7 +894,6 @@ public class StatusBarService extends Service {
                         } else if (!isBottomViewVisible && isTopViewVisible) {
                             paramsTop.height = screenHeightExclusive * 2 / 9;
                         }
-
                         break;
                     case 2:
                         if (isBottomViewVisible && !isTopViewVisible) {
@@ -951,7 +950,6 @@ public class StatusBarService extends Service {
                 }
             } else {
                 switch (coverTime) {
-
                     case 0:
                         if (isBottomViewVisible && !isTopViewVisible) {
                             paramsBottom.height = heightWindowLandscapeExclusive / 9;
@@ -1035,7 +1033,11 @@ public class StatusBarService extends Service {
                 linButtonsTop = topView.findViewById(R.id.linButtons);
                 linProgressTop = topView.findViewById(R.id.linProgress);
                 progressBarTop = topView.findViewById(R.id.progressNew);
-                progressBarTop.getProgressDrawable().setColorFilter(ContextCompat.getColor(context, R.color.appland_blue_bright), PorterDuff.Mode.SRC_IN);
+//                Resources res = getResources();
+//                Rect bounds = progressBarTop.getProgressDrawable().getBounds();
+                progressBarTop.setProgressDrawable(context.getResources().getDrawable(R.drawable.custom_progress));
+//                progressBarTop.getProgressDrawable().setBounds(bounds);
+//                progressBarTop.getProgressDrawable().setColorFilter(ContextCompat.getColor(context, R.color.appland_blue_bright), PorterDuff.Mode.SRC_IN);
                 int value = (int) TimeUnit.MINUTES.toSeconds(PrefSiempo.getInstance(context).read(PrefSiempo.BREAK_PERIOD, 1));
                 progressBarTop.setMax(value);
                 txtCountTop = topView.findViewById(R.id.txtCount);
@@ -1205,15 +1207,30 @@ public class StatusBarService extends Service {
             } else {
                 try {
                     if (isFullScreenView) {
-                        if (linButtonsTop != null && linProgressTop != null) {
-                            linProgressTop.setVisibility(View.VISIBLE);
-                            linButtonsTop.setVisibility(View.GONE);
-                        }
-                        if (countDownTimerCover != null) {
-                            countDownTimerCover.cancel();
-                            countDownTimerCover = null;
-                            PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
-                        }
+                            if (paramsTop.height != ViewGroup.LayoutParams.MATCH_PARENT) {
+                                paramsTop.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                                topView.setLayoutParams(new ViewGroup.LayoutParams(paramsTop));
+                                if (wm != null && topView.getWindowToken() != null)
+                                    wm.updateViewLayout(topView, paramsTop);
+                                if (linButtonsTop != null && linProgressTop != null) {
+                                    linProgressTop.setVisibility(View.VISIBLE);
+                                    linButtonsTop.setVisibility(View.GONE);
+                                }
+                                if (countDownTimerCover != null) {
+                                    countDownTimerCover.cancel();
+                                    countDownTimerCover = null;
+                                    PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
+                                }
+                            }
+//                        if (linButtonsTop != null && linProgressTop != null) {
+//                            linProgressTop.setVisibility(View.VISIBLE);
+//                            linButtonsTop.setVisibility(View.GONE);
+//                        }
+//                        if (countDownTimerCover != null) {
+//                            countDownTimerCover.cancel();
+//                            countDownTimerCover = null;
+//                            PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
+//                        }
                     } else {
                         if (linButtonsTop != null && linProgressTop != null) {
                             linProgressTop.setVisibility(View.GONE);
@@ -1256,7 +1273,11 @@ public class StatusBarService extends Service {
                 linButtons = bottomView.findViewById(R.id.linButtons);
                 linProgress = bottomView.findViewById(R.id.linProgress);
                 progressBar = bottomView.findViewById(R.id.progress);
-                progressBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(context, R.color.appland_blue_bright), PorterDuff.Mode.SRC_IN);
+//                Resources res = getResources();
+//                Rect bounds = progressBar.getProgressDrawable().getBounds();
+                progressBar.setProgressDrawable(context.getResources().getDrawable(R.drawable.custom_progress));
+//                progressBar.getProgressDrawable().setBounds(bounds);
+//                progressBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(context, R.color.appland_blue_bright), PorterDuff.Mode.SRC_IN);
                 int value = (int) TimeUnit.MINUTES.toSeconds(PrefSiempo.getInstance(context).read(PrefSiempo.BREAK_PERIOD, 1));
                 progressBar.setMax(value);
                 txtCount = bottomView.findViewById(R.id.txtCount);
@@ -1279,12 +1300,6 @@ public class StatusBarService extends Service {
                             PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
                         }
                     }
-//                    if (linButtons != null) {
-//                        linButtons.setVisibility(View.GONE);
-//                    }
-//                    if (linProgress != null) {
-//                        linProgress.setVisibility(View.VISIBLE);
-//                    }
                 } else {
                     if (linButtons != null)
                         linButtons.setVisibility(View.VISIBLE);
@@ -1450,15 +1465,38 @@ public class StatusBarService extends Service {
             } else {
                 try {
                     if (isFullScreenView) {
-                        if (linButtons != null && linProgress != null) {
-                            linProgress.setVisibility(View.VISIBLE);
-                            linButtons.setVisibility(View.GONE);
+
+                        if (isFullScreenView) {
+                            if (paramsBottom.height != ViewGroup.LayoutParams.MATCH_PARENT) {
+                                paramsBottom.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                                bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
+                                if (wm != null && bottomView.getWindowToken() != null)
+                                    wm.updateViewLayout(bottomView, paramsBottom);
+                                if (linButtons != null && linProgress != null) {
+                                    linProgress.setVisibility(View.VISIBLE);
+                                    linButtons.setVisibility(View.GONE);
+                                }
+                                if (countDownTimerCover != null) {
+                                    countDownTimerCover.cancel();
+                                    countDownTimerCover = null;
+                                    PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
+                                }
+                            }
+                        } else {
+                            if (linButtons != null)
+                                linButtons.setVisibility(View.VISIBLE);
                         }
-                        if (countDownTimerCover != null) {
-                            countDownTimerCover.cancel();
-                            countDownTimerCover = null;
-                            PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
-                        }
+
+
+//                        if (linButtons != null && linProgress != null) {
+//                            linProgress.setVisibility(View.VISIBLE);
+//                            linButtons.setVisibility(View.GONE);
+//                        }
+//                        if (countDownTimerCover != null) {
+//                            countDownTimerCover.cancel();
+//                            countDownTimerCover = null;
+//                            PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
+//                        }
                     } else {
                         if (paramsBottom.height <= maxHeightCoverWindow) {
                             //Increase height of overlay
@@ -1809,46 +1847,44 @@ public class StatusBarService extends Service {
                 if (PackageUtil.isSiempoLauncher(arg0)) {
                     if (intent.getAction().equals(Intent.ACTION_USER_PRESENT) ||
                             intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+                        isScreenOn = true;
                         if (countDownTimer != null) {
                             countDownTimer.cancel();
                             PrefSiempo.getInstance(context).write(PrefSiempo
                                     .LOCK_COUNTER_STATUS, false);
                         }
-                        long breakTime = PrefSiempo.getInstance(context).read
-                                (PrefSiempo
-                                        .BREAK_TIME, 0L);
 //                        if (countDownTimerBreak != null) {
+//                            countDownTimerBreak.cancel();
 //                            countDownTimerBreak = null;
-//                            isFullScreenView = true;
-//                            addOverlayWindow(6);
+//                            deterUsageRunning = false;
+//                            isFullScreenView = false;
+//                            whichPhaseRunning = 0;
+//                            resetAllTimer();
+//                            removeView();
+//                            PrefSiempo.getInstance(context).write(PrefSiempo.BREAK_TIME, 0L);
 //                        }
-                        if (countDownTimerBreak != null) {
-                            countDownTimerBreak.cancel();
-                            countDownTimerBreak = null;
-                            deterUsageRunning = false;
-                            isFullScreenView = false;
-                            whichPhaseRunning = 0;
-                            resetAllTimer();
-                            removeView();
-                            PrefSiempo.getInstance(context).write(PrefSiempo.BREAK_TIME, 0L);
-                        }
                     } else if (intent.getAction().equals(Intent
                             .ACTION_SCREEN_OFF)) {
+                        isScreenOn = false;
                         startLockScreenTimer();
-//                        if (deterUsageRunning) {
+                        if (deterUsageRunning) {
+
+                            if (countDownTimerGrace != null) {
+                                countDownTimerGrace.cancel();
+                                countDownTimerGrace = null;
+                                startTimerForBreakPeriod();
+                            }
+                            if (countDownTimerCover != null) {
+                                countDownTimerCover.cancel();
+                                countDownTimerCover = null;
+                                startTimerForBreakPeriod();
+                            }
 //                            if (countDownTimerGrace != null) {
 //                                countDownTimerGrace.cancel();
 //                                countDownTimerGrace = null;
-//                            }
-//                            if (countDownTimerCover != null) {
-//                                countDownTimerCover.cancel();
-//                                countDownTimerCover = null;
-//                            }
-//                            if (countDownTimerBreak == null) {
 //                                startTimerForBreakPeriod();
-//                                isFullScreenView = true;
 //                            }
-//                        }
+                        }
                     }
 
                 }
