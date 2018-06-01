@@ -9,26 +9,39 @@ public class DBClient {
 
     public void deleteMsgByType(int type) {
         Tracer.i("Deleting Msg by type");
-        List<TableNotificationSms> notificationSmsesList = DBUtility.getNotificationDao().queryBuilder()
-                .where(TableNotificationSmsDao.Properties.Notification_type.eq(type))
-                .list();
+        try {
+            List<TableNotificationSms> notificationSmsesList = DBUtility.getNotificationDao().queryBuilder()
+                    .where(TableNotificationSmsDao.Properties.Notification_type.eq(type))
+                    .list();
 
-        DBUtility.getNotificationDao().deleteInTx(notificationSmsesList);
+            DBUtility.getNotificationDao().deleteInTx(notificationSmsesList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void deleteMsgById(int type) {
         Tracer.i("Deleting Msg by type");
-        List<TableNotificationSms> notificationSmsesList = DBUtility.getNotificationDao().queryBuilder()
-                .where(TableNotificationSmsDao.Properties.Id.eq(type))
-                .list();
+        try {
+            List<TableNotificationSms> notificationSmsesList = DBUtility.getNotificationDao().queryBuilder()
+                    .where(TableNotificationSmsDao.Properties.Id.eq(type))
+                    .list();
 
-        DBUtility.getNotificationDao().deleteInTx(notificationSmsesList);
+            DBUtility.getNotificationDao().deleteInTx(notificationSmsesList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void deleteMsgByPackageName(String packageName) {
         Tracer.i("Deleting Msg by PackageName");
-        List<TableNotificationSms> tableNotificationSms = DBUtility.getNotificationDao().queryBuilder()
-                .where(TableNotificationSmsDao.Properties.PackageName.eq(packageName)).list();
-        DBUtility.getNotificationDao().deleteInTx(tableNotificationSms);
+        try {
+            List<TableNotificationSms> tableNotificationSms = DBUtility.getNotificationDao().queryBuilder()
+                    .where(TableNotificationSmsDao.Properties.PackageName.eq(packageName)).list();
+            DBUtility.getNotificationDao().deleteInTx(tableNotificationSms);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
