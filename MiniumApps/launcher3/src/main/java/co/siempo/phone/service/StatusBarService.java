@@ -819,12 +819,15 @@ public class StatusBarService extends Service {
 
                 if (isTopViewVisible && isBottomViewVisible) {
                     if (isLandscape) {
-                        paramsBottom.height = minusculeHeightLandscape / 2;
-                        paramsTop.height = minusculeHeightLandscape / 2;
+                        paramsBottom.height = minusculeHeightLandscape;
+                        paramsTop.height = 0;
+
+
                     } else {
-                        paramsBottom.height = minusculeHeight / 2;
-                        paramsTop.height = minusculeHeight / 2;
+                        paramsBottom.height = minusculeHeight;
+                        paramsTop.height = 0;
                     }
+                    isTopViewVisible = false;
                 }
                 Log.d("remove", "remove");
                 resetAllTimer();
@@ -1623,6 +1626,13 @@ public class StatusBarService extends Service {
         }
         if (null != txtMessageTop) {
             txtMessageTop.setText(strCoverMessage);
+        }
+
+        if (coverTime == 5) {
+            int deterTime = PrefSiempo.getInstance(context).read(PrefSiempo
+                    .DETER_AFTER, 0);
+            txtTime.setText("0" + (coverTime + deterTime) + ":00");
+            txtTimeTop.setText("0" + (coverTime + deterTime) + ":00");
         }
 
 
