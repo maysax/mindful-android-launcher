@@ -88,6 +88,8 @@ import static co.siempo.phone.utils.NotificationUtils.ANDROID_CHANNEL_ID;
 
 public class StatusBarService extends Service {
 
+    public static double latitude = 0;
+    public static double longitude = 0;
     private static int whichPhaseRunning = 0;// 0 for nothing,1 for Grace,2 for cover,3 for break;
     private static boolean deterUsageRunning = false;
     long spentTimeJunkFood = 0L;
@@ -138,9 +140,6 @@ public class StatusBarService extends Service {
     private DateChangeReceiver dateChangeReceiver;
     private int heightWindowLandscapeExclusive;
     private int coverTimeForWindow;
-
-    public static double latitude = 0;
-    public static double longitude = 0;
 
     public StatusBarService() {
     }
@@ -842,7 +841,6 @@ public class StatusBarService extends Service {
                 }
                 Log.d("remove", "remove");
                 resetAllTimer();
-                removeView();
             }
         }.start();
     }
@@ -1040,11 +1038,7 @@ public class StatusBarService extends Service {
                 linButtonsTop = topView.findViewById(R.id.linButtons);
                 linProgressTop = topView.findViewById(R.id.linProgress);
                 progressBarTop = topView.findViewById(R.id.progressNew);
-//                Resources res = getResources();
-//                Rect bounds = progressBarTop.getProgressDrawable().getBounds();
                 progressBarTop.setProgressDrawable(context.getResources().getDrawable(R.drawable.custom_progress));
-//                progressBarTop.getProgressDrawable().setBounds(bounds);
-//                progressBarTop.getProgressDrawable().setColorFilter(ContextCompat.getColor(context, R.color.appland_blue_bright), PorterDuff.Mode.SRC_IN);
                 int value = (int) TimeUnit.MINUTES.toSeconds(PrefSiempo.getInstance(context).read(PrefSiempo.BREAK_PERIOD, 1));
                 progressBarTop.setMax(value);
                 txtCountTop = topView.findViewById(R.id.txtCount);
@@ -1052,10 +1046,41 @@ public class StatusBarService extends Service {
                 txtWellnessTop = topView.findViewById(R.id.txtWellness);
                 txtSettingsTop = topView.findViewById(R.id.txtSettings);
 
-                if (linButtonsTop != null && isTopViewVisible &&
-                        !isBottomViewVisible) {
-                    linButtonsTop.setVisibility(View.VISIBLE);
+                if (isFullScreenView) {
+                    if (paramsTop.height != ViewGroup.LayoutParams.MATCH_PARENT) {
+                        paramsTop.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                        topView.setLayoutParams(new ViewGroup.LayoutParams
+                                (paramsTop));
+                        if (wm != null && topView.getWindowToken() != null)
+                            wm.updateViewLayout(topView, paramsTop);
+
+                        if (linProgressTop != null
+                                && !isBottomViewVisible) {
+                            linProgressTop.setVisibility(View.VISIBLE);
+
+                        }
+                        if (linButtonsTop != null) {
+                            linButtonsTop.setVisibility(View.GONE);
+                        }
+                        if (countDownTimerCover != null) {
+                            countDownTimerCover.cancel();
+                            countDownTimerCover = null;
+                            PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
+                        }
+                    }
+
+                } else {
+
+                    topView.setLayoutParams(new ViewGroup.LayoutParams
+                            (paramsTop));
+                    if (wm != null && topView.getWindowToken() != null)
+                        wm.updateViewLayout(topView, paramsTop);
+                    if (linButtonsTop != null && isTopViewVisible &&
+                            !isBottomViewVisible) {
+                        linButtonsTop.setVisibility(View.VISIBLE);
+                    }
                 }
+
 
                 txtTimeTop.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1139,7 +1164,10 @@ public class StatusBarService extends Service {
                 });
 
                 if (null != wm) {
-                    wm.addView(topView, paramsTop);
+                    if (isTopViewVisible) {
+                        topView.setLayoutParams(new ViewGroup.LayoutParams(paramsTop));
+                        wm.addView(topView, paramsTop);
+                    }
                     topView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -1214,42 +1242,59 @@ public class StatusBarService extends Service {
             } else {
                 try {
                     if (isFullScreenView) {
-                        if (paramsTop.height != ViewGroup.LayoutParams.MATCH_PARENT) {
-                            paramsTop.height = ViewGroup.LayoutParams.MATCH_PARENT;
-                            topView.setLayoutParams(new ViewGroup.LayoutParams(paramsTop));
-                            if (wm != null && topView.getWindowToken() != null)
-                                wm.updateViewLayout(topView, paramsTop);
-                            if (linButtonsTop != null && linProgressTop != null) {
+
+                        if (linButtonsTop != null && linProgressTop != null) {
+                            linButtonsTop.setVisibility(View.GONE);
+                            if (!isBottomViewVisible) {
                                 linProgressTop.setVisibility(View.VISIBLE);
-                                linButtonsTop.setVisibility(View.GONE);
                             }
-                            if (countDownTimerCover != null) {
-                                countDownTimerCover.cancel();
-                                countDownTimerCover = null;
-                                PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
-                            }
+
                         }
-//                        if (linButtonsTop != null && linProgressTop != null) {
-//                            linProgressTop.setVisibility(View.VISIBLE);
-//                            linButtonsTop.setVisibility(View.GONE);
-//                        }
-//                        if (countDownTimerCover != null) {
-//                            countDownTimerCover.cancel();
-//                            countDownTimerCover = null;
-//                            PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
+                        if (countDownTimerCover != null) {
+                            countDownTimerCover.cancel();
+                            countDownTimerCover = null;
+                            PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
+                        }
+//                        if (paramsTop.height != ViewGroup.LayoutParams.MATCH_PARENT) {
+//                            paramsTop.height = ViewGroup.LayoutParams.MATCH_PARENT;
+//                            topView.setLayoutParams(new ViewGroup.LayoutParams(paramsTop));
+//                            if (wm != null && topView.getWindowToken() != null)
+//                                wm.updateViewLayout(topView, paramsTop);
+//                            if (linButtonsTop != null && linProgressTop != null) {
+//                                linProgressTop.setVisibility(View.VISIBLE);
+//                                linButtonsTop.setVisibility(View.GONE);
+//                            }
+//                            if (countDownTimerCover != null) {
+//                                countDownTimerCover.cancel();
+//                                countDownTimerCover = null;
+//                                PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
+//                            }
 //                        }
                     } else {
                         if (linButtonsTop != null && linProgressTop != null) {
                             linProgressTop.setVisibility(View.GONE);
                         }
+
                         if (paramsTop.height <= maxHeightCoverWindow) {
+                            topView.setLayoutParams(new ViewGroup.LayoutParams
+                                    (paramsTop));
                             if (topView != null && topView.getWindowToken() != null) {
-                                topView.setLayoutParams(new ViewGroup.LayoutParams
-                                        (paramsTop));
+
                                 wm.updateViewLayout(topView, paramsTop);
                             }
 
                         }
+
+//                        bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
+//                        if (wm != null && bottomView != null && bottomView
+//                                .getWindowToken() != null) {
+//                            wm.updateViewLayout(bottomView, paramsBottom);
+//                        }
+//                        if (topView != null && topView.getWindowToken() != null) {
+//                            topView.setLayoutParams(new ViewGroup.LayoutParams
+//                                    (paramsTop));
+//                            wm.updateViewLayout(topView, paramsTop);
+//                        }
                     }
                     if (txtSettingsTop != null) {
                         if (!isSettingPressed) {
@@ -1280,11 +1325,7 @@ public class StatusBarService extends Service {
                 linButtons = bottomView.findViewById(R.id.linButtons);
                 linProgress = bottomView.findViewById(R.id.linProgress);
                 progressBar = bottomView.findViewById(R.id.progress);
-//                Resources res = getResources();
-//                Rect bounds = progressBar.getProgressDrawable().getBounds();
                 progressBar.setProgressDrawable(context.getResources().getDrawable(R.drawable.custom_progress));
-//                progressBar.getProgressDrawable().setBounds(bounds);
-//                progressBar.getProgressDrawable().setColorFilter(ContextCompat.getColor(context, R.color.appland_blue_bright), PorterDuff.Mode.SRC_IN);
                 int value = (int) TimeUnit.MINUTES.toSeconds(PrefSiempo.getInstance(context).read(PrefSiempo.BREAK_PERIOD, 1));
                 progressBar.setMax(value);
                 txtCount = bottomView.findViewById(R.id.txtCount);
@@ -1297,6 +1338,7 @@ public class StatusBarService extends Service {
                         bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
                         if (wm != null && bottomView.getWindowToken() != null)
                             wm.updateViewLayout(bottomView, paramsBottom);
+
                         if (linButtons != null && linProgress != null) {
                             linProgress.setVisibility(View.VISIBLE);
                             linButtons.setVisibility(View.GONE);
@@ -1307,10 +1349,14 @@ public class StatusBarService extends Service {
                             PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
                         }
                     }
+
                 } else {
+
+
                     if (linButtons != null)
                         linButtons.setVisibility(View.VISIBLE);
                 }
+
                 txtTime.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -1393,7 +1439,10 @@ public class StatusBarService extends Service {
                 });
 
                 if (null != wm) {
-                    wm.addView(bottomView, paramsBottom);
+                    if (isBottomViewVisible) {
+                        bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
+                        wm.addView(bottomView, paramsBottom);
+                    }
                     bottomView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -1473,37 +1522,40 @@ public class StatusBarService extends Service {
                 try {
                     if (isFullScreenView) {
 
-                        if (isFullScreenView) {
-                            if (paramsBottom.height != ViewGroup.LayoutParams.MATCH_PARENT) {
-                                paramsBottom.height = ViewGroup.LayoutParams.MATCH_PARENT;
-                                bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
-                                if (wm != null && bottomView.getWindowToken() != null)
-                                    wm.updateViewLayout(bottomView, paramsBottom);
-                                if (linButtons != null && linProgress != null) {
-                                    linProgress.setVisibility(View.VISIBLE);
-                                    linButtons.setVisibility(View.GONE);
-                                }
-                                if (countDownTimerCover != null) {
-                                    countDownTimerCover.cancel();
-                                    countDownTimerCover = null;
-                                    PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
-                                }
-                            }
-                        } else {
-                            if (linButtons != null)
-                                linButtons.setVisibility(View.VISIBLE);
+//                        if (isFullScreenView) {
+//                            if (paramsBottom.height != ViewGroup.LayoutParams.MATCH_PARENT) {
+//                                paramsBottom.height = ViewGroup.LayoutParams.MATCH_PARENT;
+//                                bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
+//                                if (wm != null && bottomView.getWindowToken() != null)
+//                                    wm.updateViewLayout(bottomView, paramsBottom);
+//                                if (linButtons != null && linProgress != null) {
+//                                    linProgress.setVisibility(View.VISIBLE);
+//                                    linButtons.setVisibility(View.GONE);
+//                                }
+//                                if (countDownTimerCover != null) {
+//                                    countDownTimerCover.cancel();
+//                                    countDownTimerCover = null;
+//                                    PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
+//                                }
+//                            }
+//                        } else {
+//                            bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
+//                            if (wm != null && bottomView.getWindowToken() != null)
+//                                wm.updateViewLayout(bottomView, paramsBottom);
+//                            if (linButtons != null)
+//                                linButtons.setVisibility(View.VISIBLE);
+//                        }
+
+
+                        if (linButtons != null && linProgress != null) {
+                            linProgress.setVisibility(View.VISIBLE);
+                            linButtons.setVisibility(View.GONE);
                         }
-
-
-//                        if (linButtons != null && linProgress != null) {
-//                            linProgress.setVisibility(View.VISIBLE);
-//                            linButtons.setVisibility(View.GONE);
-//                        }
-//                        if (countDownTimerCover != null) {
-//                            countDownTimerCover.cancel();
-//                            countDownTimerCover = null;
-//                            PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
-//                        }
+                        if (countDownTimerCover != null) {
+                            countDownTimerCover.cancel();
+                            countDownTimerCover = null;
+                            PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
+                        }
                     } else {
                         if (paramsBottom.height <= maxHeightCoverWindow) {
                             //Increase height of overlay
@@ -1596,8 +1648,18 @@ public class StatusBarService extends Service {
                 String strIntention = PrefSiempo.getInstance(context).read
                         (PrefSiempo.DEFAULT_INTENTION, "");
                 if (TextUtils.isEmpty(strIntention)) {
-                    strCoverMessage = "Ready for a break? " +
-                            "Tap the clock icon.";
+                    if ((null != txtSettings && txtSettings.getText().toString()
+                            .equalsIgnoreCase
+                                    ("notes")) || ((null != txtSettingsTop &&
+                            txtSettingsTop.getText().toString()
+                                    .equalsIgnoreCase
+                                            ("notes")))) {
+                        strCoverMessage = "Ready for a break? " +
+                                "Tap the notes button.";
+                    } else {
+                        strCoverMessage = "Ready for a break? " +
+                                "Tap the settings button.";
+                    }
                 } else {
                     strCoverMessage = "Your intention: " + strIntention;
                 }
