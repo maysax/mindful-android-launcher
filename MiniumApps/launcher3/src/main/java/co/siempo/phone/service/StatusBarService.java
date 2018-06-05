@@ -2055,6 +2055,7 @@ public class StatusBarService extends Service {
                         String formattedDate = df.format(calendar.getTime());
 
                         if (!storedDate.equalsIgnoreCase("") && !storedDate.equalsIgnoreCase(formattedDate)) {
+                            PrefSiempo.getInstance(context).write(PrefSiempo.CURRENT_DATE, formattedDate);
                             long spentTime = PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_USAGE_TIME, 0L);
                             long spentTimeWithCover = PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_USAGE_COVER_TIME, 0L);
 
