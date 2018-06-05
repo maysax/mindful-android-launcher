@@ -10,8 +10,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
+import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -57,6 +60,7 @@ public class AlarmService extends IntentService {
     private ArrayList<Integer> everyHourList = new ArrayList<>();
     private ArrayList<Integer> everyTwoHourList = new ArrayList<>();
     private ArrayList<Integer> everyFourHoursList = new ArrayList<>();
+    private Vibrator vibrator;
 
     public AlarmService() {
         super("MyServerOrWhatever");
@@ -70,6 +74,7 @@ public class AlarmService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             try {
                 Notification.Builder builder = new Notification.Builder(this, ANDROID_CHANNEL_ID)
@@ -240,19 +245,23 @@ public class AlarmService extends IntentService {
 
             if (notificationList.size() >= 1) {
                 Tracer.d("AlarmService: deleteAll");
+                playNotificationSoundVibrate();
                 DBUtility.getNotificationDao().deleteAll();
             }
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (audioManager != null) {
-                        if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-                            if (isTempoVolume)
-                                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, 0);
-                        }
-                    }
-                }
-            }, 1000);
+
+
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if (audioManager != null) {
+//                        if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+//                            if (isTempoVolume)
+//                                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, 0);
+//                        }
+//                    }
+//                }
+//            }, 2000);
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -272,7 +281,7 @@ public class AlarmService extends IntentService {
                 .setLargeIcon(bitmap)
                 .setGroupSummary(true)
                 .setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_SOUND)
+                //  .setDefaults(Notification.DEFAULT_SOUND)
                 .setGroup(applicationName)
                 .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
                 .build();
@@ -318,7 +327,7 @@ public class AlarmService extends IntentService {
                 .setCustomBigContentView(contentView)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
                 .setLights(Color.MAGENTA, 500, 500)
-                .setDefaults(Notification.DEFAULT_SOUND)
+                //.setDefaults(Notification.DEFAULT_SOUND)
                 .setContentInfo("Info");
 
         if (isGrouped) {
@@ -369,7 +378,7 @@ public class AlarmService extends IntentService {
                     .setAutoCancel(true)
                     .setContentIntent(contentIntent)
                     .setLights(Color.MAGENTA, 500, 500)
-                    .setDefaults(Notification.DEFAULT_SOUND)
+                    //.setDefaults(Notification.DEFAULT_SOUND)
                     .setCustomContentView(collapsedViews)
                     .setCustomBigContentView(contentView);
             n.notify(notificationSms.get(0).getId().intValue(), builder.build());
@@ -396,10 +405,42 @@ public class AlarmService extends IntentService {
                     .setAutoCancel(true)
                     .setPriority(priority)
                     .setLights(Color.MAGENTA, 500, 500)
-                    .setDefaults(Notification.DEFAULT_SOUND)
+//                    .setDefaults(Notification.DEFAULT_SOUND)
                     .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
                     .build();
             n.notify(notificationSms.get(0).getApp_icon(), newMessageNotification);
+        }
+    }
+
+
+    public void playNotificationSoundVibrate() {
+        try {
+            if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                vibrator.vibrate(500);
+                MediaPlayer mediaPlayer = new MediaPlayer();
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_SYSTEM);
+                mediaPlayer.setDataSource(getApplicationContext(), alert);
+                mediaPlayer.prepare();
+                mediaPlayer.start();
+                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        mp.release();
+                        if (audioManager != null) {
+                            if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                                if (isTempoVolume)
+                                    audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, 0);
+                            }
+                        }
+                    }
+                });
+
+            }
+
+        } catch (Exception e) {
+//            CoreApplication.getInstance().logException(e);
+            e.printStackTrace();
         }
     }
 
