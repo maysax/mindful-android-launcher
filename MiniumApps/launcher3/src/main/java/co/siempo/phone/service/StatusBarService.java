@@ -140,6 +140,7 @@ public class StatusBarService extends Service {
     private DateChangeReceiver dateChangeReceiver;
     private int heightWindowLandscapeExclusive;
     private int coverTimeForWindow;
+    private TextView txtMessage;
 
     public StatusBarService() {
     }
@@ -161,7 +162,7 @@ public class StatusBarService extends Service {
         display = wm.getDefaultDisplay();
         size = new Point();
         display.getSize(size);
-        removeView();
+        resetAllTimer();
         screenHeightExclusive = (size.y - (getNavigationBarHeight()
                 + getStatusBarHeight()));
         heightWindow = (size.y - (getNavigationBarHeight()
@@ -791,6 +792,11 @@ public class StatusBarService extends Service {
                 if (wm != null && linProgress != null && txtCount != null) {
                     txtCount.setText("" + seconds);
                     progressBar.setProgress(seconds);
+                    if (txtMessage != null) {
+                        if (txtMessage.getVisibility() == View.GONE)
+                            txtMessage.setVisibility(View.VISIBLE);
+                        txtMessage.setText("Your screen will return to normal in 60 seconds.\nHave a stretch and look at what's around you!");
+                    }
                     if (linProgressTop != null && linProgressTop.getVisibility()
                             == View.VISIBLE) {
                         txtCountTop.setText("" + seconds);
@@ -805,11 +811,14 @@ public class StatusBarService extends Service {
                     countDownTimerBreak.cancel();
                     countDownTimerBreak = null;
                 }
+                if (txtMessage != null) {
+                    txtMessage.setVisibility(View.GONE);
+                }
                 deterUsageRunning = false;
                 isFullScreenView = false;
                 whichPhaseRunning = 0;
-                linProgress.setVisibility(View.GONE);
-                linProgressTop.setVisibility(View.GONE);
+                if (linProgress != null) linProgress.setVisibility(View.GONE);
+                if (linProgressTop != null) linProgressTop.setVisibility(View.GONE);
                 final boolean isLandscape = getResources().getConfiguration()
                         .orientation == Configuration.ORIENTATION_LANDSCAPE;
                 if (isBottomViewVisible && !isTopViewVisible) {
@@ -1085,26 +1094,31 @@ public class StatusBarService extends Service {
                 txtTimeTop.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (!TextUtils.isEmpty(txtTimeTop.getText().toString())) {
-                            isFullScreenView = true;
-                            if (countDownTimerCover != null) {
-                                countDownTimerCover.cancel();
-                                countDownTimerCover = null;
-                            }
-                            PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
-                            paramsTop.height = ViewGroup.LayoutParams.MATCH_PARENT;
-                            bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
-                            if (wm != null)
-                                wm.updateViewLayout(topView, paramsTop);
-                            if (linButtonsTop != null && linProgressTop != null) {
-                                linProgressTop.setVisibility(View.VISIBLE);
-                                linButtonsTop.setVisibility(View.GONE);
-                            }
-                            startTimerForBreakPeriod();
-                            PrefSiempo.getInstance(context).write
-                                    (PrefSiempo.IS_BREAK_TIME_PRESSED, true);
-                        }
+                        try {
 
+                            if (!TextUtils.isEmpty(txtTimeTop.getText().toString())) {
+                                isFullScreenView = true;
+                                if (countDownTimerCover != null) {
+                                    countDownTimerCover.cancel();
+                                    countDownTimerCover = null;
+                                }
+                                PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
+                                paramsTop.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                                bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
+                                if (wm != null)
+                                    wm.updateViewLayout(topView, paramsTop);
+                                if (linButtonsTop != null && linProgressTop != null) {
+                                    linProgressTop.setVisibility(View.VISIBLE);
+                                    linButtonsTop.setVisibility(View.GONE);
+                                }
+                                startTimerForBreakPeriod();
+                                PrefSiempo.getInstance(context).write
+                                        (PrefSiempo.IS_BREAK_TIME_PRESSED, true);
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
                     }
                 });
@@ -1120,46 +1134,36 @@ public class StatusBarService extends Service {
                 txtSettingsTop.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (txtSettingsTop.getText().toString().equalsIgnoreCase(getResources().getString(R.string.settings))) {
-                            PrefSiempo.getInstance(context).write(PrefSiempo.IS_SETTINGS_PRESSED, true);
-                            Intent intent = new Intent(context, SettingsActivity_.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra("FlagApp", true);
-                            startActivity(intent);
-                        } else {
-//                            new ActivityHelper(context).openNotesApp(false);
-
-                            try {
-                                Intent intent = new Intent(context,
-                                        NoteListActivity.class);
-                                intent.putExtra(NoteListActivity
-                                        .EXTRA_OPEN_LATEST, false);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                context.startActivity(intent);
-                            } catch (Exception e) {
-                                CoreApplication.getInstance().logException(e);
-                                Tracer.e(e, e.getMessage());
-                            }
+                        try {
+                            settingsClickMethod();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
+
                     }
                 });
                 txtWellnessTop.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        HashMap<Integer, AppMenu> map = CoreApplication.getInstance().getToolsSettings();
-                        if (map.get(MainListItemLoader.TOOLS_WELLNESS).getApplicationName().equalsIgnoreCase("")) {
-                            MainListItem item = new MainListItem(MainListItemLoader.TOOLS_WELLNESS, context.getResources()
-                                    .getString(R.string.title_wellness), R.drawable
-                                    .ic_vector_wellness);
-                            Intent intent = new Intent(context, AppAssignmentActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra(Constants.INTENT_MAINLISTITEM, item);
-                            intent.putExtra("class_name", DashboardActivity.class.getSimpleName
-                                    ().toString());
-                            context.startActivity(intent);
-                        } else {
-                            new ActivityHelper(context).openAppWithPackageName(map.get(10).getApplicationName());
+                        try {
+                            HashMap<Integer, AppMenu> map = CoreApplication.getInstance().getToolsSettings();
+                            if (map.get(MainListItemLoader.TOOLS_WELLNESS).getApplicationName().equalsIgnoreCase("")) {
+                                MainListItem item = new MainListItem(MainListItemLoader.TOOLS_WELLNESS, context.getResources()
+                                        .getString(R.string.title_wellness), R.drawable
+                                        .ic_vector_wellness);
+                                Intent intent = new Intent(context, AppAssignmentActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.putExtra(Constants.INTENT_MAINLISTITEM, item);
+                                intent.putExtra("class_name", DashboardActivity.class.getSimpleName
+                                        ().toString());
+                                context.startActivity(intent);
+                            } else {
+                                new ActivityHelper(context).openAppWithPackageName(map.get(10).getApplicationName());
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
+
                     }
                 });
 
@@ -1171,68 +1175,78 @@ public class StatusBarService extends Service {
                     topView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (!isFullScreenView) {
-                                if (paramsBottom.height != 0 && topView
-                                        .getWindowToken() != null && isBottomViewVisible) {
-                                    paramsTop.height = topView.getHeight() +
-                                            bottomView.getHeight();
-                                    topView.setLayoutParams(new ViewGroup.LayoutParams
-                                            (paramsTop));
-                                    wm.updateViewLayout(topView, paramsTop);
-                                    paramsBottom.height = 0;
-                                    isBottomViewVisible = false;
-                                    isTopViewVisible = true;
-                                    if (bottomView.getWindowToken() != null) {
-                                        wm.removeView(bottomView);
-                                    }
-                                    variableMaxHeightPortrait = heightWindow;
-                                    variableMaxHeightLandscape = heightWindowLandscape;
-                                    linButtonsTop.setVisibility(View.VISIBLE);
-                                } else if (topView
-                                        .getWindowToken() != null &&
-                                        !isBottomViewVisible) {
-                                    if (paramsTop.height != minusculeHeight) {
-                                        paramsTop.height = topView.getHeight() / 2;
-                                        topView.setLayoutParams(new ViewGroup.LayoutParams
-                                                (paramsTop));
-                                        wm.updateViewLayout(topView, paramsTop);
-                                        paramsBottom.height = paramsTop.height;
-                                        bottomView.setLayoutParams(new ViewGroup.LayoutParams
-                                                (paramsBottom));
-                                        if (bottomView.getWindowToken() != null) {
-                                            wm.updateViewLayout(bottomView, paramsBottom);
-                                        } else {
-                                            wm.addView(bottomView, paramsBottom);
-                                        }
-                                        isBottomViewVisible = true;
-                                        isTopViewVisible = true;
-                                        variableMaxHeightPortrait = heightWindow / 2;
-                                        variableMaxHeightLandscape = heightWindowLandscape / 2;
-                                        linButtonsTop.setVisibility(View.GONE);
-                                        linButtons.setVisibility(View.VISIBLE);
-                                    } else if (paramsTop.height == minusculeHeight) {
-                                        //code for shifting bottom view to top
-                                        paramsTop.height = 0;
-                                        topView.setLayoutParams(new ViewGroup.LayoutParams
-                                                (paramsTop));
-                                        wm.updateViewLayout(topView, paramsTop);
-                                        paramsBottom.height = minusculeHeight;
-                                        isBottomViewVisible = true;
-                                        isTopViewVisible = false;
-                                        bottomView.setLayoutParams(new ViewGroup.LayoutParams
-                                                (paramsBottom));
-                                        if (bottomView.getWindowToken() != null) {
-                                            wm.updateViewLayout(bottomView, paramsBottom);
-                                        } else {
-                                            wm.addView(bottomView, paramsBottom);
-                                        }
-                                        linButtonsTop.setVisibility(View.GONE);
-                                        linButtons.setVisibility(View.VISIBLE);
-                                    }
-                                }
+                            try {
 
+                                if (!isFullScreenView) {
+                                    if (paramsBottom.height != 0 && topView
+                                            .getWindowToken() != null && isBottomViewVisible) {
+                                        if (topView != null && bottomView != null) {
+                                            paramsTop.height = topView.getHeight() +
+                                                    bottomView.getHeight();
+                                            topView.setLayoutParams(new ViewGroup.LayoutParams
+                                                    (paramsTop));
+                                            wm.updateViewLayout(topView, paramsTop);
+                                            paramsBottom.height = 0;
+                                            isBottomViewVisible = false;
+                                            isTopViewVisible = true;
+                                            if (bottomView.getWindowToken() != null) {
+                                                wm.removeView(bottomView);
+                                            }
+                                            variableMaxHeightPortrait = heightWindow;
+                                            variableMaxHeightLandscape = heightWindowLandscape;
+                                            linButtonsTop.setVisibility(View.VISIBLE);
+                                        }
+                                    } else if (topView
+                                            .getWindowToken() != null &&
+                                            !isBottomViewVisible) {
+                                        if (paramsTop.height != minusculeHeight) {
+                                            if (topView != null) {
+                                                paramsTop.height = topView.getHeight() / 2;
+                                            }
+                                            topView.setLayoutParams(new ViewGroup.LayoutParams
+                                                    (paramsTop));
+                                            wm.updateViewLayout(topView, paramsTop);
+                                            paramsBottom.height = paramsTop.height;
+                                            bottomView.setLayoutParams(new ViewGroup.LayoutParams
+                                                    (paramsBottom));
+                                            if (bottomView.getWindowToken() != null) {
+                                                wm.updateViewLayout(bottomView, paramsBottom);
+                                            } else {
+                                                wm.addView(bottomView, paramsBottom);
+                                            }
+                                            isBottomViewVisible = true;
+                                            isTopViewVisible = true;
+                                            variableMaxHeightPortrait = heightWindow / 2;
+                                            variableMaxHeightLandscape = heightWindowLandscape / 2;
+                                            linButtonsTop.setVisibility(View.GONE);
+                                            linButtons.setVisibility(View.VISIBLE);
+                                        } else if (paramsTop.height == minusculeHeight) {
+                                            //code for shifting bottom view to top
+                                            paramsTop.height = 0;
+                                            topView.setLayoutParams(new ViewGroup.LayoutParams
+                                                    (paramsTop));
+                                            wm.updateViewLayout(topView, paramsTop);
+                                            paramsBottom.height = minusculeHeight;
+                                            isBottomViewVisible = true;
+                                            isTopViewVisible = false;
+                                            bottomView.setLayoutParams(new ViewGroup.LayoutParams
+                                                    (paramsBottom));
+                                            if (bottomView.getWindowToken() != null) {
+                                                wm.updateViewLayout(bottomView, paramsBottom);
+                                            } else {
+                                                wm.addView(bottomView, paramsBottom);
+                                            }
+                                            linButtonsTop.setVisibility(View.GONE);
+                                            linButtons.setVisibility(View.VISIBLE);
+                                        }
+                                    }
+
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
+
                     });
 
 
@@ -1325,6 +1339,7 @@ public class StatusBarService extends Service {
                 linButtons = bottomView.findViewById(R.id.linButtons);
                 linProgress = bottomView.findViewById(R.id.linProgress);
                 progressBar = bottomView.findViewById(R.id.progress);
+                txtMessage = bottomView.findViewById(R.id.txtMessage);
                 progressBar.setProgressDrawable(context.getResources().getDrawable(R.drawable.custom_progress));
                 int value = (int) TimeUnit.MINUTES.toSeconds(PrefSiempo.getInstance(context).read(PrefSiempo.BREAK_PERIOD, 1));
                 progressBar.setMax(value);
@@ -1360,24 +1375,29 @@ public class StatusBarService extends Service {
                 txtTime.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (!TextUtils.isEmpty(txtTime.getText().toString())) {
-                            isFullScreenView = true;
-                            if (countDownTimerCover != null) {
-                                countDownTimerCover.cancel();
-                                countDownTimerCover = null;
+                        try {
+
+                            if (!TextUtils.isEmpty(txtTime.getText().toString())) {
+                                isFullScreenView = true;
+                                if (countDownTimerCover != null) {
+                                    countDownTimerCover.cancel();
+                                    countDownTimerCover = null;
+                                }
+                                PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
+                                paramsBottom.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                                bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
+                                if (wm != null)
+                                    wm.updateViewLayout(bottomView, paramsBottom);
+                                if (linButtons != null && linProgress != null) {
+                                    linProgress.setVisibility(View.VISIBLE);
+                                    linButtons.setVisibility(View.GONE);
+                                }
+                                startTimerForBreakPeriod();
+                                PrefSiempo.getInstance(context).write
+                                        (PrefSiempo.IS_BREAK_TIME_PRESSED, true);
                             }
-                            PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
-                            paramsBottom.height = ViewGroup.LayoutParams.MATCH_PARENT;
-                            bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
-                            if (wm != null)
-                                wm.updateViewLayout(bottomView, paramsBottom);
-                            if (linButtons != null && linProgress != null) {
-                                linProgress.setVisibility(View.VISIBLE);
-                                linButtons.setVisibility(View.GONE);
-                            }
-                            startTimerForBreakPeriod();
-                            PrefSiempo.getInstance(context).write
-                                    (PrefSiempo.IS_BREAK_TIME_PRESSED, true);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
                 });
@@ -1393,47 +1413,45 @@ public class StatusBarService extends Service {
                 txtSettings.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (txtSettings.getText().toString().equalsIgnoreCase(getResources().getString(R.string.settings))) {
-                            PrefSiempo.getInstance(context).write(PrefSiempo.IS_SETTINGS_PRESSED, true);
-                            Intent intent = new Intent(context,
-                                    SettingsActivity_.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra("FlagApp", true);
-                            startActivity(intent);
-                        } else {
-//                            new ActivityHelper(context).openNotesApp(false);
-
-                            try {
-                                Intent intent = new Intent(context,
-                                        NoteListActivity.class);
-                                intent.putExtra(NoteListActivity
-                                        .EXTRA_OPEN_LATEST, false);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                context.startActivity(intent);
-                            } catch (Exception e) {
-                                CoreApplication.getInstance().logException(e);
-                                Tracer.e(e, e.getMessage());
-                            }
-
+                        try {
+                            settingsClickMethod();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
+
+
                 });
                 txtWellness.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        HashMap<Integer, AppMenu> map = CoreApplication.getInstance().getToolsSettings();
-                        if (map.get(MainListItemLoader.TOOLS_WELLNESS).getApplicationName().equalsIgnoreCase("")) {
-                            MainListItem item = new MainListItem(MainListItemLoader.TOOLS_WELLNESS, context.getResources()
-                                    .getString(R.string.title_wellness), R.drawable
-                                    .ic_vector_wellness);
-                            Intent intent = new Intent(context, AppAssignmentActivity.class);
-                            intent.putExtra(Constants.INTENT_MAINLISTITEM, item);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra("class_name", DashboardActivity.class.getSimpleName
-                                    ().toString());
-                            context.startActivity(intent);
-                        } else {
-                            new ActivityHelper(context).openAppWithPackageName(map.get(10).getApplicationName());
+                        try {
+                            HashMap<Integer, AppMenu> map = CoreApplication.getInstance().getToolsSettings();
+                            if (map.get(MainListItemLoader.TOOLS_WELLNESS).getApplicationName().equalsIgnoreCase("")) {
+                                MainListItem item = new MainListItem(MainListItemLoader.TOOLS_WELLNESS, context.getResources()
+                                        .getString(R.string.title_wellness), R.drawable
+                                        .ic_vector_wellness);
+                                Intent intent = new Intent(context, AppAssignmentActivity.class);
+                                intent.putExtra(Constants.INTENT_MAINLISTITEM, item);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.putExtra("class_name", DashboardActivity.class.getSimpleName
+                                        ().toString());
+                                context.startActivity(intent);
+                            } else {
+                                try {
+                                    new DBClient().deleteMsgByPackageName(map.get(MainListItemLoader.TOOLS_WELLNESS).getApplicationName());
+                                    Intent intent = context.getPackageManager().getLaunchIntentForPackage(map.get(MainListItemLoader.TOOLS_WELLNESS).getApplicationName());
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    context.startActivity(intent);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    CoreApplication.getInstance().logException(e);
+                                    UIUtils.alert(context, context.getString(R.string.app_not_found));
+                                }
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
                 });
@@ -1446,74 +1464,82 @@ public class StatusBarService extends Service {
                     bottomView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (!isFullScreenView) {
-                                if (topView != null && topView.getWindowToken() !=
-                                        null
-                                        &&
-                                        topView.getHeight() !=
-                                                0) {
+                            try {
+                                if (!isFullScreenView) {
+                                    if (topView != null && topView.getWindowToken() !=
+                                            null
+                                            &&
+                                            topView.getHeight() !=
+                                                    0) {
 
-                                    paramsBottom.height = topView.getHeight() +
-                                            bottomView.getHeight();
-                                    bottomView.setLayoutParams(new ViewGroup.LayoutParams
-                                            (paramsBottom));
-                                    wm.updateViewLayout(bottomView, paramsBottom);
-                                    paramsTop.height = 0;
-                                    isBottomViewVisible = true;
-                                    isTopViewVisible = false;
-                                    if (topView.getWindowToken() != null) {
-                                        wm.removeView(topView);
-                                    }
-                                    variableMaxHeightPortrait = heightWindow;
-                                    variableMaxHeightLandscape = heightWindowLandscape;
-                                    if (txtMessageTop.getVisibility() == View.VISIBLE) {
-                                        txtMessageTop.setVisibility(View.GONE);
-
-                                    }
-                                    txtMessageBottom.setVisibility(View.VISIBLE);
-
-                                } else {
-
-
-                                    if ((!isLandscape && paramsBottom.height !=
-                                            (size.y - (getNavigationBarHeight()
-                                                    + getStatusBarHeight())) / 9)
-                                            || (isLandscape
-                                            && paramsBottom.height !=
-                                            size.x / 9)) {
-                                        paramsBottom.height = bottomView.getHeight() / 2;
-                                        isCoverTapped = true;
+                                        paramsBottom.height = topView.getHeight() +
+                                                bottomView.getHeight();
                                         bottomView.setLayoutParams(new ViewGroup.LayoutParams
                                                 (paramsBottom));
                                         wm.updateViewLayout(bottomView, paramsBottom);
-
-                                        if (paramsBottom
-                                                .height == screenHeightExclusive * 2 / 9) {
-                                            strCoverMessage = "Ready for a break? " +
-                                                    "Tap the clock icon.";
-                                        }
-                                        paramsTop.height = paramsBottom.height;
-                                        if (null != topView) {
-                                            topView.setLayoutParams(new ViewGroup.LayoutParams
-                                                    (paramsTop));
-                                            if (topView.getWindowToken() != null) {
-                                                wm.updateViewLayout(topView, paramsTop);
-                                            } else {
-                                                wm.addView(topView, paramsTop);
-                                            }
-                                        }
-                                        if (txtMessageBottom.getVisibility() == View.VISIBLE) {
-                                            txtMessageTop.setVisibility(View.VISIBLE);
-                                            txtMessageBottom.setVisibility(View.GONE);
-                                        }
-                                        variableMaxHeightPortrait = heightWindow / 2;
-                                        variableMaxHeightLandscape = heightWindowLandscape / 2;
+                                        paramsTop.height = 0;
                                         isBottomViewVisible = true;
-                                        isTopViewVisible = true;
+                                        isTopViewVisible = false;
+                                        if (topView.getWindowToken() != null) {
+                                            wm.removeView(topView);
+                                        }
+                                        variableMaxHeightPortrait = heightWindow;
+                                        variableMaxHeightLandscape = heightWindowLandscape;
+                                        if (txtMessageTop.getVisibility() == View.VISIBLE) {
+                                            txtMessageTop.setVisibility(View.GONE);
+
+                                        }
+                                        txtMessageBottom.setVisibility(View.VISIBLE);
+
+                                    } else {
+
+
+                                        if ((!isLandscape && paramsBottom.height !=
+                                                (size.y - (getNavigationBarHeight()
+                                                        + getStatusBarHeight())) / 9)
+                                                || (isLandscape
+                                                && paramsBottom.height !=
+                                                size.x / 9)) {
+                                            if (bottomView != null) {
+                                                paramsBottom.height = bottomView.getHeight() / 2;
+
+                                                isCoverTapped = true;
+                                                bottomView.setLayoutParams(new ViewGroup.LayoutParams
+                                                        (paramsBottom));
+                                                wm.updateViewLayout(bottomView, paramsBottom);
+
+                                                if (paramsBottom
+                                                        .height == screenHeightExclusive * 2 / 9) {
+                                                    strCoverMessage = "Ready for a break? " +
+                                                            "Tap the clock icon.";
+                                                }
+                                            }
+                                            paramsTop.height = paramsBottom.height;
+                                            if (null != topView) {
+                                                topView.setLayoutParams(new ViewGroup.LayoutParams
+                                                        (paramsTop));
+                                                if (topView.getWindowToken() != null) {
+                                                    wm.updateViewLayout(topView, paramsTop);
+                                                } else {
+                                                    wm.addView(topView, paramsTop);
+                                                }
+                                            }
+                                            if (txtMessageBottom.getVisibility() == View.VISIBLE) {
+                                                txtMessageTop.setVisibility(View.VISIBLE);
+                                                txtMessageBottom.setVisibility(View.GONE);
+                                            }
+                                            variableMaxHeightPortrait = heightWindow / 2;
+                                            variableMaxHeightLandscape = heightWindowLandscape / 2;
+                                            isBottomViewVisible = true;
+                                            isTopViewVisible = true;
+                                        }
                                     }
                                 }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
+
                     });
                 }
 
@@ -1680,7 +1706,7 @@ public class StatusBarService extends Service {
             case 3:
 
                 strCoverMessage = "Let your intention be your \n" +
-                        "guide.  We believe in you!";
+                        "guide. We believe in you!";
                 if (isBottomViewVisible && !isTopViewVisible) {
                     txtMessageBottom.setVisibility(View.VISIBLE);
                     txtMessageTop.setVisibility(View.GONE);
@@ -1693,7 +1719,7 @@ public class StatusBarService extends Service {
                 }
                 break;
             case 4:
-                strCoverMessage = "Reminder:  reflect on how \n" +
+                strCoverMessage = "Reminder: reflect on how \n" +
                         "this app makes you feel.";
                 if (isBottomViewVisible && !isTopViewVisible) {
                     txtMessageBottom.setVisibility(View.VISIBLE);
@@ -1963,6 +1989,54 @@ public class StatusBarService extends Service {
                         }
                     }
 
+                }
+            }
+        }
+    }
+
+    private void settingsClickMethod() {
+        if (txtSettings.getText().toString().equalsIgnoreCase(getResources().getString(R.string.settings))) {
+            PrefSiempo.getInstance(context).write(PrefSiempo.IS_SETTINGS_PRESSED, true);
+            Intent intent = new Intent(context,
+                    SettingsActivity_.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("FlagApp", true);
+            startActivity(intent);
+        } else {
+//                            new ActivityHelper(context).openNotesApp(false);
+            HashMap<Integer, AppMenu> map = CoreApplication.getInstance().getToolsSettings();
+            if (map.get(MainListItemLoader.TOOLS_NOTES).getApplicationName().equalsIgnoreCase("Notes")) {
+                try {
+                    Intent intent = new Intent(context,
+                            NoteListActivity.class);
+                    intent.putExtra(NoteListActivity
+                            .EXTRA_OPEN_LATEST, false);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                } catch (Exception e) {
+                    CoreApplication.getInstance().logException(e);
+                    Tracer.e(e, e.getMessage());
+                }
+            } else if (map.get(MainListItemLoader.TOOLS_NOTES).getApplicationName().equalsIgnoreCase("")) {
+                MainListItem item = new MainListItem(MainListItemLoader.TOOLS_NOTES, context.getResources()
+                        .getString(R.string.title_note), R.drawable
+                        .ic_vector_note);
+                Intent intent = new Intent(context, AppAssignmentActivity.class);
+                intent.putExtra(Constants.INTENT_MAINLISTITEM, item);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("class_name", DashboardActivity.class.getSimpleName
+                        ().toString());
+                context.startActivity(intent);
+            } else {
+                try {
+                    new DBClient().deleteMsgByPackageName(map.get(MainListItemLoader.TOOLS_NOTES).getApplicationName());
+                    Intent intent = context.getPackageManager().getLaunchIntentForPackage(map.get(MainListItemLoader.TOOLS_NOTES).getApplicationName());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    CoreApplication.getInstance().logException(e);
+                    UIUtils.alert(context, context.getString(R.string.app_not_found));
                 }
             }
         }

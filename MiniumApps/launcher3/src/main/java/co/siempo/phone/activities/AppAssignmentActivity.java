@@ -160,9 +160,14 @@ public class AppAssignmentActivity extends CoreActivity {
             }
 
             appListAll = new ArrayList<>();
-            appListAll.addAll(installedPackageList);
+            for (ResolveInfo resolveInfo : installedPackageList) {
+                if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
+                    if (!checkExits(resolveInfo)) {
+                        appListAll.add(resolveInfo);
+                    }
+                }
+            }
             appListAll = Sorting.sortAppAssignment(AppAssignmentActivity.this, appListAll);
-
             if (showallAppBtn.getVisibility()!=View.VISIBLE) {
                 bindList(appListAll);
             } else {
