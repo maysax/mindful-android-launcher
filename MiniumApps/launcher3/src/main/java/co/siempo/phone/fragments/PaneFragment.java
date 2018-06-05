@@ -979,7 +979,7 @@ public class PaneFragment extends CoreFragment {
                         .txtToolsTitle);
                 if (viewFlipper.getDisplayedChild() == 0) {
                     String sourceString = "From this <b>Tools Screen</b>, you " +
-                            "can launch your most helpful apps.  Assign your preferred app to each tool.  Add, change, or rearrange tools as desired.";
+                            "can launch your most helpful apps. Assign your preferred app to each tool. Add, change, or rearrange tools as desired.";
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         txtToolsMessage.setText(Html.fromHtml(sourceString, Html
                                 .FROM_HTML_MODE_COMPACT));
