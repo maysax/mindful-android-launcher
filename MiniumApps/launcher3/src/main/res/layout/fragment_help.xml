@@ -37,7 +37,6 @@
                 android:textSize="@dimen/text.size.large" />
         </RelativeLayout>
 
-
         <RelativeLayout
             android:id="@+id/relPrivacyPolicy"
             android:layout_width="match_parent"
@@ -91,6 +90,23 @@
                 android:textSize="@dimen/text.size.large" />
         </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/relContribute"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:visibility="gone"
+            android:padding="16dp">
+
+            <co.siempo.phone.customviews.RobotoRegularTextView
+                android:id="@+id/txtContribute"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:text="@string/contribute_to_siempo"
+                android:textColor="?attr/txt_content_title"
+                android:textSize="@dimen/text.size.large" />
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/relVersion"
@@ -127,7 +143,6 @@
                     android:textSize="@dimen/text.size.regular" />
             </LinearLayout>
         </RelativeLayout>
-
 
     </LinearLayout>
 

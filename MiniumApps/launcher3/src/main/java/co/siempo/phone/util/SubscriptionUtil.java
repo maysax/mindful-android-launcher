@@ -119,6 +119,40 @@ public class SubscriptionUtil {
 
     }
 
+    public void getSkuDetailsList(final List<String> skuIdsList,
+                                  final InAppInventoryListener subscriptionInventoryListener) {
+        if (iabHelper != null) {
+            try {
+                iabHelper.queryInventoryAsync(true, null, skuIdsList, new IabHelper.QueryInventoryFinishedListener() {
+                    @Override
+                    public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
+                        if (result.isFailure()) {
+                            Log.d("TEST", "Problem querying inventory: " + result);
+                            dispose();
+                            return;
+                        }
+                        ArrayList<SkuDetails> skuDetailsList = new ArrayList<>();
+                        for (String skuId : skuIdsList) {
+                            SkuDetails sku = inventory.getSkuDetails(skuId);
+                            if (sku.getSku().equals(skuId)) {
+                                skuDetailsList.add(sku);
+                                sku.getPrice();
+                            }
+                        }
+
+                        if (subscriptionInventoryListener != null) {
+                            subscriptionInventoryListener.onQueryInventoryFinished(skuDetailsList);
+                        }
+                    }
+                });
+            } catch (IabHelper.IabAsyncInProgressException e) {
+                Log.e("TEST", "EXCEPTION:" + e.getMessage());
+            }
+        }
+
+    }
+
+
     public void dispose() {
         if (iabHelper != null) {
             try {
@@ -140,6 +174,11 @@ public class SubscriptionUtil {
     public interface SubscriptionInventoryListener {
         void onQueryInventoryFinished(ArrayList<SkuDetails> skuList);
     }
+
+    public interface InAppInventoryListener {
+        void onQueryInventoryFinished(ArrayList<SkuDetails> skuList);
+    }
+
 
     public interface SubscriptionFinishedListener {
         void onSuccess();

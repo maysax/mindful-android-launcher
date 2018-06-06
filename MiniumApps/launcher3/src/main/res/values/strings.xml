@@ -517,6 +517,7 @@
     <string name="settings">Settings</string>
     <string name="wellness">Wellness</string>
     <string name="msg_internet">Please check internet connection!</string>
+    <string name="contribute_to_siempo">Contribute to Siempo</string>
 
 
     <string-array name="in_app_items_subscription">
@@ -534,6 +535,13 @@
         <!--<item>testing_monthly_dollers.01</item>-->
         <!--<item>android.test.purchased</item>-->
     </string-array>
+
+
+    <string-array name="in_app_items_donate">
+        <item>donate.01</item>
+        <item>donate.05</item>
+    </string-array>
+
 
     <string-array name="deter_after_dialog">
         <item>0 minutes</item>ng
