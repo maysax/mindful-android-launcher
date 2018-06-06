@@ -531,6 +531,7 @@ public class StatusBarService extends Service {
                 PrefSiempo.getInstance(context).write(PrefSiempo.LOCK_COUNTER_STATUS, true);
                 countDownTimer.cancel();
                 countDownTimer = null;
+                resetAllTimer();
             }
         }.start();
 
