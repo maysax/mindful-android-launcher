@@ -140,7 +140,6 @@ public class StatusBarService extends Service {
     private DateChangeReceiver dateChangeReceiver;
     private int heightWindowLandscapeExclusive;
     private int coverTimeForWindow;
-    private TextView txtMessage;
 
     public StatusBarService() {
     }
@@ -159,7 +158,9 @@ public class StatusBarService extends Service {
         registerReceiverScreenLockAndDateChange();
         appChecker = new AppChecker();
         wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-        display = wm.getDefaultDisplay();
+        if (wm != null) {
+            display = wm.getDefaultDisplay();
+        }
         size = new Point();
         display.getSize(size);
         resetAllTimer();
@@ -189,7 +190,7 @@ public class StatusBarService extends Service {
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             paramsBottom.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        } else {
             paramsBottom.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
         }
 
@@ -204,7 +205,7 @@ public class StatusBarService extends Service {
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             paramsTop.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        } else {
             paramsTop.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
         }
 
@@ -559,7 +560,10 @@ public class StatusBarService extends Service {
                 public void onLocationResult(LocationResult locationResult) {
                     if (locationResult == null) {
                         //return;
-                        Location mlocation = locationResult.getLastLocation();
+                        Location mlocation = null;
+                        if (locationResult != null) {
+                            mlocation = locationResult.getLastLocation();
+                        }
                         latitude = mlocation.getLatitude();
                         longitude = mlocation.getLongitude();
                         EventBus.getDefault().postSticky(new LocationUpdateEvent(mlocation));
@@ -792,10 +796,10 @@ public class StatusBarService extends Service {
                 if (wm != null && linProgress != null && txtCount != null) {
                     txtCount.setText("" + seconds);
                     progressBar.setProgress(seconds);
-                    if (txtMessage != null) {
-                        if (txtMessage.getVisibility() == View.GONE)
-                            txtMessage.setVisibility(View.VISIBLE);
-                        txtMessage.setText("Your screen will return to normal in 60 seconds.\nHave a stretch and look at what's around you!");
+                    if (txtMessageBottom != null) {
+                        if (txtMessageBottom.getVisibility() == View.GONE)
+                            txtMessageBottom.setVisibility(View.VISIBLE);
+                        strCoverMessage = "Your screen will return to normal in 60 seconds.\nHave a stretch and look at what's around you!";
                     }
                     if (linProgressTop != null && linProgressTop.getVisibility()
                             == View.VISIBLE) {
@@ -811,8 +815,8 @@ public class StatusBarService extends Service {
                     countDownTimerBreak.cancel();
                     countDownTimerBreak = null;
                 }
-                if (txtMessage != null) {
-                    txtMessage.setVisibility(View.GONE);
+                if (txtMessageBottom != null) {
+                    txtMessageBottom.setVisibility(View.GONE);
                 }
                 deterUsageRunning = false;
                 isFullScreenView = false;
@@ -1339,7 +1343,6 @@ public class StatusBarService extends Service {
                 linButtons = bottomView.findViewById(R.id.linButtons);
                 linProgress = bottomView.findViewById(R.id.linProgress);
                 progressBar = bottomView.findViewById(R.id.progress);
-                txtMessage = bottomView.findViewById(R.id.txtMessage);
                 progressBar.setProgressDrawable(context.getResources().getDrawable(R.drawable.custom_progress));
                 int value = (int) TimeUnit.MINUTES.toSeconds(PrefSiempo.getInstance(context).read(PrefSiempo.BREAK_PERIOD, 1));
                 progressBar.setMax(value);
@@ -1748,7 +1751,7 @@ public class StatusBarService extends Service {
                 break;
             case 6:
                 txtMessageTop.setVisibility(View.GONE);
-                txtMessageBottom.setVisibility(View.GONE);
+                //txtMessageBottom.setVisibility(View.GONE);
                 break;
 
         }
@@ -2024,15 +2027,16 @@ public class StatusBarService extends Service {
                 Intent intent = new Intent(context, AppAssignmentActivity.class);
                 intent.putExtra(Constants.INTENT_MAINLISTITEM, item);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("class_name", DashboardActivity.class.getSimpleName
-                        ().toString());
+                intent.putExtra("class_name", DashboardActivity.class.getSimpleName());
                 context.startActivity(intent);
             } else {
                 try {
                     new DBClient().deleteMsgByPackageName(map.get(MainListItemLoader.TOOLS_NOTES).getApplicationName());
                     Intent intent = context.getPackageManager().getLaunchIntentForPackage(map.get(MainListItemLoader.TOOLS_NOTES).getApplicationName());
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
+                    if (intent != null) {
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     CoreApplication.getInstance().logException(e);
