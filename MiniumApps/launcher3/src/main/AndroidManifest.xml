@@ -160,6 +160,10 @@
         <activity
             android:name=".activities.HelpActivity"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activities.ContributeActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.IntentionEditActivity"
             android:windowSoftInputMode="stateAlwaysVisible" />

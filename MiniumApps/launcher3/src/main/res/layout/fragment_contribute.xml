@@ -15,43 +15,51 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/dp_10"
-        android:text="Thank you for being part of our journey!
-As a beta user, Siempo will be free for you for life, but you are always welcome to contribute to our mission." />
+        android:text="@string/thank_you_for_"
+        android:textSize="@dimen/sp_15" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
         android:padding="@dimen/dp_10">
 
         <co.siempo.phone.customviews.RobotoMediumTextView
+            android:id="@+id/text"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="Select Amount" />
+            android:layout_weight="1"
+            android:gravity="center|right"
+            android:paddingRight="@dimen/dp_20"
+            android:text="Select Amount"
+            android:visibility="gone"
+            android:textSize="@dimen/sp_12" />
 
-        <Spinner
+        <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/spinnerContribute"
+            style="@style/Widget.AppCompat.Spinner.Underlined"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:gravity="center"
+            android:dropDownWidth="120dp"
+            android:gravity="right"
+            android:visibility="gone"
+            android:overlapAnchor="false"
             android:spinnerMode="dropdown" />
-
-        <TextView
-            android:id="@+id/txtSubmit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/dp_20"
-            android:background="@drawable/rounded_border"
-            android:gravity="center"
-            android:padding="@dimen/dp_10"
-            android:text="Submit"
-            android:textColor="@color/white" />
     </LinearLayout>
 
-
+    <TextView
+        android:id="@+id/txtSubmit"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dp_10"
+        android:background="@drawable/rounded_border"
+        android:gravity="center"
+        android:padding="@dimen/dp_10"
+        android:visibility="gone"
+        android:text="Submit"
+        android:textColor="@color/white" />
 </LinearLayout>
 
 

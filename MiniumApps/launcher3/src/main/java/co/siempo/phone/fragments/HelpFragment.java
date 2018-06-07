@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
+import co.siempo.phone.activities.ContributeActivity;
 import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.activities.HelpActivity;
 import co.siempo.phone.event.CheckVersionEvent;
@@ -142,8 +144,7 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
                 txtSendFeedback();
                 break;
             case R.id.relContribute:
-                ((CoreActivity) getActivity()).loadChildFragment(ContributeFragment_.builder()
-                        .build(), R.id.helpView);
+                startActivity(new Intent(getActivity(), ContributeActivity.class));
                 break;
             case R.id.relVersion:
                 checkUpgradeVersion();
