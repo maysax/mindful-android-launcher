@@ -788,6 +788,33 @@ public class StatusBarService extends Service {
         isFullScreenView = true;
         final int breakPeriod = PrefSiempo.getInstance(context).read(PrefSiempo.BREAK_PERIOD, 1);
         final long breakPeriod1 = breakPeriod * 60000;
+        strCoverMessage = "Your screen will return to normal in 60 seconds.\nHave a stretch and look at what's around you!";
+        if (isTopViewVisible && !isBottomViewVisible) {
+            if (null != txtMessageTop) {
+                txtMessageTop.setVisibility(View.VISIBLE);
+            }
+            if (null != txtMessageBottom) {
+                txtMessageBottom.setVisibility(View.GONE);
+            }
+        } else if (!isTopViewVisible && isBottomViewVisible) {
+            if (null != txtMessageTop) {
+                txtMessageTop.setVisibility(View.GONE);
+            }
+            if (null != txtMessageBottom) {
+                txtMessageBottom.setVisibility(View.VISIBLE);
+            }
+
+
+        } else if (isTopViewVisible && isBottomViewVisible) {
+            if (null != txtMessageTop) {
+                txtMessageTop.setVisibility(View.VISIBLE);
+            }
+            if (null != txtMessageBottom) {
+                txtMessageBottom.setVisibility(View.GONE);
+            }
+        }
+
+
         countDownTimerBreak = new CountDownTimer(breakPeriod1, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -797,16 +824,12 @@ public class StatusBarService extends Service {
                 if (wm != null && linProgress != null && txtCount != null) {
                     txtCount.setText("" + seconds);
                     progressBar.setProgress(seconds);
-                    if (txtMessageBottom != null) {
-                        if (txtMessageBottom.getVisibility() == View.GONE)
-                            txtMessageBottom.setVisibility(View.VISIBLE);
-                        strCoverMessage = "Your screen will return to normal in 60 seconds.\nHave a stretch and look at what's around you!";
-                    }
                     if (linProgressTop != null && linProgressTop.getVisibility()
                             == View.VISIBLE) {
                         txtCountTop.setText("" + seconds);
                         progressBarTop.setProgress(seconds);
                     }
+
                 }
             }
 
@@ -1617,6 +1640,12 @@ public class StatusBarService extends Service {
                                                     txtMessageTop.setVisibility(View.VISIBLE);
                                                     txtMessageBottom.setVisibility(View.GONE);
                                                 }
+                                                if (null != linButtonsTop &&
+                                                        linButtonsTop
+                                                                .getVisibility() == View.VISIBLE) {
+                                                    linButtonsTop
+                                                            .setVisibility(View.GONE);
+                                                }
                                                 variableMaxHeightPortrait = heightWindow / 2;
                                                 variableMaxHeightLandscape = heightWindowLandscape / 2;
                                                 isBottomViewVisible = true;
@@ -1837,8 +1866,30 @@ public class StatusBarService extends Service {
                 }
                 break;
             case 6:
-                txtMessageTop.setVisibility(View.GONE);
-                //txtMessageBottom.setVisibility(View.GONE);
+                if (isTopViewVisible && !isBottomViewVisible) {
+                    if (null != txtMessageTop) {
+                        txtMessageTop.setVisibility(View.VISIBLE);
+                    }
+                    if (null != txtMessageBottom) {
+                        txtMessageBottom.setVisibility(View.GONE);
+                    }
+                } else if (!isTopViewVisible && isBottomViewVisible) {
+                    if (null != txtMessageTop) {
+                        txtMessageTop.setVisibility(View.GONE);
+                    }
+                    if (null != txtMessageBottom) {
+                        txtMessageBottom.setVisibility(View.VISIBLE);
+                    }
+
+
+                } else if (isTopViewVisible && isBottomViewVisible) {
+                    if (null != txtMessageTop) {
+                        txtMessageTop.setVisibility(View.VISIBLE);
+                    }
+                    if (null != txtMessageBottom) {
+                        txtMessageBottom.setVisibility(View.GONE);
+                    }
+                }
                 break;
 
         }
