@@ -150,8 +150,8 @@ dependencies {
     annotationProcessor "org.androidannotations:androidannotations:$annotationsVersion"
     implementation "com.amitshekhar.android:android-networking:$fastAndroidNetworkingVersion"
     implementation "com.google.android.gms:play-services-location:12.0.0"
-    compile 'com.jaeger.statusbarutil:library:1.4.0'
-    compile 'com.rvalerio:fgchecker:1.1.0'
+    implementation 'com.jaeger.statusbarutil:library:1.4.0'
+    implementation 'com.rvalerio:fgchecker:1.1.0'
     implementation 'rongi.rotate-layout:rotate-layout:3.0.0'
 }
 greendao {

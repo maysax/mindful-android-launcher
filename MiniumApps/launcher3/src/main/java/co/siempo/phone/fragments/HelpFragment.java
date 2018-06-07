@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -13,13 +14,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
+import co.siempo.phone.activities.ContributeActivity;
 import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.activities.HelpActivity;
 import co.siempo.phone.event.CheckVersionEvent;
@@ -39,19 +40,16 @@ import de.greenrobot.event.Subscribe;
 public class HelpFragment extends Fragment implements View.OnClickListener {
 
     private Toolbar toolbar;
-    private TextView txtSendFeedback;
-    private TextView txtPrivacyPolicy;
-    private TextView txtFaq;
     private TextView txtVersionValue;
     private View view;
     private String TAG = "HelpFragment";
     private HelpActivity mActivity;
     private ProgressDialog progressDialog;
-    private LinearLayout lnrVersion;
-    private TextView txtTermsOfCondition;
+    private RelativeLayout relVersion;
     private RelativeLayout relPrivacyPolicy;
     private RelativeLayout relFaq;
     private RelativeLayout relTermsOfCondition;
+    private RelativeLayout relContribute;
     private RelativeLayout relFeedback;
 
     @Override
@@ -71,30 +69,6 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
 
 
         toolbar = view.findViewById(R.id.toolbar);
-
-        txtSendFeedback = view.findViewById(R.id.txtSendFeedback);
-        txtTermsOfCondition = view.findViewById(R.id.txtTermsOfCondition);
-        txtSendFeedback.setOnClickListener(this);
-        txtTermsOfCondition.setOnClickListener(this);
-
-        txtPrivacyPolicy = view.findViewById(R.id.txtPrivacyPolicy);
-        txtPrivacyPolicy.setOnClickListener(this);
-
-        txtFaq = view.findViewById(R.id.txtFaq);
-        relPrivacyPolicy = view.findViewById(R.id.relPrivacyPolicy);
-        relFaq = view.findViewById(R.id.relFaq);
-        relTermsOfCondition = view.findViewById(R.id.relTermsOfCondition);
-        relFeedback = view.findViewById(R.id.relFeedback);
-
-        txtFaq.setOnClickListener(this);
-        relPrivacyPolicy.setOnClickListener(this);
-        relFaq.setOnClickListener(this);
-        relTermsOfCondition.setOnClickListener(this);
-        relFeedback.setOnClickListener(this);
-
-        txtVersionValue = view.findViewById(R.id.txtVersionValue);
-        lnrVersion = view.findViewById(R.id.lnrVersion);
-
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
         toolbar.setTitle(R.string.help);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -104,6 +78,24 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
             }
         });
 
+        relPrivacyPolicy = view.findViewById(R.id.relPrivacyPolicy);
+        relFaq = view.findViewById(R.id.relFaq);
+        relTermsOfCondition = view.findViewById(R.id.relTermsOfCondition);
+        relFeedback = view.findViewById(R.id.relFeedback);
+        relContribute = view.findViewById(R.id.relContribute);
+        txtVersionValue = view.findViewById(R.id.txtVersionValue);
+        relVersion = view.findViewById(R.id.relVersion);
+
+        relPrivacyPolicy.setOnClickListener(this);
+        relFaq.setOnClickListener(this);
+        relTermsOfCondition.setOnClickListener(this);
+        relFeedback.setOnClickListener(this);
+        relFeedback.setOnClickListener(this);
+        relTermsOfCondition.setOnClickListener(this);
+        relContribute.setOnClickListener(this);
+        relVersion.setOnClickListener(this);
+
+
         String version = "";
         if (BuildConfig.FLAVOR.equalsIgnoreCase(getActivity().getString(R.string.alpha))) {
             version = "Siempo version : ALPHA-" + BuildConfig.VERSION_NAME;
@@ -112,13 +104,6 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
         }
         txtVersionValue.setText("" + version);
 
-
-        lnrVersion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkUpgradeVersion();
-            }
-        });
 
     }
 
@@ -146,32 +131,23 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.relFeedback:
-                txtSendFeedback();
-                break;
             case R.id.relFaq:
                 txtFaq();
                 break;
             case R.id.relPrivacyPolicy:
                 txtPrivacyPolicy();
                 break;
-
             case R.id.relTermsOfCondition:
                 termsOfServices();
                 break;
-
-            case R.id.txtSendFeedback:
+            case R.id.relFeedback:
                 txtSendFeedback();
                 break;
-            case R.id.txtFaq:
-                txtFaq();
+            case R.id.relContribute:
+                startActivity(new Intent(getActivity(), ContributeActivity.class));
                 break;
-            case R.id.txtPrivacyPolicy:
-                txtPrivacyPolicy();
-                break;
-
-            case R.id.txtTermsOfCondition:
-                termsOfServices();
+            case R.id.relVersion:
+                checkUpgradeVersion();
                 break;
             default:
                 break;

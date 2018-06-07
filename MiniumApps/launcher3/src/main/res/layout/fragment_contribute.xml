@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/toolbar_style"
+        app:titleTextColor="?attr/toolbar_text_color" />
+
+    <co.siempo.phone.customviews.RobotoMediumTextView
+        android:id="@+id/txtMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp_10"
+        android:text="@string/thank_you_for_"
+        android:textSize="@dimen/sp_15" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="@dimen/dp_10">
+
+        <co.siempo.phone.customviews.RobotoMediumTextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center|right"
+            android:paddingRight="@dimen/dp_20"
+            android:text="Select Amount"
+            android:visibility="gone"
+            android:textSize="@dimen/sp_12" />
+
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/spinnerContribute"
+            style="@style/Widget.AppCompat.Spinner.Underlined"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:dropDownWidth="120dp"
+            android:gravity="right"
+            android:visibility="gone"
+            android:overlapAnchor="false"
+            android:spinnerMode="dropdown" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtSubmit"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dp_10"
+        android:background="@drawable/rounded_border"
+        android:gravity="center"
+        android:padding="@dimen/dp_10"
+        android:visibility="gone"
+        android:text="Submit"
+        android:textColor="@color/white" />
+</LinearLayout>
+
+
