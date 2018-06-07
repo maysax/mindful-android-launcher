@@ -227,7 +227,9 @@ public class StatusBarService extends Service {
                     if (deterTime != -1) {
                         if (set.contains(process)) {
 //                            Log.d("DeterUse", "PackageName: " + process);
-                            startOverUser();
+                            if (isScreenOn) {
+                                startOverUser();
+                            }
                             if (spentTimeJunkFood == 0L) {
                                 startTimeJunkFood = System.currentTimeMillis();
                             }
@@ -1930,6 +1932,9 @@ public class StatusBarService extends Service {
 
             bottomView = null;
             topView = null;
+            if (null != paramsTop) {
+                paramsTop.height = 0;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
