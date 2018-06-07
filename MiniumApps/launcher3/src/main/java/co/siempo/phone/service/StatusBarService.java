@@ -33,6 +33,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.github.rongi.rotate_layout.layout.RotateLayout;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -142,6 +143,7 @@ public class StatusBarService extends Service {
     private DateChangeReceiver dateChangeReceiver;
     private int heightWindowLandscapeExclusive;
     private int coverTimeForWindow;
+    private RotateLayout rotateLayout;
 
     public StatusBarService() {
     }
@@ -165,6 +167,7 @@ public class StatusBarService extends Service {
         }
         size = new Point();
         display.getSize(size);
+
         resetAllTimer();
         screenHeightExclusive = (size.y - (getNavigationBarHeight()
                 + getStatusBarHeight()));
@@ -1420,9 +1423,10 @@ public class StatusBarService extends Service {
                 progressBar.setMax(value);
                 txtCount = bottomView.findViewById(R.id.txtCount);
                 txtMessageBottom = bottomView.findViewById(R.id.txtMessage);
-//                lnrRotateBottom = bottomView.findViewById(R.id.lnrRotate);
+                lnrRotateBottom = bottomView.findViewById(R.id.lnrRotate);
                 txtWellness = bottomView.findViewById(R.id.txtWellness);
                 txtSettings = bottomView.findViewById(R.id.txtSettings);
+                rotateLayout = bottomView.findViewById(R.id.rotateLayout);
                 if (isFullScreenView) {
                     if (paramsBottom.height != ViewGroup.LayoutParams.MATCH_PARENT) {
                         paramsBottom.height = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -1448,33 +1452,24 @@ public class StatusBarService extends Service {
                         linButtons.setVisibility(View.VISIBLE);
                 }
 
-//                lnrRotateBottom.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        if (null != bottomView && bottomView.getWindowToken() != null) {
-//                            if( paramsBottom.gravity == Gravity.RIGHT)
-//                            {
-//                                paramsBottom.gravity = Gravity.BOTTOM;
-//                            }
-//                            else
-//                            {
-//                                paramsBottom.gravity = Gravity.RIGHT;
-//                            }
-////                            paramsBottom.screenOrientation = Configuration
-////                                    .ORIENTATION_LANDSCAPE;
-////                            paramsBottom.gravity = Gravity.RIGHT;
+                lnrRotateBottom.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (null != bottomView && bottomView.getWindowToken() != null) {
 //
-////                            bottomView.setRotation(90);
-//                            bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
-//
-//                            wm.updateViewLayout(bottomView, paramsBottom);
-//                            Configuration newConfig = new Configuration();
-//                            newConfig.orientation = Configuration
-//                                    .ORIENTATION_LANDSCAPE;
-//                            onConfigurationChanged(newConfig);
-//                        }
-//                    }
-//                });
+
+
+                            paramsBottom.width = paramsBottom.height;
+                            paramsBottom.gravity=Gravity.RIGHT;
+                            paramsBottom.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                            rotateLayout.setAngle(90);
+
+                            bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
+
+                            wm.updateViewLayout(bottomView, paramsBottom);
+                        }
+                    }
+                });
 
                 txtTime.setOnClickListener(new View.OnClickListener() {
                     @Override

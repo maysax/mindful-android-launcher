@@ -23,6 +23,23 @@
         android:text="@string/take_a_one_minute_break_at_nany_time_to_remove_this_cover"
         android:textColor="@color/white"
         android:visibility="gone"/>
+    <LinearLayout
+        android:id="@+id/lnrRotate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/dp_5"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_5"
+        android:visibility="visible"
+        android:background="@color/white">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_rotate_cover"/>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linButtons"
