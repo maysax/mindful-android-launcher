@@ -28,6 +28,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -1456,16 +1457,12 @@ public class StatusBarService extends Service {
                     @Override
                     public void onClick(View v) {
                         if (null != bottomView && bottomView.getWindowToken() != null) {
-//
-
 
                             paramsBottom.width = paramsBottom.height;
                             paramsBottom.gravity=Gravity.RIGHT;
                             paramsBottom.height = ViewGroup.LayoutParams.MATCH_PARENT;
                             rotateLayout.setAngle(90);
-
                             bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
-
                             wm.updateViewLayout(bottomView, paramsBottom);
                         }
                     }
@@ -1924,6 +1921,16 @@ public class StatusBarService extends Service {
 
         if (null != txtMessageBottom) {
             txtMessageBottom.setText(strCoverMessage);
+            if(txtMessageBottom.getVisibility()== View.VISIBLE)
+            {
+                if(coverTimeForWindow>0) {
+                    lnrRotateBottom.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    lnrRotateBottom.setVisibility(View.GONE);
+                }
+            }
         }
         if (null != txtMessageTop) {
             txtMessageTop.setText(strCoverMessage);
