@@ -517,6 +517,8 @@
     <string name="settings">Settings</string>
     <string name="wellness">Wellness</string>
     <string name="msg_internet">Please check internet connection!</string>
+    <string name="contribute_to_siempo">Contribute to Siempo</string>
+    <string name="thank_you_for_">Thank you for being part of our journey! \nAs a beta user, Siempo will be free for you for life, but you are always welcome to contribute to our mission.</string>
 
 
     <string-array name="in_app_items_subscription">
@@ -534,6 +536,22 @@
         <!--<item>testing_monthly_dollers.01</item>-->
         <!--<item>android.test.purchased</item>-->
     </string-array>
+
+    <string-array name="in_app_items_donate">
+        <item>01</item>
+        <item>05</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>25</item>
+        <item>50</item>
+        <item>75</item>
+        <item>100</item>
+        <item>250</item>
+    </string-array>
+
+    <string name="donations__thanks_dialog">Thanks for donating!</string>
+
 
     <string-array name="deter_after_dialog">
         <item>0 minutes</item>ng
