@@ -134,6 +134,8 @@ public class StatusBarService extends Service {
     private boolean isTopViewVisible = false;
     private boolean isBottomViewVisible = true;
     private TextView txtMessageBottom;
+    private LinearLayout lnrRotateBottom;
+    private LinearLayout lnrRotateTop;
     private TextView txtMessageTop;
     private String strCoverMessage = "";
     private boolean isCoverTapped = false;
@@ -227,7 +229,9 @@ public class StatusBarService extends Service {
                     if (deterTime != -1) {
                         if (set.contains(process)) {
 //                            Log.d("DeterUse", "PackageName: " + process);
-                            startOverUser();
+                            if (isScreenOn) {
+                                startOverUser();
+                            }
                             if (spentTimeJunkFood == 0L) {
                                 startTimeJunkFood = System.currentTimeMillis();
                             }
@@ -1416,6 +1420,7 @@ public class StatusBarService extends Service {
                 progressBar.setMax(value);
                 txtCount = bottomView.findViewById(R.id.txtCount);
                 txtMessageBottom = bottomView.findViewById(R.id.txtMessage);
+//                lnrRotateBottom = bottomView.findViewById(R.id.lnrRotate);
                 txtWellness = bottomView.findViewById(R.id.txtWellness);
                 txtSettings = bottomView.findViewById(R.id.txtSettings);
                 if (isFullScreenView) {
@@ -1442,6 +1447,34 @@ public class StatusBarService extends Service {
                     if (linButtons != null)
                         linButtons.setVisibility(View.VISIBLE);
                 }
+
+//                lnrRotateBottom.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        if (null != bottomView && bottomView.getWindowToken() != null) {
+//                            if( paramsBottom.gravity == Gravity.RIGHT)
+//                            {
+//                                paramsBottom.gravity = Gravity.BOTTOM;
+//                            }
+//                            else
+//                            {
+//                                paramsBottom.gravity = Gravity.RIGHT;
+//                            }
+////                            paramsBottom.screenOrientation = Configuration
+////                                    .ORIENTATION_LANDSCAPE;
+////                            paramsBottom.gravity = Gravity.RIGHT;
+//
+////                            bottomView.setRotation(90);
+//                            bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
+//
+//                            wm.updateViewLayout(bottomView, paramsBottom);
+//                            Configuration newConfig = new Configuration();
+//                            newConfig.orientation = Configuration
+//                                    .ORIENTATION_LANDSCAPE;
+//                            onConfigurationChanged(newConfig);
+//                        }
+//                    }
+//                });
 
                 txtTime.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1930,6 +1963,9 @@ public class StatusBarService extends Service {
 
             bottomView = null;
             topView = null;
+            if (null != paramsTop) {
+                paramsTop.height = 0;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
