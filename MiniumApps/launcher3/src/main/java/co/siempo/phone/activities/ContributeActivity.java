@@ -161,6 +161,12 @@ public class ContributeActivity extends CoreActivity implements
     }
 
     @Override
+    public void onFailureInventory() {
+        Toast.makeText(this, "Unable to connect.", Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+    @Override
     public void onSuccess() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this)
                 .setTitle("")
@@ -206,7 +212,9 @@ public class ContributeActivity extends CoreActivity implements
 
                 holder = new viewHolder();
                 flater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                rowview = flater.inflate(R.layout.row_spinner, null, false);
+                if (flater != null) {
+                    rowview = flater.inflate(R.layout.row_spinner, null, false);
+                }
 
                 holder.txtTitle = rowview.findViewById(R.id.text1);
                 rowview.setTag(holder);

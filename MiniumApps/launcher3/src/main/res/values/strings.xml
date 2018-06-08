@@ -551,6 +551,9 @@
     </string-array>
 
     <string name="donations__thanks_dialog">Thanks for contributing!</string>
+    <string name="purchase">Purchase</string>
+    <string name="longitude">longitude</string>
+    <string name="latitude">latitude</string>
 
 
     <string-array name="deter_after_dialog">
