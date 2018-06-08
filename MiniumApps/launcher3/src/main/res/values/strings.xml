@@ -550,7 +550,7 @@
         <item>250</item>
     </string-array>
 
-    <string name="donations__thanks_dialog">Thanks for donating!</string>
+    <string name="donations__thanks_dialog">Thanks for contributing!</string>
 
 
     <string-array name="deter_after_dialog">
