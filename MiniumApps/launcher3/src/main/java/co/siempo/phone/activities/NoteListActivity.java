@@ -210,7 +210,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Init realIndexes array
-//        realIndexesOfSearchResults = new ArrayList<>();
+        realIndexesOfSearchResults = new ArrayList<>();
         // Initialize local file path and backup file path
         localPath = new File(getFilesDir() + "/" + NOTES_FILE_NAME);
 
