@@ -121,6 +121,7 @@ public class TempoHomeFragment extends CoreFragment {
                 if (isEnable
                         && !TextUtils.isEmpty(strImage)) {
                     PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_BAG_ENABLE, false);
+                    EventBus.getDefault().post(new NotifyBackgroundToService(false));
                     PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_BAG, "");
                     EventBus.getDefault().postSticky(new NotifyBackgroundChange(true));
                     switchCustomBackground.setChecked(false);
@@ -132,7 +133,6 @@ public class TempoHomeFragment extends CoreFragment {
                 } else if (!isEnable && !TextUtils.isEmpty(strImage)) {
                     PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_BAG_ENABLE, true);
                     EventBus.getDefault().postSticky(new NotifyBackgroundChange(true));
-                    EventBus.getDefault().post(new NotifyBackgroundToService(false));
                     switchCustomBackground.setChecked(true);
                 }
 
