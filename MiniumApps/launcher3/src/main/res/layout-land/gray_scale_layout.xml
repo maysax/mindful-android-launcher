@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#42A4FF"
-                android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootRelative"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#42A4FF"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@id/imgBackground"
+        android:scaleType="fitXY"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <TextView
         android:id="@+id/txtMessage"
@@ -19,10 +26,10 @@
         android:background="@drawable/transparent_bg_rounded"
         android:gravity="center|left"
         android:padding="@dimen/dp_5"
-        android:textSize="12sp"
         android:text="@string/take_a_one_minute_break_at_nany_time_to_remove_this_cover"
         android:textColor="@color/white"
-        android:visibility="gone"/>
+        android:textSize="12sp"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/linButtons"
@@ -47,10 +54,9 @@
             android:background="@drawable/rounded_card"
             android:gravity="center"
             android:paddingBottom="@dimen/dp_5"
-            android:paddingTop="@dimen/dp_5"
             android:paddingLeft="@dimen/dp_5"
             android:paddingRight="@dimen/dp_5"
-            >
+            android:paddingTop="@dimen/dp_5">
 
             <TextView
                 android:id="@+id/txtTime"
@@ -61,10 +67,10 @@
                 android:drawablePadding="@dimen/dp_5"
                 android:gravity="center"
                 android:textAllCaps="true"
-                android:textColor="#42A4FF"
                 android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#42A4FF"
                 android:textSize="12sp"
-                tools:text="00:00"/>
+                tools:text="00:00" />
         </LinearLayout>
 
         <LinearLayout
@@ -90,7 +96,7 @@
                 android:maxLines="1"
                 android:text="@string/settings"
                 android:textColor="#42A4FF"
-                android:textSize="12sp"/>
+                android:textSize="12sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -117,7 +123,7 @@
                 android:maxLines="1"
                 android:text="@string/wellness"
                 android:textColor="#42A4FF"
-                android:textSize="12sp"/>
+                android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -147,7 +153,7 @@
                 android:layout_height="wrap_content"
                 android:text="0"
                 android:textColor="#57000000"
-                android:textSize="12sp"/>
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/txtCount"
@@ -156,7 +162,7 @@
                 android:layout_alignParentRight="true"
                 android:text="60"
                 android:textColor="#57000000"
-                android:textSize="12sp"/>
+                android:textSize="12sp" />
         </RelativeLayout>
 
         <ProgressBar
@@ -168,7 +174,7 @@
             android:layout_marginRight="@dimen/dp_10"
             android:max="60"
             android:progress="1"
-            android:visibility="visible"/>
+            android:visibility="visible" />
     </LinearLayout>
 
 

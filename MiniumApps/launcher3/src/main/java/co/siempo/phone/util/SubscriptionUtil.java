@@ -180,7 +180,6 @@ public class SubscriptionUtil {
                                 SkuDetails sku = inventory.getSkuDetails(skuId);
                                 if (sku.getSku().equals(skuId)) {
                                     skuDetailsList.add(sku);
-                                    sku.getPrice();
                                 }
                             }
                         }
@@ -214,18 +213,20 @@ public class SubscriptionUtil {
                         if (result.isFailure()) {
                             Log.d("TEST", "Problem querying inventory: " + result);
                             dispose();
+                            subscriptionInventoryListener.onFailureInventory();
                             return;
-                        }
-                        ArrayList<SkuDetails> skuDetailsList = new ArrayList<>();
-                        for (String skuId : skuIdsList) {
-                            SkuDetails sku = inventory.getSkuDetails(skuId);
-                            if (sku.getSku().equals(skuId)) {
-                                skuDetailsList.add(sku);
+                        } else {
+                            ArrayList<SkuDetails> skuDetailsList = new ArrayList<>();
+                            for (String skuId : skuIdsList) {
+                                SkuDetails sku = inventory.getSkuDetails(skuId);
+                                if (sku.getSku().equals(skuId)) {
+                                    skuDetailsList.add(sku);
+                                }
                             }
-                        }
 
-                        if (subscriptionInventoryListener != null) {
-                            subscriptionInventoryListener.onQueryInventoryFinished(skuDetailsList, isFirstTime);
+                            if (subscriptionInventoryListener != null) {
+                                subscriptionInventoryListener.onQueryInventoryFinished(skuDetailsList, isFirstTime);
+                            }
                         }
                     }
                 });
@@ -260,6 +261,7 @@ public class SubscriptionUtil {
 
     public interface InAppInventoryListener {
         void onQueryInventoryFinished(ArrayList<SkuDetails> skuList, boolean isFirstTime);
+        void onFailureInventory();
     }
 
 

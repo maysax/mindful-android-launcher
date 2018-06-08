@@ -25,6 +25,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.activities.ChooseBackgroundActivity;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.NotifyBackgroundChange;
+import co.siempo.phone.event.NotifyBackgroundToService;
 import co.siempo.phone.event.ThemeChangeEvent;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.utils.PermissionUtil;
@@ -131,6 +132,7 @@ public class TempoHomeFragment extends CoreFragment {
                 } else if (!isEnable && !TextUtils.isEmpty(strImage)) {
                     PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_BAG_ENABLE, true);
                     EventBus.getDefault().postSticky(new NotifyBackgroundChange(true));
+                    EventBus.getDefault().post(new NotifyBackgroundToService(false));
                     switchCustomBackground.setChecked(true);
                 }
 
