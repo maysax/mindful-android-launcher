@@ -1798,7 +1798,9 @@ public class StatusBarService extends Service {
                                                     .getVisibility() == View.VISIBLE) {
                                                 txtMessageBottom.setVisibility(View.VISIBLE);
 
-                                                if (coverTimeForWindow > 0 && coverTimeForWindow < 6) {
+                                                if (coverTimeForWindow > 0 &&
+                                                        coverTimeForWindow < 6 &&
+                                                        !isFullScreenView) {
                                                     lnrRotateBottom.setVisibility(View
                                                             .VISIBLE);
                                                 } else {
@@ -2924,7 +2926,8 @@ public class StatusBarService extends Service {
         if (null != txtMessageBottom) {
             txtMessageBottom.setText(strCoverMessage);
             if (txtMessageBottom.getVisibility() == View.VISIBLE) {
-                if (coverTimeForWindow > 0 && coverTimeForWindow < 6) {
+                if (coverTimeForWindow > 0 && coverTimeForWindow < 6 &&
+                        !isFullScreenView) {
                     lnrRotateBottom.setVisibility(View.VISIBLE);
                 } else {
                     lnrRotateBottom.setVisibility(View.GONE);
@@ -2934,7 +2937,8 @@ public class StatusBarService extends Service {
 
         if (null != txtMessageTop) {
             if (txtMessageTop.getVisibility() == View.VISIBLE) {
-                if (coverTimeForWindow > 0 && coverTimeForWindow < 6) {
+                if (coverTimeForWindow > 0 && coverTimeForWindow < 6 &&
+                        !isFullScreenView) {
                     lnrRotateTop.setVisibility(View.VISIBLE);
                 } else {
                     lnrRotateTop.setVisibility(View.GONE);
