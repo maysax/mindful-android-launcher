@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.ContentObserver;
+import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.location.Location;
@@ -29,10 +30,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.github.rongi.rotate_layout.layout.RotateLayout;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -43,6 +50,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.rvalerio.fgchecker.AppChecker;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -65,6 +73,7 @@ import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBClient;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.LocationUpdateEvent;
+import co.siempo.phone.event.NotifyBackgroundToService;
 import co.siempo.phone.event.NotifySearchRefresh;
 import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.event.ReduceOverUsageEvent;
@@ -93,10 +102,13 @@ public class StatusBarService extends Service {
     public static double longitude = 0;
     private static int whichPhaseRunning = 0;// 0 for nothing,1 for Grace,2 for cover,3 for break;
     private static boolean deterUsageRunning = false;
+    public Bitmap bitmap;
     long spentTimeJunkFood = 0L;
     long startTimeJunkFood = 0L;
     Calendar calendar;
     boolean isScreenOn = true;
+    ImageView imgBackgroundTop, imgBackgroundBottom;
+    RelativeLayout rootRelativeTop, rootRelativeBottom;
     private Context context;
     private MyObserver myObserver;
     private AppInstallUninstall appInstallUninstall;
@@ -105,7 +117,8 @@ public class StatusBarService extends Service {
     private LocationRequest locationRequest;
     private LocationCallback mLocationCallback;
     private UserPresentBroadcastReceiver userPresentBroadcastReceiver;
-    private CountDownTimer countDownTimerGrace, countDownTimerCover, countDownTimerBreak;
+    private CountDownTimer countDownTimerGrace, countDownTimerCover,
+            countDownTimerBreak, countDownTimerAfterCover;
     private WindowManager wm;
     private View bottomView;
     private int heightWindow;
@@ -172,7 +185,6 @@ public class StatusBarService extends Service {
         }
         size = new Point();
         display.getSize(size);
-
         resetAllTimer();
         screenHeightExclusive = (size.y - (getNavigationBarHeight()
                 + getStatusBarHeight()));
@@ -261,6 +273,10 @@ public class StatusBarService extends Service {
                                             countDownTimerCover.cancel();
                                             countDownTimerCover = null;
                                         }
+                                        if (countDownTimerAfterCover != null) {
+                                            countDownTimerAfterCover.cancel();
+                                            countDownTimerAfterCover = null;
+                                        }
                                         startTimerForBreakPeriod();
                                     }
                                 }
@@ -273,7 +289,7 @@ public class StatusBarService extends Service {
         appChecker.whenAny(deterUse);
         appChecker.timeout(1000);
         appChecker.start(context);
-
+        getBitmap();
     }
 
     /**
@@ -614,6 +630,15 @@ public class StatusBarService extends Service {
     }
 
     @Subscribe
+    public void notifyBackgroundToService(NotifyBackgroundToService event) {
+        if (event.isNotify()) {
+            getBitmap();
+        } else {
+            bitmap = null;
+        }
+    }
+
+    @Subscribe
     public void reduceOverUsageEvent(ReduceOverUsageEvent reduceOverUsageEvent) {
         if (reduceOverUsageEvent.isStartEvent()) {
             resetAllTimer();
@@ -666,6 +691,10 @@ public class StatusBarService extends Service {
                     if (countDownTimerCover != null) {
                         countDownTimerCover.cancel();
                         countDownTimerCover = null;
+                    }
+                    if (countDownTimerAfterCover != null) {
+                        countDownTimerAfterCover.cancel();
+                        countDownTimerAfterCover = null;
                     }
                     long remainingTimeCover = 5 * 60000 - cover_time_completed;
                     countDownTimerBreak.cancel();
@@ -778,6 +807,38 @@ public class StatusBarService extends Service {
                 if (wm != null && txtTime != null) txtTime.setText(strTime);
                 if (wm != null && txtTimeTop != null) txtTimeTop.setText
                         (strTime);
+                startTimerAfterCover();
+
+            }
+        }.start();
+    }
+
+
+    private void startTimerAfterCover() {
+        final long time = 15 * 60000;
+        countDownTimerAfterCover = new CountDownTimer(time, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                long completedTime = (time - millisUntilFinished) + (5 * 60000);
+                int minutes = (int) (completedTime / (1000 * 60));
+                int seconds = (int) ((completedTime / 1000) % 60);
+
+                // store data in firebase how much time user spent with cover period.
+                long coverTimeSpent = PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_USAGE_COVER_TIME, 0L);
+                PrefSiempo.getInstance(context).write(PrefSiempo.JUNKFOOD_USAGE_COVER_TIME, coverTimeSpent + completedTime);
+
+                int deterTime = PrefSiempo.getInstance(context).read(PrefSiempo
+                        .DETER_AFTER, 0);
+                String strTime = String.format("%02d", (minutes + deterTime)) + ":" + String.format("%02d", seconds);
+                if (wm != null && txtTime != null) txtTime.setText(strTime);
+                if (wm != null && txtTimeTop != null) txtTimeTop.setText
+                        (strTime);
+
+            }
+
+            @Override
+            public void onFinish() {
+
 
             }
         }.start();
@@ -789,6 +850,20 @@ public class StatusBarService extends Service {
     private void startTimerForBreakPeriod() {
         whichPhaseRunning = 3;
         isFullScreenView = true;
+        if (null != lnrRotateTop) {
+            lnrRotateTop.setVisibility(View.GONE);
+        }
+
+        if (null != lnrRotateBottom) {
+            lnrRotateBottom.setVisibility(View.GONE);
+        }
+        if (null != lnrRotateTop) {
+            lnrRotateTop.setVisibility(View.GONE);
+        }
+
+        if (null != lnrRotateBottom) {
+            lnrRotateBottom.setVisibility(View.GONE);
+        }
         final int breakPeriod = PrefSiempo.getInstance(context).read(PrefSiempo.BREAK_PERIOD, 1);
         final long breakPeriod1 = breakPeriod * 60000;
         strCoverMessage = "Your screen will return to normal in 60 seconds.\nHave a stretch and look at what's around you!";
@@ -899,6 +974,10 @@ public class StatusBarService extends Service {
         if (countDownTimerCover != null) {
             countDownTimerCover.cancel();
             countDownTimerCover = null;
+        }
+        if (countDownTimerAfterCover != null) {
+            countDownTimerAfterCover.cancel();
+            countDownTimerAfterCover = null;
         }
         if (countDownTimerBreak != null) {
             countDownTimerBreak.cancel();
@@ -1107,6 +1186,8 @@ public class StatusBarService extends Service {
                 topView = ((LayoutInflater) getSystemService(Context
                         .LAYOUT_INFLATER_SERVICE)).inflate(R.layout
                         .gray_scale_layout_reverse, null);
+                imgBackgroundTop = topView.findViewById(R.id.imgBackground);
+                rootRelativeTop = topView.findViewById(R.id.rootRelative);
                 txtTimeTop = topView.findViewById(R.id.txtTime);
                 linButtonsTop = topView.findViewById(R.id.linButtons);
                 linProgressTop = topView.findViewById(R.id.linProgress);
@@ -1223,13 +1304,10 @@ public class StatusBarService extends Service {
                                 paramsTop.gravity = Gravity.RIGHT;
                                 int padding = UIUtils.dpToPx(context, 5);
                                 int paddingSide = UIUtils.dpToPx(context, 5);
-                                if(isLandscape)
-                                {
+                                if (isLandscape) {
                                     padding = UIUtils.dpToPx(context, 10);
 
-                                }
-                                else
-                                {
+                                } else {
                                     padding = UIUtils.dpToPx(context, 5);
 
                                 }
@@ -1240,27 +1318,24 @@ public class StatusBarService extends Service {
                                 if (linButtonsTop != null) {
                                     linButtonsTop.setPadding(0, padding, 0, padding);
                                 }
-                                if(lnrSettingsNote!=null)
-                                {
+                                if (lnrSettingsNote != null) {
                                     lnrSettingsNote.setPadding(paddingSide, padding, paddingSide, padding);
-                                }  if(lnrSettingsNoteTop!=null)
-                                {
+                                }
+                                if (lnrSettingsNoteTop != null) {
                                     lnrSettingsNoteTop.setPadding(paddingSide, padding, paddingSide, padding);
                                 }
 
-                                if(lnrWellness!=null)
-                                {
+                                if (lnrWellness != null) {
                                     lnrWellness.setPadding(paddingSide, padding, paddingSide, padding);
-                                }  if(lnrWellnessTop!=null)
-                                {
+                                }
+                                if (lnrWellnessTop != null) {
                                     lnrWellnessTop.setPadding(paddingSide, padding, paddingSide, padding);
                                 }
 
-                                if(lnrTime!=null)
-                                {
+                                if (lnrTime != null) {
                                     lnrTime.setPadding(paddingSide, padding, paddingSide, padding);
-                                }  if(lnrTimeTop!=null)
-                                {
+                                }
+                                if (lnrTimeTop != null) {
                                     lnrTimeTop.setPadding(paddingSide, padding, paddingSide, padding);
                                 }
 
@@ -1269,11 +1344,23 @@ public class StatusBarService extends Service {
                                 bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
                                 if (bottomView.getWindowToken() != null) {
                                     wm.updateViewLayout(bottomView, paramsBottom);
+                                    if (paramsBottom.height > 0 && bitmap != null) {
+                                        Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
+                                        if (imgBackgroundBottom != null) {
+                                            imgBackgroundBottom.setImageBitmap(bitbottom);
+                                        }
+                                    }
                                 }
                                 topView.setLayoutParams(new ViewGroup.LayoutParams
                                         (paramsTop));
 
                                 wm.updateViewLayout(topView, paramsTop);
+                                if (paramsTop.height > 0 && bitmap != null) {
+                                    Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
+                                    if (imgBackgroundTop != null) {
+                                        imgBackgroundTop.setImageBitmap(bit);
+                                    }
+                                }
 
                             } else {
                                 //switch case for height
@@ -1368,14 +1455,10 @@ public class StatusBarService extends Service {
                                 int paddingSide = UIUtils.dpToPx(context, 5);
 
 
-
-                                if(isLandscape)
-                                {
+                                if (isLandscape) {
                                     padding = UIUtils.dpToPx(context, 5);
 
-                                }
-                                else
-                                {
+                                } else {
                                     padding = UIUtils.dpToPx(context, 10);
 
                                 }
@@ -1388,30 +1471,27 @@ public class StatusBarService extends Service {
                                     linButtonsTop.setPadding(0, padding, 0,
                                             padding);
                                 }
-                                if(lnrSettingsNote!=null)
-                                {
+                                if (lnrSettingsNote != null) {
                                     lnrSettingsNote.setPadding(paddingSide, padding, paddingSide,
                                             padding);
-                                }  if(lnrSettingsNoteTop!=null)
-                                {
+                                }
+                                if (lnrSettingsNoteTop != null) {
                                     lnrSettingsNoteTop.setPadding(paddingSide, padding, paddingSide,
                                             padding);
                                 }
 
-                                if(lnrWellness!=null)
-                                {
+                                if (lnrWellness != null) {
                                     lnrWellness.setPadding(paddingSide, padding, paddingSide,
                                             padding);
-                                }  if(lnrWellnessTop!=null)
-                                {
+                                }
+                                if (lnrWellnessTop != null) {
                                     lnrWellnessTop.setPadding(paddingSide, padding, paddingSide,
                                             padding);
                                 }
-                                if(lnrTime!=null)
-                                {
+                                if (lnrTime != null) {
                                     lnrTime.setPadding(paddingSide, padding, paddingSide, padding);
-                                }  if(lnrTimeTop!=null)
-                                {
+                                }
+                                if (lnrTimeTop != null) {
                                     lnrTimeTop.setPadding(paddingSide, padding, paddingSide, padding);
                                 }
                                 rotateLayout.setAngle(0);
@@ -1420,8 +1500,20 @@ public class StatusBarService extends Service {
                                 topView.setLayoutParams(new ViewGroup.LayoutParams
                                         (paramsTop));
                                 wm.updateViewLayout(topView, paramsTop);
+                                if (paramsTop.height > 0 && bitmap != null) {
+                                    Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
+                                    if (imgBackgroundTop != null) {
+                                        imgBackgroundTop.setImageBitmap(bit);
+                                    }
+                                }
                                 if (bottomView.getWindowToken() != null) {
                                     wm.updateViewLayout(bottomView, paramsBottom);
+                                    if (paramsBottom.height > 0 && bitmap != null) {
+                                        Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
+                                        if (imgBackgroundBottom != null) {
+                                            imgBackgroundBottom.setImageBitmap(bitbottom);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -1434,6 +1526,7 @@ public class StatusBarService extends Service {
                                 (paramsTop));
                         if (wm != null && topView.getWindowToken() != null)
                             wm.updateViewLayout(topView, paramsTop);
+                        imgBackgroundTop.setImageBitmap(bitmap);
 
                         if (linProgressTop != null
                                 && !isBottomViewVisible) {
@@ -1448,6 +1541,11 @@ public class StatusBarService extends Service {
                             countDownTimerCover = null;
                             PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
                         }
+
+                        if (countDownTimerAfterCover != null) {
+                            countDownTimerAfterCover.cancel();
+                            countDownTimerAfterCover = null;
+                        }
                     }
 
                 } else {
@@ -1456,6 +1554,12 @@ public class StatusBarService extends Service {
                             (paramsTop));
                     if (wm != null && topView.getWindowToken() != null)
                         wm.updateViewLayout(topView, paramsTop);
+                    if (paramsTop.height > 0 && bitmap != null) {
+                        Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
+                        if (imgBackgroundTop != null) {
+                            imgBackgroundTop.setImageBitmap(bit);
+                        }
+                    }
                     if (linButtonsTop != null && isTopViewVisible &&
                             !isBottomViewVisible) {
                         linButtonsTop.setVisibility(View.VISIBLE);
@@ -1470,10 +1574,23 @@ public class StatusBarService extends Service {
 
                             if (!TextUtils.isEmpty(txtTimeTop.getText().toString())) {
                                 isFullScreenView = true;
+                                if (null != lnrRotateTop) {
+                                    lnrRotateTop.setVisibility(View.GONE);
+                                }
+
+                                if (null != lnrRotateBottom) {
+                                    lnrRotateBottom.setVisibility(View.GONE);
+                                }
                                 if (countDownTimerCover != null) {
                                     countDownTimerCover.cancel();
                                     countDownTimerCover = null;
                                 }
+
+                                if (countDownTimerAfterCover != null) {
+                                    countDownTimerAfterCover.cancel();
+                                    countDownTimerAfterCover = null;
+                                }
+
                                 PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
                                 paramsTop.height = ViewGroup.LayoutParams.MATCH_PARENT;
                                 paramsTop.width = ViewGroup.LayoutParams
@@ -1482,6 +1599,16 @@ public class StatusBarService extends Service {
                                 bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
                                 if (wm != null)
                                     wm.updateViewLayout(topView, paramsTop);
+                                if (paramsTop.height > 0 && bitmap != null) {
+                                    Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
+                                    if (imgBackgroundTop != null) {
+                                        imgBackgroundTop.setImageBitmap(bit);
+                                    }
+                                }
+                                if (imgBackgroundTop != null) {
+                                    imgBackgroundTop.setImageBitmap(bitmap);
+                                }
+
                                 if (linButtonsTop != null && linProgressTop != null) {
                                     linProgressTop.setVisibility(View.VISIBLE);
                                     linButtonsTop.setVisibility(View.GONE);
@@ -1546,19 +1673,27 @@ public class StatusBarService extends Service {
                     if (isTopViewVisible) {
                         topView.setLayoutParams(new ViewGroup.LayoutParams(paramsTop));
                         wm.addView(topView, paramsTop);
+                        if (paramsTop.height > 0 && bitmap != null) {
+                            Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
+                            if (imgBackgroundTop != null) {
+                                imgBackgroundTop.setImageBitmap(bit);
+                            }
+                        }
                     }
                     topView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             try {
-
-
                                 if (!isFullScreenView) {
-
                                     if (!isBottomViewVisible && coverTimeForWindow == 0) {
                                         if (topView.getWindowToken() != null) {
                                             wm.removeView(topView);
-
+                                        }
+                                        if (paramsTop.height > 0 && bitmap != null) {
+                                            Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
+                                            if (imgBackgroundTop != null) {
+                                                imgBackgroundTop.setImageBitmap(bit);
+                                            }
                                         }
                                         if (isLandscape) {
                                             paramsBottom.height =
@@ -1571,8 +1706,20 @@ public class StatusBarService extends Service {
                                                 (paramsBottom));
                                         if (bottomView.getWindowToken() != null) {
                                             wm.updateViewLayout(bottomView, paramsBottom);
+                                            if (paramsBottom.height > 0 && bitmap != null) {
+                                                Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
+                                                if (imgBackgroundBottom != null) {
+                                                    imgBackgroundBottom.setImageBitmap(bitbottom);
+                                                }
+                                            }
                                         } else {
                                             wm.addView(bottomView, paramsBottom);
+                                            if (paramsBottom.height > 0 && bitmap != null) {
+                                                Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
+                                                if (imgBackgroundBottom != null) {
+                                                    imgBackgroundBottom.setImageBitmap(bitbottom);
+                                                }
+                                            }
                                         }
 
                                         if (linButtons != null) {
@@ -1599,6 +1746,12 @@ public class StatusBarService extends Service {
                                                             (paramsBottom));
                                                     wm.updateViewLayout
                                                             (bottomView, paramsBottom);
+                                                    if (paramsBottom.height > 0 && bitmap != null) {
+                                                        Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
+                                                        if (imgBackgroundBottom != null) {
+                                                            imgBackgroundBottom.setImageBitmap(bitbottom);
+                                                        }
+                                                    }
                                                     paramsTop.height = 0;
                                                     isBottomViewVisible = true;
                                                     isTopViewVisible = false;
@@ -1622,6 +1775,12 @@ public class StatusBarService extends Service {
                                                             (paramsBottom));
                                                     wm.updateViewLayout
                                                             (bottomView, paramsBottom);
+                                                    if (paramsBottom.height > 0 && bitmap != null) {
+                                                        Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
+                                                        if (imgBackgroundBottom != null) {
+                                                            imgBackgroundBottom.setImageBitmap(bitbottom);
+                                                        }
+                                                    }
                                                     paramsTop.width = 0;
                                                     isBottomViewVisible = true;
                                                     isTopViewVisible = false;
@@ -1663,8 +1822,22 @@ public class StatusBarService extends Service {
                                                             (paramsBottom));
                                                     if (bottomView.getWindowToken() != null) {
                                                         wm.updateViewLayout(bottomView, paramsBottom);
+
+                                                        if (paramsBottom.height > 0 && bitmap != null) {
+                                                            Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
+                                                            if (imgBackgroundBottom != null) {
+                                                                imgBackgroundBottom.setImageBitmap(bitbottom);
+                                                            }
+                                                        }
                                                     } else {
                                                         wm.addView(bottomView, paramsBottom);
+
+                                                        if (paramsBottom.height > 0 && bitmap != null) {
+                                                            Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
+                                                            if (imgBackgroundBottom != null) {
+                                                                imgBackgroundBottom.setImageBitmap(bitbottom);
+                                                            }
+                                                        }
                                                     }
                                                     isBottomViewVisible = true;
                                                     isTopViewVisible = true;
@@ -1714,8 +1887,21 @@ public class StatusBarService extends Service {
                                                             (paramsBottom));
                                                     if (bottomView.getWindowToken() != null) {
                                                         wm.updateViewLayout(bottomView, paramsBottom);
+                                                        if (paramsBottom.height > 0 && bitmap != null) {
+                                                            Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
+                                                            if (imgBackgroundBottom != null) {
+                                                                imgBackgroundBottom.setImageBitmap(bitbottom);
+                                                            }
+                                                        }
                                                     } else {
                                                         wm.addView(bottomView, paramsBottom);
+
+                                                        if (paramsBottom.height > 0 && bitmap != null) {
+                                                            Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
+                                                            if (imgBackgroundBottom != null) {
+                                                                imgBackgroundBottom.setImageBitmap(bitbottom);
+                                                            }
+                                                        }
                                                     }
                                                 }
                                                 isBottomViewVisible = true;
@@ -1758,6 +1944,10 @@ public class StatusBarService extends Service {
                             countDownTimerCover = null;
                             PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
                         }
+                        if (countDownTimerAfterCover != null) {
+                            countDownTimerAfterCover.cancel();
+                            countDownTimerAfterCover = null;
+                        }
                     } else {
                         if (linButtonsTop != null && linProgressTop != null) {
                             linProgressTop.setVisibility(View.GONE);
@@ -1798,6 +1988,8 @@ public class StatusBarService extends Service {
                 bottomView = ((LayoutInflater) getSystemService(Context
                         .LAYOUT_INFLATER_SERVICE)).inflate(R.layout
                         .gray_scale_layout, null);
+                imgBackgroundBottom = bottomView.findViewById(R.id.imgBackground);
+                rootRelativeBottom = bottomView.findViewById(R.id.rootRelative);
                 txtTime = bottomView.findViewById(R.id.txtTime);
                 linButtons = bottomView.findViewById(R.id.linButtons);
                 linProgress = bottomView.findViewById(R.id.linProgress);
@@ -1820,15 +2012,28 @@ public class StatusBarService extends Service {
                         bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
                         if (wm != null && bottomView.getWindowToken() != null)
                             wm.updateViewLayout(bottomView, paramsBottom);
-
+                        if (imgBackgroundBottom != null) {
+                            imgBackgroundBottom.setImageBitmap(bitmap);
+                        }
                         if (linButtons != null && linProgress != null) {
                             linProgress.setVisibility(View.VISIBLE);
                             linButtons.setVisibility(View.GONE);
+                            if (null != lnrRotateTop) {
+                                lnrRotateTop.setVisibility(View.GONE);
+                            }
+
+                            if (null != lnrRotateBottom) {
+                                lnrRotateBottom.setVisibility(View.GONE);
+                            }
                         }
                         if (countDownTimerCover != null) {
                             countDownTimerCover.cancel();
                             countDownTimerCover = null;
                             PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
+                        }
+                        if (countDownTimerAfterCover != null) {
+                            countDownTimerAfterCover.cancel();
+                            countDownTimerAfterCover = null;
                         }
                     }
 
@@ -1887,13 +2092,10 @@ public class StatusBarService extends Service {
                                 rotateLayoutTop.setAngle(-90);
                                 int padding = UIUtils.dpToPx(context, 5);
                                 int paddingSide = UIUtils.dpToPx(context, 5);
-                                if(isLandscape)
-                                {
+                                if (isLandscape) {
                                     padding = UIUtils.dpToPx(context, 10);
 
-                                }
-                                else
-                                {
+                                } else {
                                     padding = UIUtils.dpToPx(context, 5);
 
                                 }
@@ -1907,27 +2109,24 @@ public class StatusBarService extends Service {
                                     linButtonsTop.setPadding(0, padding,
                                             0, padding);
                                 }
-                                if(lnrSettingsNote!=null)
-                                {
+                                if (lnrSettingsNote != null) {
                                     lnrSettingsNote.setPadding(paddingSide, padding, paddingSide, padding);
-                                }  if(lnrSettingsNoteTop!=null)
-                                {
+                                }
+                                if (lnrSettingsNoteTop != null) {
                                     lnrSettingsNoteTop.setPadding(paddingSide, padding, paddingSide, padding);
                                 }
 
-                                if(lnrWellness!=null)
-                                {
+                                if (lnrWellness != null) {
                                     lnrWellness.setPadding(paddingSide, padding, paddingSide, padding);
-                                }  if(lnrWellnessTop!=null)
-                                {
+                                }
+                                if (lnrWellnessTop != null) {
                                     lnrWellnessTop.setPadding(paddingSide, padding, paddingSide, padding);
                                 }
 
-                                if(lnrTime!=null)
-                                {
+                                if (lnrTime != null) {
                                     lnrTime.setPadding(paddingSide, padding, paddingSide, padding);
-                                }  if(lnrTimeTop!=null)
-                                {
+                                }
+                                if (lnrTimeTop != null) {
                                     lnrTimeTop.setPadding(paddingSide, padding, paddingSide, padding);
                                 }
 
@@ -1984,14 +2183,10 @@ public class StatusBarService extends Service {
                                 int paddingSide = UIUtils.dpToPx(context, 5);
 
 
-
-                                if(isLandscape)
-                                {
+                                if (isLandscape) {
                                     padding = UIUtils.dpToPx(context, 5);
 
-                                }
-                                else
-                                {
+                                } else {
                                     padding = UIUtils.dpToPx(context, 10);
 
                                 }
@@ -2004,37 +2199,34 @@ public class StatusBarService extends Service {
                                     linButtonsTop.setPadding(0,
                                             padding, 0, padding);
                                 }
-                                if(lnrSettingsNote!=null)
-                                {
+                                if (lnrSettingsNote != null) {
                                     lnrSettingsNote.setPadding(paddingSide,
                                             padding, paddingSide,
                                             padding);
-                                }  if(lnrSettingsNoteTop!=null)
-                                {
+                                }
+                                if (lnrSettingsNoteTop != null) {
                                     lnrSettingsNoteTop.setPadding(paddingSide,
                                             padding, paddingSide,
                                             padding);
                                 }
 
-                                if(lnrWellness!=null)
-                                {
+                                if (lnrWellness != null) {
                                     lnrWellness.setPadding(paddingSide,
                                             padding, paddingSide,
                                             padding);
-                                }  if(lnrWellnessTop!=null)
-                                {
+                                }
+                                if (lnrWellnessTop != null) {
                                     lnrWellnessTop.setPadding(paddingSide,
                                             padding, paddingSide,
                                             padding);
                                 }
 
-                                if(lnrTime!=null)
-                                {
+                                if (lnrTime != null) {
                                     lnrTime.setPadding(paddingSide,
                                             padding, paddingSide,
                                             padding);
-                                }  if(lnrTimeTop!=null)
-                                {
+                                }
+                                if (lnrTimeTop != null) {
                                     lnrTimeTop.setPadding(paddingSide,
                                             padding, paddingSide,
                                             padding);
@@ -2042,6 +2234,12 @@ public class StatusBarService extends Service {
 
                                 bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
                                 wm.updateViewLayout(bottomView, paramsBottom);
+                                if (paramsBottom.height > 0 && bitmap != null) {
+                                    Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
+                                    if (imgBackgroundBottom != null) {
+                                        imgBackgroundBottom.setImageBitmap(bitbottom);
+                                    }
+                                }
                             }
                         }
                     }
@@ -2054,9 +2252,20 @@ public class StatusBarService extends Service {
 
                             if (!TextUtils.isEmpty(txtTime.getText().toString())) {
                                 isFullScreenView = true;
+                                if (null != lnrRotateTop) {
+                                    lnrRotateTop.setVisibility(View.GONE);
+                                }
+
+                                if (null != lnrRotateBottom) {
+                                    lnrRotateBottom.setVisibility(View.GONE);
+                                }
                                 if (countDownTimerCover != null) {
                                     countDownTimerCover.cancel();
                                     countDownTimerCover = null;
+                                }
+                                if (countDownTimerAfterCover != null) {
+                                    countDownTimerAfterCover.cancel();
+                                    countDownTimerAfterCover = null;
                                 }
                                 PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
                                 paramsBottom.height = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -2065,9 +2274,18 @@ public class StatusBarService extends Service {
                                 bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
                                 if (wm != null)
                                     wm.updateViewLayout(bottomView, paramsBottom);
+                                imgBackgroundBottom.setImageBitmap(bitmap);
+
                                 if (linButtons != null && linProgress != null) {
                                     linProgress.setVisibility(View.VISIBLE);
                                     linButtons.setVisibility(View.GONE);
+                                    if (null != lnrRotateTop) {
+                                        lnrRotateTop.setVisibility(View.GONE);
+                                    }
+
+                                    if (null != lnrRotateBottom) {
+                                        lnrRotateBottom.setVisibility(View.GONE);
+                                    }
                                 }
                                 startTimerForBreakPeriod();
                                 PrefSiempo.getInstance(context).write
@@ -2137,6 +2355,12 @@ public class StatusBarService extends Service {
                     if (isBottomViewVisible) {
                         bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
                         wm.addView(bottomView, paramsBottom);
+                        if (paramsBottom.height > 0 && bitmap != null) {
+                            Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
+                            if (imgBackgroundBottom != null) {
+                                imgBackgroundBottom.setImageBitmap(bitbottom);
+                            }
+                        }
                     }
                     bottomView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -2149,13 +2373,15 @@ public class StatusBarService extends Service {
                                         if (bottomView.getWindowToken() != null) {
                                             wm.removeView(bottomView);
                                         }
-
+                                        if (paramsBottom.height > 0 && bitmap != null) {
+                                            Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
+                                            if (imgBackgroundBottom != null) {
+                                                imgBackgroundBottom.setImageBitmap(bitbottom);
+                                            }
+                                        }
                                         if (isLandscape) {
-
                                             paramsTop.height =
                                                     minusculeHeightLandscape;
-
-
                                         } else {
                                             paramsTop.height = minusculeHeight;
                                         }
@@ -2163,8 +2389,20 @@ public class StatusBarService extends Service {
                                                 (paramsTop));
                                         if (topView.getWindowToken() != null) {
                                             wm.updateViewLayout(topView, paramsTop);
+                                            if (paramsTop.height > 0 && bitmap != null) {
+                                                Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
+                                                if (imgBackgroundTop != null) {
+                                                    imgBackgroundTop.setImageBitmap(bit);
+                                                }
+                                            }
                                         } else {
                                             wm.addView(topView, paramsTop);
+                                            if (paramsTop.height > 0 && bitmap != null) {
+                                                Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
+                                                if (imgBackgroundTop != null) {
+                                                    imgBackgroundTop.setImageBitmap(bit);
+                                                }
+                                            }
                                         }
 
                                         if (linButtonsTop != null) {
@@ -2193,6 +2431,12 @@ public class StatusBarService extends Service {
                                                         .LayoutParams
                                                         (paramsTop));
                                                 wm.updateViewLayout(topView, paramsTop);
+                                                if (paramsTop.height > 0 && bitmap != null) {
+                                                    Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
+                                                    if (imgBackgroundTop != null) {
+                                                        imgBackgroundTop.setImageBitmap(bit);
+                                                    }
+                                                }
                                                 paramsBottom.height = 0;
                                                 isBottomViewVisible = false;
                                                 isTopViewVisible = true;
@@ -2208,6 +2452,12 @@ public class StatusBarService extends Service {
                                                         .LayoutParams
                                                         (paramsTop));
                                                 wm.updateViewLayout(topView, paramsTop);
+                                                if (paramsTop.height > 0 && bitmap != null) {
+                                                    Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
+                                                    if (imgBackgroundTop != null) {
+                                                        imgBackgroundTop.setImageBitmap(bit);
+                                                    }
+                                                }
                                                 paramsBottom.width = 0;
                                                 isBottomViewVisible = false;
                                                 isTopViewVisible = true;
@@ -2272,7 +2522,12 @@ public class StatusBarService extends Service {
                                                         bottomView.setLayoutParams(new ViewGroup.LayoutParams
                                                                 (paramsBottom));
                                                         wm.updateViewLayout(bottomView, paramsBottom);
-
+                                                        if (paramsBottom.height > 0 && bitmap != null) {
+                                                            Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
+                                                            if (imgBackgroundBottom != null) {
+                                                                imgBackgroundBottom.setImageBitmap(bitbottom);
+                                                            }
+                                                        }
                                                         if (paramsBottom
                                                                 .height == screenHeightExclusive * 2 / 9) {
                                                             strCoverMessage = "Ready for a break? " +
@@ -2285,8 +2540,22 @@ public class StatusBarService extends Service {
                                                                 (paramsTop));
                                                         if (topView.getWindowToken() != null) {
                                                             wm.updateViewLayout(topView, paramsTop);
+                                                            if (paramsTop.height > 0 && bitmap != null) {
+                                                                Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
+                                                                if (imgBackgroundTop != null) {
+                                                                    imgBackgroundTop.setImageBitmap(bit);
+                                                                }
+                                                            }
+
                                                         } else {
                                                             wm.addView(topView, paramsTop);
+                                                            if (paramsTop.height > 0 && bitmap != null) {
+                                                                Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
+                                                                if (imgBackgroundTop != null) {
+                                                                    imgBackgroundTop.setImageBitmap(bit);
+                                                                }
+                                                            }
+
                                                         }
                                                     }
                                                     if (txtMessageBottom.getVisibility() == View.VISIBLE) {
@@ -2346,7 +2615,12 @@ public class StatusBarService extends Service {
                                                         bottomView.setLayoutParams(new ViewGroup.LayoutParams
                                                                 (paramsBottom));
                                                         wm.updateViewLayout(bottomView, paramsBottom);
-
+                                                        if (paramsBottom.height > 0 && bitmap != null) {
+                                                            Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
+                                                            if (imgBackgroundBottom != null) {
+                                                                imgBackgroundBottom.setImageBitmap(bitbottom);
+                                                            }
+                                                        }
                                                         if (paramsBottom
                                                                 .height == screenHeightExclusive * 2 / 9) {
                                                             strCoverMessage = "Ready for a break? " +
@@ -2359,8 +2633,22 @@ public class StatusBarService extends Service {
                                                                 (paramsTop));
                                                         if (topView.getWindowToken() != null) {
                                                             wm.updateViewLayout(topView, paramsTop);
+                                                            if (paramsTop.height > 0 && bitmap != null) {
+                                                                Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
+                                                                if (imgBackgroundTop != null) {
+                                                                    imgBackgroundTop.setImageBitmap(bit);
+                                                                }
+                                                            }
+
                                                         } else {
                                                             wm.addView(topView, paramsTop);
+                                                            if (paramsTop.height > 0 && bitmap != null) {
+                                                                Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
+                                                                if (imgBackgroundTop != null) {
+                                                                    imgBackgroundTop.setImageBitmap(bit);
+                                                                }
+                                                            }
+
                                                         }
                                                     }
                                                     if (txtMessageBottom.getVisibility() == View.VISIBLE) {
@@ -2403,16 +2691,25 @@ public class StatusBarService extends Service {
             } else {
                 try {
                     if (isFullScreenView) {
-
-
                         if (linButtons != null && linProgress != null) {
                             linProgress.setVisibility(View.VISIBLE);
                             linButtons.setVisibility(View.GONE);
+                            if (null != lnrRotateTop) {
+                                lnrRotateTop.setVisibility(View.GONE);
+                            }
+
+                            if (null != lnrRotateBottom) {
+                                lnrRotateBottom.setVisibility(View.GONE);
+                            }
                         }
                         if (countDownTimerCover != null) {
                             countDownTimerCover.cancel();
                             countDownTimerCover = null;
                             PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
+                        }
+                        if (countDownTimerAfterCover != null) {
+                            countDownTimerAfterCover.cancel();
+                            countDownTimerAfterCover = null;
                         }
                     } else {
                         if (paramsBottom.height <= maxHeightCoverWindow) {
@@ -2424,11 +2721,23 @@ public class StatusBarService extends Service {
                             if (wm != null && bottomView != null && bottomView
                                     .getWindowToken() != null) {
                                 wm.updateViewLayout(bottomView, paramsBottom);
+                                if (paramsBottom.height > 0 && bitmap != null) {
+                                    Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
+                                    if (imgBackgroundBottom != null) {
+                                        imgBackgroundBottom.setImageBitmap(bitbottom);
+                                    }
+                                }
                             }
                             if (topView != null && topView.getWindowToken() != null) {
                                 topView.setLayoutParams(new ViewGroup.LayoutParams
                                         (paramsTop));
                                 wm.updateViewLayout(topView, paramsTop);
+                                if (paramsTop.height > 0 && bitmap != null) {
+                                    Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
+                                    if (imgBackgroundTop != null) {
+                                        imgBackgroundTop.setImageBitmap(bit);
+                                    }
+                                }
                             }
 
                         }
@@ -2604,6 +2913,10 @@ public class StatusBarService extends Service {
                     }
                 }
                 lnrRotateBottom.setVisibility(View.GONE);
+                if (imgBackgroundTop != null)
+                    imgBackgroundTop.setImageBitmap(bitmap);
+                if (imgBackgroundBottom != null)
+                    imgBackgroundBottom.setImageBitmap(bitmap);
                 break;
 
         }
@@ -2724,6 +3037,12 @@ public class StatusBarService extends Service {
                 paramsBottom.gravity = Gravity.CENTER;
                 if (null != wm) {
                     wm.updateViewLayout(bottomView, paramsBottom);
+                    if (paramsBottom.height > 0 && bitmap != null) {
+                        Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
+                        if (imgBackgroundBottom != null) {
+                            imgBackgroundBottom.setImageBitmap(bitbottom);
+                        }
+                    }
                 }
 
             }
@@ -2734,6 +3053,12 @@ public class StatusBarService extends Service {
                 paramsBottom.gravity = Gravity.BOTTOM;
                 if (null != wm) {
                     wm.updateViewLayout(bottomView, paramsBottom);
+                    if (paramsBottom.height > 0 && bitmap != null) {
+                        Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
+                        if (imgBackgroundBottom != null) {
+                            imgBackgroundBottom.setImageBitmap(bitbottom);
+                        }
+                    }
                 }
 
             }
@@ -2788,6 +3113,38 @@ public class StatusBarService extends Service {
                 }
             }
         }
+    }
+
+    private void getBitmap() {
+        String strImage = PrefSiempo.getInstance(context).read(PrefSiempo
+                .DEFAULT_BAG, "");
+        if (!strImage.equalsIgnoreCase("")) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ContextCompat.checkSelfPermission(context,
+                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    bindArrayOfImage(strImage);
+                }
+            } else {
+                bindArrayOfImage(strImage);
+            }
+        }
+    }
+
+    private void bindArrayOfImage(String strImage) {
+        Glide.with(this)
+                .load(Uri.fromFile(new File(strImage)))
+                .asBitmap()
+                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        try {
+                            bitmap = Bitmap.createScaledBitmap(resource, size.x, screenHeightExclusive, false);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 
     private class MyObserver extends ContentObserver {
@@ -2901,6 +3258,10 @@ public class StatusBarService extends Service {
                                 countDownTimerCover = null;
                                 startTimerForBreakPeriod();
                             }
+                            if (countDownTimerAfterCover != null) {
+                                countDownTimerAfterCover.cancel();
+                                countDownTimerAfterCover = null;
+                            }
                         }
                     }
 
@@ -2942,8 +3303,7 @@ public class StatusBarService extends Service {
                 e.printStackTrace();
             }
         }
+
     }
-
-
 }
 

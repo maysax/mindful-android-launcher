@@ -50,7 +50,8 @@
             android:layout_marginLeft="@dimen/dp_10"
             android:layout_marginRight="@dimen/dp_10"
             android:layout_marginTop="@dimen/dp_5"
-            android:background="@color/white"
+            android:padding="5dp"
+            android:background="@drawable/rounded_card_rotate"
             android:visibility="gone">
 
             <ImageView
