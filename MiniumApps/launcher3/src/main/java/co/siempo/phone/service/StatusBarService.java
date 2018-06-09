@@ -1171,7 +1171,7 @@ public class StatusBarService extends Service {
                             (paramsTop));
                     if (wm != null && topView.getWindowToken() != null)
                         wm.updateViewLayout(topView, paramsTop);
-                    if (paramsTop.height > 0) {
+                    if (paramsTop.height > 0 && bitmap != null) {
                         Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
                         if (imgBackgroundTop != null) {
                             imgBackgroundTop.setImageBitmap(bit);
@@ -1268,7 +1268,7 @@ public class StatusBarService extends Service {
                     if (isTopViewVisible) {
                         topView.setLayoutParams(new ViewGroup.LayoutParams(paramsTop));
                         wm.addView(topView, paramsTop);
-                        if (paramsTop.height > 0) {
+                        if (paramsTop.height > 0 && bitmap != null) {
                             Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
                             if (imgBackgroundTop != null) {
                                 imgBackgroundTop.setImageBitmap(bit);
@@ -1284,7 +1284,7 @@ public class StatusBarService extends Service {
                                         if (topView.getWindowToken() != null) {
                                             wm.removeView(topView);
                                         }
-                                        if (paramsTop.height > 0) {
+                                        if (paramsTop.height > 0 && bitmap != null) {
                                             Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
                                             if (imgBackgroundTop != null) {
                                                 imgBackgroundTop.setImageBitmap(bit);
@@ -1301,7 +1301,7 @@ public class StatusBarService extends Service {
                                                 (paramsBottom));
                                         if (bottomView.getWindowToken() != null) {
                                             wm.updateViewLayout(bottomView, paramsBottom);
-                                            if (paramsBottom.height > 0) {
+                                            if (paramsBottom.height > 0 && bitmap != null) {
                                                 Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
                                                 if (imgBackgroundBottom != null) {
                                                     imgBackgroundBottom.setImageBitmap(bitbottom);
@@ -1309,7 +1309,7 @@ public class StatusBarService extends Service {
                                             }
                                         } else {
                                             wm.addView(bottomView, paramsBottom);
-                                            if (paramsBottom.height > 0) {
+                                            if (paramsBottom.height > 0 && bitmap != null) {
                                                 Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
                                                 if (imgBackgroundBottom != null) {
                                                     imgBackgroundBottom.setImageBitmap(bitbottom);
@@ -1351,13 +1351,13 @@ public class StatusBarService extends Service {
                                                     txtMessageBottom.setVisibility(View.VISIBLE);
 
                                                 }
-                                                if (paramsTop.height > 0) {
+                                                if (paramsTop.height > 0 && bitmap != null) {
                                                     Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
                                                     if (imgBackgroundTop != null) {
                                                         imgBackgroundTop.setImageBitmap(bit);
                                                     }
                                                 }
-                                                if (paramsBottom.height > 0) {
+                                                if (paramsBottom.height > 0 && bitmap != null) {
                                                     Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
                                                     if (imgBackgroundBottom != null) {
                                                         imgBackgroundBottom.setImageBitmap(bitbottom);
@@ -1374,7 +1374,7 @@ public class StatusBarService extends Service {
                                                 topView.setLayoutParams(new ViewGroup.LayoutParams
                                                         (paramsTop));
                                                 wm.updateViewLayout(topView, paramsTop);
-                                                if (paramsTop.height > 0) {
+                                                if (paramsTop.height > 0 && bitmap != null) {
                                                     Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
                                                     if (imgBackgroundTop != null) {
                                                         imgBackgroundTop.setImageBitmap(bit);
@@ -1385,7 +1385,7 @@ public class StatusBarService extends Service {
                                                         (paramsBottom));
                                                 if (bottomView.getWindowToken() != null) {
                                                     wm.updateViewLayout(bottomView, paramsBottom);
-                                                    if (paramsBottom.height > 0) {
+                                                    if (paramsBottom.height > 0 && bitmap != null) {
                                                         Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
                                                         if (imgBackgroundBottom != null) {
                                                             imgBackgroundBottom.setImageBitmap(bitbottom);
@@ -1393,7 +1393,7 @@ public class StatusBarService extends Service {
                                                     }
                                                 } else {
                                                     wm.addView(bottomView, paramsBottom);
-                                                    if (paramsBottom.height > 0) {
+                                                    if (paramsBottom.height > 0 && bitmap != null) {
                                                         Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
                                                         if (imgBackgroundBottom != null) {
                                                             imgBackgroundBottom.setImageBitmap(bitbottom);
@@ -1412,7 +1412,7 @@ public class StatusBarService extends Service {
                                                 topView.setLayoutParams(new ViewGroup.LayoutParams
                                                         (paramsTop));
                                                 wm.updateViewLayout(topView, paramsTop);
-                                                if (paramsTop.height > 0) {
+                                                if (paramsTop.height > 0 && bitmap != null) {
                                                     Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
                                                     if (imgBackgroundTop != null) {
                                                         imgBackgroundTop.setImageBitmap(bit);
@@ -1425,7 +1425,7 @@ public class StatusBarService extends Service {
                                                         (paramsBottom));
                                                 if (bottomView.getWindowToken() != null) {
                                                     wm.updateViewLayout(bottomView, paramsBottom);
-                                                    if (paramsBottom.height > 0) {
+                                                    if (paramsBottom.height > 0 && bitmap != null) {
                                                         Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
                                                         if (imgBackgroundBottom != null) {
                                                             imgBackgroundBottom.setImageBitmap(bitbottom);
@@ -1433,7 +1433,7 @@ public class StatusBarService extends Service {
                                                     }
                                                 } else {
                                                     wm.addView(bottomView, paramsBottom);
-                                                    if (paramsBottom.height > 0) {
+                                                    if (paramsBottom.height > 0 && bitmap != null) {
                                                         Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
                                                         if (imgBackgroundBottom != null) {
                                                             imgBackgroundBottom.setImageBitmap(bitbottom);
@@ -1501,7 +1501,7 @@ public class StatusBarService extends Service {
                             if (topView != null && topView.getWindowToken() != null) {
 
                                 wm.updateViewLayout(topView, paramsTop);
-                                if (paramsTop.height > 0) {
+                                if (paramsTop.height > 0 && bitmap != null) {
                                     Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
                                     if (imgBackgroundTop != null) {
                                         imgBackgroundTop.setImageBitmap(bit);
@@ -1680,7 +1680,7 @@ public class StatusBarService extends Service {
                     if (isBottomViewVisible) {
                         bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
                         wm.addView(bottomView, paramsBottom);
-                        if (paramsBottom.height > 0) {
+                        if (paramsBottom.height > 0 && bitmap != null) {
                             Bitmap bit = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
                             if (imgBackgroundBottom != null) {
                                 imgBackgroundBottom.setImageBitmap(bit);
@@ -1698,7 +1698,7 @@ public class StatusBarService extends Service {
                                         if (bottomView.getWindowToken() != null) {
                                             wm.removeView(bottomView);
                                         }
-                                        if (paramsBottom.height > 0) {
+                                        if (paramsBottom.height > 0 && bitmap != null) {
                                             Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
                                             if (imgBackgroundBottom != null) {
                                                 imgBackgroundBottom.setImageBitmap(bitbottom);
@@ -1714,7 +1714,7 @@ public class StatusBarService extends Service {
                                                 (paramsTop));
                                         if (topView.getWindowToken() != null) {
                                             wm.updateViewLayout(topView, paramsTop);
-                                            if (paramsTop.height > 0) {
+                                            if (paramsTop.height > 0 && bitmap != null) {
                                                 Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
                                                 if (imgBackgroundTop != null) {
                                                     imgBackgroundTop.setImageBitmap(bit);
@@ -1722,7 +1722,7 @@ public class StatusBarService extends Service {
                                             }
                                         } else {
                                             wm.addView(topView, paramsTop);
-                                            if (paramsTop.height > 0) {
+                                            if (paramsTop.height > 0 && bitmap != null) {
                                                 Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
                                                 if (imgBackgroundTop != null) {
                                                     imgBackgroundTop.setImageBitmap(bit);
@@ -1754,7 +1754,7 @@ public class StatusBarService extends Service {
                                                     .LayoutParams
                                                     (paramsTop));
                                             wm.updateViewLayout(topView, paramsTop);
-                                            if (paramsTop.height > 0) {
+                                            if (paramsTop.height > 0 && bitmap != null) {
                                                 Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
                                                 if (imgBackgroundTop != null) {
                                                     imgBackgroundTop.setImageBitmap(bit);
@@ -1795,7 +1795,7 @@ public class StatusBarService extends Service {
                                                     bottomView.setLayoutParams(new ViewGroup.LayoutParams
                                                             (paramsBottom));
                                                     wm.updateViewLayout(bottomView, paramsBottom);
-                                                    if (paramsBottom.height > 0) {
+                                                    if (paramsBottom.height > 0 && bitmap != null) {
                                                         Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
                                                         if (imgBackgroundBottom != null) {
                                                             imgBackgroundBottom.setImageBitmap(bitbottom);
@@ -1813,7 +1813,7 @@ public class StatusBarService extends Service {
                                                             (paramsTop));
                                                     if (topView.getWindowToken() != null) {
                                                         wm.updateViewLayout(topView, paramsTop);
-                                                        if (paramsTop.height > 0) {
+                                                        if (paramsTop.height > 0 && bitmap != null) {
                                                             Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
                                                             if (imgBackgroundTop != null) {
                                                                 imgBackgroundTop.setImageBitmap(bit);
@@ -1821,7 +1821,7 @@ public class StatusBarService extends Service {
                                                         }
                                                     } else {
                                                         wm.addView(topView, paramsTop);
-                                                        if (paramsTop.height > 0) {
+                                                        if (paramsTop.height > 0 && bitmap != null) {
                                                             Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
                                                             if (imgBackgroundTop != null) {
                                                                 imgBackgroundTop.setImageBitmap(bit);
@@ -1878,7 +1878,7 @@ public class StatusBarService extends Service {
                             if (wm != null && bottomView != null && bottomView
                                     .getWindowToken() != null) {
                                 wm.updateViewLayout(bottomView, paramsBottom);
-                                if (paramsBottom.height > 0) {
+                                if (paramsBottom.height > 0 && bitmap != null) {
                                     Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
                                     if (imgBackgroundBottom != null) {
                                         imgBackgroundBottom.setImageBitmap(bitbottom);
@@ -1889,7 +1889,7 @@ public class StatusBarService extends Service {
                                 topView.setLayoutParams(new ViewGroup.LayoutParams
                                         (paramsTop));
                                 wm.updateViewLayout(topView, paramsTop);
-                                if (paramsTop.height > 0) {
+                                if (paramsTop.height > 0 && bitmap != null) {
                                     Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
                                     if (imgBackgroundTop != null) {
                                         imgBackgroundTop.setImageBitmap(bit);
@@ -2202,7 +2202,7 @@ public class StatusBarService extends Service {
                 paramsBottom.gravity = Gravity.CENTER;
                 if (null != wm) {
                     wm.updateViewLayout(bottomView, paramsBottom);
-                    if (paramsBottom.height > 0) {
+                    if (paramsBottom.height > 0 && bitmap != null) {
                         Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
                         if (imgBackgroundBottom != null) {
                             imgBackgroundBottom.setImageBitmap(bitbottom);
@@ -2218,7 +2218,7 @@ public class StatusBarService extends Service {
                 paramsBottom.gravity = Gravity.BOTTOM;
                 if (null != wm) {
                     wm.updateViewLayout(bottomView, paramsBottom);
-                    if (paramsBottom.height > 0) {
+                    if (paramsBottom.height > 0 && bitmap != null) {
                         Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
                         if (imgBackgroundBottom != null) {
                             imgBackgroundBottom.setImageBitmap(bitbottom);
