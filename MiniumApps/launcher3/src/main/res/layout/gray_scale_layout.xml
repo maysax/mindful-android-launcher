@@ -65,6 +65,7 @@
             android:weightSum="3">
 
             <LinearLayout
+                android:id="@+id/lnrTime"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -92,6 +93,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/lnrSettingsNote"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -118,6 +120,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/lnrWellness"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

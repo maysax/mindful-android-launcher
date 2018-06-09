@@ -143,6 +143,12 @@ public class StatusBarService extends Service {
     private int coverTimeForWindow;
     private RotateLayout rotateLayout;
     private RotateLayout rotateLayoutTop;
+    private LinearLayout lnrTime;
+    private LinearLayout lnrSettingsNote;
+    private LinearLayout lnrWellness;
+    private LinearLayout lnrTimeTop;
+    private LinearLayout lnrSettingsNoteTop;
+    private LinearLayout lnrWellnessTop;
 
     public StatusBarService() {
     }
@@ -1114,6 +1120,9 @@ public class StatusBarService extends Service {
                 txtSettingsTop = topView.findViewById(R.id.txtSettings);
                 rotateLayoutTop = topView.findViewById(R.id.rotateLayout);
                 lnrRotateTop = topView.findViewById(R.id.lnrRotate);
+                lnrTimeTop = topView.findViewById(R.id.lnrTime);
+                lnrSettingsNoteTop = topView.findViewById(R.id.lnrSettingsNote);
+                lnrWellnessTop = topView.findViewById(R.id.lnrWellness);
                 lnrRotateTop.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -1132,35 +1141,129 @@ public class StatusBarService extends Service {
                                 //switch case for width
                                 switch (coverTimeForWindow) {
                                     case 1:
-                                        paramsTop.width =
-                                                widthOfscreen * 2 / 9;
+                                        if (isTopViewVisible && isBottomViewVisible) {
+                                            paramsTop.width =
+                                                    (widthOfscreen * 2 / 9) / 2;
+                                            paramsBottom.width =
+                                                    (widthOfscreen * 2 / 9) / 2;
+                                        } else if (isTopViewVisible &&
+                                                !isBottomViewVisible) {
+                                            paramsTop.width =
+                                                    widthOfscreen * 2 / 9;
+                                        }
+
 
                                         break;
                                     case 2:
-                                        paramsTop.width =
-                                                widthOfscreen * 3 / 9;
+                                        if (isTopViewVisible && isBottomViewVisible) {
+                                            paramsTop.width =
+                                                    (widthOfscreen * 3 / 9) / 2;
+                                            paramsBottom.width =
+                                                    (widthOfscreen * 3 / 9) / 2;
+                                        } else if (isTopViewVisible &&
+                                                !isBottomViewVisible) {
+                                            paramsTop.width =
+                                                    widthOfscreen * 3 / 9;
+                                        }
+
+
                                         break;
 
                                     case 3:
-                                        paramsTop.width =
-                                                widthOfscreen * 4 / 9;
+
+                                        if (isTopViewVisible && isBottomViewVisible) {
+                                            paramsTop.width =
+                                                    (widthOfscreen * 4 / 9) / 2;
+                                            paramsBottom.width =
+                                                    (widthOfscreen * 4 / 9) / 2;
+                                        } else if (isTopViewVisible &&
+                                                !isBottomViewVisible) {
+                                            paramsTop.width =
+                                                    widthOfscreen * 4 / 9;
+                                        }
+
                                         break;
 
                                     case 4:
-                                        paramsTop.width =
-                                                widthOfscreen * 5 / 9;
+                                        if (isTopViewVisible && isBottomViewVisible) {
+                                            paramsTop.width =
+                                                    (widthOfscreen * 5 / 9) / 2;
+                                            paramsBottom.width =
+                                                    (widthOfscreen * 5 / 9) / 2;
+                                        } else if (isTopViewVisible &&
+                                                !isBottomViewVisible) {
+                                            paramsTop.width =
+                                                    widthOfscreen * 5 / 9;
+                                        }
+
                                         break;
 
                                     case 5:
-                                        paramsTop.width =
-                                                widthOfscreen * 6 / 9;
+                                        if (isTopViewVisible && isBottomViewVisible) {
+                                            paramsTop.width =
+                                                    (widthOfscreen * 6 / 9) / 2;
+                                            paramsBottom.width =
+                                                    (widthOfscreen * 6 / 9) / 2;
+                                        } else if (isTopViewVisible &&
+                                                !isBottomViewVisible) {
+                                            paramsTop.width =
+                                                    widthOfscreen * 6 / 9;
+                                        }
+
                                         break;
                                 }
                                 paramsTop.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                                if (isBottomViewVisible) {
+                                    paramsBottom.height = ViewGroup.LayoutParams
+                                            .MATCH_PARENT;
+                                }
                                 paramsBottom.height = ViewGroup.LayoutParams
                                         .MATCH_PARENT;
                                 paramsBottom.gravity = Gravity.LEFT;
                                 paramsTop.gravity = Gravity.RIGHT;
+                                int padding = UIUtils.dpToPx(context, 5);
+                                int paddingSide = UIUtils.dpToPx(context, 5);
+                                if(isLandscape)
+                                {
+                                    padding = UIUtils.dpToPx(context, 10);
+
+                                }
+                                else
+                                {
+                                    padding = UIUtils.dpToPx(context, 5);
+
+                                }
+                                if (linButtons != null) {
+                                    linButtons.setPadding(0, padding, 0, padding);
+                                }
+
+                                if (linButtonsTop != null) {
+                                    linButtonsTop.setPadding(0, padding, 0, padding);
+                                }
+                                if(lnrSettingsNote!=null)
+                                {
+                                    lnrSettingsNote.setPadding(paddingSide, padding, paddingSide, padding);
+                                }  if(lnrSettingsNoteTop!=null)
+                                {
+                                    lnrSettingsNoteTop.setPadding(paddingSide, padding, paddingSide, padding);
+                                }
+
+                                if(lnrWellness!=null)
+                                {
+                                    lnrWellness.setPadding(paddingSide, padding, paddingSide, padding);
+                                }  if(lnrWellnessTop!=null)
+                                {
+                                    lnrWellnessTop.setPadding(paddingSide, padding, paddingSide, padding);
+                                }
+
+                                if(lnrTime!=null)
+                                {
+                                    lnrTime.setPadding(paddingSide, padding, paddingSide, padding);
+                                }  if(lnrTimeTop!=null)
+                                {
+                                    lnrTimeTop.setPadding(paddingSide, padding, paddingSide, padding);
+                                }
+
                                 rotateLayout.setAngle(270);
                                 rotateLayoutTop.setAngle(-90);
                                 bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
@@ -1183,39 +1286,134 @@ public class StatusBarService extends Service {
 
                                 switch (coverTimeForWindow) {
                                     case 1:
-                                        paramsTop.height =
-                                                heightOfscreen * 2 / 9;
+                                        if (isTopViewVisible && isBottomViewVisible) {
+                                            paramsTop.height =
+                                                    (heightOfscreen * 2 / 9) / 2;
+                                            paramsBottom.height =
+                                                    (heightOfscreen * 2 / 9) / 2;
+                                        } else if (isTopViewVisible &&
+                                                !isBottomViewVisible) {
+                                            paramsTop.height =
+                                                    heightOfscreen * 2 / 9;
+                                        }
 
                                         break;
                                     case 2:
-                                        paramsTop.height =
-                                                heightOfscreen * 3 / 9;
+                                        if (isTopViewVisible && isBottomViewVisible) {
+                                            paramsTop.height =
+                                                    (heightOfscreen * 3 / 9) / 2;
+                                            paramsBottom.height =
+                                                    (heightOfscreen * 3 / 9) / 2;
+                                        } else if (isTopViewVisible &&
+                                                !isBottomViewVisible) {
+                                            paramsTop.height =
+                                                    heightOfscreen * 3 / 9;
+                                        }
+
                                         break;
 
                                     case 3:
-                                        paramsTop.height =
-                                                heightOfscreen * 4 / 9;
+                                        if (isTopViewVisible && isBottomViewVisible) {
+                                            paramsTop.height =
+                                                    (heightOfscreen * 4 / 9) / 2;
+                                            paramsBottom.height =
+                                                    (heightOfscreen * 4 / 9) / 2;
+                                        } else if (isTopViewVisible &&
+                                                !isBottomViewVisible) {
+                                            paramsTop.height =
+                                                    heightOfscreen * 4 / 9;
+                                        }
+
                                         break;
 
                                     case 4:
-                                        paramsTop.height =
-                                                heightOfscreen * 5 / 9;
+                                        if (isTopViewVisible && isBottomViewVisible) {
+                                            paramsTop.height =
+                                                    (heightOfscreen * 5 / 9) / 2;
+                                            paramsBottom.height =
+                                                    (heightOfscreen * 5 / 9) / 2;
+                                        } else if (isTopViewVisible &&
+                                                !isBottomViewVisible) {
+                                            paramsTop.height =
+                                                    heightOfscreen * 5 / 9;
+                                        }
                                         break;
 
                                     case 5:
-                                        paramsTop.height =
-                                                heightOfscreen * 6 / 9;
+                                        if (isTopViewVisible && isBottomViewVisible) {
+                                            paramsTop.height =
+                                                    (heightOfscreen * 6 / 9) / 2;
+                                            paramsBottom.height =
+                                                    (heightOfscreen * 6 / 9) / 2;
+                                        } else if (isTopViewVisible &&
+                                                !isBottomViewVisible) {
+                                            paramsTop.height =
+                                                    heightOfscreen * 6 / 9;
+                                        }
+
                                         break;
                                 }
                                 paramsTop.width = ViewGroup.LayoutParams
                                         .MATCH_PARENT;
-                                paramsTop.width = ViewGroup.LayoutParams
-                                        .MATCH_PARENT;
+                                if (isBottomViewVisible) {
+                                    paramsBottom.width = ViewGroup.LayoutParams
+                                            .MATCH_PARENT;
+                                }
                                 paramsBottom.gravity = Gravity.BOTTOM;
 
                                 paramsTop.gravity = Gravity.TOP;
-                                paramsTop.width = ViewGroup.LayoutParams
-                                        .MATCH_PARENT;
+
+
+                                int padding = UIUtils.dpToPx(context, 5);
+                                int paddingSide = UIUtils.dpToPx(context, 5);
+
+
+
+                                if(isLandscape)
+                                {
+                                    padding = UIUtils.dpToPx(context, 5);
+
+                                }
+                                else
+                                {
+                                    padding = UIUtils.dpToPx(context, 10);
+
+                                }
+                                if (linButtons != null) {
+                                    linButtons.setPadding(0, padding, 0,
+                                            padding);
+                                }
+
+                                if (linButtonsTop != null) {
+                                    linButtonsTop.setPadding(0, padding, 0,
+                                            padding);
+                                }
+                                if(lnrSettingsNote!=null)
+                                {
+                                    lnrSettingsNote.setPadding(paddingSide, padding, paddingSide,
+                                            padding);
+                                }  if(lnrSettingsNoteTop!=null)
+                                {
+                                    lnrSettingsNoteTop.setPadding(paddingSide, padding, paddingSide,
+                                            padding);
+                                }
+
+                                if(lnrWellness!=null)
+                                {
+                                    lnrWellness.setPadding(paddingSide, padding, paddingSide,
+                                            padding);
+                                }  if(lnrWellnessTop!=null)
+                                {
+                                    lnrWellnessTop.setPadding(paddingSide, padding, paddingSide,
+                                            padding);
+                                }
+                                if(lnrTime!=null)
+                                {
+                                    lnrTime.setPadding(paddingSide, padding, paddingSide, padding);
+                                }  if(lnrTimeTop!=null)
+                                {
+                                    lnrTimeTop.setPadding(paddingSide, padding, paddingSide, padding);
+                                }
                                 rotateLayout.setAngle(0);
                                 rotateLayoutTop.setAngle(0);
                                 bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
@@ -1278,6 +1476,9 @@ public class StatusBarService extends Service {
                                 }
                                 PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
                                 paramsTop.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                                paramsTop.width = ViewGroup.LayoutParams
+                                        .MATCH_PARENT;
+
                                 bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
                                 if (wm != null)
                                     wm.updateViewLayout(topView, paramsTop);
@@ -1609,6 +1810,9 @@ public class StatusBarService extends Service {
                 lnrRotateBottom = bottomView.findViewById(R.id.lnrRotate);
                 txtWellness = bottomView.findViewById(R.id.txtWellness);
                 txtSettings = bottomView.findViewById(R.id.txtSettings);
+                lnrTime = bottomView.findViewById(R.id.lnrTime);
+                lnrSettingsNote = bottomView.findViewById(R.id.lnrSettingsNote);
+                lnrWellness = bottomView.findViewById(R.id.lnrWellness);
                 rotateLayout = bottomView.findViewById(R.id.rotateLayout);
                 if (isFullScreenView) {
                     if (paramsBottom.height != ViewGroup.LayoutParams.MATCH_PARENT) {
@@ -1681,6 +1885,53 @@ public class StatusBarService extends Service {
                                 paramsTop.gravity = Gravity.RIGHT;
                                 rotateLayout.setAngle(270);
                                 rotateLayoutTop.setAngle(-90);
+                                int padding = UIUtils.dpToPx(context, 5);
+                                int paddingSide = UIUtils.dpToPx(context, 5);
+                                if(isLandscape)
+                                {
+                                    padding = UIUtils.dpToPx(context, 10);
+
+                                }
+                                else
+                                {
+                                    padding = UIUtils.dpToPx(context, 5);
+
+                                }
+
+                                if (linButtons != null) {
+                                    linButtons.setPadding(0, padding,
+                                            0, padding);
+                                }
+
+                                if (linButtonsTop != null) {
+                                    linButtonsTop.setPadding(0, padding,
+                                            0, padding);
+                                }
+                                if(lnrSettingsNote!=null)
+                                {
+                                    lnrSettingsNote.setPadding(paddingSide, padding, paddingSide, padding);
+                                }  if(lnrSettingsNoteTop!=null)
+                                {
+                                    lnrSettingsNoteTop.setPadding(paddingSide, padding, paddingSide, padding);
+                                }
+
+                                if(lnrWellness!=null)
+                                {
+                                    lnrWellness.setPadding(paddingSide, padding, paddingSide, padding);
+                                }  if(lnrWellnessTop!=null)
+                                {
+                                    lnrWellnessTop.setPadding(paddingSide, padding, paddingSide, padding);
+                                }
+
+                                if(lnrTime!=null)
+                                {
+                                    lnrTime.setPadding(paddingSide, padding, paddingSide, padding);
+                                }  if(lnrTimeTop!=null)
+                                {
+                                    lnrTimeTop.setPadding(paddingSide, padding, paddingSide, padding);
+                                }
+
+
                                 bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
                                 topView.setLayoutParams(new ViewGroup.LayoutParams
                                         (paramsTop));
@@ -1729,6 +1980,66 @@ public class StatusBarService extends Service {
                                         .MATCH_PARENT;
                                 rotateLayout.setAngle(0);
                                 rotateLayoutTop.setAngle(0);
+                                int padding = UIUtils.dpToPx(context, 5);
+                                int paddingSide = UIUtils.dpToPx(context, 5);
+
+
+
+                                if(isLandscape)
+                                {
+                                    padding = UIUtils.dpToPx(context, 5);
+
+                                }
+                                else
+                                {
+                                    padding = UIUtils.dpToPx(context, 10);
+
+                                }
+                                if (linButtons != null) {
+                                    linButtons.setPadding(0, padding, 0,
+                                            padding);
+                                }
+
+                                if (linButtonsTop != null) {
+                                    linButtonsTop.setPadding(0,
+                                            padding, 0, padding);
+                                }
+                                if(lnrSettingsNote!=null)
+                                {
+                                    lnrSettingsNote.setPadding(paddingSide,
+                                            padding, paddingSide,
+                                            padding);
+                                }  if(lnrSettingsNoteTop!=null)
+                                {
+                                    lnrSettingsNoteTop.setPadding(paddingSide,
+                                            padding, paddingSide,
+                                            padding);
+                                }
+
+                                if(lnrWellness!=null)
+                                {
+                                    lnrWellness.setPadding(paddingSide,
+                                            padding, paddingSide,
+                                            padding);
+                                }  if(lnrWellnessTop!=null)
+                                {
+                                    lnrWellnessTop.setPadding(paddingSide,
+                                            padding, paddingSide,
+                                            padding);
+                                }
+
+                                if(lnrTime!=null)
+                                {
+                                    lnrTime.setPadding(paddingSide,
+                                            padding, paddingSide,
+                                            padding);
+                                }  if(lnrTimeTop!=null)
+                                {
+                                    lnrTimeTop.setPadding(paddingSide,
+                                            padding, paddingSide,
+                                            padding);
+                                }
+
                                 bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
                                 wm.updateViewLayout(bottomView, paramsBottom);
                             }
@@ -1749,6 +2060,8 @@ public class StatusBarService extends Service {
                                 }
                                 PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, 0L);
                                 paramsBottom.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                                paramsBottom.width = ViewGroup.LayoutParams
+                                        .MATCH_PARENT;
                                 bottomView.setLayoutParams(new ViewGroup.LayoutParams(paramsBottom));
                                 if (wm != null)
                                     wm.updateViewLayout(bottomView, paramsBottom);
@@ -1906,6 +2219,14 @@ public class StatusBarService extends Service {
 
                                             txtMessageTop.setVisibility(View
                                                     .VISIBLE);
+                                            if (null != lnrRotateTop) {
+                                                lnrRotateTop.setVisibility(View.VISIBLE);
+                                            }
+
+                                            if (null != lnrRotateBottom) {
+                                                lnrRotateBottom.setVisibility
+                                                        (View.GONE);
+                                            }
 
                                             txtMessageBottom.setVisibility
                                                     (View.GONE);
@@ -2045,6 +2366,14 @@ public class StatusBarService extends Service {
                                                     if (txtMessageBottom.getVisibility() == View.VISIBLE) {
                                                         txtMessageTop.setVisibility(View.VISIBLE);
                                                         txtMessageBottom.setVisibility(View.GONE);
+                                                    }
+                                                    if (coverTimeForWindow > 0 && coverTimeForWindow < 6) {
+                                                        lnrRotateTop.setVisibility(View
+                                                                .VISIBLE);
+                                                        lnrRotateBottom
+                                                                .setVisibility(View.GONE);
+                                                    } else {
+                                                        lnrRotateTop.setVisibility(View.GONE);
                                                     }
                                                     if (null != linButtonsTop &&
                                                             linButtonsTop

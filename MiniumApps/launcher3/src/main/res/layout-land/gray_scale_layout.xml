@@ -44,7 +44,7 @@
             android:layout_marginRight="@dimen/dp_10"
             android:layout_marginTop="@dimen/dp_5"
             android:background="@color/white"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -67,6 +67,7 @@
             android:weightSum="3">
 
             <LinearLayout
+                android:id="@+id/lnrTime"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -96,6 +97,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/lnrSettingsNote"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -122,6 +124,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/lnrWellness"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
