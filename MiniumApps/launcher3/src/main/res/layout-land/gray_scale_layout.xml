@@ -11,10 +11,17 @@
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/rootRelative"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="#42A4FF"
                     android:orientation="vertical">
+
+        <ImageView
+            android:id="@id/imgBackground"
+            android:scaleType="fitXY"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <TextView
             android:id="@+id/txtMessage"
