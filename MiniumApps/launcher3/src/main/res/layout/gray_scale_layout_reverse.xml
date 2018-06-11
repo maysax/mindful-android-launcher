@@ -1,172 +1,213 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#42A4FF"
-                android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/txtMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_gravity="top"
-        android:layout_marginBottom="@dimen/dp_5"
-        android:layout_marginLeft="@dimen/dp_10"
-        android:layout_marginRight="@dimen/dp_10"
-        android:layout_marginTop="@dimen/dp_5"
-        android:background="@drawable/transparent_bg_rounded"
-        android:gravity="center|left"
-        android:padding="@dimen/dp_5"
-        android:text="@string/take_a_one_minute_break_at_nany_time_to_remove_this_cover"
-        android:textColor="@color/white"
-        android:visibility="gone"/>
+<com.github.rongi.rotate_layout.layout.RotateLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rotateLayout"
 
-    <LinearLayout
-        android:id="@+id/linButtons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/linProgress"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom"
-        android:baselineAligned="false"
-        android:gravity="bottom"
-        android:paddingBottom="@dimen/dp_10"
-        android:paddingTop="@dimen/dp_10"
-        android:visibility="gone"
-        android:weightSum="3">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/rootRelative"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#42A4FF"
+                    android:orientation="vertical">
+
+        <ImageView
+            android:id="@id/imgBackground"
+            android:scaleType="fitXY"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+        <TextView
+            android:id="@+id/txtMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="top"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_5"
+            android:background="@drawable/transparent_bg_rounded"
+            android:gravity="center|left"
+            android:padding="@dimen/dp_5"
+            android:text="@string/take_a_one_minute_break_at_nany_time_to_remove_this_cover"
+            android:textColor="@color/white"
+            android:visibility="gone"/>
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:id="@+id/lnrRotate"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/dp_5"
             android:layout_marginLeft="@dimen/dp_10"
-            android:layout_weight="1"
-            android:background="@drawable/rounded_card"
-            android:gravity="center"
-            android:paddingBottom="@dimen/dp_10"
-            android:paddingLeft="@dimen/dp_5"
-            android:paddingRight="@dimen/dp_5"
-            android:paddingTop="@dimen/dp_10">
+            android:layout_marginRight="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_5"
+            android:padding="5dp"
+            android:background="@drawable/rounded_card_rotate"
+            android:visibility="gone">
 
-            <TextView
-                android:id="@+id/txtTime"
+            <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_rotate_cover"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/linProgress"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:baselineAligned="false"
+            android:gravity="bottom"
+            android:paddingBottom="@dimen/dp_10"
+            android:paddingTop="@dimen/dp_10"
+            android:visibility="gone"
+            android:weightSum="3">
+
+            <LinearLayout
+                android:id="@+id/lnrTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:drawableLeft="@drawable/clock"
-                android:drawablePadding="@dimen/dp_5"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_card"
                 android:gravity="center"
-                android:textAllCaps="true"
-                android:textColor="#42A4FF"
-                android:textSize="14sp"
-                tools:text="00:00"/>
+                android:paddingBottom="@dimen/dp_10"
+                android:paddingLeft="@dimen/dp_5"
+                android:paddingRight="@dimen/dp_5"
+                android:paddingTop="@dimen/dp_10">
+
+                <TextView
+                    android:id="@+id/txtTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:drawableLeft="@drawable/clock"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:gravity="center"
+                    android:textAllCaps="true"
+                    android:textColor="#42A4FF"
+                    android:textSize="14sp"
+                    tools:text="00:00"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lnrSettingsNote"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_card"
+                android:gravity="center"
+                android:paddingBottom="@dimen/dp_10"
+                android:paddingLeft="@dimen/dp_5"
+                android:paddingRight="@dimen/dp_5"
+                android:paddingTop="@dimen/dp_10">
+
+                <TextView
+                    android:id="@+id/txtSettings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:drawableLeft="@drawable/settings_overlay"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/settings"
+                    android:textColor="#42A4FF"
+                    android:textSize="14sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lnrWellness"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_10"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_card"
+                android:gravity="center"
+                android:paddingBottom="@dimen/dp_10"
+                android:paddingLeft="@dimen/dp_5"
+                android:paddingRight="@dimen/dp_5"
+                android:paddingTop="@dimen/dp_10">
+
+                <TextView
+                    android:id="@+id/txtWellness"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:drawableLeft="@drawable/wellness_overlay"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/wellness"
+                    android:textColor="#42A4FF"
+                    android:textSize="14sp"/>
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/dp_10"
-            android:layout_weight="1"
-            android:background="@drawable/rounded_card"
-            android:gravity="center"
-            android:paddingBottom="@dimen/dp_10"
-            android:paddingLeft="@dimen/dp_5"
-            android:paddingRight="@dimen/dp_5"
-            android:paddingTop="@dimen/dp_10">
-
-            <TextView
-                android:id="@+id/txtSettings"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:drawableLeft="@drawable/settings_overlay"
-                android:drawablePadding="@dimen/dp_5"
-                android:gravity="center"
-                android:maxLines="1"
-                android:text="@string/settings"
-                android:textColor="#42A4FF"
-                android:textSize="14sp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/dp_10"
-            android:layout_marginRight="@dimen/dp_10"
-            android:layout_weight="1"
-            android:background="@drawable/rounded_card"
-            android:gravity="center"
-            android:paddingBottom="@dimen/dp_10"
-            android:paddingLeft="@dimen/dp_5"
-            android:paddingRight="@dimen/dp_5"
-            android:paddingTop="@dimen/dp_10">
-
-            <TextView
-                android:id="@+id/txtWellness"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:drawableLeft="@drawable/wellness_overlay"
-                android:drawablePadding="@dimen/dp_5"
-                android:gravity="center"
-                android:maxLines="1"
-                android:text="@string/wellness"
-                android:textColor="#42A4FF"
-                android:textSize="14sp"/>
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linProgress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/dp_10"
-        android:layout_marginLeft="@dimen/dp_10"
-        android:layout_marginRight="@dimen/dp_10"
-        android:layout_marginTop="@dimen/dp_10"
-        android:background="@color/white"
-        android:orientation="vertical"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp"
-        android:visibility="gone">
-
-        <RelativeLayout
+            android:id="@+id/linProgress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dp_10"
-            android:layout_marginRight="@dimen/dp_10">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:textColor="#57000000"
-                android:textSize="12sp"/>
-
-            <TextView
-                android:id="@+id/txtCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="60"
-                android:textColor="#57000000"
-                android:textSize="12sp"/>
-        </RelativeLayout>
-
-        <ProgressBar
-            android:id="@+id/progressNew"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/dp_10"
             android:layout_marginLeft="@dimen/dp_10"
             android:layout_marginRight="@dimen/dp_10"
-            android:max="60"
-            android:progress="1"
-            android:visibility="visible"/>
-    </LinearLayout>
+            android:layout_marginTop="@dimen/dp_10"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:visibility="gone">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_10">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="#57000000"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/txtCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="60"
+                    android:textColor="#57000000"
+                    android:textSize="12sp"/>
+            </RelativeLayout>
+
+            <ProgressBar
+                android:id="@+id/progressNew"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_10"
+                android:max="60"
+                android:progress="1"
+                android:visibility="visible"/>
+        </LinearLayout>
 
 
-</RelativeLayout>
+    </RelativeLayout>
+</com.github.rongi.rotate_layout.layout.RotateLayout>
