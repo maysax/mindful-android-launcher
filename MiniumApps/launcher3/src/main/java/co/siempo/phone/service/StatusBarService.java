@@ -2960,6 +2960,18 @@ public class StatusBarService extends Service {
             txtTimeTop.setText("0" + (coverTime + deterTime) + ":00");
         }
 
+        if (isFullScreenView) {
+            if (isBottomViewVisible) {
+                if (null != txtMessageBottom) {
+                    txtMessageBottom.setVisibility(View.VISIBLE);
+                }
+            } else if (isTopViewVisible) {
+                if (null != txtMessageTop) {
+                    txtMessageTop.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+
 
     }
 
@@ -3038,40 +3050,6 @@ public class StatusBarService extends Service {
         }
 
 
-        // Checks whether a hardware keyboard is available
-        if (newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO) {
-            if (isBottomViewVisible && bottomView != null && bottomView
-                    .getWindowToken() != null) {
-                paramsBottom.gravity = Gravity.CENTER;
-                if (null != wm) {
-                    wm.updateViewLayout(bottomView, paramsBottom);
-                    if (paramsBottom.height > 0 && bitmap != null) {
-                        Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
-                        if (imgBackgroundBottom != null) {
-                            imgBackgroundBottom.setImageBitmap(bitbottom);
-                        }
-                    }
-                }
-
-            }
-//            Toast.makeText(this, "keyboard visible", Toast.LENGTH_SHORT).show();
-        } else if (newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_YES) {
-            if (isBottomViewVisible && bottomView != null && bottomView
-                    .getWindowToken() != null) {
-                paramsBottom.gravity = Gravity.BOTTOM;
-                if (null != wm) {
-                    wm.updateViewLayout(bottomView, paramsBottom);
-                    if (paramsBottom.height > 0 && bitmap != null) {
-                        Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
-                        if (imgBackgroundBottom != null) {
-                            imgBackgroundBottom.setImageBitmap(bitbottom);
-                        }
-                    }
-                }
-
-            }
-//            Toast.makeText(this, "keyboard hidden", Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void settingsClickMethod() {
