@@ -81,6 +81,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         return view;
     }
 
+
     public void hideView() {
         if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.TOGGLE_LEFTMENU, 0) >= 3) {
             if (imgPullTab != null) imgPullTab.setVisibility(View.GONE);
@@ -127,6 +128,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
     @Override
     public void onResume() {
         super.onResume();
+        hideView();
         if (dialogTempo != null && dialogTempo.isShowing()) {
             if (!permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
                     || !permissionUtil.hasGiven(PermissionUtil
