@@ -1684,7 +1684,7 @@ public class StatusBarService extends Service {
                             }
                         }
                     }
-                    topView.setOnClickListener(new View.OnClickListener() {
+                    rootRelativeTop.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             try {
@@ -2368,7 +2368,7 @@ public class StatusBarService extends Service {
                             }
                         }
                     }
-                    bottomView.setOnClickListener(new View.OnClickListener() {
+                    rootRelativeBottom.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             try {
