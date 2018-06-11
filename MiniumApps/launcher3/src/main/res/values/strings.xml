@@ -548,9 +548,10 @@
         <item>75</item>
         <item>100</item>
         <item>250</item>
+        <item>400</item>
     </string-array>
 
-    <string name="donations__thanks_dialog">Thanks for contributing!</string>
+    <string name="donations__thanks_dialog">Thanks for contributing towards building healthier technology for humanity!</string>
     <string name="purchase">Purchase</string>
     <string name="longitude">longitude</string>
     <string name="latitude">latitude</string>
