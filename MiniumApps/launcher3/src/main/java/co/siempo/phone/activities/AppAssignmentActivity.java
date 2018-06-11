@@ -147,9 +147,9 @@ public class AppAssignmentActivity extends CoreActivity {
                 mimeList = getMimeList();
                 for (ResolveInfo resolveInfo : installedPackageList) {
                     if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
-                        if (!checkExits(resolveInfo)) {
+//                        if (!checkExits(resolveInfo)) {
                             appList.add(resolveInfo);
-                        }
+//                        }
                     }
                 }
                 if (showallAppBtn != null) {
@@ -162,9 +162,9 @@ public class AppAssignmentActivity extends CoreActivity {
             appListAll = new ArrayList<>();
             for (ResolveInfo resolveInfo : installedPackageList) {
                 if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
-                    if (!checkExits(resolveInfo)) {
+//                    if (!checkExits(resolveInfo)) {
                         appListAll.add(resolveInfo);
-                    }
+//                    }
                 }
             }
             appListAll = Sorting.sortAppAssignment(AppAssignmentActivity.this, appListAll);
