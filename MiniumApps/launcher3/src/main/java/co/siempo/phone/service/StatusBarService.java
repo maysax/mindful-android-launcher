@@ -247,15 +247,17 @@ public class StatusBarService extends Service {
                             if (isScreenOn) {
                                 startOverUser();
                             }
-                            if (spentTimeJunkFood == 0L) {
+                            if (startTimeJunkFood == 0L) {
                                 startTimeJunkFood = System.currentTimeMillis();
+                                Log.d("SpentTime", "StartTime " + startTimeJunkFood);
                             }
                         } else {
                             if (startTimeJunkFood != 0L) {
                                 spentTimeJunkFood = System.currentTimeMillis() - startTimeJunkFood;
+                                Log.d("SpentTime", "spentTimeJunkFood1 " + spentTimeJunkFood);
                                 long totalSpentTime = PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_USAGE_TIME, 0L) + spentTimeJunkFood;
                                 PrefSiempo.getInstance(context).write(PrefSiempo.JUNKFOOD_USAGE_TIME, totalSpentTime);
-                                Log.d("SpentTime", "SpentTimeJunkFood" + spentTimeJunkFood + "    totalSpentTime" + totalSpentTime);
+                                Log.d("SpentTime", "spentTimeJunkFood2 " + totalSpentTime);
                                 spentTimeJunkFood = 0L;
                                 startTimeJunkFood = 0L;
                             }
@@ -769,7 +771,9 @@ public class StatusBarService extends Service {
                 PrefSiempo.getInstance(context).write(PrefSiempo.COVER_TIME, completedTime);
                 // store data in firebase how much time user spent with cover period.
                 long coverTimeSpent = PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_USAGE_COVER_TIME, 0L);
-                PrefSiempo.getInstance(context).write(PrefSiempo.JUNKFOOD_USAGE_COVER_TIME, coverTimeSpent + completedTime);
+                Log.d("DeterUse : Cover", "coverTimeSpent " + coverTimeSpent);
+                Log.d("DeterUse : Cover", "completedTime " + completedTime);
+                PrefSiempo.getInstance(context).write(PrefSiempo.JUNKFOOD_USAGE_COVER_TIME, coverTimeSpent + 1000L);
 
                 if (seconds == 0 && minutes == 0) {
                     coverTimeForWindow = 0;
@@ -815,7 +819,7 @@ public class StatusBarService extends Service {
 
 
     private void startTimerAfterCover() {
-        final long time = 15 * 60000;
+        final long time = 30 * 60000;
         countDownTimerAfterCover = new CountDownTimer(time, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
