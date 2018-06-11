@@ -347,16 +347,23 @@ public class ChooseBackgroundActivity extends CoreActivity {
             }
         }
         if (resultIAV.size() > 0) {
-            Collections.sort(resultIAV, new Comparator<File>() {
-                public int compare(File f1, File f2) {
-                    return Long.compare(f2.lastModified(), f1.lastModified());
-                }
-            });
+            try {
+                Collections.sort(resultIAV, new Comparator<File>() {
+                    public int compare(File f1, File f2) {
+                        //return Long.compare(f2.lastModified(), f1.lastModified());
+                        return Long.valueOf(f2.lastModified()).compareTo(Long.valueOf(f1.lastModified()));
+                    }
+                });
 
-            for (File file : resultIAV) {
-                String path = file.getAbsolutePath();
-                resultIAV1.add(path);
+                for (File file : resultIAV) {
+                    String path = file.getAbsolutePath();
+                    resultIAV1.add(path);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
         }
 
         return resultIAV1;
