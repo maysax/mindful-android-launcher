@@ -55,9 +55,15 @@ public class EnableTempoActivity extends CoreActivity {
                     if (btnSubmit.getText().toString().equalsIgnoreCase(getString(R.string.enable_setting_a))) {
                         startActivityForResult(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS), PermissionUtil.NOTIFICATION_ACCESS);
                     } else if (btnSubmit.getText().toString().equalsIgnoreCase(getString(R.string.enable_setting_b))) {
-                        Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
+                        try {
+                            Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        } catch (Exception e) {
+                            Intent intent = new Intent(Settings.ACTION_SETTINGS);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
                     } else if (btnSubmit.getText().toString().equalsIgnoreCase(getString(R.string.tempo_enabled))) {
                         btnSubmit.setBackground(ContextCompat.getDrawable(EnableTempoActivity.this, R.drawable.button_bg_enable));
                         btnSubmit.setText(getString(R.string.tempo_enabled));
