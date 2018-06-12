@@ -833,7 +833,9 @@ public class PaneFragment extends CoreFragment {
                         public void run() {
 
                             parser.parse(event.getString());
-                            if (adapter != null) {
+                            if (adapter != null && !TextUtils.isEmpty
+                                    (TokenManager.getInstance().getCurrent()
+                                            .getTitle().trim())) {
                                 adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());
                             }
 
