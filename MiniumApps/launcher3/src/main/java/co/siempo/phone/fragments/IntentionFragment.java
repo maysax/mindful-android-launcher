@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import co.siempo.phone.R;
+import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.activities.EnableTempoActivity;
 import co.siempo.phone.activities.HelpActivity;
 import co.siempo.phone.activities.IntentionEditActivity;
@@ -128,7 +129,9 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
     @Override
     public void onResume() {
         super.onResume();
-        hideView();
+        if (DashboardActivity.currentIndexDashboard == 1) {
+            hideView();
+        }
         if (dialogTempo != null && dialogTempo.isShowing()) {
             if (!permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
                     || !permissionUtil.hasGiven(PermissionUtil
