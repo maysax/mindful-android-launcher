@@ -303,10 +303,10 @@
     <string name="msg_2hour">Batches will arrive 12 times per day.</string>
     <string name="msg_4hour">Batches will arrive 6 times per day.</string>
     <string name="msg_next_delivery">Next Delivery: </string>
-    <string name="message1">For the next day, week, or month, what do you want to remind yourself about whenever you unlock your phone?</string>
-    <string name="message2">An intention is a goal or an idea that you want to focus on. Unlike a task, it might never be \"complete\", but your top priority may change.</string>
-    <string name="message3">Keep it short and positive. Try using command verbs. Whenever you unlock, try focusing on your intention for awhile, and see what thoughts come to mind!</string>
-    <string name="message4"><b>Sample intentions:</b>\nKeep my phone locked\nFocus on family\nEat healthy foods</string>
+    <string name="message1">Your answer will appear on your home screen, and you\'ll see it every time you unlock your phone. Your new mindful home screen will keep you focused on your intention.</string>
+    <string name="message2">Your intention is the goal, aspiration, or idea that you want to prioritize right now. Think of your intention as the path you want to walk along rather a task to be checked off.</string>
+    <string name="message3"><b>Here are some example intentions:</b>\nSpend more time with family\nEat healthy foods\nKeep my phone locked</string>
+    <string name="message4">Type an intention that\'s short and positive, and try starting with an action verb. The next time you unlock your phone, you might enjoy pausing to focus on your stated intention.</string>
     <string name="save">SAVE</string>
     <string name="what_s_your_intention">What\'s your intention?</string>
     <string name="your_intention">Your Intention:</string>
