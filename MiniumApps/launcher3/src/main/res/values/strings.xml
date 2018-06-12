@@ -481,6 +481,7 @@
     <string name="enable_setting_a">Enable Setting A</string>
     <string name="enable_setting_b">Enable Setting B</string>
     <string name="enable_setting_c">Enable Setting C</string>
+    <string name="enable_setting_d">Enable Setting D</string>
     <string name="tempo_enabled">TEMPO IS ENABLED!</string>
 
     <string name="later_string">Later</string>
