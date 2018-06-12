@@ -5,6 +5,7 @@ import android.os.Build;
 
 import co.siempo.phone.main.MainFragmentMediator;
 import co.siempo.phone.util.ContactSmsPermissionHelper;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by shahab on 2/16/17.
@@ -49,6 +50,7 @@ public class TokenParser {
             }
             if (str.endsWith("@") && TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT)) {
                 router.add(new TokenItem(TokenItemType.CONTACT));
+                EventBus.getDefault().post(new TokenUpdateEvent());
             } else {
                 TokenManager.getInstance().getCurrent().setTitle(str);
             }

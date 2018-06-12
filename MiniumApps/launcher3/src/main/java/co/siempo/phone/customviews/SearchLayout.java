@@ -8,6 +8,7 @@ import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
@@ -110,12 +111,44 @@ public class SearchLayout extends CardView {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                Log.e("Changed Text", String.valueOf(s));
             }
 
             @Override
             public void afterTextChanged(Editable s) {
                 handleAfterTextChanged(s.toString());
+                Log.e("Changed Value of s", String.valueOf(s));
+                if (s.toString().length() > 0) {
+                    String str = String.valueOf(s);
+                    if (str != null) {
+                        for (TokenItem item : TokenManager.getInstance().getItems()) {
+                            Log.e("After Text Changed", String.valueOf(str));
+
+                            if (item.getExtra1() != null && !str.trim().contains(item.getTitle().trim())) {
+                                Log.e("Changed Itemhas Extra1s", str.toString());
+                                Log.e("Changed Extraa1", item.getExtra1());
+                                item.setExtra1("");
+                                item.setExtra2("");
+                                item.isChipable = true;
+                                item.setCompleteType(TokenCompleteType.FULL);
+                                //TokenManager.getInstance().setCurrent(new TokenItem
+                                //      (TokenItemType.DATA));
+                             /*   TokenManager.getInstance().setCurrent(new TokenItem(TokenItemType
+                                        .CONTACT));*/
+                                EventBus.getDefault().post(new TokenUpdateEvent());
+                                Log.e("Changed has2 Extra1s", str.toString());
+                                Log.e("Changed  2 Extraa1", item.getExtra1());
+                                Log.e("Item Type", String.valueOf(item.getItemType()));
+                            }
+                            if (item.getTitle() != null && !str.trim().contains(item.getTitle().trim())) {
+                                item.setTitle("");
+                                item.setCompleteType(TokenCompleteType.FULL);
+                                EventBus.getDefault().post(new TokenUpdateEvent());
+                                Log.e("Item Type", String.valueOf(item.getItemType()));
+                            }
+                        }
+                    }
+                }
                 DashboardActivity.isTextLenghGreater = s.toString();
             }
         });
@@ -142,6 +175,17 @@ public class SearchLayout extends CardView {
         if (isWatching) {
             EventBus.getDefault().post(new SearchLayoutEvent(s));
         }
+    /*    for (TokenItem item : TokenManager.getInstance().getItems()) {
+            if(s!=null && item!=null) {
+                Log.e("After Text Changed", String.valueOf(s));
+                if (item.getExtra1().contains(s.toString().trim())) {
+                    Log.e("Changed Itemhas Extra1s", s.toString());
+                }
+                if (item.getExtra1().contains(s.toString().trim())) {
+                    Log.e("Changed Itemhas Extra2s", s.toString());
+                }
+            }
+        }*/
     }
 
 
