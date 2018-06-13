@@ -1,8 +1,6 @@
 package co.siempo.phone.fragments;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
-import android.app.AppOpsManager;
 import android.app.Dialog;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -42,7 +40,10 @@ import co.siempo.phone.event.NotifyToolView;
 import co.siempo.phone.event.ReduceOverUsageEvent;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
+
+import static com.rvalerio.fgchecker.Utils.hasUsageStatsPermission;
 
 
 public class AppMenuFragment extends CoreFragment implements View.OnClickListener {
@@ -254,7 +255,7 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 100) {
-            if (!hasUsageStatsPermission(getActivity())) {
+            if (!UIUtils.hasUsageStatsPermission(getActivity())) {
                 Toast.makeText(getActivity(), R.string.msg_control_access, Toast.LENGTH_SHORT).show();
             } else {
 //                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -279,17 +280,6 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
                 showDialog();
             }
         }
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    boolean hasUsageStatsPermission(Context context) {
-        AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
-        int mode = 0;
-        if (appOps != null) {
-            mode = appOps.checkOpNoThrow("android:get_usage_stats",
-                    android.os.Process.myUid(), context.getPackageName());
-        }
-        return mode == AppOpsManager.MODE_ALLOWED;
     }
 
 
