@@ -63,9 +63,7 @@ public class NoteEventReceiver extends BroadcastReceiver {
         try {
             // Add new note to array
             newNoteObject = new JSONObject();
-//            newNoteObject.put(NOTE_TITLE, SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT).format(new Date()));
             newNoteObject.put(NOTE_TITLE, getTitle(intent.getStringExtra(NOTE_TITLE)));
-            // newNoteObject.put(NOTE_BODY, intent.getStringExtra(NOTE_BODY));
             newNoteObject.put(NOTE_BODY, "");
             newNoteObject.put(NOTE_COLOUR, "#FFFFFF");
             newNoteObject.put(NOTE_FAVOURED, false);

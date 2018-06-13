@@ -76,6 +76,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
     ArrayList<String> enableNotificationList = new ArrayList<>();
     Set<String> blockedAppList = new HashSet<>();
 
+    int volumeLevel = 1;
+
     private static boolean isInteger(String s, int radix) {
         try {
             if (s.isEmpty()) {
@@ -177,10 +179,10 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 }
 
 
-            /* do not display messages from "android"
-            * This includes keyboard selection message, usb connection messages, etc
-             * Hope it does not filter out too much, we will see...
-            */
+                /* do not display messages from "android"
+                 * This includes keyboard selection message, usb connection messages, etc
+                 * Hope it does not filter out too much, we will see...
+                 */
                 try {
                     if (notification != null) {
                         if (notification.getPackageName().equals("android") ||
@@ -207,8 +209,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         new HashSet<String>());
                 Tracer.d("SiempoNotificationListener:blockedAppList.size" + blockedAppList.size());
                 if (null != blockedAppList && blockedAppList.size() > 0 && blockedAppList.contains(notification.getPackageName())) {
-
-
                     if (!notification.getPackageName().equalsIgnoreCase(getPackageName())) {
                         SiempoNotificationListener.this.cancelNotification(notification.getKey());
                         Tracer.d("SiempoNotificationListener:cancelNotification");
@@ -216,15 +216,28 @@ public class SiempoNotificationListener extends NotificationListenerService {
                             Tracer.d("SiempoNotificationListener:cancelNotification");
                             if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_VIBRATE ||
                                     audioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
-                                int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
+                                int sound = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM);
                                 if (sound != 1) {
-                                    Tracer.d("SiempoNotificationListener:audioManager");
+                                    volumeLevel = sound;
+                                    PrefSiempo.getInstance(this).write(PrefSiempo.USER_VOLUME, audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+                                    Log.d("Rajesh:audioManager", "" + sound);
                                     audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+                                    Log.d("Rajesh:audioManager : ", "" + audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
                                 }
                             }
                         }
                         filterByCategory(notification);
                     }
+                } else {
+                    //Check for ringer mode
+                    if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                        int volume = PrefSiempo.getInstance(this).read(PrefSiempo.USER_VOLUME, audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+                        int sound = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM);
+                        if (sound == 1) {
+                            audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, volume, 0);
+                        }
+                    }
+
                 }
             }
         }
@@ -270,6 +283,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
      * @param statusBarNotification
      */
     private synchronized void filterByCategory(StatusBarNotification statusBarNotification) {
+
+
         String strPackageName;//getPackageName
         String strTitle = null;//android.title
         String strText = null;//android.text
@@ -377,6 +392,11 @@ public class SiempoNotificationListener extends NotificationListenerService {
             parseWhatsappMessage(statusBarNotification, strPackageName, date, data, icon, largeIcon);
 
         }
+        //Parse the Telegram.
+        else if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.TELEGRAM_PACKAGES)) {
+            Tracer.d("SiempoNotificationListener:parseGoogleCalender");
+            parseTelegramMessenger(statusBarNotification, strPackageName, strTitle, strText, date, icon, largeIcon);
+        }
         //Parse the Google Calendar
         else if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.GOOGLE_CALENDAR_PACKAGES)) {
             Tracer.d("SiempoNotificationListener:parseGoogleCalender");
@@ -413,12 +433,16 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 CoreApplication.getInstance().logException(e);
             }
         }
+        if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+            audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, volumeLevel, 0);
+            Log.d("Rajesh:audioManager : ", "" + audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+        }
     }
 
     private void parseOtherMessages(StatusBarNotification statusBarNotification, String strPackageName, String strTitle, String strText, Date date, String strBigText, int icon, byte[] largeIcon, String strCount) {
         if (statusBarNotification.getNotification() != null
                 && statusBarNotification.getNotification().tickerText != null
-                && !statusBarNotification.getNotification().tickerText.toString().equalsIgnoreCase("USB debugging connected")) {
+                && statusBarNotification.getNotification().tickerText.toString().equalsIgnoreCase("USB debugging connected")) {
             return;
         }
 
@@ -428,15 +452,15 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_TRANSPORT) &&
                 !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_SERVICE) &&
                 !statusBarNotification.getPackageName().equalsIgnoreCase("com.google.android.talk")
-                && !statusBarNotification.getPackageName().equalsIgnoreCase("com.google.android.apps.messaging")
+                //&& !statusBarNotification.getPackageName().equalsIgnoreCase("com.google.android.apps.messaging")
                 && !statusBarNotification.getPackageName().trim().equalsIgnoreCase("android"))) {
 
 
 //            if (launcherPrefs.getSharedPreferences().getBoolean(Constants.CALL_RUNNING, false)) {
-            if (PrefSiempo.getInstance(context).read(PrefSiempo.CALL_RUNNING, false)) {
-                Log.d(TAG, "OnGoing Call is Running.. no need to generate notification");
-                return;
-            }
+//            if (PrefSiempo.getInstance(context).read(PrefSiempo.CALL_RUNNING, false)) {
+//                Log.d(TAG, "OnGoing Call is Running.. no need to generate notification");
+//                return;
+//            }
             try {
                 DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
                 TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
@@ -459,7 +483,10 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     notificationSms.setId(id);
                     EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                 } else {
+                    notificationSms.setApp_icon(icon);
                     notificationSms.set_date(date);
+                    notificationSms.setPackageName(strPackageName);
+                    notificationSms.setUser_icon(largeIcon);
                     notificationSms.setNotification_date(statusBarNotification.getPostTime());
                     notificationSms.set_contact_title(strTitle);
                     if (strBigText == null) {
@@ -671,6 +698,58 @@ public class SiempoNotificationListener extends NotificationListenerService {
             CoreApplication.getInstance().logException(e);
         }
     }
+
+    private void parseTelegramMessenger(StatusBarNotification statusBarNotification, String strPackageName, String strTitle, String strText, Date date, int icon, byte[] largeIcon) {
+        try {
+            DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
+            TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
+            if (strTitle != null && strText != null && !strText.equalsIgnoreCase("") && !strTitle.contains("Telegram")) {
+                strTitle = checkTextContainForTelegram(strTitle);
+                TableNotificationSms notificationSms
+                        = DBUtility.getNotificationDao().queryBuilder()
+                        .where(TableNotificationSmsDao.Properties.PackageName.eq(strPackageName),
+                                TableNotificationSmsDao.Properties._contact_title.eq(strTitle),
+                                TableNotificationSmsDao.Properties.Notification_type.eq(NotificationUtility.NOTIFICATION_TYPE_EVENT))
+                        .unique();
+                if (notificationSms == null) {
+                    notificationSms = new TableNotificationSms();
+                    notificationSms.set_contact_title(strTitle);
+                    notificationSms.set_message(strText);
+                    notificationSms.set_date(date);
+                    notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                    notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
+                    notificationSms.setPackageName(strPackageName);
+                    notificationSms.setApp_icon(icon);
+                    notificationSms.setUser_icon(largeIcon);
+                    notificationSms.setNotification_id(statusBarNotification.getId());
+                    long id = smsDao.insert(notificationSms);
+                    notificationSms.setId(id);
+                } else {
+                    notificationSms.setPackageName(strPackageName);
+                    notificationSms.set_date(date);
+                    notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                    notificationSms.set_message(strText);
+                    notificationSms.set_contact_title(strTitle);
+                    smsDao.update(notificationSms);
+                }
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Tracer.d("SiempoNotificationListener:parseFacebookMessenger" + e.getMessage());
+            CoreApplication.getInstance().logException(e);
+        }
+    }
+
+    private String checkTextContainForTelegram(String strTitle) {
+        String title = strTitle;
+        if (strTitle.endsWith("message)") || strTitle.endsWith("messages)")) {
+            title = strTitle.substring(0, strTitle.indexOf("("));
+        }
+        return title;
+    }
+
 
     private void parseFacebook(StatusBarNotification statusBarNotification, String strPackageName, String strTitle, String strText, Date date, int icon, byte[] largeIcon) {
         try {
@@ -966,10 +1045,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
         }
         int lastParenthesiIndex = title.lastIndexOf("(");
         int lastEndParenthesisIndex = title.lastIndexOf(")");
-        if (true) {
-            return "CODE_IGNORE_ME";
-        }
-        return title;
+        return "CODE_IGNORE_ME";
     }
 
     private String removeColFromTitle(String title) {

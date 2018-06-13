@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -24,6 +25,9 @@ public class PrefSiempo {
     public static final String IS_APP_INSTALLED_FIRSTTIME = "is_app_installed_firsttime";
 
     // This field is used to store check application installed first time or not.
+    public static final String IS_AUTOSCROLL = "is_autoscroll";
+
+    // This field is used to store check application installed first time or not.
     public static final String IS_APP_INSTALLED_FIRSTTIME_SHOW_TOOLTIP = "is_app_installed_firsttime_show_tooltip";
 
     // This field is used to store check application installed first time or not.
@@ -37,6 +41,7 @@ public class PrefSiempo {
 
     // This field is used for to store tools pane visible/hide and its connected application.
     public static final String TOOLS_SETTING = "tools_setting";
+    public static final String INSTALLED_APP_VERSION_CODE = "installed_app_version_code";
 
     // This field is used for to store junkfood application package name.
     public static final String JUNKFOOD_APPS = "junkfood_apps";
@@ -54,6 +59,12 @@ public class PrefSiempo {
 
     // used for Allow peaking.
     public static final String ALLOW_PEAKING = "Allowpeaking";
+    public static final String IS_DARK_THEME = "isDarkTheme";
+
+
+    // used for default background.
+    public static final String DEFAULT_BAG = "default_back";
+    public static final String DEFAULT_BAG_ENABLE = "default_e";
 
 
     //Launcher 3 preferences
@@ -75,9 +86,19 @@ public class PrefSiempo {
     public static final String ONLY_AT = "onlyAt";
     public static final String USER_EMAILID = "userEmailId";
     public static final String IS_CONTACT_UPDATE = "isContactUpdate";
+
+
+    public static final String LOCK_COUNTER_STATUS = "LOCK_COUNTER_STATUS";
+    public static final String LOCATION_TIMER_TIME = "LOCATION_TIMER_TIME";
+    //Preference for DeterUser
+    public static final String DETER_AFTER = "deterAfter";
+    public static final String BREAK_PERIOD = "break_period";
+    public static final String GRACE_TIME = "grace_time";
+    public static final String COVER_TIME = "cover_time";
+    public static final String BREAK_TIME = "break_time";
+    public static final String IS_SETTINGS_PRESSED = "is_settings_pressed";
+    public static final String IS_BREAK_TIME_PRESSED = "is_settings_pressed";
     private static final PrefSiempo ourInstance = new PrefSiempo();
-
-
     public static String HELPFUL_ROBOTS = "HELPFUL_ROBOTS";
     public static String BLOCKED_APPLIST = "BLOCKED_APPLIST";
     public static String MESSENGER_DISABLE_COUNT = "MESSENGER_DISABLE_COUNT";
@@ -85,6 +106,14 @@ public class PrefSiempo {
     public static String HEADER_APPLIST = "HEADER_APPLIST";
     public static String TOGGLE_LEFTMENU = "toggle_leftmenu";
     public static String USER_SEEN_EMAIL_REQUEST = "user_seen_email_request";
+    public static String APPLAND_TOUR_SEEN = "appland_tour_seen";
+    public static String JUNK_RESTRICTED = "junk_restricted";
+    public static String USER_VOLUME = "user_volume";
+    public static String LOCATION_STATUS = "location_status";
+    public static String JUNKFOOD_USAGE_TIME = "junkfood_usage_time";
+    public static String JUNKFOOD_USAGE_COVER_TIME = "junkfood_usage_cover_time";
+    public static String CURRENT_DATE = "current_date";
+
 
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
@@ -179,7 +208,7 @@ public class PrefSiempo {
      * @param key   name to store in preference
      * @param value user provided value
      */
-    public void write(String key, long value) {
+    public synchronized void write(String key, long value) {
         editor.putLong(key, value);
         editor.apply();
     }
@@ -238,7 +267,11 @@ public class PrefSiempo {
      * @param defValue user provided default value
      */
     public Set<String> read(String key, Set<String> defValue) {
-        return sharedPreferences.getStringSet(key, defValue);
+
+        Set<String> sharedSet = new HashSet<>(sharedPreferences.getStringSet
+                (key, defValue));
+
+        return sharedSet;
     }
 
     /**

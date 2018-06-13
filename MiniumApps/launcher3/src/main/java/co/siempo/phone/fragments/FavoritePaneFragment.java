@@ -1,8 +1,8 @@
 package co.siempo.phone.fragments;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import co.siempo.phone.R;
@@ -33,7 +34,6 @@ public class FavoritePaneFragment extends CoreFragment {
     private ArrayList<MainListItem> items = new ArrayList<>();
     private FavoritesPaneAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private Parcelable mListState;
     private ItemOffsetDecoration itemDecoration;
     private LinearLayout linSelectFavouriteFood;
     private Button btnSelect;
@@ -121,8 +121,21 @@ public class FavoritePaneFragment extends CoreFragment {
             }
 
 
-        } else if (items.size() == 0) {
+        } else {
             linSelectFavouriteFood.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -7,6 +7,7 @@ buildscript {
 
         // Fabric
         maven { url 'https://maven.fabric.io/public' }
+        maven { url 'https://dl.bintray.com/rvalerio/maven' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
@@ -45,7 +46,7 @@ project.ext {
     baseRecyclerViewAdapterHelperVersion = "2.2.0"
     sugarOrmVersion = "1.5"
     greenDaoVersion = "3.2.0"
-    tedPermissionVersion = "2.1.1"
+    tedPermissionVersion = "2.2.0"
     fastAndroidNetworkingVersion = "0.3.0"
     espressoVersion = "2.2.2"
     multidexVersion = "1.0.3"

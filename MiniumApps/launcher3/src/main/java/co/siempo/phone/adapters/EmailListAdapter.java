@@ -68,11 +68,6 @@ public class EmailListAdapter extends ArrayAdapter<String> {
     }
 
     public class ListFilter extends Filter {
-//            @Override
-//            public CharSequence convertResultToString(Object resultValue) {
-//                String customer = (String) resultValue;
-//                return customer;
-//            }
 
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
@@ -85,8 +80,8 @@ public class EmailListAdapter extends ArrayAdapter<String> {
             if (!searchString.isEmpty()) {
 
                 for (int i = 0; i < count; i++) {
-                    if (customers.get(i).toString().contains(searchString.toLowerCase())) {
-                        suggestions.add(customers.get(i).toString());
+                    if (customers.get(i).contains(searchString.toLowerCase())) {
+                        suggestions.add(customers.get(i));
                     }
                 }
             } else {

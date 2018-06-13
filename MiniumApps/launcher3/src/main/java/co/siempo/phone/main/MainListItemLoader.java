@@ -84,13 +84,24 @@ public class MainListItemLoader {
                     .getString(R.string.title_wellness), R.drawable
                     .ic_vector_wellness));
 
-//            items.add(new MainListItem(TOOLS_TODO, context.getResources()
-//                    .getString(R.string.title_todo), R.drawable
-//                    .ic_vector_todo));
+            items.add(new MainListItem(TOOLS_TODO, context.getResources()
+                    .getString(R.string.title_todo), R.drawable
+                    .ic_vector_todo));
             items.add(new MainListItem(TOOLS_BROWSER, context.getResources()
                     .getString(R.string.title_browser), R.drawable
                     .ic_vector_browser));
-            items.add(new MainListItem(12, "", 0));
+            items.add(new MainListItem(TOOLS_MUSIC, context.getResources()
+                    .getString(R.string.title_music), R.drawable
+                    .ic_vector_music));
+            items.add(new MainListItem(TOOLS_PODCAST, context.getResources()
+                    .getString(R.string.title_podcast), R.drawable
+                    .ic_vector_podcast));
+            items.add(new MainListItem(TOOLS_FOOD, context.getResources()
+                    .getString(R.string.title_food), R.drawable
+                    .ic_vector_food));
+            items.add(new MainListItem(TOOLS_FITNESS, context.getResources()
+                    .getString(R.string.title_fitness), R.drawable
+                    .ic_vector_fitness));
             items.add(new MainListItem(TOOLS_CALL, context.getResources()
                     .getString(R.string.title_call), R.drawable.ic_vector_call,
                     MainListItemType.ACTION));
@@ -102,19 +113,6 @@ public class MainListItemLoader {
                     .ic_vector_messages, MainListItemType.ACTION));
             items.add(new MainListItem(TOOLS_EMAIL, context.getResources()
                     .getString(R.string.title_email), R.drawable.ic_vector_email));
-//
-//            items.add(new MainListItem(TOOLS_MUSIC, context.getResources()
-//                    .getString(R.string.title_music), R.drawable
-//                    .ic_vector_music));
-//            items.add(new MainListItem(TOOLS_PODCAST, context.getResources()
-//                    .getString(R.string.title_podcast), R.drawable
-//                    .ic_vector_podcast));
-//            items.add(new MainListItem(TOOLS_FOOD, context.getResources()
-//                    .getString(R.string.title_food), R.drawable
-//                    .ic_vector_food));
-//            items.add(new MainListItem(TOOLS_FITNESS, context.getResources()
-//                    .getString(R.string.title_fitness), R.drawable
-//                    .ic_vector_fitness));
 
 
         }
@@ -168,48 +166,48 @@ public class MainListItemLoader {
                 toolsItems.add(new MainListItem(TOOLS_RECORDER, context.getResources().getString(R.string.title_recorder), R.drawable.ic_vector_recorder));
             }
 
-//            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_TODO)
-//                    .getApplicationName()) && toolsSettings.get(TOOLS_TODO)
-//                    .getApplicationName().contains(".")) {
-//                toolsItems.add(new MainListItem(TOOLS_TODO, context
-//                        .getResources().getString(R.string.title_todo), R
-//                        .drawable.ic_vector_todo));
-//            }
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_TODO)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_TODO)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_TODO, context
+                        .getResources().getString(R.string.title_todo), R
+                        .drawable.ic_vector_todo));
+            }
 
             if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_BROWSER)
                     .getApplicationName()) && toolsSettings.get(TOOLS_BROWSER)
                     .getApplicationName().contains(".")) {
                 toolsItems.add(new MainListItem(TOOLS_BROWSER, context.getResources().getString(R.string.title_browser), R.drawable.ic_vector_browser));
             }
-//            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_PODCAST)
-//                    .getApplicationName()) && toolsSettings.get(TOOLS_PODCAST)
-//                    .getApplicationName().contains(".")) {
-//                toolsItems.add(new MainListItem(TOOLS_PODCAST, context
-//                        .getResources().getString(R.string.title_podcast), R
-//                        .drawable.ic_vector_podcast));
-//            }
-//            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_FOOD)
-//                    .getApplicationName()) && toolsSettings.get(TOOLS_FOOD)
-//                    .getApplicationName().contains(".")) {
-//                toolsItems.add(new MainListItem(TOOLS_FOOD, context
-//                        .getResources().getString(R.string.title_food), R
-//                        .drawable.ic_vector_food));
-//            }
-//            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_FITNESS)
-//                    .getApplicationName()) && toolsSettings.get(TOOLS_FITNESS)
-//                    .getApplicationName().contains(".")) {
-//                toolsItems.add(new MainListItem(TOOLS_FITNESS, context
-//                        .getResources().getString(R.string.title_fitness), R
-//                        .drawable.ic_vector_fitness));
-//            }
-//
-//            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_MUSIC)
-//                    .getApplicationName()) && toolsSettings.get(TOOLS_MUSIC)
-//                    .getApplicationName().contains(".")) {
-//                toolsItems.add(new MainListItem(TOOLS_MUSIC, context
-//                        .getResources().getString(R.string.title_music), R
-//                        .drawable.ic_vector_music));
-//            }
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_PODCAST)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_PODCAST)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_PODCAST, context
+                        .getResources().getString(R.string.title_podcast), R
+                        .drawable.ic_vector_podcast));
+            }
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_FOOD)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_FOOD)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_FOOD, context
+                        .getResources().getString(R.string.title_food), R
+                        .drawable.ic_vector_food));
+            }
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_FITNESS)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_FITNESS)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_FITNESS, context
+                        .getResources().getString(R.string.title_fitness), R
+                        .drawable.ic_vector_fitness));
+            }
+
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_MUSIC)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_MUSIC)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_MUSIC, context
+                        .getResources().getString(R.string.title_music), R
+                        .drawable.ic_vector_music));
+            }
 
             if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_CAMERA)
                     .getApplicationName()) && toolsSettings.get(TOOLS_CAMERA)
@@ -235,12 +233,6 @@ public class MainListItemLoader {
                     .getApplicationName()) && toolsSettings.get(TOOLS_WELLNESS)
                     .getApplicationName().contains(".")) {
                 toolsItems.add(new MainListItem(TOOLS_WELLNESS, context.getResources().getString(R.string.title_wellness), R.drawable.ic_vector_wellness));
-            }
-
-
-            if (!TextUtils.isEmpty(toolsSettings.get(12)
-                    .getApplicationName())) {
-                toolsItems.add(new MainListItem(12, "", 0));
             }
 
             if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_CALL)
@@ -506,10 +498,6 @@ public class MainListItemLoader {
                             (packageName);
 
                     break;
-//                case 18:
-//                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_feedback), context.getResources().getString(R.string.title_feedback));
-//                    new ActivityHelper(context).openFeedback();
-//                    break;
                 default:
                     UIUtils.alert(context, context.getResources().getString(R.string.msg_not_yet_implemented));
                     break;

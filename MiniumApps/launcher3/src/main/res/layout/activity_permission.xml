@@ -4,20 +4,6 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="false">
 
-    <!--<android.support.design.widget.AppBarLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:theme="@style/AppTheme.AppBarOverlay">-->
-
-    <!--<android.support.v7.widget.Toolbar-->
-    <!--android:id="@+id/toolbar"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="?attr/actionBarSize"-->
-    <!--android:background="?attr/colorPrimary"-->
-    <!--app:popupTheme="@style/AppTheme.PopupOverlay" />-->
-
-    <!--</android.support.design.widget.AppBarLayout>-->
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -59,8 +45,8 @@
 
             <TableRow
                 android:id="@+id/tblCalls"
-                android:visibility="gone"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="16dp"
+                android:visibility="gone">
 
                 <co.siempo.phone.customviews.RobotoCondensedTextView
                     android:layout_width="match_parent"
@@ -158,6 +144,23 @@
 
                 <Switch
                     android:id="@+id/switchOverlayAccess"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </TableRow>
+            <TableRow
+                android:id="@+id/tblControlAccessUsage"
+                android:layout_marginTop="16dp"
+                android:visibility="gone">
+
+                <co.siempo.phone.customviews.RobotoCondensedTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/control_access_usage"
+                    android:textSize="@dimen/text.size.large" />
+
+                <Switch
+                    android:id="@+id/switchControlAccessUsage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 

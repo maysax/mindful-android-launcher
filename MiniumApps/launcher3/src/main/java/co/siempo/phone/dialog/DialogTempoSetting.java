@@ -56,37 +56,52 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
     private ArrayList<Integer> everyTwoHourList = new ArrayList<>();
     private ArrayList<Integer> everyFourHoursList = new ArrayList<>();
     private Context context;
+    private float heightForAnim;
 
-    public DialogTempoSetting(@NonNull Context context) {
-        super(context, R.style.FullScreenDialogStyle);
+    private OnDismissListener onDismissListener = new OnDismissListener() {
+        @Override
+        public void onDismiss(DialogInterface dialog) {
+            if (null != radioBatched && !radioBatched.isChecked()) {
+                PrefSiempo.getInstance(context).write(PrefSiempo
+                        .BATCH_TIME, 15);
+            }
+        }
+    };
+
+
+    public DialogTempoSetting(@NonNull Context context, int dialogStyle) {
+        super(context, dialogStyle);
         this.context = context;
+
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        setContentView(R.layout.activity_tempo);
-        initView();
-        setCancelable(true);
-        setCanceledOnTouchOutside(true);
-        startTime = System.currentTimeMillis();
-        everyTwoHourList.addAll(Arrays.asList(0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22));
-        everyFourHoursList.addAll(Arrays.asList(0, 4, 8, 12, 16, 20));
+        if (null != getWindow()) {
+            getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+            setContentView(R.layout.activity_tempo);
+            initView();
+            setCancelable(true);
+            setCanceledOnTouchOutside(true);
+            startTime = System.currentTimeMillis();
+            everyTwoHourList.addAll(Arrays.asList(0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22));
+            everyFourHoursList.addAll(Arrays.asList(0, 4, 8, 12, 16, 20));
 
-        enableRadioOnPosition(PrefSiempo.getInstance(context).read(PrefSiempo
-                .TEMPO_TYPE, 0), false);
+            enableRadioOnPosition(PrefSiempo.getInstance(context).read(PrefSiempo
+                    .TEMPO_TYPE, 0), false);
 
-        bindOnlyAt();
+            bindOnlyAt();
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Animation in = AnimationUtils.loadAnimation(context, R.anim.fab_scale_up);
-                fabPlay.startAnimation(in);
-                fabPlay.setVisibility(View.VISIBLE);
-            }
-        }, 400);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Animation in = AnimationUtils.loadAnimation(context, R.anim.fab_scale_up);
+                    fabPlay.startAnimation(in);
+                    fabPlay.setVisibility(View.VISIBLE);
+                }
+            }, 400);
+        }
     }
 
     private void initView() {
@@ -124,6 +139,11 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
         txtOnlyAtTime1.setOnClickListener(this);
         txtOnlyAtTime2.setOnClickListener(this);
         txtOnlyAtTime3.setOnClickListener(this);
+
+        //Added as part of SSA-1534, to reset the preference of batch mode
+        // when any other radio button is checked
+        this.setOnDismissListener(onDismissListener);
+
 
     }
 
@@ -335,7 +355,9 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
             fabPlay.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fab_scale_down));
             fabPlay.setVisibility(View.INVISIBLE);
             linear.setVisibility(View.INVISIBLE);
-            ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(txtMessage, "translationY", 0, -500).setDuration(400);
+            heightForAnim = findViewById(R.id.pauseContainer).getHeight();
+            ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(txtMessage, "translationY",
+                    0, -(heightForAnim / 2)).setDuration(400);
             objectAnimator.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animation) {
@@ -501,7 +523,8 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
             strMessage = strMessage + context.getString(R.string.msg_next_delivery) + df.format(calendar.getTime());
             txtMessage.setText(strMessage);
             calendar.set(Calendar.SECOND, 0);
-            if (CoreApplication.getInstance() != null) PackageUtil.enableDisableAlarm(calendar, 0);
+            if (CoreApplication.getInstance() != null)
+                PackageUtil.enableDisableAlarm(calendar, 0);
         } else if (pos == 2) {
             radioIndividual.setChecked(false);
             radioBatched.setChecked(false);

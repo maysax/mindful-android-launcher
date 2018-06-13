@@ -40,7 +40,6 @@
             android:paddingLeft="@dimen/dp_20"
             android:paddingRight="@dimen/dp_20"
             android:text="Sound"
-            android:textColor="#000000"
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
 

@@ -1,5 +1,6 @@
 package co.siempo.phone.fragments;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.widget.GridLayoutManager;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import co.siempo.phone.R;
@@ -66,7 +68,6 @@ public class ToolsPaneFragment extends CoreFragment {
     public void onEvent(NotifyToolView notifyToolView) {
         if (notifyToolView != null && notifyToolView.isNotify()) {
             items = CoreApplication.getInstance().getToolItemsList();
-//            mAdapter.setMainListItemList(items, false, CoreApplication.getInstance().isHideIconBranding());
             mAdapter = new ToolsMenuAdapter(getActivity(), CoreApplication.getInstance().isHideIconBranding(), false, items);
             recyclerView.setAdapter(mAdapter);
             mAdapter.notifyDataSetChanged();
@@ -78,8 +79,6 @@ public class ToolsPaneFragment extends CoreFragment {
     private void initView() {
         if (getActivity() != null && recyclerView != null) {
             items = CoreApplication.getInstance().getToolItemsList();
-//            new MainListItemLoader(getActivity()).loadItemsDefaultApp(items);
-//            items = PackageUtil.getToolsMenuData(getActivity(), items);
             mLayoutManager = new GridLayoutManager(getActivity(), 4);
             recyclerView.setLayoutManager(mLayoutManager);
             if (itemDecoration != null) {
@@ -89,6 +88,19 @@ public class ToolsPaneFragment extends CoreFragment {
             recyclerView.addItemDecoration(itemDecoration);
             mAdapter = new ToolsMenuAdapter(getActivity(), CoreApplication.getInstance().isHideIconBranding(), false, items);
             recyclerView.setAdapter(mAdapter);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -7,7 +7,7 @@
               android:clickable="true"
               android:gravity="center"
               android:orientation="vertical"
-              android:showDividers="none"
+              android:showDividers="end"
               tools:ignore="UseCompoundDrawables">
 
     <LinearLayout
@@ -54,7 +54,6 @@
             android:paddingLeft="@dimen/dp_1"
             android:paddingRight="@dimen/dp_1"
             android:text="Sound"
-            android:textColor="#000000"
             android:textSize="16sp"
             tools:ignore="HardcodedText,InefficientWeight" />
 
@@ -81,5 +80,11 @@
             android:clickable="false"
             android:gravity="end"/>
     </LinearLayout>
+
+    <View
+        android:id="@+id/viewDivider"
+        android:background="?attr/divider_tools"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
 
 </LinearLayout>

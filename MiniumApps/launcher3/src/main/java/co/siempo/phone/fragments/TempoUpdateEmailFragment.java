@@ -4,8 +4,9 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -29,9 +30,14 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.UserModel;
+import co.siempo.phone.service.MailChimpOperation;
+import co.siempo.phone.service.StatusBarService;
 import co.siempo.phone.utils.PrefSiempo;
 
 @EFragment(R.layout.fragment_tempo_update_email)
@@ -52,6 +58,7 @@ public class TempoUpdateEmailFragment extends CoreFragment {
 
     @ViewById
     TextInputLayout text_input_layout;
+    private ConnectivityManager connectivityManager;
 
 
     public TempoUpdateEmailFragment() {
@@ -82,12 +89,24 @@ public class TempoUpdateEmailFragment extends CoreFragment {
                                 .USER_EMAILID, "").equals(val_email)) {
                             Toast.makeText(getActivity(), getResources().getString(R.string.success_email), Toast.LENGTH_SHORT).show();
                         }
-                        if (PrefSiempo.getInstance(context).read(PrefSiempo
-                                .USER_EMAILID, "").equalsIgnoreCase("")) {
-                            storeDataToFirebase(true, CoreApplication.getInstance().getDeviceId(), val_email);
-                        } else {
-                            storeDataToFirebase(false, CoreApplication.getInstance().getDeviceId(), val_email);
+                        try {
+
+                            connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context
+                                    .CONNECTIVITY_SERVICE);
+                            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+                            if (activeNetwork != null) {
+                                new MailChimpOperation().execute(val_email);
+                                if (PrefSiempo.getInstance(context).read(PrefSiempo
+                                        .USER_EMAILID, "").equalsIgnoreCase("")) {
+                                    storeDataToFirebase(true, CoreApplication.getInstance().getDeviceId(), val_email);
+                                } else {
+                                    storeDataToFirebase(false, CoreApplication.getInstance().getDeviceId(), val_email);
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
+
                         PrefSiempo.getInstance(context).write(PrefSiempo
                                 .USER_EMAILID, val_email);
                         hideSoftKeyboard();
@@ -101,8 +120,6 @@ public class TempoUpdateEmailFragment extends CoreFragment {
         });
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
         toolbar.setTitle(R.string.string_update_email_title);
-        toolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color
-                .colorAccent));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,19 +164,30 @@ public class TempoUpdateEmailFragment extends CoreFragment {
     private void storeDataToFirebase(boolean isNew, String userId, String emailId) {
         try {
             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("users");
-            UserModel user = new UserModel(userId, emailId);
-            mDatabase.child(userId).setValue(user);
-            mDatabase.child(userId).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
+            UserModel user = new UserModel(userId, emailId, StatusBarService.latitude, StatusBarService.longitude);
+            String key = mDatabase.child(userId).getKey();
+            if (key != null) {
+                Map map = new HashMap();
+                map.put("emailId",emailId);
+                map.put("userId",userId);
+                map.put("latitude", StatusBarService.latitude);
+                map.put("longitude", StatusBarService.longitude);
+                mDatabase.child(userId).updateChildren(map);
+            } else {
+                mDatabase.child(userId).setValue(user);
+                mDatabase.child(userId).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.d("Firebase", dataSnapshot.getKey() + "  " + dataSnapshot.getValue(UserModel.class)
+                                .toString());
+                    }
 
-                }
-
-                @Override
-                public void onCancelled(DatabaseError error) {
-                    Log.w("Firebase RealTime", "Failed to read value.", error.toException());
-                }
-            });
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                        Log.w("Firebase RealTime", "Failed to read value.", error.toException());
+                    }
+                });
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -209,4 +237,6 @@ public class TempoUpdateEmailFragment extends CoreFragment {
             e.printStackTrace();
         }
     }
+
+
 }

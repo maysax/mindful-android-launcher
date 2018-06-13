@@ -2,11 +2,13 @@ package co.siempo.phone.customviews;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Handler;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -64,7 +66,6 @@ public class SearchLayout extends CardView {
         isWatching = true;
         inflateLayout = inflate(context, R.layout.search_layout, this);
 
-//        launcherPrefs = context.getSharedPreferences("Launcher3Prefs", 0);
         txtSearchBox = inflateLayout.findViewById(R.id.txtSearchBox);
         btnClear = inflateLayout.findViewById(R.id.btnClear);
         btnClear.setOnClickListener(new OnClickListener() {
@@ -75,6 +76,11 @@ public class SearchLayout extends CardView {
         });
 
         setCardElevation(4.0f);
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(R.attr.theme_base_color, typedValue, true);
+        int color = typedValue.data;
+        setCardBackgroundColor(color);
         handler = new Handler();
     }
 

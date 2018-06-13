@@ -10,6 +10,9 @@
         android:smallScreens="true"
         android:xlargeScreens="true" />
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.PREVENT_POWER_KEY" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -32,13 +35,19 @@
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <!-- Becoming default SMS app -->
-    <uses-permission android:name="android.permission.RECEIVE_MMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.WRITE_SMS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+    <uses-permission android:name="com.android.vending.BILLING" />
+
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -64,6 +73,8 @@
     <uses-feature
         android:name="android.hardware.telephony"
         android:required="false" />
+    <uses-feature android:name="android.hardware.location.gps" />
+    <uses-feature android:name="android.hardware.location.network" />
 
     <application
         android:name=".app.Launcher3App_"
@@ -83,7 +94,8 @@
         <activity
             android:name=".launcher.FakeLauncherActivity"
             android:enabled="false"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AlertDialogTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -148,6 +160,10 @@
         <activity
             android:name=".activities.HelpActivity"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activities.ContributeActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.IntentionEditActivity"
             android:windowSoftInputMode="stateAlwaysVisible" />
@@ -160,6 +176,11 @@
         </receiver>
 
         <service android:name=".service.AlarmService" />
+        <service
+            android:name=".service.OverlayService"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/app_name" />
 
         <receiver android:name=".receivers.BootReceiver">
             <intent-filter>
@@ -179,7 +200,6 @@
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:taskAffinity=""
-            android:theme="@style/SiempoAppTheme"
             android:windowSoftInputMode="adjustPan|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -230,16 +250,21 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AppAssignmentActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <!-- <activity -->
         <!-- android:name=".fragments.PaneFragment" -->
         <!-- android:screenOrientation="portrait" /> -->
         <activity
             android:name=".activities.JunkfoodFlaggingActivity"
-            android:screenOrientation="portrait" />
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".activities.FavoritesSelectionActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".activities.ToolPositioningActivity"
             android:screenOrientation="portrait" />
@@ -254,11 +279,20 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.EmailRequestActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.EnableTempoActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.InAppItemListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.ChooseBackgroundActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.UpdateBackgroundActivity"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>

@@ -10,7 +10,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -56,6 +60,7 @@ public class AlarmService extends IntentService {
     private ArrayList<Integer> everyHourList = new ArrayList<>();
     private ArrayList<Integer> everyTwoHourList = new ArrayList<>();
     private ArrayList<Integer> everyFourHoursList = new ArrayList<>();
+    private Vibrator vibrator;
 
     public AlarmService() {
         super("MyServerOrWhatever");
@@ -69,6 +74,7 @@ public class AlarmService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             try {
                 Notification.Builder builder = new Notification.Builder(this, ANDROID_CHANNEL_ID)
@@ -93,12 +99,15 @@ public class AlarmService extends IntentService {
         everyTwoHourList.addAll(Arrays.asList(1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23));
         everyFourHoursList.addAll(Arrays.asList(1, 4, 8, 12, 16, 20, 24));
         n = NotificationManagerCompat.from(context);
-        run();
-
+        List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
+        Tracer.d("AlarmService: notificationList.size" + notificationList.size());
+        if (notificationList.size() > 0) {
+            run(notificationList);
+        }
     }
 
 
-    public void run() {
+    public void run(List<TableNotificationSms> notificationList) {
         if (PackageUtil.isSiempoLauncher(context)) {
             Calendar calendar = Calendar.getInstance();
             int systemHours = calendar.get(Calendar.HOUR_OF_DAY);
@@ -113,32 +122,22 @@ public class AlarmService extends IntentService {
                 Tracer.d("AlarmService: batchTime" + batchTime);
                 if (batchTime == 15) {
                     if (systemMinutes == 0 || systemMinutes == 15 || systemMinutes == 30 || systemMinutes == 45) {
-                        List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                        Tracer.d("AlarmService: notificationList.size" + notificationList.size());
                         createNotification(notificationList, context);
                     }
                 } else if (batchTime == 30) {
                     if (systemMinutes == 0 || systemMinutes == 30) {
-                        List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                        Tracer.d("AlarmService: notificationList.size" + notificationList.size());
                         createNotification(notificationList, context);
                     }
                 } else if (batchTime == 1) {
                     if (everyHourList.contains(systemHours) && systemMinutes == 0) {
-                        List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                        Tracer.d("AlarmService: notificationList.size" + notificationList.size());
                         createNotification(notificationList, context);
                     }
                 } else if (batchTime == 2) {
                     if (systemHours % 2 == 0 && systemMinutes == 0) {
-                        List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                        Tracer.d("AlarmService: notificationList.size" + notificationList.size());
                         createNotification(notificationList, context);
                     }
                 } else if (batchTime == 4) {
                     if (systemHours % 4 == 0 && systemMinutes == 0) {
-                        List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                        Tracer.d("AlarmService: notificationList.size" + notificationList.size());
                         createNotification(notificationList, context);
                     }
                 }
@@ -157,8 +156,6 @@ public class AlarmService extends IntentService {
                         Tracer.d("AlarmService: Time " + "User" + hours + ":" + minutes + "System:" + systemHours + ":" + systemMinutes);
                         if (hours == systemHours && minutes == systemMinutes) {
                             Tracer.d("AlarmService: onlyAt match condition" + str);
-                            List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                            Tracer.d("AlarmService: notificationList.size" + notificationList.size());
                             createNotification(notificationList, context);
                         }
                     }
@@ -168,19 +165,21 @@ public class AlarmService extends IntentService {
         }
     }
 
+    boolean isTempoVolume = false;
 
     public void createNotification(List<TableNotificationSms> notificationList, Context context) {
         try {
             Tracer.d("AlarmService: createNotification");
+
             if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-                if (audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM) == 1) {
-                    int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM) / 2;
+                int sound = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM);
+                if (sound == 1) {
+                    isTempoVolume = true;
+                    sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM) / 2;
                     audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, sound, 0);
                 }
                 Tracer.d("AlarmService: audioManager");
             }
-            Tracer.d("AlarmService: notificationList.size" + notificationList.size());
-
             Set<String> packageList = new HashSet<>();
             if (notificationList.size() > 0) {
                 for (TableNotificationSms sms : notificationList) {
@@ -223,21 +222,14 @@ public class AlarmService extends IntentService {
                         notificationChannel.enableLights(true);
                         notificationChannel.setLightColor(Color.RED);
                         notificationChannel.enableVibration(true);
+                        notificationChannel.setSound(null, null);
                         notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
                         notificationChannel.setVibrationPattern(new long[]{1000});
 
                         if (notificationManager != null) {
                             notificationManager.createNotificationChannel(notificationChannel);
                         }
-//                        notificationManager.createNotificationChannelGroup(new NotificationChannelGroup("" + channelName, channelName));
                     }
-//                    if (customNotification.getNotificationSms().size() == 1) {
-//                        Notification notification =
-//                                createSingleNotification(customNotification.getNotificationSms().get(0), false);
-//                        if (notificationManager != null) {
-//                            notificationManager.notify(customNotification.getNotificationSms().get(0).getId().intValue(), notification);
-//                        }
-//                    } else {
                     for (TableNotificationSms tableNotificationSms : customNotification.getNotificationSms()) {
                         Notification notification =
                                 createSingleNotification(tableNotificationSms, true);
@@ -245,37 +237,52 @@ public class AlarmService extends IntentService {
                             notificationManager.notify(tableNotificationSms.getId().intValue(), notification);
                         }
                     }
-                    Notification summary = createGroupNotification(customNotification.getPackagename(), customNotification.getNotificationSms().size());
+                    Notification summary = createGroupNotification(customNotification.getPackagename(), customNotification.getNotificationSms());
                     if (notificationManager != null) {
                         notificationManager.notify(customNotification.getNotificationSms().get(0).getApp_icon(), summary);
                     }
-//                    }
                 }
             }
 
             if (notificationList.size() >= 1) {
                 Tracer.d("AlarmService: deleteAll");
+                playNotificationSoundVibrate();
                 DBUtility.getNotificationDao().deleteAll();
             }
 
+
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if (audioManager != null) {
+//                        if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+//                            if (isTempoVolume)
+//                                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, 0);
+//                        }
+//                    }
+//                }
+//            }, 2000);
+
+
         } catch (Exception e) {
-            Tracer.d("AlarmService: createNotification" + e.getMessage());
             e.printStackTrace();
             CoreApplication.getInstance().logException(e);
         }
     }
 
-    private Notification createGroupNotification(String packageName, int size) {
+    private Notification createGroupNotification(String packageName, ArrayList<TableNotificationSms> notificationSms) {
         String applicationName = CoreApplication.getInstance().getListApplicationName().get(packageName);
         Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(packageName);
+        PendingIntent contentIntent = PackageUtil.getPendingIntent(context, notificationSms.get(0));
         return new NotificationCompat.Builder(context, applicationName)
                 .setSmallIcon(R.drawable.siempo_notification_icon)
                 .setContentTitle(applicationName)
-                .setContentText(size + " new messages")
+                .setContentIntent(contentIntent)
+                .setContentText(notificationSms.size() == 1 ? "1 new message" : notificationSms.size() + " new messages")
                 .setLargeIcon(bitmap)
                 .setGroupSummary(true)
                 .setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_SOUND)
+                //  .setDefaults(Notification.DEFAULT_SOUND)
                 .setGroup(applicationName)
                 .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
                 .build();
@@ -321,7 +328,7 @@ public class AlarmService extends IntentService {
                 .setCustomBigContentView(contentView)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
                 .setLights(Color.MAGENTA, 500, 500)
-                .setDefaults(Notification.DEFAULT_SOUND)
+                //.setDefaults(Notification.DEFAULT_SOUND)
                 .setContentInfo("Info");
 
         if (isGrouped) {
@@ -372,7 +379,7 @@ public class AlarmService extends IntentService {
                     .setAutoCancel(true)
                     .setContentIntent(contentIntent)
                     .setLights(Color.MAGENTA, 500, 500)
-                    .setDefaults(Notification.DEFAULT_SOUND)
+                    //.setDefaults(Notification.DEFAULT_SOUND)
                     .setCustomContentView(collapsedViews)
                     .setCustomBigContentView(contentView);
             n.notify(notificationSms.get(0).getId().intValue(), builder.build());
@@ -399,10 +406,42 @@ public class AlarmService extends IntentService {
                     .setAutoCancel(true)
                     .setPriority(priority)
                     .setLights(Color.MAGENTA, 500, 500)
-                    .setDefaults(Notification.DEFAULT_SOUND)
+//                    .setDefaults(Notification.DEFAULT_SOUND)
                     .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
                     .build();
             n.notify(notificationSms.get(0).getApp_icon(), newMessageNotification);
+        }
+    }
+
+
+    public void playNotificationSoundVibrate() {
+        try {
+            if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                vibrator.vibrate(500);
+                MediaPlayer mediaPlayer = new MediaPlayer();
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_SYSTEM);
+                mediaPlayer.setDataSource(getApplicationContext(), alert);
+                mediaPlayer.prepare();
+                mediaPlayer.start();
+                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        mp.release();
+                        if (audioManager != null) {
+                            if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                                if (isTempoVolume)
+                                    audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, 0);
+                            }
+                        }
+                    }
+                });
+
+            }
+
+        } catch (Exception e) {
+//            CoreApplication.getInstance().logException(e);
+            e.printStackTrace();
         }
     }
 

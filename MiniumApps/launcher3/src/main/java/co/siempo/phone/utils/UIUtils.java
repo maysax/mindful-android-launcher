@@ -51,6 +51,8 @@ public class UIUtils {
                 dp, context.getResources().getDisplayMetrics());
     }
 
+
+
     public static void toast(Context context, String msg) {
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
@@ -211,6 +213,13 @@ public class UIUtils {
         DisplayMetrics displaymetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         return (float) displaymetrics.heightPixels;
+
+    }
+
+    public static float getScreenWidth(Activity activity) {
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        return (float) displaymetrics.widthPixels;
 
     }
 
@@ -396,7 +405,8 @@ public class UIUtils {
      */
     public static void applyDim(@NonNull ViewGroup parent, float dimAmount) {
         //Drawable dim = new ColorDrawable(Color.BLACK);
-        Drawable dim = new ColorDrawable(parent.getContext().getResources().getColor(R.color.shadow));
+        Drawable dim = new ColorDrawable(parent.getContext().getResources()
+                .getColor(R.color.black));
         dim.setBounds(0, 0, parent.getWidth(), parent.getHeight());
         dim.setAlpha((int) (255 * dimAmount));
 

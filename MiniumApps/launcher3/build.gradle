@@ -50,13 +50,13 @@ android {
     productFlavors {
         alpha {
             dimension "Siempo"
-            versionCode 11702
-            versionName "${0}.${0}.${11}.${7}-${buildTime}"
+            versionCode 11902
+            versionName "${0}.${0}.${11}.${9}"
         }
         beta {
             dimension "Siempo"
-            versionCode 11611
-            versionName "${0}.${1}.${1}.${0}-${buildTime}"
+            versionCode 11911
+            versionName "${0}.${1}.${4}.${0}"
         }
     }
 
@@ -149,7 +149,10 @@ dependencies {
     implementation 'com.blankj:utilcode:1.5.0'
     annotationProcessor "org.androidannotations:androidannotations:$annotationsVersion"
     implementation "com.amitshekhar.android:android-networking:$fastAndroidNetworkingVersion"
-
+    implementation "com.google.android.gms:play-services-location:12.0.0"
+    implementation 'com.jaeger.statusbarutil:library:1.4.0'
+    implementation 'com.rvalerio:fgchecker:1.1.0'
+    implementation 'rongi.rotate-layout:rotate-layout:3.0.0'
 }
 greendao {
     schemaVersion "${databaseVersion}".toInteger()

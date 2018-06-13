@@ -7,19 +7,118 @@
         <item name="colorAccent">@color/colorAccent</item>
         <!--<item name="android:colorPrimaryDark">@color/layout_bg</item>-->
         <item name="android:colorControlHighlight">@color/colorAccent</item>
-        <item name="android:windowBackground">@color/layout_bg</item>
+        <item name="android:windowBackground">@color/background_white</item>
         <!-- enable overlapping of exiting and entering activities-->
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
         <item name="popupMenuStyle">@style/interrupt_popup_menu</item>
-        <item name="actionMenuTextColor">@color/colorAccent</item>
         <item name="android:windowDisablePreview">true</item>
         <item name="colorControlNormal">@color/dialog_blue</item>
+        <item name="icon_color">@color/black_80</item>
+        <item name="icon_color_reverse">@color/white</item>
+        <item name="toolbar_bg">@color/toolbar_bg</item>
+        <item name="toolbar_text_color">@color/colorAccent</item>
+        <item name="android:actionMenuTextColor">@color/colorAccent</item>
+        <item name="bottom_doc">@drawable/bottom_dock_gradient_light</item>
+        <item name="top_doc">@drawable/top_dock_gradient_light</item>
+        <item name="bottom_doc_pos">@drawable/top_dock_gradient_light_pos</item>
+        <item name="top_date_color">@color/trans_white</item>
+        <item name="pane_color">@color/white_dark</item>
+        <item name="indicator_active">@color/indicator_active</item>
+        <item name="indicator_inactive">@color/indicator_inactive</item>
+        <item name="txt_content_color">@color/settings_content_black</item>
+        <item name="txt_content_title">@color/dialog_title</item>
+        <item name="pop_up_color">@color/popup_white</item>
+        <item name="theme_base_color">@color/white</item>
+        <item name="button_bg">@color/white</item>
+        <item name="flag_header">@color/unflageapp_header</item>
+        <item name="card_image_trans">@color/trans_black</item>
+        <item name="card_image_trans_reverse">@color/trans_white</item>
+        <item name="hint_search">@color/hint_white</item>
+        <item name="chevron_junk">@color/red</item>
+        <item name="dialog_style">@style/FullScreenDialogStyle</item>
+        <item name="pull_tab">@color/pull_light</item>
+        <item name="flag_foreground">@color/forground_light</item>
+        <item name="divider_color">@color/divider_light</item>
+        <item name="image_alpha">@color/trans_white_bg_pane</item>
+        <item name="default_item_color">@color/dialog_blue</item>
+        <item name="default_item_bg">@color/white</item>
+        <item name="divider_tools">@color/divider_light_tools</item>
+        <item name="hint_color">@color/hint_white</item>
+        <item name="rounded_edt_color">@color/blue_light</item>
+        <item name="rounded_hint_color">@color/blue_light_hint</item>
+        <item name="junk_text">@color/junk_text_light</item>
+        <item name="junk_top">@color/background_white</item>
+        <item name="status_bar_pane">@color/pane_light</item>
+        <item name="navigation_bar_pane">@color/black</item>
+
+
+    </style>
+
+
+    <style name="SiempoAppThemeDark" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <!--<item name="android:colorPrimaryDark">@color/layout_bg</item>-->
+        <item name="android:colorControlHighlight">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/dark_window</item>
+        <!--<item name="android:statusBarColor">@color/dark_window</item>-->
+        <!-- enable overlapping of exiting and entering activities-->
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="popupMenuStyle">@style/interrupt_popup_menu</item>
+        <item name="dialog_style">@style/FullScreenDialogStyleDark</item>
+        <item name="android:windowDisablePreview">true</item>
+        <item name="colorControlNormal">@color/dialog_blue</item>
+        <item name="icon_color">@color/white_dark</item>
+        <item name="icon_color_reverse">@color/black</item>
+        <item name="toolbar_bg">@color/toolbar_bg_dark</item>
+        <item name="toolbar_text_color">@color/white</item>
+        <item name="bottom_doc">@drawable/bottom_dock_gradient</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
+        <item name="top_doc">@drawable/top_dock_gradient</item>
+        <item name="top_date_color">@color/trans_black_date</item>
+        <item name="pane_color">@color/black_pane</item>
+        <item name="indicator_active">@color/indicator_active_dark</item>
+        <item name="indicator_inactive">@color/indicator_inactive_dark</item>
+        <item name="txt_content_color">@color/settings_content_dark</item>
+        <item name="txt_content_title">@color/white</item>
+        <item name="pop_up_color">@color/popup</item>
+        <item name="theme_base_color">@color/black</item>
+        <item name="button_bg">@color/dialog_blue</item>
+        <item name="bottom_doc_pos">@drawable/bottom_dock_gradient</item>
+        <item name="flag_header">@color/section_title_bg</item>
+        <item name="card_image_trans">@color/trans_white</item>
+        <item name="card_image_trans_reverse">@color/trans_black</item>
+        <item name="hint_search">@color/dialog_blue</item>
+        <item name="chevron_junk">@color/white</item>
+        <item name="pull_tab">@color/pull_dark</item>
+        <item name="flag_foreground">@color/forground_dark</item>
+        <item name="divider_color">@color/divider_dark</item>
+        <item name="image_alpha">@color/trans_black_bg</item>
+        <item name="default_item_color">@color/white</item>
+        <item name="default_item_bg">@color/dialog_blue</item>
+        <item name="divider_tools">@color/divider_dark_tools</item>
+        <item name="hint_color">@color/hint_dark</item>
+        <item name="rounded_edt_color">@color/blue_dark</item>
+        <item name="rounded_hint_color">@color/blue_dark_hint</item>
+        <item name="junk_text">@color/junk_text_dark</item>
+        <item name="junk_top">@color/junk_pane</item>
+        <item name="status_bar_pane">@color/pane_dark</item>
+        <item name="navigation_bar_pane">@color/transparent</item>
+
+
     </style>
 
     <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="bottom_dock_dark">
+        <item name="android:background">@drawable/bottom_dock_gradient</item>
     </style>
 
     <style name="TextLabel" parent="TextAppearance.Design.Hint">
@@ -29,12 +128,26 @@
     <style name="FullScreenDialogStyle" parent="SiempoAppTheme">
         <item name="android:windowNoTitle">true</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:colorControlHighlight">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowAnimationStyle">@style/TempoDialog</item>
+        <item name="android:backgroundDimEnabled">true</item>
+
+    </style>
+
+    <style name="FullScreenDialogStyleDark" parent="SiempoAppThemeDark">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="colorPrimary">@color/black</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:colorControlHighlight">@color/colorAccent</item>
         <item name="android:windowBackground">@color/transparent</item>
         <item name="android:windowAnimationStyle">@style/TempoDialog</item>
         <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="MaterialDialogSheet" parent="@style/Base.Theme.AppCompat.Light.Dialog">
@@ -85,7 +198,7 @@
         <item name="android:dropDownVerticalOffset">12dp</item>
     </style>
 
-    <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="AlertDialogTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:textColor">@color/dialog_title</item>
         <item name="android:textColorPrimary">@color/dialog_message</item>
     </style>
@@ -123,6 +236,15 @@
         <item name="android:colorAccent">@color/colorAccent</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textColorPrimary">#A3A3A3</item>
+
+    </style>
+
+    <style name="toolbar_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">?attr/toolbar_bg</item>
+        <item name="android:elevation">@dimen/dp_5</item>
+        <item name="android:minHeight">?android:attr/actionBarSize</item>
 
     </style>
 

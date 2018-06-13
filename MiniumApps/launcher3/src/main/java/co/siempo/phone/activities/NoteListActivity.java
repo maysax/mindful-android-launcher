@@ -158,7 +158,6 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
                 else {
                     try {
                         notes.put(position, newFavourite);
-
                     } catch (JSONException e) {
                         CoreApplication.getInstance().logException(e);
                         e.printStackTrace();
@@ -174,14 +173,33 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
                     newFavourite.put(NOTE_FAVOURED, false);
                     notes.put(position, newFavourite);
 
+                    JSONArray newArrFav = new JSONArray();
+                    JSONArray newArrunFAv = new JSONArray();
+                    for (int i = 0; i < notes.length(); i++) {
+                        JSONObject note = notes.getJSONObject(i);
+                        String val = String.valueOf(note.get(NOTE_FAVOURED));
+                        if (val.equalsIgnoreCase("true")) {
+                            newArrFav.put(notes.get(i));
+                        } else {
+                            newArrunFAv.put(notes.get(i));
+                        }
+                    }
+                    try {
+                        for (int i = 0; i < newArrunFAv.length(); i++) {
+                            JSONObject jsonObject = newArrunFAv.getJSONObject(i);
+                            newArrFav.put(jsonObject);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    notes = newArrFav;
+                    adapter.setAdapterData(notes);
+                    adapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     CoreApplication.getInstance().logException(e);
                     e.printStackTrace();
                 }
-
-                adapter.notifyDataSetChanged();
             }
-
             // Save notes to local file
             saveData(localPath, notes);
         }
@@ -191,6 +209,8 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Init realIndexes array
+        realIndexesOfSearchResults = new ArrayList<>();
         // Initialize local file path and backup file path
         localPath = new File(getFilesDir() + "/" + NOTES_FILE_NAME);
 
@@ -324,7 +344,13 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
         toolbar.inflateMenu(R.menu.menu_main);
 
         // Set an OnMenuItemClickListener to handle menu item clicks
-        toolbar.setOnMenuItemClickListener(this);
+        //toolbar.setOnMenuItemClickListener(this);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         Menu menu = toolbar.getMenu();
 
@@ -538,7 +564,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
             // If search is active -> use position from realIndexesOfSearchResults for NotesEditActivity
-            if (searchActive) {
+            if (searchActive && null != realIndexesOfSearchResults) {
                 int newPosition = realIndexesOfSearchResults.get(position);
 
                 try {

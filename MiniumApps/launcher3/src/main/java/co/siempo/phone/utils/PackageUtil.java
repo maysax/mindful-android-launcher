@@ -757,12 +757,13 @@ public class PackageUtil {
      * Below function is used to get contact name from contact number store in contact list
      */
     private static String nameFromContactNumber(String number, Context context) {
-
+        String contactName;
+        try {
         Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
         Cursor cursor = context.getContentResolver().query(uri, new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME,
                 ContactsContract.CommonDataKinds.Phone.PHOTO_URI}, null, null, null);
-        String contactName;
-        try {
+
+
             if (cursor != null && cursor.moveToFirst()) {
                 contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
                 cursor.close();
@@ -808,7 +809,7 @@ public class PackageUtil {
 
         //get the JSON array of the ordered of sorted customers
         String jsonListOfSortedToolsId = PrefSiempo.getInstance(context).read(PrefSiempo.SORTED_MENU, "");
-
+        Log.d("MenuItem", jsonListOfSortedToolsId);
 
         //check for null
         if (!jsonListOfSortedToolsId.isEmpty()) {
@@ -845,8 +846,15 @@ public class PackageUtil {
         }
     }
 
+    /**
+     * Changes for SSA-1770-Changes
+     *
+     * @param context
+     * @param isFalse-check Whether list is fetched for empty FavItemsList or not.
+     * @return
+     */
+    public static ArrayList<MainListItem> getFavoriteList(Context context, boolean isFalse) {
 
-    public static ArrayList<MainListItem> getFavoriteList(Context context) {
         ArrayList<MainListItem> sortedFavoriteList = new ArrayList<>();
         try {
             ArrayList<MainListItem> appList = getAppList(context);
@@ -857,7 +865,12 @@ public class PackageUtil {
                     listOfSortFavoritesApps = syncFavoriteList(jsonListOfSortedFavorites, context);
                     sortedFavoriteList = sortFavoriteAppsByPosition(listOfSortFavoritesApps, appList, context);
                 } else {
-                    sortedFavoriteList = addDefaultFavoriteApps(context, appList);
+                    if (isFalse) {
+                        sortedFavoriteList = addDefaultFavoriteAppsSetting(context, appList);
+                    } else {
+                        sortedFavoriteList = addDefaultFavoriteApps(context, appList);
+                    }
+
                 }
             } else {
                 sortedFavoriteList = addDefaultFavoriteApps(context, appList);
@@ -868,8 +881,6 @@ public class PackageUtil {
 
         return sortedFavoriteList;
     }
-
-
     private static ArrayList<MainListItem> getAppList(Context context) {
         ArrayList<MainListItem> appList = new ArrayList<>();
         try {
@@ -992,7 +1003,8 @@ public class PackageUtil {
         return sortedFavoriteList;
     }
 
-    private static ArrayList<MainListItem> addDefaultFavoriteApps(Context context, List<MainListItem> appList) {
+    private static ArrayList<MainListItem> addDefaultFavoriteApps(Context context,
+                                                                  List<MainListItem> appList) {
 
         LauncherApps launcherApps = (LauncherApps) context.getSystemService(Context.LAUNCHER_APPS_SERVICE);
         Set<String> list;
@@ -1077,6 +1089,86 @@ public class PackageUtil {
                 if (isChromeEnable) {
                     list.add(CHROME_PACKAGE);
                 }
+                if (isSystemSettingEnable) {
+                    list.add(SYSTEM_SETTING);
+                }
+            }
+        }
+
+
+        Gson gson2 = new Gson();
+        String jsonListOfFavoriteApps = gson2.toJson(listOfSortFavoritesApps);
+        PrefSiempo.getInstance(context).write(PrefSiempo.FAVORITE_SORTED_MENU, jsonListOfFavoriteApps);
+        PrefSiempo.getInstance(context).write(PrefSiempo.FAVORITE_APPS, list);
+
+        return items;
+    }
+
+    private static ArrayList<MainListItem> addDefaultFavoriteAppsSetting(Context context,
+                                                                         List<MainListItem> appList) {
+
+        LauncherApps launcherApps = (LauncherApps) context.getSystemService(Context.LAUNCHER_APPS_SERVICE);
+        Set<String> list;
+        list = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_APPS, new HashSet<String>());
+
+        ArrayList<MainListItem> items = new ArrayList<>();
+        String SYSTEM_SETTING = "com.android.settings";
+
+
+        for (int i = 0; i < appList.size(); i++) {
+            if (!TextUtils.isEmpty(appList.get(i).getPackageName())) {
+                if (appList.get(i).getPackageName().equalsIgnoreCase(SYSTEM_SETTING)) {
+                    boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, appList.get(i).getPackageName());
+                    if (isEnable) {
+                        items.add(appList.get(i));
+                    }
+                }
+            }
+        }
+
+
+        int remainingFavoriteList = 12 - items.size();
+        for (int i = 0; i < remainingFavoriteList; i++) {
+            MainListItem m = new MainListItem(-10, "", "");
+            items.add(m);
+        }
+
+
+        //get the JSON array of the ordered of sorted customers
+        String jsonListOfSortedFavorites = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
+        //convert onNoteListChangedJSON array into a List<Long>
+        Gson gson1 = new Gson();
+        List<String> listOfSortFavoritesApps = gson1.fromJson(jsonListOfSortedFavorites, new TypeToken<List<String>>() {
+        }.getType());
+
+        if (listOfSortFavoritesApps != null) {
+
+            if (!listOfSortFavoritesApps.contains(SYSTEM_SETTING)) {
+                for (int i = 0; i < listOfSortFavoritesApps.size(); i++) {
+                    if (TextUtils.isEmpty(listOfSortFavoritesApps.get(i).trim())) {
+                        boolean isEnable = UIUtils.isAppInstalledAndEnabled(context, SYSTEM_SETTING);
+                        if (isEnable) {
+                            listOfSortFavoritesApps.set(i, SYSTEM_SETTING);
+                            if (list != null && !list.contains(SYSTEM_SETTING)) {
+                                list.add(SYSTEM_SETTING);
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        } else {
+            listOfSortFavoritesApps = new ArrayList<>();
+            boolean isSystemSettingEnable = UIUtils.isAppInstalledAndEnabled(context, SYSTEM_SETTING);
+            if (isSystemSettingEnable) {
+                listOfSortFavoritesApps.add(SYSTEM_SETTING);
+            }
+            int remainingCount = 12 - listOfSortFavoritesApps.size();
+            for (int j = 0; j < remainingCount; j++) {
+                listOfSortFavoritesApps.add("");
+            }
+
+            if (list != null) {
                 if (isSystemSettingEnable) {
                     list.add(SYSTEM_SETTING);
                 }
@@ -1179,7 +1271,7 @@ public class PackageUtil {
             for (int j = 0; j < recentItemList.size(); j++) {
                 MainListItem mainListItem = recentItemList.get(j);
 
-                if(null!=mainListItem) {
+                if (null != mainListItem) {
                     String recentItemTitle = mainListItem.getTitle();
                     String recentItemPackageName = mainListItem.getPackageName();
 
@@ -1269,16 +1361,6 @@ public class PackageUtil {
         return junkListItems;
     }
 
-    public static class HoursComparator implements Comparator<AlarmData> {
-        @Override
-        public int compare(AlarmData o1, AlarmData o2) {
-            if (o1.getHours() == o2.getHours()) {
-                return o1.getMinute() - o2.getMinute();
-            }
-            return o1.getHours() - o2.getHours();
-        }
-    }
-
     public static int forTwoHours(int hour) {
         ArrayList<Integer> everyTwoHourList = new ArrayList<>(Arrays.asList(0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22));
         if (hour >= 22) {
@@ -1305,5 +1387,15 @@ public class PackageUtil {
             }
         }
         return 0;
+    }
+
+    public static class HoursComparator implements Comparator<AlarmData> {
+        @Override
+        public int compare(AlarmData o1, AlarmData o2) {
+            if (o1.getHours() == o2.getHours()) {
+                return o1.getMinute() - o2.getMinute();
+            }
+            return o1.getHours() - o2.getHours();
+        }
     }
 }

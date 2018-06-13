@@ -35,6 +35,13 @@ public class FirebaseHelper {
     private static String SIEMPO_DEFAULT = "siempo_default";
     private static String SUPPRESSED_NOTIFICATION = "suppressed_notification";
     private static String TEMPO = "tempo";
+    public static String INTENTIONS = "intentions";
+    public static String HIDE_ICON_BRANDING = "hide_icon_branding";
+    public static String RANDOMIZED_JUNK_FOOD = "randomized_junk_food";
+    public static String ALLOW_SPECIFIC = "allow_specific";
+    public static String DETER_OVER_USE = "deter_over_use";
+    public static String JUNKFOOD_USAGE = "junk_food_usage";
+    public static String JUNKFOOD_USAGE_COVER = "junk_food_usage_cover";
 
     //Attribute
     private String SCREEN_NAME = "screen_name";
@@ -48,6 +55,9 @@ public class FirebaseHelper {
     private String TEMPO_INTERVAL_ONLY_AT = "tempo_interval_onlyat";
     private String TEMPO_INTERVAL = "tempo_interval";
     private String TEMPO_TYPE = "tempo_type";
+    private String ENABLE_DISABLE = "enable_disable";
+    private String BLOCK_UNBLOCK = "block_unblock";
+    private String DETER_TIME = "deter_time";
 
 
     public FirebaseHelper() {
@@ -101,6 +111,7 @@ public class FirebaseHelper {
 
     /**
      * Used fot Tool/App used by user from either IF or 3 panes.
+     * Here we user is not assign any application firebase default shows not set event to analytics.
      * from = 0 for Tool Pane.
      * from = 1 for Favorite Pane
      * from = 2 for Junkfood Pane
@@ -199,6 +210,80 @@ public class FirebaseHelper {
         }
         Tracer.i("Firebase:" + TEMPO + ": " + bundle.toString());
         getFirebaseAnalytics().logEvent(TEMPO, bundle);
+    }
+
+    /**
+     * This method used when user enable/disable Intention,IconBranding,Randomize Junk-food.
+     *
+     * @param eventFor
+     * @param enableDisable
+     */
+    public void logIntention_IconBranding_Randomize(String eventFor, int enableDisable) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(ENABLE_DISABLE, enableDisable);
+        if (eventFor.equalsIgnoreCase(INTENTIONS)) {
+            Tracer.i("Firebase:" + INTENTIONS + ": " + bundle.toString());
+            getFirebaseAnalytics().logEvent(INTENTIONS, bundle);
+        } else if (eventFor.equalsIgnoreCase(HIDE_ICON_BRANDING)) {
+            Tracer.i("Firebase:" + HIDE_ICON_BRANDING + ": " + bundle.toString());
+            getFirebaseAnalytics().logEvent(HIDE_ICON_BRANDING, bundle);
+        } else if (eventFor.equalsIgnoreCase(RANDOMIZED_JUNK_FOOD)) {
+            Tracer.i("Firebase:" + RANDOMIZED_JUNK_FOOD + ": " + bundle.toString());
+            getFirebaseAnalytics().logEvent(RANDOMIZED_JUNK_FOOD, bundle);
+        }
+
+
+    }
+
+    /**
+     * Block/Unblock application name log.
+     *
+     * @param application_name
+     * @param block_unblock
+     */
+    public void logBlockUnblockApplication(String application_name, int block_unblock) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(BLOCK_UNBLOCK, block_unblock);
+        bundle.putString(APPLICATION_NAME, application_name);
+        Tracer.i("Firebase:" + ALLOW_SPECIFIC + ": " + bundle.toString());
+        getFirebaseAnalytics().logEvent(ALLOW_SPECIFIC, bundle);
+    }
+
+    /**
+     * This method is used to store the user selected deter event time.
+     *
+     * @param time_selected -1 for off status and else are user selected time.
+     */
+    public void logDeterUseEvent(int time_selected) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(DETER_TIME, time_selected);
+        Tracer.i("Firebase:" + DETER_OVER_USE + ": " + bundle.toString());
+        getFirebaseAnalytics().logEvent(DETER_OVER_USE, bundle);
+    }
+
+    /**
+     * This method is used to store total time user spent on junkfood app on date change event.
+     *
+     * @param usage_time spent time in millisecond.
+     */
+    public void logJunkFoodUsageTime(long usage_time) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(TIME_SPENT, usage_time);
+        Tracer.i("Firebase:" + JUNKFOOD_USAGE + ": " + bundle.toString());
+        getFirebaseAnalytics().logEvent(JUNKFOOD_USAGE, bundle);
+    }
+
+
+    /**
+     * This method is used to store total time user spent on cover period on date change event.
+     *
+     * @param usage_time spent time in millisecond.
+     */
+    public void logJunkFoodUsageTimeWithCover(long usage_time) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(TIME_SPENT, usage_time);
+        Tracer.i("Firebase:" + JUNKFOOD_USAGE_COVER + ": " + bundle.toString());
+        getFirebaseAnalytics().logEvent(JUNKFOOD_USAGE_COVER, bundle);
     }
 
 }

@@ -94,11 +94,6 @@ public class SuppressNotificationAdapter extends RecyclerView.Adapter<SuppressNo
                 holder.imgAppIcon.setImageDrawable(drawable);
             }
 
-//            if (drawable != null) {
-//                holder.imgAppIcon.setImageDrawable(drawable);
-//            } else {
-//                holder.imgAppIcon.setBackground(mContext.getDrawable(R.mipmap.ic_launcher));
-//            }
             holder.txtAppName.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName()));
             if (notification.getStrTitle() == null || notification.getStrTitle().equalsIgnoreCase("")) {
                 holder.txtUserName.setText("");

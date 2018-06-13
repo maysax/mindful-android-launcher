@@ -8,9 +8,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,20 +20,42 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.javiersantos.appupdater.AppUpdaterUtils;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.RejectedExecutionException;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.DashboardPagerAdapter;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.CheckVersionEvent;
 import co.siempo.phone.event.HomePress;
+import co.siempo.phone.event.NotifyBackgroundChange;
 import co.siempo.phone.event.OnBackPressedEvent;
+import co.siempo.phone.event.ThemeChangeEvent;
 import co.siempo.phone.fragments.FavoritePaneFragment;
 import co.siempo.phone.fragments.IntentionFragment;
 import co.siempo.phone.fragments.JunkFoodPaneFragment;
@@ -40,17 +64,22 @@ import co.siempo.phone.fragments.ToolsPaneFragment;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
+import co.siempo.phone.models.UserModel;
 import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.service.LoadFavoritePane;
 import co.siempo.phone.service.LoadJunkFoodPane;
 import co.siempo.phone.service.LoadToolPane;
+import co.siempo.phone.service.MailChimpOperation;
 import co.siempo.phone.service.SiempoNotificationListener_;
+import co.siempo.phone.service.StatusBarService;
 import co.siempo.phone.ui.SiempoViewPager;
+import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 
 public class DashboardActivity extends CoreActivity {
 
@@ -80,6 +109,9 @@ public class DashboardActivity extends CoreActivity {
     private DashboardPagerAdapter mPagerAdapter;
     private AlertDialog notificationDialog;
     private Dialog overlayDialog;
+    private RelativeLayout linMain;
+    private ImageView imgBackground;
+    private Intent starterIntent;
 
     /**
      * @return True if {@link android.service.notification.NotificationListenerService} is enabled.
@@ -96,44 +128,180 @@ public class DashboardActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        permissionUtil = new PermissionUtil(this);
+
+        if (!TextUtils.isEmpty(PrefSiempo.getInstance(this).read(PrefSiempo
+                .USER_EMAILID, ""))) {
+            boolean isUserSeenEmail = PrefSiempo.getInstance(this).read(PrefSiempo
+                    .USER_SEEN_EMAIL_REQUEST, false);
+            if (!isUserSeenEmail) {
+                try {
+                    String strEmail = PrefSiempo.getInstance(this).read(PrefSiempo
+                            .USER_EMAILID, "");
+                    connectivityManager = (ConnectivityManager) getSystemService(Context
+                            .CONNECTIVITY_SERVICE);
+                    NetworkInfo activeNetwork = null;
+                    if (connectivityManager != null) {
+                        activeNetwork = connectivityManager.getActiveNetworkInfo();
+                    }
+                    if (activeNetwork != null) {
+                        new MailChimpOperation().execute(strEmail);
+                        storeDataToFirebase(CoreApplication.getInstance().getDeviceId(), strEmail);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                PrefSiempo.getInstance(this).write(PrefSiempo
+                        .USER_SEEN_EMAIL_REQUEST, true);
+            }
+        }
         if (!PrefSiempo.getInstance(this).read(PrefSiempo
-                .USER_SEEN_EMAIL_REQUEST, false) || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && !permissionUtil.hasGiven
-                (PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION))) {
+                .USER_SEEN_EMAIL_REQUEST, false)) {
             Intent intent = new Intent(this, EmailRequestActivity.class);
             startActivity(intent);
         }
+         /*   if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !permissionUtil.hasGiven
+                    (PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION))) {
+                Intent intent = new Intent(this, EmailRequestActivity.class);
+                startActivity(intent);
+            }
+        } else {
+            if (!PrefSiempo.getInstance(this).read(PrefSiempo
+                    .USER_SEEN_EMAIL_REQUEST, false) || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                    && !permissionUtil.hasGiven
+                    (PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION))) {
+                Intent intent = new Intent(this, EmailRequestActivity.class);
+                startActivity(intent);
+            }
+        }*/
+    }
 
+    private void storeDataToFirebase(String userId, String emailId) {
+        try {
+            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("users");
+            UserModel user = new UserModel(userId, emailId, StatusBarService.latitude, StatusBarService.longitude);
+            String key = mDatabase.child(userId).getKey();
+            if (key != null) {
+                Map map = new HashMap();
+                map.put("emailId",emailId);
+                map.put("userId",userId);
+                map.put("latitude", StatusBarService.latitude);
+                map.put("longitude", StatusBarService.longitude);
+                mDatabase.child(userId).updateChildren(map);
+            } else {
+                mDatabase.child(userId).setValue(user);
+                mDatabase.child(userId).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.d("Firebase", dataSnapshot.getKey() + "  " + dataSnapshot.getValue(UserModel.class)
+                                .toString());
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                        Log.w("Firebase RealTime", "Failed to read value.", error.toException());
+                    }
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
+        setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
+
+        Window w = getWindow(); // in Activity's onCreate() for instance
+        w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+//        w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//        w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+        linMain = findViewById(R.id.linMain);
+        imgBackground = findViewById(R.id.imgBackground);
+        //changeLayoutBackground();
         swipeCount = PrefSiempo.getInstance(DashboardActivity.this).read(PrefSiempo.TOGGLE_LEFTMENU, 0);
         loadViews();
         Log.d("Test", "P1");
         if (startTime == 0) {
             startTime = System.currentTimeMillis();
         }
-        mWindow = getWindow();
-        // clear FLAG_TRANSLUCENT_STATUS flag:
-        mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-        mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        defaultStatusBarColor = mWindow.getStatusBarColor();
-        Log.d("Test", "P2");
+        permissionUtil = new PermissionUtil(this);
         overlayDialog = new Dialog(this, 0);
         showOverlayOfDefaultLauncher();
+        View decor = w.getDecorView();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !read) {
+            decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
+        if (permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)) {
+            changeLayoutBackground();
+        } else {
+            PrefSiempo.getInstance(this).write(PrefSiempo
+                    .DEFAULT_BAG, "");
+            PrefSiempo.getInstance(this).write(PrefSiempo
+                    .DEFAULT_BAG_ENABLE, false);
+        }
+    }
 
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
 
+    public int getNavigationBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
+    private void changeLayoutBackground() {
+        try {
+            String filePath = PrefSiempo.getInstance(this).read(PrefSiempo
+                    .DEFAULT_BAG, "");
+            boolean isEnable = PrefSiempo.getInstance(this).read(PrefSiempo
+                    .DEFAULT_BAG_ENABLE, false);
+            if (!TextUtils.isEmpty(filePath) && isEnable) {
+                Glide.with(this)
+                        .load(Uri.fromFile(new File(filePath))) // Uri of the
+                        // picture
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(imgBackground);
+            } else {
+                imgBackground.setImageBitmap(null);
+                imgBackground.setBackground(null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setBackground() {
+        String filePath = PrefSiempo.getInstance(this).read(PrefSiempo
+                .DEFAULT_BAG, "");
+        boolean isEnable = PrefSiempo.getInstance(this).read(PrefSiempo
+                .DEFAULT_BAG_ENABLE, false);
+        if (!TextUtils.isEmpty(filePath) && isEnable) {
+            Glide.with(this)
+                    .load(Uri.fromFile(new File(filePath))) // Uri of the
+                    // picture
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(imgBackground);
+        }
     }
 
     private void showOverlayOfDefaultLauncher() {
-        if (!UIUtils.isMyLauncherDefault(this) && !overlayDialog.isShowing()) {
+        if (!PackageUtil.isSiempoLauncher(this) && !overlayDialog.isShowing()) {
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -142,25 +310,56 @@ public class DashboardActivity extends CoreActivity {
                 }
             }, 1000);
         }
+
+        //If already shown there is an overlay dialog and user sets siempo as
+        // default launcher from settings or home button then this overlay
+        // needs to be dismissed
+        if (PackageUtil.isSiempoLauncher(this) && null != overlayDialog &&
+                overlayDialog
+                        .isShowing()) {
+            overlayDialog.dismiss();
+        }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
+        boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
+        setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
         super.onNewIntent(intent);
         currentIndexDashboard = 1;
         currentIndexPaneFragment = 2;
         mPager.setCurrentItem(currentIndexDashboard, false);
-        EventBus.getDefault().post(new HomePress(1, 2));
+        EventBus.getDefault().postSticky(new HomePress(1, 2));
         loadPane();
         //In case of home press, when app is launched again we need to show
         // this overlay of default launcher if siempo is not set as default
         // launcher
         showOverlayOfDefaultLauncher();
+        if (read) {
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.transparent));
+        } else {
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.black));
+        }
+    }
+
+    public boolean hasNavBar(Resources resources) {
+        int id = resources.getIdentifier("config_showNavigationBar", "bool", "android");
+        return id > 0 && resources.getBoolean(id);
     }
 
     public void loadViews() {
+
         mPager = findViewById(R.id.pager);
+        linMain = findViewById(R.id.linMain);
+        boolean hasMenuKey = ViewConfiguration.get(this).hasPermanentMenuKey();
+        if (hasNavBar(getResources())) {
+            mPager.setPadding(0, getStatusBarHeight(), 0, getNavigationBarHeight());
+        } else {
+            mPager.setPadding(0, getStatusBarHeight(), 0, 0);
+
+        }
         mPagerAdapter = new DashboardPagerAdapter(getFragmentManager());
+        loadPane();
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(currentIndexDashboard);
         mPager.setOffscreenPageLimit(2);
@@ -179,13 +378,7 @@ public class DashboardActivity extends CoreActivity {
                         PrefSiempo.getInstance(DashboardActivity.this).write(PrefSiempo.TOGGLE_LEFTMENU, swipeCount);
                     }
                     FirebaseHelper.getInstance().logScreenUsageTime(IntentionFragment.class.getSimpleName(), startTime);
-                    if (currentIndexDashboard == 1 && PrefSiempo.getInstance(DashboardActivity.this).read(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, true)) {
-                        PrefSiempo.getInstance(DashboardActivity.this).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, false);
-                        Intent intent = new Intent(DashboardActivity.this, JunkfoodFlaggingActivity.class);
-                        startActivity(intent);
-                        overridePendingTransition(R
-                                .anim.fade_in_junk, R.anim.fade_out_junk);
-                    } else if (DashboardActivity.currentIndexPaneFragment == 0) {
+                    if (DashboardActivity.currentIndexPaneFragment == 0) {
                         Log.d("Firebase", "Junkfood Start");
                         startTime = System.currentTimeMillis();
                     } else if (DashboardActivity.currentIndexPaneFragment == 1) {
@@ -196,7 +389,10 @@ public class DashboardActivity extends CoreActivity {
                         startTime = System.currentTimeMillis();
                     }
 
+
                 } else if (currentIndexDashboard == 0 && i == 1) {
+
+
                     if (DashboardActivity.currentIndexPaneFragment == 0) {
                         Log.d("Firebase", "Junkfood End");
                         FirebaseHelper.getInstance().logScreenUsageTime(JunkFoodPaneFragment.class.getSimpleName(), startTime);
@@ -228,18 +424,28 @@ public class DashboardActivity extends CoreActivity {
 
             }
         });
-        loadPane();
+
         if (PrefSiempo.getInstance(this).read(PrefSiempo
-                .IS_APP_INSTALLED_FIRSTTIME, true)) {
-            Log.d(TAG, "Display upgrade overlayDialog.");
+                .INSTALLED_APP_VERSION_CODE, 0) == 0 || (PrefSiempo.getInstance(this).read(PrefSiempo
+                .INSTALLED_APP_VERSION_CODE, 0) < UIUtils
+                .getCurrentVersionCode(this))) {
+            PrefSiempo.getInstance(this).write(PrefSiempo
+                    .INSTALLED_APP_VERSION_CODE, UIUtils.getCurrentVersionCode(this));
             checkUpgradeVersion();
         }
+
+
     }
 
     private void loadPane() {
-        new LoadFavoritePane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        new LoadToolPane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        new LoadJunkFoodPane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        try {
+            new LoadFavoritePane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new LoadToolPane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new LoadJunkFoodPane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } catch (RejectedExecutionException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -286,7 +492,10 @@ public class DashboardActivity extends CoreActivity {
         Log.d(TAG, "Active network..");
         connectivityManager = (ConnectivityManager) getSystemService(Context
                 .CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        NetworkInfo activeNetwork = null;
+        if (connectivityManager != null) {
+            activeNetwork = connectivityManager.getActiveNetworkInfo();
+        }
         if (activeNetwork != null) {
             if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
                 ApiClient_.getInstance_(DashboardActivity.this)
@@ -299,7 +508,6 @@ public class DashboardActivity extends CoreActivity {
             Log.d(TAG, getString(R.string.nointernetconnection));
         }
     }
-
 
     @Override
     protected void onStop() {
@@ -327,28 +535,30 @@ public class DashboardActivity extends CoreActivity {
     @Subscribe
     public void checkVersionEvent(CheckVersionEvent event) {
         Log.d(TAG, "Check Version event...");
-        if (event.getVersionName() != null && event.getVersionName().equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
-            if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
-                Tracer.i("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
-                showUpdateDialog(CheckVersionEvent.ALPHA);
-                appUpdaterUtils = null;
-            } else {
-                ApiClient_.getInstance_(this).checkAppVersion(CheckVersionEvent.BETA);
-            }
+        if (event.getVersion() == -1000) {
+            Toast.makeText(this, getString(R.string.msg_internet), Toast.LENGTH_SHORT).show();
         } else {
-            if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
-                Tracer.i("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
-                showUpdateDialog(CheckVersionEvent.BETA);
-                appUpdaterUtils = null;
+            if (event.getVersionName() != null && event.getVersionName().equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
+                if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
+                    Tracer.i("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
+                    showUpdateDialog(CheckVersionEvent.ALPHA);
+                    appUpdaterUtils = null;
+                } else {
+                    ApiClient_.getInstance_(this).checkAppVersion(CheckVersionEvent.BETA);
+                }
             } else {
-                Tracer.i("Installed version: " + "Up to date.");
+                if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
+                    Tracer.i("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
+                    showUpdateDialog(CheckVersionEvent.BETA);
+                    appUpdaterUtils = null;
+                } else {
+                    Tracer.i("Installed version: " + "Up to date.");
+                }
             }
         }
     }
 
     private void showUpdateDialog(String str) {
-        PrefSiempo.getInstance(DashboardActivity.this).write(PrefSiempo
-                .IS_APP_INSTALLED_FIRSTTIME, false);
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
         if (activeNetwork != null) { // connected to the internet
             UIUtils.confirmWithCancel(this, "", str.equalsIgnoreCase(CheckVersionEvent.ALPHA) ? "New alpha version found! Would you like to update Siempo?" : "New beta version found! Would you like to update Siempo?", new DialogInterface.OnClickListener() {
@@ -379,11 +589,6 @@ public class DashboardActivity extends CoreActivity {
         if (requestCode == 100) {
             if (isEnabled(DashboardActivity.this)) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                    if (!Settings.canDrawOverlays(DashboardActivity.this)) {
-//                        Toast.makeText(this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
-//                        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-//                        startActivityForResult(intent, 102);
-//                    } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
                             && !notificationManager.isNotificationPolicyAccessGranted()) {
                         Intent intent = new Intent(
@@ -391,7 +596,6 @@ public class DashboardActivity extends CoreActivity {
                                         .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
                         startActivityForResult(intent, 103);
                     }
-//                    }
                 }
 
             } else {
@@ -400,11 +604,6 @@ public class DashboardActivity extends CoreActivity {
         }
         if (requestCode == 102) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                if (!Settings.canDrawOverlays(DashboardActivity.this)) {
-//                    Toast.makeText(this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
-//                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-//                    startActivityForResult(intent, 102);
-//                } else {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
                         && !notificationManager.isNotificationPolicyAccessGranted()) {
                     Intent intent = new Intent(
@@ -413,7 +612,6 @@ public class DashboardActivity extends CoreActivity {
                     startActivityForResult(intent, 103);
                 }
             }
-//            }
         }
 
         if (requestCode == 103) {
@@ -432,7 +630,7 @@ public class DashboardActivity extends CoreActivity {
         super.onDestroy();
         DashboardActivity.isTextLenghGreater = "";
         currentIndexDashboard = 1;
-        currentIndexPaneFragment = 1;
+        currentIndexPaneFragment = 2;
     }
 
     /**
@@ -442,14 +640,22 @@ public class DashboardActivity extends CoreActivity {
         try {
             this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             overlayDialog = new Dialog(this, 0);
-            overlayDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            Objects.requireNonNull(overlayDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
             overlayDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             overlayDialog.setContentView(R.layout.layout_default_launcher);
-            overlayDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+            Window window = overlayDialog.getWindow();
+
+            window.setGravity(Gravity.BOTTOM);
+            WindowManager.LayoutParams params = window.getAttributes();
+            window.setAttributes(params);
+            overlayDialog.getWindow().setLayout(WindowManager.LayoutParams
+                    .MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
 
             //overlayDialog.setCancelable(false);
             overlayDialog.setCanceledOnTouchOutside(false);
-            overlayDialog.show();
+            if (null != mPager && mPager.getCurrentItem() == 1) {
+                overlayDialog.show();
+            }
 
             Button btnEnable = overlayDialog.findViewById(R.id.btnEnable);
             Button btnLater = overlayDialog.findViewById(R.id.btnLater);
@@ -472,6 +678,29 @@ public class DashboardActivity extends CoreActivity {
             });
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MainThread)
+    public void onEvent(NotifyBackgroundChange notifyBackgroundChange) {
+        if (notifyBackgroundChange != null && notifyBackgroundChange.isNotify()) {
+            changeLayoutBackground();
+            EventBus.getDefault().removeStickyEvent(notifyBackgroundChange);
+        }
+
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.BackgroundThread)
+    public void onEvent(ThemeChangeEvent themeChangeEvent) {
+        if (themeChangeEvent != null && themeChangeEvent.isNotify()) {
+            Intent startMain = getIntent();
+            startMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startMain.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            EventBus.getDefault().removeStickyEvent(themeChangeEvent);
+            finish();
+            startActivity(startMain);
+
         }
     }
 

@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@color/white"
     android:fitsSystemWindows="true"
     tools:context=".activities.NoteListActivity">
 
@@ -16,10 +15,8 @@
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/toolbarMain"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/view3"
         android:clipToPadding="false"
         android:divider="@null"
         android:dividerHeight="8dp"
@@ -65,6 +62,7 @@
         tools:ignore="RtlHardcoded" />
 
     <View
+        android:id="@+id/view3"
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin.2"
         android:layout_alignParentLeft="true"

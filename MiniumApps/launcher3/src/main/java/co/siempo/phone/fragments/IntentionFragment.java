@@ -4,9 +4,13 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import co.siempo.phone.R;
+import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.activities.EnableTempoActivity;
 import co.siempo.phone.activities.HelpActivity;
 import co.siempo.phone.activities.IntentionEditActivity;
@@ -36,17 +41,18 @@ import co.siempo.phone.utils.UIUtils;
 
 public class IntentionFragment extends CoreFragment implements View.OnClickListener {
 
+    Context context;
+    TextView txtIntention, txtHint;
     private View view;
     private ImageView imgTempo;
     private ImageView imgOverFlow, imgPullTab;
-    private TextView txtIntention;
-    private LinearLayout linIF;
+    private CardView cardView;
     private PopupWindow mPopupWindow;
     private RelativeLayout relRootLayout;
     private Window mWindow;
     private int defaultStatusBarColor;
-    Context context;
     private PermissionUtil permissionUtil;
+    private DialogTempoSetting dialogTempo;
 
     public IntentionFragment() {
         // Required empty public constructor
@@ -71,14 +77,27 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         Intent myService = new Intent(getActivity(), StatusBarService.class);
         getActivity().startService(myService);
         initView(view);
+
+
         return view;
     }
 
+
     public void hideView() {
-        if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.TOGGLE_LEFTMENU, 0) >= 2) {
+        if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.TOGGLE_LEFTMENU, 0) >= 3) {
             if (imgPullTab != null) imgPullTab.setVisibility(View.GONE);
         } else {
             if (imgPullTab != null) imgPullTab.setVisibility(View.VISIBLE);
+        }
+        if (mWindow != null) {
+            mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+            mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+            // finally change the color
+            mWindow.setStatusBarColor(ContextCompat.getColor(getActivity(), R.color.transparent));
+
         }
     }
 
@@ -91,15 +110,10 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         imgOverFlow = view.findViewById(R.id.imgOverFlow);
         imgOverFlow.setOnClickListener(this);
         txtIntention = view.findViewById(R.id.txtIntention);
-        txtIntention.setOnClickListener(this);
-        linIF = view.findViewById(R.id.linIF);
+        txtHint = view.findViewById(R.id.txtHint);
+        cardView = view.findViewById(R.id.cardView);
+        cardView.setOnClickListener(this);
 
-        // clear FLAG_TRANSLUCENT_STATUS flag:
-        mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-        mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        defaultStatusBarColor = mWindow.getStatusBarColor();
         hideView();
     }
 
@@ -115,12 +129,32 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
     @Override
     public void onResume() {
         super.onResume();
-        if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.IS_INTENTION_ENABLE, false)) {
-            linIF.setVisibility(View.GONE);
-        } else {
-            linIF.setVisibility(View.VISIBLE);
+        if (DashboardActivity.currentIndexDashboard == 1) {
+            hideView();
         }
-        txtIntention.setText(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_INTENTION, ""));
+        if (dialogTempo != null && dialogTempo.isShowing()) {
+            if (!permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
+                    || !permissionUtil.hasGiven(PermissionUtil
+                    .CALL_PHONE_PERMISSION)
+                    || !PackageUtil.isSiempoLauncher(context)) {
+                dialogTempo.dismiss();
+            }
+        }
+        if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.IS_INTENTION_ENABLE, false)) {
+            cardView.setVisibility(View.GONE);
+        } else {
+            cardView.setVisibility(View.VISIBLE);
+        }
+        if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_INTENTION, "").equalsIgnoreCase("")) {
+            txtHint.setVisibility(View.INVISIBLE);
+            txtIntention.setText(getString(R.string.what_s_your_intention));
+            txtIntention.setTextColor(ContextCompat.getColor(getActivity(), R.color.hint_white));
+        } else {
+            txtHint.setVisibility(View.VISIBLE);
+            txtHint.setText(getString(R.string.your_intention));
+            txtIntention.setText(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_INTENTION, ""));
+            txtIntention.setTextColor(ContextCompat.getColor(getActivity(), R.color.settings_title_black));
+        }
         if (getActivity() != null) {
             if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME_SHOW_TOOLTIP, true)) {
                 if (!UIUtils.isMyLauncherDefault(getActivity())) {
@@ -129,14 +163,10 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                         @Override
                         public void run() {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                                if (Settings.canDrawOverlays(getActivity())) {
                                 new ActivityHelper(getActivity()).handleDefaultLauncher(getActivity());
-                                //((CoreActivity) getActivity()).loadDialog();
                                 PrefSiempo.getInstance(getActivity()).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME_SHOW_TOOLTIP, false);
-//                                }
                             } else {
                                 new ActivityHelper(getActivity()).handleDefaultLauncher(getActivity());
-                                //((CoreActivity) getActivity()).loadDialog();
                                 PrefSiempo.getInstance(getActivity()).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME_SHOW_TOOLTIP, false);
                             }
 
@@ -145,6 +175,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                 }
             }
         }
+
     }
 
 
@@ -156,7 +187,12 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                     if (permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
                             && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
                             && PackageUtil.isSiempoLauncher(context)) {
-                        DialogTempoSetting dialogTempo = new DialogTempoSetting(getActivity());
+
+                        TypedValue typedValue = new TypedValue();
+                        Resources.Theme theme = context.getTheme();
+                        theme.resolveAttribute(R.attr.dialog_style, typedValue, true);
+                        int dialogStyle = typedValue.resourceId;
+                        dialogTempo = new DialogTempoSetting(getActivity(), dialogStyle);
                         if (dialogTempo.getWindow() != null)
                             dialogTempo.getWindow().setGravity(Gravity.TOP);
                         dialogTempo.show();
@@ -178,7 +214,8 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
             case R.id.imgOverFlow:
                 showOverflowDialog();
                 break;
-            case R.id.txtIntention:
+            case R.id.cardView:
+//                EventBus.getDefault().post(new ReduceOverUsageEvent(true));
                 if (null != getActivity()) {
                     Intent intent = new Intent(getActivity(), IntentionEditActivity.class);
                     startActivity(intent);
@@ -206,7 +243,6 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT
                 );
-
                 // Set an elevation value for popup window
                 // Call requires API level 21
                 if (Build.VERSION.SDK_INT >= 21) {
@@ -226,7 +262,12 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                             if (permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
                                     && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
                                     && PackageUtil.isSiempoLauncher(context)) {
-                                DialogTempoSetting dialogTempo = new DialogTempoSetting(getActivity());
+                                TypedValue typedValue = new TypedValue();
+                                Resources.Theme theme = context.getTheme();
+                                theme.resolveAttribute(R.attr.dialog_style, typedValue, true);
+                                int dialogStyle = typedValue.resourceId;
+                                DialogTempoSetting dialogTempo = new
+                                        DialogTempoSetting(getActivity(), dialogStyle);
                                 if (dialogTempo.getWindow() != null)
                                     dialogTempo.getWindow().setGravity(Gravity.TOP);
                                 dialogTempo.show();
@@ -261,10 +302,9 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                     }
                 });
                 mPopupWindow.setOutsideTouchable(true);
-                mPopupWindow.setFocusable(true);
                 mPopupWindow.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 mPopupWindow.showAsDropDown(imgOverFlow, 0, (int) -imgOverFlow.getX() - 10);
-                UIUtils.applyDim(root, 0.6f);
+                UIUtils.applyDim(root, 0.7f);
                 if (null != getActivity()) {
                     UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
                 }
@@ -287,4 +327,6 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
             imgTempo.performClick();
         }
     }
+
+
 }

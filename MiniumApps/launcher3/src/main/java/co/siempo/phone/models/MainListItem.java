@@ -24,7 +24,7 @@ public class MainListItem implements Serializable {
     private String icon;
     private int iconRes;
     private ApplicationInfo applicationInfo = null;
-    private boolean isVisable = false;
+    private boolean isVisable;
 
 //    private Date currentDateTime;
     /**
@@ -83,6 +83,14 @@ public class MainListItem implements Serializable {
         this.title = title;
         this.itemType = itemType;
         this.drawable = drawable;
+    }
+
+    public MainListItem(MainListItem mainListItem) {
+        this.id = mainListItem.getId();
+        this.title = mainListItem.getTitle();
+        this.itemType = mainListItem.getItemType();
+        this.drawable = mainListItem.getDrawable();
+        this.isVisable = mainListItem.isVisable();
     }
 
     /**

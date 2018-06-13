@@ -75,7 +75,6 @@
             android:maxLines="2"
             android:padding="8dp"
             android:text=""
-            android:textColor="#7F7F7F"
             android:textSize="15sp" />
 
         <View

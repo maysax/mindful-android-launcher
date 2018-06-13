@@ -13,6 +13,5 @@
         android:paddingRight="@dimen/dp_10"
         android:paddingTop="@dimen/dp_14"
         android:text="@string/flag_app"
-        android:textColor="@color/dialog_title"
         android:textSize="20sp" />
 </LinearLayout>

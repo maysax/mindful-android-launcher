@@ -3,7 +3,7 @@
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dp_5"
                 android:background="@color/transparent"
                 tools:context=".activities.EmailRequestActivity">
@@ -13,7 +13,6 @@
         android:id="@+id/cardCenter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/dp_5"
         android:layout_marginLeft="@dimen/dp_5"
         android:layout_marginRight="@dimen/dp_5"
@@ -45,7 +44,6 @@
                     android:layout_marginTop="@dimen/dp_10"
                     android:gravity="center"
                     android:text="@string/would_you_like_to"
-                    android:textColor="@color/black"
                     android:textSize="18sp"
                     android:visibility="visible"/>
 
@@ -58,7 +56,6 @@
                     android:layout_marginTop="@dimen/dp_5"
                     android:lineSpacingExtra="4sp"
                     android:text="@string/make_your_home_string"
-                    android:textColor="#8A000000"
                     android:textSize="15sp"
                     android:visibility="visible"/>
 

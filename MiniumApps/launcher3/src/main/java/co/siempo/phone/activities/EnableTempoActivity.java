@@ -8,12 +8,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toolbar;
+import android.widget.TextView;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
@@ -29,20 +28,15 @@ public class EnableTempoActivity extends CoreActivity {
     ImageView imgStep, imgCenter;
     Toolbar toolbar;
     Button btnSubmit;
+    TextView on_the_next;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enable_tempo);
-        Window window = getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(getResources().getColor(R.color.white));
-        View decor = window.getDecorView();
-        decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
         permissionUtil = new PermissionUtil(this);
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_gray_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,6 +46,7 @@ public class EnableTempoActivity extends CoreActivity {
         imgStep = findViewById(R.id.imgStep);
         imgCenter = findViewById(R.id.imgCenter);
         btnSubmit = findViewById(R.id.btnSubmit);
+        on_the_next = findViewById(R.id.on_the_next);
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,9 +55,15 @@ public class EnableTempoActivity extends CoreActivity {
                     if (btnSubmit.getText().toString().equalsIgnoreCase(getString(R.string.enable_setting_a))) {
                         startActivityForResult(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS), PermissionUtil.NOTIFICATION_ACCESS);
                     } else if (btnSubmit.getText().toString().equalsIgnoreCase(getString(R.string.enable_setting_b))) {
-                        Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
+                        try {
+                            Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        } catch (Exception e) {
+                            Intent intent = new Intent(Settings.ACTION_SETTINGS);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
                     } else if (btnSubmit.getText().toString().equalsIgnoreCase(getString(R.string.tempo_enabled))) {
                         btnSubmit.setBackground(ContextCompat.getDrawable(EnableTempoActivity.this, R.drawable.button_bg_enable));
                         btnSubmit.setText(getString(R.string.tempo_enabled));
@@ -128,15 +129,20 @@ public class EnableTempoActivity extends CoreActivity {
     private void bindUi() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             if (!permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) {
+                on_the_next.setText(R.string.on_the_next);
                 imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshot_notification));
                 imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_a_lollipop));
                 btnSubmit.setText(getString(R.string.enable_setting_a));
             } else if (!PackageUtil.isSiempoLauncher(this)) {
+                on_the_next.setText(R.string.launcher_text);
                 imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshot_launcher));
                 imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_b_lollipop));
                 btnSubmit.setText(getString(R.string.enable_setting_b));
             } else {
+                on_the_next.setText(R.string.launcher_text);
                 imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshot_launcher));
+                on_the_next.setVisibility(View.GONE);
+                imgCenter.setVisibility(View.GONE);
                 imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_c_lollipop));
                 btnSubmit.setBackground(ContextCompat.getDrawable(this, R.drawable.button_bg_enable));
                 btnSubmit.setText(getString(R.string.tempo_enabled));
@@ -150,21 +156,27 @@ public class EnableTempoActivity extends CoreActivity {
             }
         } else {
             if (!permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) {
+                on_the_next.setText(R.string.on_the_next);
                 imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshot_notification));
                 imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_a));
                 btnSubmit.setText(getString(R.string.enable_setting_a));
             } else if (!permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
                     || !permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)
                     || !permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)) {
+                on_the_next.setText(R.string.permission_msg_enable_tempo);
                 imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshot_call_sms_contact));
                 imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_b));
                 btnSubmit.setText(getString(R.string.enable_setting_b));
             } else if (!PackageUtil.isSiempoLauncher(this)) {
+                on_the_next.setText(R.string.launcher_text);
                 imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshot_launcher));
                 imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_c));
                 btnSubmit.setText(getString(R.string.enable_setting_c));
             } else {
+                on_the_next.setText(R.string.launcher_text);
                 imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshot_launcher));
+                on_the_next.setVisibility(View.GONE);
+                imgCenter.setVisibility(View.GONE);
                 imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_d));
                 btnSubmit.setBackground(ContextCompat.getDrawable(this, R.drawable.button_bg_enable));
                 btnSubmit.setText(getString(R.string.tempo_enabled));

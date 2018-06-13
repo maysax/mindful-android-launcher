@@ -2,6 +2,7 @@ package co.siempo.phone.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.PopupMenu;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -20,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -57,7 +60,6 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
     private DrawableProvider mProvider;
     private TextDrawable.IBuilder mDrawableBuilder;
     private PopupMenu popup;
-    //    private HashMap<String, Bitmap> iconList;
 
     public MainListAdapter(Context context, List<MainListItem> items) {
         super(context, 0);
@@ -164,9 +166,12 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                 });
             } else {
                 if (!TextUtils.isEmpty(item.getContactName())) {
+                    TypedValue typedValue = new TypedValue();
+                    Resources.Theme theme = context.getTheme();
+                    theme.resolveAttribute(R.attr.icon_color, typedValue, true);
+                    int color = typedValue.data;
                     Drawable drawable = mProvider.getRound("" + item
-                            .getContactName().charAt(0), context.getResources
-                            ().getColor(R.color.appland_contact_black), 24);
+                            .getContactName().charAt(0), color, 24);
                     holder.icon.setImageDrawable(drawable);
                 }
             }
@@ -195,6 +200,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                 holder.icon = view.findViewById(R.id.icon);
                 holder.text = view.findViewById(R.id.text);
                 holder.imgChevron = view.findViewById(R.id.imgChevron);
+                holder.linList = view.findViewById(R.id.linList);
 
                 view.setTag(holder);
             }
@@ -225,9 +231,13 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                         } else {
                             upperCaseTitle = String.valueOf(titleApp.toUpperCase().charAt(0));
                         }
+
+                        TypedValue typedValue = new TypedValue();
+                        Resources.Theme theme = context.getTheme();
+                        theme.resolveAttribute(R.attr.icon_color, typedValue, true);
+                        int color = typedValue.data;
                         Drawable drawable = mProvider.getRound(upperCaseTitle,
-                                context.getResources().getColor(R.color
-                                        .appland_contact_black), 24);
+                                color, 24);
                         holder.icon.setImageDrawable(drawable);
                     } else {
                         Bitmap bitmap = CoreApplication.getInstance().getBitmapFromMemCache(packageName);
@@ -253,14 +263,22 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             }
 
             MainListItemType itemType = item.getItemType();
-
             // Call item in Tools has id=13 , while as a default type has id=4
-            if ((null != itemType) && (itemType == MainListItemType.DEFAULT )) {
-                holder.text.setTextColor(context.getResources().getColor(R
-                        .color.appland_blue_bright));
+            if ((null != itemType) && (itemType == MainListItemType.DEFAULT)) {
+
+                TypedValue typedValue = new TypedValue();
+                Resources.Theme theme = context.getTheme();
+                theme.resolveAttribute(R.attr.default_item_color, typedValue, true);
+                int itemColor = typedValue.data;
+                holder.text.setTextColor(itemColor);
+                theme.resolveAttribute(R.attr.default_item_bg, typedValue, true);
+                int color = typedValue.data;
+                holder.linList.setBackgroundColor(color);
+
+
             } else {
-                holder.text.setTextColor(context.getResources().getColor(R
-                        .color.black));
+                holder.linList.setBackgroundColor(context.getResources().getColor(R
+                        .color.transparent));
             }
 
         }
@@ -333,6 +351,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         ImageView icon;
         TextView text;
         ImageView imgChevron;
+        LinearLayout linList;
     }
 
 
@@ -366,110 +385,110 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                     String[] splits;
 
 
-                        switch (originalData.get(i).getItemType()) {
-                            case CONTACT:
-                                if (searchString.startsWith("@")) {
-                                    if (searchString.equals("@")) {
-                                        isValidNumber = true;
-                                        buildData.add(originalData.get(i));
-                                    } else {
+                    switch (originalData.get(i).getItemType()) {
+                        case CONTACT:
+                            if (searchString.startsWith("@")) {
+                                if (searchString.equals("@")) {
+                                    isValidNumber = true;
+                                    buildData.add(originalData.get(i));
+                                } else {
                                     /*
                                       A blank space was added with searchString2. After using trim the search problem is resolved
                                      */
-                                        String searchString2 = searchString.replaceAll("@", "").trim();
-                                        MainListItem item = originalData.get(i);
-                                        filterableString = item.getContactName();
-                                        boolean isAdded = false;
-                                        if (filterableString.toLowerCase().contains(searchString2)) {
-                                            isValidNumber = true;
-                                            buildData.add(originalData.get(i));
-                                            isAdded = true;
-                                        }
-
-                                        if (!isAdded) {
-                                            searchString2 = phoneNumberString(searchString);
-                                            List<MainListItem.ContactNumber> numbers = item.getNumbers();
-                                            for (MainListItem.ContactNumber number : numbers) {
-                                                String phoneNum = phoneNumberString(number.getNumber());
-                                                if (phoneNum.contains(searchString2)) {
-                                                    isValidNumber = true;
-                                                    buildData.add(originalData.get(i));
-                                                    break;
-                                                }
-                                            }
-                                        }
+                                    String searchString2 = searchString.replaceAll("@", "").trim();
+                                    MainListItem item = originalData.get(i);
+                                    filterableString = item.getContactName();
+                                    boolean isAdded = false;
+                                    if (filterableString.toLowerCase().contains(searchString2)) {
+                                        isValidNumber = true;
+                                        buildData.add(originalData.get(i));
+                                        isAdded = true;
                                     }
-                                }
 
-                                break;
-                            case ACTION:
-                                filterableString = originalData.get(i).getTitle();
-                                if (!TextUtils.isEmpty(filterableString)) {
-
-
-                                    if (!TextUtils.isEmpty(originalData.get
-                                            (i).getPackageName())) {
-                                        if (filterableString.toLowerCase().contains(searchString.toLowerCase().trim())) {
-                                            buildData.add(originalData.get(i));
-                                            break;
-                                        }
-                                    } else {
-                                        if (originalData.get(i).getTitle().toLowerCase().contains(searchString.toLowerCase())) {
-                                            if (checkToolsDuplicate(buildData, searchString.toLowerCase().toLowerCase())) {
+                                    if (!isAdded) {
+                                        searchString2 = phoneNumberString(searchString);
+                                        List<MainListItem.ContactNumber> numbers = item.getNumbers();
+                                        for (MainListItem.ContactNumber number : numbers) {
+                                            String phoneNum = phoneNumberString(number.getNumber());
+                                            if (phoneNum.contains(searchString2)) {
+                                                isValidNumber = true;
                                                 buildData.add(originalData.get(i));
+                                                break;
                                             }
                                         }
                                     }
                                 }
-                                break;
-                            case NUMBERS:
-                                if (PhoneNumberUtils.isGlobalPhoneNumber(searchString)) {
-                                    isValidNumber = true;
-                                    TokenManager.getInstance().getCurrent().setExtra2(searchString);
-                                    buildData.add(originalData.get(i));
-                                }
-                                break;
-                            case DEFAULT:
-                                TokenItem current = TokenManager.getInstance().getCurrent();
-                                if ((!searchString.equalsIgnoreCase("@") || !(searchString.length() > 1 && searchString.startsWith("@") && TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT))) && checkDuplicate(buildData, originalData.get(i).getTitle().toLowerCase().toLowerCase())) {
-                                    if (searchString.length() > 0 && searchString.startsWith("@") && !TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT) && isValidNumber) {
-                                    } else {
-                                        if (originalData.get(i).getTitle()
-                                                .toLowerCase().equalsIgnoreCase
-                                                        (context.getResources
-                                                                ().getString
-                                                                (R.string.title_sendAsSMS)
-                                                        ) &&
-                                                !isValidNumber && searchString
-                                                .startsWith("@")) {
+                            }
 
-                                        } else if (originalData.get(i).getTitle()
-                                                .toLowerCase().equalsIgnoreCase
-                                                        (context.getResources
-                                                                ().getString
-                                                                (R.string.title_saveNote)
-                                                        ) && searchString.equalsIgnoreCase("^") && current.getItemType() == TokenItemType.DATA) {
-
-                                        } else if (originalData.get(i).getTitle()
-                                                .toLowerCase().equalsIgnoreCase
-                                                        (context.getResources
-                                                                ().getString
-                                                                (R.string
-                                                                        .title_saveNote)) && TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT)) {
+                            break;
+                        case ACTION:
+                            filterableString = originalData.get(i).getTitle();
+                            if (!TextUtils.isEmpty(filterableString)) {
 
 
-                                        } else if (searchString.equalsIgnoreCase("@") || (searchString.startsWith("@") && isValidNumber)) {
-
-                                        } else {
-
+                                if (!TextUtils.isEmpty(originalData.get
+                                        (i).getPackageName())) {
+                                    if (filterableString.toLowerCase().contains(searchString.toLowerCase().trim())) {
+                                        buildData.add(originalData.get(i));
+                                        break;
+                                    }
+                                } else {
+                                    if (originalData.get(i).getTitle().toLowerCase().contains(searchString.toLowerCase())) {
+                                        if (checkToolsDuplicate(buildData, searchString.toLowerCase().toLowerCase())) {
                                             buildData.add(originalData.get(i));
                                         }
                                     }
-
                                 }
-                                break;
+                            }
+                            break;
+                        case NUMBERS:
+                            if (PhoneNumberUtils.isGlobalPhoneNumber(searchString)) {
+                                isValidNumber = true;
+                                TokenManager.getInstance().getCurrent().setExtra2(searchString);
+                                buildData.add(originalData.get(i));
+                            }
+                            break;
+                        case DEFAULT:
+                            TokenItem current = TokenManager.getInstance().getCurrent();
+                            if ((!searchString.equalsIgnoreCase("@") || !(searchString.length() > 1 && searchString.startsWith("@") && TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT))) && checkDuplicate(buildData, originalData.get(i).getTitle().toLowerCase().toLowerCase())) {
+                                if (searchString.length() > 0 && searchString.startsWith("@") && !TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT) && isValidNumber) {
+                                } else {
+                                    if (originalData.get(i).getTitle()
+                                            .toLowerCase().equalsIgnoreCase
+                                                    (context.getResources
+                                                            ().getString
+                                                            (R.string.title_sendAsSMS)
+                                                    ) &&
+                                            !isValidNumber && searchString
+                                            .startsWith("@")) {
 
-                        }
+                                    } else if (originalData.get(i).getTitle()
+                                            .toLowerCase().equalsIgnoreCase
+                                                    (context.getResources
+                                                            ().getString
+                                                            (R.string.title_saveNote)
+                                                    ) && searchString.equalsIgnoreCase("^") && current.getItemType() == TokenItemType.DATA) {
+
+                                    } else if (originalData.get(i).getTitle()
+                                            .toLowerCase().equalsIgnoreCase
+                                                    (context.getResources
+                                                            ().getString
+                                                            (R.string
+                                                                    .title_saveNote)) && TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT)) {
+
+
+                                    } else if (searchString.equalsIgnoreCase("@") || (searchString.startsWith("@") && isValidNumber)) {
+
+                                    } else {
+
+                                        buildData.add(originalData.get(i));
+                                    }
+                                }
+
+                            }
+                            break;
+
+                    }
                 }
             } else {
                 for (MainListItem menuMainListItem : originalData) {
