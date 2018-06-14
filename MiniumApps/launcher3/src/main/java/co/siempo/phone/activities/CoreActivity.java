@@ -138,10 +138,14 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     }
 
     void connectInAppService() {
-        Intent serviceIntent =
-                new Intent("com.android.vending.billing.InAppBillingService.BIND");
-        serviceIntent.setPackage("com.android.vending");
-        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+        try {
+            Intent serviceIntent =
+                    new Intent("com.android.vending.billing.InAppBillingService.BIND");
+            serviceIntent.setPackage("com.android.vending");
+            bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
