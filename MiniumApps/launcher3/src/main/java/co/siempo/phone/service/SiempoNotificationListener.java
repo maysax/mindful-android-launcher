@@ -259,7 +259,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
             for (String key : bundle.keySet()) {
                 Object value = bundle.get(key);
                 strKey = " Key :: " + key != null ? key : "";
-                if (null!=key && key.equalsIgnoreCase("android" +
+                if (null != key && key.equalsIgnoreCase("android" +
                         ".textLines")) {
                     strValue = " Value ::" + value != null ? "" + (value != null ? value.toString() : null) : "";
                 } else {

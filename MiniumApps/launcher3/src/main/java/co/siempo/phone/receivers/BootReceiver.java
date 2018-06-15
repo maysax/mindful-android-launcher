@@ -6,10 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import co.siempo.phone.event.ReduceOverUsageEvent;
-import co.siempo.phone.service.StatusBarService;
 import co.siempo.phone.utils.PrefSiempo;
-import de.greenrobot.event.EventBus;
 
 /**
  * Created by hardik on 18/1/18.
