@@ -1,6 +1,8 @@
 package co.siempo.phone.utils;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -475,6 +477,17 @@ public class UIUtils {
 
         }
 
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public static boolean hasUsageStatsPermission(Context context) {
+        AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+        int mode = 0;
+        if (appOps != null) {
+            mode = appOps.checkOpNoThrow("android:get_usage_stats",
+                    android.os.Process.myUid(), context.getPackageName());
+        }
+        return mode == AppOpsManager.MODE_ALLOWED;
     }
 
 }
