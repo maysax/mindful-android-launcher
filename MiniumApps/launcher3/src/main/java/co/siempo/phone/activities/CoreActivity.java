@@ -3,6 +3,7 @@ package co.siempo.phone.activities;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -45,7 +46,6 @@ import co.siempo.phone.event.JunkAppOpenEvent;
 import co.siempo.phone.helper.Validate;
 import co.siempo.phone.interfaces.NFCInterface;
 import co.siempo.phone.log.Tracer;
-import co.siempo.phone.service.OverlayService;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.EventBus;
@@ -148,12 +148,14 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     protected void onResume() {
         super.onResume();
         isOnStopCalled = false;
-        try {
-            Intent intent = new Intent(this, OverlayService.class);
-            stopService(intent);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        EventBus.getDefault().post(new ReduceOverUsageEvent(false));
+//        try {
+//            Intent intent = new Intent(this, OverlayService.class);
+//            stopService(intent);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
     }
 
     @Override
@@ -161,11 +163,12 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
         setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
         super.onNewIntent(intent);
-        try {
-            stopService(new Intent(this, OverlayService.class));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        EventBus.getDefault().post(new ReduceOverUsageEvent(false));
+//        try {
+//            stopService(new Intent(this, OverlayService.class));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void loadDialog() {
@@ -324,7 +327,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     }
 
     /**
-     *
      * @param fragment
      * @param containerViewId
      */
@@ -404,18 +406,18 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     public void onEvent(JunkAppOpenEvent junkAppOpenEvent) {
         if (junkAppOpenEvent != null && junkAppOpenEvent.isNotify()) {
             try {
-                if (PackageUtil.isSiempoLauncher(this) && PrefSiempo
-                        .getInstance(this).read
-                                (PrefSiempo.JUNK_RESTRICTED,
-                                        false)) {
-                    Intent intent = new Intent(this, OverlayService.class);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings
-                            .canDrawOverlays(this)) {
-                        startService(intent);
-                    } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                        startService(intent);
-                    }
-                }
+//                if (PackageUtil.isSiempoLauncher(this) && PrefSiempo
+//                        .getInstance(this).read
+//                                (PrefSiempo.JUNK_RESTRICTED,
+//                                        false)) {
+//                    Intent intent = new Intent(this, OverlayService.class);
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings
+//                            .canDrawOverlays(this)) {
+//                        startService(intent);
+//                    } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+//                        startService(intent);
+//                    }
+//                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -444,18 +446,17 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                         if (lockcounterstatus) {
                             DashboardActivity.currentIndexDashboard = 1;
                             DashboardActivity.currentIndexPaneFragment = 2;
-                            Intent startMain = getIntent();
-                            if (null == startMain) {
-                                startMain = new Intent(Intent.ACTION_MAIN);
+                            try {
+                                Intent startMain = new Intent(Intent.ACTION_MAIN);
                                 startMain.addCategory(Intent.CATEGORY_HOME);
+                                startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(startMain);
+                            } catch (ActivityNotFoundException e) {
+                                e.printStackTrace();
                             }
-                            startActivity(startMain);
                             PrefSiempo.getInstance(CoreActivity.this).write(PrefSiempo
                                     .LOCK_COUNTER_STATUS, false);
                         }
-                    } else if (PackageUtil.isSiempoLauncher(arg0) && intent.getAction().equals(Intent
-                            .ACTION_SCREEN_OFF)) {
-
                     }
                 }
             } catch (Exception e) {

@@ -111,6 +111,7 @@
         </LinearLayout>
 
         <RelativeLayout
+            android:visibility="gone"
             android:id="@+id/rel_restrictions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -158,6 +159,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:orientation="horizontal"
+            android:visibility="gone"
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
@@ -176,7 +178,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:fontFamily="sans-serif-medium"
-                android:text="Purchase"
+                android:text="@string/purchase"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -251,7 +253,7 @@
                 android:id="@+id/longitude"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="longitude"
+                android:text="@string/longitude"
                 android:textSize="14sp"
                 android:visibility="gone" />
 
@@ -259,7 +261,7 @@
                 android:id="@+id/latitude"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="latitude"
+                android:text="@string/latitude"
                 android:textSize="14sp"
                 android:visibility="gone" />
         </LinearLayout>

@@ -147,19 +147,27 @@ public class AppAssignmentActivity extends CoreActivity {
                 mimeList = getMimeList();
                 for (ResolveInfo resolveInfo : installedPackageList) {
                     if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
-                        if (!checkExits(resolveInfo)) {
+//                        if (!checkExits(resolveInfo)) {
                             appList.add(resolveInfo);
-                        }
+//                        }
                     }
+                }
+                if (showallAppBtn != null) {
+                    showallAppBtn.setVisibility(View.GONE);
                 }
             } else {
                 appList = CoreApplication.getInstance().getApplicationByCategory(mainListItem.getId());
             }
 
             appListAll = new ArrayList<>();
-            appListAll.addAll(installedPackageList);
+            for (ResolveInfo resolveInfo : installedPackageList) {
+                if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
+//                    if (!checkExits(resolveInfo)) {
+                        appListAll.add(resolveInfo);
+//                    }
+                }
+            }
             appListAll = Sorting.sortAppAssignment(AppAssignmentActivity.this, appListAll);
-
             if (showallAppBtn.getVisibility()!=View.VISIBLE) {
                 bindList(appListAll);
             } else {
@@ -168,7 +176,6 @@ public class AppAssignmentActivity extends CoreActivity {
         } else {
             finish();
         }
-
     }
 
     private ArrayList<ResolveInfo> getAllapp() {

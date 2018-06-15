@@ -452,14 +452,32 @@ public abstract class CoreApplication extends MultiDexApplication {
      * @return application name
      */
     public String getApplicationNameFromPackageName(String packageName) {
-        PackageManager packageManager = getPackageManager();
-        ApplicationInfo applicationInfo = null;
+        String applicationname = null;
         try {
-            applicationInfo = packageManager.getApplicationInfo(packageName, 0);
-        } catch (final PackageManager.NameNotFoundException e) {
+            if (packageName != null && !packageName.equalsIgnoreCase("")) {
+                if (TextUtils.isEmpty(getListApplicationName().get(packageName))) {
+                    PackageManager packageManager = getPackageManager();
+                    ApplicationInfo applicationInfo = null;
+                    try {
+                        applicationInfo = packageManager.getApplicationInfo(packageName, 0);
+                        applicationInfo.loadLabel(getPackageManager());
+                    } catch (final PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    if (applicationInfo.loadLabel(packageManager) == null) {
+                        applicationname = (String) (applicationInfo != null ? packageManager.getApplicationLabel(applicationInfo) : "");
+                    } else {
+                        applicationname = applicationInfo.loadLabel(packageManager).toString();
+                    }
+                } else {
+                    applicationname = getListApplicationName().get(packageName);
+                }
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return (String) (applicationInfo != null ? packageManager.getApplicationLabel(applicationInfo) : "");
+
+        return applicationname;
     }
 
     /**
@@ -486,6 +504,8 @@ public abstract class CoreApplication extends MultiDexApplication {
      */
     public ArrayList<ResolveInfo> getApplicationByCategory(int id) {
         ArrayList<ResolveInfo> list = new ArrayList<>();
+        HashSet<String> packageNames = new HashSet<>();
+        ArrayList<ResolveInfo> listTemp = new ArrayList<ResolveInfo>(0);
         switch (id) {
             case TOOLS_MAP:// Map
                 Double myLatitude = 44.433106;
@@ -494,6 +514,16 @@ public abstract class CoreApplication extends MultiDexApplication {
                 String urlAddress = "http://maps.google.com/maps?q=" + myLatitude + "," + myLongitude + "(" + labelLocation + ")&iwloc=A&hl=es";
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlAddress));
                 list.addAll(getPackageManager().queryIntentActivities(intent, 0));
+                packageNames = new HashSet<String>(0);
+                listTemp = new ArrayList<ResolveInfo>(0);
+                for (ResolveInfo resolveInfo : list) {
+                    if (!packageNames.contains(resolveInfo.activityInfo.packageName)) {
+                        packageNames.add(resolveInfo.activityInfo.packageName);
+                        listTemp.add(resolveInfo);
+                    }
+                }
+                list.clear();
+                list.addAll(listTemp);
                 break;
             case TOOLS_TRANSPORT:// Transport
                 break;
@@ -504,6 +534,16 @@ public abstract class CoreApplication extends MultiDexApplication {
                 Intent calenderIntent =
                         new Intent(Intent.ACTION_VIEW, builder.build());
                 list.addAll(getPackageManager().queryIntentActivities(calenderIntent, 0));
+                packageNames = new HashSet<String>(0);
+                listTemp = new ArrayList<ResolveInfo>(0);
+                for (ResolveInfo resolveInfo : list) {
+                    if (!packageNames.contains(resolveInfo.activityInfo.packageName)) {
+                        packageNames.add(resolveInfo.activityInfo.packageName);
+                        listTemp.add(resolveInfo);
+                    }
+                }
+                list.clear();
+                list.addAll(listTemp);
                 break;
             case TOOLS_WEATHER://Weather
                 break;
@@ -657,11 +697,31 @@ public abstract class CoreApplication extends MultiDexApplication {
             case TOOLS_CAMERA://Camera
                 Intent intentCamera = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 list.addAll(getPackageManager().queryIntentActivities(intentCamera, 0));
+                packageNames = new HashSet<String>(0);
+                listTemp = new ArrayList<ResolveInfo>(0);
+                for (ResolveInfo resolveInfo : list) {
+                    if (!packageNames.contains(resolveInfo.activityInfo.packageName)) {
+                        packageNames.add(resolveInfo.activityInfo.packageName);
+                        listTemp.add(resolveInfo);
+                    }
+                }
+                list.clear();
+                list.addAll(listTemp);
                 break;
             case TOOLS_PHOTOS://Photos
                 Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 pickIntent.setType("image/* video/*");
                 list.addAll(getPackageManager().queryIntentActivities(pickIntent, 0));
+                packageNames = new HashSet<String>(0);
+                listTemp = new ArrayList<ResolveInfo>(0);
+                for (ResolveInfo resolveInfo : list) {
+                    if (!packageNames.contains(resolveInfo.activityInfo.packageName)) {
+                        packageNames.add(resolveInfo.activityInfo.packageName);
+                        listTemp.add(resolveInfo);
+                    }
+                }
+                list.clear();
+                list.addAll(listTemp);
                 break;
             case TOOLS_PAYMENT://Payment
                 break;
@@ -670,16 +730,46 @@ public abstract class CoreApplication extends MultiDexApplication {
             case TOOLS_BROWSER://Browser
                 Intent intentBrowser = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/"));
                 list.addAll(getPackageManager().queryIntentActivities(intentBrowser, 0));
+                packageNames = new HashSet<String>(0);
+                listTemp = new ArrayList<ResolveInfo>(0);
+                for (ResolveInfo resolveInfo : list) {
+                    if (!packageNames.contains(resolveInfo.activityInfo.packageName)) {
+                        packageNames.add(resolveInfo.activityInfo.packageName);
+                        listTemp.add(resolveInfo);
+                    }
+                }
+                list.clear();
+                list.addAll(listTemp);
                 break;
 
             case TOOLS_CALL://Call
                 Uri number = Uri.parse("tel:");
                 Intent dial = new Intent(Intent.ACTION_DIAL, number);
                 list.addAll(getPackageManager().queryIntentActivities(dial, 0));
+                packageNames = new HashSet<String>(0);
+                listTemp = new ArrayList<ResolveInfo>(0);
+                for (ResolveInfo resolveInfo : list) {
+                    if (!packageNames.contains(resolveInfo.activityInfo.packageName)) {
+                        packageNames.add(resolveInfo.activityInfo.packageName);
+                        listTemp.add(resolveInfo);
+                    }
+                }
+                list.clear();
+                list.addAll(listTemp);
                 break;
             case TOOLS_CLOCK://Clock
                 Intent intentClock = new Intent(AlarmClock.ACTION_SET_ALARM);
                 list.addAll(getPackageManager().queryIntentActivities(intentClock, 0));
+                packageNames = new HashSet<String>(0);
+                listTemp = new ArrayList<ResolveInfo>(0);
+                for (ResolveInfo resolveInfo : list) {
+                    if (!packageNames.contains(resolveInfo.activityInfo.packageName)) {
+                        packageNames.add(resolveInfo.activityInfo.packageName);
+                        listTemp.add(resolveInfo);
+                    }
+                }
+                list.clear();
+                list.addAll(listTemp);
                 break;
             case TOOLS_MESSAGE://message
                 Intent message = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + ""));
@@ -758,7 +848,16 @@ public abstract class CoreApplication extends MultiDexApplication {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
+                packageNames = new HashSet<String>(0);
+                listTemp = new ArrayList<ResolveInfo>(0);
+                for (ResolveInfo resolveInfo : list) {
+                    if (!packageNames.contains(resolveInfo.activityInfo.packageName)) {
+                        packageNames.add(resolveInfo.activityInfo.packageName);
+                        listTemp.add(resolveInfo);
+                    }
+                }
+                list.clear();
+                list.addAll(listTemp);
 
                 break;
             case TOOLS_EMAIL://email
@@ -766,13 +865,32 @@ public abstract class CoreApplication extends MultiDexApplication {
                 Uri data = Uri.parse("mailto:recipient@example.com?subject=" + "" + "&body=" + "");
                 intentEmail.setData(data);
                 list.addAll(getPackageManager().queryIntentActivities(intentEmail, 0));
+                packageNames = new HashSet<String>(0);
+                listTemp = new ArrayList<ResolveInfo>(0);
+                for (ResolveInfo resolveInfo : list) {
+                    if (!packageNames.contains(resolveInfo.activityInfo.packageName)) {
+                        packageNames.add(resolveInfo.activityInfo.packageName);
+                        listTemp.add(resolveInfo);
+                    }
+                }
+                list.clear();
+                list.addAll(listTemp);
                 break;
 
             case TOOLS_MUSIC:// Music
-
                 Intent intentMusic = new Intent(MediaStore
                         .INTENT_ACTION_MUSIC_PLAYER);
                 list.addAll(getPackageManager().queryIntentActivities(intentMusic, 0));
+                packageNames = new HashSet<String>(0);
+                listTemp = new ArrayList<ResolveInfo>(0);
+                for (ResolveInfo resolveInfo : list) {
+                    if (!packageNames.contains(resolveInfo.activityInfo.packageName)) {
+                        packageNames.add(resolveInfo.activityInfo.packageName);
+                        listTemp.add(resolveInfo);
+                    }
+                }
+                list.clear();
+                list.addAll(listTemp);
                 break;
 
             case TOOLS_PODCAST://PODCAST
@@ -847,41 +965,48 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     public void downloadSiempoImages() {
-        File folderSiempoImage = new File(Environment.getExternalStorageDirectory() +
-                "/Siempo images");
-        if (!folderSiempoImage.exists()) {
-            folderSiempoImage.mkdirs();
-        }
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context
-                .CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = null;
-        if (connectivityManager != null) {
-            activeNetwork = connectivityManager.getActiveNetworkInfo();
-        }
-        if (activeNetwork != null) {
-            ArrayList<String> listImageName = new ArrayList<>(Arrays.asList(folderSiempoImage.list()));
-            String[] list = getResources().getStringArray(R.array.siempo_images);
-            DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-            for (String strUrl : list) {
-                String fileName = strUrl.substring(strUrl.lastIndexOf('/') + 1, strUrl.length());
-                String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
-                if (listImageName.contains(fileName)) {
-                    Log.d("File Exists", fileName);
-                } else {
-                    Uri Download_Uri = Uri.parse(strUrl);
-                    DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
-                    request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
-                    request.setAllowedOverRoaming(false);
-                    request.setTitle("Downloading " + fileName);
-                    request.setDescription("Downloading " + fileName);
-                    request.setVisibleInDownloadsUi(false);
-                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
-                    request.setDestinationInExternalPublicDir("/Siempo images", fileName);
-                    if (downloadManager != null) {
-                        long refid = downloadManager.enqueue(request);
+        try {
+            File folderSiempoImage = new File(Environment.getExternalStorageDirectory() +
+                    "/Siempo images");
+            if (!folderSiempoImage.exists()) {
+                folderSiempoImage.mkdirs();
+            }
+            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context
+                    .CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = null;
+            if (connectivityManager != null) {
+                activeNetwork = connectivityManager.getActiveNetworkInfo();
+            }
+            if (activeNetwork != null) {
+                if (folderSiempoImage != null && folderSiempoImage.list() != null) {
+                    ArrayList<String> listImageName = new ArrayList<>(Arrays.asList(folderSiempoImage.list()));
+                    String[] list = getResources().getStringArray(R.array.siempo_images);
+                    DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                    for (String strUrl : list) {
+                        String fileName = strUrl.substring(strUrl.lastIndexOf('/') + 1, strUrl.length());
+                        if (listImageName.contains(fileName)) {
+                            Log.d("File Exists", fileName);
+                        } else {
+                            Uri download_Uri = Uri.parse(strUrl);
+                            if (download_Uri != null) {
+                                DownloadManager.Request request = new DownloadManager.Request(download_Uri);
+                                request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+                                request.setAllowedOverRoaming(false);
+                                request.setTitle("Downloading " + fileName);
+                                request.setDescription("Downloading " + fileName);
+                                request.setVisibleInDownloadsUi(false);
+                                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
+                                request.setDestinationInExternalPublicDir("/Siempo images", fileName);
+                                if (downloadManager != null) {
+                                    long refid = downloadManager.enqueue(request);
+                                }
+                            }
+                        }
                     }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -909,15 +1034,21 @@ public abstract class CoreApplication extends MultiDexApplication {
                             addBitmapToMemoryCache(packageName, bitmap);
                         }
                         applist.add(packageName);
+
                         PackageManager packageManager = getPackageManager();
-                        ApplicationInfo applicationInfo = null;
-                        try {
-                            applicationInfo = packageManager.getApplicationInfo(packageName, 0);
-                        } catch (final PackageManager.NameNotFoundException e) {
-                            e.printStackTrace();
+                        String applicationName = appInfo.loadLabel(packageManager).toString();
+                        if (applicationName == null) {
+                            ApplicationInfo applicationInfo = null;
+                            try {
+                                applicationInfo = packageManager.getApplicationInfo(packageName, 0);
+                            } catch (final PackageManager.NameNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                            String applicationNameTemp = (String) (applicationInfo != null ? packageManager.getApplicationLabel(applicationInfo) : "");
+                            getListApplicationName().put(packageName, applicationNameTemp);
+                        } else {
+                            getListApplicationName().put(packageName, applicationName);
                         }
-                        String applicationName = (String) (applicationInfo != null ? packageManager.getApplicationLabel(applicationInfo) : "");
-                        getListApplicationName().put(packageName, applicationName);
                     }
 
                 } catch (Exception e) {

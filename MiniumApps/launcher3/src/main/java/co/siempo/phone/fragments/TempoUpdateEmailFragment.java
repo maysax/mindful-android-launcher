@@ -30,10 +30,14 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.UserModel;
 import co.siempo.phone.service.MailChimpOperation;
+import co.siempo.phone.service.StatusBarService;
 import co.siempo.phone.utils.PrefSiempo;
 
 @EFragment(R.layout.fragment_tempo_update_email)
@@ -160,19 +164,30 @@ public class TempoUpdateEmailFragment extends CoreFragment {
     private void storeDataToFirebase(boolean isNew, String userId, String emailId) {
         try {
             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("users");
-            UserModel user = new UserModel(userId, emailId);
-            mDatabase.child(userId).setValue(user);
-            mDatabase.child(userId).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
+            UserModel user = new UserModel(userId, emailId, StatusBarService.latitude, StatusBarService.longitude);
+            String key = mDatabase.child(userId).getKey();
+            if (key != null) {
+                Map map = new HashMap();
+                map.put("emailId",emailId);
+                map.put("userId",userId);
+                map.put("latitude", StatusBarService.latitude);
+                map.put("longitude", StatusBarService.longitude);
+                mDatabase.child(userId).updateChildren(map);
+            } else {
+                mDatabase.child(userId).setValue(user);
+                mDatabase.child(userId).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.d("Firebase", dataSnapshot.getKey() + "  " + dataSnapshot.getValue(UserModel.class)
+                                .toString());
+                    }
 
-                }
-
-                @Override
-                public void onCancelled(DatabaseError error) {
-                    Log.w("Firebase RealTime", "Failed to read value.", error.toException());
-                }
-            });
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                        Log.w("Firebase RealTime", "Failed to read value.", error.toException());
+                    }
+                });
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

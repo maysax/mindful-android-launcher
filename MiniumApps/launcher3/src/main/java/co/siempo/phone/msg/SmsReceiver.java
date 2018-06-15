@@ -47,8 +47,10 @@ public class SmsReceiver extends BroadcastReceiver {
             if (bundle != null) {
                 Tracer.d("SmsReceiver: onReceive" + bundle.toString());
                 Object messages[] = (Object[]) bundle.get("pdus");
-                SmsMessage smsMessage[] = new SmsMessage[messages.length];
-
+                SmsMessage smsMessage[] = new SmsMessage[0];
+                if (messages != null) {
+                    smsMessage = new SmsMessage[messages.length];
+                }
                 for (int n = 0; n < messages.length; n++) {
                     smsMessage[n] = SmsMessage.createFromPdu((byte[]) messages[n]);
                 }
@@ -59,7 +61,9 @@ public class SmsReceiver extends BroadcastReceiver {
                 } else {
                     StringBuilder bodyText = new StringBuilder();
                     for (SmsMessage message : smsMessage) {
-                        bodyText.append(message.getMessageBody());
+                        if (message != null) {
+                            bodyText.append(message.getMessageBody());
+                        }
                     }
                     mBody = bodyText.toString();
                 }
@@ -110,6 +114,7 @@ public class SmsReceiver extends BroadcastReceiver {
                     .unique();
             if (notificationSms == null) {
                 notificationSms = new TableNotificationSms();
+                notificationSms.set_is_read(false);
                 notificationSms.set_contact_title(address);
                 notificationSms.set_message(body);
                 notificationSms.set_date(date);
@@ -120,12 +125,28 @@ public class SmsReceiver extends BroadcastReceiver {
                 notificationSms.setId(id);
                 EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
             } else {
-                notificationSms.set_date(date);
-                notificationSms.setNotification_date(System.currentTimeMillis());
-                notificationSms.set_contact_title(address);
-                notificationSms.set_message(notificationSms.get_message() + "\n" + body);
-                smsDao.update(notificationSms);
-                EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+                boolean is_Read = notificationSms.get_is_read();
+                String message = notificationSms.get_message();
+                if (is_Read) {
+                    if ((!TextUtils.isEmpty(message) &&
+                            !message.equalsIgnoreCase(body))) {
+                        notificationSms.set_date(date);
+                        notificationSms.set_is_read(false);
+                        notificationSms.setNotification_date(System.currentTimeMillis());
+                        notificationSms.set_contact_title(address);
+                        notificationSms.set_message(message + "\n" + body);
+                        smsDao.update(notificationSms);
+                        EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+                    }
+                } else {
+                    notificationSms.set_date(date);
+                    notificationSms.set_is_read(false);
+                    notificationSms.setNotification_date(System.currentTimeMillis());
+                    notificationSms.set_contact_title(address);
+                    notificationSms.set_message(message + "\n" + body);
+                    smsDao.update(notificationSms);
+                    EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+                }
             }
         } catch (Exception e) {
             Tracer.d("SmsReceiver: onReceive saveMessage" + e.getMessage());

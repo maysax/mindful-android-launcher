@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import co.siempo.phone.R;
+import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.activities.EnableTempoActivity;
 import co.siempo.phone.activities.HelpActivity;
 import co.siempo.phone.activities.IntentionEditActivity;
@@ -81,6 +82,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         return view;
     }
 
+
     public void hideView() {
         if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.TOGGLE_LEFTMENU, 0) >= 3) {
             if (imgPullTab != null) imgPullTab.setVisibility(View.GONE);
@@ -127,6 +129,9 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
     @Override
     public void onResume() {
         super.onResume();
+        if (DashboardActivity.currentIndexDashboard == 1) {
+            hideView();
+        }
         if (dialogTempo != null && dialogTempo.isShowing()) {
             if (!permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
                     || !permissionUtil.hasGiven(PermissionUtil
@@ -181,7 +186,8 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                 if (null != getActivity()) {
                     if (permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
                             && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
-                            && PackageUtil.isSiempoLauncher(context)) {
+                            && PackageUtil.isSiempoLauncher(context) &&
+                            UIUtils.hasUsageStatsPermission(context)) {
 
                         TypedValue typedValue = new TypedValue();
                         Resources.Theme theme = context.getTheme();
@@ -210,6 +216,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                 showOverflowDialog();
                 break;
             case R.id.cardView:
+//                EventBus.getDefault().post(new ReduceOverUsageEvent(true));
                 if (null != getActivity()) {
                     Intent intent = new Intent(getActivity(), IntentionEditActivity.class);
                     startActivity(intent);
@@ -255,7 +262,8 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                             mPopupWindow.dismiss();
                             if (permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
                                     && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
-                                    && PackageUtil.isSiempoLauncher(context)) {
+                                    && PackageUtil.isSiempoLauncher(context)  &&
+                                    UIUtils.hasUsageStatsPermission(context)) {
                                 TypedValue typedValue = new TypedValue();
                                 Resources.Theme theme = context.getTheme();
                                 theme.resolveAttribute(R.attr.dialog_style, typedValue, true);

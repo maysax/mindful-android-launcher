@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -27,6 +28,7 @@ import java.util.TreeSet;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.BackgroundItemAdapter;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.ImageItem;
 import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.PrefSiempo;
@@ -202,9 +204,11 @@ public class ChooseBackgroundActivity extends CoreActivity {
                     .this, mainItemList);
             mImageGridview.setAdapter(backgroundItemAdapter);
         } else {
+            Log.e("Finishing Activity", "Finish called");
             finish();
         }
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -258,12 +262,14 @@ public class ChooseBackgroundActivity extends CoreActivity {
                         .setPermissionListener(new PermissionListener() {
                             @Override
                             public void onPermissionGranted() {
+                                CoreApplication.getInstance().downloadSiempoImages();
                                 bindGridView();
                             }
 
                             @Override
                             public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-
+                                Log.e("OnBackPress", "onBackPress Called");
+                                finish();
                             }
                         })
                         .setDeniedMessage(R.string.msg_permission_denied)
@@ -277,6 +283,7 @@ public class ChooseBackgroundActivity extends CoreActivity {
                 e.printStackTrace();
             }
         } else {
+            CoreApplication.getInstance().downloadSiempoImages();
             bindGridView();
         }
     }
@@ -340,19 +347,27 @@ public class ChooseBackgroundActivity extends CoreActivity {
             }
         }
         if (resultIAV.size() > 0) {
-            Collections.sort(resultIAV, new Comparator<File>() {
-                public int compare(File f1, File f2) {
-                    return Long.compare(f2.lastModified(), f1.lastModified());
-                }
-            });
+            try {
+                Collections.sort(resultIAV, new Comparator<File>() {
+                    public int compare(File f1, File f2) {
+                        //return Long.compare(f2.lastModified(), f1.lastModified());
+                        return Long.valueOf(f2.lastModified()).compareTo(Long.valueOf(f1.lastModified()));
+                    }
+                });
 
-            for (File file : resultIAV) {
-                String path = file.getAbsolutePath();
-                resultIAV1.add(path);
+                for (File file : resultIAV) {
+                    String path = file.getAbsolutePath();
+                    resultIAV1.add(path);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
         }
 
         return resultIAV1;
     }
+
 }
 

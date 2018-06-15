@@ -30,6 +30,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -41,6 +42,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.RejectedExecutionException;
 
@@ -68,6 +71,7 @@ import co.siempo.phone.service.LoadJunkFoodPane;
 import co.siempo.phone.service.LoadToolPane;
 import co.siempo.phone.service.MailChimpOperation;
 import co.siempo.phone.service.SiempoNotificationListener_;
+import co.siempo.phone.service.StatusBarService;
 import co.siempo.phone.ui.SiempoViewPager;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PermissionUtil;
@@ -125,7 +129,6 @@ public class DashboardActivity extends CoreActivity {
     protected void onResume() {
         super.onResume();
 
-
         if (!TextUtils.isEmpty(PrefSiempo.getInstance(this).read(PrefSiempo
                 .USER_EMAILID, ""))) {
             boolean isUserSeenEmail = PrefSiempo.getInstance(this).read(PrefSiempo
@@ -150,7 +153,13 @@ public class DashboardActivity extends CoreActivity {
                 PrefSiempo.getInstance(this).write(PrefSiempo
                         .USER_SEEN_EMAIL_REQUEST, true);
             }
-            if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !permissionUtil.hasGiven
+        }
+        if (!PrefSiempo.getInstance(this).read(PrefSiempo
+                .USER_SEEN_EMAIL_REQUEST, false)) {
+            Intent intent = new Intent(this, EmailRequestActivity.class);
+            startActivity(intent);
+        }
+         /*   if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !permissionUtil.hasGiven
                     (PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION))) {
                 Intent intent = new Intent(this, EmailRequestActivity.class);
                 startActivity(intent);
@@ -163,25 +172,36 @@ public class DashboardActivity extends CoreActivity {
                 Intent intent = new Intent(this, EmailRequestActivity.class);
                 startActivity(intent);
             }
-        }
+        }*/
     }
 
     private void storeDataToFirebase(String userId, String emailId) {
         try {
             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("users");
-            UserModel user = new UserModel(userId, emailId);
-            mDatabase.child(userId).setValue(user);
-            mDatabase.child(userId).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
+            UserModel user = new UserModel(userId, emailId, StatusBarService.latitude, StatusBarService.longitude);
+            String key = mDatabase.child(userId).getKey();
+            if (key != null) {
+                Map map = new HashMap();
+                map.put("emailId",emailId);
+                map.put("userId",userId);
+                map.put("latitude", StatusBarService.latitude);
+                map.put("longitude", StatusBarService.longitude);
+                mDatabase.child(userId).updateChildren(map);
+            } else {
+                mDatabase.child(userId).setValue(user);
+                mDatabase.child(userId).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.d("Firebase", dataSnapshot.getKey() + "  " + dataSnapshot.getValue(UserModel.class)
+                                .toString());
+                    }
 
-                }
-
-                @Override
-                public void onCancelled(DatabaseError error) {
-                    Log.w("Firebase RealTime", "Failed to read value.", error.toException());
-                }
-            });
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                        Log.w("Firebase RealTime", "Failed to read value.", error.toException());
+                    }
+                });
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -203,8 +223,7 @@ public class DashboardActivity extends CoreActivity {
         setContentView(R.layout.activity_dashboard);
         linMain = findViewById(R.id.linMain);
         imgBackground = findViewById(R.id.imgBackground);
-        changeLayoutBackground();
-
+        //changeLayoutBackground();
         swipeCount = PrefSiempo.getInstance(DashboardActivity.this).read(PrefSiempo.TOGGLE_LEFTMENU, 0);
         loadViews();
         Log.d("Test", "P1");
@@ -217,6 +236,14 @@ public class DashboardActivity extends CoreActivity {
         View decor = w.getDecorView();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !read) {
             decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
+        if (permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)) {
+            changeLayoutBackground();
+        } else {
+            PrefSiempo.getInstance(this).write(PrefSiempo
+                    .DEFAULT_BAG, "");
+            PrefSiempo.getInstance(this).write(PrefSiempo
+                    .DEFAULT_BAG_ENABLE, false);
         }
     }
 
@@ -256,6 +283,20 @@ public class DashboardActivity extends CoreActivity {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void setBackground() {
+        String filePath = PrefSiempo.getInstance(this).read(PrefSiempo
+                .DEFAULT_BAG, "");
+        boolean isEnable = PrefSiempo.getInstance(this).read(PrefSiempo
+                .DEFAULT_BAG_ENABLE, false);
+        if (!TextUtils.isEmpty(filePath) && isEnable) {
+            Glide.with(this)
+                    .load(Uri.fromFile(new File(filePath))) // Uri of the
+                    // picture
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(imgBackground);
         }
     }
 
@@ -494,21 +535,25 @@ public class DashboardActivity extends CoreActivity {
     @Subscribe
     public void checkVersionEvent(CheckVersionEvent event) {
         Log.d(TAG, "Check Version event...");
-        if (event.getVersionName() != null && event.getVersionName().equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
-            if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
-                Tracer.i("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
-                showUpdateDialog(CheckVersionEvent.ALPHA);
-                appUpdaterUtils = null;
-            } else {
-                ApiClient_.getInstance_(this).checkAppVersion(CheckVersionEvent.BETA);
-            }
+        if (event.getVersion() == -1000) {
+            Toast.makeText(this, getString(R.string.msg_internet), Toast.LENGTH_SHORT).show();
         } else {
-            if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
-                Tracer.i("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
-                showUpdateDialog(CheckVersionEvent.BETA);
-                appUpdaterUtils = null;
+            if (event.getVersionName() != null && event.getVersionName().equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
+                if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
+                    Tracer.i("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
+                    showUpdateDialog(CheckVersionEvent.ALPHA);
+                    appUpdaterUtils = null;
+                } else {
+                    ApiClient_.getInstance_(this).checkAppVersion(CheckVersionEvent.BETA);
+                }
             } else {
-                Tracer.i("Installed version: " + "Up to date.");
+                if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
+                    Tracer.i("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
+                    showUpdateDialog(CheckVersionEvent.BETA);
+                    appUpdaterUtils = null;
+                } else {
+                    Tracer.i("Installed version: " + "Up to date.");
+                }
             }
         }
     }

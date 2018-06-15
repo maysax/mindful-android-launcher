@@ -56,6 +56,7 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
     private ArrayList<Integer> everyTwoHourList = new ArrayList<>();
     private ArrayList<Integer> everyFourHoursList = new ArrayList<>();
     private Context context;
+    private float heightForAnim;
 
     private OnDismissListener onDismissListener = new OnDismissListener() {
         @Override
@@ -101,7 +102,6 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
                 }
             }, 400);
         }
-
     }
 
     private void initView() {
@@ -355,7 +355,9 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
             fabPlay.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fab_scale_down));
             fabPlay.setVisibility(View.INVISIBLE);
             linear.setVisibility(View.INVISIBLE);
-            ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(txtMessage, "translationY", 0, -500).setDuration(400);
+            heightForAnim = findViewById(R.id.pauseContainer).getHeight();
+            ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(txtMessage, "translationY",
+                    0, -(heightForAnim / 2)).setDuration(400);
             objectAnimator.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animation) {

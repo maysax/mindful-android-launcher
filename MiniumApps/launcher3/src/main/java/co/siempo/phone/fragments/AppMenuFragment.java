@@ -1,21 +1,34 @@
 package co.siempo.phone.fragments;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.JunkfoodFlaggingActivity;
@@ -24,14 +37,19 @@ import co.siempo.phone.event.NotifyBottomView;
 import co.siempo.phone.event.NotifyFavortieView;
 import co.siempo.phone.event.NotifyJunkFoodView;
 import co.siempo.phone.event.NotifyToolView;
+import co.siempo.phone.event.ReduceOverUsageEvent;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
+
+import static com.rvalerio.fgchecker.Utils.hasUsageStatsPermission;
 
 
 public class AppMenuFragment extends CoreFragment implements View.OnClickListener {
 
 
+    boolean isFromFlag = false;
     private View view;
     private Toolbar toolbar;
     private RelativeLayout relJunkFoodmize;
@@ -47,19 +65,26 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
     private String[] deter_after_list;
     private int index;
     private String txtOverUseFlag;
-
+    private Dialog overlayDialogPermission;
 
     public AppMenuFragment() {
         // Required empty public constructor
     }
 
-    public static AppMenuFragment newInstance() {
-        return new AppMenuFragment();
+    public static AppMenuFragment newInstance(boolean isFromFlag) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("FlagApp", isFromFlag);
+        AppMenuFragment appMenuFragment = new AppMenuFragment();
+        appMenuFragment.setArguments(bundle);
+        return appMenuFragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            isFromFlag = getArguments().getBoolean("FlagApp");
+        }
     }
 
     @Override
@@ -111,8 +136,12 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fm = getFragmentManager();
-                fm.popBackStack();
+                if (isFromFlag) {
+                    getActivity().finish();
+                } else {
+                    FragmentManager fm = getFragmentManager();
+                    fm.popBackStack();
+                }
             }
         });
 
@@ -144,14 +173,26 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
         mRelOverUseFlaggedApp = view.findViewById(R.id.relReduceOveruseFlagged);
         mRelOverUseFlaggedApp.setOnClickListener(this);
         mTxtReduceOveruseFlaggedDes = view.findViewById(R.id.txtReduceOveruseFlaggedDes);
+        if (isFromFlag) {
+            mRelOverUseFlaggedApp.setBackground(getResources().getDrawable(R
+                    .drawable.rounded_card_app_menu));
+
+            int marginInDpLeft = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 50, getResources()
+                            .getDisplayMetrics());
+            int marginInDpBottom = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 5, getResources()
+                            .getDisplayMetrics());
+            mRelOverUseFlaggedApp.setPadding(marginInDpLeft, 0, 0, marginInDpBottom);
+        } else {
+            mRelOverUseFlaggedApp.setBackground(null);
+        }
 
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            default:
-                break;
             case R.id.relJunkFoodmize:
                 if (switchJunkFoodmize.isChecked()) {
                     switchJunkFoodmize.setChecked(false);
@@ -187,9 +228,60 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
                 startActivity(junkFoodFlagIntent);
                 break;
             case R.id.relReduceOveruseFlagged:
-                showDialog();
+                requestUsageStatsPermission();
+                break;
+            default:
+                break;
         }
     }
+
+    void requestUsageStatsPermission() {
+        if (!hasUsageStatsPermission(getActivity())) {
+            startActivityForResult(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), 100);
+        } else {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                if (!Settings.canDrawOverlays(context)) {
+//                    if (null == overlayDialogPermission || !overlayDialogPermission.isShowing())
+//                        showOverLayForDrawingPermission();
+//                } else {
+//                    showDialog();
+//                }
+//            } else {
+            showDialog();
+//            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 100) {
+            if (!UIUtils.hasUsageStatsPermission(getActivity())) {
+                Toast.makeText(getActivity(), R.string.msg_control_access, Toast.LENGTH_SHORT).show();
+            } else {
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    if (!Settings.canDrawOverlays(context)) {
+//                        if (null == overlayDialogPermission || !overlayDialogPermission.isShowing())
+//                            showOverLayForDrawingPermission();
+//                    } else {
+//                        showDialog();
+//                    }
+//                } else {
+                showDialog();
+//                }
+            }
+        } else if (requestCode == 1000) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (!Settings.canDrawOverlays(context)) {
+                    Toast.makeText(getActivity(), R.string.msg_draw_over_app, Toast.LENGTH_SHORT).show();
+                } else {
+                    showDialog();
+                }
+            } else {
+                showDialog();
+            }
+        }
+    }
+
 
     private void showDialog() {
         index = -1;
@@ -219,41 +311,47 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
                             switchOveruseFlagged.setChecked(true);
                             dialog.dismiss();
                             PrefSiempo.getInstance(context).write(PrefSiempo.DETER_AFTER, 0);
+                            FirebaseHelper.getInstance().logDeterUseEvent(0);
                             txtOverUseFlag = String.format(getResources().getString(R.string
                                     .reduce_overuse_Flagged_description_setting), "<font color='#42A4FF'>" + deter_after_list[which] + "</font>");
                         } else if (which == 1) {
                             switchOveruseFlagged.setChecked(true);
                             dialog.dismiss();
                             PrefSiempo.getInstance(context).write(PrefSiempo.DETER_AFTER, 2);
+                            FirebaseHelper.getInstance().logDeterUseEvent(2);
                             txtOverUseFlag = String.format(getResources().getString(R.string
                                     .reduce_overuse_Flagged_description_setting), "<font color='#42A4FF'>" + deter_after_list[which] + "</font>");
                         } else if (which == 2) {
                             switchOveruseFlagged.setChecked(true);
                             dialog.dismiss();
                             PrefSiempo.getInstance(context).write(PrefSiempo.DETER_AFTER, 5);
+                            FirebaseHelper.getInstance().logDeterUseEvent(5);
                             txtOverUseFlag = String.format(getResources().getString(R.string
                                     .reduce_overuse_Flagged_description_setting), "<font color='#42A4FF'>" + deter_after_list[which] + "</font>");
                         } else if (which == 3) {
                             switchOveruseFlagged.setChecked(true);
                             dialog.dismiss();
                             PrefSiempo.getInstance(context).write(PrefSiempo.DETER_AFTER, 10);
+                            FirebaseHelper.getInstance().logDeterUseEvent(10);
                             txtOverUseFlag = String.format(getResources().getString(R.string
                                     .reduce_overuse_Flagged_description_setting), "<font color='#42A4FF'>" + deter_after_list[which] + "</font>");
                         } else if (which == 4) {
                             switchOveruseFlagged.setChecked(true);
                             dialog.dismiss();
                             PrefSiempo.getInstance(context).write(PrefSiempo.DETER_AFTER, 15);
+                            FirebaseHelper.getInstance().logDeterUseEvent(15);
                             txtOverUseFlag = String.format(getResources().getString(R.string
                                     .reduce_overuse_Flagged_description_setting), "<font color='#42A4FF'>" + deter_after_list[which] + "</font>");
                         } else if (which == 5) {
                             switchOveruseFlagged.setChecked(false);
                             dialog.dismiss();
                             PrefSiempo.getInstance(context).write(PrefSiempo.DETER_AFTER, -1);
+                            FirebaseHelper.getInstance().logDeterUseEvent(-1);
                             txtOverUseFlag = String.format(getResources().getString(R.string
                                     .reduce_overuse_Flagged_description_setting), "<font " +
                                     "color='#42A4FF'>" + deter_after_list[2] + "</font>");
                         }
-
+                        EventBus.getDefault().post(new ReduceOverUsageEvent(true));
                         mTxtReduceOveruseFlaggedDes.setText(Html.fromHtml(txtOverUseFlag));
                     }
                 })
@@ -272,7 +370,6 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
         super.onPause();
         FirebaseHelper.getInstance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
     }
-
 
     private void showDialogOnHideIconBranding() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -303,4 +400,81 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(getActivity(), R.color.dialog_blue));
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(getActivity(), R.color.dialog_red));
     }
+
+    private void showOverLayForDrawingPermission() {
+        if (null != getActivity()) {
+            try {
+                getActivity().setRequestedOrientation(ActivityInfo
+                        .SCREEN_ORIENTATION_PORTRAIT);
+                overlayDialogPermission = new Dialog(getActivity(), 0);
+                if (overlayDialogPermission.getWindow() != null)
+                    overlayDialogPermission.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                overlayDialogPermission.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                overlayDialogPermission.setContentView(R.layout
+                        .layout_appland_draw_permission);
+                Window window = overlayDialogPermission.getWindow();
+                // set "origin" to bottom
+                window.setGravity(Gravity.BOTTOM);
+                WindowManager.LayoutParams params = window.getAttributes();
+                window.setAttributes(params);
+                overlayDialogPermission.getWindow().setLayout(WindowManager
+                        .LayoutParams.MATCH_PARENT, WindowManager
+                        .LayoutParams.WRAP_CONTENT);
+                overlayDialogPermission.setCancelable(true);
+                overlayDialogPermission.setCanceledOnTouchOutside(true);
+                overlayDialogPermission.show();
+
+                final ViewFlipper viewFlipperOverlay = overlayDialogPermission
+                        .findViewById(R.id.viewFlipperPermissionDrawOverlay);
+                final Button btnEnable = overlayDialogPermission.findViewById
+                        (R.id.btnEnable);
+
+                final Button btnGotIt = overlayDialogPermission.findViewById
+                        (R.id.btnGotIt);
+                final Button btnLater = overlayDialogPermission.findViewById(R.id.btnLater);
+                btnLater.setText(getString(R.string.cancel));
+                btnLater.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        overlayDialogPermission.dismiss();
+                    }
+                });
+
+                btnEnable.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        viewFlipperOverlay.setInAnimation(context, R.anim
+                                .in_from_right_email);
+                        viewFlipperOverlay.setOutAnimation(context, R.anim
+                                .out_to_left_email);
+                        viewFlipperOverlay.setDisplayedChild(1);
+
+
+                    }
+                });
+
+                btnGotIt.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        overlayDialogPermission.dismiss();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            if (!Settings.canDrawOverlays(context)) {
+                                Intent intent = new Intent(Settings
+                                        .ACTION_MANAGE_OVERLAY_PERMISSION,
+                                        Uri.parse("package:" +
+                                                context.getPackageName()));
+                                startActivityForResult(intent, 1000);
+                            }
+                        }
+                    }
+                });
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
 }
