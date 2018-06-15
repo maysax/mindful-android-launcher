@@ -162,6 +162,7 @@ public class StatusBarService extends Service {
     private LinearLayout lnrTimeTop;
     private LinearLayout lnrSettingsNoteTop;
     private LinearLayout lnrWellnessTop;
+    public static String packagename = "";
 
     public StatusBarService() {
     }
@@ -238,6 +239,7 @@ public class StatusBarService extends Service {
             @Override
             public void onForeground(String process) {
                 if (PackageUtil.isSiempoLauncher(context)) {
+                    packagename = process;
                     try {
                         new DBClient().deleteMsgByPackageName(process);
                     } catch (Exception e) {

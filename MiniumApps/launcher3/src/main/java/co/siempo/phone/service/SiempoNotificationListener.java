@@ -220,13 +220,16 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                 if (sound != 1) {
                                     volumeLevel = sound;
                                     PrefSiempo.getInstance(this).write(PrefSiempo.USER_VOLUME, audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
-                                    Log.d("Rajesh:audioManager", "" + sound);
+                                    Log.d("AudioManager", "" + sound);
                                     audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
-                                    Log.d("Rajesh:audioManager : ", "" + audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+                                    Log.d("AudioManager : ", "" + audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
                                 }
                             }
                         }
-                        filterByCategory(notification);
+                        if (notification.getPackageName() != null
+                                && !notification.getPackageName().equalsIgnoreCase(StatusBarService.packagename)) {
+                            filterByCategory(notification);
+                        }
                     }
                 } else {
                     //Check for ringer mode
@@ -435,7 +438,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
         }
         if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
             audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, volumeLevel, 0);
-            Log.d("Rajesh:audioManager : ", "" + audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+            Log.d("AudioManager : ", "" + audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
         }
     }
 
@@ -473,6 +476,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     notificationSms.set_contact_title(strTitle);
                     notificationSms.set_message(strText);
                     notificationSms.set_date(date);
+                    notificationSms.set_is_read(false);
                     notificationSms.setNotification_date(statusBarNotification.getPostTime());
                     notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
                     notificationSms.setPackageName(strPackageName);
@@ -483,19 +487,42 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     notificationSms.setId(id);
                     EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                 } else {
-                    notificationSms.setApp_icon(icon);
-                    notificationSms.set_date(date);
-                    notificationSms.setPackageName(strPackageName);
-                    notificationSms.setUser_icon(largeIcon);
-                    notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                    notificationSms.set_contact_title(strTitle);
-                    if (strBigText == null) {
-                        notificationSms.set_message(strText);
+                    boolean is_Read = notificationSms.get_is_read();
+                    String message = notificationSms.get_message();
+                    if (is_Read) {
+                        if ((!TextUtils.isEmpty(message) &&
+                                !message.equalsIgnoreCase(strText))) {
+                            notificationSms.setApp_icon(icon);
+                            notificationSms.set_date(date);
+                            notificationSms.set_is_read(false);
+                            notificationSms.setPackageName(strPackageName);
+                            notificationSms.setUser_icon(largeIcon);
+                            notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                            notificationSms.set_contact_title(strTitle);
+                            if (strBigText == null) {
+                                notificationSms.set_message(strText);
+                            } else {
+                                notificationSms.set_message(strBigText);
+                            }
+                            smsDao.update(notificationSms);
+                            EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+                        }
                     } else {
-                        notificationSms.set_message(strBigText);
+                        notificationSms.setApp_icon(icon);
+                        notificationSms.set_date(date);
+                        notificationSms.set_is_read(false);
+                        notificationSms.setPackageName(strPackageName);
+                        notificationSms.setUser_icon(largeIcon);
+                        notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                        notificationSms.set_contact_title(strTitle);
+                        if (strBigText == null) {
+                            notificationSms.set_message(strText);
+                        } else {
+                            notificationSms.set_message(strBigText);
+                        }
+                        smsDao.update(notificationSms);
+                        EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                     }
-                    smsDao.update(notificationSms);
-                    EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -529,6 +556,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         notificationSms.set_contact_title(strTitle);
                         notificationSms.set_message(strText);
                         notificationSms.set_date(date);
+                        notificationSms.set_is_read(false);
                         notificationSms.setNotification_date(statusBarNotification.getPostTime());
                         notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
                         notificationSms.setPackageName(strPackageName);
@@ -539,10 +567,25 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         notificationSms.setId(id);
                         EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                     } else {
-                        notificationSms.setPackageName(strPackageName);
-                        notificationSms.set_date(date);
-                        notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                        if (!notificationSms.get_message().split("\n")[0].equalsIgnoreCase(strText)) {
+                        boolean is_Read = notificationSms.get_is_read();
+                        String message = notificationSms.get_message().split("\n")[0];
+                        if (is_Read) {
+                            if ((!TextUtils.isEmpty(message) &&
+                                    !message.equalsIgnoreCase(strText))) {
+                                notificationSms.setPackageName(strPackageName);
+                                notificationSms.set_date(date);
+                                notificationSms.set_is_read(false);
+                                notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                                notificationSms.set_message(strText + "\n" + notificationSms.get_message());
+                                notificationSms.set_contact_title(strTitle);
+                                smsDao.update(notificationSms);
+                                EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+                            }
+                        } else {
+                            notificationSms.setPackageName(strPackageName);
+                            notificationSms.set_date(date);
+                            notificationSms.set_is_read(false);
+                            notificationSms.setNotification_date(statusBarNotification.getPostTime());
                             notificationSms.set_message(strText + "\n" + notificationSms.get_message());
                             notificationSms.set_contact_title(strTitle);
                             smsDao.update(notificationSms);
@@ -574,6 +617,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                             notificationSms.set_contact_title(strTitle);
                             notificationSms.set_message(strText);
                             notificationSms.set_date(date);
+                            notificationSms.set_is_read(false);
                             notificationSms.setNotification_date(statusBarNotification.getPostTime());
                             notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
                             notificationSms.setPackageName(strPackageName);
@@ -584,16 +628,33 @@ public class SiempoNotificationListener extends NotificationListenerService {
                             notificationSms.setId(id);
                             EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                         } else {
-                            notificationSms.set_date(date);
-                            notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                            if (!notificationSms.get_message().split("\n")[0].equalsIgnoreCase(strText)) {
+                            boolean is_Read = notificationSms.get_is_read();
+                            String message = notificationSms.get_message().split("\n")[0];
+                            if (is_Read) {
+                                if ((!TextUtils.isEmpty(message) &&
+                                        !message.equalsIgnoreCase(strText))) {
+                                    notificationSms.set_date(date);
+                                    notificationSms.set_is_read(false);
+                                    notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                                    notificationSms.set_message(strText);
+                                    notificationSms.set_contact_title(strTitle);
+                                    if (!tickerText.equalsIgnoreCase("Missed call")
+                                            && !strText.equalsIgnoreCase("Missed call")) {
+                                        smsDao.update(notificationSms);
+                                        EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+                                    }
+                                }
+                            } else {
+                                notificationSms.set_date(date);
+                                notificationSms.set_is_read(false);
+                                notificationSms.setNotification_date(statusBarNotification.getPostTime());
                                 notificationSms.set_message(strText);
                                 notificationSms.set_contact_title(strTitle);
-                            }
-                            if (!tickerText.equalsIgnoreCase("Missed call")
-                                    && !strText.equalsIgnoreCase("Missed call")) {
-                                smsDao.update(notificationSms);
-                                EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+                                if (!tickerText.equalsIgnoreCase("Missed call")
+                                        && !strText.equalsIgnoreCase("Missed call")) {
+                                    smsDao.update(notificationSms);
+                                    EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+                                }
                             }
                         }
                     }
@@ -630,6 +691,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 notificationSms.set_contact_title(strTitle);
                 notificationSms.set_message(strText);
                 notificationSms.set_date(date);
+                notificationSms.set_is_read(false);
                 notificationSms.setNotification_date(statusBarNotification.getPostTime());
                 notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
                 notificationSms.setPackageName(strPackageName);
@@ -640,17 +702,39 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 notificationSms.setId(id);
                 EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
             } else {
-                notificationSms.setPackageName(strPackageName);
-                notificationSms.set_date(date);
-                notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                if (data != null && !data.toString().equalsIgnoreCase("")) {
-                    notificationSms.set_message(data.toString());
+                boolean is_Read = notificationSms.get_is_read();
+                String message = notificationSms.get_message().split("\n")[0];
+                if (is_Read) {
+                    if ((!TextUtils.isEmpty(message) &&
+                            !message.equalsIgnoreCase(strText))) {
+                        notificationSms.setPackageName(strPackageName);
+                        notificationSms.set_date(date);
+                        notificationSms.set_is_read(false);
+                        notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                        if (data != null && !data.toString().equalsIgnoreCase("")) {
+                            notificationSms.set_message(data.toString());
+                        } else {
+                            notificationSms.set_message(strText + "\n" + notificationSms.get_message());
+                        }
+                        notificationSms.set_contact_title(strTitle);
+                        smsDao.update(notificationSms);
+                        EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+                    }
                 } else {
-                    notificationSms.set_message(strText + "\n" + notificationSms.get_message());
+                    notificationSms.setPackageName(strPackageName);
+                    notificationSms.set_date(date);
+                    notificationSms.set_is_read(false);
+                    notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                    if (data != null && !data.toString().equalsIgnoreCase("")) {
+                        notificationSms.set_message(data.toString());
+                    } else {
+                        notificationSms.set_message(strText + "\n" + notificationSms.get_message());
+                    }
+                    notificationSms.set_contact_title(strTitle);
+                    smsDao.update(notificationSms);
+                    EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                 }
-                notificationSms.set_contact_title(strTitle);
-                smsDao.update(notificationSms);
-                EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -675,6 +759,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     notificationSms.set_contact_title(strTitle);
                     notificationSms.set_message(strText);
                     notificationSms.set_date(date);
+                    notificationSms.set_is_read(false);
                     notificationSms.setNotification_date(statusBarNotification.getPostTime());
                     notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
                     notificationSms.setPackageName(strPackageName);
@@ -684,12 +769,28 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     long id = smsDao.insert(notificationSms);
                     notificationSms.setId(id);
                 } else {
-                    notificationSms.setPackageName(strPackageName);
-                    notificationSms.set_date(date);
-                    notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                    notificationSms.set_message(strText + "\n" + notificationSms.get_message());
-                    notificationSms.set_contact_title(strTitle);
-                    smsDao.update(notificationSms);
+                    boolean is_Read = notificationSms.get_is_read();
+                    String message = notificationSms.get_message().split("\n")[0];
+                    if (is_Read) {
+                        if ((!TextUtils.isEmpty(message) &&
+                                !message.equalsIgnoreCase(strText))) {
+                            notificationSms.setPackageName(strPackageName);
+                            notificationSms.set_date(date);
+                            notificationSms.set_is_read(false);
+                            notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                            notificationSms.set_message(strText + "\n" + notificationSms.get_message());
+                            notificationSms.set_contact_title(strTitle);
+                            smsDao.update(notificationSms);
+                        }
+                    } else {
+                        notificationSms.setPackageName(strPackageName);
+                        notificationSms.set_date(date);
+                        notificationSms.set_is_read(false);
+                        notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                        notificationSms.set_message(strText + "\n" + notificationSms.get_message());
+                        notificationSms.set_contact_title(strTitle);
+                        smsDao.update(notificationSms);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -704,7 +805,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
             DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
             TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
             if (strTitle != null && strText != null && !strText.equalsIgnoreCase("") && !strTitle.contains("Telegram")) {
-                strTitle = checkTextContainForTelegram(strTitle);
+                strTitle = checkTextContainForTelegram(strTitle).trim();
                 TableNotificationSms notificationSms
                         = DBUtility.getNotificationDao().queryBuilder()
                         .where(TableNotificationSmsDao.Properties.PackageName.eq(strPackageName),
@@ -716,6 +817,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     notificationSms.set_contact_title(strTitle);
                     notificationSms.set_message(strText);
                     notificationSms.set_date(date);
+                    notificationSms.set_is_read(false);
                     notificationSms.setNotification_date(statusBarNotification.getPostTime());
                     notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
                     notificationSms.setPackageName(strPackageName);
@@ -725,12 +827,28 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     long id = smsDao.insert(notificationSms);
                     notificationSms.setId(id);
                 } else {
-                    notificationSms.setPackageName(strPackageName);
-                    notificationSms.set_date(date);
-                    notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                    notificationSms.set_message(strText);
-                    notificationSms.set_contact_title(strTitle);
-                    smsDao.update(notificationSms);
+                    boolean is_Read = notificationSms.get_is_read();
+                    String message = notificationSms.get_message().split("\n")[0];
+                    if (is_Read) {
+                        if ((!TextUtils.isEmpty(message) &&
+                                !message.equalsIgnoreCase(strText))) {
+                            notificationSms.setPackageName(strPackageName);
+                            notificationSms.set_date(date);
+                            notificationSms.set_is_read(false);
+                            notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                            notificationSms.set_message(strText);
+                            notificationSms.set_contact_title(strTitle);
+                            smsDao.update(notificationSms);
+                        }
+                    } else {
+                        notificationSms.setPackageName(strPackageName);
+                        notificationSms.set_date(date);
+                        notificationSms.set_is_read(false);
+                        notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                        notificationSms.set_message(strText);
+                        notificationSms.set_contact_title(strTitle);
+                        smsDao.update(notificationSms);
+                    }
                 }
             }
 
@@ -758,6 +876,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
             TableNotificationSms notificationSms = new TableNotificationSms();
             notificationSms.set_contact_title(strTitle);
             notificationSms.set_message(strText);
+            notificationSms.set_is_read(false);
             notificationSms.set_date(date);
             notificationSms.setNotification_date(statusBarNotification.getPostTime());
             notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
@@ -787,6 +906,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 notificationSms.set_contact_title(strTitle);
                 notificationSms.set_message(strText);
                 notificationSms.set_date(date);
+                notificationSms.set_is_read(false);
                 notificationSms.setNotification_date(statusBarNotification.getPostTime());
                 notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
                 notificationSms.setPackageName(strPackageName);
@@ -797,16 +917,36 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 notificationSms.setId(id);
                 EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
             } else {
-                notificationSms.set_date(date);
-                notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                notificationSms.set_contact_title(strTitle);
-                if (strBigText == null) {
-                    notificationSms.set_message(strText);
+                boolean is_Read = notificationSms.get_is_read();
+                String message = notificationSms.get_message();
+                if (is_Read) {
+                    if ((!TextUtils.isEmpty(message) &&
+                            !message.equalsIgnoreCase(strText))) {
+                        notificationSms.set_date(date);
+                        notificationSms.set_is_read(false);
+                        notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                        notificationSms.set_contact_title(strTitle);
+                        if (strBigText == null) {
+                            notificationSms.set_message(strText);
+                        } else {
+                            notificationSms.set_message(strBigText);
+                        }
+                        smsDao.update(notificationSms);
+                        EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+                    }
                 } else {
-                    notificationSms.set_message(strBigText);
+                    notificationSms.set_date(date);
+                    notificationSms.set_is_read(false);
+                    notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                    notificationSms.set_contact_title(strTitle);
+                    if (strBigText == null) {
+                        notificationSms.set_message(strText);
+                    } else {
+                        notificationSms.set_message(strBigText);
+                    }
+                    smsDao.update(notificationSms);
+                    EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                 }
-                smsDao.update(notificationSms);
-                EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
             }
 
         } catch (Exception e) {
@@ -816,7 +956,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
         }
     }
 
-    private void parseWhatsappMessage(StatusBarNotification statusBarNotification, String strPackageName, Date date, StringBuilder data, int icon, byte[] largeIcon) {
+    private void parseWhatsappMessage(StatusBarNotification statusBarNotification, String
+            strPackageName, Date date, StringBuilder data, int icon, byte[] largeIcon) {
         DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
         TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
         try {
@@ -885,6 +1026,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                 notificationSms.set_contact_title(title);
                                 notificationSms.set_message(text);
                                 notificationSms.set_date(date);
+                                notificationSms.set_is_read(false);
                                 notificationSms.setNotification_date(statusBarNotification.getPostTime());
                                 notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
                                 notificationSms.setPackageName(strPackageName);
@@ -895,10 +1037,24 @@ public class SiempoNotificationListener extends NotificationListenerService {
                             }
                         } else {
                             if (!title.contains("WhatsApp") && !title.equalsIgnoreCase("Checking for new messages")) {
-                                notificationSms.set_date(date);
-                                notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                                notificationSms.set_message(text /*+ "\n" + notificationSms.get_message()*/);
-                                smsDao.updateInTx(notificationSms);
+                                boolean is_Read = notificationSms.get_is_read();
+                                String message = notificationSms.get_message().split("\n")[0];
+                                if (is_Read) {
+                                    if ((!TextUtils.isEmpty(message) &&
+                                            !message.equalsIgnoreCase(text))) {
+                                        notificationSms.set_is_read(false);
+                                        notificationSms.set_date(date);
+                                        notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                                        notificationSms.set_message(text /*+ "\n" + notificationSms.get_message()*/);
+                                        smsDao.updateInTx(notificationSms);
+                                    }
+                                } else {
+                                    notificationSms.set_is_read(false);
+                                    notificationSms.set_date(date);
+                                    notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                                    notificationSms.set_message(text /*+ "\n" + notificationSms.get_message()*/);
+                                    smsDao.updateInTx(notificationSms);
+                                }
                             }
                         }
                     }
@@ -922,26 +1078,49 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                     notificationSms.set_contact_title("Missed call");
                                     notificationSms.set_message(text);
                                     notificationSms.set_date(date);
+                                    notificationSms.set_is_read(false);
                                     notificationSms.setNotification_date(statusBarNotification.getPostTime());
                                     notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
                                     notificationSms.setPackageName(strPackageName);
                                     notificationSms.setApp_icon(icon);
                                     notificationSms.setUser_icon(largeIcon);
                                     long id = smsDao.insertOrReplace(notificationSms);
+
                                     notificationSms.setId(id);
                                 }
                             } else {
                                 if (!title.contains("WhatsApp")) {
-                                    notificationSms.set_date(date);
-                                    notificationSms.setUser_icon(null);
-                                    notificationSms.set_contact_title("Missed call");
-                                    notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                                    if (!data.toString().equalsIgnoreCase("")) {
-                                        notificationSms.set_message(data.toString());
+                                    boolean is_Read = notificationSms.get_is_read();
+                                    String message = notificationSms.get_message().split("\n")[0];
+                                    if (is_Read) {
+                                        if ((!TextUtils.isEmpty(message) &&
+                                                !message.equalsIgnoreCase(text))) {
+                                            notificationSms.set_date(date);
+                                            notificationSms.setUser_icon(null);
+                                            notificationSms.set_is_read(false);
+                                            notificationSms.set_contact_title("Missed call");
+                                            notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                                            if (!data.toString().equalsIgnoreCase("")) {
+                                                notificationSms.set_message(data.toString());
+                                            } else {
+                                                notificationSms.set_message(text + "\n" + notificationSms.get_message());
+                                            }
+                                            smsDao.updateInTx(notificationSms);
+                                        }
                                     } else {
-                                        notificationSms.set_message(text + "\n" + notificationSms.get_message());
+                                        notificationSms.set_date(date);
+                                        notificationSms.setUser_icon(null);
+                                        notificationSms.set_is_read(false);
+                                        notificationSms.set_contact_title("Missed call");
+                                        notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                                        if (!data.toString().equalsIgnoreCase("")) {
+                                            notificationSms.set_message(data.toString());
+                                        } else {
+                                            notificationSms.set_message(text + "\n" + notificationSms.get_message());
+                                        }
+                                        smsDao.updateInTx(notificationSms);
                                     }
-                                    smsDao.updateInTx(notificationSms);
+
                                 }
                             }
                         }
