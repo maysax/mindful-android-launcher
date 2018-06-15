@@ -31,6 +31,7 @@ import de.greenrobot.event.Subscribe;
  */
 public class SearchLayout extends CardView {
 
+    private static final String TAG = "SearchLayout";
     public ChipsEditText txtSearchBox;
     ImageView btnClear;
     private SharedPreferences launcherPrefs;
@@ -101,8 +102,6 @@ public class SearchLayout extends CardView {
         super.onDetachedFromWindow();
         EventBus.getDefault().unregister(this);
     }
-
-    private static final String TAG = "SearchLayout";
 
     void setupViews() {
         txtSearchBox.addTextChangedListener(new TextWatcherExtended() {

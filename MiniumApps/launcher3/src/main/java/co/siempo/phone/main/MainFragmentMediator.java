@@ -394,7 +394,7 @@ public class MainFragmentMediator {
         protected List<MainListItem> doInBackground(String... strings) {
             try {
 
-                if(getAdapter()!=null) {
+                if (getAdapter() != null) {
                     getAdapter().setNotifyOnChange(false);
                 }
                 loadActions();

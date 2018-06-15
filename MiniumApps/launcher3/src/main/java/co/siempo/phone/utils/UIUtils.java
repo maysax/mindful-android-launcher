@@ -54,7 +54,6 @@ public class UIUtils {
     }
 
 
-
     public static void toast(Context context, String msg) {
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
@@ -454,6 +453,17 @@ public class UIUtils {
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public static boolean hasUsageStatsPermission(Context context) {
+        AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+        int mode = 0;
+        if (appOps != null) {
+            mode = appOps.checkOpNoThrow("android:get_usage_stats",
+                    android.os.Process.myUid(), context.getPackageName());
+        }
+        return mode == AppOpsManager.MODE_ALLOWED;
+    }
+
     public static class FadePageTransformer implements ViewPager
             .PageTransformer {
         public void transformPage(@NonNull View view, float position) {
@@ -477,17 +487,6 @@ public class UIUtils {
 
         }
 
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public static boolean hasUsageStatsPermission(Context context) {
-        AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
-        int mode = 0;
-        if (appOps != null) {
-            mode = appOps.checkOpNoThrow("android:get_usage_stats",
-                    android.os.Process.myUid(), context.getPackageName());
-        }
-        return mode == AppOpsManager.MODE_ALLOWED;
     }
 
 }
