@@ -164,7 +164,7 @@ public class NotificationActivity extends CoreActivity {
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
-        if (event.isAppInstalledSuccessfully()) {
+        if (!isFinishing() && event.isAppInstalledSuccessfully()) {
             bindView();
         }
     }

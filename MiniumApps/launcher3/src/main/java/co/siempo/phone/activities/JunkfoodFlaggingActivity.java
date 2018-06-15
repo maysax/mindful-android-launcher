@@ -83,7 +83,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
-        if (event.isAppInstalledSuccessfully()) {
+        if (!isFinishing() && event.isAppInstalledSuccessfully()) {
             loadApps();
         }
     }
