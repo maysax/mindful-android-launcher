@@ -24,7 +24,7 @@ public class SubscriptionUtil {
     public SubscriptionUtil(Context context) {
         this.context = context;
         iabHelper = new IabHelper(context, base64EncodedPublicKey);
-        iabHelper.enableDebugLogging(true, "Rajesh");
+        iabHelper.enableDebugLogging(true, "TestPurchase");
         setup((IabSetupFinishedListener) context);
     }
 
@@ -58,9 +58,9 @@ public class SubscriptionUtil {
     }
 
 
-    public void initSubscriptionWithExtras(final String subscriptionType,
-                                           final SubscriptionFinishedListener subscriptionFinishedListener,
-                                           String payload) {
+    private void initSubscriptionWithExtras(final String subscriptionType,
+                                            final SubscriptionFinishedListener subscriptionFinishedListener,
+                                            String payload) {
         if (iabHelper != null) {
             try {
                 iabHelper.launchSubscriptionPurchaseFlow((Activity) context,
@@ -93,9 +93,9 @@ public class SubscriptionUtil {
         }
     }
 
-    public void initPurchaseWithExtras(final String subscriptionType,
-                                       final PurchaseFinishedListener subscriptionFinishedListener,
-                                       String payload) {
+    private void initPurchaseWithExtras(final String subscriptionType,
+                                        final PurchaseFinishedListener subscriptionFinishedListener,
+                                        String payload) {
         if (iabHelper != null) {
             try {
                 iabHelper.flagEndAsync();
@@ -134,7 +134,6 @@ public class SubscriptionUtil {
                                                     // successfully consumed, so we apply the effects of the item in our
                                                     // game world's logic, which in our case means filling the gas tank a bit
                                                     Log.d("Test", "Consumption successful. Provisioning.");
-                                                } else {
                                                 }
                                                 Log.d("Test", "End consumption flow.");
                                             }
@@ -214,7 +213,6 @@ public class SubscriptionUtil {
                             Log.d("TEST", "Problem querying inventory: " + result);
                             dispose();
                             subscriptionInventoryListener.onFailureInventory();
-                            return;
                         } else {
                             ArrayList<SkuDetails> skuDetailsList = new ArrayList<>();
                             for (String skuId : skuIdsList) {
@@ -237,7 +235,7 @@ public class SubscriptionUtil {
 
     }
 
-    public void dispose() {
+    private void dispose() {
         if (iabHelper != null) {
             try {
                 iabHelper.dispose();
@@ -279,7 +277,7 @@ public class SubscriptionUtil {
         void onFailure();
     }
 
-    boolean verifyDeveloperPayload(Purchase p) {
+    private boolean verifyDeveloperPayload(Purchase p) {
         String payload = p.getDeveloperPayload();
 
         /*

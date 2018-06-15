@@ -17,8 +17,8 @@ import co.siempo.phone.R;
 
 public class EmailListAdapter extends ArrayAdapter<String> {
 
-    ArrayList<String> customers = new ArrayList<>();
-    ArrayList<String> suggestions = new ArrayList<>();
+    private ArrayList<String> customers;
+    private ArrayList<String> suggestions = new ArrayList<>();
     private Context mContext;
     private int itemLayout;
     private ListFilter listFilter = new ListFilter();
@@ -33,6 +33,7 @@ public class EmailListAdapter extends ArrayAdapter<String> {
     }
 
 
+    @NonNull
     @Override
     public View getView(int position, View view, @NonNull ViewGroup parent) {
 
@@ -97,9 +98,9 @@ public class EmailListAdapter extends ArrayAdapter<String> {
             if (results.values != null) {
                 suggestions = (ArrayList<String>) results.values;
             } else {
-                suggestions = new ArrayList<String>(customers);
+                suggestions = new ArrayList<>(customers);
             }
-            Log.d("Rajesh", "" + suggestions.size());
+            Log.d("suggestions", "" + suggestions.size());
             notifyDataSetChanged();
         }
 

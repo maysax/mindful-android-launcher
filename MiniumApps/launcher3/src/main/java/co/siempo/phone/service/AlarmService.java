@@ -19,9 +19,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -99,7 +101,7 @@ public class AlarmService extends IntentService {
         everyTwoHourList.addAll(Arrays.asList(1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23));
         everyFourHoursList.addAll(Arrays.asList(1, 4, 8, 12, 16, 20, 24));
         n = NotificationManagerCompat.from(context);
-        List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
+        List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().where(TableNotificationSmsDao.Properties._is_read.eq(false)).orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
         Tracer.d("AlarmService: notificationList.size" + notificationList.size());
         if (notificationList.size() > 0) {
             run(notificationList);
@@ -247,23 +249,29 @@ public class AlarmService extends IntentService {
             if (notificationList.size() >= 1) {
                 Tracer.d("AlarmService: deleteAll");
                 playNotificationSoundVibrate();
-                DBUtility.getNotificationDao().deleteAll();
+//                DBUtility.getNotificationDao().deleteAll();
+                for (TableNotificationSms tableNotificationSms : notificationList) {
+                    tableNotificationSms.set_is_read(true);
+                    DBUtility.getNotificationDao().update(tableNotificationSms);
+                }
+
+                try {
+                    File file = context.getDatabasePath("noti-db");
+                    double fileinKb = file.length() / 1024;
+                    double fileinMb = fileinKb / 1024;
+                    Log.d("FileSize", "Size:" + file.length() + " fileinKb:" + fileinKb + " fileinMb:" + fileinMb);
+                    if (fileinMb > 10) {
+                        long list = DBUtility.getNotificationDao().queryBuilder().count();
+                        List<TableNotificationSms> listForDelete = DBUtility.getNotificationDao().queryBuilder().
+                                orderAsc(TableNotificationSmsDao.Properties.Notification_date)
+                                .limit((int) (list / 2)).list();
+                        DBUtility.getNotificationDao().deleteInTx(listForDelete);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
-
-
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    if (audioManager != null) {
-//                        if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-//                            if (isTempoVolume)
-//                                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, 0);
-//                        }
-//                    }
-//                }
-//            }, 2000);
-
-
         } catch (Exception e) {
             e.printStackTrace();
             CoreApplication.getInstance().logException(e);
@@ -440,7 +448,6 @@ public class AlarmService extends IntentService {
             }
 
         } catch (Exception e) {
-//            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
     }
