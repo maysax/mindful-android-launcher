@@ -222,6 +222,7 @@ public class AlarmService extends IntentService {
                         notificationChannel.enableLights(true);
                         notificationChannel.setLightColor(Color.RED);
                         notificationChannel.enableVibration(true);
+                        notificationChannel.setSound(null, null);
                         notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
                         notificationChannel.setVibrationPattern(new long[]{1000});
 

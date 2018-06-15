@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 import co.siempo.phone.R;
 import co.siempo.phone.event.NotifyBackgroundChange;
+import co.siempo.phone.event.NotifyBackgroundToService;
 import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.EventBus;
@@ -58,8 +59,7 @@ public class UpdateBackgroundActivity extends CoreActivity {
         circularProgressDrawable.setColorSchemeColors(Color.parseColor("#448AFF"));
         circularProgressDrawable.start();
 
-        if (imageIntent.getExtras() != null && imageIntent.hasExtra("imageUri"))
-        {
+        if (imageIntent.getExtras() != null && imageIntent.hasExtra("imageUri")) {
             strImage = imageIntent.getExtras().getString("imageUri");
             checkPermissionAndDisplay(this, strImage);
         }
@@ -104,6 +104,7 @@ public class UpdateBackgroundActivity extends CoreActivity {
                     .into(imageView);
         }
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -123,6 +124,7 @@ public class UpdateBackgroundActivity extends CoreActivity {
                 PrefSiempo.getInstance(UpdateBackgroundActivity.this).write(PrefSiempo.DEFAULT_BAG_ENABLE, true);
                 setResult(Activity.RESULT_OK, new Intent());
                 EventBus.getDefault().postSticky(new NotifyBackgroundChange(true));
+                EventBus.getDefault().post(new NotifyBackgroundToService(true));
                 finish();
                 return false;
             }
