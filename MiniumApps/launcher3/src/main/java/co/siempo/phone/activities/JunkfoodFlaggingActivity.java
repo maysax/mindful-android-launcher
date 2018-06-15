@@ -181,6 +181,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
 
         installedPackageList = appList;
 //        new FilterApps(false).execute();
+
         bindData();
 
     }
@@ -618,39 +619,44 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
 
         @Override
         protected ArrayList<AppListInfo> doInBackground(String... strings) {
-            for (String resolveInfo : installedPackageList) {
-                if (!resolveInfo.equalsIgnoreCase(getPackageName())) {
-                    String applicationname = CoreApplication.getInstance()
-                            .getListApplicationName().get(resolveInfo);
-                    if (!TextUtils.isEmpty(applicationname)) {
-                        if (adapterlist.contains(resolveInfo)) {
-                            flagAppList.add(new AppListInfo(resolveInfo, applicationname, false, false, true));
-                        } else {
-                            unflageAppList.add(new AppListInfo(resolveInfo, applicationname, false, false, false));
+            try {
+                for (String resolveInfo : installedPackageList) {
+                    if (!resolveInfo.equalsIgnoreCase(getPackageName())) {
+                        String applicationname = CoreApplication.getInstance()
+                                .getListApplicationName().get(resolveInfo);
+                        if (!TextUtils.isEmpty(applicationname)) {
+                            if (adapterlist.contains(resolveInfo)) {
+                                flagAppList.add(new AppListInfo(resolveInfo, applicationname, false, false, true));
+                            } else {
+                                unflageAppList.add(new AppListInfo(resolveInfo, applicationname, false, false, false));
+                            }
                         }
                     }
                 }
-            }
-            //Code for removing the junk app from Favorite Sorted Menu and
-            //Favorite List
-            removeJunkAppsFromFavorites();
+                //Code for removing the junk app from Favorite Sorted Menu and
+                //Favorite List
+                removeJunkAppsFromFavorites();
 
-            if (flagAppList.size() == 0) {
-                flagAppList.add(new AppListInfo("", "", true, true, true));
-            } else {
-                flagAppList.add(0, new AppListInfo("", "", true, false, true));
-            }
-            flagAppList = Sorting.sortApplication(flagAppList);
-            bindingList.addAll(flagAppList);
+                if (flagAppList.size() == 0) {
+                    flagAppList.add(new AppListInfo("", "", true, true, true));
+                } else {
+                    flagAppList.add(0, new AppListInfo("", "", true, false, true));
+                }
+                flagAppList = Sorting.sortApplication(flagAppList);
+                bindingList.addAll(flagAppList);
 
-            if (unflageAppList.size() == 0) {
-                unflageAppList.add(new AppListInfo("", "", true, true, false));
-            } else {
-                unflageAppList.add(0, new AppListInfo("", "", true, false, false));
+                if (unflageAppList.size() == 0) {
+                    unflageAppList.add(new AppListInfo("", "", true, true, false));
+                } else {
+                    unflageAppList.add(0, new AppListInfo("", "", true, false, false));
+                }
+                unflageAppList = Sorting.sortApplication(unflageAppList);
+                bindingList.addAll(unflageAppList);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            unflageAppList = Sorting.sortApplication(unflageAppList);
-            bindingList.addAll(unflageAppList);
             return bindingList;
+
         }
 
         @Override
