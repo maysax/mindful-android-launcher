@@ -30,6 +30,7 @@ import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.UIUtils;
 
 /**
  * Created by RajeshJadi on 14/2/18.
@@ -130,28 +131,27 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                             bindView(mainListItem, holder, false);
                         }
                     } else {
-//                        if (getCountOfCheckTools() < 16) {
-//
-//                            int id = ((ToolSelectionActivity) context).check();
-//                            if (id != 0) {
-//                                ((ToolSelectionActivity) context).replace(id, mainListItem.getId());
-//                            }
-                        mainListItem.setVisable(true);
-//                        map.get(mainListItem.getId()).setVisible(true);
-                        bindView(mainListItem, holder, true);
-                        if (map.get(mainListItem.getId()).getApplicationName().equalsIgnoreCase("")) {
-                            String hashMapToolSettings = new Gson().toJson(map);
-                            PrefSiempo.getInstance(context).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
-                            Intent intent = new Intent(context, AppAssignmentActivity.class);
-                            intent.putExtra(Constants.INTENT_MAINLISTITEM, mainListItem);
-                            intent.putExtra("class_name", ToolSelectionActivity.class.getSimpleName
-                                    ().toString());
-                            ((ToolSelectionActivity) context).startActivityForResult(intent, ToolSelectionActivity.TOOL_SELECTION);
+                        if (getCountOfCheckTools() < 16) {
+
+                            int id = ((ToolSelectionActivity) context).check();
+                            if (id != 0) {
+                                ((ToolSelectionActivity) context).replace(id, mainListItem.getId());
+                            }
+                            mainListItem.setVisable(true);
+                            bindView(mainListItem, holder, true);
+                            if (map.get(mainListItem.getId()).getApplicationName().equalsIgnoreCase("")) {
+                                String hashMapToolSettings = new Gson().toJson(map);
+                                PrefSiempo.getInstance(context).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
+                                Intent intent = new Intent(context, AppAssignmentActivity.class);
+                                intent.putExtra(Constants.INTENT_MAINLISTITEM, mainListItem);
+                                intent.putExtra("class_name", ToolSelectionActivity.class.getSimpleName
+                                        ().toString());
+                                ((ToolSelectionActivity) context).startActivityForResult(intent, ToolSelectionActivity.TOOL_SELECTION);
+                            }
+                        } else {
+                            UIUtils.toastShort(context, "You cannot select " +
+                                    "more than 16 tools");
                         }
-//                        } else {
-//                            UIUtils.toastShort(context, "You cannot select " +
-//                                    "more than 16 tools");
-//                        }
                     }
 
                 }
