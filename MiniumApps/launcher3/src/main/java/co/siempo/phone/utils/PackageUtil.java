@@ -836,9 +836,9 @@ public class PackageUtil {
             //if there are still tools that were not in the sorted list
             //maybe they were added after the last drag and drop
             //add them to the sorted list
-            if (items.size() > 0) {
-                sortedTools.addAll(items);
-            }
+//            if (items.size() > 0) {
+//                sortedTools.addAll(items);
+//            }
 
             return sortedTools;
         } else {

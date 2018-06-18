@@ -141,10 +141,17 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                     } else {
                         if (getCountOfCheckTools() < 16) {
 
-                            int id = ((ToolSelectionActivity) context).check();
-                            if (id != 0) {
-                                ((ToolSelectionActivity) context).replace(id, mainListItem.getId());
+                            boolean isItemAlreadyContainsInArray = (
+                                    (ToolSelectionActivity) context)
+                                    .checkItemContains(mainListItem.getId());
+                            if (!isItemAlreadyContainsInArray) {
+                                int id = ((ToolSelectionActivity) context)
+                                        .invisibleItemId();
+                                ((ToolSelectionActivity) context)
+                                        .replaceData(id, mainListItem.getId());
                             }
+
+
                             mainListItem.setVisable(true);
                             bindView(mainListItem, holder, true);
                             if (map.get(mainListItem.getId()).getApplicationName().equalsIgnoreCase("")) {
@@ -158,11 +165,13 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                                     ((ToolSelectionActivity) context).startActivityForResult(intent, ToolSelectionActivity.TOOL_SELECTION);
                                     holder.txtAssignApp.setClickable(false);
                                 }
-                            } else {
-                                UIUtils.toastShort(context, "You cannot select " +
-                                        "more than 16 tools");
                             }
+
+                        } else {
+                            UIUtils.toastShort(context, "You cannot select " +
+                                    "more than 16 tools");
                         }
+
                     }
 
                 }
@@ -170,6 +179,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
         }
 
     }
+
     private void bindView(MainListItem mainListItem, ToolsViewHolder holder, boolean isVisible) {
 
         if (map.get(mainListItem.getId()).getApplicationName().equalsIgnoreCase("")) {
