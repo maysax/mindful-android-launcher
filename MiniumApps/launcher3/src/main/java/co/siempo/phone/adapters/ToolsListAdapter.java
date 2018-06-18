@@ -43,6 +43,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
     private HashMap<Integer, AppMenu> map;
     private Context context;
     private int defaultTextColor;
+    private boolean clickable = true;
 
     public ToolsListAdapter(Context context, ArrayList<MainListItem>
             listItems, HashMap<Integer, AppMenu> mapList) {
@@ -69,6 +70,10 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
         notifyDataSetChanged();
     }
 
+    public void changeClickble(boolean clickable) {
+        this.clickable = clickable;
+    }
+
 
     @Override
     public ToolsListAdapter.ToolsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -87,11 +92,14 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
             holder.txtAssignApp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, AppAssignmentActivity.class);
-                    intent.putExtra(Constants.INTENT_MAINLISTITEM, mainListItem);
-                    intent.putExtra("class_name", ToolSelectionActivity.class.getSimpleName
-                            ().toString());
-                    ((ToolSelectionActivity) context).startActivityForResult(intent, ToolSelectionActivity.TOOL_SELECTION);
+                    if (clickable) {
+                        Intent intent = new Intent(context, AppAssignmentActivity.class);
+                        intent.putExtra(Constants.INTENT_MAINLISTITEM, mainListItem);
+                        intent.putExtra("class_name", ToolSelectionActivity.class.getSimpleName().toString());
+                        ((ToolSelectionActivity) context).startActivityForResult(intent,
+                                ToolSelectionActivity.TOOL_SELECTION);
+                        holder.txtAssignApp.setClickable(false);
+                    }
                 }
             });
 
@@ -142,23 +150,26 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                             if (map.get(mainListItem.getId()).getApplicationName().equalsIgnoreCase("")) {
                                 String hashMapToolSettings = new Gson().toJson(map);
                                 PrefSiempo.getInstance(context).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
-                                Intent intent = new Intent(context, AppAssignmentActivity.class);
-                                intent.putExtra(Constants.INTENT_MAINLISTITEM, mainListItem);
-                                intent.putExtra("class_name", ToolSelectionActivity.class.getSimpleName
-                                        ().toString());
-                                ((ToolSelectionActivity) context).startActivityForResult(intent, ToolSelectionActivity.TOOL_SELECTION);
+                                if (clickable) {
+                                    Intent intent = new Intent(context, AppAssignmentActivity.class);
+                                    intent.putExtra(Constants.INTENT_MAINLISTITEM, mainListItem);
+                                    intent.putExtra("class_name", ToolSelectionActivity.class.getSimpleName
+                                            ().toString());
+                                    ((ToolSelectionActivity) context).startActivityForResult(intent, ToolSelectionActivity.TOOL_SELECTION);
+                                    holder.txtAssignApp.setClickable(false);
+                                }
+                            } else {
+                                UIUtils.toastShort(context, "You cannot select " +
+                                        "more than 16 tools");
                             }
-                        } else {
-                            UIUtils.toastShort(context, "You cannot select " +
-                                    "more than 16 tools");
                         }
                     }
 
                 }
             });
         }
-    }
 
+    }
     private void bindView(MainListItem mainListItem, ToolsViewHolder holder, boolean isVisible) {
 
         if (map.get(mainListItem.getId()).getApplicationName().equalsIgnoreCase("")) {
