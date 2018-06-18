@@ -178,6 +178,9 @@ public class ToolSelectionActivity extends CoreActivity {
         if (requestCode == TOOL_SELECTION) {
             if (resultCode == RESULT_OK) {
                 mAdapter.refreshEvents(adapterList);
+            } else if (resultCode == RESULT_CANCELED) {
+                mAdapter.changeClickble(true);
+                mAdapter.notifyDataSetChanged();
             }
         }
     }

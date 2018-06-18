@@ -223,11 +223,13 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
                 break;
             case R.id.relChooseFlagApp:
                 Intent junkFoodFlagIntent = new Intent(context, JunkfoodFlaggingActivity.class);
+                junkFoodFlagIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 junkFoodFlagIntent.putExtra("FromAppMenu", true);
                 startActivity(junkFoodFlagIntent);
                 break;
             case R.id.relReduceOveruseFlagged:
                 requestUsageStatsPermission();
+                mRelOverUseFlaggedApp.setClickable(false);
                 break;
             default:
                 break;
@@ -373,6 +375,7 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
     public void onResume() {
         super.onResume();
         startTime = System.currentTimeMillis();
+        mRelOverUseFlaggedApp.setClickable(true);
     }
 
     @Override
