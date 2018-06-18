@@ -209,6 +209,7 @@ public class AlphaSettingsActivity extends CoreActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AlphaSettingsActivity.this, InAppItemListActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
 
             }

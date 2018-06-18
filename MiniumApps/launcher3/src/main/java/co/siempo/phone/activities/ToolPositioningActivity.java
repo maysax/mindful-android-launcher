@@ -255,6 +255,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ToolPositioningActivity.this, ToolSelectionActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra("TopList", topItems);
                 intent.putExtra("BottomList", bottomItems);
                 startActivity(intent);
