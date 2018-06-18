@@ -255,30 +255,6 @@ public class SubscriptionUtil {
         return iabHelper;
     }
 
-    public interface SubscriptionInventoryListener {
-        void onQueryInventoryFinished(ArrayList<SkuDetails> skuList);
-    }
-
-    public interface InAppInventoryListener {
-        void onQueryInventoryFinished(ArrayList<SkuDetails> skuList, boolean isFirstTime);
-        void onFailureInventory();
-    }
-
-
-    public interface SubscriptionFinishedListener {
-        void onSuccess();
-    }
-
-    public interface PurchaseFinishedListener {
-        void onSuccess();
-    }
-
-    public interface IabSetupFinishedListener {
-        void onSetupFinish();
-
-        void onFailure();
-    }
-
     boolean verifyDeveloperPayload(Purchase p) {
         String payload = p.getDeveloperPayload();
 
@@ -306,5 +282,30 @@ public class SubscriptionUtil {
          */
 
         return true;
+    }
+
+    public interface SubscriptionInventoryListener {
+        void onQueryInventoryFinished(ArrayList<SkuDetails> skuList);
+    }
+
+
+    public interface InAppInventoryListener {
+        void onQueryInventoryFinished(ArrayList<SkuDetails> skuList, boolean isFirstTime);
+
+        void onFailureInventory();
+    }
+
+    public interface SubscriptionFinishedListener {
+        void onSuccess();
+    }
+
+    public interface PurchaseFinishedListener {
+        void onSuccess();
+    }
+
+    public interface IabSetupFinishedListener {
+        void onSetupFinish();
+
+        void onFailure();
     }
 }

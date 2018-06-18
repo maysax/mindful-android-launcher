@@ -53,6 +53,9 @@
         <item name="status_bar_pane">@color/pane_light</item>
         <item name="navigation_bar_pane">@color/black</item>
 
+        <item name="highlighted_alpha">@color/black</item>
+        <item name="arrow_color">@color/arrow_color_light</item>
+        <item name="alphabet_color">@color/black</item>
 
     </style>
 
@@ -110,7 +113,9 @@
         <item name="status_bar_pane">@color/pane_dark</item>
         <item name="navigation_bar_pane">@color/transparent</item>
 
-
+        <item name="highlighted_alpha">@color/white</item>
+        <item name="arrow_color">@color/arrow_color_light</item>
+        <item name="alphabet_color">@color/arrow_color_light</item>
     </style>
 
     <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">

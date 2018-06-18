@@ -238,7 +238,11 @@ public class StatusBarService extends Service {
             @Override
             public void onForeground(String process) {
                 if (PackageUtil.isSiempoLauncher(context)) {
-//                    new DBClient().deleteMsgByPackageName(process);
+                    try {
+                        new DBClient().deleteMsgByPackageName(process);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     Set<String> set = PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
                     int deterTime = PrefSiempo.getInstance(context).read(PrefSiempo.DETER_AFTER, -1);
                     if (deterTime != -1) {

@@ -94,7 +94,9 @@ public class IntentionEditActivity extends CoreActivity implements View.OnClickL
 
         if (strIntentField.trim().length() > 0) {
             imgClear.setVisibility(View.VISIBLE);
+            hint.setText(getString(R.string.your_intention));
         } else {
+            hint.setText(getString(R.string.what_s_your_intention));
             imgClear.setVisibility(View.GONE);
             txtHelp();
         }
@@ -133,8 +135,10 @@ public class IntentionEditActivity extends CoreActivity implements View.OnClickL
             public void afterTextChanged(Editable s) {
                 if (s.toString().trim().length() > 0) {
                     imgClear.setVisibility(View.VISIBLE);
+                    hint.setText(getString(R.string.your_intention));
                 } else {
                     imgClear.setVisibility(View.GONE);
+                    hint.setText(getString(R.string.what_s_your_intention));
                 }
 
                 if (PrefSiempo.getInstance(IntentionEditActivity.this).read(PrefSiempo.DEFAULT_INTENTION, "").equalsIgnoreCase(s.toString())) {

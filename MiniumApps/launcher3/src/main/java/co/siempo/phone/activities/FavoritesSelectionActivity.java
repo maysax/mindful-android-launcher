@@ -74,7 +74,7 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
-        if (event.isAppInstalledSuccessfully()) {
+        if (!isFinishing() && event.isAppInstalledSuccessfully()) {
             loadApps();
         }
     }

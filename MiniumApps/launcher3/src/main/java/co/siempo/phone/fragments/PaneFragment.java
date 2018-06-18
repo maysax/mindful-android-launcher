@@ -820,6 +820,7 @@ public class PaneFragment extends CoreFragment {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            changeToken(event.getString());
                             parser.parse(event.getString());
                             if (adapter != null) {
                                 adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());

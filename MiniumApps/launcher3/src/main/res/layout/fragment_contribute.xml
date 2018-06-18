@@ -33,8 +33,8 @@
             android:gravity="center|right"
             android:paddingRight="@dimen/dp_20"
             android:text="Select Amount"
-            android:visibility="gone"
-            android:textSize="@dimen/sp_12" />
+            android:textSize="@dimen/sp_12"
+            android:visibility="gone" />
 
         <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/spinnerContribute"
@@ -43,9 +43,9 @@
             android:layout_height="match_parent"
             android:dropDownWidth="120dp"
             android:gravity="right"
-            android:visibility="gone"
             android:overlapAnchor="false"
-            android:spinnerMode="dropdown" />
+            android:spinnerMode="dropdown"
+            android:visibility="gone" />
     </LinearLayout>
 
     <TextView
@@ -57,9 +57,9 @@
         android:background="@drawable/rounded_border"
         android:gravity="center"
         android:padding="@dimen/dp_10"
-        android:visibility="gone"
         android:text="Submit"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:visibility="gone" />
 </LinearLayout>
 
 
