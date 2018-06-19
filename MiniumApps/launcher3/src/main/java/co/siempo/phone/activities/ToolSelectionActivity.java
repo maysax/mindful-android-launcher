@@ -19,9 +19,11 @@ import com.google.gson.reflect.TypeToken;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.ToolsListAdapter;
@@ -51,6 +53,7 @@ public class ToolSelectionActivity extends CoreActivity {
     private ArrayList<MainListItem> topItems = new ArrayList<>(12);
     private ArrayList<MainListItem> bottomItems = new ArrayList<>(4);
     private ArrayList<MainListItem> adapterList;
+    private List<Long> listOfSortedUpdatedCustomersId = new ArrayList<>();
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -65,8 +68,22 @@ public class ToolSelectionActivity extends CoreActivity {
                         map.get(mainListItem.getId()).setVisible(mainListItem
                                 .isVisable());
                     }
-
-                    PrefSiempo.getInstance(ToolSelectionActivity.this).write(PrefSiempo.TOOLS_SETTING, new Gson().toJson(map));
+                    Log.d("Rajesh", "Save::-" +
+                            listOfSortedUpdatedCustomersId);
+                    PrefSiempo.getInstance(ToolSelectionActivity.this).write
+                            (PrefSiempo.TOOLS_SETTING, new Gson().toJson(mAdapter.getMap()));
+                    PrefSiempo.getInstance(ToolSelectionActivity.this).write
+                            (PrefSiempo
+                                    .SORTED_MENU, new Gson().toJson(listOfSortedUpdatedCustomersId)
+                            );
+                    Iterator it = map.entrySet().iterator();
+                    while (it.hasNext()) {
+                        Map.Entry pair = (Map.Entry) it.next();
+                        Log.d("HashMap", pair.getKey() + " = " + ((AppMenu)
+                                pair
+                                        .getValue()).isVisible());
+                    }
+                    Log.d("HashMap", "End");
                     EventBus.getDefault().postSticky(new NotifyBottomView(true));
                     EventBus.getDefault().postSticky(new NotifyToolView(true));
                     finish();
@@ -97,27 +114,14 @@ public class ToolSelectionActivity extends CoreActivity {
         map = CoreApplication.getInstance().getToolsSettings();
 //        topItems = (ArrayList<MainListItem>) getIntent().getExtras().getSerializable("TopList");
 //        bottomItems = (ArrayList<MainListItem>) getIntent().getExtras().getSerializable("BottomList");
-
+        String strSorted = PrefSiempo.getInstance(this).read
+                (PrefSiempo.SORTED_MENU, "");
+        //convert onNoteListChangedJSON array into a List<Long>
+        Gson gson = new GsonBuilder()
+                .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
+        listOfSortedUpdatedCustomersId = gson.fromJson(strSorted, new TypeToken<List<Long>>() {
+        }.getType());
         initView();
-    }
-
-    public int check() {
-        int id = 0;
-        //MainListItem is giving isVisable always true hence this condition cannot be used for id replacement
-        for (MainListItem mainListItem : topItems) {
-            if (!mainListItem.isVisable()) {
-                id = mainListItem.getId();
-                return id;
-            }
-        }
-
-        for (MainListItem mainListItem : bottomItems) {
-            if (!mainListItem.isVisable()) {
-                id = mainListItem.getId();
-                return id;
-            }
-        }
-        return id;
     }
 
 
@@ -185,30 +189,86 @@ public class ToolSelectionActivity extends CoreActivity {
         }
     }
 
-    public void replace(int oldId, int newId) {
-        ArrayList<MainListItem> sortedTools = new ArrayList<>();
 
-        //get the JSON array of the ordered of sorted customers
-        String jsonListOfSortedToolsId = PrefSiempo.getInstance(this).read(PrefSiempo.SORTED_MENU, "");
-        Log.d("MenuItem", jsonListOfSortedToolsId);
+    /**
+     * Check items already exists in tool position array list.
+     *
+     * @param id
+     * @return
+     */
+    public boolean checkItemContains(int id) {
 
-        //check for null
-        if (!jsonListOfSortedToolsId.isEmpty()) {
-
-
-            //convert onNoteListChangedJSON array into a List<Long>
-            Gson gson = new GsonBuilder()
-                    .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
-            List<Long> listOfSortedCustomersId = gson.fromJson(jsonListOfSortedToolsId, new TypeToken<List<Long>>() {
-            }.getType());
-            if (listOfSortedCustomersId.contains(oldId)) {
-                Collections.replaceAll(listOfSortedCustomersId, (long) oldId, (long) newId);
+        Log.d("Rajesh", "Un Check::-" + listOfSortedUpdatedCustomersId);
+        for (MainListItem mainListItem : ToolPositioningActivity.sortedList) {
+            if (mainListItem.getId() == id) {
+                return true;
             }
-            Gson gson1 = new Gson();
-            String jsonListOfSortedCustomerIds = gson1.toJson(listOfSortedCustomersId);
-            PrefSiempo.getInstance(this).write(PrefSiempo.SORTED_MENU, jsonListOfSortedCustomerIds);
+        }
+        return false;
+    }
+
+    /**
+     * return first invisible items from list.
+     *
+     * @return
+     */
+    public int invisibleItemId() {
+        ArrayList<MainListItem> itemsLocal = new ArrayList<>();
+        new MainListItemLoader(this).loadItemsDefaultApp(itemsLocal);
+        for (MainListItem mainListItem : ToolPositioningActivity.sortedList) {
+            if (!mainListItem.isVisable()) {
+                return mainListItem.getId();
+            }
+        }
+        return -1;
+    }
+
+    public void hideItemInSortedList(int id, boolean isVisible) {
+        ListIterator listIterator = ToolPositioningActivity.sortedList.listIterator();
+        while (listIterator.hasNext()) {
+            MainListItem next = (MainListItem) listIterator.next();
+            if (next.getId() == id) {
+                next.setVisable(isVisible);
+            }
         }
     }
+
+
+    public boolean replaceData(int oldId, int newId) {
+        ListIterator<Long> iterator = listOfSortedUpdatedCustomersId.listIterator();
+        while (iterator.hasNext()) {
+            long next = iterator.next();
+            if (next == oldId) {
+                //Replace element
+                iterator.set((long) newId);
+            }
+        }
+
+        int idToRemove = -1;
+        MainListItem mainListItemAdd = null;
+        for (int i = 0; i < ToolPositioningActivity.sortedList.size(); i++) {
+            if (ToolPositioningActivity.sortedList.get(i).getId() == oldId) {
+                idToRemove = i;
+            }
+            if (ToolPositioningActivity.sortedList.get(i).getId() == newId) {
+                mainListItemAdd = ToolPositioningActivity.sortedList.get(i);
+            }
+
+
+        }
+
+        if (idToRemove != -1) {
+            ToolPositioningActivity.sortedList.remove(idToRemove);
+        }
+
+        if (mainListItemAdd != null) {
+            ToolPositioningActivity.sortedList.add(mainListItemAdd);
+        }
+        Log.d("Rajesh", "oldId:" + oldId + "   " + "newId:" + newId);
+        Log.d("Rajesh", "Replace::-" + listOfSortedUpdatedCustomersId);
+        return false;
+    }
+
 
     @Override
     public void onBackPressed() {

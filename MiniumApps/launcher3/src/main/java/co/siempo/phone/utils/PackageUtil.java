@@ -809,6 +809,7 @@ public class PackageUtil {
 
         //get the JSON array of the ordered of sorted customers
         String jsonListOfSortedToolsId = PrefSiempo.getInstance(context).read(PrefSiempo.SORTED_MENU, "");
+        Tracer.d("MenuItem",jsonListOfSortedToolsId);
         Log.d("MenuItem", jsonListOfSortedToolsId);
 
         //check for null
@@ -836,9 +837,9 @@ public class PackageUtil {
             //if there are still tools that were not in the sorted list
             //maybe they were added after the last drag and drop
             //add them to the sorted list
-            if (items.size() > 0) {
-                sortedTools.addAll(items);
-            }
+//            if (items.size() > 0) {
+//                sortedTools.addAll(items);
+//            }
 
             return sortedTools;
         } else {

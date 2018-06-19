@@ -30,12 +30,14 @@ import android.util.LruCache;
 import com.androidnetworking.AndroidNetworking;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -234,6 +236,11 @@ public abstract class CoreApplication extends MultiDexApplication {
                 String hashMapToolSettings = new Gson().toJson(newMap);
                 PrefSiempo.getInstance(this).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
             }
+
+
+
+
+
         }
         setHideIconBranding(PrefSiempo.getInstance(sInstance).read(PrefSiempo.IS_ICON_BRANDING, true));
         setRandomize(PrefSiempo.getInstance(sInstance).read(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, true));
