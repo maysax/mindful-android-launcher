@@ -26,15 +26,14 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.jaeger.library.StatusBarUtil;
 
 import java.io.File;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Iterator;
+import java.util.ListIterator;
+import java.util.Map;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.ToolPositioningAdapter;
@@ -114,30 +113,30 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
                         .SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             }
         }
-        String jsonListOfSortedToolsId = PrefSiempo.getInstance(this).read
-                (PrefSiempo.SORTED_MENU, "");
-        Log.d("MenuItem", jsonListOfSortedToolsId);
-        //check for null
-        if (!jsonListOfSortedToolsId.isEmpty()) {
-            //convert onNoteListChangedJSON array into a List<Long>
-            Gson gson = new GsonBuilder()
-                    .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
-            List<Long> listOfSortedCustomersId = gson.fromJson(jsonListOfSortedToolsId, new TypeToken<List<Long>>() {
-            }.getType());
-
-            if (listOfSortedCustomersId.size() > 16) {
-                listOfSortedCustomersId.remove(12);
-                listOfSortedCustomersId.remove(13);
-                listOfSortedCustomersId.remove(14);
-                listOfSortedCustomersId.remove(15);
-
-                String jsonListOfSortedCustomerIds = gson.toJson
-                        (listOfSortedCustomersId);
-                PrefSiempo.getInstance(this).write(PrefSiempo.SORTED_MENU, jsonListOfSortedCustomerIds);
-            }
-
-
-        }
+//        String jsonListOfSortedToolsId = PrefSiempo.getInstance(this).read
+//                (PrefSiempo.SORTED_MENU, "");
+//        Log.d("MenuItem", jsonListOfSortedToolsId);
+//        //check for null
+//        if (!jsonListOfSortedToolsId.isEmpty()) {
+//            //convert onNoteListChangedJSON array into a List<Long>
+//            Gson gson = new GsonBuilder()
+//                    .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
+//            List<Long> listOfSortedCustomersId = gson.fromJson(jsonListOfSortedToolsId, new TypeToken<List<Long>>() {
+//            }.getType());
+//
+//            if (listOfSortedCustomersId.size() > 16) {
+//                listOfSortedCustomersId.remove(12);
+//                listOfSortedCustomersId.remove(13);
+//                listOfSortedCustomersId.remove(14);
+//                listOfSortedCustomersId.remove(15);
+//
+//                String jsonListOfSortedCustomerIds = gson.toJson
+//                        (listOfSortedCustomersId);
+//                PrefSiempo.getInstance(this).write(PrefSiempo.SORTED_MENU, jsonListOfSortedCustomerIds);
+//            }
+//
+//
+//        }
 
     }
 
@@ -146,6 +145,17 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         super.onResume();
         startTime = System.currentTimeMillis();
         map = CoreApplication.getInstance().getToolsSettings();
+
+
+        Iterator it = map.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+            Log.d("HashMap", pair.getKey() + " = " + ((AppMenu)
+                    pair
+                            .getValue()).isVisible() );
+        }
+
+        Log.d("HashMap","End");
         initView();
     }
 
@@ -204,7 +214,14 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         items = new ArrayList<>();
         new MainListItemLoader(this).loadItemsDefaultApp(items);
         items = PackageUtil.getToolsMenuData(this, items);
-        sortedList = items;
+        sortedList = new ArrayList<>(items);
+        ListIterator listIterator = sortedList.listIterator();
+        while (listIterator.hasNext()) {
+            MainListItem next = (MainListItem) listIterator.next();
+            next.setVisable(map.get(next.getId()).isVisible());
+        }
+
+
         recyclerView = findViewById(R.id.recyclerView);
         txtSelectTools = findViewById(R.id.txtSelectTools);
         recyclerView.setHasFixedSize(true);

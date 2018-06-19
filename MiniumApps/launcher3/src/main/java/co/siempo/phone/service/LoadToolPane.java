@@ -3,11 +3,17 @@ package co.siempo.phone.service;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -64,6 +70,9 @@ public class LoadToolPane extends AsyncTask<String, String, ArrayList<MainListIt
                     }
                 }
             }
+
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -76,12 +85,30 @@ public class LoadToolPane extends AsyncTask<String, String, ArrayList<MainListIt
     protected void onPostExecute(ArrayList<MainListItem> s) {
         super.onPostExecute(s);
 
+
+
+//
+
+
+
+        sortingMenu(s);
+
+        CoreApplication.getInstance().setToolItemsList(s);
+        CoreApplication.getInstance().setToolBottomItemsList(bottomDockList);
+        EventBus.getDefault().postSticky(new NotifyBottomView(true));
+        EventBus.getDefault().postSticky(new NotifyToolView(true));
+
+    }
+
+    private void sortingMenu(ArrayList<MainListItem> s) {
         if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo
                         .SORTED_MENU,
                 ""))) {
+
             ArrayList<Long> sortedId = new ArrayList<>();
             for (MainListItem mainListItem : s) {
                 sortedId.add((long) mainListItem.getId());
+
             }
             for (MainListItem mainListItem : bottomDockList) {
                 sortedId.add((long) mainListItem.getId());
@@ -93,11 +120,66 @@ public class LoadToolPane extends AsyncTask<String, String, ArrayList<MainListIt
                     jsonListOfSortedCustomerIds);
 
 
-        }
-        CoreApplication.getInstance().setToolItemsList(s);
-        CoreApplication.getInstance().setToolBottomItemsList(bottomDockList);
-        EventBus.getDefault().postSticky(new NotifyBottomView(true));
-        EventBus.getDefault().postSticky(new NotifyToolView(true));
+        } else {
 
+            String jsonListOfSortedToolsId = PrefSiempo.getInstance(context).read
+                    (PrefSiempo.SORTED_MENU, "");
+            //check for null
+            if (!jsonListOfSortedToolsId.isEmpty()) {
+
+                //loop through added ids
+
+                //convert onNoteListChangedJSON array into a List<Long>
+                Gson gson = new GsonBuilder()
+                        .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
+                List<Long> listOfSortedCustomersId = gson.fromJson(jsonListOfSortedToolsId, new TypeToken<List<Long>>() {
+                }.getType());
+
+
+
+
+                if (listOfSortedCustomersId.size() > 16) {
+
+                    List<Long> listOfToolsId = new ArrayList<>();
+                    List<Long> listOfRemoveId = new ArrayList<>();
+                    ArrayList<MainListItem> listItems = new ArrayList<>();
+                    listItems.addAll(s);
+                    listItems.addAll(bottomDockList);
+
+
+                    for (MainListItem listItem : listItems) {
+
+                        listOfToolsId.add((long) listItem.getId());
+                    }
+
+                    listOfRemoveId.addAll(listOfSortedCustomersId);
+                    listOfRemoveId.removeAll(listOfToolsId);
+
+                    listOfSortedCustomersId.removeAll(listOfRemoveId);
+
+
+                    String jsonListOfSortedCustomerIds = gson.toJson
+                            (listOfSortedCustomersId);
+                    PrefSiempo.getInstance(context).write(PrefSiempo.SORTED_MENU,
+                            jsonListOfSortedCustomerIds);
+
+
+                    HashMap<Integer, AppMenu> integerAppMenuHashMap = CoreApplication
+                            .getInstance().getToolsSettings();
+                    for (Long aLong : listOfRemoveId) {
+                        integerAppMenuHashMap.get((int) (long) aLong).setVisible
+                                (false);
+                    }
+
+                    String hashMapToolSettings = new Gson().toJson(integerAppMenuHashMap);
+                    PrefSiempo.getInstance(context).write(PrefSiempo.TOOLS_SETTING,
+                            hashMapToolSettings);
+                }
+
+
+            }
+
+
+        }
     }
 }

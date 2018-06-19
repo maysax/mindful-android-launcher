@@ -239,6 +239,8 @@ public abstract class CoreApplication extends MultiDexApplication {
 
 
 
+
+
         }
         setHideIconBranding(PrefSiempo.getInstance(sInstance).read(PrefSiempo.IS_ICON_BRANDING, true));
         setRandomize(PrefSiempo.getInstance(sInstance).read(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, true));

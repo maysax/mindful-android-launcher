@@ -809,6 +809,7 @@ public class PackageUtil {
 
         //get the JSON array of the ordered of sorted customers
         String jsonListOfSortedToolsId = PrefSiempo.getInstance(context).read(PrefSiempo.SORTED_MENU, "");
+        Tracer.d("MenuItem",jsonListOfSortedToolsId);
         Log.d("MenuItem", jsonListOfSortedToolsId);
 
         //check for null
