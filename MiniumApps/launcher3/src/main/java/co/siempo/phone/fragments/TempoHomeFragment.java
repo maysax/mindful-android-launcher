@@ -107,7 +107,9 @@ public class TempoHomeFragment extends CoreFragment {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        getActivity().finish();
+                        if (null != getActivity()) {
+                            getActivity().finish();
+                        }
                     }
                 }, 60);
             }
