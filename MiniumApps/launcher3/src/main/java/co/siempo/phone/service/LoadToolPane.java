@@ -3,7 +3,6 @@ package co.siempo.phone.service;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -13,6 +12,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,6 +20,7 @@ import java.util.Set;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.NotifyBottomView;
 import co.siempo.phone.event.NotifyToolView;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
@@ -72,7 +73,6 @@ public class LoadToolPane extends AsyncTask<String, String, ArrayList<MainListIt
             }
 
 
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -86,9 +86,7 @@ public class LoadToolPane extends AsyncTask<String, String, ArrayList<MainListIt
         super.onPostExecute(s);
 
 
-
 //
-
 
 
         sortingMenu(s);
@@ -136,8 +134,6 @@ public class LoadToolPane extends AsyncTask<String, String, ArrayList<MainListIt
                 }.getType());
 
 
-
-
                 if (listOfSortedCustomersId.size() > 16) {
 
                     List<Long> listOfToolsId = new ArrayList<>();
@@ -167,13 +163,28 @@ public class LoadToolPane extends AsyncTask<String, String, ArrayList<MainListIt
                     HashMap<Integer, AppMenu> integerAppMenuHashMap = CoreApplication
                             .getInstance().getToolsSettings();
                     for (Long aLong : listOfRemoveId) {
-                        integerAppMenuHashMap.get((int) (long) aLong).setVisible
+                        int id = aLong.intValue();
+                        integerAppMenuHashMap.get(id).setVisible
                                 (false);
                     }
+
 
                     String hashMapToolSettings = new Gson().toJson(integerAppMenuHashMap);
                     PrefSiempo.getInstance(context).write(PrefSiempo.TOOLS_SETTING,
                             hashMapToolSettings);
+
+                    Iterator it = integerAppMenuHashMap.entrySet().iterator();
+                    while (it.hasNext()) {
+                        Map.Entry pair = (Map.Entry) it.next();
+                        Tracer.d("HashMap" + pair.getKey() + " = " + ((AppMenu)
+                                pair
+                                        .getValue()).isVisible());
+                    }
+
+                    Tracer.d("HashMap" + "End");
+                    Tracer.d("HashMap Removed" + listOfRemoveId.toString());
+
+
                 }
 
 

@@ -84,7 +84,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
     public void onBindViewHolder(final ToolsListAdapter.ToolsViewHolder holder, final int position) {
         final MainListItem mainListItem = listItems.get(position);
         if (mainListItem != null) {
-            final boolean isVisible = mainListItem.isVisable();
+            final boolean isVisible = map.get(mainListItem.getId()).isVisible();
             holder.txtAppName.setText(mainListItem.getTitle());
             bindView(mainListItem, holder, isVisible);
             holder.txtAssignApp.setOnClickListener(new View.OnClickListener() {
@@ -142,7 +142,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                             if (isItemAlreadyContainsInArray) {
                                 ((ToolSelectionActivity) context)
                                         .hideItemInSortedList(mainListItem
-                                                .getId(),false);
+                                                .getId(), false);
                             }
                         }
                     } else {
@@ -159,7 +159,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                             } else {
                                 ((ToolSelectionActivity) context)
                                         .hideItemInSortedList(mainListItem
-                                                .getId(),true);
+                                                .getId(), true);
                             }
 
                             map.get(mainListItem.getId()).setVisible(true);
