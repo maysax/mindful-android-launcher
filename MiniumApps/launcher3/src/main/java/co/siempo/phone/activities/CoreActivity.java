@@ -353,9 +353,13 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         Validate.notNull(fragment);
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(containerViewId, fragment, "main")
-                .addToBackStack(null)
-                .commit();
+        ft.replace(containerViewId, fragment, "main");
+        ft.addToBackStack(null);
+        try {
+            ft.commit();
+        } catch (Exception e) {
+            ft.commitAllowingStateLoss();
+        }
     }
 
     @Override
