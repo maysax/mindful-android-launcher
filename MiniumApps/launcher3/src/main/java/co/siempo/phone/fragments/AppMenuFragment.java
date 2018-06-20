@@ -370,6 +370,7 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
                         }
                         EventBus.getDefault().post(new ReduceOverUsageEvent(true));
                         mTxtReduceOveruseFlaggedDes.setText(Html.fromHtml(txtOverUseFlag));
+                        mRelOverUseFlaggedApp.setClickable(true);
                     }
                 })
                 .create();
