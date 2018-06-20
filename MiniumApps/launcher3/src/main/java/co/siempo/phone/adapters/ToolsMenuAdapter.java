@@ -227,6 +227,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
     private void openAppAssignmentScreen(MainListItem item) {
         FirebaseHelper.getInstance().logSiempoMenuUsage(0, item.getTitle(), "");
         Intent intent = new Intent(context, AppAssignmentActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra(Constants.INTENT_MAINLISTITEM, item);
         intent.putExtra("class_name", DashboardActivity.class.getSimpleName
                 ().toString());
