@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
@@ -76,6 +77,8 @@ public class UpdateBackgroundActivity extends CoreActivity {
                                 Glide.with(context)
                                         .load(Uri.fromFile(new File(strImage)))
                                         .placeholder(circularProgressDrawable)
+                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                        .skipMemoryCache(true)
                                         .into(imageView);
                             }
 
@@ -101,6 +104,8 @@ public class UpdateBackgroundActivity extends CoreActivity {
             Glide.with(context)
                     .load(Uri.fromFile(new File(strImage)))
                     .placeholder(circularProgressDrawable)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
                     .into(imageView);
         }
     }
