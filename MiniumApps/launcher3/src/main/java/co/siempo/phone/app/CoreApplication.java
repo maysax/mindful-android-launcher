@@ -104,9 +104,18 @@ public abstract class CoreApplication extends MultiDexApplication {
     private boolean isHideIconBranding = true;
     private boolean isRandomize = true;
     private CrashlyticsCore crashlyticsCore;
+    private List<String> runningDownloadigFileList = new ArrayList<>();
 
     public static synchronized CoreApplication getInstance() {
         return sInstance;
+    }
+
+    public List<String> getRunningDownloadigFileList() {
+        return runningDownloadigFileList;
+    }
+
+    public void setRunningDownloadigFileList(List<String> runningDownloadigFileList) {
+        this.runningDownloadigFileList = runningDownloadigFileList;
     }
 
     public String getBase64EncodedPublicKey() {
@@ -964,7 +973,7 @@ public abstract class CoreApplication extends MultiDexApplication {
         return mMemoryCache.get(key);
     }
 
-    public void downloadSiempoImages() {
+    public synchronized void downloadSiempoImages() {
         try {
             File folderSiempoImage = new File(Environment.getExternalStorageDirectory() +
                     "/Siempo images");
@@ -988,12 +997,17 @@ public abstract class CoreApplication extends MultiDexApplication {
                             Log.d("File Exists", fileName);
                         } else {
                             Uri download_Uri = Uri.parse(strUrl);
-                            if (download_Uri != null) {
+                            if (runningDownloadigFileList == null) {
+                                runningDownloadigFileList = new ArrayList<>();
+                            }
+                            if (download_Uri != null && !getRunningDownloadigFileList().contains
+                                    (fileName)) {
+                                getRunningDownloadigFileList().add(fileName);
                                 DownloadManager.Request request = new DownloadManager.Request(download_Uri);
                                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
                                 request.setAllowedOverRoaming(false);
-                                request.setTitle("Downloading " + fileName);
-                                request.setDescription("Downloading " + fileName);
+                                request.setTitle(fileName);
+                                request.setDescription(fileName);
                                 request.setVisibleInDownloadsUi(false);
                                 request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
                                 request.setDestinationInExternalPublicDir("/Siempo images", fileName);
