@@ -556,6 +556,7 @@
     <string name="purchase">Purchase</string>
     <string name="longitude">longitude</string>
     <string name="latitude">latitude</string>
+    <string name="leave_a_review">Leave a review</string>
 
 
     <string-array name="deter_after_dialog">
