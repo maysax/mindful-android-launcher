@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -82,6 +83,8 @@ public final class BackgroundItemAdapter extends BaseAdapter {
         Glide.with(context)
                 .load(Uri.fromFile(new File(item.getDrawableId().get(0))))
                 .placeholder(circularProgressDrawable)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .into(viewHolder.mImage);
 
         return convertView;

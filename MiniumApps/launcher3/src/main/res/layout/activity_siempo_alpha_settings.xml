@@ -111,12 +111,12 @@
         </LinearLayout>
 
         <RelativeLayout
-            android:visibility="gone"
             android:id="@+id/rel_restrictions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:orientation="horizontal"
+            android:visibility="gone"
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
@@ -159,6 +159,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:orientation="horizontal"
+            android:visibility="gone"
             tools:ignore="UseCompoundDrawables">
 
             <ImageView

@@ -89,6 +89,9 @@ public class TableNotificationSms implements Serializable {
     }
 
     public void set_message(String _message) {
+        if (_message != null && _message.length() > 0) {
+            _message = _message.trim();
+        }
         this._message = _message;
     }
 

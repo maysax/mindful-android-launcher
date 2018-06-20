@@ -303,10 +303,10 @@
     <string name="msg_2hour">Batches will arrive 12 times per day.</string>
     <string name="msg_4hour">Batches will arrive 6 times per day.</string>
     <string name="msg_next_delivery">Next Delivery: </string>
-    <string name="message1">For the next day, week, or month, what do you want to remind yourself about whenever you unlock your phone?</string>
-    <string name="message2">An intention is a goal or an idea that you want to focus on. Unlike a task, it might never be \"complete\", but your top priority may change.</string>
-    <string name="message3">Keep it short and positive. Try using command verbs. Whenever you unlock, try focusing on your intention for awhile, and see what thoughts come to mind!</string>
-    <string name="message4"><b>Sample intentions:</b>\nKeep my phone locked\nFocus on family\nEat healthy foods</string>
+    <string name="message1">Your answer will appear on your home screen, and you\'ll see it every time you unlock your phone. Your new mindful home screen will keep you focused on your intention.</string>
+    <string name="message2">Your intention is the goal, aspiration, or idea that you want to prioritize right now. Think of your intention as the path you want to walk along rather a task to be checked off.</string>
+    <string name="message3"><b>Here are some example intentions:</b>\nSpend more time with family\nEat healthy foods\nKeep my phone locked</string>
+    <string name="message4">Type an intention that\'s short and positive, and try starting with an action verb. The next time you unlock your phone, you might enjoy pausing to focus on your stated intention.</string>
     <string name="save">SAVE</string>
     <string name="what_s_your_intention">What\'s your intention?</string>
     <string name="your_intention">Your Intention:</string>
@@ -481,6 +481,7 @@
     <string name="enable_setting_a">Enable Setting A</string>
     <string name="enable_setting_b">Enable Setting B</string>
     <string name="enable_setting_c">Enable Setting C</string>
+    <string name="enable_setting_d">Enable Setting D</string>
     <string name="tempo_enabled">TEMPO IS ENABLED!</string>
 
     <string name="later_string">Later</string>
@@ -500,7 +501,7 @@
     <string name="launcher_text">On the next screen: \nTap the circle, then tap the back arrow.</string>
     <string name="permission_msg_enable_tempo">Tempo needs permission \nto perform these tasks:</string>
     <string name="reduce_overuse_flagged">Reduce overuse of flagged apps</string>
-    <string name="reduce_overuse_Flagged_description_setting">You will be gently deterred from using flagged apps after 5 minutes of use. Unrestricted use will be restored after any %s  break from flagged apps.</string>
+    <string name="reduce_overuse_Flagged_description_setting">You will be gently deterred from using flagged apps after %s of use. Unrestricted use will be restored after any 1 minute  break from flagged apps.</string>
     <string name="choose_app_flag_desc">Flag any apps that you want to use less. </string>
     <string name="choose_app_flag">Choose apps to flag</string>
     <string name="custom_background_image_title">Custom background image</string>
@@ -555,6 +556,7 @@
     <string name="purchase">Purchase</string>
     <string name="longitude">longitude</string>
     <string name="latitude">latitude</string>
+    <string name="leave_a_review">Leave a review</string>
 
 
     <string-array name="deter_after_dialog">

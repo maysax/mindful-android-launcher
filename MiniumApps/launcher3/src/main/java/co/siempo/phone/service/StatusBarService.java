@@ -112,12 +112,11 @@ public class StatusBarService extends Service {
     private Context context;
     private MyObserver myObserver;
     private AppInstallUninstall appInstallUninstall;
-    private CountDownTimer countDownTimer;
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest locationRequest;
     private LocationCallback mLocationCallback;
     private UserPresentBroadcastReceiver userPresentBroadcastReceiver;
-    private CountDownTimer countDownTimerGrace, countDownTimerCover,
+    private CountDownTimer countDownTimerLockScreen, countDownTimerGrace, countDownTimerCover,
             countDownTimerBreak, countDownTimerAfterCover;
     private WindowManager wm;
     private View bottomView;
@@ -162,6 +161,7 @@ public class StatusBarService extends Service {
     private LinearLayout lnrTimeTop;
     private LinearLayout lnrSettingsNoteTop;
     private LinearLayout lnrWellnessTop;
+    public static String packagename = "";
 
     public StatusBarService() {
     }
@@ -238,7 +238,12 @@ public class StatusBarService extends Service {
             @Override
             public void onForeground(String process) {
                 if (PackageUtil.isSiempoLauncher(context)) {
-//                    new DBClient().deleteMsgByPackageName(process);
+                    packagename = process;
+                    try {
+                        new DBClient().deleteMsgByPackageName(process);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     Set<String> set = PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
                     int deterTime = PrefSiempo.getInstance(context).read(PrefSiempo.DETER_AFTER, -1);
                     if (deterTime != -1) {
@@ -545,7 +550,7 @@ public class StatusBarService extends Service {
      * This timer is start then user locked the screen and this is used to navigate user to Intention screen after 15 minute.
      */
     public void startLockScreenTimer() {
-        countDownTimer = new CountDownTimer(15 * 60000, 1000) {
+        countDownTimerLockScreen = new CountDownTimer(15 * 60000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -554,22 +559,14 @@ public class StatusBarService extends Service {
             @Override
             public void onFinish() {
                 PrefSiempo.getInstance(context).write(PrefSiempo.LOCK_COUNTER_STATUS, true);
-                countDownTimer.cancel();
-                countDownTimer = null;
+                if (countDownTimerLockScreen != null) {
+                    countDownTimerLockScreen.cancel();
+                    countDownTimerLockScreen = null;
+                }
                 resetAllTimer();
             }
         }.start();
 
-    }
-
-    /**
-     * This observer is used to determine the contact add/delete/update.
-     */
-    public void stopTimer() {
-        countDownTimer.cancel();
-
-        PrefSiempo.getInstance(this).write(PrefSiempo
-                .LOCK_COUNTER_STATUS, false);
     }
 
     @SuppressLint("MissingPermission")
@@ -699,8 +696,10 @@ public class StatusBarService extends Service {
                         countDownTimerAfterCover = null;
                     }
                     long remainingTimeCover = 5 * 60000 - cover_time_completed;
-                    countDownTimerBreak.cancel();
-                    countDownTimerBreak = null;
+                    if (countDownTimerBreak != null) {
+                        countDownTimerBreak.cancel();
+                        countDownTimerBreak = null;
+                    }
                     PrefSiempo.getInstance(context).write(PrefSiempo.BREAK_TIME, 0L);
                     int minutes = (int) (remainingTimeCover / (1000 * 60));
                     int seconds = (int) ((remainingTimeCover / 1000) % 60);
@@ -742,8 +741,10 @@ public class StatusBarService extends Service {
             @Override
             public void onFinish() {
                 PrefSiempo.getInstance(context).write(PrefSiempo.GRACE_TIME, 0L);
-                if (countDownTimerGrace != null) countDownTimerGrace.cancel();
-                countDownTimerGrace = null;
+                if (countDownTimerGrace != null) {
+                    countDownTimerGrace.cancel();
+                    countDownTimerGrace = null;
+                }
                 long remainingTimeCover = 5 * 60000;
                 startTimerForCoverPeriod(remainingTimeCover, 0L);
             }
@@ -3223,8 +3224,8 @@ public class StatusBarService extends Service {
                     if (intent.getAction().equals(Intent.ACTION_USER_PRESENT) ||
                             intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
                         isScreenOn = true;
-                        if (countDownTimer != null) {
-                            countDownTimer.cancel();
+                        if (countDownTimerLockScreen != null) {
+                            countDownTimerLockScreen.cancel();
                             PrefSiempo.getInstance(context).write(PrefSiempo
                                     .LOCK_COUNTER_STATUS, false);
                         }

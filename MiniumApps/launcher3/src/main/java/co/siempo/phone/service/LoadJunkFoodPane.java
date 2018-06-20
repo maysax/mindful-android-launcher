@@ -12,6 +12,7 @@ import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.NotifyJunkFoodView;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.Sorting;
+import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -29,7 +30,19 @@ public class LoadJunkFoodPane extends AsyncTask<String, String, ArrayList<String
     @Override
     protected ArrayList<String> doInBackground(String... strings) {
         Set<String> junkFoodList = PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
-        ArrayList<String> items = new ArrayList<>(junkFoodList);
+        ArrayList<String> items = new ArrayList<>();
+        ArrayList<String> itemsToRemove = new ArrayList<>();
+        for (String junkApp : junkFoodList) {
+            if (UIUtils.isAppInstalledAndEnabled(context, junkApp)) {
+                items.add(junkApp);
+            } else {
+                itemsToRemove.add(junkApp);
+            }
+        }
+
+        junkFoodList.removeAll(itemsToRemove);
+        PrefSiempo.getInstance(context).write(PrefSiempo.JUNKFOOD_APPS, junkFoodList);
+
         if (junkFoodList.size() > 0) {
             if (PrefSiempo.getInstance(context).read(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, true)) {
                 Collections.shuffle(items);
