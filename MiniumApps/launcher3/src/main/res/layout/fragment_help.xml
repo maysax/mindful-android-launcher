@@ -107,6 +107,23 @@
                 android:textColor="?attr/txt_content_title"
                 android:textSize="@dimen/text.size.large" />
         </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/relLeaveReview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:padding="16dp"
+            android:visibility="visible">
+
+            <co.siempo.phone.customviews.RobotoRegularTextView
+                android:id="@+id/txtLeaveReview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:text="@string/leave_a_review"
+                android:textColor="?attr/txt_content_title"
+                android:textSize="@dimen/text.size.large" />
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/relVersion"
