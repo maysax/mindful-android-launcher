@@ -35,11 +35,11 @@ public class DBClient {
     }
 
     public void deleteMsgByPackageName(String packageName) {
-        Tracer.i("Deleting Msg by PackageName");
         try {
             List<TableNotificationSms> tableNotificationSms = DBUtility.getNotificationDao().queryBuilder()
                     .where(TableNotificationSmsDao.Properties.PackageName.eq(packageName)).list();
             if (tableNotificationSms != null && tableNotificationSms.size() > 0) {
+                Tracer.i("Deleting Msg by PackageName");
                 DBUtility.getNotificationDao().deleteInTx(tableNotificationSms);
             }
         } catch (Exception e) {
