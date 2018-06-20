@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -180,9 +179,6 @@ public class AccountSettingFragment extends CoreFragment {
         } catch (Exception e) {
             e.printStackTrace();
             //In case of exception start the default setting screen
-            Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
         }
     }
 
