@@ -139,7 +139,6 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
         txtOnlyAtTime1.setOnClickListener(this);
         txtOnlyAtTime2.setOnClickListener(this);
         txtOnlyAtTime3.setOnClickListener(this);
-
         //Added as part of SSA-1534, to reset the preference of batch mode
         // when any other radio button is checked
         this.setOnDismissListener(onDismissListener);
@@ -779,6 +778,7 @@ public class DialogTempoSetting extends Dialog implements View.OnClickListener {
                 break;
             case R.id.fabPlay:
                 fabPlay();
+                fabPlay.setClickable(false);
                 break;
             case R.id.txtOnlyAtTime1:
                 txtOnlyAtTime1();

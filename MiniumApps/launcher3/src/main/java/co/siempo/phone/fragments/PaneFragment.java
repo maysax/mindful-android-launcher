@@ -820,6 +820,7 @@ public class PaneFragment extends CoreFragment {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            changeToken(event.getString());
                             parser.parse(event.getString());
                             if (adapter != null) {
                                 adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());
@@ -831,9 +832,12 @@ public class PaneFragment extends CoreFragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-
+                            changeToken(event.getString());
                             parser.parse(event.getString());
-                            if (adapter != null) {
+
+
+                            if (adapter != null && !TextUtils.isEmpty
+                                    (TokenManager.getInstance().getCurrent().getTitle().trim())) {
                                 adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());
                             }
 
@@ -850,6 +854,45 @@ public class PaneFragment extends CoreFragment {
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
+        }
+    }
+
+    public void changeToken(String str) {
+        if (str != null && str.length() > 0) {
+            List<TokenItem> itemList = TokenManager.getInstance().getItems();
+            for (TokenItem item : itemList) {
+                if (item.getItemType() == TokenItemType.CONTACT && item.getExtra1() != null &&
+                        item.getExtra2() != null &&
+                        !str.trim().contains(item
+                                .getTitle().trim()) && item.getCompleteType() == TokenCompleteType.FULL) {
+                    int index = itemList.indexOf(item);
+                    if (index == 1) {
+                        if (item.getCompleteType() == TokenCompleteType.FULL) {
+                            itemList.remove(itemList.size() - 1);
+                            item.setExtra1("");
+                            item.setExtra2("");
+                            item.setTitle("@");
+                            item.setCompleteType(TokenCompleteType.DEFAULT);
+                            router.setCurrent(item);
+                        }
+                    } else if (index == 0) {
+                        itemList.remove(item);
+                        router.setCurrent(itemList.get(itemList.size() - 1));
+                    }
+                } else if (item.getItemType() == TokenItemType.DATA && item
+                        .getTitle() != null && !str
+                        .trim().contains(item
+                                .getTitle()
+                                .trim()) && item.getExtra1() == null && item.getExtra2() == null) {
+                    int index = itemList.indexOf(item);
+                    if (item.getCompleteType() == TokenCompleteType.FULL && index == 0) {
+                        itemList.remove(item);
+                        itemList.remove(itemList.size() - 1);
+                        router.setCurrent(itemList.get(itemList.size() - 1));
+                        itemList.add(new TokenItem(TokenItemType.DATA));
+                    }
+                }
+            }
         }
     }
 

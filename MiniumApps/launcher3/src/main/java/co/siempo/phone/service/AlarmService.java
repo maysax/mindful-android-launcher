@@ -57,8 +57,9 @@ public class AlarmService extends IntentService {
 
 
     Context context;
-    private AudioManager audioManager;
     NotificationManagerCompat n;
+    boolean isTempoVolume = false;
+    private AudioManager audioManager;
     private ArrayList<Integer> everyHourList = new ArrayList<>();
     private ArrayList<Integer> everyTwoHourList = new ArrayList<>();
     private ArrayList<Integer> everyFourHoursList = new ArrayList<>();
@@ -68,10 +69,10 @@ public class AlarmService extends IntentService {
         super("MyServerOrWhatever");
     }
 
+
     public AlarmService(String name) {
         super(name);
     }
-
 
     @Override
     public void onCreate() {
@@ -107,7 +108,6 @@ public class AlarmService extends IntentService {
             run(notificationList);
         }
     }
-
 
     public void run(List<TableNotificationSms> notificationList) {
         if (PackageUtil.isSiempoLauncher(context)) {
@@ -166,8 +166,6 @@ public class AlarmService extends IntentService {
 
         }
     }
-
-    boolean isTempoVolume = false;
 
     public void createNotification(List<TableNotificationSms> notificationList, Context context) {
         try {
