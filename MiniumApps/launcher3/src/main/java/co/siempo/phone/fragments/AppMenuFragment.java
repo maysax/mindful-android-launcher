@@ -365,7 +365,8 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
                             FirebaseHelper.getInstance().logDeterUseEvent(-1);
                             txtOverUseFlag = String.format(getResources().getString(R.string
                                     .reduce_overuse_Flagged_description_setting), "<font " +
-                                    "color='#42A4FF'>" + deter_after_list[2] + "</font>");
+                                    "color='#42A4FF'>" + deter_after_list[3]
+                                    + "</font>");
                         }
                         EventBus.getDefault().post(new ReduceOverUsageEvent(true));
                         mTxtReduceOveruseFlaggedDes.setText(Html.fromHtml(txtOverUseFlag));
