@@ -101,12 +101,16 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     }
 
     public static boolean isSiempoLauncher(Context context) {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        ResolveInfo defaultLauncher = context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        if (defaultLauncher != null && defaultLauncher.activityInfo != null && defaultLauncher.activityInfo.packageName != null) {
-            String defaultLauncherStr = defaultLauncher.activityInfo.packageName;
-            return defaultLauncherStr.equals(context.getPackageName());
+        try {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            ResolveInfo defaultLauncher = context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+            if (defaultLauncher != null && defaultLauncher.activityInfo != null && defaultLauncher.activityInfo.packageName != null) {
+                String defaultLauncherStr = defaultLauncher.activityInfo.packageName;
+                return defaultLauncherStr.equals(context.getPackageName());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }
