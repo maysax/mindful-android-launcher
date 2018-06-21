@@ -3,6 +3,7 @@ package co.siempo.phone.service;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,7 +21,6 @@ import java.util.Set;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.NotifyBottomView;
 import co.siempo.phone.event.NotifyToolView;
-import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
@@ -176,13 +176,13 @@ public class LoadToolPane extends AsyncTask<String, String, ArrayList<MainListIt
                     Iterator it = integerAppMenuHashMap.entrySet().iterator();
                     while (it.hasNext()) {
                         Map.Entry pair = (Map.Entry) it.next();
-                        Tracer.d("HashMap" + pair.getKey() + " = " + ((AppMenu)
+                        Log.d("HashMap", pair.getKey() + " = " + ((AppMenu)
                                 pair
                                         .getValue()).isVisible());
                     }
 
-                    Tracer.d("HashMap" + "End");
-                    Tracer.d("HashMap Removed" + listOfRemoveId.toString());
+                    Log.d("HashMap", "End");
+                    Log.d("HashMap Removed", listOfRemoveId.toString());
 
 
                 }
