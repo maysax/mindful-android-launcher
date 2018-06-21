@@ -3,6 +3,7 @@ package co.siempo.phone.fragments;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
@@ -195,7 +196,19 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                         dialogTempo = new DialogTempoSetting(getActivity(), dialogStyle);
                         if (dialogTempo.getWindow() != null)
                             dialogTempo.getWindow().setGravity(Gravity.TOP);
-                        dialogTempo.show();
+                        if (dialogTempo != null && !dialogTempo.isShowing()) {
+                            dialogTempo.show();
+                            imgTempo.setClickable(false);
+                            if (dialogTempo != null) {
+                                dialogTempo.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog) {
+                                        imgTempo.setClickable(true);
+                                    }
+                                });
+                            }
+
+                        }
                     } else {
                         Intent intent = new Intent(context, EnableTempoActivity.class);
                         startActivityForResult(intent, 100);
