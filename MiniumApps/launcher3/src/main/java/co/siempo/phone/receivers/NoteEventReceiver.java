@@ -3,6 +3,7 @@ package co.siempo.phone.receivers;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -89,7 +90,7 @@ public class NoteEventReceiver extends BroadcastReceiver {
     }
 
     private String getTitle(String body) {
-        if (body.isEmpty()) return "";
+        if (TextUtils.isEmpty(body)) return "";
         String[] splits = body.split(" ");
         String ret = "";
 

@@ -187,7 +187,8 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                 if (null != getActivity()) {
                     if (permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
                             && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
-                            && PackageUtil.isSiempoLauncher(context)) {
+                            && PackageUtil.isSiempoLauncher(context) &&
+                            UIUtils.hasUsageStatsPermission(context)) {
 
                         TypedValue typedValue = new TypedValue();
                         Resources.Theme theme = context.getTheme();
@@ -274,7 +275,8 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                             mPopupWindow.dismiss();
                             if (permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
                                     && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
-                                    && PackageUtil.isSiempoLauncher(context)) {
+                                    && PackageUtil.isSiempoLauncher(context)  &&
+                                    UIUtils.hasUsageStatsPermission(context)) {
                                 TypedValue typedValue = new TypedValue();
                                 Resources.Theme theme = context.getTheme();
                                 theme.resolveAttribute(R.attr.dialog_style, typedValue, true);

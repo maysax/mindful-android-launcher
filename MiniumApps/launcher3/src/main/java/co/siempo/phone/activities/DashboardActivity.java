@@ -182,8 +182,8 @@ public class DashboardActivity extends CoreActivity {
             String key = mDatabase.child(userId).getKey();
             if (key != null) {
                 Map map = new HashMap();
-                map.put("emailId",emailId);
-                map.put("userId",userId);
+                map.put("emailId", emailId);
+                map.put("userId", userId);
                 map.put("latitude", StatusBarService.latitude);
                 map.put("longitude", StatusBarService.longitude);
                 mDatabase.child(userId).updateChildren(map);
@@ -192,7 +192,7 @@ public class DashboardActivity extends CoreActivity {
                 mDatabase.child(userId).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Log.d("Firebase", dataSnapshot.getKey() + "  " + dataSnapshot.getValue(UserModel.class)
+                        Log.d("Firebase", dataSnapshot.getKey() + "  " + Objects.requireNonNull(dataSnapshot.getValue(UserModel.class))
                                 .toString());
                     }
 
@@ -663,9 +663,16 @@ public class DashboardActivity extends CoreActivity {
                 @Override
                 public void onClick(View v) {
                     overlayDialog.dismiss();
-                    Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
+
+                    try {
+                        Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        Intent intent = new Intent(Settings.ACTION_SETTINGS);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
 
                 }
             });

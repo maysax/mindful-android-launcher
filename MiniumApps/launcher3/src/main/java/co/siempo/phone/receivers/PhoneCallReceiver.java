@@ -22,11 +22,10 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
     private static Date callStartTime;
     private static boolean isIncoming;
     private static String savedNumber = "";  //because the passed incoming is only valid in ringing
-    private static boolean isCallRunning = false;
+    public static boolean isCallRunning = false;
     private int tempoType;
     private Context mContext;
     private int currentProfile = -1;
-    private boolean isAppDefaultOrFront = false;
     private AudioManager audioManager;
 
     @Override
@@ -117,15 +116,11 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
                 callStartTime = new Date();
                 savedNumber = number;
 
-                isAppDefaultOrFront = PrefSiempo.getInstance(context).read(PrefSiempo
-                        .IS_APP_DEFAULT_OR_FRONT, false);
-                if (isAppDefaultOrFront) {
-                    if (currentProfile == 0 && !isCallRunning) {
-                        changeSoundProfile(true);
-                        PrefSiempo.getInstance(context).write(PrefSiempo
-                                .CALL_RUNNING, true);
-                        isCallRunning = true;
-                    }
+                if (!isCallRunning) {
+                    changeSoundProfile(true);
+                    PrefSiempo.getInstance(context).write(PrefSiempo
+                            .CALL_RUNNING, true);
+                    isCallRunning = true;
                 }
                 onIncomingCallStarted(context, number, callStartTime);
                 break;
