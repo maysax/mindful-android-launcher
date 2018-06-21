@@ -86,15 +86,16 @@ public class LoadToolPane extends AsyncTask<String, String, ArrayList<MainListIt
         super.onPostExecute(s);
 
 
-//
+        try {
+            sortingMenu(s);
 
-
-        sortingMenu(s);
-
-        CoreApplication.getInstance().setToolItemsList(s);
-        CoreApplication.getInstance().setToolBottomItemsList(bottomDockList);
-        EventBus.getDefault().postSticky(new NotifyBottomView(true));
-        EventBus.getDefault().postSticky(new NotifyToolView(true));
+            CoreApplication.getInstance().setToolItemsList(s);
+            CoreApplication.getInstance().setToolBottomItemsList(bottomDockList);
+            EventBus.getDefault().postSticky(new NotifyBottomView(true));
+            EventBus.getDefault().postSticky(new NotifyToolView(true));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -118,7 +119,29 @@ public class LoadToolPane extends AsyncTask<String, String, ArrayList<MainListIt
                     jsonListOfSortedCustomerIds);
 
 
+            HashMap<Integer, AppMenu> integerAppMenuHashMap = CoreApplication
+                    .getInstance().getToolsSettings();
+
+            Iterator it = integerAppMenuHashMap.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry pair = (Map.Entry) it.next();
+                ((AppMenu) pair.getValue()).setVisible(false);
+            }
+
+            for (Long aLong : sortedId) {
+
+                int id = aLong.intValue();
+                integerAppMenuHashMap.get(id).setVisible
+                        (true);
+            }
+
+            String hashMapToolSettings = new Gson().toJson(integerAppMenuHashMap);
+            PrefSiempo.getInstance(context).write(PrefSiempo.TOOLS_SETTING,
+                    hashMapToolSettings);
+
+
         } else {
+
 
             String jsonListOfSortedToolsId = PrefSiempo.getInstance(context).read
                     (PrefSiempo.SORTED_MENU, "");
