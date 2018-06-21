@@ -218,12 +218,12 @@ public class SiempoNotificationListener extends NotificationListenerService {
                             if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_VIBRATE ||
                                     audioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
                                 int sound = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM);
-                                Log.d("countDownTimer", "CountDownTimer "+PhoneCallReceiver.isCallRunning );
+                                Log.d("countDownTimer", "CountDownTimer " + PhoneCallReceiver.isCallRunning);
                                 if (sound != 1 && !PhoneCallReceiver.isCallRunning) {
                                     volumeLevel = sound;
                                     PrefSiempo.getInstance(this).write(PrefSiempo.USER_VOLUME, audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
                                     Log.d("AudioManager", "" + sound);
-                                    audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE |AudioManager.FLAG_SHOW_UI);
+                                    audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
                                     Log.d("AudioManager : ", "" + audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
                                 }
                             }
@@ -240,7 +240,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         int volume = PrefSiempo.getInstance(this).read(PrefSiempo.USER_VOLUME, audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
                         int sound = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM);
                         if (sound == 1) {
-                            audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, volume, AudioManager.FLAG_SHOW_UI);
+                            audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, volume, 0);
                         }
                     }
                     if (countDownTimer != null) {
@@ -268,10 +268,10 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 @Override
                 public void onFinish() {
                     if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-                        audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, volumeLevel, AudioManager.FLAG_SHOW_UI);
+                        audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, volumeLevel, 0);
                         Log.d("AudioManager : ", "" + audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
                     }
-                    Log.d("countDownTimer", "CountDownTimer cancel" );
+                    Log.d("countDownTimer", "CountDownTimer cancel");
                     if (countDownTimer != null) {
                         countDownTimer.cancel();
                         countDownTimer = null;
