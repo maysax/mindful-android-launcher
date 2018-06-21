@@ -41,6 +41,7 @@ import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.interfaces.OnToolItemListChangedListener;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.main.OnStartDragListener;
 import co.siempo.phone.main.SimpleItemTouchHelperCallback;
@@ -150,12 +151,12 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         Iterator it = map.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry) it.next();
-            Log.d("HashMap", pair.getKey() + " = " + ((AppMenu)
+            Tracer.d("HashMap"+ pair.getKey() + " = " + ((AppMenu)
                     pair
                             .getValue()).isVisible() );
         }
 
-        Log.d("HashMap","End");
+        Tracer.d("HashMap"+"End");
         initView();
     }
 

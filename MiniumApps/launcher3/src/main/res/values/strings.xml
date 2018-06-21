@@ -302,7 +302,7 @@
     <string name="msg_1hour">Batches will arrive on the hour.</string>
     <string name="msg_2hour">Batches will arrive 12 times per day.</string>
     <string name="msg_4hour">Batches will arrive 6 times per day.</string>
-    <string name="msg_next_delivery">Next Delivery: </string>
+    <string name="msg_next_delivery">"Next Delivery: "</string>
     <string name="message1">Your answer will appear on your home screen, and you\'ll see it every time you unlock your phone. Your new mindful home screen will keep you focused on your intention.</string>
     <string name="message2">Your intention is the goal, aspiration, or idea that you want to prioritize right now. Think of your intention as the path you want to walk along rather a task to be checked off.</string>
     <string name="message3"><b>Here are some example intentions:</b>\nSpend more time with family\nEat healthy foods\nKeep my phone locked</string>
@@ -560,7 +560,8 @@
 
 
     <string-array name="deter_after_dialog">
-        <item>0 minutes</item>ng
+        <item>0 minutes</item>
+        <item>1 minutes</item>
         <item>2 minutes</item>
         <item>5 minutes</item>
         <item>10 minutes</item>

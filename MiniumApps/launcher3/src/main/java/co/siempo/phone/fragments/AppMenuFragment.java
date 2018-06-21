@@ -102,27 +102,31 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
             switchOveruseFlagged.setChecked(false);
             txtOverUseFlag = String.format(getResources().getString(R.string
                     .reduce_overuse_Flagged_description_setting), "<font " +
-                    "color='#42A4FF'>" + deter_after_list[2] + "</font>");
+                    "color='#42A4FF'>" + deter_after_list[3] + "</font>");
         } else if (deterTime == 0) {
             txtOverUseFlag = String.format(getResources().getString(R.string
                     .reduce_overuse_Flagged_description_setting), "<font " +
                     "color='#42A4FF'>" + deter_after_list[0] + "</font>");
-        } else if (deterTime == 2) {
+        } else if (deterTime == 1) {
             txtOverUseFlag = String.format(getResources().getString(R.string
                     .reduce_overuse_Flagged_description_setting), "<font " +
                     "color='#42A4FF'>" + deter_after_list[1] + "</font>");
-        } else if (deterTime == 5) {
+        }else if (deterTime == 2) {
             txtOverUseFlag = String.format(getResources().getString(R.string
                     .reduce_overuse_Flagged_description_setting), "<font " +
                     "color='#42A4FF'>" + deter_after_list[2] + "</font>");
-        } else if (deterTime == 10) {
+        } else if (deterTime == 5) {
             txtOverUseFlag = String.format(getResources().getString(R.string
                     .reduce_overuse_Flagged_description_setting), "<font " +
                     "color='#42A4FF'>" + deter_after_list[3] + "</font>");
-        } else if (deterTime == 15) {
+        } else if (deterTime == 10) {
             txtOverUseFlag = String.format(getResources().getString(R.string
                     .reduce_overuse_Flagged_description_setting), "<font " +
                     "color='#42A4FF'>" + deter_after_list[4] + "</font>");
+        } else if (deterTime == 15) {
+            txtOverUseFlag = String.format(getResources().getString(R.string
+                    .reduce_overuse_Flagged_description_setting), "<font " +
+                    "color='#42A4FF'>" + deter_after_list[5] + "</font>");
         }
         mTxtReduceOveruseFlaggedDes.setText(Html.fromHtml(txtOverUseFlag));
         return view;
@@ -289,18 +293,20 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
         index = -1;
         deterTime = PrefSiempo.getInstance(context).read(PrefSiempo.DETER_AFTER, -1);
         if (deterTime == -1) {
-            index = 2;
+            index = 3;
 
         } else if (deterTime == 0) {
             index = 0;
-        } else if (deterTime == 2) {
+        } else if (deterTime == 1) {
             index = 1;
-        } else if (deterTime == 5) {
+        } else if (deterTime == 2) {
             index = 2;
-        } else if (deterTime == 10) {
+        } else if (deterTime == 5) {
             index = 3;
-        } else if (deterTime == 15) {
+        } else if (deterTime == 10) {
             index = 4;
+        } else if (deterTime == 15) {
+            index = 5;
         }
         AlertDialog dialog = new AlertDialog.Builder(context)
                 .setTitle("Deter after")
@@ -319,42 +325,52 @@ public class AppMenuFragment extends CoreFragment implements View.OnClickListene
                         } else if (which == 1) {
                             switchOveruseFlagged.setChecked(true);
                             dialog.dismiss();
+                            PrefSiempo.getInstance(context).write(PrefSiempo
+                                    .DETER_AFTER, 1);
+                            FirebaseHelper.getInstance().logDeterUseEvent(1);
+                            txtOverUseFlag = String.format(getResources().getString(R.string
+                                    .reduce_overuse_Flagged_description_setting), "<font color='#42A4FF'>" + deter_after_list[which] + "</font>");
+                        } else if (which == 2) {
+                            switchOveruseFlagged.setChecked(true);
+                            dialog.dismiss();
                             PrefSiempo.getInstance(context).write(PrefSiempo.DETER_AFTER, 2);
                             FirebaseHelper.getInstance().logDeterUseEvent(2);
                             txtOverUseFlag = String.format(getResources().getString(R.string
                                     .reduce_overuse_Flagged_description_setting), "<font color='#42A4FF'>" + deter_after_list[which] + "</font>");
-                        } else if (which == 2) {
+                        } else if (which == 3) {
                             switchOveruseFlagged.setChecked(true);
                             dialog.dismiss();
                             PrefSiempo.getInstance(context).write(PrefSiempo.DETER_AFTER, 5);
                             FirebaseHelper.getInstance().logDeterUseEvent(5);
                             txtOverUseFlag = String.format(getResources().getString(R.string
                                     .reduce_overuse_Flagged_description_setting), "<font color='#42A4FF'>" + deter_after_list[which] + "</font>");
-                        } else if (which == 3) {
+                        } else if (which == 4) {
                             switchOveruseFlagged.setChecked(true);
                             dialog.dismiss();
                             PrefSiempo.getInstance(context).write(PrefSiempo.DETER_AFTER, 10);
                             FirebaseHelper.getInstance().logDeterUseEvent(10);
                             txtOverUseFlag = String.format(getResources().getString(R.string
                                     .reduce_overuse_Flagged_description_setting), "<font color='#42A4FF'>" + deter_after_list[which] + "</font>");
-                        } else if (which == 4) {
+                        } else if (which == 5) {
                             switchOveruseFlagged.setChecked(true);
                             dialog.dismiss();
                             PrefSiempo.getInstance(context).write(PrefSiempo.DETER_AFTER, 15);
                             FirebaseHelper.getInstance().logDeterUseEvent(15);
                             txtOverUseFlag = String.format(getResources().getString(R.string
                                     .reduce_overuse_Flagged_description_setting), "<font color='#42A4FF'>" + deter_after_list[which] + "</font>");
-                        } else if (which == 5) {
+                        } else if (which == 6) {
                             switchOveruseFlagged.setChecked(false);
                             dialog.dismiss();
                             PrefSiempo.getInstance(context).write(PrefSiempo.DETER_AFTER, -1);
                             FirebaseHelper.getInstance().logDeterUseEvent(-1);
                             txtOverUseFlag = String.format(getResources().getString(R.string
                                     .reduce_overuse_Flagged_description_setting), "<font " +
-                                    "color='#42A4FF'>" + deter_after_list[2] + "</font>");
+                                    "color='#42A4FF'>" + deter_after_list[3]
+                                    + "</font>");
                         }
                         EventBus.getDefault().post(new ReduceOverUsageEvent(true));
                         mTxtReduceOveruseFlaggedDes.setText(Html.fromHtml(txtOverUseFlag));
+                        mRelOverUseFlaggedApp.setClickable(true);
                     }
                 })
                 .create();
