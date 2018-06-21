@@ -73,6 +73,7 @@
                         android:id="@+id/inputEmail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+
                         android:textColorHint="@color/dialog_blue"
                         app:hintTextAppearance="@style/TextLabel">
 
