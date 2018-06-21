@@ -84,7 +84,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
     public void onBindViewHolder(final ToolsListAdapter.ToolsViewHolder holder, final int position) {
         final MainListItem mainListItem = listItems.get(position);
         if (mainListItem != null) {
-            final boolean isVisible = map.get(mainListItem.getId()).isVisible();
+            final boolean isVisible = mainListItem.isVisable();
             holder.txtAppName.setText(mainListItem.getTitle());
             bindView(mainListItem, holder, isVisible);
             holder.txtAssignApp.setOnClickListener(new View.OnClickListener() {
