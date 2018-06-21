@@ -125,14 +125,10 @@ public class LoadToolPane extends AsyncTask<String, String, ArrayList<MainListIt
             Iterator it = integerAppMenuHashMap.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry pair = (Map.Entry) it.next();
-                ((AppMenu) pair.getValue()).setVisible(false);
-            }
-
-            for (Long aLong : sortedId) {
-
-                int id = aLong.intValue();
-                integerAppMenuHashMap.get(id).setVisible
-                        (true);
+                int id = (int) pair.getKey();
+                if (!sortedId.contains((long) id)) {
+                    ((AppMenu) pair.getValue()).setVisible(false);
+                }
             }
 
             String hashMapToolSettings = new Gson().toJson(integerAppMenuHashMap);
@@ -196,16 +192,6 @@ public class LoadToolPane extends AsyncTask<String, String, ArrayList<MainListIt
                     PrefSiempo.getInstance(context).write(PrefSiempo.TOOLS_SETTING,
                             hashMapToolSettings);
 
-                    Iterator it = integerAppMenuHashMap.entrySet().iterator();
-                    while (it.hasNext()) {
-                        Map.Entry pair = (Map.Entry) it.next();
-                        Log.d("HashMap", pair.getKey() + " = " + ((AppMenu)
-                                pair
-                                        .getValue()).isVisible());
-                    }
-
-                    Log.d("HashMap", "End");
-                    Log.d("HashMap Removed", listOfRemoveId.toString());
 
 
                 }
