@@ -94,6 +94,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="20dp"
+        android:hint="Message"
         android:padding="8dp">
 
         <EditText
@@ -104,7 +105,7 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:gravity="top"
-            android:hint="Message"
+
             android:imeOptions="actionDone"
             android:maxLines="4"
             android:minLines="2"

@@ -55,7 +55,21 @@ public class Sorting {
         sort(list, new Comparator<String>() {
             @Override
             public int compare(final String object1, final String object2) {
-                return CoreApplication.getInstance().getApplicationNameFromPackageName(object1).compareTo(CoreApplication.getInstance().getApplicationNameFromPackageName(object2));
+                String strObj1;
+                String strObj2;
+                if (CoreApplication.getInstance().getListApplicationName().get(object1) != null) {
+                    strObj1 = CoreApplication.getInstance().getListApplicationName().get(object1);
+                } else {
+                    strObj1 = CoreApplication.getInstance().getApplicationNameFromPackageName(object1);
+                }
+
+                if (CoreApplication.getInstance().getListApplicationName().get(object2) != null) {
+                    strObj2 = CoreApplication.getInstance().getListApplicationName().get(object2);
+                } else {
+                    strObj2 = CoreApplication.getInstance().getApplicationNameFromPackageName(object2);
+                }
+
+                return (strObj1 != null ? strObj1.toLowerCase() : "").compareTo((strObj2 != null ? strObj2.toLowerCase() : ""));
             }
         });
         return list;
