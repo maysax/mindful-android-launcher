@@ -3,6 +3,7 @@ package co.siempo.phone.fragments;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
@@ -186,7 +187,8 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                 if (null != getActivity()) {
                     if (permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
                             && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
-                            && PackageUtil.isSiempoLauncher(context)) {
+                            && PackageUtil.isSiempoLauncher(context) &&
+                            UIUtils.hasUsageStatsPermission(context)) {
 
                         TypedValue typedValue = new TypedValue();
                         Resources.Theme theme = context.getTheme();
@@ -195,7 +197,19 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                         dialogTempo = new DialogTempoSetting(getActivity(), dialogStyle);
                         if (dialogTempo.getWindow() != null)
                             dialogTempo.getWindow().setGravity(Gravity.TOP);
-                        dialogTempo.show();
+                        if (dialogTempo != null && !dialogTempo.isShowing()) {
+                            dialogTempo.show();
+                            imgTempo.setClickable(false);
+                            if (dialogTempo != null) {
+                                dialogTempo.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog) {
+                                        imgTempo.setClickable(true);
+                                    }
+                                });
+                            }
+
+                        }
                     } else {
                         Intent intent = new Intent(context, EnableTempoActivity.class);
                         startActivityForResult(intent, 100);
@@ -261,7 +275,8 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                             mPopupWindow.dismiss();
                             if (permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
                                     && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
-                                    && PackageUtil.isSiempoLauncher(context)) {
+                                    && PackageUtil.isSiempoLauncher(context)  &&
+                                    UIUtils.hasUsageStatsPermission(context)) {
                                 TypedValue typedValue = new TypedValue();
                                 Resources.Theme theme = context.getTheme();
                                 theme.resolveAttribute(R.attr.dialog_style, typedValue, true);

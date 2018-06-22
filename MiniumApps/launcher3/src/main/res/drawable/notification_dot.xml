@@ -5,4 +5,7 @@
         android:angle="270"
         android:endColor="@color/translucent_black"
         android:startColor="@color/translucent_black" />
+    <size
+        android:width="@dimen/dp_3"
+        android:height="3dp" />
 </shape>
