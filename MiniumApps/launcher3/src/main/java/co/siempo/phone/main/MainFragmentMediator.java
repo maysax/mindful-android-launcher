@@ -49,6 +49,7 @@ public class MainFragmentMediator {
     private Context context;
     private PaneFragment fragment;
     private List<MainListItem> items;
+
     private List<MainListItem> contactItems;
 
     private resetData resetData;
@@ -156,7 +157,11 @@ public class MainFragmentMediator {
                 switch (type) {
                     case CONTACT:
                         if (router != null) {
-                            router.contactPicked(getAdapter().getItem(position));
+                            try {
+                                router.contactPicked(getAdapter().getItem(position));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             FirebaseHelper.getInstance().logIFAction(FirebaseHelper.ACTION_CONTACT_PICK, "", data);
                         }
                         break;
