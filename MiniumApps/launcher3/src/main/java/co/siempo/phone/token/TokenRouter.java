@@ -12,16 +12,20 @@ import android.provider.Telephony;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.EBean;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
+import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.event.SendSmsDetect;
 import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.log.Tracer;
@@ -124,46 +128,88 @@ public class TokenRouter {
         try {
             if (TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT) && TokenManager.getInstance().has(TokenItemType.DATA)) {
                 String strNumber = TokenManager.getInstance().get(TokenItemType.CONTACT).getExtra2();
+                String strTitle = TokenManager.getInstance().get(TokenItemType.CONTACT).getTitle();
                 String strMessage = TokenManager.getInstance().get(TokenItemType.DATA).getTitle();
+                Log.e("Message string", strMessage);
                 if (!strMessage.trim().equalsIgnoreCase("")) {
-                    new SmsObserver(context, strNumber, strMessage).start();
-                    SmsManager smsManager = SmsManager.getDefault();
+                    if ((!DashboardActivity.isTextLenghGreater.contains(strTitle))) {
+                        UIUtils.toast(context, "Please choose a contact.");
+                        EventBus.getDefault().post(new SendSmsDetect(0));
 
-                    //Added as a part of SSA-1479, in case of long text
-                    // messages, splitting the text and sending the message
-                    // in multi-part
-                    PendingIntent sentPendingIntent = PendingIntent
-                            .getBroadcast(context, 0, new Intent(SMS_SENT),
-                                    0);
-                    PendingIntent deliveredPendingIntent = PendingIntent
-                            .getBroadcast(context, 0, new Intent
-                                    (SMS_DELIVERED), 0);
-                    ArrayList<String> smsBodyParts = smsManager
-                            .divideMessage(strMessage);
-                    ArrayList<PendingIntent> sentPendingIntents = new ArrayList<PendingIntent>();
-                    ArrayList<PendingIntent> deliveredPendingIntents = new ArrayList<PendingIntent>();
+                        List<TokenItem> itemList = TokenManager.getInstance().getItems();
+                        if (itemList.size() == 3) {
+                            itemList.remove(TokenManager.getInstance().get(TokenItemType.END_OP));
+                            //itemList.remove(TokenManager.getInstance().get(TokenItemType
+                            // .CONTACT));
+                            TokenManager.getInstance().get(TokenItemType.CONTACT).setTitle("@");
+                            TokenManager.getInstance().get(TokenItemType.CONTACT).setExtra1("");
+                            TokenManager.getInstance().get(TokenItemType.CONTACT).setExtra2("");
+                            TokenManager.getInstance().get(TokenItemType.CONTACT).setCompleteType
+                                    (TokenCompleteType.HALF);
+                        }
+                        if (itemList.size() == 2) {
+                            itemList.remove(TokenManager.getInstance().get(TokenItemType.CONTACT));
+                            String newMsg = DashboardActivity.isTextLenghGreater;
+                            if (newMsg.endsWith(" ")) {
+                                newMsg = newMsg.substring(0, newMsg.length() - 1);
+                            }
+                            TokenManager.getInstance().get(TokenItemType.DATA).setTitle(newMsg);
+                            if (TokenManager.getInstance().get(TokenItemType.DATA).getCompleteType
+                                    () != TokenCompleteType.FULL) {
+                                TokenManager.getInstance().get(TokenItemType.DATA).setCompleteType(TokenCompleteType.FULL);
+                            }
+                            add(new TokenItem(TokenItemType.CONTACT));
+                        }
+                    } else if (!DashboardActivity.isTextLenghGreater.contains(strMessage)) {
+                        UIUtils.toast(context, "Please enter message.");
+                        EventBus.getDefault().post(new SendSmsDetect(1));
+                        List<TokenItem> itemList = TokenManager.getInstance().getItems();
+                        itemList.remove(TokenManager.getInstance().get(TokenItemType.DATA));
+                        if (itemList.contains(TokenManager.getInstance().get(TokenItemType.END_OP))) {
+                            itemList.remove(TokenManager.getInstance().get(TokenItemType.END_OP));
+                        }
+                        itemList.add(new TokenItem(TokenItemType.DATA));
+                        setCurrent(itemList.get(itemList.size() - 1));
+                    } else {
+                        new SmsObserver(context, strNumber, strMessage).start();
+                        SmsManager smsManager = SmsManager.getDefault();
 
-                    for (int i = 0; i < smsBodyParts.size(); i++) {
-                        sentPendingIntents.add(sentPendingIntent);
-                        deliveredPendingIntents.add(deliveredPendingIntent);
+                        //Added as a part of SSA-1479, in case of long text
+                        // messages, splitting the text and sending the message
+                        // in multi-part
+                        PendingIntent sentPendingIntent = PendingIntent
+                                .getBroadcast(context, 0, new Intent(SMS_SENT),
+                                        0);
+                        PendingIntent deliveredPendingIntent = PendingIntent
+                                .getBroadcast(context, 0, new Intent
+                                        (SMS_DELIVERED), 0);
+                        ArrayList<String> smsBodyParts = smsManager
+                                .divideMessage(strMessage);
+                        ArrayList<PendingIntent> sentPendingIntents = new ArrayList<PendingIntent>();
+                        ArrayList<PendingIntent> deliveredPendingIntents = new ArrayList<PendingIntent>();
+
+                        for (int i = 0; i < smsBodyParts.size(); i++) {
+                            sentPendingIntents.add(sentPendingIntent);
+                            deliveredPendingIntents.add(deliveredPendingIntent);
+                        }
+
+                        smsManager.sendMultipartTextMessage(strNumber, null,
+                                smsBodyParts, sentPendingIntents,
+                                deliveredPendingIntents);
+
+
+                        Toast.makeText(context, "Sending Message...", Toast.LENGTH_LONG).show();
+                        String defaultSmsPackageName = Telephony.Sms.getDefaultSmsPackage(context);
+
+
+                        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + Uri.encode(strNumber)));
+                        if (defaultSmsPackageName != null) // Can be null in case that there is no default, then the user would be able to choose any app that supports this intent.
+                        {
+                            intent.setPackage(defaultSmsPackageName);
+                        }
+                        context.startActivity(intent);
+                        EventBus.getDefault().post(new SendSmsEvent(true));
                     }
-
-                    smsManager.sendMultipartTextMessage(strNumber, null,
-                            smsBodyParts, sentPendingIntents,
-                            deliveredPendingIntents);
-
-
-                    Toast.makeText(context, "Sending Message...", Toast.LENGTH_LONG).show();
-                    String defaultSmsPackageName = Telephony.Sms.getDefaultSmsPackage(context);
-
-
-                    Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + Uri.encode(strNumber)));
-                    if (defaultSmsPackageName != null) // Can be null in case that there is no default, then the user would be able to choose any app that supports this intent.
-                    {
-                        intent.setPackage(defaultSmsPackageName);
-                    }
-                    context.startActivity(intent);
-                    EventBus.getDefault().post(new SendSmsEvent(true));
                 } else {
                     UIUtils.toast(context, "Please enter message.");
                 }
