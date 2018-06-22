@@ -13,7 +13,9 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.UserHandle;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
@@ -259,25 +261,39 @@ public class SiempoNotificationListener extends NotificationListenerService {
 
     private void startCountDownTimer() {
         if (countDownTimer == null && !PhoneCallReceiver.isCallRunning) {
-            countDownTimer = new CountDownTimer(5000, 500) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    Log.d("countDownTimer", "" + millisUntilFinished);
-                }
+            try {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        countDownTimer = new CountDownTimer(5000, 500) {
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+                                Log.d("countDownTimer", "" + millisUntilFinished);
+                            }
 
-                @Override
-                public void onFinish() {
-                    if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-                        audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, volumeLevel, 0);
-                        Log.d("AudioManager : ", "" + audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+                            @Override
+                            public void onFinish() {
+                                if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                                    audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, volumeLevel, 0);
+                                    Log.d("AudioManager : ", "" + audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+                                }
+                                Log.d("countDownTimer", "CountDownTimer cancel");
+                                if (countDownTimer != null) {
+                                    countDownTimer.cancel();
+                                    countDownTimer = null;
+                                }
+                            }
+                        }.start();
                     }
-                    Log.d("countDownTimer", "CountDownTimer cancel");
-                    if (countDownTimer != null) {
-                        countDownTimer.cancel();
-                        countDownTimer = null;
-                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                    audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, volumeLevel, 0);
+                    Log.d("AudioManager : ", "" + audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
                 }
-            }.start();
+            }
+
         }
     }
 
