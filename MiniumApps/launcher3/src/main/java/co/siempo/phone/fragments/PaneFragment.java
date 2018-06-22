@@ -70,7 +70,6 @@ import co.siempo.phone.event.NotifyBottomView;
 import co.siempo.phone.event.NotifySearchRefresh;
 import co.siempo.phone.event.OnBackPressedEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
-import co.siempo.phone.event.SendSmsDetect;
 import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
@@ -902,15 +901,6 @@ public class PaneFragment extends CoreFragment {
         if (event.isClearList()) {
             mediator.resetData();
             imageClear.performClick();
-        }
-    }
-
-    @Subscribe
-    public void sendSmsDetect(SendSmsDetect event) {
-        if (event.getStrNumber() == 0) {
-
-        } else {
-
         }
     }
 

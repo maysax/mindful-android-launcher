@@ -30,14 +30,12 @@ import android.util.LruCache;
 import com.androidnetworking.AndroidNetworking;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -107,6 +105,30 @@ public abstract class CoreApplication extends MultiDexApplication {
     private boolean isRandomize = true;
     private CrashlyticsCore crashlyticsCore;
     private List<String> runningDownloadigFileList = new ArrayList<>();
+
+    /**
+     * Retrieving the third party app usage time when siempo set as launcher.
+     *
+     * @return
+     */
+    public ArrayMap<String, Long> getThirdpartyAppLogasLauncher() {
+        String storedHashMapString = PrefSiempo.getInstance(this).read(PrefSiempo.THIRD_PARTY_APP_LOG_AS_LAUNCHER, "");
+        java.lang.reflect.Type type = new TypeToken<ArrayMap<String, Long>>() {
+        }.getType();
+        return new Gson().fromJson(storedHashMapString, type);
+    }
+
+    /**
+     * Retrieving the third party app usage time when siempo not set as launcher.
+     *
+     * @return
+     */
+    public ArrayMap<String, Long> getThirdpartyAppLogasnotLauncher() {
+        String storedHashMapString = PrefSiempo.getInstance(this).read(PrefSiempo.THIRD_PARTY_APP_LOG_NOT_AS_LAUNCHER, "");
+        java.lang.reflect.Type type = new TypeToken<ArrayMap<String, Long>>() {
+        }.getType();
+        return new Gson().fromJson(storedHashMapString, type);
+    }
 
     public static synchronized CoreApplication getInstance() {
         return sInstance;
@@ -245,9 +267,6 @@ public abstract class CoreApplication extends MultiDexApplication {
                 String hashMapToolSettings = new Gson().toJson(newMap);
                 PrefSiempo.getInstance(this).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
             }
-
-
-
 
 
         }

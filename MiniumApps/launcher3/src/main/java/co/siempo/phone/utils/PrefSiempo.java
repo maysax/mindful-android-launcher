@@ -114,6 +114,10 @@ public class PrefSiempo {
     public static String JUNKFOOD_USAGE_COVER_TIME = "junkfood_usage_cover_time";
     public static String CURRENT_DATE = "current_date";
 
+    public static String THIRD_PARTY_APP_LOG_AS_LAUNCHER= "third_party_app_log_as_launcher";
+    public static String THIRD_PARTY_APP_LOG_NOT_AS_LAUNCHER= "third_party_app_log_not_as_launcher";
+
+
 
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
