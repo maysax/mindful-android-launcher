@@ -25,7 +25,6 @@ import co.siempo.phone.R;
 import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.event.SendSmsDetect;
 import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.log.Tracer;
@@ -134,7 +133,6 @@ public class TokenRouter {
                 if (!strMessage.trim().equalsIgnoreCase("")) {
                     if ((!DashboardActivity.isTextLenghGreater.contains(strTitle))) {
                         UIUtils.toast(context, "Please choose a contact.");
-                        EventBus.getDefault().post(new SendSmsDetect(0));
 
                         List<TokenItem> itemList = TokenManager.getInstance().getItems();
                         if (itemList.size() == 3) {
@@ -162,7 +160,6 @@ public class TokenRouter {
                         }
                     } else if (!DashboardActivity.isTextLenghGreater.contains(strMessage)) {
                         UIUtils.toast(context, "Please enter message.");
-                        EventBus.getDefault().post(new SendSmsDetect(1));
                         List<TokenItem> itemList = TokenManager.getInstance().getItems();
                         itemList.remove(TokenManager.getInstance().get(TokenItemType.DATA));
                         if (itemList.contains(TokenManager.getInstance().get(TokenItemType.END_OP))) {
