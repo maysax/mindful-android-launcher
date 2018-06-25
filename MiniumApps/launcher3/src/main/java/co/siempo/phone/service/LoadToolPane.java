@@ -46,7 +46,7 @@ public class LoadToolPane extends AsyncTask<String, String, ArrayList<MainListIt
     protected ArrayList<MainListItem> doInBackground(String... strings) {
 
         ArrayList<MainListItem> items = new ArrayList<>();
-        ArrayList<MainListItem> items1 = new ArrayList<>(12);
+        ArrayList<MainListItem> items1 = new ArrayList<>();
 
         try {
             new MainListItemLoader(context).loadItemsDefaultApp(items);
@@ -66,13 +66,11 @@ public class LoadToolPane extends AsyncTask<String, String, ArrayList<MainListIt
                 if (list.contains(mainListItem.getId())) {
                     bottomDockList.add(mainListItem);
                 } else {
-                    if (items1.size() < 12) {
+//                    if (items1.size() < 12) {
                         items1.add(mainListItem);
-                    }
+//                    }
                 }
             }
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -87,7 +85,7 @@ public class LoadToolPane extends AsyncTask<String, String, ArrayList<MainListIt
 
 
         try {
-            sortingMenu(s);
+//            sortingMenu(s);
 
             CoreApplication.getInstance().setToolItemsList(s);
             CoreApplication.getInstance().setToolBottomItemsList(bottomDockList);
