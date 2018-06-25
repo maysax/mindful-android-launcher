@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +30,7 @@ import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
-import co.siempo.phone.utils.UIUtils;
+import co.siempo.phone.utils.PrefSiempo;
 
 /**
  * Created by RajeshJadi on 14/2/18.
@@ -133,55 +135,52 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                     if (holder.checkbox.isChecked()) {
                         if (getCountOfCheckTools() > 1) {
                             mainListItem.setVisable(false);
-                            map.get(mainListItem.getId()).setVisible(false);
+//                            map.get(mainListItem.getId()).setVisible(false);
                             bindView(mainListItem, holder, false);
                             Log.d("Rajesh", "Un Check id::-" + mainListItem.getId());
-                            boolean isItemAlreadyContainsInArray = (
-                                    (ToolSelectionActivity) context)
-                                    .checkItemContains(mainListItem.getId());
-                            if (isItemAlreadyContainsInArray) {
-                                ((ToolSelectionActivity) context)
-                                        .hideItemInSortedList(mainListItem
-                                                .getId(), false);
-                            }
+//                            boolean isItemAlreadyContainsInArray = (
+//                                    (ToolSelectionActivity) context)
+//                                    .checkItemContains(mainListItem.getId());
+//                            if (isItemAlreadyContainsInArray) {
+//                                ((ToolSelectionActivity) context)
+//                                        .hideItemInSortedList(mainListItem
+//                                                .getId(), false);
+//                            }
                         }
                     } else {
-                        if (getCountOfCheckTools() < 16) {
+//                        if (getCountOfCheckTools() < 16) {
+//
+//                            boolean isItemAlreadyContainsInArray = (
+//                                    (ToolSelectionActivity) context)
+//                                    .checkItemContains(mainListItem.getId());
+//                            if (!isItemAlreadyContainsInArray) {
+//                                int id = ((ToolSelectionActivity) context)
+//                                        .invisibleItemId();
+//                                ((ToolSelectionActivity) context)
+//                                        .replaceData(id, mainListItem.getId());
+//                            } else {
+//                                ((ToolSelectionActivity) context)
+//                                        .hideItemInSortedList(mainListItem
+//                                                .getId(), true);
+//                            }
 
-                            boolean isItemAlreadyContainsInArray = (
-                                    (ToolSelectionActivity) context)
-                                    .checkItemContains(mainListItem.getId());
-                            if (!isItemAlreadyContainsInArray) {
-                                int id = ((ToolSelectionActivity) context)
-                                        .invisibleItemId();
-                                ((ToolSelectionActivity) context)
-                                        .replaceData(id, mainListItem.getId());
-                            } else {
-                                ((ToolSelectionActivity) context)
-                                        .hideItemInSortedList(mainListItem
-                                                .getId(), true);
-                            }
-
-                            map.get(mainListItem.getId()).setVisible(true);
+//                            map.get(mainListItem.getId()).setVisible(true);
                             mainListItem.setVisable(true);
                             bindView(mainListItem, holder, true);
-                            if (map.get(mainListItem.getId()).getApplicationName().equalsIgnoreCase("")) {
-//                                String hashMapToolSettings = new Gson().toJson(map);
-//                                PrefSiempo.getInstance(context).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
-                                if (clickable) {
-                                    Intent intent = new Intent(context, AppAssignmentActivity.class);
-                                    intent.putExtra(Constants.INTENT_MAINLISTITEM, mainListItem);
-                                    intent.putExtra("class_name", ToolSelectionActivity.class.getSimpleName
-                                            ().toString());
-                                    ((ToolSelectionActivity) context).startActivityForResult(intent, ToolSelectionActivity.TOOL_SELECTION);
-                                    holder.txtAssignApp.setClickable(false);
-                                }
-                            }
-
-                        } else {
-                            UIUtils.toastShort(context, "You cannot select " +
-                                    "more than 16 tools");
+                        if (map.get(mainListItem.getId()).getApplicationName().equalsIgnoreCase("")) {
+                            String hashMapToolSettings = new Gson().toJson(map);
+                            PrefSiempo.getInstance(context).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
+                            Intent intent = new Intent(context, AppAssignmentActivity.class);
+                            intent.putExtra(Constants.INTENT_MAINLISTITEM, mainListItem);
+                            intent.putExtra("class_name", ToolSelectionActivity.class.getSimpleName
+                                    ().toString());
+                            ((ToolSelectionActivity) context).startActivityForResult(intent, ToolSelectionActivity.TOOL_SELECTION);
                         }
+
+//                        } else {
+//                            UIUtils.toastShort(context, "You cannot select " +
+//                                    "more than 16 tools");
+//                        }
 
                     }
 
