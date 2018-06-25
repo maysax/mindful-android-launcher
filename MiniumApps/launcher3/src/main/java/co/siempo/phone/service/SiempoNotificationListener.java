@@ -12,7 +12,10 @@ import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.UserHandle;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
@@ -46,6 +49,7 @@ import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.NewNotificationEvent;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
+import co.siempo.phone.receivers.PhoneCallReceiver;
 import co.siempo.phone.utils.NotificationUtility;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
@@ -70,13 +74,12 @@ public class SiempoNotificationListener extends NotificationListenerService {
     @SystemService
     NotificationManager notificationManager;
 
-
     Context context;
-
     ArrayList<String> enableNotificationList = new ArrayList<>();
     Set<String> blockedAppList = new HashSet<>();
-
     int volumeLevel = 1;
+
+    CountDownTimer countDownTimer;
 
     private static boolean isInteger(String s, int radix) {
         try {
@@ -217,7 +220,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
                             if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_VIBRATE ||
                                     audioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
                                 int sound = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM);
-                                if (sound != 1) {
+                                Log.d("countDownTimer", "CountDownTimer " + PhoneCallReceiver.isCallRunning);
+                                if (sound != 1 && !PhoneCallReceiver.isCallRunning) {
                                     volumeLevel = sound;
                                     PrefSiempo.getInstance(this).write(PrefSiempo.USER_VOLUME, audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
                                     Log.d("AudioManager", "" + sound);
@@ -228,6 +232,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         }
                         if (notification.getPackageName() != null
                                 && !notification.getPackageName().equalsIgnoreCase(StatusBarService.packagename)) {
+                            startCountDownTimer();
                             filterByCategory(notification);
                         }
                     }
@@ -240,9 +245,55 @@ public class SiempoNotificationListener extends NotificationListenerService {
                             audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, volume, 0);
                         }
                     }
-
+                    if (countDownTimer != null) {
+                        countDownTimer.cancel();
+                        countDownTimer = null;
+                    }
+                }
+            } else {
+                if (countDownTimer != null) {
+                    countDownTimer.cancel();
+                    countDownTimer = null;
                 }
             }
+        }
+    }
+
+    private void startCountDownTimer() {
+        if (countDownTimer == null && !PhoneCallReceiver.isCallRunning) {
+            try {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        countDownTimer = new CountDownTimer(5000, 500) {
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+                                Log.d("countDownTimer", "" + millisUntilFinished);
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                                    audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, volumeLevel, 0);
+                                    Log.d("AudioManager : ", "" + audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+                                }
+                                Log.d("countDownTimer", "CountDownTimer cancel");
+                                if (countDownTimer != null) {
+                                    countDownTimer.cancel();
+                                    countDownTimer = null;
+                                }
+                            }
+                        }.start();
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                    audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, volumeLevel, 0);
+                    Log.d("AudioManager : ", "" + audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+                }
+            }
+
         }
     }
 
@@ -262,7 +313,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
             for (String key : bundle.keySet()) {
                 Object value = bundle.get(key);
                 strKey = " Key :: " + key != null ? key : "";
-                if (key.equalsIgnoreCase("android.textLines")) {
+                if (null != key && key.equalsIgnoreCase("android" +
+                        ".textLines")) {
                     strValue = " Value ::" + value != null ? "" + (value != null ? value.toString() : null) : "";
                 } else {
                     strValue = " Value ::" + value != null ? "" + value : "";
@@ -286,7 +338,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
      * @param statusBarNotification
      */
     private synchronized void filterByCategory(StatusBarNotification statusBarNotification) {
-
 
         String strPackageName;//getPackageName
         String strTitle = null;//android.title
@@ -435,10 +486,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
             } catch (Exception e) {
                 CoreApplication.getInstance().logException(e);
             }
-        }
-        if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-            audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, volumeLevel, 0);
-            Log.d("AudioManager : ", "" + audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
         }
     }
 

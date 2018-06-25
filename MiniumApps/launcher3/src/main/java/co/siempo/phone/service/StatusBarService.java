@@ -23,6 +23,7 @@ import android.os.IBinder;
 import android.provider.ContactsContract;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.ArrayMap;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -105,6 +106,13 @@ public class StatusBarService extends Service {
     public Bitmap bitmap;
     long spentTimeJunkFood = 0L;
     long startTimeJunkFood = 0L;
+
+    long spentTimeThirdPartyAppAsLauncher = 0L;
+    long startTimeThirdPartyAppAsLauncher = 0L;
+
+    long spentTimeThirdPartyAppNotAsLauncher = 0L;
+    long startTimeThirdPartyAppNotAsLauncher = 0L;
+
     Calendar calendar;
     boolean isScreenOn = true;
     ImageView imgBackgroundTop, imgBackgroundBottom;
@@ -112,12 +120,11 @@ public class StatusBarService extends Service {
     private Context context;
     private MyObserver myObserver;
     private AppInstallUninstall appInstallUninstall;
-    private CountDownTimer countDownTimer;
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest locationRequest;
     private LocationCallback mLocationCallback;
     private UserPresentBroadcastReceiver userPresentBroadcastReceiver;
-    private CountDownTimer countDownTimerGrace, countDownTimerCover,
+    private CountDownTimer countDownTimerLockScreen, countDownTimerGrace, countDownTimerCover,
             countDownTimerBreak, countDownTimerAfterCover;
     private WindowManager wm;
     private View bottomView;
@@ -171,15 +178,171 @@ public class StatusBarService extends Service {
     public void onCreate() {
         super.onCreate();
         context = this;
-        calendar = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        String formattedDate = df.format(calendar.getTime());
-        PrefSiempo.getInstance(context).write(PrefSiempo.CURRENT_DATE, formattedDate);
+        storeCurrentDate();
         EventBus.getDefault().register(this);
         registerObserverForContact();
         registerObserverForAppInstallUninstall();
         registerReceiverScreenLockAndDateChange();
+        initializeOverlayView();
+        initializeAppChecker();
+        getBitmap();
+    }
+
+    private void initializeAppChecker() {
         appChecker = new AppChecker();
+        AppChecker.Listener deterUse = new AppChecker.Listener() {
+            @Override
+            public void onForeground(String process) {
+                if (process != null) {
+                    if (PackageUtil.isSiempoLauncher(context)) {
+                        try {
+                            new DBClient().deleteMsgByPackageName(process);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (TextUtils.isEmpty(packagename)) {
+                            if (startTimeThirdPartyAppAsLauncher == 0L) {
+                                startTimeThirdPartyAppAsLauncher = System.currentTimeMillis();
+                                spentTimeThirdPartyAppAsLauncher = 0L;
+                            }
+                        } else {
+                            if (!packagename.equalsIgnoreCase(process)) {
+                                ArrayMap<String, Long> map = CoreApplication.getInstance().getThirdpartyAppLogasLauncher();
+                                if (map != null) {
+                                    if (map.containsKey(packagename)) {
+                                        long time = map.get(packagename);
+                                        spentTimeThirdPartyAppAsLauncher = System.currentTimeMillis() - startTimeThirdPartyAppAsLauncher;
+                                        spentTimeThirdPartyAppAsLauncher = time + spentTimeThirdPartyAppAsLauncher;
+                                        Log.d("UsageTime", "NotNull:" + spentTimeThirdPartyAppAsLauncher);
+                                    } else {
+                                        spentTimeThirdPartyAppAsLauncher = System.currentTimeMillis() - startTimeThirdPartyAppAsLauncher;
+                                    }
+                                } else {
+                                    map = new ArrayMap<>();
+                                    spentTimeThirdPartyAppAsLauncher = System.currentTimeMillis() - startTimeThirdPartyAppAsLauncher;
+                                    Log.d("UsageTime", "Null:" + startTimeThirdPartyAppAsLauncher);
+                                }
+                                map.put(packagename, spentTimeThirdPartyAppAsLauncher);
+                                for (Map.Entry<String, Long> entry : map.entrySet()) {
+                                    Log.d("UsageTime as default", entry.getKey() + "/" + entry.getValue());
+                                }
+                                PrefSiempo.getInstance(context).write(PrefSiempo.THIRD_PARTY_APP_LOG_AS_LAUNCHER, new Gson().toJson(map));
+                                startTimeThirdPartyAppAsLauncher = 0L;
+                                spentTimeThirdPartyAppAsLauncher = 0L;
+                                startTimeThirdPartyAppAsLauncher = System.currentTimeMillis();
+                            } else {
+                                if (startTimeThirdPartyAppAsLauncher == 0L) {
+                                    startTimeThirdPartyAppAsLauncher = System.currentTimeMillis();
+                                    spentTimeThirdPartyAppAsLauncher = 0L;
+                                    Log.d("UsageTime", "NotMatch: " + startTimeThirdPartyAppAsLauncher);
+                                }
+                            }
+                        }
+                        overlayDetection(process);
+                    } else {
+                        if (TextUtils.isEmpty(packagename)) {
+                            if (startTimeThirdPartyAppNotAsLauncher == 0L) {
+                                startTimeThirdPartyAppNotAsLauncher = System.currentTimeMillis();
+                                spentTimeThirdPartyAppNotAsLauncher = 0L;
+                            }
+                        } else {
+                            if (!packagename.equalsIgnoreCase(process)) {
+                                ArrayMap<String, Long> map = CoreApplication.getInstance().getThirdpartyAppLogasnotLauncher();
+                                if (map != null) {
+                                    if (map.containsKey(packagename)) {
+                                        long time = map.get(packagename);
+                                        spentTimeThirdPartyAppNotAsLauncher = System.currentTimeMillis() - startTimeThirdPartyAppAsLauncher;
+                                        spentTimeThirdPartyAppNotAsLauncher = time + spentTimeThirdPartyAppNotAsLauncher;
+                                        Log.d("UsageTime", "NotNull:" + spentTimeThirdPartyAppNotAsLauncher);
+                                    } else {
+                                        spentTimeThirdPartyAppNotAsLauncher = System.currentTimeMillis() - startTimeThirdPartyAppNotAsLauncher;
+                                    }
+                                } else {
+                                    map = new ArrayMap<>();
+                                    spentTimeThirdPartyAppNotAsLauncher = System.currentTimeMillis() - startTimeThirdPartyAppNotAsLauncher;
+                                }
+                                map.put(packagename, spentTimeThirdPartyAppNotAsLauncher);
+                                for (Map.Entry<String, Long> entry : map.entrySet()) {
+                                    Log.d("UsageTime", entry.getKey() + "/" + entry.getValue());
+                                }
+                                PrefSiempo.getInstance(context).write(PrefSiempo.THIRD_PARTY_APP_LOG_NOT_AS_LAUNCHER, new Gson().toJson(map));
+                                startTimeThirdPartyAppNotAsLauncher = 0L;
+                                spentTimeThirdPartyAppNotAsLauncher = 0L;
+                                startTimeThirdPartyAppNotAsLauncher = System.currentTimeMillis();
+                            } else {
+                                if (startTimeThirdPartyAppNotAsLauncher == 0L) {
+                                    startTimeThirdPartyAppNotAsLauncher = System.currentTimeMillis();
+                                    spentTimeThirdPartyAppNotAsLauncher = 0L;
+                                    Log.d("UsageTime", "NotMatch: " + startTimeThirdPartyAppNotAsLauncher);
+                                }
+                            }
+                        }
+                    }
+                }
+                packagename = process;
+            }
+        };
+        appChecker.whenAny(deterUse);
+        appChecker.timeout(1000);
+        appChecker.start(context);
+    }
+
+    private void overlayDetection(String process) {
+        Set<String> set = PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
+        int deterTime = PrefSiempo.getInstance(context).read(PrefSiempo.DETER_AFTER, -1);
+        if (deterTime != -1) {
+            if (set.contains(process)) {
+                if (isScreenOn) {
+                    startOverUser();
+                }
+                if (startTimeJunkFood == 0L) {
+                    startTimeJunkFood = System.currentTimeMillis();
+                    Log.d("SpentTime", "StartTime " + startTimeJunkFood);
+                }
+            } else {
+                if (startTimeJunkFood != 0L) {
+                    spentTimeJunkFood = System.currentTimeMillis() - startTimeJunkFood;
+                    Log.d("SpentTime", "spentTimeJunkFood1 " + spentTimeJunkFood);
+                    long totalSpentTime = PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_USAGE_TIME, 0L) + spentTimeJunkFood;
+                    PrefSiempo.getInstance(context).write(PrefSiempo.JUNKFOOD_USAGE_TIME, totalSpentTime);
+                    Log.d("SpentTime", "spentTimeJunkFood2 " + totalSpentTime);
+                    spentTimeJunkFood = 0L;
+                    startTimeJunkFood = 0L;
+                }
+                if (!set.contains(process) && deterUsageRunning) {
+                    removeView();
+                    if (whichPhaseRunning != 0) {
+                        if (whichPhaseRunning == 1) {
+                            if (countDownTimerGrace != null) {
+                                countDownTimerGrace.cancel();
+                                countDownTimerGrace = null;
+                                startTimerForBreakPeriod();
+                            }
+                        } else if (whichPhaseRunning == 2) {
+                            if (countDownTimerCover != null) {
+                                countDownTimerCover.cancel();
+                                countDownTimerCover = null;
+                            }
+                            if (countDownTimerAfterCover != null) {
+                                countDownTimerAfterCover.cancel();
+                                countDownTimerAfterCover = null;
+                            }
+                            startTimerForBreakPeriod();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void storeCurrentDate() {
+        calendar = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        String formattedDate = df.format(calendar.getTime());
+        PrefSiempo.getInstance(context).write(PrefSiempo.CURRENT_DATE, formattedDate);
+    }
+
+    private void initializeOverlayView() {
         wm = (WindowManager) getSystemService(WINDOW_SERVICE);
         if (wm != null) {
             display = wm.getDefaultDisplay();
@@ -234,70 +397,6 @@ public class StatusBarService extends Service {
 
         display.getSize(size);
         maxHeightCoverWindow = screenHeightExclusive * 6 / 9;
-
-        AppChecker.Listener deterUse = new AppChecker.Listener() {
-            @Override
-            public void onForeground(String process) {
-                if (PackageUtil.isSiempoLauncher(context)) {
-                    packagename = process;
-                    try {
-                        new DBClient().deleteMsgByPackageName(process);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    Set<String> set = PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
-                    int deterTime = PrefSiempo.getInstance(context).read(PrefSiempo.DETER_AFTER, -1);
-                    if (deterTime != -1) {
-                        if (set.contains(process)) {
-//                            Log.d("DeterUse", "PackageName: " + process);
-                            if (isScreenOn) {
-                                startOverUser();
-                            }
-                            if (startTimeJunkFood == 0L) {
-                                startTimeJunkFood = System.currentTimeMillis();
-                                Log.d("SpentTime", "StartTime " + startTimeJunkFood);
-                            }
-                        } else {
-                            if (startTimeJunkFood != 0L) {
-                                spentTimeJunkFood = System.currentTimeMillis() - startTimeJunkFood;
-                                Log.d("SpentTime", "spentTimeJunkFood1 " + spentTimeJunkFood);
-                                long totalSpentTime = PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_USAGE_TIME, 0L) + spentTimeJunkFood;
-                                PrefSiempo.getInstance(context).write(PrefSiempo.JUNKFOOD_USAGE_TIME, totalSpentTime);
-                                Log.d("SpentTime", "spentTimeJunkFood2 " + totalSpentTime);
-                                spentTimeJunkFood = 0L;
-                                startTimeJunkFood = 0L;
-                            }
-                            if (!set.contains(process) && deterUsageRunning) {
-                                removeView();
-                                if (whichPhaseRunning != 0) {
-                                    if (whichPhaseRunning == 1) {
-                                        if (countDownTimerGrace != null) {
-                                            countDownTimerGrace.cancel();
-                                            countDownTimerGrace = null;
-                                            startTimerForBreakPeriod();
-                                        }
-                                    } else if (whichPhaseRunning == 2) {
-                                        if (countDownTimerCover != null) {
-                                            countDownTimerCover.cancel();
-                                            countDownTimerCover = null;
-                                        }
-                                        if (countDownTimerAfterCover != null) {
-                                            countDownTimerAfterCover.cancel();
-                                            countDownTimerAfterCover = null;
-                                        }
-                                        startTimerForBreakPeriod();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        };
-        appChecker.whenAny(deterUse);
-        appChecker.timeout(1000);
-        appChecker.start(context);
-        getBitmap();
     }
 
     /**
@@ -551,7 +650,7 @@ public class StatusBarService extends Service {
      * This timer is start then user locked the screen and this is used to navigate user to Intention screen after 15 minute.
      */
     public void startLockScreenTimer() {
-        countDownTimer = new CountDownTimer(15 * 60000, 1000) {
+        countDownTimerLockScreen = new CountDownTimer(15 * 60000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -560,22 +659,14 @@ public class StatusBarService extends Service {
             @Override
             public void onFinish() {
                 PrefSiempo.getInstance(context).write(PrefSiempo.LOCK_COUNTER_STATUS, true);
-                countDownTimer.cancel();
-                countDownTimer = null;
+                if (countDownTimerLockScreen != null) {
+                    countDownTimerLockScreen.cancel();
+                    countDownTimerLockScreen = null;
+                }
                 resetAllTimer();
             }
         }.start();
 
-    }
-
-    /**
-     * This observer is used to determine the contact add/delete/update.
-     */
-    public void stopTimer() {
-        countDownTimer.cancel();
-
-        PrefSiempo.getInstance(this).write(PrefSiempo
-                .LOCK_COUNTER_STATUS, false);
     }
 
     @SuppressLint("MissingPermission")
@@ -705,8 +796,10 @@ public class StatusBarService extends Service {
                         countDownTimerAfterCover = null;
                     }
                     long remainingTimeCover = 5 * 60000 - cover_time_completed;
-                    countDownTimerBreak.cancel();
-                    countDownTimerBreak = null;
+                    if (countDownTimerBreak != null) {
+                        countDownTimerBreak.cancel();
+                        countDownTimerBreak = null;
+                    }
                     PrefSiempo.getInstance(context).write(PrefSiempo.BREAK_TIME, 0L);
                     int minutes = (int) (remainingTimeCover / (1000 * 60));
                     int seconds = (int) ((remainingTimeCover / 1000) % 60);
@@ -748,8 +841,10 @@ public class StatusBarService extends Service {
             @Override
             public void onFinish() {
                 PrefSiempo.getInstance(context).write(PrefSiempo.GRACE_TIME, 0L);
-                if (countDownTimerGrace != null) countDownTimerGrace.cancel();
-                countDownTimerGrace = null;
+                if (countDownTimerGrace != null) {
+                    countDownTimerGrace.cancel();
+                    countDownTimerGrace = null;
+                }
                 long remainingTimeCover = 5 * 60000;
                 startTimerForCoverPeriod(remainingTimeCover, 0L);
             }
@@ -3229,8 +3324,8 @@ public class StatusBarService extends Service {
                     if (intent.getAction().equals(Intent.ACTION_USER_PRESENT) ||
                             intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
                         isScreenOn = true;
-                        if (countDownTimer != null) {
-                            countDownTimer.cancel();
+                        if (countDownTimerLockScreen != null) {
+                            countDownTimerLockScreen.cancel();
                             PrefSiempo.getInstance(context).write(PrefSiempo
                                     .LOCK_COUNTER_STATUS, false);
                         }
@@ -3267,8 +3362,9 @@ public class StatusBarService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             try {
-                if (PackageUtil.isSiempoLauncher(context)) {
-                    if (intent.getAction().equals(Intent.ACTION_TIME_CHANGED)) {
+
+                if (intent.getAction().equals(Intent.ACTION_TIME_CHANGED)) {
+                    if (PackageUtil.isSiempoLauncher(context)) {
                         String storedDate = PrefSiempo.getInstance(context).read(PrefSiempo.CURRENT_DATE, "");
                         calendar = Calendar.getInstance();
                         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
@@ -3288,6 +3384,33 @@ public class StatusBarService extends Service {
                                 FirebaseHelper.getInstance().logJunkFoodUsageTimeWithCover(spentTimeWithCover);
                                 PrefSiempo.getInstance(context).write(PrefSiempo.JUNKFOOD_USAGE_COVER_TIME, 0L);
                             }
+
+                            ArrayMap<String, Long> mapAsDefault = CoreApplication.getInstance().getThirdpartyAppLogasLauncher();
+                            if (mapAsDefault != null && mapAsDefault.size() > 0) {
+                                if (mapAsDefault.containsKey(getPackageName())) {
+                                    mapAsDefault.remove(getPackageName());
+                                }
+                                for (Map.Entry<String, Long> entry : mapAsDefault.entrySet()) {
+                                    Log.d("UsageTime", entry.getKey() + "/" + entry.getValue());
+                                    FirebaseHelper.getInstance().logTimeThirdPartyUsageAppAsLauncher(entry.getKey(), entry.getValue());
+                                }
+                                PrefSiempo.getInstance(context).read(PrefSiempo.THIRD_PARTY_APP_LOG_AS_LAUNCHER, "");
+                            }
+                        }
+                    } else {
+                        ArrayMap<String, Long> mapNotDefault = CoreApplication.getInstance().getThirdpartyAppLogasnotLauncher();
+                        if (mapNotDefault != null && mapNotDefault.size() > 0) {
+                            if (mapNotDefault.containsKey(getPackageName())) {
+                                mapNotDefault.remove(getPackageName());
+                            }
+                            if (mapNotDefault.containsKey("android")) {
+                                mapNotDefault.remove("android");
+                            }
+                            for (Map.Entry<String, Long> entry : mapNotDefault.entrySet()) {
+                                Log.d("UsageTime", entry.getKey() + "/" + entry.getValue());
+                                FirebaseHelper.getInstance().logTimeThirdPartyUsageAppNotAsLauncher(entry.getKey(), entry.getValue());
+                            }
+                            PrefSiempo.getInstance(context).read(PrefSiempo.THIRD_PARTY_APP_LOG_NOT_AS_LAUNCHER, "");
                         }
                     }
                 }

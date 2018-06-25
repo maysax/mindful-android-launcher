@@ -28,7 +28,6 @@ import java.util.TreeSet;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.BackgroundItemAdapter;
-import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.ImageItem;
 import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.PrefSiempo;
@@ -262,7 +261,7 @@ public class ChooseBackgroundActivity extends CoreActivity {
                         .setPermissionListener(new PermissionListener() {
                             @Override
                             public void onPermissionGranted() {
-                                CoreApplication.getInstance().downloadSiempoImages();
+                                // CoreApplication.getInstance().downloadSiempoImages();
                                 bindGridView();
                             }
 
@@ -283,7 +282,7 @@ public class ChooseBackgroundActivity extends CoreActivity {
                 e.printStackTrace();
             }
         } else {
-            CoreApplication.getInstance().downloadSiempoImages();
+            // CoreApplication.getInstance().downloadSiempoImages();
             bindGridView();
         }
     }

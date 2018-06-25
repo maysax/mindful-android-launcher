@@ -72,6 +72,7 @@ public class TempoNotificationFragment extends CoreFragment {
     @Click
     void relContainerAllowSpecificApps() {
         Intent i = new Intent(getActivity(), NotificationActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(i);
     }
 

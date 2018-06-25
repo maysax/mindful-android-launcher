@@ -50,13 +50,13 @@ android {
     productFlavors {
         alpha {
             dimension "Siempo"
-            versionCode 12101
-            versionName "${0}.${0}.${12}.${1}"
+            versionCode 12201
+            versionName "${0}.${0}.${12}.${2}"
         }
         beta {
             dimension "Siempo"
-            versionCode 12111
-            versionName "${0}.${1}.${5}.${0}"
+            versionCode 12211
+            versionName "${0}.${1}.${6}.${0}"
         }
     }
 

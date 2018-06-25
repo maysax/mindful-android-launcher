@@ -3,11 +3,13 @@ package co.siempo.phone.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -51,6 +53,7 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
     private RelativeLayout relTermsOfCondition;
     private RelativeLayout relContribute;
     private RelativeLayout relFeedback;
+    private RelativeLayout relLeaveReview;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -85,6 +88,7 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
         relContribute = view.findViewById(R.id.relContribute);
         txtVersionValue = view.findViewById(R.id.txtVersionValue);
         relVersion = view.findViewById(R.id.relVersion);
+        relLeaveReview = view.findViewById(R.id.relLeaveReview);
 
         relPrivacyPolicy.setOnClickListener(this);
         relFaq.setOnClickListener(this);
@@ -94,6 +98,7 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
         relTermsOfCondition.setOnClickListener(this);
         relContribute.setOnClickListener(this);
         relVersion.setOnClickListener(this);
+        relLeaveReview.setOnClickListener(this);
 
 
         String version = "";
@@ -148,6 +153,16 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.relVersion:
                 checkUpgradeVersion();
+                break;
+            case R.id.relLeaveReview:
+                if (getActivity() != null) {
+                    final String appPackageName = getActivity().getPackageName(); // getPackageName() from Context or Activity object
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                    } catch (ActivityNotFoundException e) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                    }
+                }
                 break;
             default:
                 break;

@@ -42,6 +42,9 @@ public class FirebaseHelper {
     public static String DETER_OVER_USE = "deter_over_use";
     public static String JUNKFOOD_USAGE = "junk_food_usage";
     public static String JUNKFOOD_USAGE_COVER = "junk_food_usage_cover";
+    public static String USAGE_THIRD_PARTY_AS_DEFAULT = "usage_third_party_as_default";
+    public static String USAGE_THIRD_PARTY_NOT_DEFAULT = "usage_third_party_not_default";
+
 
     //Attribute
     private String SCREEN_NAME = "screen_name";
@@ -284,6 +287,33 @@ public class FirebaseHelper {
         bundle.putLong(TIME_SPENT, usage_time);
         Tracer.i("Firebase:" + JUNKFOOD_USAGE_COVER + ": " + bundle.toString());
         getFirebaseAnalytics().logEvent(JUNKFOOD_USAGE_COVER, bundle);
+    }
+
+
+    /**
+     * This method is used to store total time user spent on cover period on date change event.
+     *
+     * @param usage_time spent time in millisecond.
+     */
+    public void logTimeThirdPartyUsageAppNotAsLauncher(String applicationname, long usage_time) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(TIME_SPENT, usage_time);
+        bundle.putString(APPLICATION_NAME, applicationname);
+        Tracer.i("Firebase:" + USAGE_THIRD_PARTY_NOT_DEFAULT + ": " + bundle.toString());
+        getFirebaseAnalytics().logEvent(USAGE_THIRD_PARTY_NOT_DEFAULT, bundle);
+    }
+
+    /**
+     * This method is used to store total time user spent on cover period on date change event.
+     *
+     * @param usage_time spent time in millisecond.
+     */
+    public void logTimeThirdPartyUsageAppAsLauncher(String applicationname, long usage_time) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(TIME_SPENT, usage_time);
+        bundle.putString(APPLICATION_NAME, applicationname);
+        Tracer.i("Firebase:" + USAGE_THIRD_PARTY_AS_DEFAULT + ": " + bundle.toString());
+        getFirebaseAnalytics().logEvent(USAGE_THIRD_PARTY_AS_DEFAULT, bundle);
     }
 
 }

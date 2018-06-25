@@ -1,5 +1,6 @@
 package co.siempo.phone.activities;
 
+import android.app.DownloadManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -13,6 +14,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.database.Cursor;
 import android.graphics.PixelFormat;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -86,6 +88,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     private InnerRecevier mRecevier;
     private String state = "";
     private String TAG = "CoreActivity";
+    private DownloadReceiver mDownloadReceiver;
 
     // Static method to return File at localPath
     public static File getLocalPath() {
@@ -98,12 +101,16 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     }
 
     public static boolean isSiempoLauncher(Context context) {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        ResolveInfo defaultLauncher = context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        if (defaultLauncher != null && defaultLauncher.activityInfo != null && defaultLauncher.activityInfo.packageName != null) {
-            String defaultLauncherStr = defaultLauncher.activityInfo.packageName;
-            return defaultLauncherStr.equals(context.getPackageName());
+        try {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            ResolveInfo defaultLauncher = context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+            if (defaultLauncher != null && defaultLauncher.activityInfo != null && defaultLauncher.activityInfo.packageName != null) {
+                String defaultLauncherStr = defaultLauncher.activityInfo.packageName;
+                return defaultLauncherStr.equals(context.getPackageName());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }
@@ -135,13 +142,22 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        mDownloadReceiver = new DownloadReceiver();
+        IntentFilter downloadIntent = new IntentFilter();
+        downloadIntent.addAction("android.intent.action.DOWNLOAD_COMPLETE");
+        registerReceiver(mDownloadReceiver, downloadIntent);
     }
 
     void connectInAppService() {
-        Intent serviceIntent =
-                new Intent("com.android.vending.billing.InAppBillingService.BIND");
-        serviceIntent.setPackage("com.android.vending");
-        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+        try {
+            Intent serviceIntent =
+                    new Intent("com.android.vending.billing.InAppBillingService.BIND");
+            serviceIntent.setPackage("com.android.vending");
+            bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -303,6 +319,13 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                 e.printStackTrace();
             }
         }
+        if (mDownloadReceiver != null) {
+            try {
+                unregisterReceiver(mDownloadReceiver);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -334,9 +357,13 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         Validate.notNull(fragment);
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(containerViewId, fragment, "main")
-                .addToBackStack(null)
-                .commit();
+        ft.replace(containerViewId, fragment, "main");
+        ft.addToBackStack(null);
+        try {
+            ft.commit();
+        } catch (Exception e) {
+            ft.commitAllowingStateLoss();
+        }
     }
 
     @Override
@@ -484,6 +511,41 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                     state = reason;
                 }
             }
+        }
+    }
+
+    public class DownloadReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            long receivedID = intent.getLongExtra(
+                    DownloadManager.EXTRA_DOWNLOAD_ID, -1L);
+            DownloadManager mgr = (DownloadManager)
+                    context.getSystemService(Context.DOWNLOAD_SERVICE);
+
+            DownloadManager.Query query = new DownloadManager.Query();
+            query.setFilterById(receivedID);
+            Cursor cur = mgr.query(query);
+            int index = cur.getColumnIndex(DownloadManager.COLUMN_STATUS);
+            if (cur.moveToFirst()) {
+                if (cur.getInt(index) == DownloadManager.STATUS_SUCCESSFUL) {
+                    // do something
+                    Log.e("download sucessfull", String.valueOf(receivedID));
+                    String title = cur.getString(cur.getColumnIndex(DownloadManager.COLUMN_TITLE));
+                    CoreApplication.getInstance().getRunningDownloadigFileList().remove(title);
+                    Log.e("downloaded file", String.valueOf(title));
+                } else if (cur.getInt(index) == DownloadManager.ERROR_UNKNOWN) {
+                    String title = cur.getString(cur.getColumnIndex(DownloadManager.COLUMN_TITLE));
+                    if (CoreApplication.getInstance().getRunningDownloadigFileList().contains(title)) {
+                        CoreApplication.getInstance().getRunningDownloadigFileList().remove(title);
+                    }
+                } else if (cur.getInt(index) == DownloadManager.PAUSED_WAITING_TO_RETRY) {
+                    String title = cur.getString(cur.getColumnIndex(DownloadManager.COLUMN_TITLE));
+                    if (CoreApplication.getInstance().getRunningDownloadigFileList().contains(title)) {
+                        CoreApplication.getInstance().getRunningDownloadigFileList().remove(title);
+                    }
+                }
+            }
+            cur.close();
         }
     }
 }

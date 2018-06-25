@@ -148,13 +148,18 @@ public class ContributeActivity extends CoreActivity implements
                 finish();
             } else {
                 this.skuList = skuList;
-                progressDialog.dismiss();
-                adapter = new CustomAdapter(this,
-                        R.layout.row_spinner, R.id.title, skuList);
-                spinnerContribute.setAdapter(adapter);
-                text.setVisibility(View.VISIBLE);
-                spinnerContribute.setVisibility(View.VISIBLE);
-                txtSubmit.setVisibility(View.VISIBLE);
+
+                if(!isFinishing()) {
+                    if(null!=progressDialog && progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
+                    adapter = new CustomAdapter(this,
+                            R.layout.row_spinner, R.id.title, skuList);
+                    spinnerContribute.setAdapter(adapter);
+                    text.setVisibility(View.VISIBLE);
+                    spinnerContribute.setVisibility(View.VISIBLE);
+                    txtSubmit.setVisibility(View.VISIBLE);
+                }
 
             }
         }

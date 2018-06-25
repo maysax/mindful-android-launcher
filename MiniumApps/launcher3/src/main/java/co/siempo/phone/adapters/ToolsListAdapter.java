@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +43,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
     private HashMap<Integer, AppMenu> map;
     private Context context;
     private int defaultTextColor;
+    private boolean clickable = true;
 
     public ToolsListAdapter(Context context, ArrayList<MainListItem>
             listItems, HashMap<Integer, AppMenu> mapList) {
@@ -68,6 +70,10 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
         notifyDataSetChanged();
     }
 
+    public void changeClickble(boolean clickable) {
+        this.clickable = clickable;
+    }
+
 
     @Override
     public ToolsListAdapter.ToolsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -86,11 +92,14 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
             holder.txtAssignApp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, AppAssignmentActivity.class);
-                    intent.putExtra(Constants.INTENT_MAINLISTITEM, mainListItem);
-                    intent.putExtra("class_name", ToolSelectionActivity.class.getSimpleName
-                            ().toString());
-                    ((ToolSelectionActivity) context).startActivityForResult(intent, ToolSelectionActivity.TOOL_SELECTION);
+                    if (clickable) {
+                        Intent intent = new Intent(context, AppAssignmentActivity.class);
+                        intent.putExtra(Constants.INTENT_MAINLISTITEM, mainListItem);
+                        intent.putExtra("class_name", ToolSelectionActivity.class.getSimpleName().toString());
+                        ((ToolSelectionActivity) context).startActivityForResult(intent,
+                                ToolSelectionActivity.TOOL_SELECTION);
+                        holder.txtAssignApp.setClickable(false);
+                    }
                 }
             });
 
@@ -128,17 +137,36 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                             mainListItem.setVisable(false);
 //                            map.get(mainListItem.getId()).setVisible(false);
                             bindView(mainListItem, holder, false);
+                            Log.d("Rajesh", "Un Check id::-" + mainListItem.getId());
+//                            boolean isItemAlreadyContainsInArray = (
+//                                    (ToolSelectionActivity) context)
+//                                    .checkItemContains(mainListItem.getId());
+//                            if (isItemAlreadyContainsInArray) {
+//                                ((ToolSelectionActivity) context)
+//                                        .hideItemInSortedList(mainListItem
+//                                                .getId(), false);
+//                            }
                         }
                     } else {
 //                        if (getCountOfCheckTools() < 16) {
 //
-//                            int id = ((ToolSelectionActivity) context).check();
-//                            if (id != 0) {
-//                                ((ToolSelectionActivity) context).replace(id, mainListItem.getId());
+//                            boolean isItemAlreadyContainsInArray = (
+//                                    (ToolSelectionActivity) context)
+//                                    .checkItemContains(mainListItem.getId());
+//                            if (!isItemAlreadyContainsInArray) {
+//                                int id = ((ToolSelectionActivity) context)
+//                                        .invisibleItemId();
+//                                ((ToolSelectionActivity) context)
+//                                        .replaceData(id, mainListItem.getId());
+//                            } else {
+//                                ((ToolSelectionActivity) context)
+//                                        .hideItemInSortedList(mainListItem
+//                                                .getId(), true);
 //                            }
-                        mainListItem.setVisable(true);
-//                        map.get(mainListItem.getId()).setVisible(true);
-                        bindView(mainListItem, holder, true);
+
+//                            map.get(mainListItem.getId()).setVisible(true);
+                            mainListItem.setVisable(true);
+                            bindView(mainListItem, holder, true);
                         if (map.get(mainListItem.getId()).getApplicationName().equalsIgnoreCase("")) {
                             String hashMapToolSettings = new Gson().toJson(map);
                             PrefSiempo.getInstance(context).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
@@ -148,15 +176,18 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                                     ().toString());
                             ((ToolSelectionActivity) context).startActivityForResult(intent, ToolSelectionActivity.TOOL_SELECTION);
                         }
+
 //                        } else {
 //                            UIUtils.toastShort(context, "You cannot select " +
 //                                    "more than 16 tools");
 //                        }
+
                     }
 
                 }
             });
         }
+
     }
 
     private void bindView(MainListItem mainListItem, ToolsViewHolder holder, boolean isVisible) {

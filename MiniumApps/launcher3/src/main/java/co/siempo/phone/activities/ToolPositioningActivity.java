@@ -80,11 +80,6 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
 
         try {
             if (!TextUtils.isEmpty(filePath)) {
-
-
-//                Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-//                BitmapDrawable ob = new BitmapDrawable(getResources(), bitmap);
-//                relMain.setBackground(ob);
                 //Code for Applying background
                 Glide.with(this)
                         .load(Uri.fromFile(new File(filePath))) // Uri of the
@@ -150,36 +145,9 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
     protected void onPause() {
         super.onPause();
 
-
-//        ArrayList<MainListItem> top = new ArrayList<>();
-//        ArrayList<MainListItem> bottom = new ArrayList<>();
-//
-//        for (int i = 0; i < sortedList.size(); i++) {
-//            if (i >= 12) {
-////                map.get(sortedList.get(i).getId()).setBottomDoc(true);
-//                bottom.add(sortedList.get(i));
-//            } else {
-//                top.add(sortedList.get(i));
-////                map.get(sortedList.get(i).getId()).setBottomDoc(false);
-//            }
-//        }
-//
-//        for (Map.Entry<Integer, AppMenu> entry : map.entrySet()) {
-//            for (int i = 0; i < top.size(); i++) {
-//                if (entry.getKey() == top.get(i).getId()) {
-//                    map.get(top.get(i).getId()).setBottomDoc(false);
-//                }
-//            }
-//
-//            for (int i = 0; i < bottom.size(); i++) {
-//                if (entry.getKey() == bottom.get(i).getId()) {
-//                    map.get(bottom.get(i).getId()).setBottomDoc(true);
-//                }
-//            }
-//        }
-
         for (int i = 0; i < sortedList.size(); i++) {
             if (i >= 16) {
+//            if (i >= 12) {
                 map.get(sortedList.get(i).getId()).setBottomDoc(true);
             } else {
                 map.get(sortedList.get(i).getId()).setBottomDoc(false);
@@ -205,36 +173,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         setSupportActionBar(toolbar);
         items = new ArrayList<>();
         new MainListItemLoader(this).loadItemsDefaultApp(items);
-//        items = CoreApplication.getInstance().getToolItemsList();
         items = PackageUtil.getToolsMenuData(this, items);
-//        ArrayList<MainListItem> visableItems = new ArrayList<>();
-//        ArrayList<MainListItem> inVisableItems = new ArrayList<>();
-//        ArrayList<MainListItem> tempData = new ArrayList<>();
-//
-//        for (MainListItem mainListItem : CoreApplication.getInstance().getToolItemsList()) {
-//            if (map.get(mainListItem.getId()).isVisible()) {
-//                visableItems.add(mainListItem);
-//            } else {
-//                inVisableItems.add(mainListItem);
-//            }
-//        }
-//        tempData.addAll(visableItems);
-//        tempData.addAll(inVisableItems);
-
-//        for (int i = 0; i < 12; i++) {
-//            topItems.add(CoreApplication.getInstance().getToolItemsList().get(i));
-//        }
-//
-//        topItems = new ArrayList<>();
-//        topItems.addAll(CoreApplication.getInstance().getToolItemsList());
-//        bottomItems = new ArrayList<>();
-//        bottomItems.addAll(CoreApplication.getInstance().getToolBottomItemsList());
-//
-//        items.addAll(topItems);
-//        items.addAll(bottomItems);
-//        items = CoreApplication.getInstance().getToolItemsList();
-//
-
         recyclerView = findViewById(R.id.recyclerView);
         txtSelectTools = findViewById(R.id.txtSelectTools);
         recyclerView.setHasFixedSize(true);
@@ -255,8 +194,9 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ToolPositioningActivity.this, ToolSelectionActivity.class);
-                intent.putExtra("TopList", topItems);
-                intent.putExtra("BottomList", bottomItems);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                intent.putExtra("TopList", topItems);
+//                intent.putExtra("BottomList", bottomItems);
                 startActivity(intent);
             }
         });

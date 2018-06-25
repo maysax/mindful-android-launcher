@@ -105,7 +105,8 @@ public class IntentionEditActivity extends CoreActivity implements View.OnClickL
             @SuppressLint("RestrictedApi")
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                if (actionId == EditorInfo.IME_ACTION_DONE || actionId ==
+                        EditorInfo.IME_ACTION_NEXT || event.getAction() == KeyEvent.ACTION_DOWN) {
                     if (txtSave.getVisibility() == View.VISIBLE) {
                         PrefSiempo.getInstance(IntentionEditActivity.this).write(PrefSiempo.DEFAULT_INTENTION, strIntentField);
                         UIUtils.hideSoftKeyboard(IntentionEditActivity.this, getWindow().getDecorView().getWindowToken());

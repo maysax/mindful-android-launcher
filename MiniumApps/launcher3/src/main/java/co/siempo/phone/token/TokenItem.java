@@ -6,8 +6,8 @@ package co.siempo.phone.token;
 
 public class TokenItem {
 
+    public boolean isChipable;
     private TokenItemType itemType;
-    private boolean isChipable;
     private String title;
     private String extra1;
     private String extra2;

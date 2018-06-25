@@ -146,33 +146,7 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
             holder.relMenu.setBackgroundColor(context.getResources().getColor
                     (R.color.transparent));
         }
-
-        holder.imgAppIcon.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (holder.linearLayout.getVisibility() == View.VISIBLE) {
-                    if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                        mDragStartListener.onStartDrag(holder);
-                    }
-                }
-                return false;
-            }
-        });
-
-        holder.icon.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (holder.linearLayout.getVisibility() == View.VISIBLE) {
-                    if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                        mDragStartListener.onStartDrag(holder);
-                    }
-                }
-                return false;
-            }
-        });
-
-
-        holder.text.setOnTouchListener(new View.OnTouchListener() {
+        holder.linearLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (holder.linearLayout.getVisibility() == View.VISIBLE) {
