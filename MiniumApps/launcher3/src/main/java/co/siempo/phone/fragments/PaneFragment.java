@@ -797,8 +797,10 @@ public class PaneFragment extends CoreFragment {
                     .size() <= 3) {
                 listView.setOnTouchListener(new OnSwipeTouchListener(context,
                         listView));
+
             } else {
                 listView.setOnTouchListener(null);
+                Log.d("Rajesh",""+adapter.getCount());
             }
 
 
@@ -909,6 +911,20 @@ public class PaneFragment extends CoreFragment {
         if (event != null) {
             if (isAdded()) {
                 pagerPane.setCurrentItem(event.getCurrentIndexPaneFragment(), true);
+                isSearchVisable = false;
+                if (searchLayout != null && chipsEditText != null) {
+                    searchLayout.txtSearchBox.setText("");
+                    if(mediator!=null && !mediator.getRunningStatus()){
+                        mediator.resetData();
+                    }
+                }
+                TokenManager.getInstance().clear();
+//                if (edtSearchToolsRounded != null) {
+//                    edtSearchToolsRounded.performClick();
+//                }
+//                EventBus.getDefault().post(new TokenUpdateEvent());
+//                EventBus.getDefault().post(new SearchLayoutEvent(""));
+
             }
             EventBus.getDefault().removeStickyEvent(event);
         }
@@ -964,6 +980,7 @@ public class PaneFragment extends CoreFragment {
 
                             }
                         }
+
                     }
                 }
             });

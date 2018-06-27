@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.ContentObserver;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.location.Location;
@@ -101,18 +102,16 @@ public class StatusBarService extends Service {
 
     public static double latitude = 0;
     public static double longitude = 0;
+    public static String packagename = "";
     private static int whichPhaseRunning = 0;// 0 for nothing,1 for Grace,2 for cover,3 for break;
     private static boolean deterUsageRunning = false;
     public Bitmap bitmap;
     long spentTimeJunkFood = 0L;
     long startTimeJunkFood = 0L;
-
     long spentTimeThirdPartyAppAsLauncher = 0L;
     long startTimeThirdPartyAppAsLauncher = 0L;
-
     long spentTimeThirdPartyAppNotAsLauncher = 0L;
     long startTimeThirdPartyAppNotAsLauncher = 0L;
-
     Calendar calendar;
     boolean isScreenOn = true;
     ImageView imgBackgroundTop, imgBackgroundBottom;
@@ -169,7 +168,6 @@ public class StatusBarService extends Service {
     private LinearLayout lnrTimeTop;
     private LinearLayout lnrSettingsNoteTop;
     private LinearLayout lnrWellnessTop;
-    public static String packagename = "";
 
     public StatusBarService() {
     }
@@ -3215,6 +3213,15 @@ public class StatusBarService extends Service {
                 bindArrayOfImage(strImage);
             }
         }
+
+//        else {
+//            try {
+//                bitmap=  BitmapFactory.decodeResource(context.getResources(),
+//                        R.drawable.cover_bg);
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     private void bindArrayOfImage(String strImage) {
