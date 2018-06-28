@@ -13,28 +13,28 @@ public class Tracer {
     }
 
     public static void d(String message, Object... args) {
-        Logger.d(message, args);
-        writeLog(null, message, args);
+//        Logger.d(message, args);
+//        writeLog(null, message, args);
     }
 
     public static void i(String message, Object... args) {
-        Logger.i(message, args);
+//        Logger.i(message, args);
 //        writeLog(null, message, args);
     }
 
     public static void w(String message, Object... args) {
-        Logger.w(message, args);
-        writeLog(null, message, args);
+//        Logger.w(message, args);
+//        writeLog(null, message, args);
     }
 
     public static void e(String message, Object... args) {
-        Logger.e(message, args);
-        writeLog(null, message, args);
+//        Logger.e(message, args);
+//        writeLog(null, message, args);
     }
 
     public static void e(Throwable throwable, String message, Object... args) {
-        Logger.e(throwable, message, args);
-        writeLog(throwable, message, args);
+//        Logger.e(throwable, message, args);
+//        writeLog(throwable, message, args);
     }
 
     public static void e(Throwable throwable) {

@@ -81,6 +81,9 @@ public class TableNotificationSms implements Serializable {
     }
 
     public void set_contact_title(String _contact_title) {
+        if (_contact_title != null && _contact_title.length() > 0) {
+            _contact_title = _contact_title.trim();
+        }
         this._contact_title = _contact_title;
     }
 
