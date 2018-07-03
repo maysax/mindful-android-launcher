@@ -512,8 +512,8 @@
     <string name="filter_apps">"Filter apps…"</string>
     <string name="no_apps">No apps match that input text</string>
     <string name="no_mattched_text">No apps match that input text</string>
-    <string name="msg_draw_over_app">You have not enable "Can draw on top of other apps" permission.</string>
-    <string name="msg_control_access">You have not "Enable control access to usage information" permission.</string>
+    <string name="msg_draw_over_app">You have not enabled "Can draw on top of other apps" permission.</string>
+    <string name="msg_control_access">You have not enabled "Control access to usage information" permission.</string>
     <string name="take_a_one_minute_break_at_nany_time_to_remove_this_cover">Take a one minute break at  any time to remove this cover.</string>
     <string name="settings">Settings</string>
     <string name="wellness">Wellness</string>

@@ -559,59 +559,63 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
     }
 
     private void openEditActivity(int position) {
-        if (realIndexesOfSearchResults != null) {
-            Intent intent = new Intent(this, NotesEditActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        try {
+            if (realIndexesOfSearchResults != null) {
+                Intent intent = new Intent(this, NotesEditActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
-            // If search is active -> use position from realIndexesOfSearchResults for NotesEditActivity
-            if (searchActive && null != realIndexesOfSearchResults) {
-                int newPosition = realIndexesOfSearchResults.get(position);
+                // If search is active -> use position from realIndexesOfSearchResults for NotesEditActivity
+                if (searchActive && null != realIndexesOfSearchResults) {
+                    int newPosition = realIndexesOfSearchResults.get(position);
 
-                try {
-                    // Package selected note content and send to NotesEditActivity
-                    intent.putExtra(NOTE_TITLE, notes.getJSONObject(newPosition).getString(NOTE_TITLE));
-                    intent.putExtra(NOTE_BODY, notes.getJSONObject(newPosition).getString(NOTE_BODY));
-                    intent.putExtra(NOTE_COLOUR, notes.getJSONObject(newPosition).getString(NOTE_COLOUR));
-                    intent.putExtra(NOTE_FONT_SIZE, notes.getJSONObject(newPosition).getInt(NOTE_FONT_SIZE));
+                    try {
+                        // Package selected note content and send to NotesEditActivity
+                        intent.putExtra(NOTE_TITLE, notes.getJSONObject(newPosition).getString(NOTE_TITLE));
+                        intent.putExtra(NOTE_BODY, notes.getJSONObject(newPosition).getString(NOTE_BODY));
+                        intent.putExtra(NOTE_COLOUR, notes.getJSONObject(newPosition).getString(NOTE_COLOUR));
+                        intent.putExtra(NOTE_FONT_SIZE, notes.getJSONObject(newPosition).getInt(NOTE_FONT_SIZE));
 
-                    if (notes.getJSONObject(newPosition).has(NOTE_HIDE_BODY)) {
-                        intent.putExtra(NOTE_HIDE_BODY,
-                                notes.getJSONObject(newPosition).getBoolean(NOTE_HIDE_BODY));
-                    } else
-                        intent.putExtra(NOTE_HIDE_BODY, false);
+                        if (notes.getJSONObject(newPosition).has(NOTE_HIDE_BODY)) {
+                            intent.putExtra(NOTE_HIDE_BODY,
+                                    notes.getJSONObject(newPosition).getBoolean(NOTE_HIDE_BODY));
+                        } else
+                            intent.putExtra(NOTE_HIDE_BODY, false);
 
-                } catch (JSONException e) {
-                    CoreApplication.getInstance().logException(e);
-                    e.printStackTrace();
+                    } catch (JSONException e) {
+                        CoreApplication.getInstance().logException(e);
+                        e.printStackTrace();
+                    }
+
+                    intent.putExtra(NOTE_REQUEST_CODE, newPosition);
+                    startActivityForResult(intent, newPosition);
                 }
 
-                intent.putExtra(NOTE_REQUEST_CODE, newPosition);
-                startActivityForResult(intent, newPosition);
-            }
+                // If search is not active -> use normal position for NotesEditActivity
+                else {
+                    try {
+                        // Package selected note content and send to NotesEditActivity
+                        intent.putExtra(NOTE_TITLE, notes.getJSONObject(position).getString(NOTE_TITLE));
+                        intent.putExtra(NOTE_BODY, notes.getJSONObject(position).getString(NOTE_BODY));
+                        intent.putExtra(NOTE_COLOUR, notes.getJSONObject(position).getString(NOTE_COLOUR));
+                        intent.putExtra(NOTE_FONT_SIZE, notes.getJSONObject(position).getInt(NOTE_FONT_SIZE));
 
-            // If search is not active -> use normal position for NotesEditActivity
-            else {
-                try {
-                    // Package selected note content and send to NotesEditActivity
-                    intent.putExtra(NOTE_TITLE, notes.getJSONObject(position).getString(NOTE_TITLE));
-                    intent.putExtra(NOTE_BODY, notes.getJSONObject(position).getString(NOTE_BODY));
-                    intent.putExtra(NOTE_COLOUR, notes.getJSONObject(position).getString(NOTE_COLOUR));
-                    intent.putExtra(NOTE_FONT_SIZE, notes.getJSONObject(position).getInt(NOTE_FONT_SIZE));
+                        if (notes.getJSONObject(position).has(NOTE_HIDE_BODY)) {
+                            intent.putExtra(NOTE_HIDE_BODY,
+                                    notes.getJSONObject(position).getBoolean(NOTE_HIDE_BODY));
+                        } else
+                            intent.putExtra(NOTE_HIDE_BODY, false);
 
-                    if (notes.getJSONObject(position).has(NOTE_HIDE_BODY)) {
-                        intent.putExtra(NOTE_HIDE_BODY,
-                                notes.getJSONObject(position).getBoolean(NOTE_HIDE_BODY));
-                    } else
-                        intent.putExtra(NOTE_HIDE_BODY, false);
+                    } catch (JSONException e) {
+                        CoreApplication.getInstance().logException(e);
+                        e.printStackTrace();
+                    }
 
-                } catch (JSONException e) {
-                    CoreApplication.getInstance().logException(e);
-                    e.printStackTrace();
+                    intent.putExtra(NOTE_REQUEST_CODE, position);
+                    startActivityForResult(intent, position);
                 }
-
-                intent.putExtra(NOTE_REQUEST_CODE, position);
-                startActivityForResult(intent, position);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -1104,5 +1108,9 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
         FirebaseHelper.getInstance().logScreenUsageTime(NoteListActivity.this.getClass().getSimpleName(), startTime);
     }
 
-
+    @Override
+    protected void onStop() {
+        super.onStop();
+        searchEnded();
+    }
 }

@@ -537,8 +537,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     boolean is_Read = notificationSms.get_is_read();
                     String message = notificationSms.get_message();
                     if (is_Read) {
-                        if ((!TextUtils.isEmpty(message) &&
-                                !message.equalsIgnoreCase(strText))) {
+                        if ((!TextUtils.isEmpty(message.trim()) &&
+                                !message.equalsIgnoreCase(strText.trim()))) {
                             notificationSms.setApp_icon(icon);
                             notificationSms.set_date(date);
                             notificationSms.set_is_read(false);
@@ -617,8 +617,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         boolean is_Read = notificationSms.get_is_read();
                         String message = notificationSms.get_message().split("\n")[0];
                         if (is_Read) {
-                            if ((!TextUtils.isEmpty(message) &&
-                                    !message.equalsIgnoreCase(strText))) {
+                            if ((!TextUtils.isEmpty(message.trim()) &&
+                                    !message.equalsIgnoreCase(strText.trim()))) {
                                 notificationSms.setPackageName(strPackageName);
                                 notificationSms.set_date(date);
                                 notificationSms.set_is_read(false);
@@ -678,8 +678,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
                             boolean is_Read = notificationSms.get_is_read();
                             String message = notificationSms.get_message().split("\n")[0];
                             if (is_Read) {
-                                if ((!TextUtils.isEmpty(message) &&
-                                        !message.equalsIgnoreCase(strText))) {
+                                if ((!TextUtils.isEmpty(message.trim()) &&
+                                        !message.equalsIgnoreCase(strText.trim()))) {
                                     notificationSms.set_date(date);
                                     notificationSms.set_is_read(false);
                                     notificationSms.setNotification_date(statusBarNotification.getPostTime());
@@ -752,8 +752,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 boolean is_Read = notificationSms.get_is_read();
                 String message = notificationSms.get_message().split("\n")[0];
                 if (is_Read) {
-                    if ((!TextUtils.isEmpty(message) &&
-                            !message.equalsIgnoreCase(strText))) {
+                    if ((!TextUtils.isEmpty(message.trim()) &&
+                            !message.equalsIgnoreCase(strText.trim()))) {
                         notificationSms.setPackageName(strPackageName);
                         notificationSms.set_date(date);
                         notificationSms.set_is_read(false);
@@ -819,8 +819,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     boolean is_Read = notificationSms.get_is_read();
                     String message = notificationSms.get_message().split("\n")[0];
                     if (is_Read) {
-                        if ((!TextUtils.isEmpty(message) &&
-                                !message.equalsIgnoreCase(strText))) {
+                        if ((!TextUtils.isEmpty(message.trim()) &&
+                                !message.equalsIgnoreCase(strText.trim()))) {
                             notificationSms.setPackageName(strPackageName);
                             notificationSms.set_date(date);
                             notificationSms.set_is_read(false);
@@ -877,8 +877,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     boolean is_Read = notificationSms.get_is_read();
                     String message = notificationSms.get_message().split("\n")[0];
                     if (is_Read) {
-                        if ((!TextUtils.isEmpty(message) &&
-                                !message.equalsIgnoreCase(strText))) {
+                        if ((!TextUtils.isEmpty(message.trim()) &&
+                                !message.equalsIgnoreCase(strText.trim()))) {
                             notificationSms.setPackageName(strPackageName);
                             notificationSms.set_date(date);
                             notificationSms.set_is_read(false);
@@ -967,8 +967,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 boolean is_Read = notificationSms.get_is_read();
                 String message = notificationSms.get_message();
                 if (is_Read) {
-                    if ((!TextUtils.isEmpty(message) &&
-                            !message.equalsIgnoreCase(strText))) {
+                    if ((!TextUtils.isEmpty(message.trim()) &&
+                            !message.equalsIgnoreCase(strText.trim()))) {
                         notificationSms.set_date(date);
                         notificationSms.set_is_read(false);
                         notificationSms.setNotification_date(statusBarNotification.getPostTime());
@@ -1081,26 +1081,32 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                 notificationSms.setUser_icon(largeIcon);
                                 long id = smsDao.insertOrReplace(notificationSms);
                                 notificationSms.setId(id);
+                                Log.d("Test New","title : "+ title+ " Length:"+ title.length());
+                                Log.d("Test New","message : "+ text+ " Length:"+ text.length());
                             }
                         } else {
                             if (!title.contains("WhatsApp") && !title.equalsIgnoreCase("Checking for new messages")) {
                                 boolean is_Read = notificationSms.get_is_read();
                                 String message = notificationSms.get_message().split("\n")[0];
+                                Log.d("Test","is_Read "+is_Read);
+                                Log.d("Test Update","title : "+ title+ " Length:"+ title.length());
+                                Log.d("Test Update","text : "+ text+ " Length:"+ text.length());
+                                Log.d("Test Update","message : "+ message+ " Length:"+ message.length());
                                 if (is_Read) {
-                                    if ((!TextUtils.isEmpty(message) &&
-                                            !message.equalsIgnoreCase(text))) {
+                                    if ((!TextUtils.isEmpty(message.trim()) &&
+                                            !message.equalsIgnoreCase(text.trim()))) {
                                         notificationSms.set_is_read(false);
                                         notificationSms.set_date(date);
                                         notificationSms.setNotification_date(statusBarNotification.getPostTime());
                                         notificationSms.set_message(text /*+ "\n" + notificationSms.get_message()*/);
-                                        smsDao.updateInTx(notificationSms);
+                                        smsDao.update(notificationSms);
                                     }
                                 } else {
                                     notificationSms.set_is_read(false);
                                     notificationSms.set_date(date);
                                     notificationSms.setNotification_date(statusBarNotification.getPostTime());
                                     notificationSms.set_message(text /*+ "\n" + notificationSms.get_message()*/);
-                                    smsDao.updateInTx(notificationSms);
+                                    smsDao.update(notificationSms);
                                 }
                             }
                         }
@@ -1140,8 +1146,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                     boolean is_Read = notificationSms.get_is_read();
                                     String message = notificationSms.get_message().split("\n")[0];
                                     if (is_Read) {
-                                        if ((!TextUtils.isEmpty(message) &&
-                                                !message.equalsIgnoreCase(text))) {
+                                        if ((!TextUtils.isEmpty(message.trim()) &&
+                                                !message.equalsIgnoreCase(text.trim()))) {
                                             notificationSms.set_date(date);
                                             notificationSms.setUser_icon(null);
                                             notificationSms.set_is_read(false);

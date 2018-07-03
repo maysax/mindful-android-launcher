@@ -325,6 +325,7 @@ public class MainFragmentMediator {
             if (getAdapter() != null) {
                 getAdapter().loadData(newList);
                 getAdapter().getFilter().filter("@");
+                getAdapter().notifyDataSetChanged();
             }
         } catch (Exception e) {
             e.printStackTrace();
