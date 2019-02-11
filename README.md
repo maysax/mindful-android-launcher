@@ -1,4 +1,4 @@
-# Launcher by Siempo
+# Launcher
 
 
 ## Key Features:
