@@ -1,7 +1,7 @@
 # Launcher by Siempo
 
 
-# #Key Features:
+## Key Features:
 
 ### Notification Tempo
 Get notifications batched at set intervals. On the half hour, top of the hour, or once a day like the mail. Select specific apps that may interrupt you.
@@ -28,4 +28,4 @@ Randomize the location of your distracting apps to prevent unconscious opens and
 Licensing 
 ---------------------
 
-Nudge by Siempo is proudly licensed under the [GPL v3.0](https://www.gnu.org/licenses/gpl-3.0.txt) license.
+Siempo is proudly licensed under the [GPL v3.0](https://www.gnu.org/licenses/gpl-3.0.txt) license.
