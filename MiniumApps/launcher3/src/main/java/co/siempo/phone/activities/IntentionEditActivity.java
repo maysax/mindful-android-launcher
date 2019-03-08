@@ -107,14 +107,12 @@ public class IntentionEditActivity extends CoreActivity implements View.OnClickL
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE || actionId ==
                         EditorInfo.IME_ACTION_NEXT || event.getAction() == KeyEvent.ACTION_DOWN) {
-                    if (txtSave.getVisibility() == View.VISIBLE) {
-                        PrefSiempo.getInstance(IntentionEditActivity.this).write(PrefSiempo.DEFAULT_INTENTION, strIntentField);
-                        UIUtils.hideSoftKeyboard(IntentionEditActivity.this, getWindow().getDecorView().getWindowToken());
-                        if (!strIntentField.equalsIgnoreCase("")) {
-                            runAnimation();
-                        } else {
-                            finish();
-                        }
+                    PrefSiempo.getInstance(IntentionEditActivity.this).write(PrefSiempo.DEFAULT_INTENTION, strIntentField);
+                    UIUtils.hideSoftKeyboard(IntentionEditActivity.this, getWindow().getDecorView().getWindowToken());
+                    if (!strIntentField.equalsIgnoreCase("")) {
+                        runAnimation();
+                    } else {
+                        finish();
                     }
                     return true;
                 }
