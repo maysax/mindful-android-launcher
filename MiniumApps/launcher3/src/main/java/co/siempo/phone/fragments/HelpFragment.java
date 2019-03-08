@@ -29,6 +29,7 @@ import co.siempo.phone.event.CheckVersionEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.service.ApiClient_;
+import co.siempo.phone.utils.DeviceUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
@@ -114,8 +115,13 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
 
 
     void txtSendFeedback() {
-        ((CoreActivity) getActivity()).loadChildFragment(FeedbackFragment_.builder()
-                .build(), R.id.helpView);
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        String uriText = String.format("mailto:%s?subject=%s&body=%s",
+                "feedback@siempo.co", Uri.encode("Feedback"),
+                Uri.encode(DeviceUtil.getDeviceInfo()));
+        Uri uri = Uri.parse(uriText);
+        intent.setData(uri);
+        startActivity(intent);
     }
 
     void txtFaq() {
