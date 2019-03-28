@@ -56,7 +56,7 @@ android {
         }
         beta {
             dimension "Siempo"
-            versionCode 12311
+            versionCode 12313
             versionName "${0}.${1}.${6}.${0}"
         }
     }
