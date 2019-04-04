@@ -42,7 +42,7 @@ Don't see something here? Tell us about your superpowers and what you would like
 
 We seek to experiment with new approaches to innovation, drawing inspiration from the bleeding edge of progressive business culture: collective intelligence, omni-win paradigm, metamodernism, Zebras Unite, Emergent Strategy, Transformative Technology, Conscious Capitalism, Conscious Leadership, feminine economy, design feeling, humane technology and more. 
 
-### [Thank you 🤗🌎](https:/https://www.youtube.com/watch?v=fCF3_WpLA_Q&feature=youtu.be/)
+### [Thank you 🤗🌎](https://www.youtube.com/watch?v=fCF3_WpLA_Q&feature=youtu.be/)
 
 
 
