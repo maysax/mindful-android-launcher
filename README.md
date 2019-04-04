@@ -24,6 +24,7 @@
 [![Siempo footage](http://img.youtube.com/vi/VnL7VPwe6A0/0.jpg)](http://www.youtube.com/watch?v=VnL7VPwe6A0)
 
 
+<a href="http://example.com/" target="_blank">Hello, world!</a>
 
 # Current Goals
 ---------------------
