@@ -24,7 +24,6 @@
 [![Siempo footage](http://img.youtube.com/vi/VnL7VPwe6A0/0.jpg)](http://www.youtube.com/watch?v=VnL7VPwe6A0)
 
 
-
 # Current Goals
 ---------------------
 
@@ -39,11 +38,11 @@ We are in the exciting early stages of creating an iOS app. Seeking designers an
 
 
 ### And beyond
-Don't see something here? Tell us about your superpowers and what you would like to work on. We need help overhauling our web presence, conducting user research, brainstorming future product direction, getting the word out and more.
-[**Sign up.**](https://docs.google.com/forms/d/1-hqfeXyy8FcCCMX8CZHTRO54enZCf5TMY_ATzScbqaM/edit#responses)
+Don't see something here? Tell us about your superpowers and what you would like to work on. We need help overhauling our web presence, conducting user research, brainstorming future product direction, getting the word out and more. [**Sign up.**](https://docs.google.com/forms/d/1-hqfeXyy8FcCCMX8CZHTRO54enZCf5TMY_ATzScbqaM/edit#responses)
 
 We seek to experiment with new approaches to innovation, drawing inspiration from the bleeding edge of progressive business culture: collective intelligence, omni-win paradigm, metamodernism, Zebras Unite, Emergent Strategy, Transformative Technology, Conscious Capitalism, Conscious Leadership, feminine economy, design feeling, humane technology and more. 
 
+### [Thank you 🤗🌎](https:/https://www.youtube.com/watch?v=fCF3_WpLA_Q&feature=youtu.be/)
 
 
 
