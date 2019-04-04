@@ -15,7 +15,7 @@
 
 ---
 
-## [**Sign up to get involved and stay updated**](https://docs.google.com/forms/d/1-hqfeXyy8FcCCMX8CZHTRO54enZCf5TMY_ATzScbqaM/edit#responses){target="_blank"}
+## [**Sign up to get involved and stay updated**](https://docs.google.com/forms/d/1-hqfeXyy8FcCCMX8CZHTRO54enZCf5TMY_ATzScbqaM/edit#responses)
 
 [Roadmap](https://trello.com/b/bVnnjPr4/siempo-development) | [Handbook](https://docs.google.com/document/d/119WKk-H9RbwyDoDzsNj4lKPcjKOrbUDtnEXjFJxhAaw/edit) | [Discord](https://discord.gg/KWZRMRs)  | [Android app](https://play.google.com/store/apps/details?id=co.siempo.phone) | [Chrome extension](https://chrome.google.com/webstore/detail/nudge-by-siempo-beta/hjoookglknijcfdlbcfnehfhicbknemj) | [Contact](mailto:info@siempo.co)
 
@@ -24,7 +24,6 @@
 [![Siempo footage](http://img.youtube.com/vi/VnL7VPwe6A0/0.jpg)](http://www.youtube.com/watch?v=VnL7VPwe6A0)
 
 
-<a href="http://example.com/" target="_blank">Hello, world!</a>
 
 # Current Goals
 ---------------------
@@ -40,7 +39,8 @@ We are in the exciting early stages of creating an iOS app. Seeking designers an
 
 
 ### And beyond
-Don't see something here? Tell us about your superpowers and what you would like to work on. We need help overhauling our web presence, conducting user research, brainstorming future product direction, getting the word out and more. [**Sign up.**](https://docs.google.com/forms/d/1-hqfeXyy8FcCCMX8CZHTRO54enZCf5TMY_ATzScbqaM/edit#responses)
+Don't see something here? Tell us about your superpowers and what you would like to work on. We need help overhauling our web presence, conducting user research, brainstorming future product direction, getting the word out and more.
+[**Sign up.**](https://docs.google.com/forms/d/1-hqfeXyy8FcCCMX8CZHTRO54enZCf5TMY_ATzScbqaM/edit#responses)
 
 We seek to experiment with new approaches to innovation, drawing inspiration from the bleeding edge of progressive business culture: collective intelligence, omni-win paradigm, metamodernism, Zebras Unite, Emergent Strategy, Transformative Technology, Conscious Capitalism, Conscious Leadership, feminine economy, design feeling, humane technology and more. 
 
