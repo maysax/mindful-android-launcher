@@ -15,7 +15,7 @@
 
 ---
 
-## [**Sign up to get involved and stay updated**](https://docs.google.com/forms/d/1-hqfeXyy8FcCCMX8CZHTRO54enZCf5TMY_ATzScbqaM/edit#responses)
+## [**Sign up to get involved and stay updated**](https://docs.google.com/forms/d/1-hqfeXyy8FcCCMX8CZHTRO54enZCf5TMY_ATzScbqaM/edit#responses){target="_blank"}
 
 [Roadmap](https://trello.com/b/bVnnjPr4/siempo-development) | [Handbook](https://docs.google.com/document/d/119WKk-H9RbwyDoDzsNj4lKPcjKOrbUDtnEXjFJxhAaw/edit) | [Discord](https://discord.gg/KWZRMRs)  | [Android app](https://play.google.com/store/apps/details?id=co.siempo.phone) | [Chrome extension](https://chrome.google.com/webstore/detail/nudge-by-siempo-beta/hjoookglknijcfdlbcfnehfhicbknemj) | [Contact](mailto:info@siempo.co)
 
