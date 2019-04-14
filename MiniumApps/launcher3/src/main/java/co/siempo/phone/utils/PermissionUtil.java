@@ -58,13 +58,13 @@ public class PermissionUtil {
             case CONTACT_PERMISSION:
                 return hasAppPermissions(Manifest.permission.READ_CONTACTS)
                         && hasAppPermissions(Manifest.permission.WRITE_CONTACTS);
-            case CALL_PHONE_PERMISSION:
+            /*case CALL_PHONE_PERMISSION:
                 return hasAppPermissions(Manifest.permission.CALL_PHONE) &&
-                        hasAppPermissions(Manifest.permission.READ_PHONE_STATE);
-            case SEND_SMS_PERMISSION:
+                        hasAppPermissions(Manifest.permission.READ_PHONE_STATE);*/
+            /*case SEND_SMS_PERMISSION:
                 return hasAppPermissions(Manifest.permission.RECEIVE_SMS) &&
                         hasAppPermissions(Manifest.permission.SEND_SMS)
-                        && hasAppPermissions(Manifest.permission.READ_SMS);
+                        && hasAppPermissions(Manifest.permission.READ_SMS);*/
             case CAMERA_PERMISSION:
                 return hasAppPermissions(Manifest.permission.CAMERA);
             case ACCOUNT_PERMISSION:
@@ -88,10 +88,10 @@ public class PermissionUtil {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             appPermissions = context.checkSelfPermission(Manifest.permission.READ_CONTACTS) +
                     context.checkSelfPermission(Manifest.permission.WRITE_CONTACTS) +
-                    context.checkSelfPermission(Manifest.permission.READ_CALL_LOG) +
-                    context.checkSelfPermission(Manifest.permission.WRITE_CALL_LOG) +
-                    context.checkSelfPermission(Manifest.permission.CALL_PHONE) +
-                    context.checkSelfPermission(Manifest.permission.SEND_SMS) +
+                    //context.checkSelfPermission(Manifest.permission.READ_CALL_LOG) +
+                    //context.checkSelfPermission(Manifest.permission.WRITE_CALL_LOG) +
+                    //context.checkSelfPermission(Manifest.permission.CALL_PHONE) +
+                    //context.checkSelfPermission(Manifest.permission.SEND_SMS) +
                     context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
         }
 

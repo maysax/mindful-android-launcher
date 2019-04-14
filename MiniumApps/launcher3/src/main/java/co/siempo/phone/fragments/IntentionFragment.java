@@ -135,8 +135,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         }
         if (dialogTempo != null && dialogTempo.isShowing()) {
             if (!permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
-                    || !permissionUtil.hasGiven(PermissionUtil
-                    .CALL_PHONE_PERMISSION)
+                    /*|| !permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)*/
                     || !PackageUtil.isSiempoLauncher(context)) {
                 dialogTempo.dismiss();
             }
@@ -186,7 +185,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
             case R.id.imgTempo:
                 if (null != getActivity()) {
                     if (permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
-                            && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
+                            /*&& permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)*/
                             && PackageUtil.isSiempoLauncher(context) &&
                             UIUtils.hasUsageStatsPermission(context)) {
 
@@ -274,7 +273,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                             UIUtils.clearDim(root);
                             mPopupWindow.dismiss();
                             if (permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)
-                                    && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
+                                    /*&& permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)*/
                                     && PackageUtil.isSiempoLauncher(context)  &&
                                     UIUtils.hasUsageStatsPermission(context)) {
                                 TypedValue typedValue = new TypedValue();

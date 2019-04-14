@@ -76,7 +76,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:fontFamily="sans-serif-medium"
-                android:text="@string/title.suppressedNotifications"
+                android:text="@string/title_suppressedNotifications"
                 android:textSize="14sp"/>
 
         </LinearLayout>
@@ -105,7 +105,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:fontFamily="sans-serif-medium"
-                android:text="@string/title.siempoPermissions"
+                android:text="@string/title_siempoPermissions"
                 android:textSize="14sp"/>
 
         </LinearLayout>
@@ -138,7 +138,7 @@
                 android:layout_marginStart="15dp"
                 android:layout_toRightOf="@+id/icon_restrictions"
                 android:fontFamily="sans-serif-medium"
-                android:text="@string/title.siempoRestrictions"
+                android:text="@string/title_siempoRestrictions"
                 android:textSize="14sp"/>
 
             <Switch
@@ -210,7 +210,7 @@
                 android:layout_marginStart="15dp"
                 android:layout_toRightOf="@+id/icon_location"
                 android:fontFamily="sans-serif-medium"
-                android:text="@string/title.siempoLocation"
+                android:text="@string/title_siempoLocation"
                 android:textSize="14sp" />
 
             <Switch

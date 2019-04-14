@@ -453,14 +453,8 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                             if ((!searchString.equalsIgnoreCase("@") || !(searchString.length() > 1 && searchString.startsWith("@") && TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT))) && checkDuplicate(buildData, originalData.get(i).getTitle().toLowerCase().toLowerCase())) {
                                 if (searchString.length() > 0 && searchString.startsWith("@") && !TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT) && isValidNumber) {
                                 } else {
-                                    if (originalData.get(i).getTitle()
-                                            .toLowerCase().equalsIgnoreCase
-                                                    (context.getResources
-                                                            ().getString
-                                                            (R.string.title_sendAsSMS)
-                                                    ) &&
-                                            !isValidNumber && searchString
-                                            .startsWith("@")) {
+                                    if (originalData.get(i).getTitle().toLowerCase().equalsIgnoreCase(context.getResources().getString(R.string.title_sendAsSMS)) &&
+                                            !isValidNumber && searchString.startsWith("@")) {
 
                                     } else if (originalData.get(i).getTitle()
                                             .toLowerCase().equalsIgnoreCase

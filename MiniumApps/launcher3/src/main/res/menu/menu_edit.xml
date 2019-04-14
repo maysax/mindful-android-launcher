@@ -8,19 +8,19 @@
         android:id="@+id/action_note_colour"
         android:icon="@drawable/ic_color_lens_black_24dp"
         android:orderInCategory="100"
-        android:title="@string/label.color"
+        android:title="@string/label_color"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_font_size"
         android:orderInCategory="102"
-        android:title="@string/label.fontSize"
+        android:title="@string/label_fontSize"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_hide_show_body"
         android:orderInCategory="103"
-        android:title="@string/label.hideNoteBody"
+        android:title="@string/label_hideNoteBody"
         app:showAsAction="never" />
 
 </menu>

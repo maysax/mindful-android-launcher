@@ -6,24 +6,24 @@
 
     <item
         android:id="@+id/action_search"
-        android:hint="@string/label.search"
+        android:hint="@string/label_search"
         android:icon="@android:drawable/ic_menu_search"
         android:orderInCategory="100"
-        android:title="@string/label.search"
+        android:title="@string/label_search"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
 
     <item
         android:id="@+id/action_backup"
         android:orderInCategory="101"
-        android:title="@string/label.backup"
+        android:title="@string/label_backup"
         android:visible="false"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_restore"
         android:orderInCategory="102"
-        android:title="@string/label.restore"
+        android:title="@string/label_restore"
         android:visible="false"
         app:showAsAction="never" />
 
