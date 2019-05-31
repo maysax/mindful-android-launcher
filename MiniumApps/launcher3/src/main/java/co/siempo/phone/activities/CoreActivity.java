@@ -188,7 +188,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         PendingIntent pendingIntent1 = PendingIntent.getService(this, 1, intent1, 0);
         alarmManager.set(AlarmManager.RTC, cal.getTimeInMillis(), pendingIntent1);
         cal = Calendar.getInstance();
-        cal.set(2019, 6, 19);
+        cal.set(2019, 5, 19);
         Intent intent2 = new Intent(this, ReminderService.class);
         intent2.putExtra("title","Special opportunity: how would you like to become an owner in Siempo?");
         intent2.putExtra("body","Please consider participating in our crowd equity campaign!");
