@@ -8,7 +8,7 @@ apply plugin: 'com.google.firebase.firebase-perf'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+
     lintOptions {
         disable 'GoogleAppIndexingApiWarning', 'GradleCompatible', 'IconDensities', 'Registered', 'MissingTranslation', 'SetTextI18n', 'RtlHardcoded', 'SelectableText', 'PermissionImpliesUnsupportedHardware', 'TypographyFractions', 'TypographyQuotes', 'InvalidPackage'
         ignoreWarnings true
@@ -56,8 +56,8 @@ android {
         }
         beta {
             dimension "Siempo"
-            versionCode 12313
-            versionName "${0}.${1}.${6}.${0}"
+            versionCode 12316
+            versionName "${0}.${1}.${7}.${0}"
         }
     }
 

@@ -113,7 +113,10 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
-
+        <service
+            android:name=".service.ReminderService"
+            android:enabled="true"
+            android:exported="false" />
         <receiver
             android:name=".receivers.CallReceiver"
             android:enabled="true">

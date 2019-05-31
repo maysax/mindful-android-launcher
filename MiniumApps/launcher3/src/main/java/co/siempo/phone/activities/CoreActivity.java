@@ -1,9 +1,11 @@
 package co.siempo.phone.activities;
 
+import android.app.AlarmManager;
 import android.app.DownloadManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -23,6 +25,7 @@ import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -39,6 +42,7 @@ import com.android.vending.billing.IInAppBillingService;
 import org.androidannotations.annotations.EActivity;
 
 import java.io.File;
+import java.util.Calendar;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Config;
@@ -48,6 +52,7 @@ import co.siempo.phone.event.JunkAppOpenEvent;
 import co.siempo.phone.helper.Validate;
 import co.siempo.phone.interfaces.NFCInterface;
 import co.siempo.phone.log.Tracer;
+import co.siempo.phone.service.ReminderService;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.EventBus;
@@ -147,6 +152,51 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         IntentFilter downloadIntent = new IntentFilter();
         downloadIntent.addAction("android.intent.action.DOWNLOAD_COMPLETE");
         registerReceiver(mDownloadReceiver, downloadIntent);
+
+        startAlarm();
+    }
+    private void startAlarm() {
+         SharedPreferences preferences;
+         SharedPreferences.Editor[] editor;
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String reminder_flag = preferences.getString("reminder_flag_new", "0");
+        if(reminder_flag.equals("0")) {
+            editor = new SharedPreferences.Editor[1];
+            editor[0] = preferences.edit();
+            editor[0].putString("reminder_flag_new","1");
+            editor[0].apply();
+            AlarmManager alarmManager = (AlarmManager) this.getSystemService(this.ALARM_SERVICE);
+            long when = System.currentTimeMillis();         // notification time
+            Calendar cal;
+            cal = Calendar.getInstance();
+            //cal.add(Calendar.HOUR, 24);
+            cal.add(Calendar.MINUTE, 3);
+            Intent intent = new Intent(this, ReminderService.class);
+            intent.putExtra("title","Welcome to Siempo! Thank you for your trust.");
+            intent.putExtra("body","Choose a custom background to make your experience more personal.");
+            intent.putExtra("type","0");
+            PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, 0);
+            alarmManager.set(AlarmManager.RTC, cal.getTimeInMillis(), pendingIntent);
+
+            cal = Calendar.getInstance();
+        //cal.add(Calendar.HOUR, 24);
+        cal.add(Calendar.DAY_OF_MONTH, 7);
+        Intent intent1 = new Intent(this, ReminderService.class);
+        intent1.putExtra("title","Congratulations on sticking with Siempo for a week!");
+        intent1.putExtra("body","Please considering contributing to Siempo if you have found the experience valuable.");
+        intent1.putExtra("type","1");
+        PendingIntent pendingIntent1 = PendingIntent.getService(this, 1, intent1, 0);
+        alarmManager.set(AlarmManager.RTC, cal.getTimeInMillis(), pendingIntent1);
+        cal = Calendar.getInstance();
+        cal.set(2019, 6, 19);
+        Intent intent2 = new Intent(this, ReminderService.class);
+        intent2.putExtra("title","Special opportunity: how would you like to become an owner in Siempo?");
+        intent2.putExtra("body","Please consider participating in our crowd equity campaign!");
+        intent2.putExtra("type","2");
+        PendingIntent pendingIntent2 = PendingIntent.getService(this, 2, intent2, 0);
+        alarmManager.set(AlarmManager.RTC, cal.getTimeInMillis(), pendingIntent2);
+
+          }
     }
 
     void connectInAppService() {
