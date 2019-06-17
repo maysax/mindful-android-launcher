@@ -10,5 +10,5 @@ import co.siempo.phone.models.MainListItem;
 
 public interface OnToolItemListChangedListener {
 
-    void onToolItemListChanged(ArrayList<MainListItem> customers);
+    void onToolItemListChanged(ArrayList<MainListItem> customers,int position);
 }

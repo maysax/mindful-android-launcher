@@ -77,11 +77,8 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                     holder.text.setText(item.getTitle());
                 }
                 if (isHideIconBranding) {
-                    Log.d("Test", "hideIcon branding true tooolll");
                     holder.icon.setVisibility(View.VISIBLE);
                     holder.imgAppIcon.setVisibility(View.GONE);
-
-
                     try {
 
                         holder.icon.setImageResource(item.getDrawable());

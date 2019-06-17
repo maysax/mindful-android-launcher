@@ -420,6 +420,28 @@
     <string name="title_clock">Clock</string>
     <string name="title_messages">Messages</string>
     <string name="title_email">Email</string>
+    <string name="title_cloud">Cloud</string>
+    <string name="title_books">Books</string>
+    <string name="title_authentication">Authentication</string>
+    <string name="title_assistant">Assistant</string>
+    <string name="title_additional_message">Additional Message</string>
+    <string name="title_banking">Banking</string>
+    <string name="title_course">Course</string>
+    <string name="title_doc">Doc</string>
+    <string name="title_files">Files</string>
+    <string name="title_flash">Flash</string>
+    <string name="title_health">Health</string>
+    <string name="title_journal">Journal</string>
+    <string name="title_languages">Languages</string>
+    <string name="title_learning">Learning</string>
+    <string name="title_meditation">Meditation</string>
+    <string name="title_microphone">Microphone</string>
+    <string name="title_news">News</string>
+    <string name="title_search">Search</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_voice">Voice</string>
+
+
     <string name="hide_icon_branding">Hide icon branding</string>
     <string name="randomize_junkfood">Randomize flagged-app icons</string>
     <string name="reduce_overuse_screen">Reduce overuse of screen</string>
