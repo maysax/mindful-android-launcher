@@ -79,7 +79,9 @@
 
     <application
         android:name=".app.Launcher3App_"
-        android:allowBackup="true"
+        tools:replace="android:allowBackup"
+        android:allowBackup="false"
+        android:fullBackupOnly="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"

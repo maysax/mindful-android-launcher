@@ -6,11 +6,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -90,16 +92,31 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         } else {
             if (imgPullTab != null) imgPullTab.setVisibility(View.VISIBLE);
         }
+
         if (mWindow != null) {
-            mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-            mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-            // finally change the color
-            mWindow.setStatusBarColor(ContextCompat.getColor(getActivity(), R.color.transparent));
-
+            mWindow.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            mWindow.clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
         }
+
+
+
+        boolean isEnable = PrefSiempo.getInstance(getActivity()).read(PrefSiempo
+                .DEFAULT_BAG_ENABLE, false);
+        if(isEnable){
+            if (mWindow != null) {
+                mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+                mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                TypedValue typedValue = new TypedValue();
+                Resources.Theme theme = context.getTheme();
+                theme.resolveAttribute(R.attr.transparent, typedValue, true);
+                int transparentcolor= typedValue.data;
+                // finally change the color
+                mWindow.setStatusBarColor(transparentcolor);
+                mWindow.setNavigationBarColor(transparentcolor);
+            }
+        }
+
     }
 
     private void initView(View view) {
