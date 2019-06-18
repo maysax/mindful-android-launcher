@@ -330,6 +330,8 @@
     <string name="allow_interrupt_msg">Allow this app to interrupt you</string>
     <string name="info_or_uninstall">Get info or uninstall app</string>
     <string name="stop_interrupt_msg">Stop allowing interruptions</string>
+    <string name="notification">Hide Notificationbar</string>
+    <string name="icon_text_visibility">Hide icon labels</string>
 
     <!--notes strings-->
     <string name="title_noteColor">Note color</string>

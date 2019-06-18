@@ -214,8 +214,8 @@ public class DashboardActivity extends CoreActivity {
         setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
 
         Window w = getWindow(); // in Activity's onCreate() for instance
-        w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-//        w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+ //       w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+       w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 //        w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
 
@@ -321,6 +321,47 @@ public class DashboardActivity extends CoreActivity {
         }
     }
 
+
+    private void notificationVisibility() {
+        /*final View decorView = getWindow().getDecorView();
+        final int uiOptions = decorView.getSystemUiVisibility();
+        final int[] newUiOptions = {uiOptions};
+
+        if (PrefSiempo.getInstance(this).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, false)) {
+            newUiOptions[0] |= View.SYSTEM_UI_FLAG_FULLSCREEN;
+        }else
+        {
+            newUiOptions[0] &= ~View.SYSTEM_UI_FLAG_FULLSCREEN;
+        }
+        decorView.setSystemUiVisibility(newUiOptions[0]);*/
+
+        /*View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);*/
+
+        if (PrefSiempo.getInstance(this).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, false))
+        {
+            View decorView = getWindow().getDecorView();
+            decorView.setFitsSystemWindows(false);
+            decorView.setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        }else
+        {
+            View decorView = getWindow().getDecorView();
+            decorView.setFitsSystemWindows(true);
+        }
+    }
+
     @Override
     protected void onNewIntent(Intent intent) {
         boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
@@ -352,12 +393,12 @@ public class DashboardActivity extends CoreActivity {
         mPager = findViewById(R.id.pager);
         linMain = findViewById(R.id.linMain);
         boolean hasMenuKey = ViewConfiguration.get(this).hasPermanentMenuKey();
-        if (hasNavBar(getResources())) {
-            mPager.setPadding(0, getStatusBarHeight(), 0, getNavigationBarHeight());
-        } else {
-            mPager.setPadding(0, getStatusBarHeight(), 0, 0);
-
-        }
+//        if (hasNavBar(getResources())) {
+//            mPager.setPadding(0, getStatusBarHeight(), 0, getNavigationBarHeight());
+//        } else {
+//            mPager.setPadding(0, getStatusBarHeight(), 0, 0);
+//
+//        }
         mPagerAdapter = new DashboardPagerAdapter(getFragmentManager());
         loadPane();
         mPager.setAdapter(mPagerAdapter);
@@ -663,7 +704,7 @@ public class DashboardActivity extends CoreActivity {
                 @Override
                 public void onClick(View v) {
                     overlayDialog.dismiss();
-
+                    notificationVisibility();
                     try {
                         Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -681,6 +722,8 @@ public class DashboardActivity extends CoreActivity {
                 @Override
                 public void onClick(View v) {
                     overlayDialog.dismiss();
+                    notificationVisibility();
+
                 }
             });
         } catch (Exception e) {

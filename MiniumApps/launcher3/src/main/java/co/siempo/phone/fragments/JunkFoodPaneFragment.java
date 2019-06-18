@@ -60,6 +60,16 @@ public class JunkFoodPaneFragment extends CoreFragment {
 
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(mAdapter != null)
+        {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
     @Override
     public void setMenuVisibility(boolean menuVisible) {
         super.setMenuVisibility(menuVisible);

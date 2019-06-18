@@ -60,6 +60,17 @@ public class FavoritePaneFragment extends CoreFragment {
 
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(mAdapter != null)
+        {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+
     @Subscribe(sticky = true, threadMode = ThreadMode.MainThread)
     public void onEvent(NotifyFavortieView notifyFavortieView) {
         if (notifyFavortieView != null && notifyFavortieView.isNotify()) {

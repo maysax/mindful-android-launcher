@@ -205,12 +205,24 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                     }
                 }
             });
+
+            boolean isEnable = PrefSiempo.getInstance(context).read(PrefSiempo.DEFAULT_ICON_TEXT_VISIBILITY_ENABLE, false);
+            Log.e("isEnable","isEnable 3 "+isEnable);
+            if(isEnable)
+            {
+                holder.txtLayout.setVisibility(View.GONE);
+            }else
+            {
+                holder.txtLayout.setVisibility(View.VISIBLE);
+            }
+
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
     }
+
 
     /**
      * if the user has multiple apps that are installed and relevant to this tool (e.g. tool is browser, and Chrome and Firefox are installed)
@@ -254,6 +266,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
         TextView textDefaultApp;
         RelativeLayout relMenu;
         private LinearLayout linearLayout;
+        LinearLayout txtLayout;
 
         public ViewHolder(View v) {
             super(v);
@@ -265,6 +278,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
             icon = v.findViewById(R.id.icon);
             imgView = v.findViewById(R.id.imgView);
             imgAppIcon = v.findViewById(R.id.imgAppIcon);
+            txtLayout = v.findViewById(R.id.tools_txtLayout);
         }
     }
 }

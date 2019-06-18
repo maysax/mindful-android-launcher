@@ -155,6 +155,84 @@
 
         </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/rel_icon_text_visibility"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/relCustomBackground"
+            android:layout_marginTop="@dimen/dp_8"
+            android:clickable="true"
+            android:paddingLeft="50dp">
+
+            <co.siempo.phone.customviews.RobotoRegularTextView
+                android:id="@+id/txtIconVisibility"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_toLeftOf="@+id/switchIconVisibility"
+                android:lineSpacingExtra="5sp"
+                android:padding="8dp"
+                android:text="@string/icon_text_visibility"
+                android:textColor="?attr/txt_content_title"
+                android:textSize="16sp" />
+
+            <Switch
+                android:id="@+id/switchIconVisibility"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/txtIconVisibility"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="8dp"
+                android:clickable="false" />
+
+
+        </RelativeLayout>
+
+
+
+        <RelativeLayout
+            android:id="@+id/rel_notification_visibility"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rel_icon_text_visibility"
+            android:layout_marginTop="@dimen/dp_8"
+            android:visibility="gone"
+            android:clickable="true"
+            android:paddingLeft="50dp">
+
+            <co.siempo.phone.customviews.RobotoRegularTextView
+                android:id="@+id/txtNotificationVisibility"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_toLeftOf="@+id/switchNotification"
+                android:lineSpacingExtra="5sp"
+                android:padding="8dp"
+                android:text="@string/notification"
+                android:textColor="?attr/txt_content_title"
+                android:textSize="16sp" />
+
+            <Switch
+                android:id="@+id/switchNotification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/txtNotificationVisibility"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="8dp"
+                android:clickable="false" />
+
+
+        </RelativeLayout>
+
+
 
     </RelativeLayout>
 
