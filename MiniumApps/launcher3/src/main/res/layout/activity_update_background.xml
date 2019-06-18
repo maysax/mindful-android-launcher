@@ -16,7 +16,28 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
+        android:adjustViewBounds="true"
         android:layout_below="@id/toolbar"
-        android:scaleType="fitXY" />
+        android:scaleType="fitCenter" />
+
+
+    <uk.co.senab.photoview.PhotoView
+        android:layout_height="match_parent"
+        android:id="@+id/ivFullScreen"
+        android:layout_below="@id/toolbar"
+        android:visibility="visible"
+        android:background="@color/cardview_dark_background"
+        android:layout_width="match_parent"
+        android:scaleType="fitCenter"
+        />
+
+    <!--<com.github.rahatarmanahmed.cpv.CircularProgressView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/progress_view"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:cpv_animAutostart="true"
+        app:cpv_indeterminate="true" />-->
 
 </RelativeLayout>

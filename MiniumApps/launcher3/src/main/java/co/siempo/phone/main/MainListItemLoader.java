@@ -89,7 +89,7 @@ public class MainListItemLoader {
             items.add(new MainListItem(TOOLS_CALENDAR, context.getResources()
                     .getString(R.string.title_calendar), R.drawable.ic_vector_calendar));
             items.add(new MainListItem(TOOLS_WEATHER, context.getResources()
-                    .getString(R.string.title_weather), R.drawable.ic_vector_cloud));
+                    .getString(R.string.title_weather), R.drawable.ic_menu_weather));
             items.add(new MainListItem(TOOLS_NOTES, context.getResources()
                     .getString(R.string.title_note), R.drawable.ic_vector_note,
                     MainListItemType.ACTION));
@@ -215,7 +215,7 @@ public class MainListItemLoader {
                     .getApplicationName().contains(".")) {
                 toolsItems.add(new MainListItem(TOOLS_WEATHER, context
                         .getResources().getString(R.string.title_weather), R
-                        .drawable.ic_vector_cloud));
+                        .drawable.ic_menu_weather));
             }
 
             if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_NOTES)

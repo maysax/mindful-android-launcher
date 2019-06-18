@@ -58,11 +58,15 @@ public class ToolsPaneFragment extends CoreFragment {
         return view;
 
     }
-
     @Override
     public void onResume() {
         super.onResume();
+        if(mAdapter != null)
+        {
+            mAdapter.notifyDataSetChanged();
+        }
     }
+
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MainThread)
     public void onEvent(NotifyToolView notifyToolView) {
@@ -90,6 +94,8 @@ public class ToolsPaneFragment extends CoreFragment {
             recyclerView.setAdapter(mAdapter);
         }
     }
+
+
 
     @Override
     public void onDetach() {
