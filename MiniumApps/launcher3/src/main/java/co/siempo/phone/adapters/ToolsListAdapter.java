@@ -635,17 +635,16 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                     holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
                     holder.checkbox.setChecked(true);
                     holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
-                            (context, R.drawable.ic_menu_cloud_white));
+                            (context, R.drawable.ic_menu_white_new_cloud));
                     holder.viewDivider.setBackgroundColor(ContextCompat.getColor
                             (context, R.color.white));
                     holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
                 } else {
 
-                    Log.d("hardikkamothi","visible nathi ..");
                     holder.txtAssignApp.setVisibility(View.INVISIBLE);
                     holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
                     holder.checkbox.setChecked(false);
-                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_vector_cloud));
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_vector_new_cloud));
                     holder.viewDivider.setBackgroundColor(ContextCompat.getColor
                             (context, dividerColor));
                     holder.txtAppName.setTextColor(ContextCompat.getColor(context, defaultTextColor));
@@ -659,7 +658,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                     holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
                     holder.checkbox.setChecked(true);
                     holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
-                            (context, R.drawable.ic_menu_books_white));
+                            (context, R.drawable.ic_menu_white_book));
                     holder.viewDivider.setBackgroundColor(ContextCompat.getColor
                             (context, R.color.white));
                     holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
@@ -667,7 +666,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                     holder.txtAssignApp.setVisibility(View.INVISIBLE);
                     holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
                     holder.checkbox.setChecked(false);
-                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_vector_books));
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_vector_book));
                     holder.viewDivider.setBackgroundColor(ContextCompat.getColor
                             (context, dividerColor));
                     holder.txtAppName.setTextColor(ContextCompat.getColor(context, defaultTextColor));
@@ -773,7 +772,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                     holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
                     holder.checkbox.setChecked(true);
                     holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
-                            (context, R.drawable.ic_menu_cource_white));
+                            (context, R.drawable.ic_menu_course_white));
                     holder.viewDivider.setBackgroundColor(ContextCompat.getColor
                             (context, R.color.white));
                     holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));

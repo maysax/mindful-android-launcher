@@ -169,7 +169,7 @@ public class MainListItem implements Serializable {
         return drawable;
     }
 
-    public void setDrawable(int drawable) {
+    {
         this.drawable = drawable;
     }
 //

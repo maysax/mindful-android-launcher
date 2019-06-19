@@ -80,9 +80,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                     holder.icon.setVisibility(View.VISIBLE);
                     holder.imgAppIcon.setVisibility(View.GONE);
                     try {
-
                         holder.icon.setImageResource(item.getDrawable());
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
