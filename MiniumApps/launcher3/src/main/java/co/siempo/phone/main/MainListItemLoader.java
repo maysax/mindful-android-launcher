@@ -80,7 +80,6 @@ public class MainListItemLoader {
 
     public void loadItemsDefaultApp(List<MainListItem> items) {
         if (context != null) {
-            Log.d("hardikkamothi","load default items..");
             items.add(new MainListItem(TOOLS_MAP, context.getResources()
                     .getString(R.string.title_map), R.drawable.ic_vector_map));
             items.add(new MainListItem(TOOLS_TRANSPORT, context.getResources
@@ -126,9 +125,9 @@ public class MainListItemLoader {
                     .getString(R.string.title_fitness), R.drawable
                     .ic_vector_fitness));
             items.add(new MainListItem(TOOLS_CLOUD, context.getResources()
-                    .getString(R.string.title_cloud), R.drawable.ic_vector_cloud));
+                    .getString(R.string.title_cloud), R.drawable.ic_vector_new_cloud));
             items.add(new MainListItem(TOOLS_BOOKS, context.getResources()
-                    .getString(R.string.title_books), R.drawable.ic_vector_books));
+                    .getString(R.string.title_books), R.drawable.ic_vector_book));
             items.add(new MainListItem(TOOLS_AUTHENTICATION, context.getResources()
                     .getString(R.string.title_authentication), R.drawable.ic_vector_authenticator));
             items.add(new MainListItem(TOOLS_ASSISTANT, context.getResources()
@@ -138,7 +137,7 @@ public class MainListItemLoader {
             items.add(new MainListItem(TOOLS_BANKING, context.getResources()
                     .getString(R.string.title_banking), R.drawable.ic_vector_banking));
             items.add(new MainListItem(TOOLS_COURCE, context.getResources()
-                    .getString(R.string.title_course), R.drawable.ic_vector_cource));
+                    .getString(R.string.title_course), R.drawable.ic_vector_course));
             items.add(new MainListItem(TOOLS_DOC, context.getResources()
                     .getString(R.string.title_doc), R.drawable.ic_vector_doc));
             items.add(new MainListItem(TOOLS_FILES, context.getResources()
@@ -329,7 +328,7 @@ public class MainListItemLoader {
                     .getApplicationName()) && toolsSettings.get(TOOLS_CLOUD)
                     .getApplicationName().contains(".")) {
                 toolsItems.add(new MainListItem(TOOLS_CLOUD, context
-                        .getResources().getString(R.string.title_cloud), R.drawable.ic_vector_cloud));
+                        .getResources().getString(R.string.title_cloud), R.drawable.ic_vector_new_cloud));
             }
 
 
@@ -337,7 +336,7 @@ public class MainListItemLoader {
                     .getApplicationName()) && toolsSettings.get(TOOLS_BOOKS)
                     .getApplicationName().contains(".")) {
                 toolsItems.add(new MainListItem(TOOLS_BOOKS, context
-                        .getResources().getString(R.string.title_books), R.drawable.ic_vector_books));
+                        .getResources().getString(R.string.title_books), R.drawable.ic_vector_book));
             }
 
 
@@ -382,7 +381,7 @@ public class MainListItemLoader {
                     .getApplicationName()) && toolsSettings.get(TOOLS_COURCE)
                     .getApplicationName().contains(".")) {
                 toolsItems.add(new MainListItem(TOOLS_COURCE, context
-                        .getResources().getString(R.string.title_course), R.drawable.ic_vector_cource));
+                        .getResources().getString(R.string.title_course), R.drawable.ic_vector_course));
             }
 
 
