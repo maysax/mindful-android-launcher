@@ -170,6 +170,13 @@ public class PaneFragment extends CoreFragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_pane, container, false);
         linMain = rootView.findViewById(R.id.linMain);
+        linMain.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                ((CoreActivity)getActivity()).gestureDetector.onTouchEvent(motionEvent);
+                return false;
+            }
+        });
         Log.d("Test", "P1");
         context = (CoreActivity) getActivity();
         getColorOfStatusBar();

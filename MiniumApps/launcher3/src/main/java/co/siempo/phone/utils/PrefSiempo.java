@@ -121,6 +121,11 @@ public class PrefSiempo {
 
     public static final String DEFAULT_NOTIFICATION_ENABLE = "default_notification";
 
+
+    /*This preferences are for double tap coontrols*/
+    public static final String IS_SLEEP_ENABLE = "isSleepEnable";
+    public static final String IS_DND_ENABLE = "isDnDEnable";
+    
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
 

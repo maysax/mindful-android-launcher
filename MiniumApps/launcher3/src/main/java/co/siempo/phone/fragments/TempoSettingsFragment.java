@@ -29,6 +29,8 @@ public class TempoSettingsFragment extends CoreFragment {
     @ViewById
     RelativeLayout relNotification;
     @ViewById
+    RelativeLayout relDoubleTap;
+    @ViewById
     RelativeLayout relAccount;
     @ViewById
     RelativeLayout relAlphaSettings;
@@ -80,6 +82,11 @@ public class TempoSettingsFragment extends CoreFragment {
     @Click
     void relNotification() {
         ((CoreActivity) getActivity()).loadChildFragment(TempoNotificationFragment_.builder().build(), R.id.tempoView);
+    }
+
+    @Click
+    void relDoubleTap() {
+        ((CoreActivity) getActivity()).loadChildFragment(DoubleTapControlsFragment_.builder().build(), R.id.tempoView);
     }
 
     @Click

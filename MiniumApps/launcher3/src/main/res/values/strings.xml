@@ -545,6 +545,14 @@
     <string name="contribute_to_siempo">Contribute to Siempo</string>
     <string name="thank_you_for_">Thank you for being part of our journey! \nAs a beta user, Siempo will be free for you for life, but you are always welcome to contribute to our mission.</string>
 
+    <string name="string_doubletap_title">Double tap controls</string>
+    <string name="sleep">Sleep</string>
+    <string name="message_sleep_mode">When Sleep mode is on, double tapping on any screen will make your device to go in sleep mode.</string>
+    <string name="message_dnd_mode">When do not disturb is on, double tapping on any screen will make your device to go in DND mode.</string>
+    <string name="device_admin_not_enabled">Siempo is not marked as Device Administrator. Please check Security settings and enable it.</string>
+    <string name="admin_receiver_status_enabled">Siempo is added as Device Administrator</string>
+    <string name="admin_receiver_status_disabled">Siempo is removed from Device Administrators list</string>
+    <string name="device_admin_description">Turns the screen off and locks your device with a double tap.</string>
 
     <string-array name="in_app_items_subscription">
         <item>sub.monthly.selector.dollars.01</item>

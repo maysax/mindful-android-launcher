@@ -5,7 +5,9 @@ import android.app.DownloadManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.admin.DevicePolicyManager;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -30,12 +32,15 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
 
@@ -52,6 +57,7 @@ import co.siempo.phone.event.JunkAppOpenEvent;
 import co.siempo.phone.helper.Validate;
 import co.siempo.phone.interfaces.NFCInterface;
 import co.siempo.phone.log.Tracer;
+import co.siempo.phone.receivers.ScreenOffAdminReceiver;
 import co.siempo.phone.service.ReminderService;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
@@ -66,7 +72,8 @@ import de.greenrobot.event.Subscribe;
  */
 
 @EActivity
-public abstract class CoreActivity extends AppCompatActivity implements NFCInterface {
+public abstract class CoreActivity extends AppCompatActivity implements NFCInterface, GestureDetector.OnGestureListener,
+        GestureDetector.OnDoubleTapListener {
 
     public static File localPath, backupPath;
     public int currentIndex = 0;
@@ -94,6 +101,9 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     private String state = "";
     private String TAG = "CoreActivity";
     private DownloadReceiver mDownloadReceiver;
+
+    public GestureDetector gestureDetector;
+    private NotificationManager mNotificationManager;
 
     // Static method to return File at localPath
     public static File getLocalPath() {
@@ -154,6 +164,11 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         registerReceiver(mDownloadReceiver, downloadIntent);
 
         startAlarm();
+
+        // set gesture detector
+        gestureDetector = new GestureDetector(this, this);
+        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        gestureDetector.setOnDoubleTapListener(this);
     }
     private void startAlarm() {
          SharedPreferences preferences;
@@ -598,4 +613,124 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             cur.close();
         }
     }
+
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent motionEvent) {
+        return true;
+    }
+
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent motionEvent) {
+        //Toast.makeText(getApplicationContext(), "DOUBLE TAP Event",Toast.LENGTH_SHORT).show();
+        if(motionEvent.getAction()==1)
+        {
+            if(PrefSiempo.getInstance(CoreActivity.this).read(PrefSiempo.IS_DND_ENABLE, false)) {
+                changeInterruptionFiler(NotificationManager.INTERRUPTION_FILTER_NONE);
+            }
+
+            if(PrefSiempo.getInstance(CoreActivity.this).read(PrefSiempo.IS_SLEEP_ENABLE, false)) {
+                sleep();
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+        this.gestureDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
+    }
+
+    @Override
+    public void onShowPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onDown(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+        return false;
+    }
+
+
+    public boolean checkNotificationAccessGranted(boolean onlyAccessCheck) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { // If api level minimum 23
+            // If notification policy access granted for this package
+            if (!mNotificationManager.isNotificationPolicyAccessGranted()) {
+                if (!onlyAccessCheck) {
+                    Intent intent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                    startActivityForResult(intent, 111);
+                }
+                return false;
+            }
+
+            return true;
+
+        }
+        return false;
+    }
+
+    public void changeInterruptionFiler(int interruptionFilter) {
+        if(checkNotificationAccessGranted(true)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                mNotificationManager.setInterruptionFilter(interruptionFilter);
+            }
+        }
+    }
+
+    private boolean checkDeviceAdminAccessGranted(boolean onlyAccessCheck) {
+        DevicePolicyManager policyManager = (DevicePolicyManager) CoreActivity.this
+                .getSystemService(Context.DEVICE_POLICY_SERVICE);
+        ComponentName adminReceiver = new ComponentName(CoreActivity.this,
+                ScreenOffAdminReceiver.class);
+        boolean admin = policyManager.isAdminActive(adminReceiver);
+        if(onlyAccessCheck) {
+            return admin;
+        } else {
+            if(!admin) {
+                // ask for device administration rights
+                Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+                ComponentName mDeviceAdmin = new ComponentName(CoreActivity.this, ScreenOffAdminReceiver.class);
+                intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mDeviceAdmin);
+                intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, R.string.device_admin_description);
+                startActivityForResult(intent, 112);
+            }
+            return false;
+        }
+
+    }
+
+    private void sleep() {
+        DevicePolicyManager policyManager = (DevicePolicyManager) CoreActivity.this
+                .getSystemService(Context.DEVICE_POLICY_SERVICE);
+
+        if(checkDeviceAdminAccessGranted(true)) {
+            policyManager.lockNow();
+        }
+    }
+
 }
