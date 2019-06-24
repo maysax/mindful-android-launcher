@@ -421,6 +421,9 @@ public class PaneFragment extends CoreFragment {
                 }, 800);
                 //delay
             }
+            if(mAdapter !=null){
+                mAdapter.notifyDataSetChanged();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

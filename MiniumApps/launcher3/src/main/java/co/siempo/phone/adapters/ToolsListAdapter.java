@@ -421,7 +421,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                     holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
                     holder.checkbox.setChecked(true);
                     holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
-                            (context, R.drawable.ic_white_todo));
+                            (context, R.drawable.ic_menu_todo_white));
                     holder.viewDivider.setBackgroundColor(ContextCompat.getColor
                             (context, R.color.white));
                     holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
@@ -780,7 +780,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                     holder.txtAssignApp.setVisibility(View.INVISIBLE);
                     holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
                     holder.checkbox.setChecked(false);
-                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_course));
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_vector_course));
                     holder.viewDivider.setBackgroundColor(ContextCompat.getColor
                             (context, dividerColor));
                     holder.txtAppName.setTextColor(ContextCompat.getColor(context, defaultTextColor));
