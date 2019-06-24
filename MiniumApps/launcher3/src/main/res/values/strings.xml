@@ -330,6 +330,8 @@
     <string name="allow_interrupt_msg">Allow this app to interrupt you</string>
     <string name="info_or_uninstall">Get info or uninstall app</string>
     <string name="stop_interrupt_msg">Stop allowing interruptions</string>
+    <string name="notification">Hide Notificationbar</string>
+    <string name="icon_text_visibility">Hide icon labels</string>
 
     <!--notes strings-->
     <string name="title_noteColor">Note color</string>
@@ -420,6 +422,28 @@
     <string name="title_clock">Clock</string>
     <string name="title_messages">Messages</string>
     <string name="title_email">Email</string>
+    <string name="title_cloud">Cloud</string>
+    <string name="title_books">Books</string>
+    <string name="title_authentication">Auth</string>
+    <string name="title_assistant">Assistant</string>
+    <string name="title_additional_message">Chats</string>
+    <string name="title_banking">Banking</string>
+    <string name="title_course">Course</string>
+    <string name="title_doc">Docs</string>
+    <string name="title_files">Files</string>
+    <string name="title_flash">Light</string>
+    <string name="title_health">Health</string>
+    <string name="title_journal">Journal</string>
+    <string name="title_languages">Languages</string>
+    <string name="title_learning">Learning</string>
+    <string name="title_meditation">Meditation</string>
+    <string name="title_microphone">Microphone</string>
+    <string name="title_news">News</string>
+    <string name="title_search">Search</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_voice">Voice</string>
+
+
     <string name="hide_icon_branding">Hide icon branding</string>
     <string name="randomize_junkfood">Randomize flagged-app icons</string>
     <string name="reduce_overuse_screen">Reduce overuse of screen</string>
@@ -521,6 +545,14 @@
     <string name="contribute_to_siempo">Contribute to Siempo</string>
     <string name="thank_you_for_">Thank you for being part of our journey! \nAs a beta user, Siempo will be free for you for life, but you are always welcome to contribute to our mission.</string>
 
+    <string name="string_doubletap_title">Double tap controls</string>
+    <string name="sleep">Sleep</string>
+    <string name="message_sleep_mode">When Sleep mode is on, double tapping on any screen will make your device to go in sleep mode.</string>
+    <string name="message_dnd_mode">When do not disturb is on, double tapping on any screen will make your device to go in DND mode.</string>
+    <string name="device_admin_not_enabled">Siempo is not marked as Device Administrator. Please check Security settings and enable it.</string>
+    <string name="admin_receiver_status_enabled">Siempo is added as Device Administrator</string>
+    <string name="admin_receiver_status_disabled">Siempo is removed from Device Administrators list</string>
+    <string name="device_admin_description">Turns the screen off and locks your device with a double tap.</string>
 
     <string-array name="in_app_items_subscription">
         <item>sub.monthly.selector.dollars.01</item>

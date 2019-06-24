@@ -120,7 +120,6 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                         holder.imgAppIcon.setColorFilter(ContextCompat.getColor(context, R.color
                                 .white), android.graphics.PorterDuff.Mode.SRC_IN);
                     } else {
-
                         holder.imgAppIcon.setColorFilter(ContextCompat.getColor
                                 (context, defaultTextColor), android.graphics.PorterDuff.Mode
                                 .SRC_IN);
@@ -137,7 +136,6 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                             mainListItem.setVisable(false);
 //                            map.get(mainListItem.getId()).setVisible(false);
                             bindView(mainListItem, holder, false);
-                            Log.d("Rajesh", "Un Check id::-" + mainListItem.getId());
 //                            boolean isItemAlreadyContainsInArray = (
 //                                    (ToolSelectionActivity) context)
 //                                    .checkItemContains(mainListItem.getId());
@@ -287,7 +285,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                     holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
                     holder.checkbox.setChecked(false);
                     holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
-                            (context, R.drawable.ic_vector_cloud));
+                            (context, R.drawable.ic_menu_weather));
                     holder.viewDivider.setBackgroundColor(ContextCompat.getColor
                             (context, dividerColor));
                     holder.txtAppName.setTextColor(ContextCompat.getColor(context, defaultTextColor));
@@ -423,7 +421,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                     holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
                     holder.checkbox.setChecked(true);
                     holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
-                            (context, R.drawable.ic_white_todo));
+                            (context, R.drawable.ic_menu_todo_white));
                     holder.viewDivider.setBackgroundColor(ContextCompat.getColor
                             (context, R.color.white));
                     holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
@@ -551,7 +549,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                     holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
                     holder.checkbox.setChecked(true);
                     holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
-                            (context, R.drawable.ic_vector_music_white));
+                            (context, R.drawable.ic_menu_music_white));
                     holder.viewDivider.setBackgroundColor(ContextCompat.getColor
                             (context, R.color.white));
                     holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
@@ -572,7 +570,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                     holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
                     holder.checkbox.setChecked(true);
                     holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
-                            (context, R.drawable.ic_vector_podcast_white));
+                            (context, R.drawable.ic_menu_podcast_white));
                     holder.viewDivider.setBackgroundColor(ContextCompat.getColor
                             (context, R.color.white));
                     holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
@@ -593,7 +591,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                     holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
                     holder.checkbox.setChecked(true);
                     holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
-                            (context, R.drawable.ic_vector_food_white));
+                            (context, R.drawable.ic_menu_food_white));
                     holder.viewDivider.setBackgroundColor(ContextCompat.getColor
                             (context, R.color.white));
                     holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
@@ -614,7 +612,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                     holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
                     holder.checkbox.setChecked(true);
                     holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
-                            (context, R.drawable.ic_vector_fitness_white));
+                            (context, R.drawable.ic_menu_fitness_white));
                     holder.viewDivider.setBackgroundColor(ContextCompat.getColor
                             (context, R.color.white));
                     holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
@@ -624,6 +622,469 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                     holder.checkbox.setChecked(false);
                     holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
                             (context, R.drawable.ic_vector_fitness));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, dividerColor));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, defaultTextColor));
+                }
+                break;
+
+            case 21:
+                if (isVisible) {
+                    Log.d("hardikkamothi","visible che ..");
+                    holder.txtAssignApp.setVisibility(View.VISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+                    holder.checkbox.setChecked(true);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
+                            (context, R.drawable.ic_menu_white_new_cloud));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, R.color.white));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
+                } else {
+
+                    holder.txtAssignApp.setVisibility(View.INVISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+                    holder.checkbox.setChecked(false);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_vector_new_cloud));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, dividerColor));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, defaultTextColor));
+                }
+                break;
+
+
+            case 22:
+                if (isVisible) {
+                    holder.txtAssignApp.setVisibility(View.VISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+                    holder.checkbox.setChecked(true);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
+                            (context, R.drawable.ic_menu_white_book));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, R.color.white));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
+                } else {
+                    holder.txtAssignApp.setVisibility(View.INVISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+                    holder.checkbox.setChecked(false);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_vector_book));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, dividerColor));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, defaultTextColor));
+                }
+                break;
+
+
+            case 23:
+                if (isVisible) {
+                    holder.txtAssignApp.setVisibility(View.VISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+                    holder.checkbox.setChecked(true);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
+                            (context, R.drawable.ic_menu_authenticator_white));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, R.color.white));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
+                } else {
+                    holder.txtAssignApp.setVisibility(View.INVISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+                    holder.checkbox.setChecked(false);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_vector_authenticator));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, dividerColor));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, defaultTextColor));
+                }
+                break;
+
+
+            case 24:
+                if (isVisible) {
+                    holder.txtAssignApp.setVisibility(View.VISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+                    holder.checkbox.setChecked(true);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
+                            (context, R.drawable.ic_menu_assistant_white));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, R.color.white));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
+                } else {
+                    holder.txtAssignApp.setVisibility(View.INVISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+                    holder.checkbox.setChecked(false);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_vector_assistant));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, dividerColor));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, defaultTextColor));
+                }
+                break;
+
+
+
+
+            case 25:
+                if (isVisible) {
+                    holder.txtAssignApp.setVisibility(View.VISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+                    holder.checkbox.setChecked(true);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
+                            (context, R.drawable.ic_menu_additionalmessage_white));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, R.color.white));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
+                } else {
+                    holder.txtAssignApp.setVisibility(View.INVISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+                    holder.checkbox.setChecked(false);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_vector_additionalmessage));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, dividerColor));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, defaultTextColor));
+                }
+                break;
+
+
+
+
+            case 26:
+                if (isVisible) {
+                    holder.txtAssignApp.setVisibility(View.VISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+                    holder.checkbox.setChecked(true);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
+                            (context, R.drawable.ic_menu_banking_white));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, R.color.white));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
+                } else {
+                    holder.txtAssignApp.setVisibility(View.INVISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+                    holder.checkbox.setChecked(false);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_vector_banking));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, dividerColor));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, defaultTextColor));
+                }
+                break;
+
+
+            case 27:
+                if (isVisible) {
+                    holder.txtAssignApp.setVisibility(View.VISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+                    holder.checkbox.setChecked(true);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
+                            (context, R.drawable.ic_menu_course_white));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, R.color.white));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
+                } else {
+                    holder.txtAssignApp.setVisibility(View.INVISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+                    holder.checkbox.setChecked(false);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_vector_course));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, dividerColor));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, defaultTextColor));
+                }
+                break;
+
+
+
+            case 28:
+                if (isVisible) {
+                    holder.txtAssignApp.setVisibility(View.VISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+                    holder.checkbox.setChecked(true);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
+                            (context, R.drawable.ic_menu_doc_white));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, R.color.white));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
+                } else {
+                    holder.txtAssignApp.setVisibility(View.INVISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+                    holder.checkbox.setChecked(false);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_vector_doc));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, dividerColor));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, defaultTextColor));
+                }
+                break;
+
+
+
+
+            case 29:
+                if (isVisible) {
+                    holder.txtAssignApp.setVisibility(View.VISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+                    holder.checkbox.setChecked(true);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
+                            (context, R.drawable.ic_menu_files_white));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, R.color.white));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
+                } else {
+                    holder.txtAssignApp.setVisibility(View.INVISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+                    holder.checkbox.setChecked(false);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_vector_files));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, dividerColor));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, defaultTextColor));
+                }
+                break;
+
+
+
+
+
+            case 30:
+                if (isVisible) {
+                    holder.txtAssignApp.setVisibility(View.VISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+                    holder.checkbox.setChecked(true);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
+                            (context, R.drawable.ic_menu_flash_white));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, R.color.white));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
+                } else {
+                    holder.txtAssignApp.setVisibility(View.INVISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+                    holder.checkbox.setChecked(false);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_vector_flash));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, dividerColor));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, defaultTextColor));
+                }
+                break;
+
+
+
+
+            case 31:
+                if (isVisible) {
+                    holder.txtAssignApp.setVisibility(View.VISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+                    holder.checkbox.setChecked(true);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
+                            (context, R.drawable.ic_menu_health_white));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, R.color.white));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
+                } else {
+                    holder.txtAssignApp.setVisibility(View.INVISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+                    holder.checkbox.setChecked(false);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_vector_health));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, dividerColor));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, defaultTextColor));
+                }
+                break;
+
+
+
+            case 32:
+                if (isVisible) {
+                    holder.txtAssignApp.setVisibility(View.VISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+                    holder.checkbox.setChecked(true);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
+                            (context, R.drawable.ic_menu_journal_white));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, R.color.white));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
+                } else {
+                    holder.txtAssignApp.setVisibility(View.INVISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+                    holder.checkbox.setChecked(false);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_vector_journal));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, dividerColor));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, defaultTextColor));
+                }
+                break;
+
+
+
+            case 33:
+                if (isVisible) {
+                    holder.txtAssignApp.setVisibility(View.VISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+                    holder.checkbox.setChecked(true);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
+                            (context, R.drawable.ic_menu_language_white));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, R.color.white));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
+                } else {
+                    holder.txtAssignApp.setVisibility(View.INVISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+                    holder.checkbox.setChecked(false);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_vector_language));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, dividerColor));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, defaultTextColor));
+                }
+                break;
+
+
+
+
+            case 34:
+                if (isVisible) {
+                    holder.txtAssignApp.setVisibility(View.VISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+                    holder.checkbox.setChecked(true);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
+                            (context, R.drawable.ic_menu_learning_white));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, R.color.white));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
+                } else {
+                    holder.txtAssignApp.setVisibility(View.INVISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+                    holder.checkbox.setChecked(false);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_vector_learning));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, dividerColor));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, defaultTextColor));
+                }
+                break;
+
+
+
+
+            case 35:
+                if (isVisible) {
+                    holder.txtAssignApp.setVisibility(View.VISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+                    holder.checkbox.setChecked(true);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
+                            (context, R.drawable.ic_menu_meditation_white));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, R.color.white));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
+                } else {
+                    holder.txtAssignApp.setVisibility(View.INVISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+                    holder.checkbox.setChecked(false);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_vector_meditation));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, dividerColor));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, defaultTextColor));
+                }
+                break;
+
+
+
+            case 36:
+                if (isVisible) {
+                    holder.txtAssignApp.setVisibility(View.VISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+                    holder.checkbox.setChecked(true);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
+                            (context, R.drawable.ic_menu_microphone_white));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, R.color.white));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
+                } else {
+                    holder.txtAssignApp.setVisibility(View.INVISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+                    holder.checkbox.setChecked(false);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_vector_microphone));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, dividerColor));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, defaultTextColor));
+                }
+                break;
+
+
+            case 37:
+                if (isVisible) {
+                    holder.txtAssignApp.setVisibility(View.VISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+                    holder.checkbox.setChecked(true);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
+                            (context, R.drawable.ic_menu_news_white));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, R.color.white));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
+                } else {
+                    holder.txtAssignApp.setVisibility(View.INVISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+                    holder.checkbox.setChecked(false);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_vector_news));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, dividerColor));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, defaultTextColor));
+                }
+                break;
+
+
+
+
+            case 38:
+                if (isVisible) {
+                    holder.txtAssignApp.setVisibility(View.VISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+                    holder.checkbox.setChecked(true);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
+                            (context, R.drawable.ic_menu_search_white));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, R.color.white));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
+                } else {
+                    holder.txtAssignApp.setVisibility(View.INVISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+                    holder.checkbox.setChecked(false);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_vector_search));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, dividerColor));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, defaultTextColor));
+                }
+                break;
+
+
+
+            case 39:
+                if (isVisible) {
+                    holder.txtAssignApp.setVisibility(View.VISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+                    holder.checkbox.setChecked(true);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
+                            (context, R.drawable.ic_menu_settings_white));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, R.color.white));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
+                } else {
+                    holder.txtAssignApp.setVisibility(View.INVISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+                    holder.checkbox.setChecked(false);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_vector_settings));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, dividerColor));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, defaultTextColor));
+                }
+                break;
+
+
+            case 40:
+                if (isVisible) {
+                    holder.txtAssignApp.setVisibility(View.VISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+                    holder.checkbox.setChecked(true);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable
+                            (context, R.drawable.ic_menu_voice_white));
+                    holder.viewDivider.setBackgroundColor(ContextCompat.getColor
+                            (context, R.color.white));
+                    holder.txtAppName.setTextColor(ContextCompat.getColor(context, R.color.white));
+                } else {
+                    holder.txtAssignApp.setVisibility(View.INVISIBLE);
+                    holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+                    holder.checkbox.setChecked(false);
+                    holder.imgAppIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_vector_voice));
                     holder.viewDivider.setBackgroundColor(ContextCompat.getColor
                             (context, dividerColor));
                     holder.txtAppName.setTextColor(ContextCompat.getColor(context, defaultTextColor));

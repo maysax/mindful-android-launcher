@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,6 +51,27 @@ public class MainListItemLoader {
     public static final int TOOLS_PODCAST = 18;
     public static final int TOOLS_FOOD = 19;
     public static final int TOOLS_FITNESS = 20;
+
+    public static final int TOOLS_CLOUD = 21;
+    public static final int TOOLS_BOOKS = 22;
+    public static final int TOOLS_AUTHENTICATION = 23;
+    public static final int TOOLS_ASSISTANT = 24;
+    public static final int TOOLS_ADDITIONAL_MESSAGE = 25;
+    public static final int TOOLS_BANKING = 26;
+    public static final int TOOLS_COURCE = 27;
+    public static final int TOOLS_DOC = 28;
+    public static final int TOOLS_FILES = 29;
+    public static final int TOOLS_FLASH = 30;
+    public static final int TOOLS_HEALTH = 31;
+    public static final int TOOLS_JOURNAL = 32;
+    public static final int TOOLS_LANGUAGES = 33;
+    public static final int TOOLS_LEARNING = 34;
+    public static final int TOOLS_MEDITATION = 35;
+    public static final int TOOLS_MICROPHONE = 36;
+    public static final int TOOLS_NEWS = 37;
+    public static final int TOOLS_SEARCH = 38;
+    public static final int TOOLS_SETTINGS = 39;
+    public static final int TOOLS_VOICE = 40;
     private Context context;
 
     public MainListItemLoader(Context context) {
@@ -66,7 +88,7 @@ public class MainListItemLoader {
             items.add(new MainListItem(TOOLS_CALENDAR, context.getResources()
                     .getString(R.string.title_calendar), R.drawable.ic_vector_calendar));
             items.add(new MainListItem(TOOLS_WEATHER, context.getResources()
-                    .getString(R.string.title_weather), R.drawable.ic_vector_cloud));
+                    .getString(R.string.title_weather), R.drawable.ic_menu_weather));
             items.add(new MainListItem(TOOLS_NOTES, context.getResources()
                     .getString(R.string.title_note), R.drawable.ic_vector_note,
                     MainListItemType.ACTION));
@@ -102,6 +124,46 @@ public class MainListItemLoader {
             items.add(new MainListItem(TOOLS_FITNESS, context.getResources()
                     .getString(R.string.title_fitness), R.drawable
                     .ic_vector_fitness));
+            items.add(new MainListItem(TOOLS_CLOUD, context.getResources()
+                    .getString(R.string.title_cloud), R.drawable.ic_vector_new_cloud));
+            items.add(new MainListItem(TOOLS_BOOKS, context.getResources()
+                    .getString(R.string.title_books), R.drawable.ic_vector_book));
+            items.add(new MainListItem(TOOLS_AUTHENTICATION, context.getResources()
+                    .getString(R.string.title_authentication), R.drawable.ic_vector_authenticator));
+            items.add(new MainListItem(TOOLS_ASSISTANT, context.getResources()
+                    .getString(R.string.title_assistant), R.drawable.ic_vector_assistant));
+            items.add(new MainListItem(TOOLS_ADDITIONAL_MESSAGE, context.getResources()
+                    .getString(R.string.title_additional_message), R.drawable.ic_vector_additionalmessage));
+            items.add(new MainListItem(TOOLS_BANKING, context.getResources()
+                    .getString(R.string.title_banking), R.drawable.ic_vector_banking));
+            items.add(new MainListItem(TOOLS_COURCE, context.getResources()
+                    .getString(R.string.title_course), R.drawable.ic_vector_course));
+            items.add(new MainListItem(TOOLS_DOC, context.getResources()
+                    .getString(R.string.title_doc), R.drawable.ic_vector_doc));
+            items.add(new MainListItem(TOOLS_FILES, context.getResources()
+                    .getString(R.string.title_files), R.drawable.ic_vector_files));
+            items.add(new MainListItem(TOOLS_FLASH, context.getResources()
+                    .getString(R.string.title_flash), R.drawable.ic_vector_flash));
+            items.add(new MainListItem(TOOLS_HEALTH, context.getResources()
+                    .getString(R.string.title_health), R.drawable.ic_vector_health));
+            items.add(new MainListItem(TOOLS_JOURNAL, context.getResources()
+                    .getString(R.string.title_journal), R.drawable.ic_vector_journal));
+            items.add(new MainListItem(TOOLS_LANGUAGES, context.getResources()
+                    .getString(R.string.title_languages), R.drawable.ic_vector_language));
+            items.add(new MainListItem(TOOLS_LEARNING, context.getResources()
+                    .getString(R.string.title_learning), R.drawable.ic_vector_learning));
+            items.add(new MainListItem(TOOLS_MEDITATION, context.getResources()
+                    .getString(R.string.title_meditation), R.drawable.ic_vector_meditation));
+            items.add(new MainListItem(TOOLS_MICROPHONE, context.getResources()
+                    .getString(R.string.title_microphone), R.drawable.ic_vector_microphone));
+            items.add(new MainListItem(TOOLS_NEWS, context.getResources()
+                    .getString(R.string.title_news), R.drawable.ic_vector_news));
+            items.add(new MainListItem(TOOLS_SEARCH, context.getResources()
+                    .getString(R.string.title_search), R.drawable.ic_vector_search));
+            items.add(new MainListItem(TOOLS_SETTINGS, context.getResources()
+                    .getString(R.string.title_settings), R.drawable.ic_vector_settings));
+            items.add(new MainListItem(TOOLS_VOICE, context.getResources()
+                    .getString(R.string.title_voice), R.drawable.ic_vector_voice));
             items.add(new MainListItem(TOOLS_CALL, context.getResources()
                     .getString(R.string.title_call), R.drawable.ic_vector_call,
                     MainListItemType.ACTION));
@@ -152,7 +214,7 @@ public class MainListItemLoader {
                     .getApplicationName().contains(".")) {
                 toolsItems.add(new MainListItem(TOOLS_WEATHER, context
                         .getResources().getString(R.string.title_weather), R
-                        .drawable.ic_vector_cloud));
+                        .drawable.ic_menu_weather));
             }
 
             if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_NOTES)
@@ -261,6 +323,211 @@ public class MainListItemLoader {
                 toolsItems.add(new MainListItem(TOOLS_EMAIL, context
                         .getResources().getString(R.string.title_email), R.drawable.ic_vector_email));
             }
+
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_CLOUD)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_CLOUD)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_CLOUD, context
+                        .getResources().getString(R.string.title_cloud), R.drawable.ic_vector_new_cloud));
+            }
+
+
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_BOOKS)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_BOOKS)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_BOOKS, context
+                        .getResources().getString(R.string.title_books), R.drawable.ic_vector_book));
+            }
+
+
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_AUTHENTICATION)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_AUTHENTICATION)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_AUTHENTICATION, context
+                        .getResources().getString(R.string.title_authentication), R.drawable.ic_vector_authenticator));
+            }
+
+
+
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_ASSISTANT)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_ASSISTANT)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_ASSISTANT, context
+                        .getResources().getString(R.string.title_assistant), R.drawable.ic_vector_assistant));
+            }
+
+
+
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_ADDITIONAL_MESSAGE)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_ADDITIONAL_MESSAGE)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_ADDITIONAL_MESSAGE, context
+                        .getResources().getString(R.string.title_additional_message), R.drawable.ic_vector_additionalmessage));
+            }
+
+
+
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_BANKING)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_BANKING)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_BANKING, context
+                        .getResources().getString(R.string.title_banking), R.drawable.ic_vector_banking));
+            }
+
+
+
+
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_COURCE)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_COURCE)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_COURCE, context
+                        .getResources().getString(R.string.title_course), R.drawable.ic_vector_course));
+            }
+
+
+
+
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_DOC)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_DOC)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_DOC, context
+                        .getResources().getString(R.string.title_doc), R.drawable.ic_vector_doc));
+            }
+
+
+
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_FILES)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_FILES)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_FILES, context
+                        .getResources().getString(R.string.title_files), R.drawable.ic_vector_files));
+            }
+
+
+
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_FLASH)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_FLASH)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_FLASH, context
+                        .getResources().getString(R.string.title_flash), R.drawable.ic_vector_flash));
+            }
+
+
+
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_HEALTH)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_HEALTH)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_HEALTH, context
+                        .getResources().getString(R.string.title_health), R.drawable.ic_vector_health));
+            }
+
+
+
+
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_JOURNAL)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_JOURNAL)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_JOURNAL, context
+                        .getResources().getString(R.string.title_journal), R.drawable.ic_vector_journal));
+            }
+
+
+
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_LANGUAGES)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_LANGUAGES)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_LANGUAGES, context
+                        .getResources().getString(R.string.title_languages), R.drawable.ic_vector_language));
+            }
+
+
+
+
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_LEARNING)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_LEARNING)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_LEARNING, context
+                        .getResources().getString(R.string.title_learning), R.drawable.ic_vector_learning));
+            }
+
+
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_MEDITATION)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_MEDITATION)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_MEDITATION, context
+                        .getResources().getString(R.string.title_meditation), R.drawable.ic_vector_meditation));
+            }
+
+
+
+
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_MICROPHONE)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_MICROPHONE)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_MICROPHONE, context
+                        .getResources().getString(R.string.title_microphone), R.drawable.ic_vector_microphone));
+            }
+
+
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_NEWS)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_NEWS)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_NEWS, context
+                        .getResources().getString(R.string.title_news), R.drawable.ic_vector_news));
+            }
+
+
+
+
+
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_SEARCH)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_SEARCH)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_SEARCH, context
+                        .getResources().getString(R.string.title_search), R.drawable.ic_vector_search));
+            }
+
+
+
+
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_SETTINGS)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_SETTINGS)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_SETTINGS, context
+                        .getResources().getString(R.string.title_settings), R.drawable.ic_vector_settings));
+            }
+
+
+
+
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_VOICE)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_VOICE)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_VOICE, context
+                        .getResources().getString(R.string.title_voice), R.drawable.ic_vector_voice));
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             toolsItems = Sorting.sortToolAppAssignment(context, toolsItems);
 
@@ -498,6 +765,234 @@ public class MainListItemLoader {
                             (packageName);
 
                     break;
+
+                case TOOLS_CLOUD:// Cloud
+
+                    packageName = CoreApplication.getInstance().getToolsSettings().get
+                            (TOOLS_CLOUD).getApplicationName().trim();
+                    applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_cloud), applicationName);
+                    new ActivityHelper(context).openAppWithPackageName
+                            (packageName);
+
+                    break;
+
+                case TOOLS_BOOKS:// Books
+
+                    packageName = CoreApplication.getInstance().getToolsSettings().get
+                            (TOOLS_BOOKS).getApplicationName().trim();
+                    applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_books), applicationName);
+                    new ActivityHelper(context).openAppWithPackageName
+                            (packageName);
+                    break;
+
+
+                case TOOLS_AUTHENTICATION:// Authentication
+
+                    packageName = CoreApplication.getInstance().getToolsSettings().get
+                            (TOOLS_AUTHENTICATION).getApplicationName().trim();
+                    applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_authentication), applicationName);
+                    new ActivityHelper(context).openAppWithPackageName
+                            (packageName);
+                    break;
+
+
+                case TOOLS_ASSISTANT:// Assistant
+
+                    packageName = CoreApplication.getInstance().getToolsSettings().get
+                            (TOOLS_ASSISTANT).getApplicationName().trim();
+                    applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_assistant), applicationName);
+                    new ActivityHelper(context).openAppWithPackageName
+                            (packageName);
+                    break;
+
+
+
+                case TOOLS_ADDITIONAL_MESSAGE:// Assistant
+
+                    packageName = CoreApplication.getInstance().getToolsSettings().get
+                            (TOOLS_ADDITIONAL_MESSAGE).getApplicationName().trim();
+                    applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_additional_message), applicationName);
+                    new ActivityHelper(context).openAppWithPackageName
+                            (packageName);
+                    break;
+
+
+                case TOOLS_BANKING:
+
+                    packageName = CoreApplication.getInstance().getToolsSettings().get
+                            (TOOLS_BANKING).getApplicationName().trim();
+                    applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_banking), applicationName);
+                    new ActivityHelper(context).openAppWithPackageName
+                            (packageName);
+                    break;
+
+                case TOOLS_COURCE:
+
+                    packageName = CoreApplication.getInstance().getToolsSettings().get
+                            (TOOLS_COURCE).getApplicationName().trim();
+                    applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_course), applicationName);
+                    new ActivityHelper(context).openAppWithPackageName
+                            (packageName);
+                    break;
+
+
+                case TOOLS_DOC:
+
+                    packageName = CoreApplication.getInstance().getToolsSettings().get
+                            (TOOLS_DOC).getApplicationName().trim();
+                    applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_doc), applicationName);
+                    new ActivityHelper(context).openAppWithPackageName
+                            (packageName);
+                    break;
+
+
+
+                case TOOLS_FILES:
+
+                    packageName = CoreApplication.getInstance().getToolsSettings().get
+                            (TOOLS_FILES).getApplicationName().trim();
+                    applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_files), applicationName);
+                    new ActivityHelper(context).openAppWithPackageName
+                            (packageName);
+                    break;
+
+                case TOOLS_FLASH:
+
+                    packageName = CoreApplication.getInstance().getToolsSettings().get
+                            (TOOLS_FLASH).getApplicationName().trim();
+                    applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_flash), applicationName);
+                    new ActivityHelper(context).openAppWithPackageName
+                            (packageName);
+                    break;
+
+
+                case TOOLS_HEALTH:
+
+                    packageName = CoreApplication.getInstance().getToolsSettings().get
+                            (TOOLS_HEALTH).getApplicationName().trim();
+                    applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_health), applicationName);
+                    new ActivityHelper(context).openAppWithPackageName
+                            (packageName);
+                    break;
+
+
+                case TOOLS_JOURNAL:
+
+                    packageName = CoreApplication.getInstance().getToolsSettings().get
+                            (TOOLS_JOURNAL).getApplicationName().trim();
+                    applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_journal), applicationName);
+                    new ActivityHelper(context).openAppWithPackageName
+                            (packageName);
+                    break;
+
+                case TOOLS_LANGUAGES:
+
+                    packageName = CoreApplication.getInstance().getToolsSettings().get
+                            (TOOLS_LANGUAGES).getApplicationName().trim();
+                    applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_languages), applicationName);
+                    new ActivityHelper(context).openAppWithPackageName
+                            (packageName);
+                    break;
+
+
+                case TOOLS_LEARNING:
+
+                    packageName = CoreApplication.getInstance().getToolsSettings().get
+                            (TOOLS_LEARNING).getApplicationName().trim();
+                    applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_learning), applicationName);
+                    new ActivityHelper(context).openAppWithPackageName
+                            (packageName);
+                    break;
+
+
+
+
+                case TOOLS_MEDITATION:
+
+                    packageName = CoreApplication.getInstance().getToolsSettings().get
+                            (TOOLS_MEDITATION).getApplicationName().trim();
+                    applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_meditation), applicationName);
+                    new ActivityHelper(context).openAppWithPackageName
+                            (packageName);
+                    break;
+
+
+
+                case TOOLS_MICROPHONE:
+
+                    packageName = CoreApplication.getInstance().getToolsSettings().get
+                            (TOOLS_MICROPHONE).getApplicationName().trim();
+                    applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_microphone), applicationName);
+                    new ActivityHelper(context).openAppWithPackageName
+                            (packageName);
+                    break;
+
+
+
+                case TOOLS_NEWS:
+
+                    packageName = CoreApplication.getInstance().getToolsSettings().get
+                            (TOOLS_NEWS).getApplicationName().trim();
+                    applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_news), applicationName);
+                    new ActivityHelper(context).openAppWithPackageName
+                            (packageName);
+                    break;
+
+
+
+
+                case TOOLS_SEARCH:
+
+                    packageName = CoreApplication.getInstance().getToolsSettings().get
+                            (TOOLS_SEARCH).getApplicationName().trim();
+                    applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_search), applicationName);
+                    new ActivityHelper(context).openAppWithPackageName
+                            (packageName);
+                    break;
+
+
+
+
+                case TOOLS_SETTINGS:
+
+                    packageName = CoreApplication.getInstance().getToolsSettings().get
+                            (TOOLS_SETTINGS).getApplicationName().trim();
+                    applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_settings), applicationName);
+                    new ActivityHelper(context).openAppWithPackageName
+                            (packageName);
+                    break;
+
+
+
+                case TOOLS_VOICE:
+
+                    packageName = CoreApplication.getInstance().getToolsSettings().get
+                            (TOOLS_VOICE).getApplicationName().trim();
+                    applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_voice), applicationName);
+                    new ActivityHelper(context).openAppWithPackageName
+                            (packageName);
+                    break;
+
                 default:
                     UIUtils.alert(context, context.getResources().getString(R.string.msg_not_yet_implemented));
                     break;

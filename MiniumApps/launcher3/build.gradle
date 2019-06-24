@@ -154,6 +154,7 @@ dependencies {
     implementation 'com.jaeger.statusbarutil:library:1.4.0'
     implementation 'com.rvalerio:fgchecker:1.1.0'
     implementation 'rongi.rotate-layout:rotate-layout:3.0.0'
+    implementation 'com.commit451:PhotoView:1.2.4'
 }
 greendao {
     schemaVersion "${databaseVersion}".toInteger()

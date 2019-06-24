@@ -54,6 +54,12 @@ public class TempoHomeFragment extends CoreFragment {
     Switch switchDarkTheme;
 
     @ViewById
+    Switch switchNotification;
+
+    @ViewById
+    Switch switchIconVisibility;
+
+    @ViewById
     RelativeLayout relDarkTheme;
 
     private PermissionUtil permissionUtil;
@@ -140,6 +146,76 @@ public class TempoHomeFragment extends CoreFragment {
 
             }
         });
+
+        switchIconVisibility.setChecked(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_ICON_TEXT_VISIBILITY_ENABLE, false));
+        switchIconVisibility.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Switch sb = (Switch) v;
+                if (sb.isChecked()) {
+                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_ICON_TEXT_VISIBILITY_ENABLE, true);
+                } else  {
+                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_ICON_TEXT_VISIBILITY_ENABLE, false);
+                }
+            }
+        });
+
+        final View decorView = getActivity().getWindow().getDecorView();
+        final int uiOptions = decorView.getSystemUiVisibility();
+        final int[] newUiOptions = {uiOptions};
+
+        switchNotification.setChecked(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, false));
+        /*switchNotification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean isEnable = PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, false);
+                if (isEnable) {
+                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, false);
+                    switchNotification.setChecked(false);
+                } else {
+                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, true);
+                    //switchNotification.setChecked(true);
+                    newUiOptions[0] |= View.SYSTEM_UI_FLAG_FULLSCREEN;
+                }
+                decorView.setSystemUiVisibility(newUiOptions[0]);
+                //notificationVisibility();
+            }
+        });*/
+        switchNotification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean isEnable = PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, false);
+                if (isEnable) {
+                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, false);
+                    switchNotification.setChecked(false);
+                    newUiOptions[0] |= View.SYSTEM_UI_FLAG_FULLSCREEN;
+                } else {
+                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, true);
+                    newUiOptions[0] &= ~View.SYSTEM_UI_FLAG_FULLSCREEN;
+                }
+                decorView.setSystemUiVisibility(newUiOptions[0]);
+            }
+        });
+    }
+
+    private void notificationVisibility() {
+
+        if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, false))
+        {
+            View decorView = getActivity().getWindow().getDecorView();
+            decorView.setFitsSystemWindows(false);
+            decorView.setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        }else
+        {
+            View decorView = getActivity().getWindow().getDecorView();
+            decorView.setFitsSystemWindows(true);
+        }
     }
 
     @Click

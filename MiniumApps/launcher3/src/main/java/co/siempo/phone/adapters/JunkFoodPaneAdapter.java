@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import co.siempo.phone.event.JunkAppOpenEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.utils.DrawableProvider;
+import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -126,6 +128,15 @@ public class JunkFoodPaneAdapter extends RecyclerView.Adapter<JunkFoodPaneAdapte
 
 
         });
+
+        boolean isEnable = PrefSiempo.getInstance(context).read(PrefSiempo.DEFAULT_ICON_TEXT_VISIBILITY_ENABLE, false);
+        if(isEnable)
+        {
+            holder.txtLayout.setVisibility(View.GONE);
+        }else
+        {
+            holder.txtLayout.setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -145,6 +156,7 @@ public class JunkFoodPaneAdapter extends RecyclerView.Adapter<JunkFoodPaneAdapte
         TextView textDefaultApp;
         RelativeLayout relMenu;
         private LinearLayout linearLayout;
+        LinearLayout txtLayout;
 
         public ViewHolder(View v) {
             super(v);
@@ -157,6 +169,7 @@ public class JunkFoodPaneAdapter extends RecyclerView.Adapter<JunkFoodPaneAdapte
             imgView = v.findViewById(R.id.imgView);
             imgAppIcon = v.findViewById(R.id.imgAppIcon);
             imgUnderLine = v.findViewById(R.id.imgUnderLine);
+            txtLayout = v.findViewById(R.id.txtLayout);
         }
     }
 }

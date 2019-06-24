@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.utils.DrawableProvider;
+import co.siempo.phone.utils.PrefSiempo;
 
 /**
  * Created by Shahab on 2/23/2017.
@@ -140,6 +142,15 @@ public class FavoritesPaneAdapter extends RecyclerView.Adapter<FavoritesPaneAdap
                 }
             }
         });
+
+        boolean isEnable = PrefSiempo.getInstance(context).read(PrefSiempo.DEFAULT_ICON_TEXT_VISIBILITY_ENABLE, false);
+        if(isEnable)
+        {
+            holder.txtLayout.setVisibility(View.GONE);
+        }else
+        {
+            holder.txtLayout.setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -180,6 +191,7 @@ public class FavoritesPaneAdapter extends RecyclerView.Adapter<FavoritesPaneAdap
         TextView textDefaultApp;
         RelativeLayout relMenu;
         private LinearLayout linearLayout;
+        LinearLayout txtLayout;
 
         public ViewHolder(View v) {
             super(v);
@@ -192,6 +204,7 @@ public class FavoritesPaneAdapter extends RecyclerView.Adapter<FavoritesPaneAdap
             txtAppTextImage = v.findViewById(R.id.txtAppTextImage);
             imgAppIcon = v.findViewById(R.id.imgAppIcon);
             imgView = v.findViewById(R.id.imgView);
+            txtLayout = v.findViewById(R.id.favorite_txtLayout);
         }
     }
 }

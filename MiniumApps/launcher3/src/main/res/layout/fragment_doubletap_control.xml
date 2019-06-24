@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="UselessParent">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/toolbar_style"
+            app:navigationIcon="@drawable/ic_arrow_back_blue_24dp"
+            app:titleTextColor="?attr/toolbar_text_color" />
+
+
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <RelativeLayout
+            android:id="@+id/relSleep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar"
+            android:layout_marginTop="@dimen/dp_4"
+            android:clickable="true"
+            android:paddingLeft="50dp">
+
+            <co.siempo.phone.customviews.RobotoRegularTextView
+                android:id="@+id/txtSleep"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                android:lineSpacingExtra="5sp"
+                android:padding="8dp"
+                android:text="@string/sleep"
+                android:textColor="?attr/txt_content_title"
+                android:textSize="16sp" />
+
+            <Switch
+                android:id="@+id/switchSleep"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/txtSleep"
+                android:layout_marginRight="8dp" />
+
+
+            <co.siempo.phone.customviews.RobotoRegularTextView
+                android:id="@+id/txtSleepDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtSleep"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_toLeftOf="@+id/switchSleep"
+                android:lineSpacingExtra="4sp"
+                android:paddingBottom="4dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="0dp"
+                android:text="@string/message_sleep_mode"
+                android:textColor="?attr/txt_content_color"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/relDnD"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/relSleep"
+            android:layout_marginTop="@dimen/dp_8"
+            android:clickable="true"
+            android:paddingLeft="50dp">
+
+            <co.siempo.phone.customviews.RobotoRegularTextView
+                android:id="@+id/txtDnD"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                android:lineSpacingExtra="5sp"
+                android:padding="8dp"
+                android:text="Do not disturb"
+                android:textColor="?attr/txt_content_title"
+                android:textSize="16sp" />
+
+            <Switch
+                android:id="@+id/switchDnD"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/txtDnD"
+                android:layout_marginRight="8dp" />
+
+
+            <co.siempo.phone.customviews.RobotoRegularTextView
+                android:id="@+id/txtDnDDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtDnD"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_toLeftOf="@+id/switchDnD"
+                android:lineSpacingExtra="4sp"
+                android:paddingBottom="4dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="0dp"
+                android:text="@string/message_dnd_mode"
+                android:textColor="?attr/txt_content_color"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+    </ScrollView>
+    </RelativeLayout>
+
+</LinearLayout>

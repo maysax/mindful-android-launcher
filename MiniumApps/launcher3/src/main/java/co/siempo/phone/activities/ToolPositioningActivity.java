@@ -14,6 +14,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -144,10 +145,9 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
     @Override
     protected void onPause() {
         super.onPause();
-
         for (int i = 0; i < sortedList.size(); i++) {
-            if (i >= 16) {
-//            if (i >= 12) {
+
+            if (i >= 36) {
                 map.get(sortedList.get(i).getId()).setBottomDoc(true);
             } else {
                 map.get(sortedList.get(i).getId()).setBottomDoc(false);
@@ -178,6 +178,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         txtSelectTools = findViewById(R.id.txtSelectTools);
         recyclerView.setHasFixedSize(true);
         mLayoutManager = new GridLayoutManager(this, 4);
+
         recyclerView.setLayoutManager(mLayoutManager);
         if (itemDecoration != null) {
             recyclerView.removeItemDecoration(itemDecoration);
@@ -226,7 +227,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
     }
 
     @Override
-    public void onToolItemListChanged(ArrayList<MainListItem> customers) {
+    public void onToolItemListChanged(ArrayList<MainListItem> customers, int toposition) {
         ArrayList<Long> listOfSortedCustomerId = new ArrayList<>();
         for (MainListItem customer : customers) {
             listOfSortedCustomerId.add((long) customer.getId());
@@ -236,6 +237,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         String jsonListOfSortedCustomerIds = gson.toJson(listOfSortedCustomerId);
         PrefSiempo.getInstance(this).write(PrefSiempo.SORTED_MENU, jsonListOfSortedCustomerIds);
     }
+
 
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {

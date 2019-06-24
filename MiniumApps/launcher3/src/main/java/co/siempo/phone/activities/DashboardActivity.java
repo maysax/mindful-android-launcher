@@ -23,6 +23,7 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.Window;
@@ -214,8 +215,8 @@ public class DashboardActivity extends CoreActivity {
         setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
 
         Window w = getWindow(); // in Activity's onCreate() for instance
-        w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-//        w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+ //       w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+       w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 //        w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
 
@@ -350,14 +351,38 @@ public class DashboardActivity extends CoreActivity {
     public void loadViews() {
 
         mPager = findViewById(R.id.pager);
+        mPager.setOnTouchListener(new View.OnTouchListener() {
+            private float pointX;
+            private float pointY;
+            private int tolerance = 50;
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch(event.getAction()) {
+                    case MotionEvent.ACTION_MOVE:
+                        return false; //This is important, if you return TRUE the action of swipe will not take place.
+                    case MotionEvent.ACTION_DOWN:
+                        pointX = event.getX();
+                        pointY = event.getY();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        boolean sameX = pointX + tolerance > event.getX() && pointX - tolerance < event.getX();
+                        boolean sameY = pointY + tolerance > event.getY() && pointY - tolerance < event.getY();
+                        if (sameX && sameY) {
+                            //The user "clicked" certain point in the screen or just returned to the same position an raised the finger
+                        }
+                }
+                ((CoreActivity) DashboardActivity.this).gestureDetector.onTouchEvent(event);
+                return false;
+            }
+        });
         linMain = findViewById(R.id.linMain);
         boolean hasMenuKey = ViewConfiguration.get(this).hasPermanentMenuKey();
-        if (hasNavBar(getResources())) {
-            mPager.setPadding(0, getStatusBarHeight(), 0, getNavigationBarHeight());
-        } else {
-            mPager.setPadding(0, getStatusBarHeight(), 0, 0);
-
-        }
+//        if (hasNavBar(getResources())) {
+//            mPager.setPadding(0, getStatusBarHeight(), 0, getNavigationBarHeight());
+//        } else {
+//            mPager.setPadding(0, getStatusBarHeight(), 0, 0);
+//
+//        }
         mPagerAdapter = new DashboardPagerAdapter(getFragmentManager());
         loadPane();
         mPager.setAdapter(mPagerAdapter);
