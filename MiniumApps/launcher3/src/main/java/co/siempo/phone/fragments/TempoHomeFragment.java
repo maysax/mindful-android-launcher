@@ -28,6 +28,7 @@ import co.siempo.phone.event.NotifyBackgroundChange;
 import co.siempo.phone.event.NotifyBackgroundToService;
 import co.siempo.phone.event.ThemeChangeEvent;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.util.AppUtils;
 import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.EventBus;
@@ -165,35 +166,19 @@ public class TempoHomeFragment extends CoreFragment {
         final int[] newUiOptions = {uiOptions};
 
         switchNotification.setChecked(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, false));
-        /*switchNotification.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean isEnable = PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, false);
-                if (isEnable) {
-                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, false);
-                    switchNotification.setChecked(false);
-                } else {
-                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, true);
-                    //switchNotification.setChecked(true);
-                    newUiOptions[0] |= View.SYSTEM_UI_FLAG_FULLSCREEN;
-                }
-                decorView.setSystemUiVisibility(newUiOptions[0]);
-                //notificationVisibility();
-            }
-        });*/
         switchNotification.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                boolean isEnable = PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, false);
-                if (isEnable) {
-                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, false);
-                    switchNotification.setChecked(false);
-                    newUiOptions[0] |= View.SYSTEM_UI_FLAG_FULLSCREEN;
-                } else {
+            public void onClick(View v)
+            {
+                Switch sb = (Switch) v;
+                if(sb.isChecked())
+                {
                     PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, true);
-                    newUiOptions[0] &= ~View.SYSTEM_UI_FLAG_FULLSCREEN;
+                }else
+                {
+                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, false);
                 }
-                decorView.setSystemUiVisibility(newUiOptions[0]);
+                AppUtils.notificationBarManaged(getActivity(), null);
             }
         });
     }
