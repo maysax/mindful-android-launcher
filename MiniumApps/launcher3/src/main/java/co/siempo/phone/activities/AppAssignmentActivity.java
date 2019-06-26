@@ -137,20 +137,13 @@ public class AppAssignmentActivity extends CoreActivity {
             mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
             installedPackageList = getPackageManager().queryIntentActivities(mainIntent, 0);
             if (idList.contains(mainListItem.getId())) {
-                /*for (Map.Entry<Integer, AppMenu> app : CoreApplication.getInstance().getToolsSettings().entrySet()) {
-                    if (app.getKey() != mainListItem.getId()) {
-                        AppMenu appMenu = app.getValue();
-                        if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
-                            connectedAppsList.add(appMenu.getApplicationName());
-                        }
-                    }
-                }*/
+
+
+
                 mimeList = getMimeList();
                 for (ResolveInfo resolveInfo : installedPackageList) {
                     if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
-//                        if (!checkExits(resolveInfo)) {
                             appList.add(resolveInfo);
-//                        }
                     }
                 }
                 if (showallAppBtn != null) {

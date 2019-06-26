@@ -86,6 +86,7 @@ import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.utils.CategoryUtils;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
@@ -1755,7 +1756,7 @@ public class StatusBarService extends Service {
                             if (map.get(MainListItemLoader.TOOLS_WELLNESS).getApplicationName().equalsIgnoreCase("")) {
                                 MainListItem item = new MainListItem(MainListItemLoader.TOOLS_WELLNESS, context.getResources()
                                         .getString(R.string.title_wellness), R.drawable
-                                        .ic_vector_wellness);
+                                        .ic_vector_wellness, CategoryUtils.HEALTH_FITNESS);
                                 Intent intent = new Intent(context, AppAssignmentActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 intent.putExtra(Constants.INTENT_MAINLISTITEM, item);
@@ -2430,7 +2431,7 @@ public class StatusBarService extends Service {
                             if (map.get(MainListItemLoader.TOOLS_WELLNESS).getApplicationName().equalsIgnoreCase("")) {
                                 MainListItem item = new MainListItem(MainListItemLoader.TOOLS_WELLNESS, context.getResources()
                                         .getString(R.string.title_wellness), R.drawable
-                                        .ic_vector_wellness);
+                                        .ic_vector_wellness,CategoryUtils.HEALTH_FITNESS);
                                 Intent intent = new Intent(context, AppAssignmentActivity.class);
                                 intent.putExtra(Constants.INTENT_MAINLISTITEM, item);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -3178,7 +3179,7 @@ public class StatusBarService extends Service {
             } else if (map.get(MainListItemLoader.TOOLS_NOTES).getApplicationName().equalsIgnoreCase("")) {
                 MainListItem item = new MainListItem(MainListItemLoader.TOOLS_NOTES, context.getResources()
                         .getString(R.string.title_note), R.drawable
-                        .ic_vector_note);
+                        .ic_vector_note,CategoryUtils.PRODUCTIVITY);
                 Intent intent = new Intent(context, AppAssignmentActivity.class);
                 intent.putExtra(Constants.INTENT_MAINLISTITEM, item);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

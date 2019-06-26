@@ -25,6 +25,7 @@ public class MainListItem implements Serializable {
     private int iconRes;
     private ApplicationInfo applicationInfo = null;
     private boolean isVisable;
+    private String category="";
 
 //    private Date currentDateTime;
     /**
@@ -78,11 +79,12 @@ public class MainListItem implements Serializable {
         this.iconRes = iconRes;
     }
 
-    public MainListItem(int id, String title, int drawable, MainListItemType itemType) {
+    public MainListItem(int id, String title, int drawable, MainListItemType itemType,String category) {
         this.id = id;
         this.title = title;
         this.itemType = itemType;
         this.drawable = drawable;
+        this.category=category;
     }
 
     public MainListItem(MainListItem mainListItem) {
@@ -100,10 +102,11 @@ public class MainListItem implements Serializable {
      * @param title    name
      * @param drawable image id
      */
-    public MainListItem(int id, String title, int drawable) {
+    public MainListItem(int id, String title, int drawable,String category) {
         this.id = id;
         this.title = title;
         this.drawable = drawable;
+        this.category=category;
 //        this.currentDateTime = GregorianCalendar.getInstance().getTime();
 
     }
@@ -116,6 +119,10 @@ public class MainListItem implements Serializable {
 //        return currentDateTime;
 ////    }
 
+
+    public String getCategory(){
+        return  category;
+    }
     public int getId() {
         return id;
     }
