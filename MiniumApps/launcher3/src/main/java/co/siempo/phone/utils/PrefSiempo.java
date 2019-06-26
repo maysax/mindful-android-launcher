@@ -61,12 +61,17 @@ public class PrefSiempo {
     public static final String ALLOW_PEAKING = "Allowpeaking";
     public static final String IS_DARK_THEME = "isDarkTheme";
 
+    public static final String IS_ASK_HINT = "IS_ASK_HINT";
+
 
     // used for default background.
     public static final String DEFAULT_BAG = "default_back";
     public static final String DEFAULT_BAG_ENABLE = "default_e";
 
-    public static final String IS_ASK_HINT = "IS_ASK_HINT";
+    public static final String DEFAULT_ICON_TEXT_VISIBILITY_ENABLE = "default_o";
+
+    public static final String DEFAULT_NOTIFICATION_ENABLE = "default_notification";
+
 
     //Launcher 3 preferences
     public static final String UPDATE_PROMPT = "updatePrompt";
@@ -118,15 +123,8 @@ public class PrefSiempo {
     public static String THIRD_PARTY_APP_LOG_AS_LAUNCHER= "third_party_app_log_as_launcher";
     public static String THIRD_PARTY_APP_LOG_NOT_AS_LAUNCHER= "third_party_app_log_not_as_launcher";
 
-    public static final String DEFAULT_ICON_TEXT_VISIBILITY_ENABLE = "default_o";
-
-    public static final String DEFAULT_NOTIFICATION_ENABLE = "default_notification";
 
 
-    /*This preferences are for double tap coontrols*/
-    public static final String IS_SLEEP_ENABLE = "isSleepEnable";
-    public static final String IS_DND_ENABLE = "isDnDEnable";
-    
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
 
@@ -305,7 +303,4 @@ public class PrefSiempo {
         editor.clear();
         editor.commit();
     }
-
-
-
 }

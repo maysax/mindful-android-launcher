@@ -155,13 +155,13 @@ public class JunkFoodPaneAdapter extends RecyclerView.Adapter<JunkFoodPaneAdapte
         TextView text, txtAppTextImage;
         TextView textDefaultApp;
         RelativeLayout relMenu;
-        private LinearLayout linearLayout;
-        LinearLayout txtLayout;
+        private LinearLayout linearLayout, txtLayout;
 
         public ViewHolder(View v) {
             super(v);
             layout = v;
             linearLayout = v.findViewById(R.id.linearList);
+            txtLayout = v.findViewById(R.id.txtLayout);
             relMenu = v.findViewById(R.id.relMenu);
             text = v.findViewById(R.id.text);
             textDefaultApp = v.findViewById(R.id.textDefaultApp);
@@ -169,7 +169,6 @@ public class JunkFoodPaneAdapter extends RecyclerView.Adapter<JunkFoodPaneAdapte
             imgView = v.findViewById(R.id.imgView);
             imgAppIcon = v.findViewById(R.id.imgAppIcon);
             imgUnderLine = v.findViewById(R.id.imgUnderLine);
-            txtLayout = v.findViewById(R.id.txtLayout);
         }
     }
 }

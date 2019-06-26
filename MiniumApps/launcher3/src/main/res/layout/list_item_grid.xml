@@ -54,12 +54,12 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/tools_txtLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:orientation="vertical"
+            android:id="@+id/txtLayout"
             tools:ignore="InefficientWeight">
 
             <co.siempo.phone.customviews.RobotoCondensedTextView

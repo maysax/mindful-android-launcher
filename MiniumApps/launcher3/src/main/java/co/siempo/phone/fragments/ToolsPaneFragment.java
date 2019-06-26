@@ -52,13 +52,12 @@ public class ToolsPaneFragment extends CoreFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_tools_pane, container, false);
-        Log.d("Test", "T1");
         recyclerView = view.findViewById(R.id.recyclerView);
         initView();
-        Log.d("Test", "T2");
         return view;
 
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -67,7 +66,6 @@ public class ToolsPaneFragment extends CoreFragment {
             mAdapter.notifyDataSetChanged();
         }
     }
-
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MainThread)
     public void onEvent(NotifyToolView notifyToolView) {
@@ -79,6 +77,15 @@ public class ToolsPaneFragment extends CoreFragment {
             EventBus.getDefault().removeStickyEvent(notifyToolView);
         }
 
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser  && getActivity() != null)
+        {
+            AppUtils.notificationBarManaged(getActivity(), null);
+        }
     }
 
     private void initView() {
@@ -96,8 +103,6 @@ public class ToolsPaneFragment extends CoreFragment {
         }
     }
 
-
-
     @Override
     public void onDetach() {
         super.onDetach();
@@ -110,14 +115,4 @@ public class ToolsPaneFragment extends CoreFragment {
             throw new RuntimeException(e);
         }
     }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser  && getActivity() != null)
-        {
-            AppUtils.notificationBarManaged(getActivity(), null);
-        }
-    }
-
 }

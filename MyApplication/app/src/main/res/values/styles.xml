@@ -1,0 +1,40 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+
+    <style name="SiempoAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <!--<item name="android:colorPrimaryDark">@color/layout_bg</item>-->
+        <item name="android:colorControlHighlight">#bcbcbc</item>
+        <item name="android:windowBackground">@color/trans_black</item>
+        <!-- enable overlapping of exiting and entering activities-->
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <!--<item name="popupMenuStyle">@style/interrupt_popup_menu</item>-->
+        <item name="android:windowDisablePreview">true</item>
+        <item name="colorControlNormal">#f9f9f9</item>
+        <item name="android:actionMenuTextColor">@color/colorAccent</item>
+        <!--<item name="status_bar_pane">@color/pane_light</item>-->
+        <!--<item name="navigation_bar_pane">@color/black</item>-->
+        <!--<item name="android:windowTranslucentStatus">true</item>-->
+        <!--<item name="android:windowTranslucentNavigation">true</item>-->
+        <!--<item name="android:navigationBarColor">@android:color/transparent</item>-->
+        <item name="android:statusBarColor">#f8f8f8</item>
+
+
+    </style>
+</resources>

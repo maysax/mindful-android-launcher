@@ -76,13 +76,10 @@
         android:required="false" />
     <uses-feature android:name="android.hardware.location.gps" />
     <uses-feature android:name="android.hardware.location.network" />
-    <uses-permission android:name="android.permission.USES_POLICY_FORCE_LOCK" />
 
     <application
         android:name=".app.Launcher3App_"
-        tools:replace="android:allowBackup"
-        android:allowBackup="false"
-        android:fullBackupOnly="false"
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
@@ -249,21 +246,6 @@
             </intent-filter>
         </receiver>
 
-        <receiver
-            android:name=".receivers.ScreenOffAdminReceiver"
-            android:description="@string/device_admin_description"
-            android:label="@string/app_name"
-            android:permission="android.permission.BIND_DEVICE_ADMIN" >
-            <meta-data
-                android:name="android.app.device_admin"
-                android:resource="@xml/device_admin" />
-
-            <intent-filter>
-                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
-            </intent-filter>
-        </receiver>
-
-
         <activity
             android:name="com.evernote.client.android.EvernoteOAuthActivity"
             android:screenOrientation="portrait" />
@@ -317,6 +299,14 @@
         <activity
             android:name=".activities.UpdateBackgroundActivity"
             android:screenOrientation="portrait" />
+
+        <activity android:name="com.soundcloud.android.crop.CropImageActivity"
+            android:screenOrientation="portrait"/>
+
+        <!--<activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>-->
 
     </application>
 

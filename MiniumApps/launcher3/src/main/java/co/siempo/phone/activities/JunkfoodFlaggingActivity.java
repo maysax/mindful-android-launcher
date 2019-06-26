@@ -36,7 +36,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
@@ -54,7 +53,6 @@ import co.siempo.phone.models.AppListInfo;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.service.LoadFavoritePane;
 import co.siempo.phone.service.LoadJunkFoodPane;
-import co.siempo.phone.service.LoadToolPane;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.Sorting;
@@ -177,7 +175,7 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
 
         //Adding for ToolAppList
         if (toolsAppList != null && favoriteList != null) {
-//            appList.removeAll(toolsAppList);
+            appList.removeAll(toolsAppList);
             appList.removeAll(favoriteList);
         }
 
@@ -234,19 +232,6 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
                     @Override
                     public void run() {
                         favoriteList.removeAll(adapterlist);
-                        getToolsAppList().removeAll(adapterlist);
-
-                        HashMap<Integer, AppMenu> newMap = CoreApplication.getInstance().getToolsSettings();
-                        for(int i=0;i<newMap.size();i++){
-                            if(newMap!=null && newMap.get(i)!=null && !TextUtils.isEmpty(newMap.get(i).getApplicationName())){
-                                if(adapterlist.contains(newMap.get(i).getApplicationName())){
-                                    newMap.get(i).setApplicationName("");
-                                }
-                            }
-                        }
-                        String hashMapToolSettings = new Gson().toJson(newMap);
-                        PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
-
                         PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write(PrefSiempo.FAVORITE_APPS, favoriteList);
                         PrefSiempo.getInstance(JunkfoodFlaggingActivity.this).write
                                 (PrefSiempo.JUNKFOOD_APPS, adapterlist);
@@ -255,8 +240,6 @@ public class JunkfoodFlaggingActivity extends CoreActivity implements AdapterVie
                         }
                         new LoadFavoritePane(JunkfoodFlaggingActivity.this).execute();
                         new LoadJunkFoodPane(JunkfoodFlaggingActivity.this).execute();
-
-                        new LoadToolPane(JunkfoodFlaggingActivity.this).execute();
                         EventBus.getDefault().postSticky(new NotifySearchRefresh(true));
                         FirebaseHelper.getInstance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
 

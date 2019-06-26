@@ -190,13 +190,13 @@ public class FavoritesPaneAdapter extends RecyclerView.Adapter<FavoritesPaneAdap
         TextView text, txtAppTextImage;
         TextView textDefaultApp;
         RelativeLayout relMenu;
-        private LinearLayout linearLayout;
-        LinearLayout txtLayout;
+        private LinearLayout linearLayout, txtLayout;
 
         public ViewHolder(View v) {
             super(v);
             layout = v;
             linearLayout = v.findViewById(R.id.linearList);
+            txtLayout = v.findViewById(R.id.txtLayout);
             imgUnderLine = v.findViewById(R.id.imgUnderLine);
             relMenu = v.findViewById(R.id.relMenu);
             text = v.findViewById(R.id.text);
@@ -204,7 +204,6 @@ public class FavoritesPaneAdapter extends RecyclerView.Adapter<FavoritesPaneAdap
             txtAppTextImage = v.findViewById(R.id.txtAppTextImage);
             imgAppIcon = v.findViewById(R.id.imgAppIcon);
             imgView = v.findViewById(R.id.imgView);
-            txtLayout = v.findViewById(R.id.favorite_txtLayout);
         }
     }
 }

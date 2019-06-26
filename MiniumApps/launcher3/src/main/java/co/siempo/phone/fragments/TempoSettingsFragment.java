@@ -2,6 +2,7 @@ package co.siempo.phone.fragments;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -28,8 +29,6 @@ public class TempoSettingsFragment extends CoreFragment {
     RelativeLayout relAppMenu;
     @ViewById
     RelativeLayout relNotification;
-    @ViewById
-    RelativeLayout relDoubleTap;
     @ViewById
     RelativeLayout relAccount;
     @ViewById
@@ -64,39 +63,40 @@ public class TempoSettingsFragment extends CoreFragment {
             }
         }
 
-
     }
 
 
     @Click
     void relHome() {
+        Log.e("Tab","1");
         ((CoreActivity) getActivity()).loadChildFragment(TempoHomeFragment_.builder()
                 .build(), R.id.tempoView);
     }
 
     @Click
-    void relAppMenu() {
+    void relAppMenu()
+    {
+        Log.e("Tab","2");
         ((CoreActivity) getActivity()).loadChildFragment(AppMenuFragment.newInstance(false), R.id.tempoView);
     }
 
     @Click
-    void relNotification() {
+    void relNotification()
+    {
+        Log.e("Tab","3");
         ((CoreActivity) getActivity()).loadChildFragment(TempoNotificationFragment_.builder().build(), R.id.tempoView);
     }
 
     @Click
-    void relDoubleTap() {
-        ((CoreActivity) getActivity()).loadChildFragment(DoubleTapControlsFragment_.builder().build(), R.id.tempoView);
-    }
-
-    @Click
-    void relAccount() {
+    void relAccount()
+    {
+        Log.e("Tab","4");
         ((CoreActivity) getActivity()).loadChildFragment(AccountSettingFragment_.builder().build(), R.id.tempoView);
     }
 
     @Click
     void relAlphaSettings() {
-
+        Log.e("Tab","5");
         new ActivityHelper(context).openSiempoAlphaSettingsApp();
     }
 

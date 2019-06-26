@@ -49,5 +49,8 @@ public class PanePagerAdapter extends FragmentPagerAdapter {
         return 3;
     }
 
+    public void refresh() {
+
+    }
 }
 

@@ -289,6 +289,9 @@ public class DashboardActivity extends CoreActivity {
     public void changeLayoutBackground(int color)
     {
         Log.e("image","image "+ PrefSiempo.getInstance(this).read(PrefSiempo.DEFAULT_BAG, ""));
+        /*if (!PrefSiempo.getInstance(this).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, false)) {
+
+        }*/
         if (color == -1) {
             try {
                 String filePath = PrefSiempo.getInstance(this).read(PrefSiempo

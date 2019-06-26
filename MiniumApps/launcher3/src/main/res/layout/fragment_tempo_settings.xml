@@ -86,27 +86,6 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/relDoubleTap"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:paddingLeft="50dp">
-
-            <co.siempo.phone.customviews.RobotoRegularTextView
-                android:id="@+id/txtDoubleTap"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="8dp"
-                android:padding="8dp"
-                android:text="@string/string_doubletap_title"
-                android:textColor="?attr/txt_content_title"
-                android:textSize="@dimen/text.size.large"/>
-        </RelativeLayout>
-
-        <RelativeLayout
             android:id="@+id/relAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

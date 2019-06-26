@@ -8,6 +8,7 @@ buildscript {
         // Fabric
         maven { url 'https://maven.fabric.io/public' }
         maven { url 'https://dl.bintray.com/rvalerio/maven' }
+        maven { url "https://jitpack.io" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'

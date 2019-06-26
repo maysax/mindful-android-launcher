@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -30,6 +29,7 @@ import co.siempo.phone.interfaces.OnToolItemListChangedListener;
 import co.siempo.phone.main.OnStartDragListener;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.utils.PrefSiempo;
 
 /**
  * Created by rajeshjadi on 14/2/18.
@@ -67,7 +67,8 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
                         Collections.swap(arrayList, i, i - 1);
                     }
                 }
-                mListChangedListener.onToolItemListChanged(arrayList,toPosition);
+
+                mListChangedListener.onToolItemListChanged(arrayList);
                 notifyItemMoved(fromPosition, toPosition);
             }
         } catch (Exception e) {
@@ -82,7 +83,6 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
     public void onItemDismiss(int position) {
 
     }
-
 
 
     // Create new views (invoked by the layout manager)
@@ -103,6 +103,8 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
     public void onBindViewHolder(final ItemViewHolder holder, int position) {
         final MainListItem item = arrayList.get(position);
         final AppMenu appMenu = map.get(item.getId());
+
+
         if (null != appMenu && appMenu.isVisible()) {
             holder.linearLayout.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(item.getTitle())) {
@@ -143,7 +145,6 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
             holder.relMenu.setBackgroundResource(drawable);
 
         } else {
-
             holder.relMenu.setBackgroundColor(context.getResources().getColor
                     (R.color.transparent));
         }
@@ -158,12 +159,10 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
                 return false;
             }
         });
-
     }
 
     @Override
     public int getItemCount() {
-
         return arrayList.size();
     }
 

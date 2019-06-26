@@ -77,10 +77,15 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                     holder.text.setText(item.getTitle());
                 }
                 if (isHideIconBranding) {
+                    Log.d("Test", "hideIcon branding true tooolll");
                     holder.icon.setVisibility(View.VISIBLE);
                     holder.imgAppIcon.setVisibility(View.GONE);
+
+
                     try {
+
                         holder.icon.setImageResource(item.getDrawable());
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -212,14 +217,12 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
             {
                 holder.txtLayout.setVisibility(View.VISIBLE);
             }
-
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
     }
-
 
     /**
      * if the user has multiple apps that are installed and relevant to this tool (e.g. tool is browser, and Chrome and Firefox are installed)
@@ -262,20 +265,19 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
         TextView text;
         TextView textDefaultApp;
         RelativeLayout relMenu;
-        private LinearLayout linearLayout;
-        LinearLayout txtLayout;
+        private LinearLayout linearLayout, txtLayout;
 
         public ViewHolder(View v) {
             super(v);
             layout = v;
             linearLayout = v.findViewById(R.id.linearList);
+            txtLayout = v.findViewById(R.id.txtLayout);
             relMenu = v.findViewById(R.id.relMenu);
             text = v.findViewById(R.id.text);
             textDefaultApp = v.findViewById(R.id.textDefaultApp);
             icon = v.findViewById(R.id.icon);
             imgView = v.findViewById(R.id.imgView);
             imgAppIcon = v.findViewById(R.id.imgAppIcon);
-            txtLayout = v.findViewById(R.id.tools_txtLayout);
         }
     }
 }

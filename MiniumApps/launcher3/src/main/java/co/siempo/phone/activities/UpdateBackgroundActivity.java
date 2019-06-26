@@ -46,11 +46,11 @@ public class UpdateBackgroundActivity extends CoreActivity {
     String strImage;
     private Toolbar toolbar;
     private PermissionUtil permissionUtil;
-    private ImageView imageView;
     private CircularProgressDrawable circularProgressDrawable;
 
     private PhotoViewAttacher mAttacher;
     private PhotoView photoView;
+
     private RelativeLayout hintLayout;
 
     @Override
@@ -68,7 +68,6 @@ public class UpdateBackgroundActivity extends CoreActivity {
         });
         setSupportActionBar(toolbar);
         Intent imageIntent = getIntent();
-        imageView = findViewById(R.id.imageView);
 
         circularProgressDrawable = new CircularProgressDrawable(this);
         circularProgressDrawable.setStrokeWidth(8f);
@@ -77,9 +76,8 @@ public class UpdateBackgroundActivity extends CoreActivity {
         circularProgressDrawable.start();
 
         photoView = findViewById(R.id.ivFullScreen);
-
-        mAttacher = new PhotoViewAttacher(photoView);
         hintLayout = findViewById(R.id.hintLayout);
+        mAttacher = new PhotoViewAttacher(photoView);
 
         boolean isVisible = PrefSiempo.getInstance(this).read(PrefSiempo.IS_ASK_HINT, false);
 

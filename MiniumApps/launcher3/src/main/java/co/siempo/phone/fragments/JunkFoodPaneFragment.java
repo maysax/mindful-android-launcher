@@ -45,7 +45,8 @@ public class JunkFoodPaneFragment extends CoreFragment {
         // Required empty public constructor
     }
 
-    public static JunkFoodPaneFragment newInstance() {
+    public static JunkFoodPaneFragment newInstance()
+    {
         return new JunkFoodPaneFragment();
     }
 
@@ -54,9 +55,7 @@ public class JunkFoodPaneFragment extends CoreFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_junkfood_pane, container, false);
-        Log.d("Test", "J1");
         initView();
-        Log.d("Test", "J2");
         return view;
 
     }
@@ -100,8 +99,6 @@ public class JunkFoodPaneFragment extends CoreFragment {
             recyclerView.addItemDecoration(itemDecoration);
             mAdapter = new JunkFoodPaneAdapter(getActivity(), items, CoreApplication.getInstance().isHideIconBranding());
             recyclerView.setAdapter(mAdapter);
-
-
         }
     }
 
@@ -117,12 +114,15 @@ public class JunkFoodPaneFragment extends CoreFragment {
                 Collections.shuffle(CoreApplication.getInstance().getJunkFoodList());
                 items = CoreApplication.getInstance().getJunkFoodList();
             }
-        }if(getActivity() != null)
-        {
-            AppUtils.notificationBarManaged(getActivity(), null);
+        }else{
+            if(getActivity() != null)
+            {
+                AppUtils.notificationBarManaged(getActivity(), null);
+            }
         }
-
     }
+
+
     @Override
     public void onDetach() {
         super.onDetach();
@@ -144,5 +144,4 @@ public class JunkFoodPaneFragment extends CoreFragment {
             mAdapter.notifyDataSetChanged();
         }
     }
-
 }

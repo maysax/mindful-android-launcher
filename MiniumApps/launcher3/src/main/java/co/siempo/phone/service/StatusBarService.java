@@ -11,7 +11,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.ContentObserver;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.location.Location;
@@ -348,8 +347,7 @@ public class StatusBarService extends Service {
         size = new Point();
         display.getSize(size);
         resetAllTimer();
-        screenHeightExclusive = (size.y - (getNavigationBarHeight()
-                + getStatusBarHeight()));
+        screenHeightExclusive = (size.y - (getNavigationBarHeight()+ getStatusBarHeight()));
         heightWindow = (size.y - (getNavigationBarHeight()
                 + getStatusBarHeight())) * 6 / 9;
 
@@ -3123,7 +3121,8 @@ public class StatusBarService extends Service {
         if (resourceId > 0) {
             result = getResources().getDimensionPixelSize(resourceId);
         }
-        return result;
+        return 0;
+        //return result;
     }
 
     @Override

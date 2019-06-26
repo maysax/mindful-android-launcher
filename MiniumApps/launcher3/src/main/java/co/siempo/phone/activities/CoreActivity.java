@@ -5,9 +5,7 @@ import android.app.DownloadManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.admin.DevicePolicyManager;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -30,17 +28,17 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.v4.view.OnApplyWindowInsetsListener;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.view.WindowInsetsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
 
@@ -57,7 +55,6 @@ import co.siempo.phone.event.JunkAppOpenEvent;
 import co.siempo.phone.helper.Validate;
 import co.siempo.phone.interfaces.NFCInterface;
 import co.siempo.phone.log.Tracer;
-import co.siempo.phone.receivers.ScreenOffAdminReceiver;
 import co.siempo.phone.service.ReminderService;
 import co.siempo.phone.util.AppUtils;
 import co.siempo.phone.utils.PackageUtil;
@@ -73,8 +70,7 @@ import de.greenrobot.event.Subscribe;
  */
 
 @EActivity
-public abstract class CoreActivity extends AppCompatActivity implements NFCInterface, GestureDetector.OnGestureListener,
-        GestureDetector.OnDoubleTapListener {
+public abstract class CoreActivity extends AppCompatActivity implements NFCInterface {
 
     public static File localPath, backupPath;
     public int currentIndex = 0;
@@ -102,9 +98,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     private String state = "";
     private String TAG = "CoreActivity";
     private DownloadReceiver mDownloadReceiver;
-
-    public GestureDetector gestureDetector;
-    private NotificationManager mNotificationManager;
 
     // Static method to return File at localPath
     public static File getLocalPath() {
@@ -165,23 +158,27 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         registerReceiver(mDownloadReceiver, downloadIntent);
 
         startAlarm();
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content), new OnApplyWindowInsetsListener() {
+            @Override
+            public WindowInsetsCompat onApplyWindowInsets(View v, WindowInsetsCompat insets) {
+                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+                params.bottomMargin = insets.getSystemWindowInsetBottom();
+                return insets.consumeSystemWindowInsets();
+            }
+        });
 
-        // set gesture detector
-        gestureDetector = new GestureDetector(this, this);
-        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        gestureDetector.setOnDoubleTapListener(this);
-        AppUtils.notificationBarManaged(this, null);
+        statusBar();
     }
 
     private void startAlarm() {
-         SharedPreferences preferences;
-         SharedPreferences.Editor[] editor;
+        SharedPreferences preferences;
+        SharedPreferences.Editor[] editor;
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String reminder_flag = preferences.getString("reminder_flag_new", "0");
-        if(reminder_flag.equals("0")) {
+        if (reminder_flag.equals("0")) {
             editor = new SharedPreferences.Editor[1];
             editor[0] = preferences.edit();
-            editor[0].putString("reminder_flag_new","1");
+            editor[0].putString("reminder_flag_new", "1");
             editor[0].apply();
             AlarmManager alarmManager = (AlarmManager) this.getSystemService(this.ALARM_SERVICE);
             long when = System.currentTimeMillis();         // notification time
@@ -190,31 +187,31 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             //cal.add(Calendar.HOUR, 24);
             cal.add(Calendar.MINUTE, 3);
             Intent intent = new Intent(this, ReminderService.class);
-            intent.putExtra("title","Welcome to Siempo! Thank you for your trust.");
-            intent.putExtra("body","Choose a custom background to make your experience more personal.");
-            intent.putExtra("type","0");
+            intent.putExtra("title", "Welcome to Siempo! Thank you for your trust.");
+            intent.putExtra("body", "Choose a custom background to make your experience more personal.");
+            intent.putExtra("type", "0");
             PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, 0);
             alarmManager.set(AlarmManager.RTC, cal.getTimeInMillis(), pendingIntent);
 
             cal = Calendar.getInstance();
-        //cal.add(Calendar.HOUR, 24);
-        cal.add(Calendar.DAY_OF_MONTH, 7);
-        Intent intent1 = new Intent(this, ReminderService.class);
-        intent1.putExtra("title","Congratulations on sticking with Siempo for a week!");
-        intent1.putExtra("body","Please considering contributing to Siempo if you have found the experience valuable.");
-        intent1.putExtra("type","1");
-        PendingIntent pendingIntent1 = PendingIntent.getService(this, 1, intent1, 0);
-        alarmManager.set(AlarmManager.RTC, cal.getTimeInMillis(), pendingIntent1);
-        cal = Calendar.getInstance();
-        cal.set(2019, 5, 19);
-        Intent intent2 = new Intent(this, ReminderService.class);
-        intent2.putExtra("title","Special opportunity: how would you like to become an owner in Siempo?");
-        intent2.putExtra("body","Please consider participating in our crowd equity campaign!");
-        intent2.putExtra("type","2");
-        PendingIntent pendingIntent2 = PendingIntent.getService(this, 2, intent2, 0);
-        alarmManager.set(AlarmManager.RTC, cal.getTimeInMillis(), pendingIntent2);
+            //cal.add(Calendar.HOUR, 24);
+            cal.add(Calendar.DAY_OF_MONTH, 7);
+            Intent intent1 = new Intent(this, ReminderService.class);
+            intent1.putExtra("title", "Congratulations on sticking with Siempo for a week!");
+            intent1.putExtra("body", "Please considering contributing to Siempo if you have found the experience valuable.");
+            intent1.putExtra("type", "1");
+            PendingIntent pendingIntent1 = PendingIntent.getService(this, 1, intent1, 0);
+            alarmManager.set(AlarmManager.RTC, cal.getTimeInMillis(), pendingIntent1);
+            cal = Calendar.getInstance();
+            cal.set(2019, 5, 19);
+            Intent intent2 = new Intent(this, ReminderService.class);
+            intent2.putExtra("title", "Special opportunity: how would you like to become an owner in Siempo?");
+            intent2.putExtra("body", "Please consider participating in our crowd equity campaign!");
+            intent2.putExtra("type", "2");
+            PendingIntent pendingIntent2 = PendingIntent.getService(this, 2, intent2, 0);
+            alarmManager.set(AlarmManager.RTC, cal.getTimeInMillis(), pendingIntent2);
 
-          }
+        }
     }
 
     void connectInAppService() {
@@ -239,8 +236,15 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
+        statusBar();
+    }
+
+
+    private void statusBar()
+    {
         AppUtils.notificationBarManaged(this, null);
     }
+
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -616,124 +620,4 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             cur.close();
         }
     }
-
-    @Override
-    public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
-        return false;
-    }
-
-    @Override
-    public boolean onDoubleTap(MotionEvent motionEvent) {
-        return true;
-    }
-
-    @Override
-    public boolean onDoubleTapEvent(MotionEvent motionEvent) {
-        //Toast.makeText(getApplicationContext(), "DOUBLE TAP Event",Toast.LENGTH_SHORT).show();
-        if(motionEvent.getAction()==1)
-        {
-            if(PrefSiempo.getInstance(CoreActivity.this).read(PrefSiempo.IS_DND_ENABLE, false)) {
-                changeInterruptionFiler(NotificationManager.INTERRUPTION_FILTER_NONE);
-            }
-
-            if(PrefSiempo.getInstance(CoreActivity.this).read(PrefSiempo.IS_SLEEP_ENABLE, false)) {
-                sleep();
-            }
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event){
-        this.gestureDetector.onTouchEvent(event);
-        return super.onTouchEvent(event);
-    }
-
-    @Override
-    public void onShowPress(MotionEvent motionEvent) {
-
-    }
-
-    @Override
-    public boolean onDown(MotionEvent motionEvent) {
-        return false;
-    }
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent motionEvent) {
-        return false;
-    }
-
-    @Override
-    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-        return false;
-    }
-
-    @Override
-    public void onLongPress(MotionEvent motionEvent) {
-
-    }
-
-    @Override
-    public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-        return false;
-    }
-
-
-    public boolean checkNotificationAccessGranted(boolean onlyAccessCheck) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { // If api level minimum 23
-            // If notification policy access granted for this package
-            if (!mNotificationManager.isNotificationPolicyAccessGranted()) {
-                if (!onlyAccessCheck) {
-                    Intent intent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-                    startActivityForResult(intent, 111);
-                }
-                return false;
-            }
-
-            return true;
-
-        }
-        return false;
-    }
-
-    public void changeInterruptionFiler(int interruptionFilter) {
-        if(checkNotificationAccessGranted(true)) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                mNotificationManager.setInterruptionFilter(interruptionFilter);
-            }
-        }
-    }
-
-    private boolean checkDeviceAdminAccessGranted(boolean onlyAccessCheck) {
-        DevicePolicyManager policyManager = (DevicePolicyManager) CoreActivity.this
-                .getSystemService(Context.DEVICE_POLICY_SERVICE);
-        ComponentName adminReceiver = new ComponentName(CoreActivity.this,
-                ScreenOffAdminReceiver.class);
-        boolean admin = policyManager.isAdminActive(adminReceiver);
-        if(onlyAccessCheck) {
-            return admin;
-        } else {
-            if(!admin) {
-                // ask for device administration rights
-                Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
-                ComponentName mDeviceAdmin = new ComponentName(CoreActivity.this, ScreenOffAdminReceiver.class);
-                intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mDeviceAdmin);
-                intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, R.string.device_admin_description);
-                startActivityForResult(intent, 112);
-            }
-            return false;
-        }
-
-    }
-
-    private void sleep() {
-        DevicePolicyManager policyManager = (DevicePolicyManager) CoreActivity.this
-                .getSystemService(Context.DEVICE_POLICY_SERVICE);
-
-        if(checkDeviceAdminAccessGranted(true)) {
-            policyManager.lockNow();
-        }
-    }
-
 }

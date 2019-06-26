@@ -84,6 +84,7 @@ import co.siempo.phone.token.TokenParser;
 import co.siempo.phone.token.TokenRouter;
 import co.siempo.phone.token.TokenUpdateEvent;
 import co.siempo.phone.ui.SiempoViewPager;
+import co.siempo.phone.util.AppUtils;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
@@ -170,14 +171,6 @@ public class PaneFragment extends CoreFragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_pane, container, false);
         linMain = rootView.findViewById(R.id.linMain);
-        linMain.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                ((CoreActivity)getActivity()).gestureDetector.onTouchEvent(motionEvent);
-                return false;
-            }
-        });
-        Log.d("Test", "P1");
         context = (CoreActivity) getActivity();
         getColorOfStatusBar();
         initView(rootView);
@@ -196,10 +189,12 @@ public class PaneFragment extends CoreFragment {
         return rootView;
     }
 
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         bindView();
+
     }
 
     @Override
@@ -207,7 +202,6 @@ public class PaneFragment extends CoreFragment {
         super.onPause();
         UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
         getActivity().unregisterReceiver(mKeyBoardReceiver);
-
     }
 
 
@@ -281,6 +275,15 @@ public class PaneFragment extends CoreFragment {
                         drawableId));
                 ((DashboardActivity)getActivity()).changeLayoutBackground(ContextCompat.getColor(context,
                         drawableId));
+            } else {
+                if(getActivity() != null && context != null)
+                {
+                    /*linMain.setBackgroundColor(ContextCompat.getColor(context, R.color
+                            .transparent));*/
+
+                    /*((DashboardActivity)getActivity()).changeLayoutBackground(ContextCompat.getColor(context, R.color
+                            .transparent));*/
+                }
             }
         }
     }
@@ -300,7 +303,8 @@ public class PaneFragment extends CoreFragment {
         }
     }
 
-    private void changeColorOfStatusBar() {
+    private void changeColorOfStatusBar()
+    {
         if (pagerPane != null && pagerPane.getCurrentItem() == 0 && isVisible
                 () && DashboardActivity.currentIndexDashboard == 0) {
             mWindow.setStatusBarColor(statusBarColorJunk);
@@ -376,11 +380,11 @@ public class PaneFragment extends CoreFragment {
             int drawableId = typedValue.resourceId;
             linMain.setBackgroundColor(ContextCompat.getColor(context,
                     drawableId));
-
-
+            ((DashboardActivity)getActivity()).changeLayoutBackground(ContextCompat.getColor(context,drawableId));
         } else {
             linMain.setBackgroundColor(ContextCompat.getColor(context, R.color
                     .transparent));
+            ((DashboardActivity)getActivity()).changeLayoutBackground(ContextCompat.getColor(context, R.color.transparent));
         }
         getActivity().registerReceiver(mKeyBoardReceiver, new IntentFilter(Utils
                 .KEYBOARD_ACTION));
@@ -408,8 +412,6 @@ public class PaneFragment extends CoreFragment {
         if (searchLayout != null && searchLayout.getVisibility() == View.VISIBLE) {
             updateListViewLayout(false);
         }
-
-
         try {
             if (PrefSiempo.getInstance(context).read(PrefSiempo
                     .APPLAND_TOUR_SEEN, false) && PrefSiempo.getInstance(context).read(PrefSiempo
@@ -437,9 +439,6 @@ public class PaneFragment extends CoreFragment {
                     }
                 }, 800);
                 //delay
-            }
-            if(mAdapter !=null){
-                mAdapter.notifyDataSetChanged();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -505,8 +504,9 @@ public class PaneFragment extends CoreFragment {
 
 
                         @Override
-                        public void onPageSelected(int i) {
-
+                        public void onPageSelected(int i)
+                        {
+                            Log.e("page","pagerNum "+i);
                             if (i == 0) {
                                 /* Junkfood Pane */
                                 if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>()).size() == 0) {
@@ -521,7 +521,6 @@ public class PaneFragment extends CoreFragment {
                                             .APPLAND_TOUR_SEEN, false)) {
                                         //Show overlay for draw over other apps permission
 
-
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                             if (!Settings.canDrawOverlays(context) &&
                                                     PrefSiempo.getInstance(context).read
@@ -531,11 +530,7 @@ public class PaneFragment extends CoreFragment {
                                                     showOverLayForDrawingPermission();
                                             }
                                         }
-
-
                                     }
-
-
                                 }
                                 UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
 
