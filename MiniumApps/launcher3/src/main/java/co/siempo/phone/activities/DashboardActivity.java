@@ -22,8 +22,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.Window;
@@ -74,6 +74,7 @@ import co.siempo.phone.service.MailChimpOperation;
 import co.siempo.phone.service.SiempoNotificationListener_;
 import co.siempo.phone.service.StatusBarService;
 import co.siempo.phone.ui.SiempoViewPager;
+import co.siempo.phone.util.AppUtils;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.PrefSiempo;
@@ -174,6 +175,9 @@ public class DashboardActivity extends CoreActivity {
                 startActivity(intent);
             }
         }*/
+
+        AppUtils.notificationBarManaged(this, linMain);
+        AppUtils.statusbarColor0(this, 1);
     }
 
     private void storeDataToFirebase(String userId, String emailId) {
@@ -215,16 +219,18 @@ public class DashboardActivity extends CoreActivity {
         setTheme(read ? R.style.SiempoAppThemeDark : R.style.SiempoAppTheme);
 
         Window w = getWindow(); // in Activity's onCreate() for instance
- //       w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-       w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        //w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+//        w.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 //        w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         linMain = findViewById(R.id.linMain);
+
+
         imgBackground = findViewById(R.id.imgBackground);
-        //changeLayoutBackground();
+        //linMain.setPadding(0, getStatusBarHeight(), 0, 0);
         swipeCount = PrefSiempo.getInstance(DashboardActivity.this).read(PrefSiempo.TOGGLE_LEFTMENU, 0);
         loadViews();
         Log.d("Test", "P1");
@@ -239,13 +245,27 @@ public class DashboardActivity extends CoreActivity {
             decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
         if (permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)) {
-            changeLayoutBackground();
+            changeLayoutBackground(-1);
         } else {
             PrefSiempo.getInstance(this).write(PrefSiempo
                     .DEFAULT_BAG, "");
             PrefSiempo.getInstance(this).write(PrefSiempo
                     .DEFAULT_BAG_ENABLE, false);
         }
+
+        getColorList();
+    }
+
+    private void getColorList()
+    {
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = getTheme();
+        theme.resolveAttribute(R.attr.junk_top, typedValue, true);
+        AppUtils.backGroundColor = typedValue.resourceId;
+        theme.resolveAttribute(R.attr.junk_top, typedValue, true);
+        AppUtils.statusBarColorJunk = typedValue.data;
+        theme.resolveAttribute(R.attr.status_bar_pane, typedValue, true);
+        AppUtils.statusBarColorPane = typedValue.data;
     }
 
     public int getStatusBarHeight() {
@@ -266,26 +286,57 @@ public class DashboardActivity extends CoreActivity {
         return result;
     }
 
-    private void changeLayoutBackground() {
-        try {
-            String filePath = PrefSiempo.getInstance(this).read(PrefSiempo
-                    .DEFAULT_BAG, "");
-            boolean isEnable = PrefSiempo.getInstance(this).read(PrefSiempo
-                    .DEFAULT_BAG_ENABLE, false);
-            if (!TextUtils.isEmpty(filePath) && isEnable) {
-                Glide.with(this)
-                        .load(Uri.fromFile(new File(filePath))) // Uri of the
-                        // picture
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(imgBackground);
-            } else {
-                imgBackground.setImageBitmap(null);
-                imgBackground.setBackground(null);
+    public void changeLayoutBackground(int color)
+    {
+        Log.e("image","image "+ PrefSiempo.getInstance(this).read(PrefSiempo.DEFAULT_BAG, ""));
+        if (color == -1) {
+            try {
+                String filePath = PrefSiempo.getInstance(this).read(PrefSiempo
+                        .DEFAULT_BAG, "");
+                boolean isEnable = PrefSiempo.getInstance(this).read(PrefSiempo
+                        .DEFAULT_BAG_ENABLE, false);
+                if (!TextUtils.isEmpty(filePath) && isEnable) {
+                    Glide.with(this)
+                            .load(Uri.fromFile(new File(filePath))) // Uri of the
+                            // picture
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(imgBackground);
+                } else {
+                    imgBackground.setImageBitmap(null);
+                    imgBackground.setBackground(null);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else {
+            if (!PrefSiempo.getInstance(this).read(PrefSiempo.DEFAULT_BAG_ENABLE, false)) {
+                try {
+                    String filePath = PrefSiempo.getInstance(this).read(PrefSiempo
+                            .DEFAULT_BAG, "");
+                    boolean isEnable = PrefSiempo.getInstance(this).read(PrefSiempo
+                            .DEFAULT_BAG_ENABLE, false);
+                    if (!TextUtils.isEmpty(filePath) && isEnable) {
+                        Glide.with(this)
+                                .load(Uri.fromFile(new File(filePath))) // Uri of the
+                                // picture
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(imgBackground);
+                    } else {
+                        imgBackground.setImageBitmap(null);
+                        imgBackground.setBackground(null);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                //AppUtils.statusBarManaged(DashboardActivity.this);
+            }
         }
+
+        AppUtils.notificationBarManaged(this, linMain);
     }
+
+
 
     private void setBackground() {
         String filePath = PrefSiempo.getInstance(this).read(PrefSiempo
@@ -337,9 +388,9 @@ public class DashboardActivity extends CoreActivity {
         // launcher
         showOverlayOfDefaultLauncher();
         if (read) {
-            getWindow().setNavigationBarColor(getResources().getColor(R.color.transparent));
+            //getWindow().setNavigationBarColor(getResources().getColor(R.color.transparent));
         } else {
-            getWindow().setNavigationBarColor(getResources().getColor(R.color.black));
+            //getWindow().setNavigationBarColor(getResources().getColor(R.color.black));
         }
     }
 
@@ -351,38 +402,13 @@ public class DashboardActivity extends CoreActivity {
     public void loadViews() {
 
         mPager = findViewById(R.id.pager);
-        mPager.setOnTouchListener(new View.OnTouchListener() {
-            private float pointX;
-            private float pointY;
-            private int tolerance = 50;
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction()) {
-                    case MotionEvent.ACTION_MOVE:
-                        return false; //This is important, if you return TRUE the action of swipe will not take place.
-                    case MotionEvent.ACTION_DOWN:
-                        pointX = event.getX();
-                        pointY = event.getY();
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        boolean sameX = pointX + tolerance > event.getX() && pointX - tolerance < event.getX();
-                        boolean sameY = pointY + tolerance > event.getY() && pointY - tolerance < event.getY();
-                        if (sameX && sameY) {
-                            //The user "clicked" certain point in the screen or just returned to the same position an raised the finger
-                        }
-                }
-                ((CoreActivity) DashboardActivity.this).gestureDetector.onTouchEvent(event);
-                return false;
-            }
-        });
         linMain = findViewById(R.id.linMain);
         boolean hasMenuKey = ViewConfiguration.get(this).hasPermanentMenuKey();
-//        if (hasNavBar(getResources())) {
-//            mPager.setPadding(0, getStatusBarHeight(), 0, getNavigationBarHeight());
-//        } else {
-//            mPager.setPadding(0, getStatusBarHeight(), 0, 0);
-//
-//        }
+        /*if (hasNavBar(getResources())) {
+            mPager.setPadding(0, getStatusBarHeight(), 0, getNavigationBarHeight());
+        } else {
+            mPager.setPadding(0, getStatusBarHeight(), 0, 0);
+        }*/
         mPagerAdapter = new DashboardPagerAdapter(getFragmentManager());
         loadPane();
         mPager.setAdapter(mPagerAdapter);
@@ -395,6 +421,11 @@ public class DashboardActivity extends CoreActivity {
 
             @Override
             public void onPageSelected(int i) {
+                if(i == 1)
+                {
+                    AppUtils.notificationBarManaged(DashboardActivity.this, null);
+                    AppUtils.statusbarColor0(DashboardActivity.this, 1);
+                }
                 if (currentIndexDashboard == 1 && i == 0) {
                     Log.d("Firebase", "Intention End");
                     if (swipeCount >= 0 && swipeCount < 3) {
@@ -688,7 +719,7 @@ public class DashboardActivity extends CoreActivity {
                 @Override
                 public void onClick(View v) {
                     overlayDialog.dismiss();
-
+                    AppUtils.notificationBarManaged(DashboardActivity.this, linMain);
                     try {
                         Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -705,6 +736,7 @@ public class DashboardActivity extends CoreActivity {
             btnLater.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    AppUtils.notificationBarManaged(DashboardActivity.this, linMain);
                     overlayDialog.dismiss();
                 }
             });
@@ -716,7 +748,7 @@ public class DashboardActivity extends CoreActivity {
     @Subscribe(sticky = true, threadMode = ThreadMode.MainThread)
     public void onEvent(NotifyBackgroundChange notifyBackgroundChange) {
         if (notifyBackgroundChange != null && notifyBackgroundChange.isNotify()) {
-            changeLayoutBackground();
+            changeLayoutBackground(-1);
             EventBus.getDefault().removeStickyEvent(notifyBackgroundChange);
         }
 

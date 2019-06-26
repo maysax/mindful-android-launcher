@@ -88,7 +88,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:support-v4:26.1.0'
     androidTestImplementation "junit:junit:$junitVersion"
-    androidTestCompile("com.android.support.test.espresso:espresso-core:$espressoVersion", {
+    androidTestImplementation("com.android.support.test.espresso:espresso-core:$espressoVersion", {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     implementation project(':chips')
@@ -102,7 +102,7 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     implementation "com.github.yuweiguocn:GreenDaoUpgradeHelper:$greenDaoUpgradeHelperVersion"
     implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
-    debugCompile "com.amitshekhar.android:debug-db:$debugDBVersion"
+    debugImplementation "com.amitshekhar.android:debug-db:$debugDBVersion"
     implementation 'com.google.firebase:firebase-core:12.0.0'
     implementation 'com.google.firebase:firebase-database:12.0.0'
     implementation 'com.google.firebase:firebase-perf:12.0.0'
@@ -118,7 +118,7 @@ dependencies {
 // indicator for view pager
     implementation 'com.evernote:android-sdk:2.0.0-RC4'
 
-    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2') {
+    androidTestImplementation('com.android.support.test.espresso:espresso-contrib:2.2') {
         exclude module: 'support-annotations'
         exclude group: 'com.android.support', module: 'appcompat'
         exclude group: 'com.android.support', module: 'support-v4'

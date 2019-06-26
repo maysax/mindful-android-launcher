@@ -19,6 +19,7 @@ import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
 import co.siempo.phone.event.NotifyToolView;
 import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.util.AppUtils;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
@@ -109,4 +110,14 @@ public class ToolsPaneFragment extends CoreFragment {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser  && getActivity() != null)
+        {
+            AppUtils.notificationBarManaged(getActivity(), null);
+        }
+    }
+
 }

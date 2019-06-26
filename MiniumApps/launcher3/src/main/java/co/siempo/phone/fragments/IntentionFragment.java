@@ -36,6 +36,7 @@ import co.siempo.phone.activities.SettingsActivity_;
 import co.siempo.phone.dialog.DialogTempoSetting;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.service.StatusBarService;
+import co.siempo.phone.util.AppUtils;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.PrefSiempo;
@@ -94,8 +95,8 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         }
 
         if (mWindow != null) {
-            mWindow.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            mWindow.clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+            //mWindow.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            //mWindow.clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
         }
 
 
@@ -104,16 +105,16 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                 .DEFAULT_BAG_ENABLE, false);
         if(isEnable){
             if (mWindow != null) {
-                mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                //mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                 // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-                mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                //mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                 TypedValue typedValue = new TypedValue();
                 Resources.Theme theme = context.getTheme();
                 theme.resolveAttribute(R.attr.transparent, typedValue, true);
                 int transparentcolor= typedValue.data;
                 // finally change the color
-                mWindow.setStatusBarColor(transparentcolor);
-                mWindow.setNavigationBarColor(transparentcolor);
+                //mWindow.setStatusBarColor(transparentcolor);
+                //mWindow.setNavigationBarColor(transparentcolor);
             }
         }
 
@@ -347,6 +348,17 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                     }
                 });
             }
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser &&  getActivity() != null)
+        {
+            AppUtils.notificationBarManaged(getActivity(), null);
+            ((DashboardActivity)getActivity()).changeLayoutBackground(-1);
+            AppUtils.statusbarColor0(getActivity(), 1);
         }
     }
 

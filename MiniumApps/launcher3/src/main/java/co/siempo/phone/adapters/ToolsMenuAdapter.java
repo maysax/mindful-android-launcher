@@ -205,7 +205,6 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
             });
 
             boolean isEnable = PrefSiempo.getInstance(context).read(PrefSiempo.DEFAULT_ICON_TEXT_VISIBILITY_ENABLE, false);
-            Log.e("isEnable","isEnable 3 "+isEnable);
             if(isEnable)
             {
                 holder.txtLayout.setVisibility(View.GONE);

@@ -210,7 +210,7 @@
                     android:layout_marginTop="@dimen/dp_8"
                     android:clickable="true"
                     android:paddingLeft="50dp"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <co.siempo.phone.customviews.RobotoRegularTextView
                         android:id="@+id/txtNotificationVisibility"

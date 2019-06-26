@@ -266,6 +266,23 @@ public class PaneFragment extends CoreFragment {
                 firstTimeLoad = false;
             }
         }
+
+        //////////////////////
+        if(isVisibleToUser)
+        {
+            String filePath = PrefSiempo.getInstance(context).read(PrefSiempo
+                    .DEFAULT_BAG, "");
+            if (!TextUtils.isEmpty(filePath)) {
+                TypedValue typedValue = new TypedValue();
+                Resources.Theme theme = context.getTheme();
+                theme.resolveAttribute(R.attr.image_alpha, typedValue, true);
+                int drawableId = typedValue.resourceId;
+                linMain.setBackgroundColor(ContextCompat.getColor(context,
+                        drawableId));
+                ((DashboardActivity)getActivity()).changeLayoutBackground(ContextCompat.getColor(context,
+                        drawableId));
+            }
+        }
     }
 
     public void loadView() {

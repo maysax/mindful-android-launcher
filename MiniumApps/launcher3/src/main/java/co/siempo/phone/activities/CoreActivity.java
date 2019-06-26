@@ -59,6 +59,7 @@ import co.siempo.phone.interfaces.NFCInterface;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.receivers.ScreenOffAdminReceiver;
 import co.siempo.phone.service.ReminderService;
+import co.siempo.phone.util.AppUtils;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.EventBus;
@@ -169,7 +170,9 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         gestureDetector = new GestureDetector(this, this);
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         gestureDetector.setOnDoubleTapListener(this);
+        AppUtils.notificationBarManaged(this, null);
     }
+
     private void startAlarm() {
          SharedPreferences preferences;
          SharedPreferences.Editor[] editor;
@@ -236,7 +239,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-
+        AppUtils.notificationBarManaged(this, null);
     }
 
     @Override

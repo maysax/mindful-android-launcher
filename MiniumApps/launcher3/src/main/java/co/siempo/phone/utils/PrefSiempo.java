@@ -66,6 +66,7 @@ public class PrefSiempo {
     public static final String DEFAULT_BAG = "default_back";
     public static final String DEFAULT_BAG_ENABLE = "default_e";
 
+    public static final String IS_ASK_HINT = "IS_ASK_HINT";
 
     //Launcher 3 preferences
     public static final String UPDATE_PROMPT = "updatePrompt";

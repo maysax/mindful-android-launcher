@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -50,6 +51,7 @@ public class UpdateBackgroundActivity extends CoreActivity {
 
     private PhotoViewAttacher mAttacher;
     private PhotoView photoView;
+    private RelativeLayout hintLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +79,23 @@ public class UpdateBackgroundActivity extends CoreActivity {
         photoView = findViewById(R.id.ivFullScreen);
 
         mAttacher = new PhotoViewAttacher(photoView);
+        hintLayout = findViewById(R.id.hintLayout);
 
+        boolean isVisible = PrefSiempo.getInstance(this).read(PrefSiempo.IS_ASK_HINT, false);
+
+        if(!isVisible)
+        {
+            hintLayout.setVisibility(View.VISIBLE);
+            hintLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PrefSiempo.getInstance(UpdateBackgroundActivity.this).write(PrefSiempo.IS_ASK_HINT, true);
+                    hintLayout.setVisibility(View.GONE);
+                }
+            });
+        }else{
+            hintLayout.setVisibility(View.GONE);
+        }
 
         if (imageIntent.getExtras() != null && imageIntent.hasExtra("imageUri")) {
             strImage = imageIntent.getExtras().getString("imageUri");
