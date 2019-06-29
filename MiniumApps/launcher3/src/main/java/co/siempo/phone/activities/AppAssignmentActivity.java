@@ -2,7 +2,10 @@ package co.siempo.phone.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DividerItemDecoration;
@@ -10,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
@@ -21,11 +25,22 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Executor;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.viewholder.AppAssignmentAdapter;
@@ -34,7 +49,10 @@ import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.NotifySearchRefresh;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.models.CategoryAppList;
 import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.utils.CategoryUtils;
+import co.siempo.phone.utils.NetworkUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.Sorting;
 import de.greenrobot.event.EventBus;
@@ -61,6 +79,7 @@ public class AppAssignmentActivity extends CoreActivity {
     private ImageView imgClear;
     private EditText edtSearch;
     private String class_name;
+    private Context context;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -131,44 +150,82 @@ public class AppAssignmentActivity extends CoreActivity {
 
     private void filterList() {
         appList = new ArrayList<>();
+
         if (mainListItem != null) {
-            List<ResolveInfo> installedPackageList;
-            Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-            mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-            installedPackageList = getPackageManager().queryIntentActivities(mainIntent, 0);
-            if (idList.contains(mainListItem.getId())) {
-
-
-
-                mimeList = getMimeList();
-                for (ResolveInfo resolveInfo : installedPackageList) {
-                    if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
-                            appList.add(resolveInfo);
-                    }
-                }
-                if (showallAppBtn != null) {
-                    showallAppBtn.setVisibility(View.GONE);
-                }
-            } else {
-                appList = CoreApplication.getInstance().getApplicationByCategory(mainListItem.getId());
+            if(NetworkUtil.isOnline(context)){
+                showListByCategory();
             }
-
-            appListAll = new ArrayList<>();
-            for (ResolveInfo resolveInfo : installedPackageList) {
-                if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
-//                    if (!checkExits(resolveInfo)) {
-                        appListAll.add(resolveInfo);
-//                    }
-                }
-            }
-            appListAll = Sorting.sortAppAssignment(AppAssignmentActivity.this, appListAll);
-            if (showallAppBtn.getVisibility()!=View.VISIBLE) {
-                bindList(appListAll);
-            } else {
-                bindList(appList);
+            else{
+                showListByMimeType();
             }
         } else {
             finish();
+        }
+    }
+
+    public void showListByCategory(){
+        boolean isCategoryAvailable=false;
+        List<CategoryAppList> categoryAppList=CoreApplication.getInstance().categoryAppList;
+
+        if(categoryAppList!=null && categoryAppList.size()>0) {
+            Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+            mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+            List<ResolveInfo> installedPackageList = context.getPackageManager().queryIntentActivities(mainIntent, 0);
+            for (ResolveInfo resolveInfo : installedPackageList) {
+
+                if (resolveInfo.activityInfo.packageName != null && !resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
+                    for (CategoryAppList category : categoryAppList) {
+
+                        if (mainListItem != null && resolveInfo.activityInfo.packageName.equalsIgnoreCase(category.getPackageName()) &&  mainListItem.getCategory().equalsIgnoreCase(category.getCategoryName())) {
+                            isCategoryAvailable = true;
+                            appList.add(resolveInfo);
+                        }
+                    }
+                }
+            }
+
+            if(isCategoryAvailable){
+                bindList(appList);
+            }
+            else{
+                showListByMimeType();
+            }
+        }
+        else{
+            showListByMimeType();
+        }
+    }
+
+    public void showListByMimeType(){
+        List<ResolveInfo> installedPackageList;
+        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        installedPackageList = getPackageManager().queryIntentActivities(mainIntent, 0);
+        if (idList.contains(mainListItem.getId())) {
+            mimeList = getMimeList();
+            for (ResolveInfo resolveInfo : installedPackageList) {
+                if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
+                    appList.add(resolveInfo);
+                }
+            }
+            if (showallAppBtn != null) {
+                showallAppBtn.setVisibility(View.GONE);
+            }
+        } else {
+            appList = CoreApplication.getInstance().getApplicationByCategory(mainListItem.getId());
+        }
+
+        appListAll = new ArrayList<>();
+        for (ResolveInfo resolveInfo : installedPackageList) {
+            if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
+                appListAll.add(resolveInfo);
+            }
+        }
+        appListAll = Sorting.sortAppAssignment(AppAssignmentActivity.this, appListAll);
+        if (showallAppBtn.getVisibility()!=View.VISIBLE) {
+            bindList(appListAll);
+        } else {
+            bindList(appList);
         }
     }
 
@@ -197,6 +254,7 @@ public class AppAssignmentActivity extends CoreActivity {
     }
 
     private void initView() {
+        context = (Context)AppAssignmentActivity.this;
         toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
         if (mainListItem != null) {
@@ -254,6 +312,22 @@ public class AppAssignmentActivity extends CoreActivity {
                 edtSearch.setText("");
             }
         });
+
+        getAllInstallApps();
+    }
+
+    public void getAllInstallApps(){
+        List<ResolveInfo> installedPackageList;
+        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        installedPackageList = getPackageManager().queryIntentActivities(mainIntent, 0);
+        appListAll = new ArrayList<>();
+        for (ResolveInfo resolveInfo : installedPackageList) {
+            if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
+                appListAll.add(resolveInfo);
+            }
+        }
+        appListAll = Sorting.sortAppAssignment(AppAssignmentActivity.this, appListAll);
 
     }
 
