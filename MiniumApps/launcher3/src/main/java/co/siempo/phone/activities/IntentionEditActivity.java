@@ -63,7 +63,7 @@ public class IntentionEditActivity extends CoreActivity implements View.OnClickL
         getWindow().setReturnTransition(returnTrans);
         setContentView(R.layout.activity_intention_edit);
         Window window = getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        //window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(getResources().getColor(R.color.bg_permissionscreenstatusbar));
         View decor = window.getDecorView();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

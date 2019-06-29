@@ -3123,7 +3123,8 @@ public class StatusBarService extends Service {
         if (resourceId > 0) {
             result = getResources().getDimensionPixelSize(resourceId);
         }
-        return result;
+        return 0;
+        //return result;
     }
 
     @Override
