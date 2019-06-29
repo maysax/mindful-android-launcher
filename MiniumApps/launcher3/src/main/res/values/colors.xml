@@ -120,6 +120,7 @@
     <color name="shadow">#727272</color>
     <color name="transparent">@android:color/transparent</color>
     <color name="darker_gray">@android:color/darker_gray</color>
+    <color name="darker_gray_trans">#ffbbbaaa</color>
 
     <!-- Text colors -->
     <color name="text.primary">#212121</color>
@@ -161,5 +162,6 @@
     <color name="pane_dark">#CC000000</color>
     <color name="arrow_color_light">#CCCCCC</color>
 
+    <color name="black_transperent">#40000000</color>
 
 </resources>

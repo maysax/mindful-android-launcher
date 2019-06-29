@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,8 @@ import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
 import co.siempo.phone.event.NotifyFavortieView;
 import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.util.AppUtils;
+import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
@@ -60,13 +63,21 @@ public class FavoritePaneFragment extends CoreFragment {
 
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
         if(mAdapter != null)
         {
             mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser && getActivity() != null){
+
+            AppUtils.notificationBarManaged(getActivity(), null);
         }
     }
 
@@ -150,4 +161,6 @@ public class FavoritePaneFragment extends CoreFragment {
             throw new RuntimeException(e);
         }
     }
+
+
 }

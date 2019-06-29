@@ -630,7 +630,6 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
 
             case 21:
                 if (isVisible) {
-                    Log.d("hardikkamothi","visible che ..");
                     holder.txtAssignApp.setVisibility(View.VISIBLE);
                     holder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
                     holder.checkbox.setChecked(true);

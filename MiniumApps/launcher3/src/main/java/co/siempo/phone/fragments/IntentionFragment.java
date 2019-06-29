@@ -101,22 +101,22 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
 
 
 
-        boolean isEnable = PrefSiempo.getInstance(getActivity()).read(PrefSiempo
-                .DEFAULT_BAG_ENABLE, false);
-        if(isEnable){
-            if (mWindow != null) {
-                //mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-                //mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                TypedValue typedValue = new TypedValue();
-                Resources.Theme theme = context.getTheme();
-                theme.resolveAttribute(R.attr.transparent, typedValue, true);
-                int transparentcolor= typedValue.data;
-                // finally change the color
-                //mWindow.setStatusBarColor(transparentcolor);
-                //mWindow.setNavigationBarColor(transparentcolor);
-            }
-        }
+//        boolean isEnable = PrefSiempo.getInstance(getActivity()).read(PrefSiempo
+//                .DEFAULT_BAG_ENABLE, false);
+//        if(isEnable){
+//            if (mWindow != null) {
+//                //mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//                // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+//                //mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//                TypedValue typedValue = new TypedValue();
+//                Resources.Theme theme = context.getTheme();
+//                theme.resolveAttribute(R.attr.transparent, typedValue, true);
+//                int transparentcolor= typedValue.data;
+//                // finally change the color
+//                //mWindow.setStatusBarColor(transparentcolor);
+//                //mWindow.setNavigationBarColor(transparentcolor);
+//            }
+//        }
 
     }
 
@@ -196,6 +196,17 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
 
     }
 
+
+    private void setWindowFlag(final int bits, boolean on) {
+        Window win = getActivity().getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
+    }
 
     @Override
     public void onClick(View v) {

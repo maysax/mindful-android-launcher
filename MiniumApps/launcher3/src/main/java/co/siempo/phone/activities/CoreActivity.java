@@ -30,6 +30,9 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.v4.view.OnApplyWindowInsetsListener;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.view.WindowInsetsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -165,6 +168,14 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         registerReceiver(mDownloadReceiver, downloadIntent);
 
         startAlarm();
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content), new OnApplyWindowInsetsListener() {
+            @Override
+            public WindowInsetsCompat onApplyWindowInsets(View v, WindowInsetsCompat insets) {
+                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+                params.bottomMargin = insets.getSystemWindowInsetBottom();
+                return insets.consumeSystemWindowInsets();
+            }
+        });
 
         // set gesture detector
         gestureDetector = new GestureDetector(this, this);
@@ -629,7 +640,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 
     @Override
     public boolean onDoubleTapEvent(MotionEvent motionEvent) {
-        //Toast.makeText(getApplicationContext(), "DOUBLE TAP Event",Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(), "DOUBLE TAP Event",Toast.LENGTH_SHORT).show();
         if(motionEvent.getAction()==1)
         {
             if(PrefSiempo.getInstance(CoreActivity.this).read(PrefSiempo.IS_DND_ENABLE, false)) {

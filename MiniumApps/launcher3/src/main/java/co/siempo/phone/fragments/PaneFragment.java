@@ -270,21 +270,25 @@ public class PaneFragment extends CoreFragment {
         //////////////////////
         if(isVisibleToUser)
         {
-            String filePath = PrefSiempo.getInstance(context).read(PrefSiempo
-                    .DEFAULT_BAG, "");
-            if (!TextUtils.isEmpty(filePath)) {
-                TypedValue typedValue = new TypedValue();
-                Resources.Theme theme = context.getTheme();
-                theme.resolveAttribute(R.attr.image_alpha, typedValue, true);
-                int drawableId = typedValue.resourceId;
-                linMain.setBackgroundColor(ContextCompat.getColor(context,
-                        drawableId));
-                ((DashboardActivity)getActivity()).changeLayoutBackground(ContextCompat.getColor(context,
-                        drawableId));
-            }
+         changeStatusBar();
         }
     }
 
+
+    public void changeStatusBar(){
+        String filePath = PrefSiempo.getInstance(context).read(PrefSiempo
+                .DEFAULT_BAG, "");
+        if (!TextUtils.isEmpty(filePath)) {
+            TypedValue typedValue = new TypedValue();
+            Resources.Theme theme = context.getTheme();
+            theme.resolveAttribute(R.attr.image_alpha, typedValue, true);
+            int drawableId = typedValue.resourceId;
+            linMain.setBackgroundColor(ContextCompat.getColor(context,
+                    drawableId));
+            ((DashboardActivity)getActivity()).changeLayoutBackground(ContextCompat.getColor(context,
+                    drawableId));
+        }
+    }
     public void loadView() {
         if (getActivity() != null) {
             getActivity().runOnUiThread(new Runnable() {
@@ -376,11 +380,11 @@ public class PaneFragment extends CoreFragment {
             int drawableId = typedValue.resourceId;
             linMain.setBackgroundColor(ContextCompat.getColor(context,
                     drawableId));
-
-
+            ((DashboardActivity)getActivity()).changeLayoutBackground(ContextCompat.getColor(context,drawableId));
         } else {
             linMain.setBackgroundColor(ContextCompat.getColor(context, R.color
                     .transparent));
+            ((DashboardActivity)getActivity()).changeLayoutBackground(ContextCompat.getColor(context, R.color.transparent));
         }
         getActivity().registerReceiver(mKeyBoardReceiver, new IntentFilter(Utils
                 .KEYBOARD_ACTION));
@@ -408,8 +412,6 @@ public class PaneFragment extends CoreFragment {
         if (searchLayout != null && searchLayout.getVisibility() == View.VISIBLE) {
             updateListViewLayout(false);
         }
-
-
         try {
             if (PrefSiempo.getInstance(context).read(PrefSiempo
                     .APPLAND_TOUR_SEEN, false) && PrefSiempo.getInstance(context).read(PrefSiempo
@@ -438,6 +440,9 @@ public class PaneFragment extends CoreFragment {
                 }, 800);
                 //delay
             }
+
+            changeStatusBar();
+
             if(mAdapter !=null){
                 mAdapter.notifyDataSetChanged();
             }
@@ -1396,4 +1401,5 @@ public class PaneFragment extends CoreFragment {
 
         }
     }
+
 }
