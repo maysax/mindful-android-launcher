@@ -41,6 +41,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -49,7 +50,10 @@ import co.siempo.phone.R;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.AppMenu;
+import co.siempo.phone.models.CategoryAppList;
 import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.service.CategoriesApp;
+import co.siempo.phone.service.ReminderService;
 import co.siempo.phone.utils.LifecycleHandler;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
@@ -123,9 +127,16 @@ public abstract class CoreApplication extends MultiDexApplication {
     private boolean isHideIconBranding = true;
     private boolean isRandomize = true;
     private CrashlyticsCore crashlyticsCore;
+    public List<CategoryAppList> categoryAppList = new ArrayList<>();
     private List<String> runningDownloadigFileList = new ArrayList<>();
 
+
+
+    public List<CategoryAppList> getCategoryAppList(){
+        return categoryAppList;
+    }
     /**
+     *
      * Retrieving the third party app usage time when siempo set as launcher.
      *
      * @return
@@ -291,6 +302,14 @@ public abstract class CoreApplication extends MultiDexApplication {
         }
         setHideIconBranding(PrefSiempo.getInstance(sInstance).read(PrefSiempo.IS_ICON_BRANDING, true));
         setRandomize(PrefSiempo.getInstance(sInstance).read(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, true));
+
+
+        /**
+         * Fetch Category App List
+         */
+        Intent intent = new Intent(this, CategoriesApp.class);
+        startService(intent);
+
     }
 
     /**

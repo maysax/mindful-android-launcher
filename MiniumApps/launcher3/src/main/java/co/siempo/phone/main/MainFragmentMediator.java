@@ -8,6 +8,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.text.TextUtils;
 
+import com.evernote.client.android.helper.Cat;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ import co.siempo.phone.token.TokenItemType;
 import co.siempo.phone.token.TokenManager;
 import co.siempo.phone.token.TokenRouter;
 import co.siempo.phone.util.ContactSmsPermissionHelper;
+import co.siempo.phone.utils.CategoryUtils;
 import co.siempo.phone.utils.ContactsLoader;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PermissionUtil;
@@ -116,19 +119,19 @@ public class MainFragmentMediator {
 
                 if (fragment.getManager().hasCompleted(TokenItemType.CONTACT) && fragment.getManager().has(TokenItemType.DATA) && !fragment.getManager().get(TokenItemType.DATA).getTitle().isEmpty()) {
                     //items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.ic_messages_tool, MainListItemType.DEFAULT));
-                    items.add(new MainListItem(3, fragment.getString(R.string.title_swipe), R.drawable.ic_default_swipe, MainListItemType.DEFAULT));
+                    items.add(new MainListItem(3, fragment.getString(R.string.title_swipe), R.drawable.ic_default_swipe, MainListItemType.DEFAULT, CategoryUtils.EMPTY));
                 } else if (fragment.getManager().hasCompleted(TokenItemType.CONTACT)) {
                     //items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.ic_messages_tool, MainListItemType.DEFAULT));
-                    items.add(new MainListItem(3, fragment.getString(R.string.title_swipe), R.drawable.ic_default_swipe, MainListItemType.DEFAULT));
+                    items.add(new MainListItem(3, fragment.getString(R.string.title_swipe), R.drawable.ic_default_swipe, MainListItemType.DEFAULT, CategoryUtils.EMPTY));
                 } else if (fragment.getManager().hasCompleted(TokenItemType.DATA)) {
                     //items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.ic_messages_tool,MainListItemType.DEFAULT));
                     items.add(new MainListItem(2, fragment.getString(R
-                            .string.title_saveNote), R.drawable.ic_notes_tool, MainListItemType.DEFAULT));
-                    items.add(new MainListItem(3, fragment.getString(R.string.title_swipe), R.drawable.ic_default_swipe, MainListItemType.DEFAULT));
+                            .string.title_saveNote), R.drawable.ic_notes_tool, MainListItemType.DEFAULT,CategoryUtils.EMPTY));
+                    items.add(new MainListItem(3, fragment.getString(R.string.title_swipe), R.drawable.ic_default_swipe, MainListItemType.DEFAULT,CategoryUtils.EMPTY));
                 } else {
                     //items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.ic_messages_tool, MainListItemType.DEFAULT));
-                    items.add(new MainListItem(2, fragment.getString(R.string.title_saveNote), R.drawable.ic_notes_tool, MainListItemType.DEFAULT));
-                    items.add(new MainListItem(3, fragment.getString(R.string.title_swipe), R.drawable.ic_default_swipe, MainListItemType.DEFAULT));
+                    items.add(new MainListItem(2, fragment.getString(R.string.title_saveNote), R.drawable.ic_notes_tool, MainListItemType.DEFAULT,CategoryUtils.EMPTY));
+                    items.add(new MainListItem(3, fragment.getString(R.string.title_swipe), R.drawable.ic_default_swipe, MainListItemType.DEFAULT,CategoryUtils.EMPTY));
                 }
             }
         } catch (Exception e) {
@@ -338,7 +341,7 @@ public class MainFragmentMediator {
             for (MainListItem item : contactItems) {
                 if (item != null && item.getContactId() == selectedContactId) {
                     for (MainListItem.ContactNumber number : item.getNumbers()) {
-                        items.add(new MainListItem(selectedContactId, number.getNumber(), R.drawable.icon_call, MainListItemType.NUMBERS));
+                        items.add(new MainListItem(selectedContactId, number.getNumber(), R.drawable.icon_call, MainListItemType.NUMBERS,CategoryUtils.EMPTY));
                     }
                 }
             }

@@ -51,7 +51,7 @@ public class Launcher3App extends CoreApplication {
     private boolean isSiempoLauncher = false;
     private long startTime;
     private ResolveInfo resolveInfo;
-    private ArrayList<ResolveInfo> appList;
+
 
     @Trace(tag = TRACE_TAG)
     @Override
@@ -91,6 +91,8 @@ public class Launcher3App extends CoreApplication {
     public DaoSession getDaoSession() {
         return daoSession;
     }
+
+
 
     private void loadConfigurationValues() {
         int flowSegmentCount = 4;
