@@ -592,6 +592,9 @@
     <string name="longitude">longitude</string>
     <string name="latitude">latitude</string>
     <string name="leave_a_review">Leave a review</string>
+    <string name="thanks_for_email_collection">We\'re collecting email address because we\'d love to thank you personally!</string>
+    <string name="wallpaper">Wallpaper</string>
+    <string name="distracting_apps">Distracting Apps</string>
 
 
     <string-array name="deter_after_dialog">
