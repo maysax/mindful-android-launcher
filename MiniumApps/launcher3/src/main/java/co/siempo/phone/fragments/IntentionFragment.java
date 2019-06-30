@@ -28,11 +28,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import co.siempo.phone.R;
+import co.siempo.phone.activities.ChooseBackgroundActivity;
+import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.activities.EnableTempoActivity;
 import co.siempo.phone.activities.HelpActivity;
 import co.siempo.phone.activities.IntentionEditActivity;
+import co.siempo.phone.activities.JunkfoodFlaggingActivity;
 import co.siempo.phone.activities.SettingsActivity_;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.dialog.DialogTempoSetting;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.service.StatusBarService;
@@ -283,6 +287,10 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                 LinearLayout linSettings = customView.findViewById(R.id.linSettings);
                 LinearLayout linTempo = customView.findViewById(R.id.linTempo);
 
+
+                LinearLayout linWallpaper = customView.findViewById(R.id.linWallpaper);
+                LinearLayout linDistractingApp = customView.findViewById(R.id.linDistractingApp);
+
                 linTempo.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -332,6 +340,31 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                         }
                     }
                 });
+
+                linWallpaper.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (getActivity() != null) {
+                            UIUtils.clearDim(root);
+                            mPopupWindow.dismiss();
+                            CoreApplication.getInstance().downloadSiempoImages();
+                            startActivity(new Intent(getActivity(), ChooseBackgroundActivity.class));
+                        }
+                    }
+                });
+
+                linDistractingApp.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (getActivity() != null) {
+                            UIUtils.clearDim(root);
+                            mPopupWindow.dismiss();
+                            Intent junkFoodFlagIntent = new Intent(getActivity(), JunkfoodFlaggingActivity.class);
+                            startActivity(junkFoodFlagIntent);
+                        }
+                    }
+                });
+
                 mPopupWindow.setOutsideTouchable(true);
                 mPopupWindow.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 mPopupWindow.showAsDropDown(imgOverFlow, 0, (int) -imgOverFlow.getX() - 10);
