@@ -30,6 +30,7 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.view.OnApplyWindowInsetsListener;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.WindowInsetsCompat;
@@ -43,7 +44,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Toast;
+import android.widget.ImageView;
 
 import com.android.vending.billing.IInAppBillingService;
 
@@ -683,6 +684,47 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     @Override
     public void onLongPress(MotionEvent motionEvent) {
 
+        // SSA-1960 START
+        final BottomSheetDialog mBottomSheetDialog = new BottomSheetDialog(this);
+        View sheetView = getLayoutInflater().inflate(R.layout.shortcuts_bottom, null);
+        mBottomSheetDialog.setContentView(sheetView);
+
+        ImageView shortcutSettings = sheetView.findViewById(R.id.shortcut_settings);
+        shortcutSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CoreActivity.this, SettingsActivity_.class);
+                startActivity(intent);
+                mBottomSheetDialog.closeOptionsMenu();
+                mBottomSheetDialog.hide();
+            }
+        });
+
+        ImageView shortcutWallpaper = sheetView.findViewById(R.id.shortcut_wallpaper);
+        shortcutWallpaper.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CoreApplication.getInstance().downloadSiempoImages();
+                startActivity(new Intent(CoreActivity.this, ChooseBackgroundActivity.class));
+                mBottomSheetDialog.closeOptionsMenu();
+                mBottomSheetDialog.hide();
+            }
+        });
+
+        ImageView shortcutDistractApp = sheetView.findViewById(R.id.shortcut_distract_app);
+        shortcutDistractApp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent junkFoodFlagIntent = new Intent(CoreActivity.this, JunkfoodFlaggingActivity.class);
+                startActivity(junkFoodFlagIntent);
+                mBottomSheetDialog.closeOptionsMenu();
+                mBottomSheetDialog.hide();
+            }
+        });
+
+        mBottomSheetDialog.show();
+
+        // SSA-1960 END
     }
 
     @Override
