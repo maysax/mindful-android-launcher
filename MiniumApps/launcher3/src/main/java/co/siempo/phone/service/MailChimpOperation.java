@@ -42,10 +42,10 @@ public class MailChimpOperation extends AsyncTask<String, Void, String> {
             RequestBody body = null;
 
             switch (emailType) {
-                case CONTRIBUTOR_EMAIL:
+                case EMAIL_REG:
                     body = RequestBody.create(mediaType, "{\"email_address\":\"" + val_email + "\",\"status\":\"subscribed\"}");
                     break;
-                case EMAIL_REG:
+                case CONTRIBUTOR_EMAIL:
                     if(isSubscribed) {
                         body = RequestBody.create(mediaType, "{\"contributor_email_address\":\"" + val_email + "\",\"status\":\"subscribed\"}");
                     } else {
