@@ -137,7 +137,7 @@
         android:padding="@dimen/dp_10"
         android:text="Submit"
         android:textColor="@color/white"
-        android:visibility="visible" />
+        android:visibility="gone" />
 </LinearLayout>
 
 
