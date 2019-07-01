@@ -207,7 +207,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             intent.putExtra("type","0");
             PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, 0);
             alarmManager.set(AlarmManager.RTC, cal.getTimeInMillis(), pendingIntent);
-
+//
             cal = Calendar.getInstance();
         //cal.add(Calendar.HOUR, 24);
         cal.add(Calendar.DAY_OF_MONTH, 7);
@@ -217,14 +217,14 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         intent1.putExtra("type","1");
         PendingIntent pendingIntent1 = PendingIntent.getService(this, 1, intent1, 0);
         alarmManager.set(AlarmManager.RTC, cal.getTimeInMillis(), pendingIntent1);
-        cal = Calendar.getInstance();
-        cal.set(2019, 5, 19);
-        Intent intent2 = new Intent(this, ReminderService.class);
-        intent2.putExtra("title","Special opportunity: how would you like to become an owner in Siempo?");
-        intent2.putExtra("body","Please consider participating in our crowd equity campaign!");
-        intent2.putExtra("type","2");
-        PendingIntent pendingIntent2 = PendingIntent.getService(this, 2, intent2, 0);
-        alarmManager.set(AlarmManager.RTC, cal.getTimeInMillis(), pendingIntent2);
+//        cal = Calendar.getInstance();
+//        cal.set(2019, 5, 19);
+//        Intent intent2 = new Intent(this, ReminderService.class);
+//        intent2.putExtra("title","Special opportunity: how would you like to become an owner in Siempo?");
+//        intent2.putExtra("body","Please consider participating in our crowd equity campaign!");
+//        intent2.putExtra("type","2");
+//        PendingIntent pendingIntent2 = PendingIntent.getService(this, 2, intent2, 0);
+//        alarmManager.set(AlarmManager.RTC, cal.getTimeInMillis(), pendingIntent2);
 
           }
     }

@@ -147,7 +147,6 @@ public class UpdateBackgroundActivity extends CoreActivity {
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 .into(imageView);*/
-        Log.e("strImage","strImage2 "+strImage);
 
         Glide.with(getApplicationContext())
                 .load(Uri.fromFile(new File(strImage)))
