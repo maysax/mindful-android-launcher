@@ -162,7 +162,7 @@ public class EmailRequestActivity extends CoreActivity implements View.OnClickLi
                     activeNetwork = connectivityManager.getActiveNetworkInfo();
                 }
                 if (activeNetwork != null) {
-                    new MailChimpOperation().execute(strEmail);
+                    new MailChimpOperation(MailChimpOperation.EmailType.EMAIL_REG).execute(strEmail);
                     storeDataToFirebase(CoreApplication.getInstance().getDeviceId(), strEmail, 0, 0);
                 }
                 finish();

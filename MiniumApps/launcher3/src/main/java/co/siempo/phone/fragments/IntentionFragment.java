@@ -29,6 +29,7 @@ import android.widget.TextView;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.ChooseBackgroundActivity;
+import co.siempo.phone.activities.ContributeActivity;
 import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.activities.EnableTempoActivity;
@@ -298,10 +299,20 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                 LinearLayout linHelp = customView.findViewById(R.id.linHelp);
                 LinearLayout linSettings = customView.findViewById(R.id.linSettings);
                 LinearLayout linTempo = customView.findViewById(R.id.linTempo);
-
-
                 LinearLayout linWallpaper = customView.findViewById(R.id.linWallpaper);
                 LinearLayout linDistractingApp = customView.findViewById(R.id.linDistractingApp);
+                LinearLayout linContribute = customView.findViewById(R.id.linContribute);
+
+                linContribute.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (getActivity() != null) {
+                            UIUtils.clearDim(root);
+                            mPopupWindow.dismiss();
+                            startActivity(new Intent(getActivity(), ContributeActivity.class));
+                        }
+                    }
+                });
 
                 linTempo.setOnClickListener(new View.OnClickListener() {
                     @Override

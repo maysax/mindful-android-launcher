@@ -147,7 +147,7 @@ public class DashboardActivity extends CoreActivity {
                         activeNetwork = connectivityManager.getActiveNetworkInfo();
                     }
                     if (activeNetwork != null) {
-                        new MailChimpOperation().execute(strEmail);
+                        new MailChimpOperation(MailChimpOperation.EmailType.EMAIL_REG).execute(strEmail);
                         storeDataToFirebase(CoreApplication.getInstance().getDeviceId(), strEmail);
                     }
                 } catch (Exception e) {

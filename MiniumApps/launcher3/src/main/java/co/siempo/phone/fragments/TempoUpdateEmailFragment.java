@@ -95,7 +95,7 @@ public class TempoUpdateEmailFragment extends CoreFragment {
                                     .CONNECTIVITY_SERVICE);
                             NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
                             if (activeNetwork != null) {
-                                new MailChimpOperation().execute(val_email);
+                                new MailChimpOperation(MailChimpOperation.EmailType.EMAIL_REG).execute(val_email);
                                 if (PrefSiempo.getInstance(context).read(PrefSiempo
                                         .USER_EMAILID, "").equalsIgnoreCase("")) {
                                     storeDataToFirebase(true, CoreApplication.getInstance().getDeviceId(), val_email);
