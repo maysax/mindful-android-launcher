@@ -23,29 +23,107 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
+        android:orientation="vertical"
         android:padding="@dimen/dp_10">
 
-        <co.siempo.phone.customviews.RobotoMediumTextView
-            android:id="@+id/text"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center|right"
-            android:paddingRight="@dimen/dp_20"
-            android:text="Select Amount"
-            android:textSize="@dimen/sp_12"
-            android:visibility="gone" />
 
-        <android.support.v7.widget.AppCompatSpinner
-            android:id="@+id/spinnerContribute"
-            style="@style/Widget.AppCompat.Spinner.Underlined"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+            <co.siempo.phone.customviews.RobotoMediumTextView
+                android:id="@+id/text"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center|right"
+                android:paddingRight="@dimen/dp_20"
+                android:text="Select Amount"
+                android:textSize="@dimen/sp_12"
+                android:visibility="gone" />
+
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/spinnerContribute"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:dropDownWidth="120dp"
+                android:gravity="right"
+                android:overlapAnchor="false"
+                android:spinnerMode="dropdown"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/text_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:hint="@string/lbl_email"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:textColorHint="@color/errorColor"
+            app:errorTextAppearance="@style/error_appearance">
+
+            <EditText
+                android:id="@+id/contributeEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:text=""
+                android:textColorHint="@color/colorAccent">
+
+            </EditText>
+        </android.support.design.widget.TextInputLayout>
+        <co.siempo.phone.customviews.RobotoRegularTextView
+            android:id="@+id/txtErrorMessage"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:dropDownWidth="120dp"
-            android:gravity="right"
-            android:overlapAnchor="false"
-            android:spinnerMode="dropdown"
-            android:visibility="gone" />
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/imgLogo"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/dp_1"
+            android:gravity="center"
+            android:paddingLeft="@dimen/dp_3"
+            android:text="@string/error_email"
+            android:textColor="#FF4291"
+            android:textSize="12sp"
+            android:visibility="gone"/>
+
+        <co.siempo.phone.customviews.RobotoMediumTextView
+            android:id="@+id/txtEmailThanks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_10"
+            android:text="@string/thanks_for_email_collection"
+            android:textSize="@dimen/sp_15" />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="start"
+            android:padding="@dimen/dp_10"
+            android:layout_height="wrap_content">
+            <CheckBox
+                android:id="@+id/subscribeSiempo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:button="@drawable/checkbox_selector"
+                />
+            <co.siempo.phone.customviews.RobotoMediumTextView
+                android:id="@+id/txtSubscribe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp_10"
+                android:text="Subscribe Siempo"
+                android:textSize="@dimen/sp_15" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <TextView
@@ -59,7 +137,7 @@
         android:padding="@dimen/dp_10"
         android:text="Submit"
         android:textColor="@color/white"
-        android:visibility="gone" />
+        android:visibility="visible" />
 </LinearLayout>
 
 

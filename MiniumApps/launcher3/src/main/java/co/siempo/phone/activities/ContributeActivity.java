@@ -4,16 +4,21 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,9 +28,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.service.MailChimpOperation;
 import co.siempo.phone.util.SkuDetails;
 import co.siempo.phone.util.SubscriptionUtil;
+import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.UIUtils;
 
 /**
  * This screen is use to display FAQ link.
@@ -45,11 +54,19 @@ public class ContributeActivity extends CoreActivity implements
     private SkuDetails skuDetails;
     private CustomAdapter adapter;
 
+    private EditText contributeEmail;
+    private TextView txtErrorMessage;
+    private CheckBox subscribeSiempo;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_contribute);
         setUpToolbar();
+
+        contributeEmail = (EditText) findViewById(R.id.contributeEmail);
+        txtErrorMessage = (TextView) findViewById(R.id.txtErrorMessage);
+        subscribeSiempo= (CheckBox) findViewById(R.id.subscribeSiempo);
 
         additionalSkuListPlayStore.addAll(Arrays.asList(getResources().getStringArray(R.array.in_app_items_donate)));
 
@@ -82,9 +99,44 @@ public class ContributeActivity extends CoreActivity implements
         txtSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                subscriptionUtil.initPurchase(skuDetails.getSku(), ContributeActivity.this);
+                String contributorEmail = contributeEmail.getText().toString();
+
+                if(!TextUtils.isEmpty(contributorEmail)) {
+                    if(validEmail(contributorEmail)) {
+                        new MailChimpOperation(MailChimpOperation.EmailType.EMAIL_REG, subscribeSiempo.isChecked()).execute(contributorEmail);
+                        subscriptionUtil.initPurchase(skuDetails.getSku(), ContributeActivity.this);
+                    }
+                } else {
+                    subscriptionUtil.initPurchase(skuDetails.getSku(), ContributeActivity.this);
+                }
+
             }
         });
+    }
+
+    private boolean validEmail(String strEmail){
+        boolean isValidEmail = UIUtils.isValidEmail(strEmail);
+        if (isValidEmail) {
+            txtErrorMessage.setVisibility(View.GONE);
+            try {
+                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context
+                        .CONNECTIVITY_SERVICE);
+                NetworkInfo activeNetwork = null;
+                if (connectivityManager != null) {
+                    activeNetwork = connectivityManager.getActiveNetworkInfo();
+                }
+                if (activeNetwork != null) {
+                    return true;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            txtErrorMessage.setVisibility(View.VISIBLE);
+            return false;
+        }
+
+        return false;
     }
 
     private void setUpToolbar() {
@@ -136,7 +188,7 @@ public class ContributeActivity extends CoreActivity implements
 
     @Override
     public void onFailure() {
-        Toast.makeText(this, "In app billing error", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Please make sure PlayStore is configured properly!", Toast.LENGTH_SHORT).show();
         finish();
     }
 
