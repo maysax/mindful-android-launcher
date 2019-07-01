@@ -2,16 +2,25 @@ package co.siempo.phone.fragments;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -26,6 +35,14 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.ChooseBackgroundActivity;
@@ -37,6 +54,7 @@ import co.siempo.phone.activities.HelpActivity;
 import co.siempo.phone.activities.IntentionEditActivity;
 import co.siempo.phone.activities.JunkfoodFlaggingActivity;
 import co.siempo.phone.activities.SettingsActivity_;
+import co.siempo.phone.activities.UpdateBackgroundActivity;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.dialog.DialogTempoSetting;
 import co.siempo.phone.helper.ActivityHelper;
@@ -370,8 +388,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                         if (getActivity() != null) {
                             UIUtils.clearDim(root);
                             mPopupWindow.dismiss();
-                            CoreApplication.getInstance().downloadSiempoImages();
-                            startActivity(new Intent(getActivity(), ChooseBackgroundActivity.class));
+                            showWallPaperSelection();
                         }
                     }
                 });
@@ -418,13 +435,132 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
     }
 
 
+
+
+    public void showWallPaperSelection(){
+        final BottomSheetDialog mBottomSheetDialog = new BottomSheetDialog(getActivity());
+        View sheetView = getActivity().getLayoutInflater().inflate(R.layout.shortcuts_wallpaper, null);
+        mBottomSheetDialog.setContentView(sheetView);
+
+        ImageView folder = sheetView.findViewById(R.id.shortcut_icon_folder);
+        folder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mBottomSheetDialog.dismiss();
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent, 10);
+
+            }
+        });
+
+        ImageView gallary = sheetView.findViewById(R.id.shortcut_icon_gallary);
+        gallary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mBottomSheetDialog.dismiss();
+                Intent i = new Intent(
+                        Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                startActivityForResult(i, 7);
+
+            }
+        });
+
+        ImageView browser = sheetView.findViewById(R.id.shortcut_icon_globe);
+        browser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mBottomSheetDialog.dismiss();
+            }
+        });
+
+        mBottomSheetDialog.show();
+
+    }
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100 && resultCode == Activity.RESULT_OK) {
-            imgTempo.performClick();
+
+        switch (requestCode){
+            case 100:
+                if(resultCode == Activity.RESULT_OK){
+                    imgTempo.performClick();
+                }
+                break;
+            case 10:
+                if(resultCode==Activity.RESULT_OK){
+                    Uri uri=data.getData();
+
+                    String id = DocumentsContract.getDocumentId(uri);
+
+                    if(!TextUtils.isEmpty(id) && uri!=null){
+
+                        try {
+                            InputStream inputStream = getActivity().getContentResolver().openInputStream(uri);
+                            File file = new File(getActivity().getCacheDir().getAbsolutePath()+"/"+id);
+                            writeFile(inputStream, file);
+                            String filePath = file.getAbsolutePath();
+                            Toast.makeText(getActivity(), "file path "+filePath, Toast.LENGTH_LONG).show();
+                            Intent mUpdateBackgroundIntent = new Intent(getActivity(),UpdateBackgroundActivity.class);
+                            mUpdateBackgroundIntent.putExtra("imageUri", filePath);
+                            startActivityForResult(mUpdateBackgroundIntent, 3);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+                break;
+            case 7:
+                if(resultCode == Activity.RESULT_OK){
+                    Toast.makeText(getActivity(),"selection done",Toast.LENGTH_LONG).show();
+                    Uri selectedImage = data.getData();
+                    String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+                    Cursor cursor = getActivity().getContentResolver().query(selectedImage,
+                            filePathColumn, null, null, null);
+                    cursor.moveToFirst();
+                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                    String picturePath = cursor.getString(columnIndex);
+                    cursor.close();
+                    Intent mUpdateBackgroundIntent = new Intent(getActivity(),
+                            UpdateBackgroundActivity
+                                    .class);
+                    mUpdateBackgroundIntent.putExtra("imageUri", picturePath);
+                    startActivityForResult(mUpdateBackgroundIntent, 3);
+                }
+                break;
         }
+
     }
 
+    void writeFile(InputStream in, File file) {
+        OutputStream out = null;
+        try {
+            out = new FileOutputStream(file);
+            byte[] buf = new byte[1024];
+            int len;
+            while((len=in.read(buf))>0){
+                out.write(buf,0,len);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                if ( out != null ) {
+                    out.close();
+                }
+                in.close();
+            } catch ( IOException e ) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 }
