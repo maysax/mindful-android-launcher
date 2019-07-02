@@ -495,22 +495,47 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                 if(resultCode==Activity.RESULT_OK){
                     Uri uri=data.getData();
 
-                    String id = DocumentsContract.getDocumentId(uri);
+                    if(uri !=null && !TextUtils.isEmpty(uri.toString())){
 
-                    if(!TextUtils.isEmpty(id) && uri!=null){
+                        if(uri.toString().contains("com.google.android.apps.photos.contentprovider")){
+                            return;
+                        }
 
-                        try {
-                            InputStream inputStream = getActivity().getContentResolver().openInputStream(uri);
-                            File file = new File(getActivity().getCacheDir().getAbsolutePath()+"/"+id);
-                            writeFile(inputStream, file);
-                            String filePath = file.getAbsolutePath();
-                            Toast.makeText(getActivity(), "file path "+filePath, Toast.LENGTH_LONG).show();
-                            Intent mUpdateBackgroundIntent = new Intent(getActivity(),UpdateBackgroundActivity.class);
-                            mUpdateBackgroundIntent.putExtra("imageUri", filePath);
-                            startActivityForResult(mUpdateBackgroundIntent, 3);
+                        if(uri.toString().contains("/storage")){
+                            String[] storagepath=uri.toString().split("/storage");
+                            if(storagepath.length>1){
+                                String filePath="/storage"+storagepath[1];
+                                Intent mUpdateBackgroundIntent = new Intent(getActivity(),UpdateBackgroundActivity.class);
+                                mUpdateBackgroundIntent.putExtra("imageUri", filePath);
+                                startActivityForResult(mUpdateBackgroundIntent, 3);
+                            }
+                        }
+                        else{
+                            String id = DocumentsContract.getDocumentId(uri);
 
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                            if(!TextUtils.isEmpty(id) && uri!=null){
+
+                                try {
+                                    InputStream inputStream = getActivity().getContentResolver().openInputStream(uri);
+                                    File file = new File(getActivity().getCacheDir().getAbsolutePath()+"/"+id);
+                                    writeFile(inputStream, file);
+                                    String filePath = file.getAbsolutePath();
+
+                                    if(filePath.contains("raw:")){
+                                        String[] downloadPath=filePath.split("raw:");
+                                        if(downloadPath.length>1){
+                                            filePath =downloadPath[1];
+                                        }
+                                    }
+
+                                    Intent mUpdateBackgroundIntent = new Intent(getActivity(),UpdateBackgroundActivity.class);
+                                    mUpdateBackgroundIntent.putExtra("imageUri", filePath);
+                                    startActivityForResult(mUpdateBackgroundIntent, 3);
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
                         }
                     }
 
@@ -518,7 +543,6 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
                 break;
             case 7:
                 if(resultCode == Activity.RESULT_OK){
-                    Toast.makeText(getActivity(),"selection done",Toast.LENGTH_LONG).show();
                     Uri selectedImage = data.getData();
                     String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
