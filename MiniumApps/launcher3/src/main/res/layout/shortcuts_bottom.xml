@@ -23,7 +23,7 @@
             android:layout_marginBottom="20dp"
             android:layout_margin="@dimen/dp_10"
             android:padding="@dimen/dp_10"
-            android:src="@drawable/ic_vector_distracting_app" />
+            android:src="@drawable/ic_vector_bottom_distracting_app" />
 
 
         <ImageView
@@ -33,7 +33,7 @@
             android:layout_margin="@dimen/dp_10"
             android:layout_marginBottom="20dp"
             android:padding="@dimen/dp_10"
-            android:src="@drawable/ic_vector_wallpaper" />
+            android:src="@drawable/ic_vector_bottom_wallpaper" />
 
         <ImageView
             android:id="@+id/shortcut_settings"
@@ -42,7 +42,7 @@
             android:layout_margin="@dimen/dp_10"
             android:layout_marginBottom="20dp"
             android:padding="@dimen/dp_10"
-            android:src="@drawable/ic_vector_settings" />
+            android:src="@drawable/ic_vector_bottom_settings" />
 
     </LinearLayout>
 

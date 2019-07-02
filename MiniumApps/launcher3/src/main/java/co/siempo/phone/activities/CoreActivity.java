@@ -1,5 +1,6 @@
 package co.siempo.phone.activities;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DownloadManager;
 import android.app.Fragment;
@@ -28,6 +29,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
@@ -35,6 +38,7 @@ import android.support.v4.view.OnApplyWindowInsetsListener;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.WindowInsetsCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -51,6 +55,10 @@ import com.android.vending.billing.IInAppBillingService;
 import org.androidannotations.annotations.EActivity;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Calendar;
 
 import co.siempo.phone.R;
@@ -704,8 +712,9 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         shortcutWallpaper.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CoreApplication.getInstance().downloadSiempoImages();
-                startActivity(new Intent(CoreActivity.this, ChooseBackgroundActivity.class));
+//                CoreApplication.getInstance().downloadSiempoImages();
+//                startActivity(new Intent(CoreActivity.this, ChooseBackgroundActivity.class));
+                showWallPaperSelection();
                 mBottomSheetDialog.closeOptionsMenu();
                 mBottomSheetDialog.hide();
             }
@@ -725,6 +734,157 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         mBottomSheetDialog.show();
 
         // SSA-1960 END
+    }
+
+
+
+    public void showWallPaperSelection(){
+        final BottomSheetDialog mBottomSheetDialog = new BottomSheetDialog(this);
+        View sheetView = getLayoutInflater().inflate(R.layout.shortcuts_wallpaper, null);
+        mBottomSheetDialog.setContentView(sheetView);
+
+        ImageView folder = sheetView.findViewById(R.id.shortcut_icon_folder);
+        folder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mBottomSheetDialog.dismiss();
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent, 10);
+
+            }
+        });
+
+        ImageView gallary = sheetView.findViewById(R.id.shortcut_icon_gallary);
+        gallary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mBottomSheetDialog.dismiss();
+                Intent i = new Intent(
+                        Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                startActivityForResult(i, 7);
+
+            }
+        });
+
+        ImageView browser = sheetView.findViewById(R.id.shortcut_icon_globe);
+        browser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mBottomSheetDialog.dismiss();
+            }
+        });
+
+        mBottomSheetDialog.show();
+
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Intention screen Wallpaper selection
+        if(requestCode == 10 || requestCode == 7) {
+            switch (requestCode) {
+                case 10:
+                    if(resultCode== Activity.RESULT_OK){
+                        Uri uri=data.getData();
+
+                        if(uri !=null && !TextUtils.isEmpty(uri.toString())){
+
+                            if(uri.toString().contains("com.google.android.apps.photos.contentprovider")){
+                                return;
+                            }
+
+                            if(uri.toString().contains("/storage")){
+                                String[] storagepath=uri.toString().split("/storage");
+                                if(storagepath.length>1){
+                                    String filePath="/storage"+storagepath[1];
+                                    Intent mUpdateBackgroundIntent = new Intent(this,UpdateBackgroundActivity.class);
+                                    mUpdateBackgroundIntent.putExtra("imageUri", filePath);
+                                    startActivityForResult(mUpdateBackgroundIntent, 3);
+                                }
+                            }
+                            else{
+                                String id = DocumentsContract.getDocumentId(uri);
+
+                                if(!TextUtils.isEmpty(id) && uri!=null){
+
+                                    try {
+                                        InputStream inputStream = this.getContentResolver().openInputStream(uri);
+                                        File file = new File(this.getCacheDir().getAbsolutePath()+"/"+id);
+                                        writeFile(inputStream, file);
+                                        String filePath = file.getAbsolutePath();
+
+                                        if(filePath.contains("raw:")){
+                                            String[] downloadPath=filePath.split("raw:");
+                                            if(downloadPath.length>1){
+                                                filePath =downloadPath[1];
+                                            }
+                                        }
+
+                                        Intent mUpdateBackgroundIntent = new Intent(this,UpdateBackgroundActivity.class);
+                                        mUpdateBackgroundIntent.putExtra("imageUri", filePath);
+                                        startActivityForResult(mUpdateBackgroundIntent, 3);
+
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                    break;
+                case 7:
+                    if(resultCode == Activity.RESULT_OK){
+                        Uri selectedImage = data.getData();
+                        String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+                        Cursor cursor = getContentResolver().query(selectedImage,
+                                filePathColumn, null, null, null);
+                        cursor.moveToFirst();
+                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                        String picturePath = cursor.getString(columnIndex);
+                        cursor.close();
+                        Intent mUpdateBackgroundIntent = new Intent(this,
+                                UpdateBackgroundActivity
+                                        .class);
+                        mUpdateBackgroundIntent.putExtra("imageUri", picturePath);
+                        startActivityForResult(mUpdateBackgroundIntent, 3);
+                    }
+                    break;
+            }
+            }
+            else{
+            super.onActivityResult(requestCode, resultCode, data);
+            }
+        }
+
+
+    void writeFile(InputStream in, File file) {
+        OutputStream out = null;
+        try {
+            out = new FileOutputStream(file);
+            byte[] buf = new byte[1024];
+            int len;
+            while((len=in.read(buf))>0){
+                out.write(buf,0,len);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                if ( out != null ) {
+                    out.close();
+                }
+                in.close();
+            } catch ( IOException e ) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
