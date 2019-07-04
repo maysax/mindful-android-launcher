@@ -1,20 +1,20 @@
 package co.siempo.phone.fragments;
 
+import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.database.ContentObserver;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
+import android.os.Handler;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.design.widget.BottomSheetDialog;
@@ -38,16 +38,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 import co.siempo.phone.R;
-import co.siempo.phone.activities.ChooseBackgroundActivity;
 import co.siempo.phone.activities.ContributeActivity;
-import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.activities.EnableTempoActivity;
 import co.siempo.phone.activities.HelpActivity;
@@ -55,7 +52,6 @@ import co.siempo.phone.activities.IntentionEditActivity;
 import co.siempo.phone.activities.JunkfoodFlaggingActivity;
 import co.siempo.phone.activities.SettingsActivity_;
 import co.siempo.phone.activities.UpdateBackgroundActivity;
-import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.dialog.DialogTempoSetting;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.service.StatusBarService;
@@ -80,6 +76,7 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
     private int defaultStatusBarColor;
     private PermissionUtil permissionUtil;
     private DialogTempoSetting dialogTempo;
+    final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 102;
 
     public IntentionFragment() {
         // Required empty public constructor
@@ -434,9 +431,6 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
         }
     }
 
-
-
-
     public void showWallPaperSelection(){
         final BottomSheetDialog mBottomSheetDialog = new BottomSheetDialog(getActivity());
         View sheetView = getActivity().getLayoutInflater().inflate(R.layout.shortcuts_wallpaper, null);
@@ -468,18 +462,132 @@ public class IntentionFragment extends CoreFragment implements View.OnClickListe
             }
         });
 
+
         ImageView browser = sheetView.findViewById(R.id.shortcut_icon_globe);
         browser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mBottomSheetDialog.dismiss();
+                int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                Log.e("permissionCheck","permissionCheck "+permissionCheck);
+                if(permissionCheck == -1){
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+                    }
+                }else
+                {
+                    openBrowser();
+                }
             }
         });
 
         mBottomSheetDialog.show();
-
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+
+        boolean canUseExternalStorage = false;
+
+        if (requestCode == MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                canUseExternalStorage = true;
+            }
+            if (!canUseExternalStorage) {
+                Toast.makeText(getActivity(), "Cannot use this feature without requested permission", Toast.LENGTH_SHORT).show();
+            } else {
+                openBrowser();
+            }
+        }
+    }
+
+    private String isDuplicatePath = "";
+    private void openBrowser()
+    {
+        isDuplicatePath = "";
+        setMediaObserver();
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse("https://www.google.com/"));
+        startActivity(i);
+    }
+
+
+    private void setMediaObserver() {
+        getActivity().getContentResolver().registerContentObserver(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, true,
+                new ContentObserver(new Handler()) {
+                    @Override
+                    public void onChange(boolean selfChange) {
+                        Log.d("your_tag","External Media has been changed3");
+                        super.onChange(selfChange);
+
+                        Long timestamp = readLastDateFromMediaStore(context, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        String mime = readLastMIMEFromMediaStore(context, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        // comapare with your stored last value and do what you need to do
+
+                        String path = "blank";
+                        if(mime.toLowerCase().contains("image"))
+                        {
+                            path = readLastPathFromMediaStore(context, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        }
+
+                        if(!path.equalsIgnoreCase("blank"))
+                        {
+                            if(!isDuplicatePath.equalsIgnoreCase(path))
+                            {
+                                isDuplicatePath = path;
+
+                                Intent mUpdateBackgroundIntent = new Intent(getActivity(),UpdateBackgroundActivity.class);
+                                mUpdateBackgroundIntent.putExtra("imageUri", path);
+                                startActivityForResult(mUpdateBackgroundIntent, 3);
+                            }
+
+                            Log.e("lastImage","lastImage timestemp3 "+timestamp+" mime "+mime+" path = "+path);
+                        }
+
+                    }
+                }
+        );
+    }
+
+
+    private Long readLastDateFromMediaStore(Context context, Uri uri) {
+        Cursor cursor = context.getContentResolver().query(uri, null, null, null, "date_added DESC");
+
+        Long dateAdded =-1l;
+        if (cursor.moveToNext()) {
+            dateAdded = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATE_ADDED));
+        }
+        cursor.close();
+        return dateAdded;
+    }
+
+    private String readLastMIMEFromMediaStore(Context context, Uri uri) {
+        Cursor cursor = context.getContentResolver().query(uri, null, null, null, "date_added DESC");
+
+        String mime = "";
+        if (cursor.moveToNext()) {
+            mime= cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.MIME_TYPE));
+        }
+        cursor.close();
+        return mime;
+    }
+
+    private String readLastPathFromMediaStore(Context context, Uri uri) {
+        Cursor cursor = context.getContentResolver().query(uri, null, null, null, "date_added DESC");
+
+        String displayName = "";
+        String[] column = { MediaStore.Images.Media.DATA };
+
+        int columnIndex = cursor.getColumnIndex(column[0]);
+
+        if (cursor.moveToFirst()) {
+            displayName= cursor.getString(columnIndex);
+        }
+        cursor.close();
+        return displayName;
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
