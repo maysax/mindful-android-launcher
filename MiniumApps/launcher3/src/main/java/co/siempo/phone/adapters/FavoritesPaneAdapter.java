@@ -143,7 +143,7 @@ public class FavoritesPaneAdapter extends RecyclerView.Adapter<FavoritesPaneAdap
             }
         });
 
-        boolean isEnable = PrefSiempo.getInstance(context).read(PrefSiempo.DEFAULT_ICON_TEXT_VISIBILITY_ENABLE, false);
+        boolean isEnable = PrefSiempo.getInstance(context).read(PrefSiempo.DEFAULT_ICON_FAVORITE_TEXT_VISIBILITY_ENABLE, false);
         if(isEnable)
         {
             holder.txtLayout.setVisibility(View.GONE);
