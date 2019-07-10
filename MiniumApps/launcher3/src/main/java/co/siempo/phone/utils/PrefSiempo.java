@@ -118,7 +118,9 @@ public class PrefSiempo {
     public static String THIRD_PARTY_APP_LOG_AS_LAUNCHER= "third_party_app_log_as_launcher";
     public static String THIRD_PARTY_APP_LOG_NOT_AS_LAUNCHER= "third_party_app_log_not_as_launcher";
 
-    public static final String DEFAULT_ICON_TEXT_VISIBILITY_ENABLE = "default_o";
+    public static final String DEFAULT_ICON_TOOLS_TEXT_VISIBILITY_ENABLE = "default_tools_o";
+    public static final String DEFAULT_ICON_FAVORITE_TEXT_VISIBILITY_ENABLE = "default_favorite_o";
+    public static final String DEFAULT_ICON_JUNKFOOD_TEXT_VISIBILITY_ENABLE = "default_junkfood_o";
 
     public static final String DEFAULT_NOTIFICATION_ENABLE = "default_notification";
 

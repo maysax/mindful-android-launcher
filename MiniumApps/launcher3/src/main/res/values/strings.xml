@@ -336,6 +336,10 @@
     <string name="notification">Hide Notification Bar</string>
     <string name="icon_text_visibility">Hide icon labels</string>
 
+    <string name="icon_tools_screen">Tools Screen Icon Labels</string>
+    <string name="icon_favorite_screen">Favorite Screen Icon Labels</string>
+    <string name="icon_junkfood_screen">JunkFood Screen Icon Labels</string>
+
     <!--notes strings-->
     <string name="title_noteColor">Note color</string>
     <string name="title_notesDelete">Selected notes will be deleted</string>

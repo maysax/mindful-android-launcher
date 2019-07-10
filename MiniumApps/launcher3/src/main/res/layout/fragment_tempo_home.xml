@@ -165,7 +165,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/rel_icon_text_visibility"
+                    android:id="@+id/rel_icon_tool_text_visibility"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/relCustomBackground"
@@ -174,25 +174,25 @@
                     android:paddingLeft="50dp">
 
                     <co.siempo.phone.customviews.RobotoRegularTextView
-                        android:id="@+id/txtIconVisibility"
+                        android:id="@+id/txtIconToolVisibility"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
                         android:layout_marginTop="8dp"
-                        android:layout_toLeftOf="@+id/switchIconVisibility"
+                        android:layout_toLeftOf="@+id/switchIconToolsVisibility"
                         android:lineSpacingExtra="5sp"
                         android:padding="8dp"
-                        android:text="@string/icon_text_visibility"
+                        android:text="@string/icon_tools_screen"
                         android:textColor="?attr/txt_content_title"
                         android:textSize="16sp" />
 
                     <Switch
-                        android:id="@+id/switchIconVisibility"
+                        android:id="@+id/switchIconToolsVisibility"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignBaseline="@+id/txtIconVisibility"
+                        android:layout_alignBaseline="@+id/txtIconToolVisibility"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="8dp"
@@ -202,11 +202,92 @@
                 </RelativeLayout>
 
 
+
+                <RelativeLayout
+                    android:id="@+id/rel_icon_favorite_text_visibility"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/rel_icon_tool_text_visibility"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:clickable="true"
+                    android:paddingLeft="50dp">
+
+                    <co.siempo.phone.customviews.RobotoRegularTextView
+                        android:id="@+id/txtIconFavoriteVisibility"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_toLeftOf="@+id/switchIconFavoriteVisibility"
+                        android:lineSpacingExtra="5sp"
+                        android:padding="8dp"
+                        android:text="@string/icon_favorite_screen"
+                        android:textColor="?attr/txt_content_title"
+                        android:textSize="16sp" />
+
+                    <Switch
+                        android:id="@+id/switchIconFavoriteVisibility"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/txtIconFavoriteVisibility"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="8dp"
+                        android:clickable="false" />
+
+
+                </RelativeLayout>
+
+
+
+
+
+                <RelativeLayout
+                    android:id="@+id/rel_icon_junkfood_text_visibility"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/rel_icon_favorite_text_visibility"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:clickable="true"
+                    android:paddingLeft="50dp">
+
+                    <co.siempo.phone.customviews.RobotoRegularTextView
+                        android:id="@+id/txtIconJunkFoodVisibility"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_toLeftOf="@+id/switchIconJunkFoodVisibility"
+                        android:lineSpacingExtra="5sp"
+                        android:padding="8dp"
+                        android:text="@string/icon_junkfood_screen"
+                        android:textColor="?attr/txt_content_title"
+                        android:textSize="16sp" />
+
+                    <Switch
+                        android:id="@+id/switchIconJunkFoodVisibility"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/txtIconJunkFoodVisibility"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="8dp"
+                        android:clickable="false" />
+
+
+                </RelativeLayout>
+
+
+
                 <RelativeLayout
                     android:id="@+id/rel_notification_visibility"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/rel_icon_text_visibility"
+                    android:layout_below="@id/rel_icon_junkfood_text_visibility"
                     android:layout_marginTop="@dimen/dp_8"
                     android:clickable="true"
                     android:paddingLeft="50dp"

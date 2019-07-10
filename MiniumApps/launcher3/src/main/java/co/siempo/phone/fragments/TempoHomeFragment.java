@@ -58,7 +58,13 @@ public class TempoHomeFragment extends CoreFragment {
     Switch switchNotification;
 
     @ViewById
-    Switch switchIconVisibility;
+    Switch switchIconToolsVisibility;
+
+    @ViewById
+    Switch switchIconFavoriteVisibility;
+
+    @ViewById
+    Switch switchIconJunkFoodVisibility;
 
     @ViewById
     RelativeLayout relDarkTheme;
@@ -148,18 +154,49 @@ public class TempoHomeFragment extends CoreFragment {
             }
         });
 
-        switchIconVisibility.setChecked(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_ICON_TEXT_VISIBILITY_ENABLE, false));
-        switchIconVisibility.setOnClickListener(new View.OnClickListener() {
+        switchIconToolsVisibility.setChecked(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_ICON_TOOLS_TEXT_VISIBILITY_ENABLE, false));
+        switchIconToolsVisibility.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Switch sb = (Switch) v;
                 if (sb.isChecked()) {
-                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_ICON_TEXT_VISIBILITY_ENABLE, true);
+                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_ICON_TOOLS_TEXT_VISIBILITY_ENABLE, true);
                 } else  {
-                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_ICON_TEXT_VISIBILITY_ENABLE, false);
+                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_ICON_TOOLS_TEXT_VISIBILITY_ENABLE, false);
                 }
             }
         });
+
+
+
+        switchIconFavoriteVisibility.setChecked(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_ICON_FAVORITE_TEXT_VISIBILITY_ENABLE, false));
+        switchIconFavoriteVisibility.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Switch sb = (Switch) v;
+                if (sb.isChecked()) {
+                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_ICON_FAVORITE_TEXT_VISIBILITY_ENABLE, true);
+                } else  {
+                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_ICON_FAVORITE_TEXT_VISIBILITY_ENABLE, false);
+                }
+            }
+        });
+
+
+
+        switchIconJunkFoodVisibility.setChecked(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_ICON_JUNKFOOD_TEXT_VISIBILITY_ENABLE, false));
+        switchIconJunkFoodVisibility.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Switch sb = (Switch) v;
+                if (sb.isChecked()) {
+                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_ICON_JUNKFOOD_TEXT_VISIBILITY_ENABLE, true);
+                } else  {
+                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_ICON_JUNKFOOD_TEXT_VISIBILITY_ENABLE, false);
+                }
+            }
+        });
+
 
         final View decorView = getActivity().getWindow().getDecorView();
         final int uiOptions = decorView.getSystemUiVisibility();
