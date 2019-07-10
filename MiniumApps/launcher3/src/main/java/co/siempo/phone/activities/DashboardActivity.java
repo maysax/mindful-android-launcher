@@ -763,8 +763,8 @@ public class DashboardActivity extends CoreActivity {
             btnLater.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AppUtils.notificationBarManaged(DashboardActivity.this, linMain);
                     overlayDialog.dismiss();
+                    AppUtils.notificationBarManaged(DashboardActivity.this, linMain);
                 }
             });
         } catch (Exception e) {
