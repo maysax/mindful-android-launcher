@@ -155,7 +155,7 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
                     PrefSiempo.getInstance(context).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
 
                     new LoadToolPane(context).execute();
-                    if (class_name.equalsIgnoreCase(DashboardActivity.class.getSimpleName().toString())) {
+                    if (class_name.equalsIgnoreCase(DashboardActivity.CLASS_NAME)) {
                         if (id == 5 && item == null) {
                             new ActivityHelper(context).openNotesApp(false);
                             context.finish();

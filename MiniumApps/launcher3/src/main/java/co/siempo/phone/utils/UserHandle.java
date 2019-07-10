@@ -49,10 +49,9 @@ public class UserHandle {
         if (this.handle == null) {
             return base;
         } else {
-            StringBuilder result = new StringBuilder(base);
-            result.append(separator);
-            result.append(this.serial);
-            return result.toString();
+            String result = base + separator +
+                    this.serial;
+            return result;
         }
     }
 
