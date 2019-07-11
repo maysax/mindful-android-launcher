@@ -1760,8 +1760,7 @@ public class StatusBarService extends Service {
                                 Intent intent = new Intent(context, AppAssignmentActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 intent.putExtra(Constants.INTENT_MAINLISTITEM, item);
-                                intent.putExtra("class_name", DashboardActivity.class.getSimpleName
-                                        ().toString());
+                                intent.putExtra("class_name", DashboardActivity.CLASS_NAME);
                                 context.startActivity(intent);
                             } else {
                                 new ActivityHelper(context).openAppWithPackageName(map.get(10).getApplicationName());
@@ -2435,8 +2434,7 @@ public class StatusBarService extends Service {
                                 Intent intent = new Intent(context, AppAssignmentActivity.class);
                                 intent.putExtra(Constants.INTENT_MAINLISTITEM, item);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.putExtra("class_name", DashboardActivity.class.getSimpleName
-                                        ().toString());
+                                intent.putExtra("class_name", DashboardActivity.CLASS_NAME);
                                 context.startActivity(intent);
                             } else {
                                 try {

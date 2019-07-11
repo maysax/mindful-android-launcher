@@ -33,7 +33,7 @@
             android:layout_height="wrap_content">
             <co.siempo.phone.customviews.RobotoMediumTextView
                 android:id="@+id/text"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center|right"
@@ -82,12 +82,8 @@
             android:id="@+id/txtErrorMessage"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_below="@+id/imgLogo"
-            android:layout_centerInParent="true"
             android:layout_marginTop="@dimen/dp_1"
             android:gravity="center"
-            android:paddingLeft="@dimen/dp_3"
             android:text="@string/error_email"
             android:textColor="#FF4291"
             android:textSize="12sp"

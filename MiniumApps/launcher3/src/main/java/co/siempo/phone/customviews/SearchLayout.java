@@ -36,7 +36,7 @@ public class SearchLayout extends CardView {
     ImageView btnClear;
     private SharedPreferences launcherPrefs;
     private View inflateLayout;
-    private String formattedTxt;
+    private StringBuilder formattedTxt = new StringBuilder();
     private boolean isWatching = true;
     private Handler handler;
 
@@ -156,23 +156,23 @@ public class SearchLayout extends CardView {
 
 
     private void updateSearchField() {
-        String[] splits = formattedTxt.split("\\|");
+        String[] splits = formattedTxt.toString().split("\\|");
 
-        String newText = "";
+        StringBuilder newText = new StringBuilder();
         boolean space = false;
         for (String s : splits) {
             if (space) {
                 if (!s.startsWith(" "))
-                    newText += " ";
+                    newText.append(" ");
             }
             space = true;
-            newText += s.replaceAll("\\^", "").replaceAll("~", "");
+            newText.append(s.replaceAll("\\^", "").replaceAll("~", ""));
         }
 
-        if (formattedTxt.endsWith("|")) newText += " ";
+        if (formattedTxt.toString().endsWith("|")) newText.append(" ");
 
         isWatching = false;
-        txtSearchBox.setText(newText);
+        txtSearchBox.setText(newText.toString());
         isWatching = true;
 
         int startPos = 0;
@@ -195,23 +195,23 @@ public class SearchLayout extends CardView {
     }
 
     private void buildFormattedText() {
-        formattedTxt = "";
+        formattedTxt .append("");
 
         for (TokenItem item : TokenManager.getInstance().getItems()) {
             if (item.getCompleteType() == TokenCompleteType.FULL) {
                 if (item.isChipable()) {
-                    formattedTxt += "^";
+                    formattedTxt.append("^");
                 }
 
-                formattedTxt += item.getTitle() + "|";
+                formattedTxt.append(item.getTitle()).append("|");
             } else if (item.getCompleteType() == TokenCompleteType.HALF) {
                 if (item.isChipable()) {
-                    formattedTxt += "~";
+                    formattedTxt.append("~");
                 }
-                formattedTxt += item.getTitle() + "|";
+                formattedTxt.append(item.getTitle()).append("|");
 
             } else {
-                formattedTxt += item.getTitle();
+                formattedTxt.append(item.getTitle());
             }
         }
     }

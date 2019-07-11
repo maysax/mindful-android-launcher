@@ -95,7 +95,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                     if (clickable) {
                         Intent intent = new Intent(context, AppAssignmentActivity.class);
                         intent.putExtra(Constants.INTENT_MAINLISTITEM, mainListItem);
-                        intent.putExtra("class_name", ToolSelectionActivity.class.getSimpleName().toString());
+                        intent.putExtra("class_name", ToolSelectionActivity.class.getSimpleName());
                         ((ToolSelectionActivity) context).startActivityForResult(intent,
                                 ToolSelectionActivity.TOOL_SELECTION);
                         holder.txtAssignApp.setClickable(false);
@@ -171,7 +171,7 @@ public class ToolsListAdapter extends RecyclerView.Adapter<ToolsListAdapter
                             Intent intent = new Intent(context, AppAssignmentActivity.class);
                             intent.putExtra(Constants.INTENT_MAINLISTITEM, mainListItem);
                             intent.putExtra("class_name", ToolSelectionActivity.class.getSimpleName
-                                    ().toString());
+                                    ());
                             ((ToolSelectionActivity) context).startActivityForResult(intent, ToolSelectionActivity.TOOL_SELECTION);
                         }
 

@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -156,9 +157,7 @@ public class LayoutBuild implements ILayoutCallback {
 
     private void recomputeSpans(final Spannable text) {
         spans.clear();
-        for (BubbleSpan span : text.getSpans(0, text.length(), BubbleSpan.class)) {
-            spans.add(span);
-        }
+        Collections.addAll(spans, text.getSpans(0, text.length(), BubbleSpan.class));
     }
 
     public void draw(Canvas canvas) {

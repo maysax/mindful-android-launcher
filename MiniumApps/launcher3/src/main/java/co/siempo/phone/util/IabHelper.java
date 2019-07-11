@@ -909,16 +909,12 @@ public class IabHelper {
         int mod = skuList.size() % 20;
         for (int i = 0; i < n; i++) {
             tempList = new ArrayList<String>();
-            for (String s : skuList.subList(i * 20, i * 20 + 20)) {
-                tempList.add(s);
-            }
+            tempList.addAll(skuList.subList(i * 20, i * 20 + 20));
             packs.add(tempList);
         }
         if (mod != 0) {
             tempList = new ArrayList<String>();
-            for (String s : skuList.subList(n * 20, n * 20 + mod)) {
-                tempList.add(s);
-            }
+            tempList.addAll(skuList.subList(n * 20, n * 20 + mod));
             packs.add(tempList);
         }
 
