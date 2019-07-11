@@ -235,8 +235,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
         Intent intent = new Intent(context, AppAssignmentActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra(Constants.INTENT_MAINLISTITEM, item);
-        intent.putExtra("class_name", DashboardActivity.class.getSimpleName
-                ().toString());
+        intent.putExtra("class_name", DashboardActivity.class.getSimpleName());
         context.startActivity(intent);
     }
 

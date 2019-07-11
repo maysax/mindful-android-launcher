@@ -87,6 +87,7 @@ import de.greenrobot.event.ThreadMode;
 public class DashboardActivity extends CoreActivity {
 
     public static final String IS_FROM_HOME = "isFromHome";
+    public static final String CLASS_NAME = DashboardActivity.class.getSimpleName();
     public static String isTextLenghGreater = "";
     public static boolean isJunkFoodOpen = false;
     public static int currentIndexDashboard = 1;
