@@ -91,6 +91,8 @@ import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
 import me.relex.circleindicator.CircleIndicator;
 
+import static co.siempo.phone.utils.UIUtils.hasUsageStatsPermission;
+
 /**
  * Main class for Tools Pane, Favorites Pane and JunkFood Pane.
  * Ui is changed based on which pane the user is currently on.
@@ -527,16 +529,27 @@ public class PaneFragment extends CoreFragment {
                                         //Show overlay for draw over other apps permission
 
 
+//                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                                            if (!Settings.canDrawOverlays(context) &&
+//                                                    PrefSiempo.getInstance(context).read
+//                                                            (PrefSiempo.DETER_AFTER,
+//                                                                    -1) != -1) {
+//                                                if (null == overlayDialogPermission || !overlayDialogPermission.isShowing())
+//                                                    showOverLayForDrawingPermission();
+//                                            }
+//                                        }
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                            if (!Settings.canDrawOverlays(context) &&
-                                                    PrefSiempo.getInstance(context).read
-                                                            (PrefSiempo.DETER_AFTER,
-                                                                    -1) != -1) {
-                                                if (null == overlayDialogPermission || !overlayDialogPermission.isShowing())
-                                                    showOverLayForDrawingPermission();
+                                            if (!hasUsageStatsPermission(getActivity())) {
+                                                if (!Settings.canDrawOverlays(context) &&
+                                                        PrefSiempo.getInstance(context).read
+                                                                (PrefSiempo.DETER_AFTER,
+                                                                        -1) != -1) {
+                                                    if (null == overlayDialogPermission || !overlayDialogPermission.isShowing())
+
+                                                        showOverLayForDrawingPermission();
+                                                }
                                             }
                                         }
-
 
                                     }
 

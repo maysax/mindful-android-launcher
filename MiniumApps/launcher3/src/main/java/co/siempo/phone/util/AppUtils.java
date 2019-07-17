@@ -19,7 +19,7 @@ public class AppUtils
     public static int statusBarColorJunk = 0;
     public static int statusBarColorPane = 1;
 
-    private static void statusBarManaged(Activity activity) {
+    public static void statusBarManaged(Activity activity) {
         if (PrefSiempo.getInstance(activity).read(PrefSiempo
                 .IS_DARK_THEME, false)) {
             cancelLightStatusBar(activity);
