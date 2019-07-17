@@ -72,6 +72,7 @@ import co.siempo.phone.service.LoadFavoritePane;
 import co.siempo.phone.service.LoadJunkFoodPane;
 import co.siempo.phone.service.LoadToolPane;
 import co.siempo.phone.service.MailChimpOperation;
+import co.siempo.phone.service.ScreenFilterService;
 import co.siempo.phone.service.SiempoNotificationListener_;
 import co.siempo.phone.service.StatusBarService;
 import co.siempo.phone.ui.SiempoViewPager;
@@ -256,6 +257,10 @@ public class DashboardActivity extends CoreActivity {
         }
 
         getColorList();
+
+        Intent command = new Intent(DashboardActivity.this, ScreenFilterService.class);
+        command.putExtra(ScreenFilterService.BUNDLE_KEY_COMMAND, 0);
+        startService(command);
     }
 
     private void getColorList()
