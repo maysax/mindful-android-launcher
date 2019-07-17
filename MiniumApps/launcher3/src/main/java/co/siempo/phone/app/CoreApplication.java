@@ -67,6 +67,7 @@ import static co.siempo.phone.main.MainListItemLoader.TOOLS_AUTHENTICATION;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_BANKING;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_BOOKS;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_BROWSER;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_CALCULATOR;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_CALENDAR;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_CALL;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_CAMERA;
@@ -96,8 +97,11 @@ import static co.siempo.phone.main.MainListItemLoader.TOOLS_PODCAST;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_RECORDER;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_SEARCH;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_SETTINGS;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_SLEEP;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_TODO;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_TRANSLATE;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_TRANSPORT;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_VIDEO;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_VOICE;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_WEATHER;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_WELLNESS;
@@ -478,7 +482,19 @@ public abstract class CoreApplication extends MultiDexApplication {
                         ().getApplicationByCategory(40).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(40).get(0).activityInfo.packageName : ""));
 
 
+                map.put(TOOLS_SLEEP, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(41).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(41).get(0).activityInfo.packageName : ""));
 
+
+                map.put(TOOLS_CALCULATOR, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(42).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(42).get(0).activityInfo.packageName : ""));
+
+
+                map.put(TOOLS_TRANSLATE, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(43).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(43).get(0).activityInfo.packageName : ""));
+
+                map.put(TOOLS_VIDEO, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(44).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(44).get(0).activityInfo.packageName : ""));
 
 
 
@@ -1145,6 +1161,18 @@ public abstract class CoreApplication extends MultiDexApplication {
                 break;
 
             case TOOLS_VOICE://Recorder
+                break;
+
+            case TOOLS_SLEEP://Recorder
+                break;
+
+            case TOOLS_CALCULATOR://Recorder
+                break;
+
+            case TOOLS_TRANSLATE://Recorder
+                break;
+
+            case TOOLS_VIDEO://Recorder
                 break;
 
             default:
