@@ -37,6 +37,7 @@ import co.siempo.phone.main.OnStartDragListener;
 import co.siempo.phone.main.SimpleItemTouchHelperCallback;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.service.LoadFavoritePane;
+import co.siempo.phone.util.AppUtils;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 
@@ -106,7 +107,7 @@ public class FavoriteAppsPositionActivity extends CoreActivity implements OnFavo
         } catch (Exception e) {
             e.printStackTrace();
         }
-        StatusBarUtil.setTranslucent(this);
+       /*StatusBarUtil.setTranslucent(this);
         boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
         if (read) {
             getWindow().setStatusBarColor(getResources().getColor(R.color.black));
@@ -115,7 +116,10 @@ public class FavoriteAppsPositionActivity extends CoreActivity implements OnFavo
                 getWindow().setStatusBarColor(getResources().getColor(R.color.white));
                 getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             }
-        }
+        }*/
+        AppUtils.notificationBarManaged(this, null);
+        AppUtils.statusBarManaged(this);
+        AppUtils.statusbarColor0(this, 1);
     }
 
 
