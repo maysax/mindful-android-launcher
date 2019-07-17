@@ -2,6 +2,8 @@ package co.siempo.phone.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
@@ -98,8 +100,14 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                     } else {
                         Log.d("Test", "bitmap  not null");
                         if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
-                            BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, appMenu.getApplicationName());
-                            CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                            ApplicationInfo appInfo = null;
+                            try {
+                                appInfo = context.getPackageManager().getApplicationInfo(appMenu.getApplicationName(), PackageManager.GET_META_DATA);
+                                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(appInfo, context.getPackageManager());
+                                CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                            } catch (PackageManager.NameNotFoundException e) {
+                                e.printStackTrace();
+                            }
                         }
                         holder.icon.setVisibility(View.VISIBLE);
                         holder.imgAppIcon.setVisibility(View.GONE);

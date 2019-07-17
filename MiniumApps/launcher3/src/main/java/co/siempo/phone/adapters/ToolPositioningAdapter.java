@@ -1,6 +1,8 @@
 package co.siempo.phone.adapters;
 
 import android.app.Activity;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
@@ -121,8 +123,14 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
                     holder.imgAppIcon.setVisibility(View.VISIBLE);
                     holder.imgAppIcon.setImageBitmap(bitmap);
                 } else {
-                    BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, appMenu.getApplicationName());
-                    CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                    ApplicationInfo appInfo = null;
+                    try {
+                        appInfo = context.getPackageManager().getApplicationInfo(appMenu.getApplicationName(), PackageManager.GET_META_DATA);
+                        BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(appInfo, context.getPackageManager());
+                        CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
                     holder.icon.setVisibility(View.VISIBLE);
                     holder.imgAppIcon.setVisibility(View.GONE);
                     holder.icon.setImageResource(item.getDrawable());

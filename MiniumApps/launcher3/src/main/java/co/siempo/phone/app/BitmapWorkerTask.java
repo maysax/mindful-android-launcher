@@ -15,25 +15,19 @@ import co.siempo.phone.utils.PackageUtil;
 
 public class BitmapWorkerTask extends AsyncTask<Object, Void, Void> {
     // Decode image in background.
-    String name;
-    Context context;
+    private ApplicationInfo appInfo;
+    private PackageManager packageManager;
 
-    public BitmapWorkerTask(Context context, String name) {
-        this.context = context;
-        this.name = name;
+    public BitmapWorkerTask(ApplicationInfo appInfo, PackageManager packageManager) {
+        this.appInfo = appInfo;
+        this.packageManager = packageManager;
     }
 
     @Override
     protected Void doInBackground(Object... params) {
-        ApplicationInfo appInfo;
-        try {
-            appInfo = context.getPackageManager().getApplicationInfo(name, PackageManager.GET_META_DATA);
-            Drawable drawable = appInfo.loadIcon(context.getPackageManager());
-            Bitmap bitmap = PackageUtil.drawableToBitmap(drawable);
-            CoreApplication.getInstance().addBitmapToMemoryCache(appInfo.packageName, bitmap);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
+        Drawable drawable = appInfo.loadIcon(packageManager);
+        Bitmap bitmap = PackageUtil.drawableToBitmap(drawable);
+        CoreApplication.getInstance().addBitmapToMemoryCache(appInfo.packageName, bitmap);
         return null;
     }
 }

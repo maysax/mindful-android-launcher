@@ -77,8 +77,15 @@ public class TempoNotificationItemViewHolder extends RecyclerView.ViewHolder {
             if (bitmap != null) {
                 imv_appicon.setImageBitmap(bitmap);
             } else {
-                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, packageName);
-                CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+
+                ApplicationInfo appInfo = null;
+                try {
+                    appInfo = context.getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA);
+                    BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(appInfo, context.getPackageManager());
+                    CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
                 Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(packageName);
                 if (drawable != null) {
                     imv_appicon.setImageDrawable(drawable);

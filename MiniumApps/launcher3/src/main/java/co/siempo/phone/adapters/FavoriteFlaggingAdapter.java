@@ -1,6 +1,8 @@
 package co.siempo.phone.adapters;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -123,8 +125,14 @@ public class FavoriteFlaggingAdapter extends BaseAdapter implements Filterable {
                     if (bitmap != null) {
                         holder.imgAppIcon.setImageBitmap(bitmap);
                     } else {
-                        BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, resolveInfo.packageName);
-                        CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                        ApplicationInfo appInfo = null;
+                        try {
+                            appInfo = context.getPackageManager().getApplicationInfo(resolveInfo.packageName, PackageManager.GET_META_DATA);
+                            BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(appInfo, context.getPackageManager());
+                            CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                        } catch (PackageManager.NameNotFoundException e) {
+                            e.printStackTrace();
+                        }
                         Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(resolveInfo.packageName);
                         holder.imgAppIcon.setImageDrawable(drawable);
                     }

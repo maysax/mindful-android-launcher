@@ -21,19 +21,19 @@ import de.greenrobot.event.EventBus;
 
 public class LoadJunkFoodPane extends AsyncTask<String, String, ArrayList<String>> {
 
-    private Context context;
+    private PrefSiempo prefSiempo;
 
-    public LoadJunkFoodPane(Context context) {
-        this.context = context;
+    public LoadJunkFoodPane(PrefSiempo prefSiempo) {
+        this.prefSiempo = prefSiempo;
     }
 
     @Override
     protected ArrayList<String> doInBackground(String... strings) {
-        Set<String> junkFoodList = PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
+        Set<String> junkFoodList = prefSiempo.read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
         ArrayList<String> items = new ArrayList<>();
         ArrayList<String> itemsToRemove = new ArrayList<>();
         for (String junkApp : junkFoodList) {
-            if (UIUtils.isAppInstalledAndEnabled(context, junkApp)) {
+            if (UIUtils.isAppInstalledAndEnabled(junkApp)) {
                 items.add(junkApp);
             } else {
                 itemsToRemove.add(junkApp);
@@ -41,10 +41,10 @@ public class LoadJunkFoodPane extends AsyncTask<String, String, ArrayList<String
         }
 
         junkFoodList.removeAll(itemsToRemove);
-        PrefSiempo.getInstance(context).write(PrefSiempo.JUNKFOOD_APPS, junkFoodList);
+        prefSiempo.write(PrefSiempo.JUNKFOOD_APPS, junkFoodList);
 
         if (junkFoodList.size() > 0) {
-            if (PrefSiempo.getInstance(context).read(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, true)) {
+            if (prefSiempo.read(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, true)) {
                 Collections.shuffle(items);
             } else {
                 items = Sorting.sortJunkAppAssignment(items);

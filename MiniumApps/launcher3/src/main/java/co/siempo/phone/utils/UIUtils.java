@@ -42,6 +42,7 @@ import java.io.ByteArrayOutputStream;
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.app.Launcher3App;
 
 
 public class UIUtils {
@@ -321,6 +322,19 @@ public class UIUtils {
 
     public static boolean isAppInstalledAndEnabled(Context context, String packageName) {
         PackageManager packageManager = context.getPackageManager();
+        ApplicationInfo applicationInfo = null;
+        try {
+            applicationInfo = packageManager.getApplicationInfo(packageName, 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            CoreApplication.getInstance().logException(e);
+            //  e.printStackTrace();
+        }
+        return applicationInfo != null && applicationInfo.enabled;
+// Installed
+    }
+
+    public static boolean isAppInstalledAndEnabled(String packageName) {
+        PackageManager packageManager = Launcher3App.getInstance().getApplicationContext().getPackageManager();
         ApplicationInfo applicationInfo = null;
         try {
             applicationInfo = packageManager.getApplicationInfo(packageName, 0);

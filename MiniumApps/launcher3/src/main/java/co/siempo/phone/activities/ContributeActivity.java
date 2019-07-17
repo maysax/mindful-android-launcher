@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +45,7 @@ public class ContributeActivity extends CoreActivity implements
 
     private Spinner spinnerContribute;
     private Toolbar toolbar;
-    private TextView txtSubmit;
+    private TextView txtSubmit, txtMsg;
     private TextView text;
     private long startTime = 0;
     private SubscriptionUtil subscriptionUtil;
@@ -64,6 +65,8 @@ public class ContributeActivity extends CoreActivity implements
         setContentView(R.layout.fragment_contribute);
         setUpToolbar();
 
+        txtMsg = (TextView) findViewById(R.id.txtMessage);
+        txtMsg.setMovementMethod(LinkMovementMethod.getInstance());
         contributeEmail = (EditText) findViewById(R.id.contributeEmail);
         txtErrorMessage = (TextView) findViewById(R.id.txtErrorMessage);
         subscribeSiempo= (CheckBox) findViewById(R.id.subscribeSiempo);

@@ -639,9 +639,9 @@ public class StatusBarService extends Service {
      * Notify all 3 panes fragment.
      */
     private void reloadData() {
-        new LoadFavoritePane(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        new LoadToolPane(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        new LoadJunkFoodPane(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadFavoritePane(PrefSiempo.getInstance(context)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadToolPane().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadJunkFoodPane(PrefSiempo.getInstance(context)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         EventBus.getDefault().postSticky(new NotifySearchRefresh(true));
     }
 

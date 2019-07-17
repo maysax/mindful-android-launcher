@@ -17,6 +17,8 @@
 package co.siempo.phone.adapters;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -88,8 +90,14 @@ public class SuppressNotificationAdapter extends RecyclerView.Adapter<SuppressNo
             if (bitmap != null) {
                 holder.imgAppIcon.setImageBitmap(bitmap);
             } else {
-                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(mContext, notification.getPackageName());
-                CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                ApplicationInfo appInfo = null;
+                try {
+                    appInfo = mContext.getPackageManager().getApplicationInfo(notification.getPackageName(), PackageManager.GET_META_DATA);
+                    BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(appInfo, mContext.getPackageManager());
+                    CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
                 Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(notification.getPackageName());
                 holder.imgAppIcon.setImageDrawable(drawable);
             }
@@ -143,8 +151,14 @@ public class SuppressNotificationAdapter extends RecyclerView.Adapter<SuppressNo
                 if (bitmap != null) {
                     holder.imgAppIcon.setImageBitmap(bitmap);
                 } else {
-                    BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(mContext, defSMSApp);
-                    CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                    ApplicationInfo appInfo = null;
+                    try {
+                        appInfo = mContext.getPackageManager().getApplicationInfo(defSMSApp, PackageManager.GET_META_DATA);
+                        BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(appInfo, mContext.getPackageManager());
+                        CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
                     Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(defSMSApp);
                     holder.imgAppIcon.setImageDrawable(drawable);
                 }
