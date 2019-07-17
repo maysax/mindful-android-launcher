@@ -1,9 +1,14 @@
 package co.siempo.phone.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
@@ -19,10 +24,16 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.ChooseBackgroundActivity;
+import co.siempo.phone.activities.UpdateBackgroundActivity;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.NotifyBackgroundChange;
 import co.siempo.phone.event.NotifyBackgroundToService;
@@ -259,7 +270,9 @@ public class TempoHomeFragment extends CoreFragment {
                             @Override
                             public void onPermissionGranted() {
                                 CoreApplication.getInstance().downloadSiempoImages();
-                                startActivity(new Intent(getActivity(), ChooseBackgroundActivity.class));
+                                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                                intent.setType("image/*");
+                                startActivityForResult(intent, 10);
                             }
 
                             @Override
@@ -279,7 +292,9 @@ public class TempoHomeFragment extends CoreFragment {
             }
         } else {
             CoreApplication.getInstance().downloadSiempoImages();
-            startActivity(new Intent(getActivity(), ChooseBackgroundActivity.class));
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*");
+            startActivityForResult(intent, 10);
         }
     }
 
@@ -300,6 +315,110 @@ public class TempoHomeFragment extends CoreFragment {
     }
 
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Intention screen Wallpaper selection
+        if(requestCode == 10 || requestCode == 7) {
+            switch (requestCode) {
+                case 10:
+                    if(resultCode== Activity.RESULT_OK){
+                        Uri uri=data.getData();
+
+                        if(uri !=null && !TextUtils.isEmpty(uri.toString())){
+
+                            if(uri.toString().contains("com.google.android.apps.photos.contentprovider")){
+                                return;
+                            }
+
+                            if(uri.toString().contains("/storage")){
+                                String[] storagepath=uri.toString().split("/storage");
+                                if(storagepath.length>1){
+                                    String filePath="/storage"+storagepath[1];
+                                    Intent mUpdateBackgroundIntent = new Intent(getActivity(),UpdateBackgroundActivity.class);
+                                    mUpdateBackgroundIntent.putExtra("imageUri", filePath);
+                                    startActivityForResult(mUpdateBackgroundIntent, 3);
+                                }
+                            }
+                            else{
+                                String id = DocumentsContract.getDocumentId(uri);
+
+                                if(!TextUtils.isEmpty(id) && uri!=null){
+
+                                    try {
+                                        InputStream inputStream = getActivity().getContentResolver().openInputStream(uri);
+                                        File file = new File(getActivity().getCacheDir().getAbsolutePath()+"/"+id);
+                                        writeFile(inputStream, file);
+                                        String filePath = file.getAbsolutePath();
+
+                                        if(filePath.contains("raw:")){
+                                            String[] downloadPath=filePath.split("raw:");
+                                            if(downloadPath.length>1){
+                                                filePath =downloadPath[1];
+                                            }
+                                        }
+
+                                        Intent mUpdateBackgroundIntent = new Intent(getActivity(),UpdateBackgroundActivity.class);
+                                        mUpdateBackgroundIntent.putExtra("imageUri", filePath);
+                                        startActivityForResult(mUpdateBackgroundIntent, 3);
+
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                    break;
+                case 7:
+                    if(resultCode == Activity.RESULT_OK){
+                        Uri selectedImage = data.getData();
+                        String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+                        Cursor cursor = getActivity().getContentResolver().query(selectedImage,
+                                filePathColumn, null, null, null);
+                        cursor.moveToFirst();
+                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                        String picturePath = cursor.getString(columnIndex);
+                        cursor.close();
+                        Intent mUpdateBackgroundIntent = new Intent(getActivity(),
+                                UpdateBackgroundActivity
+                                        .class);
+                        mUpdateBackgroundIntent.putExtra("imageUri", picturePath);
+                        startActivityForResult(mUpdateBackgroundIntent, 3);
+                    }
+                    break;
+            }
+        }
+        else{
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+
+    void writeFile(InputStream in, File file) {
+        OutputStream out = null;
+        try {
+            out = new FileOutputStream(file);
+            byte[] buf = new byte[1024];
+            int len;
+            while((len=in.read(buf))>0){
+                out.write(buf,0,len);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                if ( out != null ) {
+                    out.close();
+                }
+                in.close();
+            } catch ( IOException e ) {
+                e.printStackTrace();
+            }
+        }
+    }
     @Click
     void relDarkTheme() {
         switchDarkTheme.performClick();
