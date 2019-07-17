@@ -429,6 +429,10 @@
     <string name="title_clock">Clock</string>
     <string name="title_messages">Messages</string>
     <string name="title_email">Email</string>
+    <string name="title_sleep">Sleep</string>
+    <string name="title_calculator">Calculator</string>
+    <string name="title_translate">Translate</string>
+    <string name="title_video">Video</string>
     <string name="title_cloud">Cloud</string>
     <string name="title_books">Books</string>
     <string name="title_authentication">Auth</string>

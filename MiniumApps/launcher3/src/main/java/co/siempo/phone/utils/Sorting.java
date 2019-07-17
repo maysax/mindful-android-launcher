@@ -28,7 +28,7 @@ public class Sorting {
      * @param list
      * @return
      */
-    public synchronized static ArrayList<ResolveInfo> sortAppAssignment(final Context context, ArrayList<ResolveInfo> list) {
+    public synchronized static List<ResolveInfo> sortAppAssignment(final Context context, List<ResolveInfo> list) {
         sort(list, new Comparator<ResolveInfo>() {
             @Override
             public int compare(final ResolveInfo object1, final ResolveInfo object2) {

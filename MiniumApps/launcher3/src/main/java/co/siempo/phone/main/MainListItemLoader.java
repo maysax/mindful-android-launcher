@@ -75,6 +75,10 @@ public class MainListItemLoader {
     public static final int TOOLS_SEARCH = 38;
     public static final int TOOLS_SETTINGS = 39;
     public static final int TOOLS_VOICE = 40;
+    public static final int TOOLS_SLEEP = 41;
+    public static final int TOOLS_CALCULATOR = 42;
+    public static final int TOOLS_TRANSLATE = 43;
+    public static final int TOOLS_VIDEO = 44;
     private Context context;
 
     public MainListItemLoader(Context context) {
@@ -168,6 +172,14 @@ public class MainListItemLoader {
                     .getString(R.string.title_settings), R.drawable.ic_vector_settings,CategoryUtils.TOOLS));
             items.add(new MainListItem(TOOLS_VOICE, context.getResources()
                     .getString(R.string.title_voice), R.drawable.ic_vector_voice,CategoryUtils.MUSIC_AUDIO));
+            items.add(new MainListItem(TOOLS_SLEEP, context.getResources()
+                    .getString(R.string.title_sleep), R.drawable.ic_vector_sleep,CategoryUtils.LIFESTYLE));
+            items.add(new MainListItem(TOOLS_CALCULATOR, context.getResources()
+                    .getString(R.string.title_calculator), R.drawable.ic_vector_calculator,CategoryUtils.TOOLS));
+            items.add(new MainListItem(TOOLS_TRANSLATE, context.getResources()
+                    .getString(R.string.title_translate), R.drawable.ic_vector_translate,CategoryUtils.TOOLS));
+            items.add(new MainListItem(TOOLS_VIDEO, context.getResources()
+                    .getString(R.string.title_video), R.drawable.ic_vector_video,CategoryUtils.MUSIC));
             items.add(new MainListItem(TOOLS_CALL, context.getResources()
                     .getString(R.string.title_call), R.drawable.ic_vector_call,
                     MainListItemType.ACTION,CategoryUtils.COMMUNICATION));
@@ -179,7 +191,6 @@ public class MainListItemLoader {
                     .ic_vector_messages, MainListItemType.ACTION,CategoryUtils.COMMUNICATION));
             items.add(new MainListItem(TOOLS_EMAIL, context.getResources()
                     .getString(R.string.title_email), R.drawable.ic_vector_email,CategoryUtils.COMMUNICATION));
-
 
         }
     }
@@ -506,6 +517,38 @@ public class MainListItemLoader {
                 toolsItems.add(new MainListItem(TOOLS_VOICE, context
                         .getResources().getString(R.string.title_voice), R.drawable.ic_vector_voice,CategoryUtils.MUSIC_AUDIO));
             }
+
+
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_SLEEP)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_SLEEP)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_SLEEP, context
+                        .getResources().getString(R.string.title_sleep), R.drawable.ic_vector_sleep,CategoryUtils.LIFESTYLE));
+            }
+
+
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_CALCULATOR)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_CALCULATOR)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_CALCULATOR, context
+                        .getResources().getString(R.string.title_calculator), R.drawable.ic_vector_calculator,CategoryUtils.TOOLS));
+            }
+
+
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_TRANSLATE)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_TRANSLATE)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_TRANSLATE, context
+                        .getResources().getString(R.string.title_translate), R.drawable.ic_vector_translate,CategoryUtils.TOOLS));
+            }
+
+            if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_VIDEO)
+                    .getApplicationName()) && toolsSettings.get(TOOLS_VIDEO)
+                    .getApplicationName().contains(".")) {
+                toolsItems.add(new MainListItem(TOOLS_VIDEO, context
+                        .getResources().getString(R.string.title_video), R.drawable.ic_vector_video,CategoryUtils.MUSIC));
+            }
+
 
 
 
@@ -969,6 +1012,47 @@ public class MainListItemLoader {
                             (TOOLS_VOICE).getApplicationName().trim();
                     applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
                     FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_voice), applicationName);
+                    new ActivityHelper(context).openAppWithPackageName
+                            (packageName);
+                    break;
+
+
+                case TOOLS_SLEEP:
+
+                    packageName = CoreApplication.getInstance().getToolsSettings().get
+                            (TOOLS_SLEEP).getApplicationName().trim();
+                    applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_sleep), applicationName);
+                    new ActivityHelper(context).openAppWithPackageName
+                            (packageName);
+                    break;
+
+                case TOOLS_CALCULATOR:
+
+                    packageName = CoreApplication.getInstance().getToolsSettings().get
+                            (TOOLS_CALCULATOR).getApplicationName().trim();
+                    applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_calculator), applicationName);
+                    new ActivityHelper(context).openAppWithPackageName
+                            (packageName);
+                    break;
+
+                case TOOLS_TRANSLATE:
+
+                    packageName = CoreApplication.getInstance().getToolsSettings().get
+                            (TOOLS_TRANSLATE).getApplicationName().trim();
+                    applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_translate), applicationName);
+                    new ActivityHelper(context).openAppWithPackageName
+                            (packageName);
+                    break;
+
+                case TOOLS_VIDEO:
+
+                    packageName = CoreApplication.getInstance().getToolsSettings().get
+                            (TOOLS_VIDEO).getApplicationName().trim();
+                    applicationName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                    FirebaseHelper.getInstance().logSiempoMenuUsage(3, context.getResources().getString(R.string.title_video), applicationName);
                     new ActivityHelper(context).openAppWithPackageName
                             (packageName);
                     break;
