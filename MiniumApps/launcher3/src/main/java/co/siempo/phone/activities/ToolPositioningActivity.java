@@ -147,7 +147,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         super.onPause();
         for (int i = 0; i < sortedList.size(); i++) {
 
-            if (i >= 36) {
+            if (i >= 40) {
                 map.get(sortedList.get(i).getId()).setBottomDoc(true);
             } else {
                 map.get(sortedList.get(i).getId()).setBottomDoc(false);

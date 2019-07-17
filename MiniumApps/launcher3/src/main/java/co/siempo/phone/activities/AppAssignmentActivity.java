@@ -41,6 +41,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.viewholder.AppAssignmentAdapter;
@@ -60,14 +61,14 @@ import de.greenrobot.event.Subscribe;
 
 public class AppAssignmentActivity extends CoreActivity {
 
-    public ArrayList<ResolveInfo> appList = new ArrayList<>();
+    public List<ResolveInfo> appList = new ArrayList<>();
     MainListItem mainListItem;
     MenuItem item_tools;
     //8 Photos
-    List<Integer> idList = Arrays.asList(2, 4, 6, 9, 10, 12, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40);
+    List<Integer> idList = Arrays.asList(2, 4, 6, 9, 10, 12, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44);
     ArrayList<String> connectedAppsList = new ArrayList<>();
     Set<String> set = new HashSet<>();
-    ArrayList<ResolveInfo> appListAll = new ArrayList<>();
+    List<ResolveInfo> appListAll = new ArrayList<>();
     ArrayList<ResolveInfo> mimeList = new ArrayList<>();
     private Toolbar toolbar;
     private RecyclerView recyclerView;
@@ -80,6 +81,7 @@ public class AppAssignmentActivity extends CoreActivity {
     private EditText edtSearch;
     private String class_name;
     private Context context;
+    List<String> googleApps= Arrays.asList("com.google.android.gm","com.google.android.googlequicksearchbox","com.android.chrome","com.google.android.apps.photos","com.google.android.apps.googleassistant","com.google.android.calendar","com.google.android.apps.docs.editors.docs","com.google.android.apps.docs.editors.sheets","com.google.android.apps.docs.editors.slides","com.google.android.apps.docs","com.google.android.apps.tachyon","com.google.earth","com.google.android.apps.fitness","com.google.android.apps.chromecast.app","com.google.android.keep","com.google.android.apps.maps","com.google.android.apps.nbu.paisa.user","com.google.android.music","com.google.android.apps.podcasts");
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -171,12 +173,13 @@ public class AppAssignmentActivity extends CoreActivity {
             Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
             mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
             List<ResolveInfo> installedPackageList = context.getPackageManager().queryIntentActivities(mainIntent, 0);
+
+
             for (ResolveInfo resolveInfo : installedPackageList) {
-
                 if (resolveInfo.activityInfo.packageName != null && !resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
-                    for (CategoryAppList category : categoryAppList) {
 
-                        if (mainListItem != null && resolveInfo.activityInfo.packageName.equalsIgnoreCase(category.getPackageName()) &&  mainListItem.getCategory().equalsIgnoreCase(category.getCategoryName())) {
+                    for (String googleAppPackages: googleApps) {
+                        if ((mainListItem != null && resolveInfo.activityInfo.packageName.equalsIgnoreCase(googleAppPackages.toString().toLowerCase()))){
                             isCategoryAvailable = true;
                             appList.add(resolveInfo);
                         }
@@ -184,6 +187,30 @@ public class AppAssignmentActivity extends CoreActivity {
                 }
             }
 
+
+
+            for (ResolveInfo resolveInfo : installedPackageList) {
+
+                if (resolveInfo.activityInfo.packageName != null && !resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
+
+                    String appName="";
+                    try{
+                        appName =  resolveInfo.loadLabel(getPackageManager()).toString();
+                    }catch (Exception e){
+
+                    }
+                    for (CategoryAppList category : categoryAppList) {
+                        if ((mainListItem != null && resolveInfo.activityInfo.packageName.equalsIgnoreCase(category.getPackageName()) &&  mainListItem.getCategory().equalsIgnoreCase(category.getCategoryName())) || ( appName.contains(mainListItem.getTitle()) || mainListItem.getTitle().contains(appName) ) ) {
+                            isCategoryAvailable = true;
+                            appList.add(resolveInfo);
+                        }
+                    }
+                }
+            }
+
+
+
+            appList=removeDuplicates(appList);
             if(isCategoryAvailable){
                 bindList(appList);
             }
@@ -195,6 +222,29 @@ public class AppAssignmentActivity extends CoreActivity {
             showListByMimeType();
         }
     }
+
+    // Function to remove duplicates from an ArrayList
+    public static <T> List<T> removeDuplicates(List<T> list)
+    {
+
+        // Create a new ArrayList
+        List<T> newList = new ArrayList<T>();
+
+        // Traverse through the first list
+        for (T element : list) {
+
+            // If this element is not present in newList
+            // then add it
+            if (!newList.contains(element)) {
+
+                newList.add(element);
+            }
+        }
+
+        // return the new list
+        return newList;
+    }
+
 
     public void showListByMimeType(){
         List<ResolveInfo> installedPackageList;
@@ -222,6 +272,9 @@ public class AppAssignmentActivity extends CoreActivity {
             }
         }
         appListAll = Sorting.sortAppAssignment(AppAssignmentActivity.this, appListAll);
+        appListAll=removeDuplicates(appListAll);
+        appList=removeDuplicates(appList);
+
         if (showallAppBtn.getVisibility()!=View.VISIBLE) {
             bindList(appListAll);
         } else {
@@ -229,7 +282,7 @@ public class AppAssignmentActivity extends CoreActivity {
         }
     }
 
-    private ArrayList<ResolveInfo> getAllapp() {
+    private List<ResolveInfo> getAllapp() {
         return appListAll;
     }
 
@@ -331,7 +384,7 @@ public class AppAssignmentActivity extends CoreActivity {
 
     }
 
-    private void bindList(ArrayList<ResolveInfo> appList) {
+    private void bindList(List<ResolveInfo> appList) {
         if (appList != null && appList.size() > 0) {
             recyclerView.setVisibility(View.VISIBLE);
             txtErrorMessage.setVisibility(View.INVISIBLE);
