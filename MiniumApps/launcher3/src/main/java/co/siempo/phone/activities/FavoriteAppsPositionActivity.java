@@ -143,7 +143,7 @@ public class FavoriteAppsPositionActivity extends CoreActivity implements OnFavo
     @Override
     protected void onPause() {
         super.onPause();
-        new LoadFavoritePane(this).execute();
+        new LoadFavoritePane(PrefSiempo.getInstance(this)).execute();
         FirebaseHelper.getInstance().logScreenUsageTime(FavoriteAppsPositionActivity.this.getClass().getSimpleName(), startTime);
     }
 

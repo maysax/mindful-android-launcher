@@ -16,6 +16,7 @@ import java.util.List;
 import co.siempo.phone.R;
 import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.fragments.PaneFragment;
 import co.siempo.phone.fragments.ToolsPaneFragment;
 import co.siempo.phone.helper.ActivityHelper;
@@ -81,8 +82,8 @@ public class MainListItemLoader {
     public static final int TOOLS_VIDEO = 44;
     private Context context;
 
-    public MainListItemLoader(Context context) {
-        this.context = context;
+    public MainListItemLoader() {
+        this.context = Launcher3App.getInstance().getApplicationContext();
     }
 
     public void loadItemsDefaultApp(List<MainListItem> items) {

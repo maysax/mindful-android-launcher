@@ -19,10 +19,10 @@ import de.greenrobot.event.EventBus;
 
 public class LoadFavoritePane extends AsyncTask<String, String, ArrayList<MainListItem>> {
 
-    Context context;
+    PrefSiempo prefSiempo;
 
-    public LoadFavoritePane(Context context) {
-        this.context = context;
+    public LoadFavoritePane(PrefSiempo prefSimepo) {
+        this.prefSiempo = prefSimepo;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class LoadFavoritePane extends AsyncTask<String, String, ArrayList<MainLi
         /**
          * Changes for SSA-1770 for checking whether Favourite Item list is empty or not.
          */
-        items = PackageUtil.getFavoriteList(context, false);
+        items = PackageUtil.getFavoriteList(false);
 
         int itemsSize = items.size();
         int tempFavSize = 0;
@@ -41,10 +41,10 @@ public class LoadFavoritePane extends AsyncTask<String, String, ArrayList<MainLi
             }
         }
         if (itemsSize == tempFavSize) {
-            PrefSiempo.getInstance(context).write(PrefSiempo.FAVORITE_SORTED_MENU, "");
-            items = PackageUtil.getFavoriteList(context, true);
+            prefSiempo.write(PrefSiempo.FAVORITE_SORTED_MENU, "");
+            items = PackageUtil.getFavoriteList( true);
         } else {
-            items = PackageUtil.getFavoriteList(context, false);
+            items = PackageUtil.getFavoriteList( false);
         }
         return items;
     }

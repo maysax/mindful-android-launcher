@@ -84,7 +84,7 @@ public class MainFragmentMediator {
     }
 
     private synchronized void loadActions() {
-        new MainListItemLoader(fragment.getActivity()).loadItems(items, fragment);
+        new MainListItemLoader().loadItems(items, fragment);
     }
 
     public void loadContacts() {
@@ -172,7 +172,7 @@ public class MainFragmentMediator {
                                             .getDefault());
                             PackageUtil.addRecentItemList(getAdapter().getItem(position), context);
                             position = getAdapter().getItem(position).getId();
-                            new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
+                            new MainListItemLoader().listItemClicked(position);
                             EventBus.getDefault().post(new SendSmsEvent(true));
                         } else {
                             if (fragment != null) {

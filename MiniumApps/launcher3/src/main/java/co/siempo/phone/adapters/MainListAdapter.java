@@ -2,6 +2,8 @@ package co.siempo.phone.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -244,8 +246,13 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                         if (bitmap != null) {
                             holder.icon.setImageBitmap(bitmap);
                         } else {
-                            BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, packageName);
-                            CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                            try {
+                                ApplicationInfo appInfo = context.getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA);
+                                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(appInfo, context.getPackageManager());
+                                CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                            } catch (PackageManager.NameNotFoundException e) {
+                                e.printStackTrace();
+                            }
                             Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(packageName);
                             holder.icon.setImageDrawable(drawable);
                         }

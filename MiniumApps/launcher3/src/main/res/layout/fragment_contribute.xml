@@ -54,11 +54,35 @@
                 android:visibility="gone" />
         </LinearLayout>
 
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="start"
+            android:layout_marginTop="30dp"
+            android:padding="@dimen/dp_10"
+            android:layout_height="wrap_content">
+            <CheckBox
+                android:id="@+id/subscribeSiempo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:button="@drawable/checkbox_selector"
+                />
+            <co.siempo.phone.customviews.RobotoMediumTextView
+                android:id="@+id/txtSubscribe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp_10"
+                android:text="Subscribe to Siempo"
+                android:textSize="@dimen/sp_15" />
+        </LinearLayout>
+
         <android.support.design.widget.TextInputLayout
             android:id="@+id/text_input_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+
             android:hint="@string/lbl_email"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
@@ -78,6 +102,7 @@
 
             </EditText>
         </android.support.design.widget.TextInputLayout>
+
         <co.siempo.phone.customviews.RobotoRegularTextView
             android:id="@+id/txtErrorMessage"
             android:layout_width="wrap_content"
@@ -98,27 +123,6 @@
             android:textSize="@dimen/sp_15" />
 
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="start"
-            android:padding="@dimen/dp_10"
-            android:layout_height="wrap_content">
-            <CheckBox
-                android:id="@+id/subscribeSiempo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:button="@drawable/checkbox_selector"
-                />
-            <co.siempo.phone.customviews.RobotoMediumTextView
-                android:id="@+id/txtSubscribe"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/dp_10"
-                android:text="Subscribe Siempo"
-                android:textSize="@dimen/sp_15" />
-        </LinearLayout>
 
     </LinearLayout>
 

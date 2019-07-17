@@ -34,11 +34,9 @@ import de.greenrobot.event.EventBus;
 
 public class LoadToolPane extends AsyncTask<String, String, ArrayList<MainListItem>> {
 
-    Context context;
     ArrayList<MainListItem> bottomDockList;
 
-    public LoadToolPane(Context context) {
-        this.context = context;
+    public LoadToolPane() {
         bottomDockList = new ArrayList<>();
     }
 
@@ -48,8 +46,8 @@ public class LoadToolPane extends AsyncTask<String, String, ArrayList<MainListIt
         ArrayList<MainListItem> items1 = new ArrayList<>();
 
         try {
-            new MainListItemLoader(context).loadItemsDefaultApp(items);
-            items = PackageUtil.getToolsMenuData(context, items);
+            new MainListItemLoader().loadItemsDefaultApp(items);
+            items = PackageUtil.getToolsMenuData(items);
             Set<Integer> list = new HashSet<>();
 
             if (null != CoreApplication.getInstance() && null != CoreApplication

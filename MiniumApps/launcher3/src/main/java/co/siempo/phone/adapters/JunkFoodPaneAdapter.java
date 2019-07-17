@@ -2,6 +2,8 @@ package co.siempo.phone.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -97,8 +99,14 @@ public class JunkFoodPaneAdapter extends RecyclerView.Adapter<JunkFoodPaneAdapte
             if (bitmap != null) {
                 holder.imgAppIcon.setImageBitmap(bitmap);
             } else {
-                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, item);
-                CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                ApplicationInfo appInfo = null;
+                try {
+                    appInfo = context.getPackageManager().getApplicationInfo(item, PackageManager.GET_META_DATA);
+                    BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(appInfo, context.getPackageManager());
+                    CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
                 Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(item);
                 holder.imgAppIcon.setImageDrawable(drawable);
             }
