@@ -256,7 +256,7 @@
     <string name="add">ADD</string>
     <string name="home_screen">Customize appearance</string>
     <string name="account">Account</string>
-    <string name="alpha_settings">Alpha Settings</string>
+    <string name="alpha_settings">Alpha settings</string>
     <string name="allow_specific_apps">Allow specific apps</string>
     <string name="select_apps_title">Select apps</string>
     <string name="app_name_tools">App Name</string>
@@ -333,12 +333,12 @@
     <string name="allow_interrupt_msg">Allow this app to interrupt you</string>
     <string name="info_or_uninstall">Get info or uninstall app</string>
     <string name="stop_interrupt_msg">Stop allowing interruptions</string>
-    <string name="notification">Hide Notification Bar</string>
+    <string name="notification">Hide notification bar</string>
     <string name="icon_text_visibility">Hide icon labels</string>
 
-    <string name="icon_tools_screen">Tools Screen Icon Labels</string>
-    <string name="icon_favorite_screen">Favorite Screen Icon Labels</string>
-    <string name="icon_junkfood_screen">JunkFood Screen Icon Labels</string>
+    <string name="icon_tools_screen">Disable tools screen icon labels</string>
+    <string name="icon_favorite_screen">Disable favorites screen icon labels</string>
+    <string name="icon_junkfood_screen">Disable flagged screen icon label</string>
 
     <!--notes strings-->
     <string name="title_noteColor">Note color</string>
