@@ -739,46 +739,9 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 
 
     public void showWallPaperSelection(){
-        final BottomSheetDialog mBottomSheetDialog = new BottomSheetDialog(this);
-        View sheetView = getLayoutInflater().inflate(R.layout.shortcuts_wallpaper, null);
-        mBottomSheetDialog.setContentView(sheetView);
-
-        ImageView folder = sheetView.findViewById(R.id.shortcut_icon_folder);
-        folder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mBottomSheetDialog.dismiss();
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                startActivityForResult(intent, 10);
-
-            }
-        });
-
-        ImageView gallary = sheetView.findViewById(R.id.shortcut_icon_gallary);
-        gallary.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mBottomSheetDialog.dismiss();
-                Intent i = new Intent(
-                        Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-                startActivityForResult(i, 7);
-
-            }
-        });
-
-        ImageView browser = sheetView.findViewById(R.id.shortcut_icon_globe);
-        browser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mBottomSheetDialog.dismiss();
-            }
-        });
-
-        mBottomSheetDialog.show();
-
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        startActivityForResult(intent, 10);
     }
 
 

@@ -550,7 +550,7 @@
     <string name="wellness">Wellness</string>
     <string name="msg_internet">Please check internet connection!</string>
     <string name="contribute_to_siempo">Contribute to Siempo</string>
-    <string name="thank_you_for_">Thank you for being part of our journey! \nAs a beta user, Siempo will be free for you for life, but you are always welcome to contribute to our mission.</string>
+    <string name="thank_you_for_">Thank you for being part of our journey! \nAs a beta user, Siempo will be free for you for life, but you are always welcome to contribute to our mission, or <a href="https://github.com/Get-Siempo">help us build Siempo</a>.</string>
 
     <string name="string_doubletap_title">Double tap controls</string>
     <string name="sleep">Sleep</string>

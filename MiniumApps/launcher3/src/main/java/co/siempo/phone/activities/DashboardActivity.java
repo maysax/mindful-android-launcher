@@ -523,9 +523,9 @@ public class DashboardActivity extends CoreActivity {
 
     private void loadPane() {
         try {
-            new LoadFavoritePane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            new LoadToolPane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            new LoadJunkFoodPane(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new LoadFavoritePane(PrefSiempo.getInstance(DashboardActivity.this)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new LoadToolPane().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new LoadJunkFoodPane(PrefSiempo.getInstance(this)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } catch (RejectedExecutionException e) {
             e.printStackTrace();
         }

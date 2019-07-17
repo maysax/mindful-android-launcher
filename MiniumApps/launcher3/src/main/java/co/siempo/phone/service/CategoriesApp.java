@@ -55,24 +55,30 @@ public class CategoriesApp extends IntentService {
     public void getCategoryApps(){
         BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<Runnable>(NetworkUtil.maximumPoolSize);
         Executor threadPoolExecutor = new ThreadPoolExecutor(NetworkUtil.corePoolSize, NetworkUtil.maximumPoolSize, NetworkUtil.keepAliveTime, TimeUnit.SECONDS, workQueue);
-        new FetchCategoryTask().executeOnExecutor(threadPoolExecutor);
+        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        List<ResolveInfo> installedPackageList = context.getPackageManager().queryIntentActivities(mainIntent, 0);
+        new FetchCategoryTask(installedPackageList, getPackageName()).executeOnExecutor(threadPoolExecutor);
     }
 
 
-    private class FetchCategoryTask extends AsyncTask<Void, Void, Void> {
+    private static class FetchCategoryTask extends AsyncTask<Void, Void, Void> {
 
-        private PackageManager pm;
+        private List<ResolveInfo> installedPackageList;
+        private String packageName;
+
+        public FetchCategoryTask(List<ResolveInfo> installedPackageList, String packageName) {
+            this.installedPackageList = installedPackageList;
+            this.packageName = packageName;
+        }
 
         @Override
         protected Void doInBackground(Void... errors) {
 
             List<CategoryAppList> categoryAppList= CoreApplication.getInstance().categoryAppList;
-            Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-            mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-            List<ResolveInfo> installedPackageList = context.getPackageManager().queryIntentActivities(mainIntent, 0);
             String category;
             for (ResolveInfo resolveInfo : installedPackageList) {
-                if(resolveInfo.activityInfo.packageName!=null && !resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())){
+                if(resolveInfo.activityInfo.packageName!=null && !resolveInfo.activityInfo.packageName.equalsIgnoreCase(packageName)){
                     String query_url = "https://play.google.com/store/apps/details?id="+resolveInfo.activityInfo.packageName;  //GOOGLE_URL + packageInfo.packageName;
                     category = getCategory(query_url);
                     if(!TextUtils.isEmpty(category) && !category.equalsIgnoreCase("error")){
@@ -86,21 +92,20 @@ public class CategoriesApp extends IntentService {
             return null;
         }
 
-    }
+        String getCategory(String query_url) {
 
-
-
-    private String getCategory(String query_url) {
-
-        try {
-            Document doc = Jsoup.connect(query_url).get();
-            Elements link = doc.select("a[class=\"hrTbp R8zArc\"]");
-            return link.last().text();
-        } catch (Exception e) {
-            Log.e("DOc", e.toString());
+            try {
+                Document doc = Jsoup.connect(query_url).get();
+                Elements link = doc.select("a[class=\"hrTbp R8zArc\"]");
+                return link.last().text();
+            } catch (Exception e) {
+                Log.e("DOc", e.toString());
+            }
+            return "";
         }
-        return "";
+
     }
+
 
     /**
      * Handle action Foo in the provided background thread with the provided

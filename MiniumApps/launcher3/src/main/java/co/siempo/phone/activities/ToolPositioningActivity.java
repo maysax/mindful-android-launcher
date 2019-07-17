@@ -156,7 +156,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
 
         String hashMapToolSettings = new Gson().toJson(map);
         PrefSiempo.getInstance(this).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
-        new LoadToolPane(this).execute();
+        new LoadToolPane().execute();
         FirebaseHelper.getInstance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
 
     }
@@ -172,7 +172,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         toolbar.setTitle(R.string.editing_tools);
         setSupportActionBar(toolbar);
         items = new ArrayList<>();
-        new MainListItemLoader(this).loadItemsDefaultApp(items);
+        new MainListItemLoader().loadItemsDefaultApp(items);
         items = PackageUtil.getToolsMenuData(this, items);
         recyclerView = findViewById(R.id.recyclerView);
         txtSelectTools = findViewById(R.id.txtSelectTools);

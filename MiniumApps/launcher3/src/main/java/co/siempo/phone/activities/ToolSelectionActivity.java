@@ -118,7 +118,7 @@ public class ToolSelectionActivity extends CoreActivity {
             EventBus.getDefault().postSticky(new NotifyBottomView(true));
             EventBus.getDefault().postSticky(new NotifyToolView(true));
         }
-        new LoadToolPane(this).execute();
+        new LoadToolPane().execute();
         EventBus.getDefault().postSticky(new NotifySearchRefresh(true));
         FirebaseHelper.getInstance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
     }
@@ -139,14 +139,14 @@ public class ToolSelectionActivity extends CoreActivity {
     private void filterListData() {
         //Copy List
         items = new ArrayList<>();
-        new MainListItemLoader(this).loadItemsDefaultApp(items);
+        new MainListItemLoader().loadItemsDefaultApp(items);
         for (int i = 0; i < items.size(); i++) {
             items.get(i).setVisable(map.get(items.get(i).getId()).isVisible());
         }
 
         //original list which will be edited
         adapterList = new ArrayList<>();
-        new MainListItemLoader(this).loadItemsDefaultApp(adapterList);
+        new MainListItemLoader().loadItemsDefaultApp(adapterList);
         int size = adapterList.size();
         for (int i = 0; i < size; i++) {
             adapterList.get(i).setVisable(map.get(adapterList.get(i).getId()).isVisible());
@@ -193,7 +193,7 @@ public class ToolSelectionActivity extends CoreActivity {
      */
     public int invisibleItemId() {
         ArrayList<MainListItem> itemsLocal = new ArrayList<>();
-        new MainListItemLoader(this).loadItemsDefaultApp(itemsLocal);
+        new MainListItemLoader().loadItemsDefaultApp(itemsLocal);
 //        for (MainListItem mainListItem : ToolPositioningActivity.sortedList) {
 //            if (!mainListItem.isVisable()) {
 //                return mainListItem.getId();

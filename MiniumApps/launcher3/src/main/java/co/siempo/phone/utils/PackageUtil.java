@@ -57,6 +57,7 @@ import java.util.Set;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.customviews.NotificationHelper;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
@@ -847,6 +848,55 @@ public class PackageUtil {
         }
     }
 
+
+    public static ArrayList<MainListItem> getToolsMenuData(ArrayList<MainListItem> items) {
+
+
+        //create an empty array to hold the list of sorted Customers
+        ArrayList<MainListItem> sortedTools = new ArrayList<>();
+
+        //get the JSON array of the ordered of sorted customers
+        String jsonListOfSortedToolsId = PrefSiempo.getInstance(Launcher3App.getInstance().getApplicationContext()).read(PrefSiempo.SORTED_MENU, "");
+        Tracer.d("MenuItem",jsonListOfSortedToolsId);
+        Log.d("MenuItem", jsonListOfSortedToolsId);
+
+        //check for null
+        if (!jsonListOfSortedToolsId.isEmpty()) {
+
+            //convert onNoteListChangedJSON array into a List<Long>
+            Gson gson = new GsonBuilder()
+                    .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
+            List<Long> listOfSortedCustomersId = gson.fromJson(jsonListOfSortedToolsId, new TypeToken<List<Long>>() {
+            }.getType());
+
+            //build sorted list
+            if (listOfSortedCustomersId != null && listOfSortedCustomersId.size() > 0) {
+                for (Long id : listOfSortedCustomersId) {
+                    for (MainListItem tools : items) {
+                        if (tools.getId() == id) {
+                            sortedTools.add(tools);
+                            items.remove(tools);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            //if there are still tools that were not in the sorted list
+            //maybe they were added after the last drag and drop
+            //add them to the sorted list
+//            if (items.size() > 0) {
+//                sortedTools.addAll(items);
+//            }
+
+            return sortedTools;
+        } else {
+            return items;
+        }
+    }
+
+
+
     /**
      * Changes for SSA-1770-Changes
      *
@@ -855,7 +905,6 @@ public class PackageUtil {
      * @return
      */
     public static ArrayList<MainListItem> getFavoriteList(Context context, boolean isFalse) {
-
         ArrayList<MainListItem> sortedFavoriteList = new ArrayList<>();
         try {
             ArrayList<MainListItem> appList = getAppList(context);
@@ -882,6 +931,45 @@ public class PackageUtil {
 
         return sortedFavoriteList;
     }
+
+    /**
+     * Changes for SSA-1770-Changes
+     *
+     * @param context
+     * @param isFalse-check Whether list is fetched for empty FavItemsList or not.
+     * @return
+     */
+    public static ArrayList<MainListItem> getFavoriteList(boolean isFalse) {
+        ArrayList<MainListItem> sortedFavoriteList = new ArrayList<>();
+        try {
+            Context context = Launcher3App.getInstance().getApplicationContext();
+            ArrayList<MainListItem> appList = getAppList(context);
+            if (appList.size() > 0) {
+                String jsonListOfSortedFavorites = PrefSiempo.getInstance(context).read(PrefSiempo.FAVORITE_SORTED_MENU, "");
+                List<String> listOfSortFavoritesApps;
+                if (!TextUtils.isEmpty(jsonListOfSortedFavorites)) {
+                    listOfSortFavoritesApps = syncFavoriteList(jsonListOfSortedFavorites, context);
+                    sortedFavoriteList = sortFavoriteAppsByPosition(listOfSortFavoritesApps, appList, context);
+                } else {
+                    if (isFalse) {
+                        sortedFavoriteList = addDefaultFavoriteAppsSetting(context, appList);
+                    } else {
+                        sortedFavoriteList = addDefaultFavoriteApps(context, appList);
+                    }
+
+                }
+            } else {
+                sortedFavoriteList = addDefaultFavoriteApps(context, appList);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return sortedFavoriteList;
+    }
+
+
+
     private static ArrayList<MainListItem> getAppList(Context context) {
         ArrayList<MainListItem> appList = new ArrayList<>();
         try {
