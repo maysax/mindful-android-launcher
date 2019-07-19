@@ -51,6 +51,7 @@ public class TempoHomeFragment extends CoreFragment {
     @ViewById
     Toolbar toolbar;
 
+
     @ViewById
     Switch switchDisableIntentionsControls;
 
