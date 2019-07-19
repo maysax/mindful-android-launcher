@@ -77,6 +77,7 @@
     <uses-feature android:name="android.hardware.location.network" />
 
     <uses-permission android:name="android.permission.USES_POLICY_FORCE_LOCK" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
     <application
         android:name=".app.Launcher3App_"
@@ -190,6 +191,11 @@
             android:enabled="true"
             android:exported="true"
             android:label="@string/app_name" />
+
+        <service
+            android:name=".service.ScreenFilterService"
+            android:enabled="true" >
+        </service>
 
         <receiver android:name=".receivers.BootReceiver">
             <intent-filter>

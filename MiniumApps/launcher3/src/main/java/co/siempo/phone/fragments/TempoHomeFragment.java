@@ -33,12 +33,14 @@ import java.util.ArrayList;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.ChooseBackgroundActivity;
+import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.activities.UpdateBackgroundActivity;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.NotifyBackgroundChange;
 import co.siempo.phone.event.NotifyBackgroundToService;
 import co.siempo.phone.event.ThemeChangeEvent;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.service.ScreenFilterService;
 import co.siempo.phone.util.AppUtils;
 import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.PrefSiempo;
@@ -79,6 +81,11 @@ public class TempoHomeFragment extends CoreFragment {
 
     @ViewById
     RelativeLayout relDarkTheme;
+
+
+    @ViewById
+    Switch switchScreenOverlay;
+
 
     private PermissionUtil permissionUtil;
 
@@ -229,6 +236,27 @@ public class TempoHomeFragment extends CoreFragment {
                 AppUtils.notificationBarManaged(getActivity(), null);
             }
         });
+
+        switchScreenOverlay.setChecked(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_SCREEN_OVERLAY, false));
+        switchScreenOverlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Switch sb = (Switch) view;
+                if(sb.isChecked())
+                {
+                    checkPermissionsForSystemWindow();
+
+                }else
+                {
+                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_SCREEN_OVERLAY, false);
+                    Intent command = new Intent(getActivity(), ScreenFilterService.class);
+                    command.putExtra(ScreenFilterService.BUNDLE_KEY_COMMAND, 1);
+                    getActivity().startService(command);
+                }
+
+            }
+        });
     }
 
     private void notificationVisibility() {
@@ -295,6 +323,41 @@ public class TempoHomeFragment extends CoreFragment {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("image/*");
             startActivityForResult(intent, 10);
+        }
+    }
+
+
+    private void checkPermissionsForSystemWindow() {
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !permissionUtil.hasGiven
+                (PermissionUtil.SYSTEM_WINDOW_ALERT))) {
+            try {
+                TedPermission.with(getActivity())
+                        .setPermissionListener(new PermissionListener() {
+                            @Override
+                            public void onPermissionGranted() {
+                                PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_SCREEN_OVERLAY, true);
+                                Intent command = new Intent(getActivity(), ScreenFilterService.class);
+                                command.putExtra(ScreenFilterService.BUNDLE_KEY_COMMAND, 0);
+                                getActivity().startService(command);
+                            }
+
+                            @Override
+                            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+
+                            }
+                        })
+                        .setDeniedMessage(R.string.msg_permission_denied)
+                        .setPermissions(new String[]{
+                                Manifest.permission.SYSTEM_ALERT_WINDOW})
+                        .check();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_SCREEN_OVERLAY, true);
+            Intent command = new Intent(getActivity(), ScreenFilterService.class);
+            command.putExtra(ScreenFilterService.BUNDLE_KEY_COMMAND, 0);
+            getActivity().startService(command);
         }
     }
 

@@ -123,7 +123,7 @@ public class PrefSiempo {
     public static final String DEFAULT_ICON_JUNKFOOD_TEXT_VISIBILITY_ENABLE = "default_junkfood_o";
 
     public static final String DEFAULT_NOTIFICATION_ENABLE = "default_notification";
-
+    public static final String DEFAULT_SCREEN_OVERLAY = "default_screen_overlay";
 
     /*This preferences are for double tap coontrols*/
     public static final String IS_SLEEP_ENABLE = "isSleepEnable";
