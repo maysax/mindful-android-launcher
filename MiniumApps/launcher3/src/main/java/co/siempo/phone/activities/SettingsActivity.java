@@ -31,7 +31,7 @@ public class SettingsActivity extends CoreActivity {
 
     private void statusBar()
     {
-        final boolean isEnable = PrefSiempo.getInstance(this).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, false);
+        final boolean isEnable = PrefSiempo.getInstance(this).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, true);
         if(isEnable)
         {
             View decorView =  getWindow().getDecorView();
@@ -45,7 +45,7 @@ public class SettingsActivity extends CoreActivity {
                         public void onSystemUiVisibilityChange(int visibility) {
                             if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
                             {
-                                if(PrefSiempo.getInstance(SettingsActivity.this).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, false))
+                                if(PrefSiempo.getInstance(SettingsActivity.this).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, true))
                                 {
                                     new Handler().postDelayed(new Runnable() {
                                         @Override

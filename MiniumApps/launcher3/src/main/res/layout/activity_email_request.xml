@@ -41,6 +41,7 @@
         android:id="@+id/viewFlipperEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="50dp"
         android:layout_centerInParent="true">
 
 
@@ -82,6 +83,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autofillHints="em"
+                            android:letterSpacing="0.01"
                             android:focusableInTouchMode="true"
                             android:focusedByDefault="false"
                             android:hint="Your email address"

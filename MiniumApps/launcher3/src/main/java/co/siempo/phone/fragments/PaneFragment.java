@@ -1,8 +1,10 @@
 package co.siempo.phone.fragments;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
@@ -45,11 +47,13 @@ import android.widget.ViewFlipper;
 
 import com.eyeem.chips.ChipsEditText;
 import com.eyeem.chips.Utils;
+import com.google.gson.Gson;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -75,7 +79,11 @@ import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainFragmentMediator;
 import co.siempo.phone.main.MainListAdapterEvent;
+import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.service.LoadFavoritePane;
+import co.siempo.phone.service.LoadJunkFoodPane;
+import co.siempo.phone.service.LoadToolPane;
 import co.siempo.phone.token.TokenCompleteType;
 import co.siempo.phone.token.TokenItem;
 import co.siempo.phone.token.TokenItemType;
@@ -424,6 +432,7 @@ public class PaneFragment extends CoreFragment {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+
                         if (isAdded()) {
                             pagerPane.setCurrentItem(1);
                         }
@@ -435,6 +444,7 @@ public class PaneFragment extends CoreFragment {
                                 }
                                 PrefSiempo.getInstance(context).write(PrefSiempo
                                         .IS_AUTOSCROLL, false);
+                                showDialog();
 
                             }
                         }, 700);
@@ -451,6 +461,21 @@ public class PaneFragment extends CoreFragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void showDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        //builder.setTitle(getString(R.string.msg_congratulations));
+        builder.setMessage(R.string.tap_and_hold_customize);
+        builder.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(getActivity(), R.color.dialog_blue));
     }
 
     private void bindBottomDock() {

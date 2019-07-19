@@ -333,7 +333,7 @@
     <string name="allow_interrupt_msg">Allow this app to interrupt you</string>
     <string name="info_or_uninstall">Get info or uninstall app</string>
     <string name="stop_interrupt_msg">Stop allowing interruptions</string>
-    <string name="notification">Hide notification bar</string>
+    <string name="notification">Notification bar</string>
     <string name="icon_text_visibility">Hide icon labels</string>
 
     <string name="icon_tools_screen">Disable tools screen icon labels</string>
@@ -603,6 +603,8 @@
     <string name="thanks_for_email_collection">We\'re collecting email address because we\'d love to thank you personally!</string>
     <string name="wallpaper">Wallpaper</string>
     <string name="distracting_apps">Distracting Apps</string>
+    <string name="icon_label">Icon labels</string>
+    <string name="tap_and_hold_customize">Tap and hold to customize and set tools</string>
 
 
     <string-array name="deter_after_dialog">
