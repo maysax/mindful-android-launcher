@@ -208,6 +208,7 @@ public class TempoHomeFragment extends CoreFragment {
             }
         });*/
 
+
         rel_icon_label.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
