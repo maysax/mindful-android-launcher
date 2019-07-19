@@ -30,6 +30,7 @@ public class PermissionUtil {
     public static final int WRITE_EXTERNAL_STORAGE_PERMISSION = 8;
     public static final int LOCATION_PERMISSION = 9;
     public static final int ACCOUNT_PERMISSION = 10;
+    public static final int SYSTEM_WINDOW_ALERT = 11;
 
     private Context context;
 
@@ -76,8 +77,8 @@ public class PermissionUtil {
             case LOCATION_PERMISSION:
                 return hasAppPermissions(Manifest.permission.ACCESS_FINE_LOCATION) &&
                         hasAppPermissions(Manifest.permission.ACCESS_FINE_LOCATION);
-
-
+            case SYSTEM_WINDOW_ALERT:
+                return hasAppPermissions(Manifest.permission.SYSTEM_ALERT_WINDOW);
         }
         return false;
     }

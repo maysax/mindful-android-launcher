@@ -258,9 +258,11 @@ public class DashboardActivity extends CoreActivity {
 
         getColorList();
 
-        Intent command = new Intent(DashboardActivity.this, ScreenFilterService.class);
-        command.putExtra(ScreenFilterService.BUNDLE_KEY_COMMAND, 0);
-        startService(command);
+        if(PrefSiempo.getInstance(DashboardActivity.this).read(PrefSiempo.DEFAULT_SCREEN_OVERLAY, false)) {
+            Intent command = new Intent(DashboardActivity.this, ScreenFilterService.class);
+            command.putExtra(ScreenFilterService.BUNDLE_KEY_COMMAND, 0);
+            startService(command);
+        }
     }
 
     private void getColorList()
