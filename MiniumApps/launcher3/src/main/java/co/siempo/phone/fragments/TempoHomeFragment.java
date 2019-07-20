@@ -33,7 +33,7 @@ import java.util.ArrayList;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.ChooseBackgroundActivity;
-import co.siempo.phone.activities.DashboardActivity;
+import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.activities.UpdateBackgroundActivity;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.NotifyBackgroundChange;
@@ -51,6 +51,7 @@ public class TempoHomeFragment extends CoreFragment {
 
     @ViewById
     Toolbar toolbar;
+
 
     @ViewById
     Switch switchDisableIntentionsControls;
@@ -70,22 +71,25 @@ public class TempoHomeFragment extends CoreFragment {
     @ViewById
     Switch switchNotification;
 
+
     @ViewById
+    Switch switchScreenOverlay;
+
+
+   /* @ViewById
     Switch switchIconToolsVisibility;
 
     @ViewById
     Switch switchIconFavoriteVisibility;
 
     @ViewById
-    Switch switchIconJunkFoodVisibility;
+    Switch switchIconJunkFoodVisibility;*/
 
     @ViewById
     RelativeLayout relDarkTheme;
 
-
     @ViewById
-    Switch switchScreenOverlay;
-
+    RelativeLayout rel_icon_label;
 
     private PermissionUtil permissionUtil;
 
@@ -172,7 +176,7 @@ public class TempoHomeFragment extends CoreFragment {
             }
         });
 
-        switchIconToolsVisibility.setChecked(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_ICON_TOOLS_TEXT_VISIBILITY_ENABLE, false));
+        /*switchIconToolsVisibility.setChecked(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_ICON_TOOLS_TEXT_VISIBILITY_ENABLE, false));
         switchIconToolsVisibility.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -184,8 +188,6 @@ public class TempoHomeFragment extends CoreFragment {
                 }
             }
         });
-
-
 
         switchIconFavoriteVisibility.setChecked(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_ICON_FAVORITE_TEXT_VISIBILITY_ENABLE, false));
         switchIconFavoriteVisibility.setOnClickListener(new View.OnClickListener() {
@@ -200,8 +202,6 @@ public class TempoHomeFragment extends CoreFragment {
             }
         });
 
-
-
         switchIconJunkFoodVisibility.setChecked(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_ICON_JUNKFOOD_TEXT_VISIBILITY_ENABLE, false));
         switchIconJunkFoodVisibility.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -213,14 +213,21 @@ public class TempoHomeFragment extends CoreFragment {
                     PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_ICON_JUNKFOOD_TEXT_VISIBILITY_ENABLE, false);
                 }
             }
-        });
+        });*/
 
+
+        rel_icon_label.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((CoreActivity) getActivity()).loadChildFragment(IconLabelsFragment_.builder().build(), R.id.tempoView);
+            }
+        });
 
         final View decorView = getActivity().getWindow().getDecorView();
         final int uiOptions = decorView.getSystemUiVisibility();
         final int[] newUiOptions = {uiOptions};
 
-        switchNotification.setChecked(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, false));
+        switchNotification.setChecked(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, true));
         switchNotification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
@@ -239,29 +246,65 @@ public class TempoHomeFragment extends CoreFragment {
 
         switchScreenOverlay.setChecked(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_SCREEN_OVERLAY, false));
         switchScreenOverlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        @Override
+        public void onClick(View view) {
 
-                Switch sb = (Switch) view;
-                if(sb.isChecked())
-                {
-                    checkPermissionsForSystemWindow();
+                                        Switch sb = (Switch) view;
+                                if(sb.isChecked())
+                                    {
+                                                checkPermissionsForSystemWindow();
 
-                }else
-                {
-                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_SCREEN_OVERLAY, false);
-                    Intent command = new Intent(getActivity(), ScreenFilterService.class);
-                    command.putExtra(ScreenFilterService.BUNDLE_KEY_COMMAND, 1);
-                    getActivity().startService(command);
-                }
+                                        }else
+                                {
+                                            PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_SCREEN_OVERLAY, false);
+                                    Intent command = new Intent(getActivity(), ScreenFilterService.class);
+                                    command.putExtra(ScreenFilterService.BUNDLE_KEY_COMMAND, 1);
+                                    getActivity().startService(command);
+                                }
 
-            }
+                                    }
         });
+
     }
+
+    private void checkPermissionsForSystemWindow() {
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !permissionUtil.hasGiven
+                (PermissionUtil.SYSTEM_WINDOW_ALERT))) {
+            try {
+                TedPermission.with(getActivity())
+                        .setPermissionListener(new PermissionListener() {
+                            @Override
+                            public void onPermissionGranted() {
+                                PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_SCREEN_OVERLAY, true);
+                                Intent command = new Intent(getActivity(), ScreenFilterService.class);
+                                command.putExtra(ScreenFilterService.BUNDLE_KEY_COMMAND, 0);
+                                getActivity().startService(command);
+                            }
+
+                            @Override
+                            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+
+                            }
+                        })
+                        .setDeniedMessage(R.string.msg_permission_denied)
+                        .setPermissions(new String[]{
+                                Manifest.permission.SYSTEM_ALERT_WINDOW})
+                        .check();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_SCREEN_OVERLAY, true);
+            Intent command = new Intent(getActivity(), ScreenFilterService.class);
+            command.putExtra(ScreenFilterService.BUNDLE_KEY_COMMAND, 0);
+            getActivity().startService(command);
+        }
+    }
+
 
     private void notificationVisibility() {
 
-        if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, false))
+        if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, true))
         {
             View decorView = getActivity().getWindow().getDecorView();
             decorView.setFitsSystemWindows(false);
@@ -323,41 +366,6 @@ public class TempoHomeFragment extends CoreFragment {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("image/*");
             startActivityForResult(intent, 10);
-        }
-    }
-
-
-    private void checkPermissionsForSystemWindow() {
-        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !permissionUtil.hasGiven
-                (PermissionUtil.SYSTEM_WINDOW_ALERT))) {
-            try {
-                TedPermission.with(getActivity())
-                        .setPermissionListener(new PermissionListener() {
-                            @Override
-                            public void onPermissionGranted() {
-                                PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_SCREEN_OVERLAY, true);
-                                Intent command = new Intent(getActivity(), ScreenFilterService.class);
-                                command.putExtra(ScreenFilterService.BUNDLE_KEY_COMMAND, 0);
-                                getActivity().startService(command);
-                            }
-
-                            @Override
-                            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-
-                            }
-                        })
-                        .setDeniedMessage(R.string.msg_permission_denied)
-                        .setPermissions(new String[]{
-                                Manifest.permission.SYSTEM_ALERT_WINDOW})
-                        .check();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_SCREEN_OVERLAY, true);
-            Intent command = new Intent(getActivity(), ScreenFilterService.class);
-            command.putExtra(ScreenFilterService.BUNDLE_KEY_COMMAND, 0);
-            getActivity().startService(command);
         }
     }
 

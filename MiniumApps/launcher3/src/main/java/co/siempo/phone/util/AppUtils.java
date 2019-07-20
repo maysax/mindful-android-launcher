@@ -59,7 +59,7 @@ public class AppUtils
     }
 
     public static void notificationBarManaged(Activity activity, RelativeLayout linMain) {
-        if (PrefSiempo.getInstance(activity).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, false)) {
+        if (PrefSiempo.getInstance(activity).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, true)) {
             hideNotification(activity);
             if (linMain != null) {
                 linMain.setPadding(0, 0, 0, 0);
@@ -95,7 +95,7 @@ public class AppUtils
         {
             if(!PrefSiempo.getInstance(activity).read(PrefSiempo.DEFAULT_BAG_ENABLE, false))
             {
-                if(!PrefSiempo.getInstance(activity).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, false))
+                if(!PrefSiempo.getInstance(activity).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, true))
                 {
                     if(PrefSiempo.getInstance(activity).read(PrefSiempo.IS_DARK_THEME, false))
                     {
@@ -109,7 +109,7 @@ public class AppUtils
                 }
             }else
             {
-                if(!PrefSiempo.getInstance(activity).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, false))
+                if(!PrefSiempo.getInstance(activity).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, true))
                 {
                     activity.getWindow().setStatusBarColor(ContextCompat.getColor(activity , R.color.transparent));
                 }
@@ -127,14 +127,14 @@ public class AppUtils
     }
 
     private static void detectNotificationVisibility(final Activity activity) {
-        final boolean isEnable = PrefSiempo.getInstance(activity).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, false);
+        final boolean isEnable = PrefSiempo.getInstance(activity).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, true);
         if (isEnable) {
             activity.getWindow().getDecorView().setOnSystemUiVisibilityChangeListener
                     (new View.OnSystemUiVisibilityChangeListener() {
                         @Override
                         public void onSystemUiVisibilityChange(int visibility) {
                             if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                                if (PrefSiempo.getInstance(activity).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, false)) {
+                                if (PrefSiempo.getInstance(activity).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, true)) {
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {

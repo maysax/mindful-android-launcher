@@ -169,6 +169,7 @@ public class AppAssignmentActivity extends CoreActivity {
         boolean isCategoryAvailable=false;
         List<CategoryAppList> categoryAppList=CoreApplication.getInstance().categoryAppList;
 
+
         if(categoryAppList!=null && categoryAppList.size()>0) {
             Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
             mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -200,6 +201,12 @@ public class AppAssignmentActivity extends CoreActivity {
 
                     }
                     for (CategoryAppList category : categoryAppList) {
+
+                        if(mainListItem!=null && mainListItem.getCategory()!=null && mainListItem.getCategory().equalsIgnoreCase("Travel & Local") && resolveInfo!=null && resolveInfo.activityInfo!=null && resolveInfo.activityInfo.packageName.equalsIgnoreCase("me.lyft.android")){
+                            isCategoryAvailable = true;
+                            appList.add(resolveInfo);
+                        }
+
                         if ((mainListItem != null && resolveInfo.activityInfo.packageName.equalsIgnoreCase(category.getPackageName()) &&  mainListItem.getCategory().equalsIgnoreCase(category.getCategoryName())) || ( appName.contains(mainListItem.getTitle()) || mainListItem.getTitle().contains(appName) ) ) {
                             isCategoryAvailable = true;
                             appList.add(resolveInfo);

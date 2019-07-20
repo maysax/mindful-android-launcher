@@ -242,6 +242,7 @@
     <string name="btn_enable">Enable</string>
     <string name="btn_viewall_installed">Show all installed apps</string>
     <string name="btn_next">Next</string>
+    <string name="btn_done">Done</string>
     <string name="btn_got">Got it</string>
     <string name="to_help_you_storage">"To help you understand your current phone habits, Siempo needs permission to store information on this device. We do not read your private files or collect information about files on your device."</string>
     <string name="userid">UserId:</string>
@@ -333,12 +334,12 @@
     <string name="allow_interrupt_msg">Allow this app to interrupt you</string>
     <string name="info_or_uninstall">Get info or uninstall app</string>
     <string name="stop_interrupt_msg">Stop allowing interruptions</string>
-    <string name="notification">Hide notification bar</string>
+    <string name="notification">Notification bar</string>
     <string name="icon_text_visibility">Hide icon labels</string>
 
     <string name="icon_tools_screen">Disable tools screen icon labels</string>
     <string name="icon_favorite_screen">Disable favorites screen icon labels</string>
-    <string name="icon_junkfood_screen">Disable flagged screen icon label</string>
+    <string name="icon_junkfood_screen">Disable flagged screen icon labels</string>
 
     <!--notes strings-->
     <string name="title_noteColor">Note color</string>
@@ -603,6 +604,8 @@
     <string name="thanks_for_email_collection">We\'re collecting email address because we\'d love to thank you personally!</string>
     <string name="wallpaper">Wallpaper</string>
     <string name="distracting_apps">Distracting Apps</string>
+    <string name="icon_label">Icon labels</string>
+    <string name="tap_and_hold_customize">Tap and hold to customize and set tools</string>
 
 
     <string-array name="deter_after_dialog">
