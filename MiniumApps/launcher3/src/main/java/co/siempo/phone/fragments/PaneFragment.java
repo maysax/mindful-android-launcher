@@ -464,19 +464,35 @@ public class PaneFragment extends CoreFragment {
     }
 
     private void showDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        //builder.setTitle(getString(R.string.msg_congratulations));
-        builder.setMessage(R.string.tap_and_hold_customize);
-        builder.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
+        getActivity().setRequestedOrientation(ActivityInfo
+                .SCREEN_ORIENTATION_PORTRAIT);
+        final Dialog overlayDialog = new Dialog(getActivity(), 0);
+        if (overlayDialog.getWindow() != null) {
+            overlayDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        }
+        overlayDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        overlayDialog.setContentView(R.layout.layout_tools_tour);
+        Window window = overlayDialog.getWindow();
+        // set "origin" to bottom
+        window.setGravity(Gravity.BOTTOM);
+        WindowManager.LayoutParams params = window.getAttributes();
+        window.setAttributes(params);
+        overlayDialog.getWindow().setLayout(WindowManager
+                .LayoutParams.MATCH_PARENT, WindowManager
+                .LayoutParams.WRAP_CONTENT);
+
+        overlayDialog.setCancelable(false);
+        overlayDialog.setCanceledOnTouchOutside(false);
+        overlayDialog.show();
+
+        final Button btnNext = overlayDialog.findViewById(R.id.btnNext);
+        btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+            public void onClick(View v) {
+                overlayDialog.dismiss();
             }
         });
-        AlertDialog dialog = builder.create();
-        dialog.show();
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(getActivity(), R.color.dialog_blue));
-    }
+     }
 
     private void bindBottomDock() {
 
