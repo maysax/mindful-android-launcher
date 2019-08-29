@@ -1,36 +1,39 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Siempo</string>
 
-    <string name="format.battery" tools:ignore="UnusedResources">%1$s %2$d%%</string>
-    <string name="format.signal" tools:ignore="UnusedResources">{fa-signal 12dp} %1$s {fa-wifi 12dp}</string>
+    <!--<string name="format.battery" tools:ignore="UnusedResources">%1$s %2$d%%</string>
+    <string name="format.signal" tools:ignore="UnusedResources">{fa-signal 12dp} %1$s {fa-wifi 12dp}</string>-->
 
-    <string name="title.text" tools:ignore="UnusedResources">Text</string>
-    <string name="title.note" tools:ignore="UnusedResources">Note</string>
+    <string name="title_text" tools:ignore="UnusedResources">Text</string>
+    <string name="title_note" tools:ignore="UnusedResources">Note</string>
 
-    <string name="title.callLog" tools:ignore="UnusedResources">Call Log</string>
-    <string name="title.voicemail" tools:ignore="UnusedResources">Voicemail</string>
+    <string name="title_callLog" tools:ignore="UnusedResources">Call Log</string>
+    <string name="title_voicemail" tools:ignore="UnusedResources">Voicemail</string>
 
-    <string name="title.theme" tools:ignore="UnusedResources">Theme</string>
+    <string name="title_theme" tools:ignore="UnusedResources">Theme</string>
 
 
-    <string name="title.feedback">Feedback</string>
-    <string name="title.faq">FAQ</string>
-    <string name="title.suppressedNotifications">View Suppressed Notification</string>
-    <string name="title.siempoPermissions">Siempo Permissions</string>
-    <string name="title.siempoRestrictions">Restrictions</string>
-    <string name="title.siempoLocation">Location</string>
-    <string name="title.inbox" tools:ignore="UnusedResources">Google Inbox</string>
-    <string name="title.defaultLauncher">Set default home app</string>
+    <string name="pinch_hint" >Pinch-to-zoom to adjust the wallpaper</string>
+    <string name="double_tap_hint">You can also double-tap to zoom</string>
+
+    <string name="title_feedback">Feedback</string>
+    <string name="title_faq">FAQ</string>
+    <string name="title_suppressedNotifications">View Suppressed Notification</string>
+    <string name="title_siempoPermissions">Siempo Permissions</string>
+    <string name="title_siempoRestrictions">Restrictions</string>
+    <string name="title_siempoLocation">Location</string>
+    <string name="title_inbox" tools:ignore="UnusedResources">Google Inbox</string>
+    <string name="title_defaultLauncher">Set default home app</string>
     <string name="title_tracking" tools:ignore="UnusedResources">Tracking</string>
-    <string name="title.version">Version: %1$s</string>
-    <string name="title.defaultapp">Assign app defaults</string>
-    <string name="title.apps">Apps</string>
-    <string name="title.calendar">Calendar</string>
+    <string name="title_version">Version: %1$s</string>
+    <string name="title_defaultapp">Assign app defaults</string>
+    <string name="title_apps">Apps</string>
+    <string name="title_calendar">Calendar</string>
 
-    <string name="title.mindfulMorningAlarm" tools:ignore="UnusedResources">Mindful Morning Alarm</string>
-    <string name="title.sendAsSMS">Send as a message</string>
-    <string name="title.saveNote">Save as a note</string>
-    <string name="title.swipe">Swipe right to show flagged apps</string>
+    <string name="title_mindfulMorningAlarm" tools:ignore="UnusedResources">Mindful Morning Alarm</string>
+    <string name="title_sendAsSMS">Send as a message</string>
+    <string name="title_saveNote">Save as a note</string>
+    <string name="title_swipe">Swipe right to show flagged apps</string>
 
     <string name="label_multiple_numbers">Multiple numbers</string>
     <string name="string_notification_title">Control notifications</string>
@@ -41,7 +44,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" tools:ignore="UnusedResources">Hello blank fragment</string>
     <string name="title_activity_installed_app_list">Installed App List </string>
-    <string name="msg.notificationEmpty">Nothing new. Feel free to take a breath and look at your surroundings.</string>
+    <string name="msg_notificationEmpty">Nothing new. Feel free to take a breath and look at your surroundings.</string>
     <string name="nointernetconnection">No internet connection available</string>
 
 
@@ -239,6 +242,7 @@
     <string name="btn_enable">Enable</string>
     <string name="btn_viewall_installed">Show all installed apps</string>
     <string name="btn_next">Next</string>
+    <string name="btn_done">Done</string>
     <string name="btn_got">Got it</string>
     <string name="to_help_you_storage">"To help you understand your current phone habits, Siempo needs permission to store information on this device. We do not read your private files or collect information about files on your device."</string>
     <string name="userid">UserId:</string>
@@ -253,7 +257,7 @@
     <string name="add">ADD</string>
     <string name="home_screen">Customize appearance</string>
     <string name="account">Account</string>
-    <string name="alpha_settings">Alpha Settings</string>
+    <string name="alpha_settings">Alpha settings</string>
     <string name="allow_specific_apps">Allow specific apps</string>
     <string name="select_apps_title">Select apps</string>
     <string name="app_name_tools">App Name</string>
@@ -330,37 +334,43 @@
     <string name="allow_interrupt_msg">Allow this app to interrupt you</string>
     <string name="info_or_uninstall">Get info or uninstall app</string>
     <string name="stop_interrupt_msg">Stop allowing interruptions</string>
+    <string name="notification">Notification bar</string>
+    <string name="icon_text_visibility">Hide icon labels</string>
+
+    <string name="icon_tools_screen">Disable tools screen icon labels</string>
+    <string name="icon_favorite_screen">Disable favorites screen icon labels</string>
+    <string name="icon_junkfood_screen">Disable flagged screen icon labels</string>
 
     <!--notes strings-->
-    <string name="title.noteColor">Note color</string>
-    <string name="title.notesDelete">Selected notes will be deleted</string>
-    <string name="title.restoreFailed">No backup found</string>
-    <string name="title.backupCreated">Backup successful</string>
+    <string name="title_noteColor">Note color</string>
+    <string name="title_notesDelete">Selected notes will be deleted</string>
+    <string name="title_restoreFailed">No backup found</string>
+    <string name="title_backupCreated">Backup successful</string>
 
-    <string name="label.hideNoteBody">Hide note body in list</string>
-    <string name="label.showNoteBody">Show note body in list</string>
-    <string name="label.selected">Selected</string>
-
-
-    <string name="msg.emptyNotes" tools:ignore="TypographyQuotes">Press \'+\' to add new note</string>
-    <string name="msg.deleteSuccessful">Delete successful</string>
-    <string name="msg.emptyNoteDiscarded">Empty note discarded</string>
-    <string name="msg.titleCannotBeEmpty">Title cannot be empty</string>
-    <string name="msg.noteWillBeHidden">Note body will now be hidden in notes list</string>
-    <string name="msg.noteWillBeShown">Note body will now be shown in notes list</string>
-    <string name="msg.backupUnsuccessful">Backup unsuccessful</string>
-    <string name="msg.noNotesToBackup">No notes to backup</string>
-    <string name="msg.notesRestored">Notes restored</string>
-    <string name="msg.restoreUnsuccessful">Restore unsuccessful</string>
-    <string name="msg.restoreFailed" tools:ignore="TypographyQuotes">To restore notes, the backup file has to be in \'External/Ebb/ebbNotes_backup.json\'</string>
-    <string name="msg.backupCreated">Backup created in</string>
-
-    <string name="prompt.restore">Are you sure you want to restore backup notes? (Cannot be undone)</string>
-    <string name="prompt.backup">Are you sure you want to backup current notes?</string>
+    <string name="label_hideNoteBody">Hide note body in list</string>
+    <string name="label_showNoteBody">Show note body in list</string>
+    <string name="label_selected">Selected</string>
 
 
-    <string name="title.fontSize">Change font size</string>
-    <string name="title.saveChanges">Save changes?</string>
+    <string name="msg_emptyNotes" tools:ignore="TypographyQuotes">Press \'+\' to add new note</string>
+    <string name="msg_deleteSuccessful">Delete successful</string>
+    <string name="msg_emptyNoteDiscarded">Empty note discarded</string>
+    <string name="msg_titleCannotBeEmpty">Title cannot be empty</string>
+    <string name="msg_noteWillBeHidden">Note body will now be hidden in notes list</string>
+    <string name="msg_noteWillBeShown">Note body will now be shown in notes list</string>
+    <string name="msg_backupUnsuccessful">Backup unsuccessful</string>
+    <string name="msg_noNotesToBackup">No notes to backup</string>
+    <string name="msg_notesRestored">Notes restored</string>
+    <string name="msg_restoreUnsuccessful">Restore unsuccessful</string>
+    <string name="msg_restoreFailed" tools:ignore="TypographyQuotes">To restore notes, the backup file has to be in \'External/Ebb/ebbNotes_backup.json\'</string>
+    <string name="msg_backupCreated">Backup created in</string>
+
+    <string name="prompt_restore">Are you sure you want to restore backup notes? (Cannot be undone)</string>
+    <string name="prompt_backup">Are you sure you want to backup current notes?</string>
+
+
+    <string name="title_fontSize">Change font size</string>
+    <string name="title_saveChanges">Save changes?</string>
 
     <string-array name="fontSizeNames">
         <item>Small</item>
@@ -372,28 +382,28 @@
 
 
     <!-- errors -->
-    <string name="error.requiredField">This field is required</string>
-    <string name="error.invalidEmail">This email address is not valid</string>
-    <string name="error.invalidPassword">This password has to be at least 8 characters and can contain alpha-numeric characters and/or @#$%</string>
-    <string name="error.mismatchPassword">The passwords do not match</string>
+    <string name="error_requiredField">This field is required</string>
+    <string name="error_invalidEmail">This email address is not valid</string>
+    <string name="error_invalidPassword">This password has to be at least 8 characters and can contain alpha-numeric characters and/or @#$%</string>
+    <string name="error_mismatchPassword">The passwords do not match</string>
 
     <!-- messages -->
-    <string name="msg.not.yet.implemented">Not yet implemented</string>
-    <string name="msg.noteSaved">Your note has been saved.</string>
-    <string name="msg.noteCreated">Note created</string>
+    <string name="msg_not_yet_implemented">Not yet implemented</string>
+    <string name="msg_noteSaved">Your note has been saved.</string>
+    <string name="msg_noteCreated">Note created</string>
     <!-- Icons -->
 
-    <string name="label.yes">Yes</string>
-    <string name="label.no">No</string>
-    <string name="label.search">Search</string>
-    <string name="label.backup">Backup</string>
-    <string name="label.restore">Restore</string>
-    <string name="label.color">Color</string>
-    <string name="label.delete">Delete</string>
-    <string name="label.fontSize">Font size</string>
-    <string name="label.title">Title</string>
-    <string name="label.note">Note</string>
-    <string name="label.favorite">Favorite</string>
+    <string name="label_yes">Yes</string>
+    <string name="label_no">No</string>
+    <string name="label_search">Search</string>
+    <string name="label_backup">Backup</string>
+    <string name="label_restore">Restore</string>
+    <string name="label_color">Color</string>
+    <string name="label_delete">Delete</string>
+    <string name="label_fontSize">Font size</string>
+    <string name="label_title">Title</string>
+    <string name="label_note">Note</string>
+    <string name="label_favorite">Favorite</string>
     <string name="make_siempo_your_default_home_app">Make Siempo your default home app:</string>
     <string name="select">Select</string>
     <string name="select_your_prefered_home_app">Select your preferred Home app</string>
@@ -402,24 +412,50 @@
 
 
     <!--name tools menu-->
-    <string name="title.map">Maps</string>
-    <string name="title.transport">Rides</string>
-    <string name="title.weather">Weather</string>
-    <string name="title.recorder">Recorder</string>
-    <string name="title.todo">To-do</string>
-    <string name="title.podcast">Podcast</string>
-    <string name="title.food">Food</string>
-    <string name="title.music">Music</string>
-    <string name="title.fitness">Fitness</string>
-    <string name="title.camera">Camera</string>
-    <string name="title.photos">Photos</string>
-    <string name="title.payment">Payment</string>
-    <string name="title.wellness">Wellness</string>
-    <string name="title.browser">Browser</string>
-    <string name="title.call">Calls</string>
-    <string name="title.clock">Clock</string>
-    <string name="title.messages">Messages</string>
-    <string name="title.email">Email</string>
+    <string name="title_map">Maps</string>
+    <string name="title_transport">Rides</string>
+    <string name="title_weather">Weather</string>
+    <string name="title_recorder">Recorder</string>
+    <string name="title_todo">To-do</string>
+    <string name="title_podcast">Podcast</string>
+    <string name="title_food">Food</string>
+    <string name="title_music">Music</string>
+    <string name="title_fitness">Fitness</string>
+    <string name="title_camera">Camera</string>
+    <string name="title_photos">Photos</string>
+    <string name="title_payment">Payment</string>
+    <string name="title_wellness">Wellness</string>
+    <string name="title_browser">Browser</string>
+    <string name="title_call">Calls</string>
+    <string name="title_clock">Clock</string>
+    <string name="title_messages">Messages</string>
+    <string name="title_email">Email</string>
+    <string name="title_sleep">Sleep</string>
+    <string name="title_calculator">Calculator</string>
+    <string name="title_translate">Translate</string>
+    <string name="title_video">Video</string>
+    <string name="title_cloud">Cloud</string>
+    <string name="title_books">Books</string>
+    <string name="title_authentication">Auth</string>
+    <string name="title_assistant">Assistant</string>
+    <string name="title_additional_message">Chats</string>
+    <string name="title_banking">Banking</string>
+    <string name="title_course">Course</string>
+    <string name="title_doc">Docs</string>
+    <string name="title_files">Files</string>
+    <string name="title_flash">Light</string>
+    <string name="title_health">Health</string>
+    <string name="title_journal">Journal</string>
+    <string name="title_languages">Languages</string>
+    <string name="title_learning">Learning</string>
+    <string name="title_meditation">Meditation</string>
+    <string name="title_microphone">Microphone</string>
+    <string name="title_news">News</string>
+    <string name="title_search">Search</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_voice">Voice</string>
+
+
     <string name="hide_icon_branding">Hide icon branding</string>
     <string name="randomize_junkfood">Randomize flagged-app icons</string>
     <string name="reduce_overuse_screen">Reduce overuse of screen</string>
@@ -519,8 +555,16 @@
     <string name="wellness">Wellness</string>
     <string name="msg_internet">Please check internet connection!</string>
     <string name="contribute_to_siempo">Contribute to Siempo</string>
-    <string name="thank_you_for_">Thank you for being part of our journey! \nAs a beta user, Siempo will be free for you for life, but you are always welcome to contribute to our mission.</string>
+    <string name="thank_you_for_">Thank you for being part of our journey! \nAs a beta user, Siempo will be free for you for life, but you are always welcome to contribute to our mission, or <a href="https://github.com/Get-Siempo">help us build Siempo</a>.</string>
 
+    <string name="string_doubletap_title">Double tap controls</string>
+    <string name="sleep">Sleep</string>
+    <string name="message_sleep_mode">When Sleep mode is on, double tapping on any screen will make your device to go in sleep mode.</string>
+    <string name="message_dnd_mode">When do not disturb is on, double tapping on any screen will make your device to go in DND mode.</string>
+    <string name="device_admin_not_enabled">Siempo is not marked as Device Administrator. Please check Security settings and enable it.</string>
+    <string name="admin_receiver_status_enabled">Siempo is added as Device Administrator</string>
+    <string name="admin_receiver_status_disabled">Siempo is removed from Device Administrators list</string>
+    <string name="device_admin_description">Turns the screen off and locks your device with a double tap.</string>
 
     <string-array name="in_app_items_subscription">
         <item>sub.monthly.selector.dollars.01</item>
@@ -557,6 +601,11 @@
     <string name="longitude">longitude</string>
     <string name="latitude">latitude</string>
     <string name="leave_a_review">Leave a review</string>
+    <string name="thanks_for_email_collection">We\'re collecting email address because we\'d love to thank you personally!</string>
+    <string name="wallpaper">Wallpaper</string>
+    <string name="distracting_apps">Distracting Apps</string>
+    <string name="icon_label">Icon labels</string>
+    <string name="tap_and_hold_customize">Tap and hold to customize and set tools</string>
 
 
     <string-array name="deter_after_dialog">

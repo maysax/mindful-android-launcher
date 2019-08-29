@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-
         tools:ignore="UselessParent">
 
         <LinearLayout
@@ -57,7 +56,7 @@
             android:id="@+id/linPane"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1.85"
+            android:layout_weight="1.95"
             android:background="?attr/pane_color"
             android:orientation="vertical"
             android:visibility="visible">
@@ -86,7 +85,7 @@
             android:id="@+id/linBottomDoc"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.6"
+            android:layout_weight="0.5"
             android:background="?attr/bottom_doc"
             android:orientation="vertical"
             android:visibility="visible">
@@ -105,6 +104,7 @@
                 android:id="@+id/recyclerViewBottomDoc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_alignParentBottom="true"
                 android:layout_marginLeft="@dimen/dp_5"
                 android:layout_marginRight="@dimen/dp_5" />

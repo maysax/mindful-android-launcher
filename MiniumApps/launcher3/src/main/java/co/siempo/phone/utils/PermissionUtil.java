@@ -30,6 +30,7 @@ public class PermissionUtil {
     public static final int WRITE_EXTERNAL_STORAGE_PERMISSION = 8;
     public static final int LOCATION_PERMISSION = 9;
     public static final int ACCOUNT_PERMISSION = 10;
+    public static final int SYSTEM_WINDOW_ALERT = 11;
 
     private Context context;
 
@@ -58,13 +59,13 @@ public class PermissionUtil {
             case CONTACT_PERMISSION:
                 return hasAppPermissions(Manifest.permission.READ_CONTACTS)
                         && hasAppPermissions(Manifest.permission.WRITE_CONTACTS);
-            case CALL_PHONE_PERMISSION:
+            /*case CALL_PHONE_PERMISSION:
                 return hasAppPermissions(Manifest.permission.CALL_PHONE) &&
-                        hasAppPermissions(Manifest.permission.READ_PHONE_STATE);
-            case SEND_SMS_PERMISSION:
+                        hasAppPermissions(Manifest.permission.READ_PHONE_STATE);*/
+            /*case SEND_SMS_PERMISSION:
                 return hasAppPermissions(Manifest.permission.RECEIVE_SMS) &&
                         hasAppPermissions(Manifest.permission.SEND_SMS)
-                        && hasAppPermissions(Manifest.permission.READ_SMS);
+                        && hasAppPermissions(Manifest.permission.READ_SMS);*/
             case CAMERA_PERMISSION:
                 return hasAppPermissions(Manifest.permission.CAMERA);
             case ACCOUNT_PERMISSION:
@@ -76,8 +77,8 @@ public class PermissionUtil {
             case LOCATION_PERMISSION:
                 return hasAppPermissions(Manifest.permission.ACCESS_FINE_LOCATION) &&
                         hasAppPermissions(Manifest.permission.ACCESS_FINE_LOCATION);
-
-
+            case SYSTEM_WINDOW_ALERT:
+                return hasAppPermissions(Manifest.permission.SYSTEM_ALERT_WINDOW);
         }
         return false;
     }
@@ -88,10 +89,10 @@ public class PermissionUtil {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             appPermissions = context.checkSelfPermission(Manifest.permission.READ_CONTACTS) +
                     context.checkSelfPermission(Manifest.permission.WRITE_CONTACTS) +
-                    context.checkSelfPermission(Manifest.permission.READ_CALL_LOG) +
-                    context.checkSelfPermission(Manifest.permission.WRITE_CALL_LOG) +
-                    context.checkSelfPermission(Manifest.permission.CALL_PHONE) +
-                    context.checkSelfPermission(Manifest.permission.SEND_SMS) +
+                    //context.checkSelfPermission(Manifest.permission.READ_CALL_LOG) +
+                    //context.checkSelfPermission(Manifest.permission.WRITE_CALL_LOG) +
+                    //context.checkSelfPermission(Manifest.permission.CALL_PHONE) +
+                    //context.checkSelfPermission(Manifest.permission.SEND_SMS) +
                     context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
         }
 

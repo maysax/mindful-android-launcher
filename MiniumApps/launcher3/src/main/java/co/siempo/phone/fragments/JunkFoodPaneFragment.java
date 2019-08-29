@@ -22,6 +22,7 @@ import co.siempo.phone.adapters.JunkFoodPaneAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
 import co.siempo.phone.event.NotifyJunkFoodView;
+import co.siempo.phone.util.AppUtils;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
@@ -116,6 +117,9 @@ public class JunkFoodPaneFragment extends CoreFragment {
                 Collections.shuffle(CoreApplication.getInstance().getJunkFoodList());
                 items = CoreApplication.getInstance().getJunkFoodList();
             }
+        }if(getActivity() != null)
+        {
+            AppUtils.notificationBarManaged(getActivity(), null);
         }
 
     }
@@ -129,6 +133,15 @@ public class JunkFoodPaneFragment extends CoreFragment {
 
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(mAdapter != null)
+        {
+            mAdapter.notifyDataSetChanged();
         }
     }
 

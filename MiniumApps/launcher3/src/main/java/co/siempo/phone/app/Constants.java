@@ -68,12 +68,12 @@ public class Constants {
     public static final String ALPHA_SETTING = "0x0p9o8i7u6y";
     public static final String HUAWEI = "huawei";
     public static String[] PERMISSIONS = {
-            Manifest.permission.CALL_PHONE,
+            //Manifest.permission.CALL_PHONE,
             Manifest.permission.READ_CONTACTS,
             Manifest.permission.WRITE_CONTACTS,
-            Manifest.permission.RECEIVE_SMS,
-            Manifest.permission.SEND_SMS,
-            Manifest.permission.READ_SMS,
+            //Manifest.permission.RECEIVE_SMS,
+            //Manifest.permission.SEND_SMS,
+            //Manifest.permission.READ_SMS,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE
     };

@@ -43,7 +43,7 @@
 
             </TableRow>
 
-            <TableRow
+            <!--<TableRow
                 android:id="@+id/tblCalls"
                 android:layout_marginTop="16dp"
                 android:visibility="gone">
@@ -77,7 +77,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
-            </TableRow>
+            </TableRow>-->
 
             <TableRow
                 android:id="@+id/tblStorage"

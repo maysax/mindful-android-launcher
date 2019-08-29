@@ -44,6 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/dp_5"
                 android:padding="@dimen/dp_5"
+                android:visibility="gone"
                 android:src="@drawable/ic_tempo_dailog"/>
 
             <ImageView

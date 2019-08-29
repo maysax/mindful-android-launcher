@@ -86,6 +86,7 @@ import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.utils.CategoryUtils;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
@@ -638,9 +639,9 @@ public class StatusBarService extends Service {
      * Notify all 3 panes fragment.
      */
     private void reloadData() {
-        new LoadFavoritePane(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        new LoadToolPane(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        new LoadJunkFoodPane(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadFavoritePane(PrefSiempo.getInstance(context)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadToolPane().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new LoadJunkFoodPane(PrefSiempo.getInstance(context)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         EventBus.getDefault().postSticky(new NotifySearchRefresh(true));
     }
 
@@ -1755,12 +1756,11 @@ public class StatusBarService extends Service {
                             if (map.get(MainListItemLoader.TOOLS_WELLNESS).getApplicationName().equalsIgnoreCase("")) {
                                 MainListItem item = new MainListItem(MainListItemLoader.TOOLS_WELLNESS, context.getResources()
                                         .getString(R.string.title_wellness), R.drawable
-                                        .ic_vector_wellness);
+                                        .ic_vector_wellness, CategoryUtils.HEALTH_FITNESS);
                                 Intent intent = new Intent(context, AppAssignmentActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 intent.putExtra(Constants.INTENT_MAINLISTITEM, item);
-                                intent.putExtra("class_name", DashboardActivity.class.getSimpleName
-                                        ().toString());
+                                intent.putExtra("class_name", DashboardActivity.CLASS_NAME);
                                 context.startActivity(intent);
                             } else {
                                 new ActivityHelper(context).openAppWithPackageName(map.get(10).getApplicationName());
@@ -2430,12 +2430,11 @@ public class StatusBarService extends Service {
                             if (map.get(MainListItemLoader.TOOLS_WELLNESS).getApplicationName().equalsIgnoreCase("")) {
                                 MainListItem item = new MainListItem(MainListItemLoader.TOOLS_WELLNESS, context.getResources()
                                         .getString(R.string.title_wellness), R.drawable
-                                        .ic_vector_wellness);
+                                        .ic_vector_wellness,CategoryUtils.HEALTH_FITNESS);
                                 Intent intent = new Intent(context, AppAssignmentActivity.class);
                                 intent.putExtra(Constants.INTENT_MAINLISTITEM, item);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.putExtra("class_name", DashboardActivity.class.getSimpleName
-                                        ().toString());
+                                intent.putExtra("class_name", DashboardActivity.CLASS_NAME);
                                 context.startActivity(intent);
                             } else {
                                 try {
@@ -3123,7 +3122,8 @@ public class StatusBarService extends Service {
         if (resourceId > 0) {
             result = getResources().getDimensionPixelSize(resourceId);
         }
-        return result;
+        return 0;
+        //return result;
     }
 
     @Override
@@ -3177,7 +3177,7 @@ public class StatusBarService extends Service {
             } else if (map.get(MainListItemLoader.TOOLS_NOTES).getApplicationName().equalsIgnoreCase("")) {
                 MainListItem item = new MainListItem(MainListItemLoader.TOOLS_NOTES, context.getResources()
                         .getString(R.string.title_note), R.drawable
-                        .ic_vector_note);
+                        .ic_vector_note,CategoryUtils.PRODUCTIVITY);
                 Intent intent = new Intent(context, AppAssignmentActivity.class);
                 intent.putExtra(Constants.INTENT_MAINLISTITEM, item);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

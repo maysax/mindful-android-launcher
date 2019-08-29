@@ -1,1 +1,1 @@
-[{"outputType":{"type":"APK"},"apkInfo":{"type":"MAIN","splits":[],"versionCode":12211},"path":"launcher3-beta-release.apk","properties":{"packageId":"co.siempo.phone","split":"","minSdkVersion":"21"}}]
+[{"outputType":{"type":"APK"},"apkInfo":{"type":"MAIN","splits":[],"versionCode":12313,"versionName":"0.1.6.0","enabled":true,"outputFile":"launcher3-beta-release.apk","fullName":"betaRelease","baseName":"beta-release"},"path":"launcher3-beta-release.apk","properties":{}}]

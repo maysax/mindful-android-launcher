@@ -102,7 +102,7 @@
                 android:padding="@dimen/dp_10"
                 android:paddingLeft="18dp"
                 android:paddingRight="18dp"
-                android:text="@string/msg.notificationEmpty"
+                android:text="@string/msg_notificationEmpty"
                 android:textSize="@dimen/text.size.medium"
                 android:visibility="gone" />
 

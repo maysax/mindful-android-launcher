@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_pause"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context="co.siempo.phone.pause.PauseActivity">
+        tools:ignore="UselessParent">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -17,147 +16,273 @@
             app:navigationIcon="@drawable/ic_arrow_back_blue_24dp"
             app:titleTextColor="?attr/toolbar_text_color" />
 
-        <RelativeLayout
-            android:id="@+id/relAllowSpecificApps"
+
+        <ScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/toolbar"
-            android:layout_marginTop="@dimen/dp_4"
-            android:clickable="true"
-            android:paddingLeft="50dp">
+            android:layout_below="@+id/toolbar">
 
-            <co.siempo.phone.customviews.RobotoRegularTextView
-                android:id="@+id/txtDisableNotificationControls"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="8dp"
-                android:lineSpacingExtra="5sp"
-                android:padding="8dp"
-                android:text="@string/disable_intentions"
-                android:textColor="?attr/txt_content_title"
-                android:textSize="16sp" />
+                tools:context="co.siempo.phone.pause.PauseActivity">
 
-            <Switch
-                android:id="@+id/switchDisableIntentionsControls"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/txtDisableNotificationControls"
-                android:layout_marginRight="8dp" />
+                <RelativeLayout
+                    android:id="@+id/relAllowSpecificApps"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_4"
+                    android:clickable="true"
+                    android:paddingLeft="50dp">
 
+                    <co.siempo.phone.customviews.RobotoRegularTextView
+                        android:id="@+id/txtDisableNotificationControls"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginTop="8dp"
+                        android:lineSpacingExtra="5sp"
+                        android:padding="8dp"
+                        android:text="@string/disable_intentions"
+                        android:textColor="?attr/txt_content_title"
+                        android:textSize="16sp" />
 
-            <co.siempo.phone.customviews.RobotoRegularTextView
-                android:id="@+id/txtDisableIntentions"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtDisableNotificationControls"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_toLeftOf="@+id/switchDisableIntentionsControls"
-                android:lineSpacingExtra="4sp"
-                android:paddingBottom="4dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="0dp"
-                android:text="@string/when_intentions_are_disabled_your_home_screen_will_be_blank"
-                android:textColor="?attr/txt_content_color"
-                android:textSize="14sp" />
-
-        </RelativeLayout>
+                    <Switch
+                        android:id="@+id/switchDisableIntentionsControls"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@+id/txtDisableNotificationControls"
+                        android:layout_marginRight="8dp" />
 
 
-        <RelativeLayout
-            android:id="@+id/relDarkTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/relAllowSpecificApps"
-            android:layout_marginTop="@dimen/dp_8"
-            android:clickable="true"
-            android:paddingLeft="50dp">
+                    <co.siempo.phone.customviews.RobotoRegularTextView
+                        android:id="@+id/txtDisableIntentions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txtDisableNotificationControls"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_toLeftOf="@+id/switchDisableIntentionsControls"
+                        android:lineSpacingExtra="4sp"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="0dp"
+                        android:text="@string/when_intentions_are_disabled_your_home_screen_will_be_blank"
+                        android:textColor="?attr/txt_content_color"
+                        android:textSize="14sp" />
 
-            <co.siempo.phone.customviews.RobotoRegularTextView
-                android:id="@+id/txtDarkTheme"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="8dp"
-                android:lineSpacingExtra="5sp"
-                android:padding="8dp"
-                android:text="@string/dark_theme"
-                android:textColor="?attr/txt_content_title"
-                android:textSize="16sp" />
-
-            <Switch
-                android:id="@+id/switchDarkTheme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/txtDarkTheme"
-                android:layout_marginRight="8dp" />
+                </RelativeLayout>
 
 
-            <co.siempo.phone.customviews.RobotoRegularTextView
-                android:id="@+id/txtDarkThemeText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtDarkTheme"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_toLeftOf="@+id/switchDarkTheme"
-                android:lineSpacingExtra="4sp"
-                android:paddingBottom="4dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="0dp"
-                android:text="@string/dark_theme_text"
-                android:textColor="?attr/txt_content_color"
-                android:textSize="14sp" />
+                <RelativeLayout
+                    android:id="@+id/relDarkTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/relAllowSpecificApps"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:clickable="true"
+                    android:paddingLeft="50dp">
 
-        </RelativeLayout>
+                    <co.siempo.phone.customviews.RobotoRegularTextView
+                        android:id="@+id/txtDarkTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginTop="8dp"
+                        android:lineSpacingExtra="5sp"
+                        android:padding="8dp"
+                        android:text="@string/dark_theme"
+                        android:textColor="?attr/txt_content_title"
+                        android:textSize="16sp" />
 
-        <RelativeLayout
-            android:id="@+id/relCustomBackground"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/relDarkTheme"
-            android:layout_marginTop="@dimen/dp_8"
-            android:clickable="true"
-            android:paddingLeft="50dp">
-
-            <co.siempo.phone.customviews.RobotoRegularTextView
-                android:id="@+id/txtCustomBackground"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_toLeftOf="@+id/switchCustomBackground"
-                android:lineSpacingExtra="5sp"
-                android:padding="8dp"
-                android:text="@string/custom_background_image_title"
-                android:textColor="?attr/txt_content_title"
-                android:textSize="16sp" />
-
-            <Switch
-                android:id="@+id/switchCustomBackground"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/txtCustomBackground"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="8dp"
-                android:clickable="false" />
+                    <Switch
+                        android:id="@+id/switchDarkTheme"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@+id/txtDarkTheme"
+                        android:layout_marginRight="8dp" />
 
 
-        </RelativeLayout>
+                    <co.siempo.phone.customviews.RobotoRegularTextView
+                        android:id="@+id/txtDarkThemeText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txtDarkTheme"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_toLeftOf="@+id/switchDarkTheme"
+                        android:lineSpacingExtra="4sp"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="0dp"
+                        android:text="@string/dark_theme_text"
+                        android:textColor="?attr/txt_content_color"
+                        android:textSize="14sp" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relCustomBackground"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/relDarkTheme"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:clickable="true"
+                    android:paddingLeft="50dp">
+
+                    <co.siempo.phone.customviews.RobotoRegularTextView
+                        android:id="@+id/txtCustomBackground"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_toLeftOf="@+id/switchCustomBackground"
+                        android:lineSpacingExtra="5sp"
+                        android:padding="8dp"
+                        android:text="@string/custom_background_image_title"
+                        android:textColor="?attr/txt_content_title"
+                        android:textSize="16sp" />
+
+                    <Switch
+                        android:id="@+id/switchCustomBackground"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/txtCustomBackground"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="8dp"
+                        android:clickable="false" />
 
 
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/rel_icon_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/relCustomBackground"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:clickable="true"
+                    android:paddingLeft="50dp">
+
+                    <co.siempo.phone.customviews.RobotoRegularTextView
+                        android:id="@+id/txtIconJunkFoodVisibility"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginTop="8dp"
+                        android:lineSpacingExtra="5sp"
+                        android:padding="8dp"
+                        android:text="@string/icon_label"
+                        android:textColor="?attr/txt_content_title"
+                        android:textSize="16sp" />
+
+                    <Switch
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/txtIconJunkFoodVisibility"
+                        android:layout_alignParentRight="true"
+                        android:visibility="gone"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="8dp"
+                        android:clickable="false" />
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rel_notification_visibility"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/rel_icon_label"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:clickable="true"
+                    android:paddingLeft="50dp"
+                    android:visibility="visible">
+
+                    <co.siempo.phone.customviews.RobotoRegularTextView
+                        android:id="@+id/txtNotificationVisibility"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_toLeftOf="@+id/switchNotification"
+                        android:lineSpacingExtra="5sp"
+                        android:padding="8dp"
+                        android:text="@string/notification"
+                        android:textColor="?attr/txt_content_title"
+                        android:textSize="16sp" />
+
+                    <Switch
+                        android:id="@+id/switchNotification"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/txtNotificationVisibility"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="8dp"
+                        android:clickable="false" />
+
+
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/rel_screen_overlay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/rel_notification_visibility"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:clickable="true"
+                    android:paddingLeft="50dp"
+                    android:visibility="visible">
+
+                    <co.siempo.phone.customviews.RobotoRegularTextView
+                        android:id="@+id/txtScreenOverlayVisibility"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_toLeftOf="@+id/switchScreenOverlay"
+                        android:lineSpacingExtra="5sp"
+                        android:padding="8dp"
+                        android:text="Screen overlay effect"
+                        android:textColor="?attr/txt_content_title"
+                        android:textSize="16sp" />
+
+                    <Switch
+                        android:id="@+id/switchScreenOverlay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/txtScreenOverlayVisibility"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="8dp"
+                        android:clickable="false" />
+                </RelativeLayout>
+
+
+
+
+            </RelativeLayout>
+
+        </ScrollView>
     </RelativeLayout>
-
-</ScrollView>
+</LinearLayout>
 
 

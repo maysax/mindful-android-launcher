@@ -54,7 +54,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:gravity="center"
-        android:text="@string/msg.emptyNotes"
+        android:text="@string/msg_emptyNotes"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/colorAccent"
         android:textStyle="bold"

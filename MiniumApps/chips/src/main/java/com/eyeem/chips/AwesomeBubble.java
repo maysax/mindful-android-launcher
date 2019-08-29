@@ -32,11 +32,9 @@ public class AwesomeBubble {
         text_paint.setTextSize(style.textSize);
 
         int correction = 0;
-        if (android.os.Build.VERSION.SDK_INT >= 18) {
-            // so with 4.3, StaticLayout.getDesiredWidth started giving bad results
-            // adding 1px helps
-            correction = 1;
-        }
+        // so with 4.3, StaticLayout.getDesiredWidth started giving bad results
+        // adding 1px helps
+        correction = 1;
 
         int maximum_w = containerWidth - 4 * style.bubblePadding;
         int desired_w = (int) StaticLayout.getDesiredWidth(text, text_paint) + correction;

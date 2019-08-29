@@ -73,9 +73,9 @@ public class ContactSmsPermissionHelper {
 
     public void checkForContactAndSMSPermission() {
 
-        if (permissionUtil.hasGiven(PermissionUtil
-                .CONTACT_PERMISSION) && permissionUtil.hasGiven(PermissionUtil
-                .SEND_SMS_PERMISSION)) {
+        if (permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)
+                /*&& permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)*/
+                ) {
             if (isFromTokenParser) {
                 router.setCurrent(new TokenItem(TokenItemType.CONTACT));
             } else {
@@ -91,30 +91,28 @@ public class ContactSmsPermissionHelper {
 
         } else {
 
-            if (!permissionUtil.hasGiven(PermissionUtil
-                    .CONTACT_PERMISSION) &&
-                    !permissionUtil.hasGiven(PermissionUtil
-                            .SEND_SMS_PERMISSION)) {
-
+            if (!permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)
+                    /*&& !permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)*/
+                    ) {
                 try {
                     TedPermission.with(context)
                             .setPermissionListener(permissionlistener)
                             .setDeniedMessage(R.string.msg_permission_denied)
                             .setPermissions(new String[]{
                                     Manifest.permission.READ_CONTACTS,
-                                    Manifest
-                                            .permission.WRITE_CONTACTS, Manifest.permission.RECEIVE_SMS,
+                                    Manifest.permission.WRITE_CONTACTS
+                                    /*Manifest.permission.RECEIVE_SMS,
                                     Manifest.permission.SEND_SMS,
-                                    Manifest.permission.READ_SMS})
+                                    Manifest.permission.READ_SMS*/})
                             .check();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
 
-            } else if (!permissionUtil.hasGiven(PermissionUtil
-                    .CONTACT_PERMISSION) && permissionUtil.hasGiven(PermissionUtil
-                    .SEND_SMS_PERMISSION)) {
+            } else if (!permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)
+                    /*&& permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)*/
+                    ) {
 
 
                 try {
@@ -123,17 +121,16 @@ public class ContactSmsPermissionHelper {
                             .setDeniedMessage(R.string.msg_permission_denied)
                             .setPermissions(new String[]{
                                     Manifest.permission.READ_CONTACTS,
-                                    Manifest
-                                            .permission.WRITE_CONTACTS})
+                                    Manifest.permission.WRITE_CONTACTS})
                             .check();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
 
-            } else if (!permissionUtil.hasGiven(PermissionUtil
-                    .SEND_SMS_PERMISSION) && permissionUtil.hasGiven(PermissionUtil
-                    .CONTACT_PERMISSION)) {
+            }/* else if (!permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)
+                    *//*&& permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)*//*
+                    ) {
 
                 try {
                     TedPermission.with(context)
@@ -149,13 +146,7 @@ public class ContactSmsPermissionHelper {
                 }
 
 
-            }
-
-
+            }*/
         }
-
-
     }
-
-
 }

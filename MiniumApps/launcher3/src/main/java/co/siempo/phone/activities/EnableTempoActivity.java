@@ -78,13 +78,13 @@ public class EnableTempoActivity extends CoreActivity {
                         startActivityForResult(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS), PermissionUtil.NOTIFICATION_ACCESS);
                     } else if (btnSubmit.getText().toString().equalsIgnoreCase(getString(R.string.enable_setting_b))) {
                         askForPermission(new String[]{
-                                Manifest.permission.CALL_PHONE,
-                                Manifest.permission.READ_PHONE_STATE,
+                                /*Manifest.permission.CALL_PHONE,*/
+                                /*Manifest.permission.READ_PHONE_STATE,*/
                                 Manifest.permission.READ_CONTACTS,
-                                Manifest.permission.WRITE_CONTACTS,
-                                Manifest.permission.RECEIVE_SMS,
-                                Manifest.permission.SEND_SMS,
-                                Manifest.permission.READ_SMS});
+                                Manifest.permission.WRITE_CONTACTS
+                                /*Manifest.permission.RECEIVE_SMS,*/
+                                /*Manifest.permission.SEND_SMS,*/
+                                /*Manifest.permission.READ_SMS*/});
                     } else if (btnSubmit.getText().toString().equalsIgnoreCase(getString(R.string.enable_setting_c))) {
                         startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
                     } else if (btnSubmit.getText().toString().equalsIgnoreCase(getString(R.string.enable_setting_d))) {
@@ -176,9 +176,9 @@ public class EnableTempoActivity extends CoreActivity {
                 imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshot_notification));
                 imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_aa));
                 btnSubmit.setText(getString(R.string.enable_setting_a));
-            } else if (!permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
+            } else if (/*!permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)
                     || !permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)
-                    || !permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)) {
+                    || */!permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)) {
                 on_the_next.setText(R.string.permission_msg_enable_tempo);
                 imgCenter.setBackground(ContextCompat.getDrawable(this, R.drawable.screenshot_call_sms_contact));
                 imgStep.setBackground(ContextCompat.getDrawable(this, R.drawable.progress_bb));

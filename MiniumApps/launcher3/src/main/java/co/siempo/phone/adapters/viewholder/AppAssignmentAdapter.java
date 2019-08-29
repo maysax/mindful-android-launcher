@@ -2,6 +2,8 @@ package co.siempo.phone.adapters.viewholder;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -116,8 +118,14 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
                 if (bitmap != null) {
                     holder.imgIcon.setImageBitmap(bitmap);
                 } else {
-                    BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, item.activityInfo.packageName);
-                    CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                    ApplicationInfo appInfo = null;
+                    try {
+                        appInfo = context.getPackageManager().getApplicationInfo(item.activityInfo.packageName, PackageManager.GET_META_DATA);
+                        BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(appInfo, context.getPackageManager());
+                        CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
                     Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(item.activityInfo.packageName);
                     holder.imgIcon.setImageDrawable(drawable);
                 }
@@ -154,8 +162,8 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
                     String hashMapToolSettings = new Gson().toJson(map);
                     PrefSiempo.getInstance(context).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
 
-                    new LoadToolPane(context).execute();
-                    if (class_name.equalsIgnoreCase(DashboardActivity.class.getSimpleName().toString())) {
+                    new LoadToolPane().execute();
+                    if (class_name.equalsIgnoreCase(DashboardActivity.CLASS_NAME)) {
                         if (id == 5 && item == null) {
                             new ActivityHelper(context).openNotesApp(false);
                             context.finish();

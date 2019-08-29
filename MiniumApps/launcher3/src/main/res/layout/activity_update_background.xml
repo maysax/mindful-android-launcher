@@ -12,11 +12,89 @@
         app:navigationIcon="@drawable/ic_arrow_back_blue_24dp"
         app:titleTextColor="?attr/toolbar_text_color" />
 
-    <ImageView
-        android:id="@+id/imageView"
+
+    <uk.co.senab.photoview.PhotoView
+        android:id="@+id/ivFullScreen"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
-        android:scaleType="fitXY" />
+        android:background="@color/cardview_dark_background"
+        android:scaleType="fitXY"
+        android:visibility="visible" />
+
+    <RelativeLayout
+        android:id="@+id/hintLayout"
+        android:layout_width="match_parent"
+        android:layout_below="@id/toolbar"
+        android:visibility="visible"
+        android:layout_centerVertical="true"
+        android:background="#45000000"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:adjustViewBounds="true"
+            android:background="#90000000"
+            android:scaleType="fitCenter"
+            android:visibility="visible" />
+
+        <ImageView
+            android:layout_width="@dimen/dp_60"
+            android:src="@drawable/pinch"
+            android:id="@+id/icon1"
+            android:tint="@color/white"
+            android:layout_marginStart="@dimen/dp_60"
+            android:layout_marginTop="@dimen/dp_60"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:layout_height="@dimen/dp_60"/>
+
+        <TextView
+            android:layout_toRightOf="@+id/icon1"
+            android:layout_width="wrap_content"
+            android:layout_alignTop="@+id/icon1"
+            android:layout_marginTop="@dimen/dp_20"
+            android:textColor="@color/white"
+            android:layout_marginStart="@dimen/dp_10"
+            android:text="@string/pinch_hint"
+            android:textSize="@dimen/sp_20"
+            android:id="@+id/txtPinchHint"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:layout_width="@dimen/dp_60"
+            android:src="@drawable/double_tap"
+            android:id="@+id/icon2"
+            android:layout_below="@+id/txtPinchHint"
+            android:layout_marginStart="@dimen/dp_60"
+            android:tint="@color/white"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:layout_height="@dimen/dp_60"/>
+
+        <TextView
+            android:layout_toRightOf="@+id/icon2"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/txtPinchHint"
+            android:textSize="@dimen/sp_20"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_alignTop="@+id/icon2"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:text="@string/double_tap_hint"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+    <!--<com.github.rahatarmanahmed.cpv.CircularProgressView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/progress_view"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:cpv_animAutostart="true"
+        app:cpv_indeterminate="true" />-->
 
 </RelativeLayout>

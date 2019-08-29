@@ -41,6 +41,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -49,7 +50,10 @@ import co.siempo.phone.R;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.AppMenu;
+import co.siempo.phone.models.CategoryAppList;
 import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.service.CategoriesApp;
+import co.siempo.phone.service.ReminderService;
 import co.siempo.phone.utils.LifecycleHandler;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
@@ -57,27 +61,50 @@ import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
 
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_ADDITIONAL_MESSAGE;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_ASSISTANT;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_AUTHENTICATION;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_BANKING;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_BOOKS;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_BROWSER;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_CALCULATOR;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_CALENDAR;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_CALL;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_CAMERA;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_CLOCK;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_CLOUD;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_COURCE;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_DOC;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_EMAIL;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_FILES;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_FITNESS;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_FLASH;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_FOOD;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_HEALTH;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_JOURNAL;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_LANGUAGES;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_LEARNING;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_MAP;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_MEDITATION;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_MESSAGE;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_MICROPHONE;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_MUSIC;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_NEWS;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_NOTES;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_PAYMENT;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_PHOTOS;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_PODCAST;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_RECORDER;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_SEARCH;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_SETTINGS;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_SLEEP;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_TODO;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_TRANSLATE;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_TRANSPORT;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_VIDEO;
+import static co.siempo.phone.main.MainListItemLoader.TOOLS_VOICE;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_WEATHER;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_WELLNESS;
-
 /**
  * Each application should contain an {@link Application} class instance
  * All applications of this project should extend their own application from this class
@@ -104,9 +131,16 @@ public abstract class CoreApplication extends MultiDexApplication {
     private boolean isHideIconBranding = true;
     private boolean isRandomize = true;
     private CrashlyticsCore crashlyticsCore;
+    public List<CategoryAppList> categoryAppList = new ArrayList<>();
     private List<String> runningDownloadigFileList = new ArrayList<>();
 
+
+
+    public List<CategoryAppList> getCategoryAppList(){
+        return categoryAppList;
+    }
     /**
+     *
      * Retrieving the third party app usage time when siempo set as launcher.
      *
      * @return
@@ -272,6 +306,14 @@ public abstract class CoreApplication extends MultiDexApplication {
         }
         setHideIconBranding(PrefSiempo.getInstance(sInstance).read(PrefSiempo.IS_ICON_BRANDING, true));
         setRandomize(PrefSiempo.getInstance(sInstance).read(PrefSiempo.IS_RANDOMIZE_JUNKFOOD, true));
+
+
+        /**
+         * Fetch Category App List
+         */
+        Intent intent = new Intent(this, CategoriesApp.class);
+        startService(intent);
+
     }
 
     /**
@@ -343,6 +385,126 @@ public abstract class CoreApplication extends MultiDexApplication {
                         ().getApplicationByCategory(15).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(15).get(0).activityInfo.packageName : ""));
                 map.put(TOOLS_EMAIL, new AppMenu(true, true, CoreApplication.getInstance
                         ().getApplicationByCategory(16).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(16).get(0).activityInfo.packageName : ""));
+
+                map.put(TOOLS_CLOUD, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(21).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(21).get(0).activityInfo.packageName : ""));
+
+
+                map.put(TOOLS_BOOKS, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(22).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(22).get(0).activityInfo.packageName : ""));
+
+                map.put(TOOLS_AUTHENTICATION, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(23).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(23).get(0).activityInfo.packageName : ""));
+
+
+                map.put(TOOLS_ASSISTANT, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(24).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(24).get(0).activityInfo.packageName : ""));
+
+
+                map.put(TOOLS_ADDITIONAL_MESSAGE, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(25).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(25).get(0).activityInfo.packageName : ""));
+
+                map.put(TOOLS_BANKING, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(26).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(26).get(0).activityInfo.packageName : ""));
+
+
+                map.put(TOOLS_COURCE, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(27).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(27).get(0).activityInfo.packageName : ""));
+
+
+
+                map.put(TOOLS_DOC, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(28).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(28).get(0).activityInfo.packageName : ""));
+
+
+
+
+                map.put(TOOLS_FILES, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(29).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(29).get(0).activityInfo.packageName : ""));
+
+
+                map.put(TOOLS_FLASH, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(30).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(30).get(0).activityInfo.packageName : ""));
+
+
+
+                map.put(TOOLS_HEALTH, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(31).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(31).get(0).activityInfo.packageName : ""));
+
+
+
+                map.put(TOOLS_JOURNAL, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(32).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(32).get(0).activityInfo.packageName : ""));
+
+
+
+                map.put(TOOLS_LANGUAGES, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(33).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(33).get(0).activityInfo.packageName : ""));
+
+
+
+
+                map.put(TOOLS_LEARNING, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(34).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(34).get(0).activityInfo.packageName : ""));
+
+
+
+                map.put(TOOLS_MEDITATION, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(35).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(35).get(0).activityInfo.packageName : ""));
+
+
+
+                map.put(TOOLS_MICROPHONE, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(36).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(36).get(0).activityInfo.packageName : ""));
+
+
+
+
+
+                map.put(TOOLS_NEWS, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(37).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(37).get(0).activityInfo.packageName : ""));
+
+
+
+                map.put(TOOLS_SEARCH, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(38).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(38).get(0).activityInfo.packageName : ""));
+
+
+
+
+                map.put(TOOLS_SETTINGS, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(39).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(39).get(0).activityInfo.packageName : ""));
+
+
+
+
+                map.put(TOOLS_VOICE, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(40).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(40).get(0).activityInfo.packageName : ""));
+
+
+                map.put(TOOLS_SLEEP, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(41).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(41).get(0).activityInfo.packageName : ""));
+
+
+                map.put(TOOLS_CALCULATOR, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(42).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(42).get(0).activityInfo.packageName : ""));
+
+
+                map.put(TOOLS_TRANSLATE, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(43).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(43).get(0).activityInfo.packageName : ""));
+
+                map.put(TOOLS_VIDEO, new AppMenu(false, false, CoreApplication.getInstance
+                        ().getApplicationByCategory(44).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(44).get(0).activityInfo.packageName : ""));
+
+
+
+
+
+
+
+
+
+
 
 
                 String hashMapToolSettings = new Gson().toJson(map);
@@ -939,6 +1101,80 @@ public abstract class CoreApplication extends MultiDexApplication {
 
             case TOOLS_TODO://
                 break;
+
+            case TOOLS_CLOUD://Recorder
+                break;
+
+            case TOOLS_BOOKS://Recorder
+                break;
+
+            case TOOLS_AUTHENTICATION://Recorder
+                break;
+
+            case TOOLS_ASSISTANT://Recorder
+                break;
+
+            case TOOLS_ADDITIONAL_MESSAGE://Recorder
+                break;
+
+            case TOOLS_BANKING://Recorder
+                break;
+
+            case TOOLS_COURCE://Recorder
+                break;
+
+            case TOOLS_DOC://Recorder
+                break;
+
+            case TOOLS_FILES://Recorder
+                break;
+
+            case TOOLS_FLASH://Recorder
+                break;
+
+            case TOOLS_HEALTH://Recorder
+                break;
+
+            case TOOLS_JOURNAL://Recorder
+                break;
+
+            case TOOLS_LANGUAGES://Recorder
+                break;
+
+
+            case TOOLS_LEARNING://Recorder
+                break;
+
+            case TOOLS_MEDITATION://Recorder
+                break;
+
+            case TOOLS_MICROPHONE://Recorder
+                break;
+
+            case TOOLS_NEWS://Recorder
+                break;
+
+            case TOOLS_SEARCH://Recorder
+                break;
+
+            case TOOLS_SETTINGS://Recorder
+                break;
+
+            case TOOLS_VOICE://Recorder
+                break;
+
+            case TOOLS_SLEEP://Recorder
+                break;
+
+            case TOOLS_CALCULATOR://Recorder
+                break;
+
+            case TOOLS_TRANSLATE://Recorder
+                break;
+
+            case TOOLS_VIDEO://Recorder
+                break;
+
             default:
                 break;
         }

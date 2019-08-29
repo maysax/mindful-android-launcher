@@ -189,8 +189,8 @@ public class FavoritesSelectionActivity extends CoreActivity implements AdapterV
                 PrefSiempo.getInstance(FavoritesSelectionActivity.this).write
                         (PrefSiempo.FAVORITE_APPS, adapterList);
                 PrefSiempo.getInstance(FavoritesSelectionActivity.this).write(PrefSiempo.JUNKFOOD_APPS, junkFoodList);
-                new LoadJunkFoodPane(FavoritesSelectionActivity.this).execute();
-                new LoadFavoritePane(FavoritesSelectionActivity.this).execute();
+                new LoadJunkFoodPane(PrefSiempo.getInstance(FavoritesSelectionActivity.this)).execute();
+                new LoadFavoritePane(PrefSiempo.getInstance(FavoritesSelectionActivity.this)).execute();
                 finish();
                 return false;
             }

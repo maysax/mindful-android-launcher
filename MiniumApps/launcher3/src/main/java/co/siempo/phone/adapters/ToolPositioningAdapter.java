@@ -1,10 +1,14 @@
 package co.siempo.phone.adapters;
 
 import android.app.Activity;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -65,8 +69,7 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
                         Collections.swap(arrayList, i, i - 1);
                     }
                 }
-
-                mListChangedListener.onToolItemListChanged(arrayList);
+                mListChangedListener.onToolItemListChanged(arrayList,toPosition);
                 notifyItemMoved(fromPosition, toPosition);
             }
         } catch (Exception e) {
@@ -81,6 +84,7 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
     public void onItemDismiss(int position) {
 
     }
+
 
 
     // Create new views (invoked by the layout manager)
@@ -101,8 +105,6 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
     public void onBindViewHolder(final ItemViewHolder holder, int position) {
         final MainListItem item = arrayList.get(position);
         final AppMenu appMenu = map.get(item.getId());
-
-
         if (null != appMenu && appMenu.isVisible()) {
             holder.linearLayout.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(item.getTitle())) {
@@ -121,8 +123,14 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
                     holder.imgAppIcon.setVisibility(View.VISIBLE);
                     holder.imgAppIcon.setImageBitmap(bitmap);
                 } else {
-                    BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(context, appMenu.getApplicationName());
-                    CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                    ApplicationInfo appInfo = null;
+                    try {
+                        appInfo = context.getPackageManager().getApplicationInfo(appMenu.getApplicationName(), PackageManager.GET_META_DATA);
+                        BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(appInfo, context.getPackageManager());
+                        CoreApplication.getInstance().includeTaskPool(bitmapWorkerTask, null);
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
                     holder.icon.setVisibility(View.VISIBLE);
                     holder.imgAppIcon.setVisibility(View.GONE);
                     holder.icon.setImageResource(item.getDrawable());
@@ -143,6 +151,7 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
             holder.relMenu.setBackgroundResource(drawable);
 
         } else {
+
             holder.relMenu.setBackgroundColor(context.getResources().getColor
                     (R.color.transparent));
         }
@@ -162,6 +171,7 @@ public class ToolPositioningAdapter extends RecyclerView.Adapter<ToolPositioning
 
     @Override
     public int getItemCount() {
+
         return arrayList.size();
     }
 

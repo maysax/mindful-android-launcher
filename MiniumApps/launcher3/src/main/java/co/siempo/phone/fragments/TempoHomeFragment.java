@@ -1,9 +1,14 @@
 package co.siempo.phone.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
@@ -19,15 +24,24 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.ChooseBackgroundActivity;
+import co.siempo.phone.activities.CoreActivity;
+import co.siempo.phone.activities.UpdateBackgroundActivity;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.NotifyBackgroundChange;
 import co.siempo.phone.event.NotifyBackgroundToService;
 import co.siempo.phone.event.ThemeChangeEvent;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.service.ScreenFilterService;
+import co.siempo.phone.util.AppUtils;
 import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.EventBus;
@@ -37,6 +51,7 @@ public class TempoHomeFragment extends CoreFragment {
 
     @ViewById
     Toolbar toolbar;
+
 
     @ViewById
     Switch switchDisableIntentionsControls;
@@ -54,7 +69,27 @@ public class TempoHomeFragment extends CoreFragment {
     Switch switchDarkTheme;
 
     @ViewById
+    Switch switchNotification;
+
+
+    @ViewById
+    Switch switchScreenOverlay;
+
+
+   /* @ViewById
+    Switch switchIconToolsVisibility;
+
+    @ViewById
+    Switch switchIconFavoriteVisibility;
+
+    @ViewById
+    Switch switchIconJunkFoodVisibility;*/
+
+    @ViewById
     RelativeLayout relDarkTheme;
+
+    @ViewById
+    RelativeLayout rel_icon_label;
 
     private PermissionUtil permissionUtil;
 
@@ -140,6 +175,151 @@ public class TempoHomeFragment extends CoreFragment {
 
             }
         });
+
+        /*switchIconToolsVisibility.setChecked(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_ICON_TOOLS_TEXT_VISIBILITY_ENABLE, false));
+        switchIconToolsVisibility.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Switch sb = (Switch) v;
+                if (sb.isChecked()) {
+                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_ICON_TOOLS_TEXT_VISIBILITY_ENABLE, true);
+                } else  {
+                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_ICON_TOOLS_TEXT_VISIBILITY_ENABLE, false);
+                }
+            }
+        });
+
+        switchIconFavoriteVisibility.setChecked(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_ICON_FAVORITE_TEXT_VISIBILITY_ENABLE, false));
+        switchIconFavoriteVisibility.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Switch sb = (Switch) v;
+                if (sb.isChecked()) {
+                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_ICON_FAVORITE_TEXT_VISIBILITY_ENABLE, true);
+                } else  {
+                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_ICON_FAVORITE_TEXT_VISIBILITY_ENABLE, false);
+                }
+            }
+        });
+
+        switchIconJunkFoodVisibility.setChecked(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_ICON_JUNKFOOD_TEXT_VISIBILITY_ENABLE, false));
+        switchIconJunkFoodVisibility.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Switch sb = (Switch) v;
+                if (sb.isChecked()) {
+                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_ICON_JUNKFOOD_TEXT_VISIBILITY_ENABLE, true);
+                } else  {
+                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_ICON_JUNKFOOD_TEXT_VISIBILITY_ENABLE, false);
+                }
+            }
+        });*/
+
+
+        rel_icon_label.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((CoreActivity) getActivity()).loadChildFragment(IconLabelsFragment_.builder().build(), R.id.tempoView);
+            }
+        });
+
+        final View decorView = getActivity().getWindow().getDecorView();
+        final int uiOptions = decorView.getSystemUiVisibility();
+        final int[] newUiOptions = {uiOptions};
+
+        switchNotification.setChecked(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, true));
+        switchNotification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                Switch sb = (Switch) v;
+                if(sb.isChecked())
+                {
+                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, true);
+                }else
+                {
+                    PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, false);
+                }
+                AppUtils.notificationBarManaged(getActivity(), null);
+            }
+        });
+
+        switchScreenOverlay.setChecked(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_SCREEN_OVERLAY, false));
+        switchScreenOverlay.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+                                        Switch sb = (Switch) view;
+                                if(sb.isChecked())
+                                    {
+                                                checkPermissionsForSystemWindow();
+
+                                        }else
+                                {
+                                            PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_SCREEN_OVERLAY, false);
+                                    Intent command = new Intent(getActivity(), ScreenFilterService.class);
+                                    command.putExtra(ScreenFilterService.BUNDLE_KEY_COMMAND, 1);
+                                    getActivity().startService(command);
+                                }
+
+                                    }
+        });
+
+    }
+
+    private void checkPermissionsForSystemWindow() {
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !permissionUtil.hasGiven
+                (PermissionUtil.SYSTEM_WINDOW_ALERT))) {
+            try {
+                TedPermission.with(getActivity())
+                        .setPermissionListener(new PermissionListener() {
+                            @Override
+                            public void onPermissionGranted() {
+                                PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_SCREEN_OVERLAY, true);
+                                Intent command = new Intent(getActivity(), ScreenFilterService.class);
+                                command.putExtra(ScreenFilterService.BUNDLE_KEY_COMMAND, 0);
+                                getActivity().startService(command);
+                            }
+
+                            @Override
+                            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+
+                            }
+                        })
+                        .setDeniedMessage(R.string.msg_permission_denied)
+                        .setPermissions(new String[]{
+                                Manifest.permission.SYSTEM_ALERT_WINDOW})
+                        .check();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            PrefSiempo.getInstance(getActivity()).write(PrefSiempo.DEFAULT_SCREEN_OVERLAY, true);
+            Intent command = new Intent(getActivity(), ScreenFilterService.class);
+            command.putExtra(ScreenFilterService.BUNDLE_KEY_COMMAND, 0);
+            getActivity().startService(command);
+        }
+    }
+
+
+    private void notificationVisibility() {
+
+        if (PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, true))
+        {
+            View decorView = getActivity().getWindow().getDecorView();
+            decorView.setFitsSystemWindows(false);
+            decorView.setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        }else
+        {
+            View decorView = getActivity().getWindow().getDecorView();
+            decorView.setFitsSystemWindows(true);
+        }
     }
 
     @Click
@@ -161,7 +341,9 @@ public class TempoHomeFragment extends CoreFragment {
                             @Override
                             public void onPermissionGranted() {
                                 CoreApplication.getInstance().downloadSiempoImages();
-                                startActivity(new Intent(getActivity(), ChooseBackgroundActivity.class));
+                                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                                intent.setType("image/*");
+                                startActivityForResult(intent, 10);
                             }
 
                             @Override
@@ -181,7 +363,9 @@ public class TempoHomeFragment extends CoreFragment {
             }
         } else {
             CoreApplication.getInstance().downloadSiempoImages();
-            startActivity(new Intent(getActivity(), ChooseBackgroundActivity.class));
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*");
+            startActivityForResult(intent, 10);
         }
     }
 
@@ -202,6 +386,110 @@ public class TempoHomeFragment extends CoreFragment {
     }
 
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Intention screen Wallpaper selection
+        if(requestCode == 10 || requestCode == 7) {
+            switch (requestCode) {
+                case 10:
+                    if(resultCode== Activity.RESULT_OK){
+                        Uri uri=data.getData();
+
+                        if(uri !=null && !TextUtils.isEmpty(uri.toString())){
+
+                            if(uri.toString().contains("com.google.android.apps.photos.contentprovider")){
+                                return;
+                            }
+
+                            if(uri.toString().contains("/storage")){
+                                String[] storagepath=uri.toString().split("/storage");
+                                if(storagepath.length>1){
+                                    String filePath="/storage"+storagepath[1];
+                                    Intent mUpdateBackgroundIntent = new Intent(getActivity(),UpdateBackgroundActivity.class);
+                                    mUpdateBackgroundIntent.putExtra("imageUri", filePath);
+                                    startActivityForResult(mUpdateBackgroundIntent, 3);
+                                }
+                            }
+                            else{
+                                String id = DocumentsContract.getDocumentId(uri);
+
+                                if(!TextUtils.isEmpty(id) && uri!=null){
+
+                                    try {
+                                        InputStream inputStream = getActivity().getContentResolver().openInputStream(uri);
+                                        File file = new File(getActivity().getCacheDir().getAbsolutePath()+"/"+id);
+                                        writeFile(inputStream, file);
+                                        String filePath = file.getAbsolutePath();
+
+                                        if(filePath.contains("raw:")){
+                                            String[] downloadPath=filePath.split("raw:");
+                                            if(downloadPath.length>1){
+                                                filePath =downloadPath[1];
+                                            }
+                                        }
+
+                                        Intent mUpdateBackgroundIntent = new Intent(getActivity(),UpdateBackgroundActivity.class);
+                                        mUpdateBackgroundIntent.putExtra("imageUri", filePath);
+                                        startActivityForResult(mUpdateBackgroundIntent, 3);
+
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                    break;
+                case 7:
+                    if(resultCode == Activity.RESULT_OK){
+                        Uri selectedImage = data.getData();
+                        String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+                        Cursor cursor = getActivity().getContentResolver().query(selectedImage,
+                                filePathColumn, null, null, null);
+                        cursor.moveToFirst();
+                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                        String picturePath = cursor.getString(columnIndex);
+                        cursor.close();
+                        Intent mUpdateBackgroundIntent = new Intent(getActivity(),
+                                UpdateBackgroundActivity
+                                        .class);
+                        mUpdateBackgroundIntent.putExtra("imageUri", picturePath);
+                        startActivityForResult(mUpdateBackgroundIntent, 3);
+                    }
+                    break;
+            }
+        }
+        else{
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+
+    void writeFile(InputStream in, File file) {
+        OutputStream out = null;
+        try {
+            out = new FileOutputStream(file);
+            byte[] buf = new byte[1024];
+            int len;
+            while((len=in.read(buf))>0){
+                out.write(buf,0,len);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                if ( out != null ) {
+                    out.close();
+                }
+                in.close();
+            } catch ( IOException e ) {
+                e.printStackTrace();
+            }
+        }
+    }
     @Click
     void relDarkTheme() {
         switchDarkTheme.performClick();

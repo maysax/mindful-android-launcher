@@ -1,31 +1,52 @@
-# Launcher
+
+# Welcome to Open Source Siempo 💜📱✨
+
+![https://play.google.com/store/apps/details?id=co.siempo.phone](https://i.imgur.com/6QuaRKM.jpg)
 
 
-## Key Features:
+**What:** We are reimagining the design of screens to support mental health, wellbeing and human potential.
 
-### Notification Tempo
-Get notifications batched at set intervals. On the half hour, top of the hour, or once a day like the mail. Select specific apps that may interrupt you.
+**Why**: This is an important problem of our time that is not being meaningfully addressed by the companies who have the resources to do so. They need projects like Siempo to lead innovation and add market pressure.
 
-### Screen Cover
-Siempo can help you reduce app overuse with gentle nudges that reveal the amount of time spent in the app and offer healthier uses of screen time. 
+**How:** We recently pivoted to open source to invite passionate professionals who want to plug into this [humane tech](https:/http://humanetech.com/) movement.
 
-### Enlightened Home Screen
-Siempo replaces the stock Android home screen with a calmer, less distracting interface. More of a zen garden than a Times Square. Customize with a calm image.
-
-### Intention Setting
-From the home screen you can personalize a message you will see every time you unlock your phone. What would be skillful for you to read dozens of times per day?
-
-### Tidy App Menus
-Tiered menu system keeps your tools and favorites closer by, and your distracting apps further away. 
-
-### Muted App Icons
-Unbranded and greyscale app icons prevent you from getting sidetracked and accumulating cognitive load on the way in/out of your phone.
-
-### App Scrambling
-Randomize the location of your distracting apps to prevent unconscious opens and usage.
+![](https://i.imgur.com/MKh6jbC.png)
 
 
-Licensing 
+---
+
+## [**Sign up to get involved and stay updated**](https://docs.google.com/forms/d/1-hqfeXyy8FcCCMX8CZHTRO54enZCf5TMY_ATzScbqaM/edit#responses)
+
+[Roadmap](https://trello.com/b/bVnnjPr4/siempo-development) | [Handbook](https://docs.google.com/document/d/119WKk-H9RbwyDoDzsNj4lKPcjKOrbUDtnEXjFJxhAaw/edit) | [Discord](https://discord.gg/KWZRMRs)  | [Android app](https://play.google.com/store/apps/details?id=co.siempo.phone) | [Chrome extension](https://chrome.google.com/webstore/detail/nudge-by-siempo-beta/hjoookglknijcfdlbcfnehfhicbknemj) | [Contact](mailto:info@siempo.co)
+
+
+
+[![Siempo footage](http://img.youtube.com/vi/VnL7VPwe6A0/0.jpg)](http://www.youtube.com/watch?v=VnL7VPwe6A0)
+
+
+# Current Goals
+---------------------
+
+### Android App 
+Our near term priorities involve adding industry-standard launcher features and improving the existing feature set. This summer we plan on expanding functionality. Seeking *Android developers, designers, data analysts, and QA testers.*
+
+### Browser Extension
+We are in the process of [merging two great chrome extensions](https://github.com/Get-Siempo/siempo-browser-ext) and launching this Siempo product on desktop. Seeking *web developers and designers*.
+
+### iOS App
+We are in the exciting early stages of creating an iOS app. Seeking designers and developers to help us build this from scratch.
+
+
+### And beyond
+Don't see something here? Tell us about your superpowers and what you would like to work on. We need help overhauling our web presence, conducting user research, brainstorming future product direction, getting the word out and more. [**Sign up.**](https://docs.google.com/forms/d/1-hqfeXyy8FcCCMX8CZHTRO54enZCf5TMY_ATzScbqaM/edit#responses)
+
+We seek to experiment with new approaches to innovation, drawing inspiration from the bleeding edge of progressive business culture: collective intelligence, omni-win paradigm, metamodernism, Zebras Unite, Emergent Strategy, Transformative Technology, Conscious Capitalism, Conscious Leadership, feminine economy, design feeling, humane technology and more. 
+
+### [Thank you 🤗🌎](https://www.youtube.com/watch?v=fCF3_WpLA_Q&feature=youtu.be/)
+
+
+
+# Licensing 
 ---------------------
 
 Siempo is proudly licensed under the [GPL v3.0](https://www.gnu.org/licenses/gpl-3.0.txt) license.

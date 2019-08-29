@@ -14,6 +14,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,6 +44,7 @@ import co.siempo.phone.main.SimpleItemTouchHelperCallback;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.service.LoadToolPane;
+import co.siempo.phone.util.AppUtils;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 
@@ -98,17 +100,19 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         } catch (Exception e) {
             e.printStackTrace();
         }
-        StatusBarUtil.setTransparent(this);
+        /*StatusBarUtil.setTranslucent(this);
         boolean read = PrefSiempo.getInstance(this).read(PrefSiempo.IS_DARK_THEME, false);
         if (read) {
             getWindow().setStatusBarColor(getResources().getColor(R.color.black));
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 getWindow().setStatusBarColor(getResources().getColor(R.color.white));
-                getWindow().getDecorView().setSystemUiVisibility(View
-                        .SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             }
-        }
+        }*/
+        AppUtils.notificationBarManaged(this, null);
+        AppUtils.statusBarManaged(this);
+        AppUtils.statusbarColor0(this, 1);
     }
 
     @Override
@@ -144,10 +148,9 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
     @Override
     protected void onPause() {
         super.onPause();
-
         for (int i = 0; i < sortedList.size(); i++) {
-            if (i >= 16) {
-//            if (i >= 12) {
+
+            if (i >= 40) {
                 map.get(sortedList.get(i).getId()).setBottomDoc(true);
             } else {
                 map.get(sortedList.get(i).getId()).setBottomDoc(false);
@@ -156,7 +159,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
 
         String hashMapToolSettings = new Gson().toJson(map);
         PrefSiempo.getInstance(this).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
-        new LoadToolPane(this).execute();
+        new LoadToolPane().execute();
         FirebaseHelper.getInstance().logScreenUsageTime(this.getClass().getSimpleName(), startTime);
 
     }
@@ -172,12 +175,13 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         toolbar.setTitle(R.string.editing_tools);
         setSupportActionBar(toolbar);
         items = new ArrayList<>();
-        new MainListItemLoader(this).loadItemsDefaultApp(items);
+        new MainListItemLoader().loadItemsDefaultApp(items);
         items = PackageUtil.getToolsMenuData(this, items);
         recyclerView = findViewById(R.id.recyclerView);
         txtSelectTools = findViewById(R.id.txtSelectTools);
         recyclerView.setHasFixedSize(true);
         mLayoutManager = new GridLayoutManager(this, 4);
+
         recyclerView.setLayoutManager(mLayoutManager);
         if (itemDecoration != null) {
             recyclerView.removeItemDecoration(itemDecoration);
@@ -226,7 +230,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
     }
 
     @Override
-    public void onToolItemListChanged(ArrayList<MainListItem> customers) {
+    public void onToolItemListChanged(ArrayList<MainListItem> customers, int toposition) {
         ArrayList<Long> listOfSortedCustomerId = new ArrayList<>();
         for (MainListItem customer : customers) {
             listOfSortedCustomerId.add((long) customer.getId());
@@ -236,6 +240,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnToolItemL
         String jsonListOfSortedCustomerIds = gson.toJson(listOfSortedCustomerId);
         PrefSiempo.getInstance(this).write(PrefSiempo.SORTED_MENU, jsonListOfSortedCustomerIds);
     }
+
 
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {

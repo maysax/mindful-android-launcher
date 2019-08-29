@@ -47,7 +47,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="15dp"
                     android:fontFamily="sans-serif-medium"
-                    android:text="@string/title.defaultLauncher"
+                    android:text="@string/title_defaultLauncher"
                     android:textSize="14sp"
                     tools:ignore="UnusedIds" />
 
@@ -78,7 +78,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="15dp"
                     android:fontFamily="sans-serif-medium"
-                    android:text="@string/title.defaultapp"
+                    android:text="@string/title_defaultapp"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -110,7 +110,7 @@
             <!--android:layout_gravity="center_vertical"-->
             <!--android:layout_marginStart="15dp"-->
             <!--android:fontFamily="sans-serif-medium"-->
-            <!--android:text="@string/title.suppressedNotifications"-->
+            <!--android:text="@string/title_suppressedNotifications"-->
             <!--android:textSize="14sp" />-->
 
             <!--</LinearLayout>-->
@@ -190,7 +190,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="15dp"
                     android:fontFamily="sans-serif-medium"
-                    android:text="@string/title.faq"
+                    android:text="@string/title_faq"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -219,7 +219,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="15dp"
                     android:fontFamily="sans-serif-medium"
-                    android:text="@string/title.feedback"
+                    android:text="@string/title_feedback"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -248,7 +248,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="15dp"
                     android:fontFamily="sans-serif-medium"
-                    android:text="@string/title.version"
+                    android:text="@string/title_version"
                     android:textSize="14sp" />
 
             </LinearLayout>

@@ -1,8 +1,10 @@
 package co.siempo.phone.fragments;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
@@ -45,11 +47,13 @@ import android.widget.ViewFlipper;
 
 import com.eyeem.chips.ChipsEditText;
 import com.eyeem.chips.Utils;
+import com.google.gson.Gson;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -75,7 +79,11 @@ import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainFragmentMediator;
 import co.siempo.phone.main.MainListAdapterEvent;
+import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.service.LoadFavoritePane;
+import co.siempo.phone.service.LoadJunkFoodPane;
+import co.siempo.phone.service.LoadToolPane;
 import co.siempo.phone.token.TokenCompleteType;
 import co.siempo.phone.token.TokenItem;
 import co.siempo.phone.token.TokenItemType;
@@ -90,6 +98,8 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
 import me.relex.circleindicator.CircleIndicator;
+
+import static co.siempo.phone.utils.UIUtils.hasUsageStatsPermission;
 
 /**
  * Main class for Tools Pane, Favorites Pane and JunkFood Pane.
@@ -170,6 +180,13 @@ public class PaneFragment extends CoreFragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_pane, container, false);
         linMain = rootView.findViewById(R.id.linMain);
+        linMain.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                ((CoreActivity)getActivity()).gestureDetector.onTouchEvent(motionEvent);
+                return false;
+            }
+        });
         Log.d("Test", "P1");
         context = (CoreActivity) getActivity();
         getColorOfStatusBar();
@@ -259,8 +276,29 @@ public class PaneFragment extends CoreFragment {
                 firstTimeLoad = false;
             }
         }
+
+        //////////////////////
+        if(isVisibleToUser)
+        {
+         changeStatusBar();
+        }
     }
 
+
+    public void changeStatusBar(){
+        String filePath = PrefSiempo.getInstance(context).read(PrefSiempo
+                .DEFAULT_BAG, "");
+        if (!TextUtils.isEmpty(filePath)) {
+            TypedValue typedValue = new TypedValue();
+            Resources.Theme theme = context.getTheme();
+            theme.resolveAttribute(R.attr.image_alpha, typedValue, true);
+            int drawableId = typedValue.resourceId;
+            linMain.setBackgroundColor(ContextCompat.getColor(context,
+                    drawableId));
+            ((DashboardActivity)getActivity()).changeLayoutBackground(ContextCompat.getColor(context,
+                    drawableId));
+        }
+    }
     public void loadView() {
         if (getActivity() != null) {
             getActivity().runOnUiThread(new Runnable() {
@@ -352,11 +390,11 @@ public class PaneFragment extends CoreFragment {
             int drawableId = typedValue.resourceId;
             linMain.setBackgroundColor(ContextCompat.getColor(context,
                     drawableId));
-
-
+            ((DashboardActivity)getActivity()).changeLayoutBackground(ContextCompat.getColor(context,drawableId));
         } else {
             linMain.setBackgroundColor(ContextCompat.getColor(context, R.color
                     .transparent));
+            ((DashboardActivity)getActivity()).changeLayoutBackground(ContextCompat.getColor(context, R.color.transparent));
         }
         getActivity().registerReceiver(mKeyBoardReceiver, new IntentFilter(Utils
                 .KEYBOARD_ACTION));
@@ -384,8 +422,6 @@ public class PaneFragment extends CoreFragment {
         if (searchLayout != null && searchLayout.getVisibility() == View.VISIBLE) {
             updateListViewLayout(false);
         }
-
-
         try {
             if (PrefSiempo.getInstance(context).read(PrefSiempo
                     .APPLAND_TOUR_SEEN, false) && PrefSiempo.getInstance(context).read(PrefSiempo
@@ -396,6 +432,7 @@ public class PaneFragment extends CoreFragment {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+
                         if (isAdded()) {
                             pagerPane.setCurrentItem(1);
                         }
@@ -407,6 +444,7 @@ public class PaneFragment extends CoreFragment {
                                 }
                                 PrefSiempo.getInstance(context).write(PrefSiempo
                                         .IS_AUTOSCROLL, false);
+                                showDialog();
 
                             }
                         }, 700);
@@ -414,10 +452,47 @@ public class PaneFragment extends CoreFragment {
                 }, 800);
                 //delay
             }
+
+            changeStatusBar();
+
+            if(mAdapter !=null){
+                mAdapter.notifyDataSetChanged();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    private void showDialog() {
+        getActivity().setRequestedOrientation(ActivityInfo
+                .SCREEN_ORIENTATION_PORTRAIT);
+        final Dialog overlayDialog = new Dialog(getActivity(), 0);
+        if (overlayDialog.getWindow() != null) {
+            overlayDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        }
+        overlayDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        overlayDialog.setContentView(R.layout.layout_tools_tour);
+        Window window = overlayDialog.getWindow();
+        // set "origin" to bottom
+        window.setGravity(Gravity.BOTTOM);
+        WindowManager.LayoutParams params = window.getAttributes();
+        window.setAttributes(params);
+        overlayDialog.getWindow().setLayout(WindowManager
+                .LayoutParams.MATCH_PARENT, WindowManager
+                .LayoutParams.WRAP_CONTENT);
+
+        overlayDialog.setCancelable(false);
+        overlayDialog.setCanceledOnTouchOutside(false);
+        overlayDialog.show();
+
+        final Button btnNext = overlayDialog.findViewById(R.id.btnNext);
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                overlayDialog.dismiss();
+            }
+        });
+     }
 
     private void bindBottomDock() {
 
@@ -495,16 +570,27 @@ public class PaneFragment extends CoreFragment {
                                         //Show overlay for draw over other apps permission
 
 
+//                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                                            if (!Settings.canDrawOverlays(context) &&
+//                                                    PrefSiempo.getInstance(context).read
+//                                                            (PrefSiempo.DETER_AFTER,
+//                                                                    -1) != -1) {
+//                                                if (null == overlayDialogPermission || !overlayDialogPermission.isShowing())
+//                                                    showOverLayForDrawingPermission();
+//                                            }
+//                                        }
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                            if (!Settings.canDrawOverlays(context) &&
-                                                    PrefSiempo.getInstance(context).read
-                                                            (PrefSiempo.DETER_AFTER,
-                                                                    -1) != -1) {
-                                                if (null == overlayDialogPermission || !overlayDialogPermission.isShowing())
-                                                    showOverLayForDrawingPermission();
+                                            if (!hasUsageStatsPermission(getActivity())) {
+                                                if (!Settings.canDrawOverlays(context) &&
+                                                        PrefSiempo.getInstance(context).read
+                                                                (PrefSiempo.DETER_AFTER,
+                                                                        -1) != -1) {
+                                                    if (null == overlayDialogPermission || !overlayDialogPermission.isShowing())
+
+                                                        showOverLayForDrawingPermission();
+                                                }
                                             }
                                         }
-
 
                                     }
 
@@ -1369,4 +1455,5 @@ public class PaneFragment extends CoreFragment {
 
         }
     }
+
 }

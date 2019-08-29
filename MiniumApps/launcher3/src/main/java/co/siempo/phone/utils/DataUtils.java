@@ -53,6 +53,7 @@ public class DataUtils {
     public static final String NOTE_FONT_SIZE = "fontSize";
     public static final String NOTE_HIDE_BODY = "hideBody";
     private static final String NOTES_ARRAY_NAME = "notes"; // Root object name
+    public static int height = 0;
 
     /**
      * Wrap 'notes' array into a root object and store in file 'toFile'
