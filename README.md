@@ -4,7 +4,7 @@
 ![https://play.google.com/store/apps/details?id=co.siempo.phone](https://i.imgur.com/6QuaRKM.jpg)
 
 
-**What:** We are reimagining the design of screens to support mental health, wellbeing and human potential.
+**What:** We are reimagining the design of screens to support mindful use of technology, wellbeing and human potential by digital detox.
 
 **Why**: This is an important problem of our time that is not being meaningfully addressed by the companies who have the resources to do so. They need projects like Siempo to lead innovation and add market pressure.
 
