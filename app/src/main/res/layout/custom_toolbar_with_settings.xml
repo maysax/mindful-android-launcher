@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="63dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:elevation="8dp"
+        android:minHeight="?attr/actionBarSize"
+        app:contentInsetEnd="0dp"
+        app:contentInsetLeft="0dp"
+        app:contentInsetRight="0dp"
+        app:contentInsetStart="0dp"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        tools:ignore="DuplicateIncludedIds">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/crossActionBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:contentDescription="@null"
+                android:padding="4dp"
+                android:src="@drawable/icon_close_app"
+                tools:ignore="DuplicateIncludedIds" />
+
+            <TextView
+                android:id="@+id/titleActionBar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:text="Mindful Morning"
+                android:textSize="20sp"
+                tools:ignore="DuplicateIncludedIds,HardcodedText" />
+
+            <ImageView
+                android:id="@+id/settingsActionBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="18dp"
+                android:contentDescription="@null"
+                android:padding="4dp"
+                android:src="@drawable/icon_settings"
+                android:visibility="visible"
+                tools:ignore="DuplicateIncludedIds,UnusedIds" />
+
+            <ImageView
+                android:id="@+id/btnListOrGrid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="18dp"
+                android:contentDescription="@null"
+                android:padding="4dp"
+                android:src="@drawable/icon_settings"
+                android:tag="0"
+                android:visibility="gone"
+                tools:ignore="DuplicateIncludedIds,UnusedIds" />
+        </LinearLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+
+
+</RelativeLayout>

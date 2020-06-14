@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/applayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="co.siempo.phone.activities.AppAssignmentActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/toolbar_style"
+        app:navigationIcon="@drawable/ic_arrow_back_blue_24dp"
+        app:titleTextColor="?attr/toolbar_text_color"/>
+
+    <RelativeLayout
+        android:id="@+id/search_bar_app"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
+        android:background="?attr/toolbar_bg"
+        android:elevation="@dimen/dp_5"
+        android:padding="@dimen/dp_8">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="@dimen/dp_10"
+            app:cardCornerRadius="@dimen/dp_2"
+            app:cardUseCompatPadding="true">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/imgSearch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="@dimen/dp_8"
+                    android:background="@drawable/ic_search"/>
+
+                <EditText
+                    android:id="@+id/edtSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/imgClear"
+                    android:layout_toRightOf="@+id/imgSearch"
+                    android:background="@color/transparent"
+                    android:hint="@string/filter_apps"
+                    android:padding="@dimen/dp_8"
+                    android:singleLine="true"
+                    android:text=""
+                    android:textColorHint="?attr/hint_search"
+                    android:textSize="16sp"/>
+
+                <ImageView
+                    android:id="@+id/imgClear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:padding="@dimen/dp_8"
+                    android:src="@drawable/ic_close_blue"
+                    android:visibility="invisible"/>
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/search_bar_app"
+        app:titleTextAppearance="@style/Toolbar.TitleText"/>
+
+    <co.siempo.phone.customviews.RobotoCondensedTextView
+        android:id="@+id/txtErrorMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/recyclerView"
+        android:layout_below="@+id/search_bar_app"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="@dimen/dp_16"
+        android:gravity="center"
+        android:text="@string/no_app_found_or_no_relevant_app"
+        android:textSize="@dimen/sp_20"
+        android:visibility="invisible"/>
+
+    <co.siempo.phone.customviews.RobotoMediumTextView
+        android:id="@+id/txtViewAllapps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="41dp"
+        android:background="@drawable/rounded_border"
+        android:elevation="@dimen/dp_5"
+        android:paddingBottom="@dimen/dp_10"
+        android:paddingLeft="@dimen/dp_14"
+        android:paddingRight="@dimen/dp_14"
+        android:paddingTop="@dimen/dp_10"
+        android:text="@string/btn_viewall_installed"
+
+        android:textAllCaps="true"
+        android:textColor="#DEFFFFFF"
+        android:textSize="14sp"/>
+</RelativeLayout>

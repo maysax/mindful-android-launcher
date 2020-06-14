@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_pause"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/toolbar_style"
+        app:navigationIcon="@drawable/ic_arrow_back_blue_24dp"
+        app:titleTextColor="?attr/toolbar_text_color" />
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/relHideIconBranding"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginRight="@dimen/dp_5"
+                android:layout_marginTop="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:paddingLeft="50dp">
+
+                <co.siempo.phone.customviews.RobotoRegularTextView
+                    android:id="@+id/txtTemp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:lineSpacingExtra="5sp"
+                    android:padding="8dp"
+                    android:text="@string/hide_icon_branding"
+                    android:textColor="?attr/txt_content_title"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:id="@+id/linHide"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/txtRandom"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignTop="@+id/txtRandom"
+                    android:layout_below="@+id/txtRandom"
+                    android:layout_marginRight="8dp">
+
+                    <Switch
+                        android:id="@+id/switchHideIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:clickable="false" />
+                </LinearLayout>
+
+                <co.siempo.phone.customviews.RobotoRegularTextView
+                    android:id="@+id/txtRandom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtTemp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_toLeftOf="@+id/linHide"
+                    android:lineSpacingExtra="4sp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="0dp"
+                    android:text="@string/iconbranding_description_setting"
+                    android:textColor="?attr/txt_content_color"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relReduceOveruseScreen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/relHideIconBranding"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginRight="@dimen/dp_5"
+                android:layout_marginTop="8dp"
+                android:clickable="true"
+                android:paddingLeft="50dp"
+                android:visibility="gone">
+
+                <co.siempo.phone.customviews.RobotoRegularTextView
+                    android:id="@+id/txtReduceOveruseScreen"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:lineSpacingExtra="5sp"
+                    android:padding="8dp"
+                    android:text="@string/reduce_overuse_screen"
+                    android:textColor="?attr/txt_content_title"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:id="@+id/linOverUseScreen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/txtReduceOveruseScreenDes"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/txtReduceOveruseScreen"
+                    android:layout_marginRight="8dp">
+
+                    <Switch
+                        android:id="@+id/switchOveruseScreen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:clickable="false" />
+                </LinearLayout>
+
+                <co.siempo.phone.customviews.RobotoRegularTextView
+                    android:id="@+id/txtReduceOveruseScreenDes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtReduceOveruseScreen"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_toLeftOf="@+id/linOverUseScreen"
+                    android:lineSpacingExtra="4sp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="0dp"
+                    android:text="@string/reduce_overuse_screen_description_setting"
+                    android:textColor="?attr/txt_content_color"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relReduceOveruseFlagged"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/relReduceOveruseScreen"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginRight="@dimen/dp_5"
+                android:layout_marginTop="8dp"
+                android:clickable="true"
+                android:paddingLeft="50dp"
+                android:visibility="visible">
+
+                <co.siempo.phone.customviews.RobotoRegularTextView
+                    android:id="@+id/txtReduceOveruseFlagged"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:lineSpacingExtra="5sp"
+                    android:padding="8dp"
+                    android:text="@string/reduce_overuse_flagged"
+                    android:textColor="?attr/txt_content_title"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:id="@+id/linOverUseFlagged"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/txtReduceOveruseFlaggedDes"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/txtReduceOveruseFlagged"
+                    android:layout_marginRight="8dp">
+
+                    <Switch
+                        android:id="@+id/switchOveruseFlagged"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:clickable="false" />
+                </LinearLayout>
+
+                <co.siempo.phone.customviews.RobotoRegularTextView
+                    android:id="@+id/txtReduceOveruseFlaggedDes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtReduceOveruseFlagged"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_toLeftOf="@+id/linOverUseFlagged"
+                    android:lineSpacingExtra="4sp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="0dp"
+                    android:text="@string/reduce_overuse_Flagged_description_setting"
+                    android:textColor="?attr/txt_content_color"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relJunkFoodmize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/relReduceOveruseFlagged"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginRight="@dimen/dp_5"
+                android:layout_marginTop="8dp"
+                android:clickable="true"
+                android:paddingLeft="50dp">
+
+                <co.siempo.phone.customviews.RobotoRegularTextView
+                    android:id="@+id/txtJunkFoodmize"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:lineSpacingExtra="5sp"
+                    android:padding="8dp"
+                    android:text="@string/randomize_junkfood"
+                    android:textColor="?attr/txt_content_title"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:id="@+id/linJunkFoodmize"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/txtDisableIntentions"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/txtJunkFoodmize"
+                    android:layout_marginRight="8dp">
+
+                    <Switch
+                        android:id="@+id/switchJunkFoodmize"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:clickable="false" />
+                </LinearLayout>
+
+                <co.siempo.phone.customviews.RobotoRegularTextView
+                    android:id="@+id/txtDisableIntentions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtJunkFoodmize"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_toLeftOf="@+id/linJunkFoodmize"
+                    android:lineSpacingExtra="4sp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="0dp"
+                    android:text="@string/junkfood_description_setting"
+
+                    android:textColor="?attr/txt_content_color"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relChooseFlagApp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/relJunkFoodmize"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginRight="@dimen/dp_5"
+                android:layout_marginTop="8dp"
+                android:clickable="true"
+                android:paddingLeft="50dp">
+
+                <co.siempo.phone.customviews.RobotoRegularTextView
+                    android:id="@+id/txtChooseFlagapp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:lineSpacingExtra="5sp"
+                    android:padding="8dp"
+                    android:text="@string/choose_app_flag"
+                    android:textColor="?attr/txt_content_title"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:id="@+id/linChooseFlagapp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/txtChooseFlagappDesc"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/txtChooseFlagapp"
+                    android:layout_marginRight="8dp">
+
+                    <Switch
+                        android:id="@+id/switchChooseFlaggedApp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:clickable="false"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <co.siempo.phone.customviews.RobotoRegularTextView
+                    android:id="@+id/txtChooseFlagappDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtChooseFlagapp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_toLeftOf="@+id/linChooseFlagapp"
+                    android:lineSpacingExtra="4sp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="0dp"
+                    android:text="@string/choose_app_flag_desc"
+                    android:textColor="?attr/txt_content_color"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>
+
+
+

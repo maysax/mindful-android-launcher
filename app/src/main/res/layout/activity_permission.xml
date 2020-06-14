@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical"
+        android:padding="@dimen/margin.4">
+
+        <co.siempo.phone.customviews.RobotoCondensedTextView
+            android:id="@+id/txtPermissionLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/permission_title"
+            android:textSize="18sp" />
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin.3"
+            android:stretchColumns="0">
+
+            <TableRow
+                android:id="@+id/tblContact"
+                android:visibility="gone">
+
+                <co.siempo.phone.customviews.RobotoCondensedTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/contact_permission"
+                    android:textSize="@dimen/text.size.large" />
+
+                <Switch
+                    android:id="@+id/switchContactPermission"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </TableRow>
+
+            <!--<TableRow
+                android:id="@+id/tblCalls"
+                android:layout_marginTop="16dp"
+                android:visibility="gone">
+
+                <co.siempo.phone.customviews.RobotoCondensedTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/call_permission"
+                    android:textSize="@dimen/text.size.large" />
+
+                <Switch
+                    android:id="@+id/switchCallPermission"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tblSMS"
+                android:layout_marginTop="16dp"
+                android:visibility="gone">
+
+                <co.siempo.phone.customviews.RobotoCondensedTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sms_permission"
+                    android:textSize="@dimen/text.size.large" />
+
+                <Switch
+                    android:id="@+id/switchSmsPermission"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </TableRow>-->
+
+            <TableRow
+                android:id="@+id/tblStorage"
+                android:layout_marginTop="16dp"
+                android:visibility="gone">
+
+                <co.siempo.phone.customviews.RobotoCondensedTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/storage_permission"
+                    android:textSize="@dimen/text.size.large" />
+
+                <Switch
+                    android:id="@+id/switchFilePermission"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tblLocation"
+                android:layout_marginTop="16dp"
+                android:visibility="gone">
+
+                <co.siempo.phone.customviews.RobotoCondensedTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/location_permission"
+                    android:textSize="@dimen/text.size.large" />
+
+
+            </TableRow>
+
+
+            <TableRow
+                android:id="@+id/tblNotification"
+                android:layout_marginTop="16dp"
+                android:visibility="gone">
+
+                <co.siempo.phone.customviews.RobotoCondensedTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/notificationAccess"
+                    android:textSize="@dimen/text.size.large" />
+
+                <Switch
+                    android:id="@+id/switchNotificationAccess"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </TableRow>
+
+
+            <TableRow
+                android:id="@+id/tblDrawOverlay"
+                android:layout_marginTop="16dp"
+                android:visibility="gone">
+
+                <co.siempo.phone.customviews.RobotoCondensedTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/draw_overlay"
+                    android:textSize="@dimen/text.size.large" />
+
+                <Switch
+                    android:id="@+id/switchOverlayAccess"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </TableRow>
+            <TableRow
+                android:id="@+id/tblControlAccessUsage"
+                android:layout_marginTop="16dp"
+                android:visibility="gone">
+
+                <co.siempo.phone.customviews.RobotoCondensedTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/control_access_usage"
+                    android:textSize="@dimen/text.size.large" />
+
+                <Switch
+                    android:id="@+id/switchControlAccessUsage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </TableRow>
+
+
+        </TableLayout>
+
+        <Button
+            android:id="@+id/btnContinue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:padding="16dp"
+            android:text="@string/btn_continue" />
+
+
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

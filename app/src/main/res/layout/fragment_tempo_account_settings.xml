@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/activity_account_setting"
+              android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="UselessParent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/toolbar_style"
+            app:navigationIcon="@drawable/ic_arrow_back_blue_24dp"
+            app:titleTextColor="?attr/toolbar_text_color" />
+
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <RelativeLayout
+                    android:id="@+id/relPurchaseSiempo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="50dp"
+                    android:visibility="gone"
+                    tools:ignore="RtlSymmetry">
+
+
+                    <co.siempo.phone.customviews.RobotoRegularTextView
+                        android:id="@+id/txtPurchaseSiempo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginTop="8dp"
+                        android:lineSpacingExtra="5sp"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="4dp"
+                        android:text="@string/lbl_purchaseSiempo"
+                        android:textSize="16sp"
+                        />
+
+                    <co.siempo.phone.customviews.RobotoRegularTextView
+                        android:id="@+id/txtPurchaseSiempoDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/txtPurchaseSiempo"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="60dp"
+                        android:lineSpacingExtra="4sp"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="2dp"
+                        android:text="@string/lbl_freeTrial"
+                        android:textSize="14sp"
+                        />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relUpdateEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/relPurchaseSiempo"
+                    android:paddingLeft="50dp"
+                    tools:ignore="RtlSymmetry">
+
+
+                    <co.siempo.phone.customviews.RobotoRegularTextView
+                        android:id="@+id/txtUpdateEmailAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginTop="8dp"
+                        android:lineSpacingExtra="5sp"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="4dp"
+                        android:text="@string/lbl_updateEmail"
+                        android:textColor="?attr/txt_content_title"
+                        android:textSize="16sp"
+                        />
+
+                    <co.siempo.phone.customviews.RobotoRegularTextView
+                        android:id="@+id/txtUpdateEmailDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/txtUpdateEmailAddress"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="60dp"
+                        android:lineSpacingExtra="4sp"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="2dp"
+                        android:text="@string/lbl_updateEmailDescription"
+                        android:textColor="?attr/txt_content_color"
+                        android:textSize="14sp"
+                        />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relChangeHome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/relUpdateEmail"
+                    android:layout_marginTop="8dp"
+                    android:paddingLeft="50dp"
+                    tools:ignore="RtlSymmetry">
+
+
+                    <co.siempo.phone.customviews.RobotoRegularTextView
+                        android:id="@+id/txtExitSiempoService"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:lineSpacingExtra="5sp"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="4dp"
+                        android:text="@string/lbl_exitSiempo"
+                        android:textColor="?attr/txt_content_title"
+                        android:textSize="16sp"
+                        />
+
+                    <co.siempo.phone.customviews.RobotoRegularTextView
+                        android:id="@+id/txtExitSiempoServiceDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/txtExitSiempoService"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="60dp"
+                        android:lineSpacingExtra="4sp"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="2dp"
+                        android:text="@string/lbl_switchSiempo"
+                        android:textColor="?attr/txt_content_color"
+                        android:textSize="14sp"/>
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/relAnalytics"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/relChangeHome"
+                    android:layout_marginTop="16dp"
+                    android:paddingLeft="50dp"
+                    tools:ignore="RtlSymmetry">
+
+                    <co.siempo.phone.customviews.RobotoRegularTextView
+                        android:id="@+id/txtShareAnalytics"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:lineSpacingExtra="5sp"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="4dp"
+                        android:text="@string/lbl_analytics"
+                        android:textColor="?attr/txt_content_title"
+                        android:textSize="16sp"/>
+
+                    <LinearLayout
+                        android:id="@+id/lbl_analytics_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txtShareAnalytics"
+                        android:orientation="horizontal">
+
+
+                        <co.siempo.phone.customviews.RobotoRegularTextView
+                            android:id="@+id/txt_analytics_description"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginRight="16dp"
+                            android:layout_weight="1"
+                            android:lineSpacingExtra="4sp"
+                            android:paddingBottom="4dp"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:paddingTop="2dp"
+                            android:text="@string/lbl_analytics_description"
+                            android:textColor="?attr/txt_content_color"
+                            android:textSize="14sp"/>
+
+                        <Switch
+                            android:id="@+id/swtch_analytics"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="8dp"/>
+
+
+                    </LinearLayout>
+                </RelativeLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/relAnalytics"
+                    android:orientation="horizontal"
+                    android:paddingLeft="50dp"
+                    tools:ignore="RtlSymmetry">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <co.siempo.phone.customviews.RobotoRegularTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginRight="16dp"
+                            android:layout_weight="1"
+                            android:lineSpacingExtra="4sp"
+                            android:paddingBottom="4dp"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:paddingTop="2dp"
+                            android:text="@string/lbl_analytics_description2"
+                            android:textSize="14sp"
+                            tools:ignore="InefficientWeight"/>
+
+                        <co.siempo.phone.customviews.RobotoCondensedTextView
+                            android:id="@+id/txt_privacyPolicy"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginRight="16dp"
+                            android:lineSpacingExtra="4sp"
+                            android:paddingBottom="4dp"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:paddingTop="2dp"
+                            android:text="@string/privacypolicy_link"
+                            android:textColor="@color/dialog_blue"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <Switch
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="8dp"
+                        android:visibility="invisible"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+        </ScrollView>
+
+
+    </RelativeLayout>
+
+</LinearLayout>
+
+

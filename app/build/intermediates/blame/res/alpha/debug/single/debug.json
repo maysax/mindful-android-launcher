@@ -1,0 +1,1850 @@
+[
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_wellness.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_wellness.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xxxhdpi_hibernate_50.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xxxhdpi\\hibernate_50.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_progress_ee.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\progress_ee.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_list_item.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\list_item.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_list_item_apps.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\list_item_apps.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_fragment_tempo_account_settings.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_tempo_account_settings.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_wallpaper.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_wallpaper.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_fragment_feedback.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_feedback.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_arrow_back_white_24dp.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_arrow_back_white_24dp.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\anim_slide_up_dialog.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\anim\\slide_up_dialog.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_buttonbg.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_buttonbg.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_tool_selection.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_tool_selection.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_files.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_files.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_app_assignement.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_app_assignement.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi_ic_vector_files_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi\\ic_vector_files_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\xml_connections.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\xml\\connections.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_progress_a.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\progress_a.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xhdpi_icon_call.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xhdpi\\icon_call.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_circle_menu.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\circle_menu.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_payment.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_payment.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_favorite_selection.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_favorite_selection.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_recorder.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_recorder.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi_ic_vector_doc_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi\\ic_vector_doc_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_settings_main.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_settings_main.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_circle_menu_unselected.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\circle_menu_unselected.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xxxhdpi_ic_check.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xxxhdpi\\ic_check.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_authenticator_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_authenticator_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xhdpi_hibernate_50.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xhdpi\\hibernate_50.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_course_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_course_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_tranport_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_tranport_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_list_item_junkfoodflag.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\list_item_junkfoodflag.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_native_settings.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_native_settings.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_dock_bg_dark.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_dock_bg_dark.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\animator_enter_from_left.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\animator\\enter_from_left.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_voice_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_voice_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_bottom_dock_bg.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\bottom_dock_bg.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_file.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_file.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xhdpi_ic_vector_sleep_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xhdpi\\ic_vector_sleep_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_play_arrow_transparent_24dp.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_play_arrow_transparent_24dp.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_row_spinner.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\row_spinner.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_indicator_active.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\indicator_active.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_drop_shadow.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\drop_shadow.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_installed_app_bottom_sheet.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\installed_app_bottom_sheet.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_clock.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_clock.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_uninstall.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_uninstall.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_home_popup.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\home_popup.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_recorder.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_recorder.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_sample_image.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\sample_image.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\anim_anim_slide_in_left.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\anim\\anim_slide_in_left.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_rounded_border.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\rounded_border.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_progress_c.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\progress_c.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_language_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_language_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_toolbar.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\toolbar.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_help.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_help.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_default_swipe.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_default_swipe.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_white_new_cloud.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_white_new_cloud.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_fragment_intention.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_intention.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_screenshot_call_sms_contact.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\screenshot_call_sms_contact.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi_ic_vector_health_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi\\ic_vector_health_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xxhdpi_double_tap.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xxhdpi\\double_tap.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_note.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_note.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\anim_slide_out_down.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\anim\\slide_out_down.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xxhdpi_placeholder_blank_contact.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xxhdpi\\placeholder_blank_contact.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_edit.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_edit.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi_ic_vector_news_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi\\ic_vector_news_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_health.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_health.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_voice.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_voice.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_search_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_search_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_language.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_language.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_microphone.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_microphone.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_settings.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_settings.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\anim_animation2.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\anim\\animation2.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\animator_push_down_in.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\animator\\push_down_in.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xxhdpi_hibernate_50.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xxhdpi\\hibernate_50.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xxxhdpi_icon_call.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xxxhdpi\\icon_call.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi_hibernate_50.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi\\hibernate_50.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_music_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_music_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_letter_bottom_border_junkfood.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\letter_bottom_border_junkfood.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_layout_pane_guided_tour.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\layout_pane_guided_tour.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi_ic_vector_browser_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi\\ic_vector_browser_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_update_background.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_update_background.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_todo_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_todo_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_food_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_food_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_doc_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_doc_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\animator_push_up_out.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\animator\\push_up_out.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_button_bounds.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_button_bounds.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_cloud.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_cloud.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_location.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_location.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_calendar.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_calendar.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_siempo_settings.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_siempo_settings.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_weather_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_weather_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_select_normal.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\select_normal.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\animator_slide_out_up.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\animator\\slide_out_up.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_meditation.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_meditation.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xxhdpi_check.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xxhdpi\\check.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_fragment_tempo_settings.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_tempo_settings.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_rounded_card.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\rounded_card.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\xml_pref_notification.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\xml\\pref_notification.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_default_swipe_black.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_default_swipe_black.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xhdpi_ic_check.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xhdpi\\ic_check.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_microphone_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_microphone_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_browser.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_browser.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_installed_app_list_row.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\installed_app_list_row.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_select_tools.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\select_tools.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_center_dock_bg.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_center_dock_bg.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\xml_device_settings.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\xml\\device_settings.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_custom_toolbar_with_settings.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\custom_toolbar_with_settings.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_fitness_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_fitness_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_fragment_icon_labels.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_icon_labels.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\xml_pref_data_sync.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\xml\\pref_data_sync.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_white_todo.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_white_todo.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_tooltip_circle.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\tooltip_circle.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_settings_overlay.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\settings_overlay.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_row.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\row.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\xml_system_settings.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\xml\\system_settings.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_list_application_item_grid_junk.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\list_application_item_grid_junk.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_sleep.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_sleep.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xxxhdpi_icon_close_app.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xxxhdpi\\icon_close_app.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_rounded_tools_list_item.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\rounded_tools_list_item.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_top_dock_gradient_light.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\top_dock_gradient_light.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_icon_browser.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_icon_browser.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xhdpi_placeholder_blank_contact.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xhdpi\\placeholder_blank_contact.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xxhdpi_icon_sms.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xxhdpi\\icon_sms.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_tooltip.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_tooltip.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_calender.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_calender.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_fragment_faq.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_faq.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_notes.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_notes.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_clock.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_clock.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_additional_message.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_additional_message.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\anim_slide_in_tempo_dialog.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\anim\\slide_in_tempo_dialog.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_app_usage.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\app_usage.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_msg_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_msg_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_top_dock_gradient.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\top_dock_gradient.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_check_box_blue_24dp.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_check_box_blue_24dp.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xhdpi_ic_vector_bottom_distracting_app.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xhdpi\\ic_vector_bottom_distracting_app.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_gray_scale_layout_reverse.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\gray_scale_layout_reverse.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_more_vert_black_24dp.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_more_vert_black_24dp.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_fragment_pause_item.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_pause_item.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\mipmap-hdpi_ic_launcher.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_clock_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_clock_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_flash_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_flash_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_installed_app_list.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_installed_app_list.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_bottom_dock_gradient_light.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\bottom_dock_gradient_light.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_email_row.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\email_row.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_progress_cc.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\progress_cc.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xhdpi_ic_vector_voice_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xhdpi\\ic_vector_voice_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_meditation_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_meditation_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_settings_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_settings_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\anim_out_to_left.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\anim\\out_to_left.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_chevron.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_chevron.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_button_next_bg.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\button_next_bg.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_remove_black_24dp.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_remove_black_24dp.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-hdpi_ic_check.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-hdpi\\ic_check.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_button_bg_vector.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\button_bg_vector.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_tool_positioning.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_tool_positioning.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_list_view_note.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\list_view_note.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_layout_appland_tour.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\layout_appland_tour.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_icon_folder.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_icon_folder.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xxxhdpi_icon_settings.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xxxhdpi\\icon_settings.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_books.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_books.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_call_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_call_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_mail.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_mail.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xxhdpi_icon_settings.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xxhdpi\\icon_settings.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_notification_blog3_collapsed.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\notification_blog3_collapsed.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\menu_menu_edit.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\menu\\menu_edit.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_select_pressed.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\select_pressed.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_custom_progress.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\custom_progress.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi_ic_vector_authenticator_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi\\ic_vector_authenticator_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_fitness.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_fitness.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_email.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_email.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_rectagle_menu.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\rectagle_menu.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_layout_tools_tour.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\layout_tools_tour.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\mipmap-mdpi_ic_launcher.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\xml_device_admin.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\xml\\device_admin.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_main.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_recorder_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_recorder_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_fragment_app_menu.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_app_menu.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_translate.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_translate.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_tempo_dailog.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_tempo_dailog.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_mail_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_mail_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_call.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_call.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\anim_out_to_right.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\anim\\out_to_right.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_fragment_tempo_update_email.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_tempo_update_email.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\anim_slide_out_tempo_dialog.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\anim\\slide_out_tempo_dialog.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_notes_overlay.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\notes_overlay.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\anim_fade_in_junk.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\anim\\fade_in_junk.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_siempo_logo.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\siempo_logo.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xxhdpi_icon_call.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xxhdpi\\icon_call.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\xml_personal_settings.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\xml\\personal_settings.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_progress_b_lollipop.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\progress_b_lollipop.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_rounded_card_rotate.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\rounded_card_rotate.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_choose_background_grid_item.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\choose_background_grid_item.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\animator_exit_to_right.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\animator\\exit_to_right.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_email_request.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_email_request.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\animator_push_up_in.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\animator\\push_up_in.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_fragment_junkfood_pane.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_junkfood_pane.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi_siempo_notification_icon.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi\\siempo_notification_icon.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_notes_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_notes_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xxhdpi_siempo_notification_icon.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xxhdpi\\siempo_notification_icon.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi-v11_ic_notifications_black_24dp.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi-v11\\ic_notifications_black_24dp.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_siempo_alpha_settings.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_siempo_alpha_settings.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xhdpi_icon_settings.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xhdpi\\icon_settings.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_tempo_section_header_layout.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\tempo_section_header_layout.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\menu_junkfood_popup.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\menu\\junkfood_popup.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_camera.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_camera.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_in_app_item_list.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_in_app_item_list.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi-v11_ic_info_black_24dp.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi-v11\\ic_info_black_24dp.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_list_main_settings.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\list_main_settings.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_calender_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_calender_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xhdpi_ic_vector_todo_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xhdpi\\ic_vector_todo_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_star_black_24dp.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_star_black_24dp.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_files_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_files_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\menu_app_assign.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\menu\\app_assign.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_siempo_supress_notification.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_siempo_supress_notification.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_tempo_installed_app_list_row.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\tempo_installed_app_list_row.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_close_blue.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_close_blue.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_browser_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_browser_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_fragment_doubletap_control.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_doubletap_control.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\menu_menu_delete.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\menu\\menu_delete.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_wellness.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_wellness.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_progress_dd.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\progress_dd.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_checkbox_selector.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\checkbox_selector.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xxhdpi_ic_check.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xxhdpi\\ic_check.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_fragment_help.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_help.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_junkfood_flagging.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_junkfood_flagging.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\anim_anim_slide_in_right.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\anim\\anim_slide_in_right.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_camera.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_camera.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_additionalmessage_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_additionalmessage_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_bottom_dock_gradient.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\bottom_dock_gradient.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\animator_slide_out_down.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\animator\\slide_out_down.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_assistant.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_assistant.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi_ic_vector_learning_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi\\ic_vector_learning_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_down_arrow.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_down_arrow.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi_ic_vector_additionalmessage_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi\\ic_vector_additionalmessage_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_progress_b.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\progress_b.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_dashboard.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_dashboard.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xxxhdpi_check.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xxxhdpi\\check.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_shortcuts_wallpaper.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\shortcuts_wallpaper.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_color_picker_dialog.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\color_picker_dialog.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_rectagle_blue.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\rectagle_blue.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_fragment_tempo_home.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_tempo_home.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xhdpi_icon_close_app.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xhdpi\\icon_close_app.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_browser_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_browser_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi_ic_vector_assistant_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi\\ic_vector_assistant_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xhdpi_ic_vector_bottom_settings.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xhdpi\\ic_vector_bottom_settings.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_segmented_button_style.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\segmented_button_style.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_view_count_footer.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\view_count_footer.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_selector.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\selector.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_calculator.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_calculator.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_call.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_call.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_transparent_bg_rounded.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\transparent_bg_rounded.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\anim_fade_out.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\anim\\fade_out.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_wellness_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_wellness_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\menu_tempo_notification_popup.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\menu\\tempo_notification_popup.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_progress_aa.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\progress_aa.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_tempo.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_tempo.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_icons_clear_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_icons_clear_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\animator_slide_in_up.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\animator\\slide_in_up.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_course.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_course.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_shortcuts_bottom.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\shortcuts_bottom.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_tick.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\tick.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout-land_gray_scale_layout_reverse.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout-land\\gray_scale_layout_reverse.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_photo.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_photo.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\anim_in_from_right_email.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\anim\\in_from_right_email.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_color_picker_swatch.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\color_picker_swatch.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_news_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_news_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_check_circle_black_24dp.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_check_circle_black_24dp.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xxhdpi_icon_close_app.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xxhdpi\\icon_close_app.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_sleep_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_sleep_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_debug_layout.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\debug_layout.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_custom_notification_card_collapse.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\custom_notification_card_collapse.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_list_item_action.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\list_item_action.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_screenshot_notification.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\screenshot_notification.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_payment.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_payment.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_list_application_item_grid.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\list_application_item_grid.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_divider_tools.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\divider_tools.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi_icon_sms.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi\\icon_sms.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_top_dock_gradient_light_pos.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\top_dock_gradient_light_pos.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_button_bg_enable.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\button_bg_enable.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\anim_out_to_left_email.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\anim\\out_to_left_email.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\animator_exit_to_left.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\animator\\exit_to_left.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_header.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\header.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_permission.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_permission.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_msg.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_msg.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\menu_menu_main.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\menu\\menu_main.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_fragment_tools_pane.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_tools_pane.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi_check.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi\\check.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_tranport.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_tranport.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_fragment_tempo_tbd.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_tempo_tbd.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_health_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_health_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_fragment_pause_pref.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_pause_pref.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_wellness_overlay.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\wellness_overlay.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_weather.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_weather.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\animator_enter_from_right.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\animator\\enter_from_right.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_img_draw_overlay_enable.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\img_draw_overlay_enable.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_doc.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_doc.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_heart.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_heart.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xhdpi_ic_vector_wallpaper.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xhdpi\\ic_vector_wallpaper.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_search.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_search.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_enable_tempo.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_enable_tempo.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\anim_anim_slide_out_right.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\anim\\anim_slide_out_right.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\anim_in_from_right.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\anim\\in_from_right.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_dialog_open_with.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\dialog_open_with.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_flash.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_flash.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_list_item_contacts.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\list_item_contacts.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_todo.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_todo.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\anim_in_from_left.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\anim\\in_from_left.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_button_background_blue.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\button_background_blue.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_distracting_app.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_distracting_app.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_map_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_map_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_notification_card.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\notification_card.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_clock.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\clock.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_list_item_contact_numbers.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\list_item_contact_numbers.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_person_black_24dp.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_person_black_24dp.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_authenticator.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_authenticator.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\anim_animation1.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\anim\\animation1.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xhdpi_ic_vector_additionalmessage_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xhdpi\\ic_vector_additionalmessage_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_news.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_news.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_gray_scale_layout.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\gray_scale_layout.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_course.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_course.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi_ic_vector_meditation_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi\\ic_vector_meditation_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_close_hint.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_close_hint.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi_ic_vector_flash_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi\\ic_vector_flash_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_tools_app_list_row.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\tools_app_list_row.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xxxhdpi_siempo_notification_icon.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xxxhdpi\\siempo_notification_icon.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_button_bg.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\button_bg.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\animator_slide_in_down.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\animator\\slide_in_down.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_browser.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_browser.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout-land_gray_scale_layout.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout-land\\gray_scale_layout.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_cloud_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_cloud_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_tooltip_launcher.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\tooltip_launcher.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\menu_app_assignment_list.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\menu\\app_assignment_list.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xxxhdpi_placeholder_blank_contact.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xxxhdpi\\placeholder_blank_contact.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\anim_fade_in.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\anim\\fade_in.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_progress_a_lollipop.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\progress_a_lollipop.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_transport.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_transport.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_banking_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_banking_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_search_layout.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\search_layout.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_installed_app_grid_row.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\installed_app_grid_row.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_podcast.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_podcast.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_fragment_favorite_pane.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_favorite_pane.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_photos_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_photos_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_fragment_pane.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_pane.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi_ic_vector_journal_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi\\ic_vector_journal_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_list_item_grid.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\list_item_grid.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_rounded_card_app_menu.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\rounded_card_app_menu.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_tempo_settings.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_tempo_settings.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_search.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_search.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_browser.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_browser.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_icon_globe.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_icon_globe.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_arrow_back_gray_24dp.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_arrow_back_gray_24dp.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_star_border_black_24dp.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_star_border_black_24dp.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_map.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_map.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\menu_app_junkfood_flagging.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\menu\\app_junkfood_flagging.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_icon_gallary.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_icon_gallary.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_fragment_contribute.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_contribute.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_color_lens_black_24dp.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_color_lens_black_24dp.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\anim_fade_out_junk.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\anim\\fade_out_junk.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_contribute.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_contribute.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_music.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_music.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_cloud.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_cloud.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_arrow_drop_down_accent_24dp.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_arrow_drop_down_accent_24dp.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_auto_text_rectangle.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\auto_text_rectangle.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_choose_background.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_choose_background.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xhdpi_ic_vector_bottom_wallpaper.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xhdpi\\ic_vector_bottom_wallpaper.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_tranparent.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\tranparent.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_camera_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_camera_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_top_dock_bg.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\top_dock_bg.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_add_black_24dp.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_add_black_24dp.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_video.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_video.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_fragment_privacy_policy.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_privacy_policy.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_app_info.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_app_info.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_learning.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_learning.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_layout_appland_draw_permission.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\layout_appland_draw_permission.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_map.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_map.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_book.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_book.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_notification_dot.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\notification_dot.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_layout_default_launcher.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\layout_default_launcher.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xxxhdpi_icon_sms.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xxxhdpi\\icon_sms.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_white_book.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_white_book.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_layout_top_dock_junk.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\layout_top_dock_junk.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_fragment_terms_services.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_terms_services.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_add_circle_outline_black_24dp.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_add_circle_outline_black_24dp.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_intention_edit.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_intention_edit.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_circle_menu_selected.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\circle_menu_selected.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_app_menus_icon.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\app_menus_icon.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-hdpi_check.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-hdpi\\check.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_color_picker_swatch.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\color_picker_swatch.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_edittext.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\edittext.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_progress_bb.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\progress_bb.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi_ic_check.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi\\ic_check.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi_icon_settings.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi\\icon_settings.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi_icon_call.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi\\icon_call.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_notification_blog4_expanded.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\notification_blog4_expanded.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_fragment_tempo_notifications.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_tempo_notifications.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_notes_tool.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_notes_tool.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi_ic_vector_microphone_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi\\ic_vector_microphone_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_custom_notification_card.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\custom_notification_card.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_journal_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_journal_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_cource_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_cource_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_rounded_auto_text_view.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\rounded_auto_text_view.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi_ic_vector_books_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi\\ic_vector_books_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_list_item_junkfoodflag_red.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\list_item_junkfoodflag_red.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\menu_update_email_menu.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\menu\\update_email_menu.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_learning_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_learning_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_down_arrow_red.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_down_arrow_red.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xhdpi_ic_vector_search_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xhdpi\\ic_vector_search_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_tempo_list_notification.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_tempo_list_notification.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_messages_tool.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_messages_tool.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_indicator_inactive.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\indicator_inactive.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_banking.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_banking.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_letterbottomborder.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\letterbottomborder.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\xml_pref_general.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\xml\\pref_general.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_pull_button.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_pull_button.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_help_tempo.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_help_tempo.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_progress_c_lollipop.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\progress_c_lollipop.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\anim_in_from_left_tour.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\anim\\in_from_left_tour.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xhdpi_check.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xhdpi\\check.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_podcast_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_podcast_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_custom_edit_text_cursor.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\custom_edit_text_cursor.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_check_box_outline_blank_blue_24dp.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_check_box_outline_blank_blue_24dp.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_delete_black_24dp.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_delete_black_24dp.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xxhdpi_pinch.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xxhdpi\\pinch.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_update.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_update.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_progress_d.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\progress_d.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_photos.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_photos.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_assistant_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_assistant_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_fragment_intention_field.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_intention_field.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_layout_top_dock.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\layout_top_dock.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_settings_tempo.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_settings_tempo.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xhdpi_ic_vector_settings_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xhdpi\\ic_vector_settings_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi_icon_close_app.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi\\icon_close_app.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_favorite_apps_positioning.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_favorite_apps_positioning.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_additionalmessage.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_additionalmessage.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_screenshot_launcher.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\screenshot_launcher.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi_placeholder_blank_contact.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi\\placeholder_blank_contact.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_row_subscription.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\row_subscription.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_top_bar_bg.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\top_bar_bg.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_new_cloud.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_new_cloud.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_payment_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_payment_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xhdpi_siempo_notification_icon.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xhdpi\\siempo_notification_icon.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_fragment_old_menu.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_old_menu.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\anim_out_to_right_tour.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\anim\\out_to_right_tour.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\animator_push_down_out.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\animator\\push_down_out.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xxhdpi_image_coverage.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xxhdpi\\image_coverage.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi_ic_vector_banking_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi\\ic_vector_banking_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_siempo_settings_default.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_siempo_settings_default.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_rotate_cover.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_rotate_cover.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_arrow_back_blue_24dp.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_arrow_back_blue_24dp.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\anim_anim_slide_out_left.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\anim\\anim_slide_out_left.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-mdpi_ic_vector_language_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-mdpi\\ic_vector_language_white.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\xml_nfc_tech_filter.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\xml\\nfc_tech_filter.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_messages.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_messages.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_list_item_app_assignment.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\list_item_app_assignment.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_food.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_food.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable-xhdpi_icon_sms.png.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable-xhdpi\\icon_sms.png"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\layout_activity_main_notes.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_main_notes.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_vector_journal.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_vector_journal.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\res\\merged\\alpha\\debug\\drawable_ic_menu_books_white.xml.flat",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\drawable\\ic_menu_books_white.xml"
+    }
+]

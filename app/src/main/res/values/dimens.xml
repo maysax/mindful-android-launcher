@@ -1,0 +1,56 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="menu_grid_margin">15dp</dimen>
+    <dimen name="text_margin" tools:ignore="UnusedResources">16dp</dimen>
+    <dimen name="dp_1">1dp</dimen>
+    <dimen name="dp_2">2dp</dimen>
+    <dimen name="dp_3">3dp</dimen>
+    <dimen name="dp_4">4dp</dimen>
+    <dimen name="dp_5">5dp</dimen>
+    <dimen name="dp_6">6dp</dimen>
+    <dimen name="dp_8">8dp</dimen>
+    <dimen name="dp_10">10dp</dimen>
+    <dimen name="dp_14">14dp</dimen>
+    <dimen name="dp_15">15dp</dimen>
+    <dimen name="dp_16">16dp</dimen>
+    <dimen name="dp_20">20dp</dimen>
+    <dimen name="dp_22">22dp</dimen>
+    <dimen name="dp_24">24dp</dimen>
+    <dimen name="dp_32">32dp</dimen>
+    <dimen name="dp_40">40dp</dimen>
+    <dimen name="dp_46">46dp</dimen>
+    <dimen name="dp_48">48dp</dimen>
+    <dimen name="dp_60">60dp</dimen>
+    <dimen name="sp_20">20sp</dimen>
+    <dimen name="sp_14">14sp</dimen>
+    <dimen name="sp_15">15sp</dimen>
+    <dimen name="sp_18">18sp</dimen>
+    <dimen name="sp_12">12sp</dimen>
+    <dimen name="sp_16">16sp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!--notes dimens-->
+    <dimen name="color_swatch_large">64dip</dimen>
+    <dimen name="color_swatch_small">48dip</dimen>
+    <dimen name="color_swatch_margins_large">8dip</dimen>
+    <dimen name="color_swatch_margins_small">4dip</dimen>
+
+    <!-- margin/padding -->
+    <dimen name="margin.2">8dp</dimen>
+    <dimen name="margin.3">12dp</dimen>
+    <dimen name="margin.4">16dp</dimen>
+    <dimen name="margin.5">20dp</dimen>
+    <dimen name="margin.6">24dp</dimen>
+
+    <!-- Text sizes -->
+    <dimen name="text.size.regular">12sp</dimen>
+    <dimen name="text.size.medium">14sp</dimen>
+    <dimen name="text.size.large">16sp</dimen>
+    <dimen name="text.size.xl">18sp</dimen>
+    <dimen name="text.size.2xl">20sp</dimen>
+    <dimen name="width">100dp</dimen>
+    <dimen name="height">100dp</dimen>
+
+</resources>
