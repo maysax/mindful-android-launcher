@@ -627,17 +627,17 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                     // do something
                     Log.e("download sucessfull", String.valueOf(receivedID));
                     String title = cur.getString(cur.getColumnIndex(DownloadManager.COLUMN_TITLE));
-                    CoreApplication.getInstance().getRunningDownloadigFileList().remove(title);
+                    CoreApplication.getInstance().getRunningDownloadingFileList().remove(title);
                     Log.e("downloaded file", String.valueOf(title));
                 } else if (cur.getInt(index) == DownloadManager.ERROR_UNKNOWN) {
                     String title = cur.getString(cur.getColumnIndex(DownloadManager.COLUMN_TITLE));
-                    if (CoreApplication.getInstance().getRunningDownloadigFileList().contains(title)) {
-                        CoreApplication.getInstance().getRunningDownloadigFileList().remove(title);
+                    if (CoreApplication.getInstance().getRunningDownloadingFileList().contains(title)) {
+                        CoreApplication.getInstance().getRunningDownloadingFileList().remove(title);
                     }
                 } else if (cur.getInt(index) == DownloadManager.PAUSED_WAITING_TO_RETRY) {
                     String title = cur.getString(cur.getColumnIndex(DownloadManager.COLUMN_TITLE));
-                    if (CoreApplication.getInstance().getRunningDownloadigFileList().contains(title)) {
-                        CoreApplication.getInstance().getRunningDownloadigFileList().remove(title);
+                    if (CoreApplication.getInstance().getRunningDownloadingFileList().contains(title)) {
+                        CoreApplication.getInstance().getRunningDownloadingFileList().remove(title);
                     }
                 }
             }

@@ -21,7 +21,6 @@ import android.provider.AlarmClock;
 import android.provider.CalendarContract;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import androidx.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
@@ -33,6 +32,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,7 +57,6 @@ import co.siempo.phone.utils.LifecycleHandler;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
-import org.greenrobot.eventbus.EventBus;
 import io.fabric.sdk.android.Fabric;
 
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_ADDITIONAL_MESSAGE;
@@ -103,6 +103,7 @@ import static co.siempo.phone.main.MainListItemLoader.TOOLS_VIDEO;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_VOICE;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_WEATHER;
 import static co.siempo.phone.main.MainListItemLoader.TOOLS_WELLNESS;
+
 /**
  * Each application should contain an {@link Application} class instance
  * All applications of this project should extend their own application from this class
@@ -111,8 +112,7 @@ import static co.siempo.phone.main.MainListItemLoader.TOOLS_WELLNESS;
  * Created by shahab on 3/17/16.
  */
 
-public abstract class CoreApplication extends MultiDexApplication {
-
+public abstract class CoreApplication extends Application {
     private static CoreApplication sInstance;
     UserManager userManager;
     LauncherApps launcherApps;
@@ -130,15 +130,14 @@ public abstract class CoreApplication extends MultiDexApplication {
     private boolean isRandomize = true;
     private CrashlyticsCore crashlyticsCore;
     public List<CategoryAppList> categoryAppList = new ArrayList<>();
-    private List<String> runningDownloadigFileList = new ArrayList<>();
+    private List<String> runningDownloadingFileList = new ArrayList<>();
 
 
-
-    public List<CategoryAppList> getCategoryAppList(){
+    public List<CategoryAppList> getCategoryAppList() {
         return categoryAppList;
     }
+
     /**
-     *
      * Retrieving the third party app usage time when siempo set as launcher.
      *
      * @return
@@ -166,12 +165,12 @@ public abstract class CoreApplication extends MultiDexApplication {
         return sInstance;
     }
 
-    public List<String> getRunningDownloadigFileList() {
-        return runningDownloadigFileList;
+    public List<String> getRunningDownloadingFileList() {
+        return runningDownloadingFileList;
     }
 
-    public void setRunningDownloadigFileList(List<String> runningDownloadigFileList) {
-        this.runningDownloadigFileList = runningDownloadigFileList;
+    public void setRunningDownloadingFileList(List<String> runningDownloadingFileList) {
+        this.runningDownloadingFileList = runningDownloadingFileList;
     }
 
     public String getBase64EncodedPublicKey() {
@@ -232,6 +231,12 @@ public abstract class CoreApplication extends MultiDexApplication {
 
     public void setListApplicationName(ArrayMap<String, String> listApplicationName) {
         this.listApplicationName = listApplicationName;
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        //MultiDex.install(this);
     }
 
     @Override
@@ -410,11 +415,8 @@ public abstract class CoreApplication extends MultiDexApplication {
                         ().getApplicationByCategory(27).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(27).get(0).activityInfo.packageName : ""));
 
 
-
                 map.put(TOOLS_DOC, new AppMenu(false, false, CoreApplication.getInstance
                         ().getApplicationByCategory(28).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(28).get(0).activityInfo.packageName : ""));
-
-
 
 
                 map.put(TOOLS_FILES, new AppMenu(false, false, CoreApplication.getInstance
@@ -425,55 +427,40 @@ public abstract class CoreApplication extends MultiDexApplication {
                         ().getApplicationByCategory(30).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(30).get(0).activityInfo.packageName : ""));
 
 
-
                 map.put(TOOLS_HEALTH, new AppMenu(false, false, CoreApplication.getInstance
                         ().getApplicationByCategory(31).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(31).get(0).activityInfo.packageName : ""));
-
 
 
                 map.put(TOOLS_JOURNAL, new AppMenu(false, false, CoreApplication.getInstance
                         ().getApplicationByCategory(32).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(32).get(0).activityInfo.packageName : ""));
 
 
-
                 map.put(TOOLS_LANGUAGES, new AppMenu(false, false, CoreApplication.getInstance
                         ().getApplicationByCategory(33).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(33).get(0).activityInfo.packageName : ""));
-
-
 
 
                 map.put(TOOLS_LEARNING, new AppMenu(false, false, CoreApplication.getInstance
                         ().getApplicationByCategory(34).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(34).get(0).activityInfo.packageName : ""));
 
 
-
                 map.put(TOOLS_MEDITATION, new AppMenu(false, false, CoreApplication.getInstance
                         ().getApplicationByCategory(35).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(35).get(0).activityInfo.packageName : ""));
-
 
 
                 map.put(TOOLS_MICROPHONE, new AppMenu(false, false, CoreApplication.getInstance
                         ().getApplicationByCategory(36).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(36).get(0).activityInfo.packageName : ""));
 
 
-
-
-
                 map.put(TOOLS_NEWS, new AppMenu(false, false, CoreApplication.getInstance
                         ().getApplicationByCategory(37).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(37).get(0).activityInfo.packageName : ""));
-
 
 
                 map.put(TOOLS_SEARCH, new AppMenu(false, false, CoreApplication.getInstance
                         ().getApplicationByCategory(38).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(38).get(0).activityInfo.packageName : ""));
 
 
-
-
                 map.put(TOOLS_SETTINGS, new AppMenu(false, false, CoreApplication.getInstance
                         ().getApplicationByCategory(39).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(39).get(0).activityInfo.packageName : ""));
-
-
 
 
                 map.put(TOOLS_VOICE, new AppMenu(false, false, CoreApplication.getInstance
@@ -493,16 +480,6 @@ public abstract class CoreApplication extends MultiDexApplication {
 
                 map.put(TOOLS_VIDEO, new AppMenu(false, false, CoreApplication.getInstance
                         ().getApplicationByCategory(44).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(44).get(0).activityInfo.packageName : ""));
-
-
-
-
-
-
-
-
-
-
 
 
                 String hashMapToolSettings = new Gson().toJson(map);
@@ -1257,12 +1234,12 @@ public abstract class CoreApplication extends MultiDexApplication {
                             Log.d("File Exists", fileName);
                         } else {
                             Uri download_Uri = Uri.parse(strUrl);
-                            if (runningDownloadigFileList == null) {
-                                runningDownloadigFileList = new ArrayList<>();
+                            if (runningDownloadingFileList == null) {
+                                runningDownloadingFileList = new ArrayList<>();
                             }
-                            if (download_Uri != null && !getRunningDownloadigFileList().contains
+                            if (download_Uri != null && !getRunningDownloadingFileList().contains
                                     (fileName)) {
-                                getRunningDownloadigFileList().add(fileName);
+                                getRunningDownloadingFileList().add(fileName);
                                 DownloadManager.Request request = new DownloadManager.Request(download_Uri);
                                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
                                 request.setAllowedOverRoaming(false);

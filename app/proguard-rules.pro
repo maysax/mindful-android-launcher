@@ -19,37 +19,31 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--keep class com.crashlytics.** { *; }
--dontwarn com.crashlytics.**
--dontwarn javax.xml.bind.DatatypeConverter
--dontwarn org.apache.commons.codec.binary.Base64
--dontwarn org.scribe.services.DatatypeConverterEncoder
--dontwarn butterknife.internal.**
 
--dontwarn com.gc.materialdesign.views.**
+# BEGIN GreenDao
+-keepclassmembers class * extends org.greenrobot.greendao.AbstractDao {
+public static java.lang.String TABLENAME;
+}
+-keep class **$Properties { *; }
 
--dontwarn java.awt.**
--dontwarn java.beans.Beans
--dontwarn javax.security.**
--keep class javamail.** {*;}
--keep class javax.mail.** {*;}
--keep class javax.activation.** {*;}
--keep class com.sun.mail.dsn.** {*;}
--keep class com.sun.mail.handlers.** {*;}
--keep class com.sun.mail.smtp.** {*;}
--keep class com.sun.mail.util.** {*;}
--keep class mailcap.** {*;}
--keep class mimetypes.** {*;}
--keep class myjava.awt.datatransfer.** {*;}
--keep class org.apache.harmony.awt.** {*;}
--keep class org.apache.harmony.misc.** {*;}
+# If you DO use SQLCipher:
+# -keep class org.greenrobot.greendao.database.SqlCipherEncryptedHelper { *; }
 
--keepclassmembers class * extends org.greenrobot.**greendao.**AbstractDao
--dontwarn org.greenrobot.greendao.database.**
+# If you do NOT use SQLCipher:
+-dontwarn net.sqlcipher.database.**
+# If you do NOT use RxJava:
+-dontwarn rx.**
+# END GreenDao
 
--dontwarn org.xmlpull.v1.**
--dontwarn okhttp3.**
--keep class okhttp3.** { *; }
--dontwarn okio.**
--dontwarn javax.annotation.Nullable
--dontwarn javax.annotation.ParametersAreNonnullByDefault
+# BEGIN EventBus
+-keepattributes *Annotation*
+-keepclassmembers class * {
+    @org.greenrobot.eventbus.Subscribe <methods>;
+}
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }
+
+# And if you use AsyncExecutor:
+# -keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent {
+#     <init>(java.lang.Throwable);
+# }
+# END EventBus
