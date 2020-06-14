@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "co.siempo.phone"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -24,15 +24,9 @@ android {
     }
 
     buildTypes {
-        debug {
-            debuggable true
+        release {
             minifyEnabled false
             shrinkResources false
-        }
-        release {
-            debuggable false
-            minifyEnabled true
-            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -42,20 +36,18 @@ android {
         alpha {
             dimension "Siempo"
             versionCode 12301
-            versionName "${0}.${0}.${12}.${3}"
+            versionName "0.0.12.3"
         }
         beta {
             dimension "Siempo"
             versionCode 12316
-            versionName "${0}.${1}.${7}.${0}"
+            versionName "0.1.7.0"
         }
     }
 
-    buildFeatures {
-        viewBinding = true
-    }
+    buildFeatures { viewBinding = true }
 
-    dexOptions.jumboMode = true
+    dexOptions { jumboMode = true }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -121,7 +113,9 @@ dependencies {
     implementation 'org.greenrobot:greendao:3.3.0'
     implementation 'org.greenrobot:eventbus:3.2.0'
     implementation 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v1.3.0'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+    implementation('com.crashlytics.sdk.android:crashlytics:2.10.1') {
+        transitive = true
+    }
     implementation 'com.amitshekhar.android:android-networking:0.3.0'
     implementation 'org.jsoup:jsoup:1.11.3'
     implementation 'com.orhanobut:logger:1.11'
@@ -138,7 +132,7 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     // ADD THIS AT THE BOTTOM
     apply plugin: 'com.google.gms.google-services'
