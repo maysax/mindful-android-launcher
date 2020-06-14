@@ -14,7 +14,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        buildConfigField("String", "GIT_SHA", "\"TODO: implement\"")
+        buildConfigField("String", "GIT_SHA", "\"${gitSha}\"")
         buildConfigField("String", "BUILD_TIME", "\"${buildTime}\"")
 
         multiDexEnabled true
