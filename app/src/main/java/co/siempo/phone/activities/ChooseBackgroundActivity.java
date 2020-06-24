@@ -85,8 +85,8 @@ public class ChooseBackgroundActivity extends CoreActivity {
 
     private void bindGridView() {
         mainItemList = new ArrayList<>();
-        final String strDefault = PrefSiempo.getInstance(ChooseBackgroundActivity.this).read(PrefSiempo
-                .DEFAULT_BAG, "");
+        final String strDefault = PrefSiempo.getInstance(ChooseBackgroundActivity.this)
+                .read(PrefSiempo.DEFAULT_BAG, "");
         new AsyncTask<String, String, ArrayList<ImageItem>>() {
             ArrayList<ImageItem> local;
 
@@ -182,8 +182,7 @@ public class ChooseBackgroundActivity extends CoreActivity {
                 } else {
                     if (internalItemList != null && internalItemList.size() > 0) {
                         Intent mUpdateBackgroundIntent = new Intent(ChooseBackgroundActivity.this,
-                                UpdateBackgroundActivity
-                                        .class);
+                                UpdateBackgroundActivity.class);
                         mUpdateBackgroundIntent.putExtra("imageUri", internalItemList.get(position)
                                 .getDrawableId().get(0));
                         startActivityForResult(mUpdateBackgroundIntent, PICK_IMAGE_REQUEST);

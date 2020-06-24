@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
@@ -13,9 +12,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.WindowManager;
 
-import co.siempo.phone.receivers.OrientationChangeReceiver;
-
 import co.siempo.phone.R;
+import co.siempo.phone.receivers.OrientationChangeReceiver;
 import co.siempo.phone.service.ScreenFilterService;
 
 public class ScreenFilterPresenter implements OrientationChangeReceiver.OnOrientationChangeListener,
@@ -220,37 +218,23 @@ public class ScreenFilterPresenter implements OrientationChangeReceiver.OnOrient
     //endregion
 
     private WindowManager.LayoutParams createFilterLayoutParams() {
+        final int type = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+                ? WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+                : WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY;
 
-        WindowManager.LayoutParams wlp;
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            wlp = new WindowManager.LayoutParams(
-                    WindowManager.LayoutParams.MATCH_PARENT,
-                    mScreenManager.getScreenHeight(),
-                    0,
-                    -mScreenManager.getStatusBarHeightPx(),
-                    WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE |
-                            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-                            WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN |
-                            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS |
-                            WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR |
-                            WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
-                    PixelFormat.TRANSLUCENT);
-        } else {
-            wlp = new WindowManager.LayoutParams(
-                    WindowManager.LayoutParams.MATCH_PARENT,
-                    mScreenManager.getScreenHeight(),
-                    0,
-                    -mScreenManager.getStatusBarHeightPx(),
-                    WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY,
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE |
-                            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-                            WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN |
-                            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS |
-                            WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR |
-                            WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
-                    PixelFormat.TRANSLUCENT);
-        }
+        final WindowManager.LayoutParams wlp = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                mScreenManager.getScreenHeight(),
+                0,
+                -mScreenManager.getStatusBarHeightPx(),
+                type,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE |
+                        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+                        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN |
+                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS |
+                        WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR |
+                        WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                PixelFormat.TRANSLUCENT);
 
         wlp.gravity = Gravity.TOP | Gravity.START;
         return wlp;
@@ -282,7 +266,8 @@ public class ScreenFilterPresenter implements OrientationChangeReceiver.OnOrient
     }
 
     private void moveToState(State newState) {
-        if (DEBUG) Log.i(TAG, String.format("Transitioning state from %s to %s", mCurrentState, newState));
+        if (DEBUG)
+            Log.i(TAG, String.format("Transitioning state from %s to %s", mCurrentState, newState));
 
         mCurrentState = newState;
 

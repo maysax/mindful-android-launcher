@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="isIntentionEnable"
+        android:summary="@string/when_intentions_are_disabled_your_home_screen_will_be_blank"
+        android:title="@string/disable_intentions" />
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="isDarkTheme"
+        android:summary="@string/dark_theme_text"
+        android:title="@string/dark_theme" />
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="default_e"
+        android:title="@string/custom_background_image_title" />
+    <Preference
+        android:fragment="co.siempo.phone.preferences.IconLabelsPreferenceFragment"
+        android:title="@string/icon_label" />
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="default_notification"
+        android:title="@string/hide_notification_bar" />
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="default_screen_overlay"
+        android:title="Screen overlay effect" />
+</PreferenceScreen>

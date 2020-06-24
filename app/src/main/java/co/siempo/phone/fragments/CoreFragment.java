@@ -21,7 +21,6 @@ import co.siempo.phone.log.Tracer;
 /**
  * A simple {@link Fragment} subclass.
  */
-@EFragment
 public abstract class CoreFragment extends Fragment {
     protected static final String TRACE_TAG = LogConfig.TRACE_TAG + "MainFragment";
 

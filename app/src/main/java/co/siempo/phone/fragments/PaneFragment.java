@@ -64,7 +64,6 @@ import co.siempo.phone.R;
 import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.activities.JunkfoodFlaggingActivity;
-import co.siempo.phone.activities.SettingsActivity;
 import co.siempo.phone.adapters.MainListAdapter;
 import co.siempo.phone.adapters.PanePagerAdapter;
 import co.siempo.phone.adapters.ToolsMenuAdapter;
@@ -82,6 +81,7 @@ import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainFragmentMediator;
 import co.siempo.phone.main.MainListAdapterEvent;
 import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.preferences.SettingsActivity;
 import co.siempo.phone.token.TokenCompleteType;
 import co.siempo.phone.token.TokenItem;
 import co.siempo.phone.token.TokenItemType;
@@ -111,7 +111,7 @@ public class PaneFragment extends CoreFragment {
     PanePagerAdapter mPagerAdapter;
     private LinearLayout linTopDoc;
     private LinearLayout linPane;
-    private RelativeLayout linBottomDoc;
+    private ViewGroup linBottomDoc;
     private EditText edtSearchToolsRounded;
     private TextView txtTopDockDate;
     private SearchLayout searchLayout;
@@ -489,6 +489,7 @@ public class PaneFragment extends CoreFragment {
 
         mLayoutManager = new GridLayoutManager(getActivity(), 4);
         if (null != recyclerViewBottomDoc) {
+            recyclerViewBottomDoc.setHasFixedSize(true);
             recyclerViewBottomDoc.setLayoutManager(mLayoutManager);
             if (itemDecoration != null) {
                 recyclerViewBottomDoc.removeItemDecoration(itemDecoration);

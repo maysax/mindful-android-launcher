@@ -3,18 +3,17 @@ package co.siempo.phone.util;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-
 import android.view.View;
 import android.view.Window;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+
 import co.siempo.phone.R;
 import co.siempo.phone.utils.PrefSiempo;
 
-public class AppUtils
-{
+public class AppUtils {
     public static int backGroundColor = 0;
     public static int statusBarColorJunk = 0;
     public static int statusBarColorPane = 1;
@@ -77,41 +76,31 @@ public class AppUtils
 
     private static void hideNotification(Activity activity) {
         View decorView = activity.getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         //decorView.setFitsSystemWindows(false);
     }
 
     private static void showNotification(Activity activity) {
         View decorView = activity.getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
-        decorView.setSystemUiVisibility(uiOptions);
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
         //decorView.setFitsSystemWindows(true);
     }
 
-    public static void statusbarColor0(Activity activity, int i)
-    {
-        if(backGroundColor != 0)
-        {
-            if(!PrefSiempo.getInstance(activity).read(PrefSiempo.DEFAULT_BAG_ENABLE, false))
-            {
-                if(!PrefSiempo.getInstance(activity).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, true))
-                {
-                    if(PrefSiempo.getInstance(activity).read(PrefSiempo.IS_DARK_THEME, false))
-                    {
+    public static void statusbarColor0(Activity activity, int i) {
+        if (backGroundColor != 0) {
+            if (!PrefSiempo.getInstance(activity).read(PrefSiempo.DEFAULT_BAG_ENABLE, false)) {
+                if (!PrefSiempo.getInstance(activity).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, true)) {
+                    if (PrefSiempo.getInstance(activity).read(PrefSiempo.IS_DARK_THEME, false)) {
                         cancelLightStatusBar(activity);
-                        activity.getWindow().setStatusBarColor(ContextCompat.getColor(activity , R.color.dark_window));
-                    }else
-                    {
+                        activity.getWindow().setStatusBarColor(ContextCompat.getColor(activity, R.color.dark_window));
+                    } else {
                         changeToLightStatusBar(activity);
-                        activity.getWindow().setStatusBarColor(ContextCompat.getColor(activity , backGroundColor));
+                        activity.getWindow().setStatusBarColor(ContextCompat.getColor(activity, backGroundColor));
                     }
                 }
-            }else
-            {
-                if(!PrefSiempo.getInstance(activity).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, true))
-                {
-                    activity.getWindow().setStatusBarColor(ContextCompat.getColor(activity , R.color.transparent));
+            } else {
+                if (!PrefSiempo.getInstance(activity).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, true)) {
+                    activity.getWindow().setStatusBarColor(ContextCompat.getColor(activity, R.color.transparent));
                 }
             }
         }
@@ -129,25 +118,23 @@ public class AppUtils
     private static void detectNotificationVisibility(final Activity activity) {
         final boolean isEnable = PrefSiempo.getInstance(activity).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, true);
         if (isEnable) {
-            activity.getWindow().getDecorView().setOnSystemUiVisibilityChangeListener
-                    (new View.OnSystemUiVisibilityChangeListener() {
-                        @Override
-                        public void onSystemUiVisibilityChange(int visibility) {
-                            if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                                if (PrefSiempo.getInstance(activity).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, true)) {
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            View decorView = activity.getWindow().getDecorView();
-                                            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-                                            decorView.setSystemUiVisibility(uiOptions);
-                                            //decorView.setFitsSystemWindows(true);
-                                        }
-                                    }, 3000);
+            activity.getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+                @Override
+                public void onSystemUiVisibilityChange(int visibility) {
+                    if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                        if (PrefSiempo.getInstance(activity).read(PrefSiempo.DEFAULT_NOTIFICATION_ENABLE, true)) {
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    View decorView = activity.getWindow().getDecorView();
+                                    decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+                                    //decorView.setFitsSystemWindows(true);
                                 }
-                            }
+                            }, 3000);
                         }
-                    });
+                    }
+                }
+            });
 
         } else {
             showNotification(activity);

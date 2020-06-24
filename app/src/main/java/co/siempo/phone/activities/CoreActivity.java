@@ -55,7 +55,6 @@ import androidx.viewbinding.ViewBinding;
 import com.android.vending.billing.IInAppBillingService;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
-import org.androidannotations.annotations.EActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -74,6 +73,7 @@ import co.siempo.phone.event.JunkAppOpenEvent;
 import co.siempo.phone.helper.Validate;
 import co.siempo.phone.interfaces.NFCInterface;
 import co.siempo.phone.log.Tracer;
+import co.siempo.phone.preferences.SettingsActivity;
 import co.siempo.phone.receivers.ScreenOffAdminReceiver;
 import co.siempo.phone.service.ReminderService;
 import co.siempo.phone.util.AppUtils;
@@ -87,7 +87,6 @@ import co.siempo.phone.utils.PrefSiempo;
  * Created by shahab on 3/17/16.
  */
 
-@EActivity
 public abstract class CoreActivity extends AppCompatActivity implements NFCInterface, GestureDetector.OnGestureListener,
         GestureDetector.OnDoubleTapListener {
 
@@ -469,7 +468,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            handleBackPress();
+            onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -478,24 +477,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     @Subscribe
     public void genericEvent(Object event) {
         // DO NOT code here, it is a generic catch event method
-    }
-
-    @Override
-    public void onBackPressed() {
-        handleBackPress();
-    }
-
-    private void handleBackPress() {
-        try {
-            if (getFragmentManager().getBackStackEntryCount() == 0) {
-                this.finish();
-            } else {
-                getFragmentManager().popBackStack();
-            }
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            e.printStackTrace();
-        }
     }
 
     @Subscribe

@@ -19,6 +19,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.SET_WALLPAPER" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <!--
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
@@ -157,9 +158,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.SiempoPermissionActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.SettingsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.NotificationActivity"
@@ -312,9 +310,17 @@
         <activity
             android:name=".activities.ChooseBackgroundActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.SET_WALLPAPER" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activities.UpdateBackgroundActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".preferences.SettingsActivity"
             android:screenOrientation="portrait" />
     </application>
 </manifest>

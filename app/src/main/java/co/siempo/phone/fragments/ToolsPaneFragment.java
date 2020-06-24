@@ -1,6 +1,5 @@
 package co.siempo.phone.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -16,7 +15,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import co.siempo.phone.R;
@@ -67,6 +65,7 @@ public class ToolsPaneFragment extends CoreFragment {
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
+        AppUtils.notificationBarManaged(requireActivity(), null);
     }
 
 
@@ -96,26 +95,4 @@ public class ToolsPaneFragment extends CoreFragment {
             recyclerView.setAdapter(mAdapter);
         }
     }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        try {
-            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
-            childFragmentManager.setAccessible(true);
-            childFragmentManager.set(this, null);
-
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && getActivity() != null) {
-            AppUtils.notificationBarManaged(getActivity(), null);
-        }
-    }
-
 }

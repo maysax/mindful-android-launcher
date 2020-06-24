@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:key="userEmailId"
+        android:summary="@string/lbl_updateEmailDescription"
+        android:title="@string/lbl_updateEmail" />
+    <Preference
+        android:key="exit_siempo"
+        android:summary="@string/lbl_switchSiempo"
+        android:title="@string/lbl_exitSiempo" />
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="isFireBaseAnalyticsEnable"
+        android:summary="@string/lbl_analytics_description"
+        android:title="@string/lbl_analytics" />
+    <Preference
+        android:key="privacy_policy"
+        android:summary="@string/lbl_analytics_description2" />
+</PreferenceScreen>

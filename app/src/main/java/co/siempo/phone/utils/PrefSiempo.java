@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.preference.PreferenceManager;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -139,7 +141,7 @@ public class PrefSiempo {
     //The context passed into the getInstance should be application level context.
     public static PrefSiempo getInstance(Context context) {
         if (sharedPreferences == null) {
-            sharedPreferences = context.getSharedPreferences(context.getPackageName(), Activity.MODE_PRIVATE);
+            sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
             editor = sharedPreferences.edit();
         }
         return ourInstance;

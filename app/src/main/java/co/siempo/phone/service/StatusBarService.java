@@ -1,5 +1,6 @@
 package co.siempo.phone.service;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.Service;
@@ -21,7 +22,6 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.provider.ContactsContract;
-import androidx.core.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
@@ -36,6 +36,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -71,7 +73,6 @@ import co.siempo.phone.R;
 import co.siempo.phone.activities.AppAssignmentActivity;
 import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.activities.NoteListActivity;
-import co.siempo.phone.activities.SettingsActivity;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBClient;
@@ -88,6 +89,7 @@ import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.preferences.SettingsActivity;
 import co.siempo.phone.utils.CategoryUtils;
 import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
@@ -2541,11 +2543,6 @@ public class StatusBarService extends Service {
                                                     }
                                                 }
                                                 paramsBottom.height = 0;
-                                                isBottomViewVisible = false;
-                                                isTopViewVisible = true;
-                                                if (bottomView.getWindowToken() != null) {
-                                                    wm.removeView(bottomView);
-                                                }
 
                                             } else {
                                                 paramsTop.width = topView
@@ -2562,222 +2559,210 @@ public class StatusBarService extends Service {
                                                     }
                                                 }
                                                 paramsBottom.width = 0;
-                                                isBottomViewVisible = false;
-                                                isTopViewVisible = true;
-                                                if (bottomView.getWindowToken() != null) {
-                                                    wm.removeView(bottomView);
-                                                }
 
                                             }
+                                            isBottomViewVisible = false;
+                                            isTopViewVisible = true;
+                                            if (bottomView.getWindowToken() != null) {
+                                                wm.removeView(bottomView);
+                                            }
 
-                                            txtMessageTop.setVisibility(View
-                                                    .VISIBLE);
+                                            txtMessageTop.setVisibility(View.VISIBLE);
                                             if (null != lnrRotateTop) {
                                                 lnrRotateTop.setVisibility(View.VISIBLE);
                                             }
 
                                             if (null != lnrRotateBottom) {
-                                                lnrRotateBottom.setVisibility
-                                                        (View.GONE);
+                                                lnrRotateBottom.setVisibility(View.GONE);
                                             }
 
-                                            txtMessageBottom.setVisibility
-                                                    (View.GONE);
+                                            txtMessageBottom.setVisibility(View.GONE);
 
                                             if (null != linButtonsTop) {
                                                 linButtonsTop.setVisibility(View.VISIBLE);
                                             }
 
-                                        } else {
+                                        } else if (paramsBottom.gravity == Gravity.BOTTOM) {
+                                            if ((!isLandscape && paramsBottom.height !=
+                                                    (size.y - (getNavigationBarHeight()
+                                                            + getStatusBarHeight())) / 9)
+                                                    || (isLandscape
+                                                    && paramsBottom.height !=
+                                                    size.x / 9)) {
+                                                if (bottomView != null) {
 
-
-                                            if (paramsBottom.gravity == Gravity.BOTTOM) {
-                                                if ((!isLandscape && paramsBottom.height !=
-                                                        (size.y - (getNavigationBarHeight()
-                                                                + getStatusBarHeight())) / 9)
-                                                        || (isLandscape
-                                                        && paramsBottom.height !=
-                                                        size.x / 9)) {
-                                                    if (bottomView != null) {
-
-                                                        if (paramsBottom
-                                                                .gravity == Gravity
-                                                                .BOTTOM) {
-                                                            paramsBottom.height = bottomView.getHeight() / 2;
-                                                            paramsTop.height = paramsBottom.height;
-                                                            paramsTop
-                                                                    .width = ViewGroup.LayoutParams.MATCH_PARENT;
-                                                            paramsBottom
-                                                                    .width = ViewGroup.LayoutParams.MATCH_PARENT;
-                                                        } else {
-                                                            paramsBottom.width =
-                                                                    bottomView.getWidth()
-                                                                            / 2;
-                                                            paramsTop.width =
-                                                                    paramsBottom.width;
-                                                            paramsTop
-                                                                    .height = ViewGroup
-                                                                    .LayoutParams.MATCH_PARENT;
-                                                            paramsBottom
-                                                                    .height = ViewGroup.LayoutParams.MATCH_PARENT;
-                                                        }
-                                                        isCoverTapped = true;
-                                                        bottomView.setLayoutParams(new ViewGroup.LayoutParams
-                                                                (paramsBottom));
-                                                        wm.updateViewLayout(bottomView, paramsBottom);
-                                                        if (paramsBottom.height > 0 && bitmap != null) {
-                                                            Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
-                                                            if (imgBackgroundBottom != null) {
-                                                                imgBackgroundBottom.setImageBitmap(bitbottom);
-                                                            }
-                                                        }
-                                                        if (paramsBottom
-                                                                .height == screenHeightExclusive * 2 / 9) {
-                                                            strCoverMessage = "Ready for a break? " +
-                                                                    "Tap the clock icon.";
-                                                        }
-                                                    }
-
-                                                    if (null != topView) {
-                                                        topView.setLayoutParams(new ViewGroup.LayoutParams
-                                                                (paramsTop));
-                                                        if (topView.getWindowToken() != null) {
-                                                            wm.updateViewLayout(topView, paramsTop);
-                                                            if (paramsTop.height > 0 && bitmap != null) {
-                                                                Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
-                                                                if (imgBackgroundTop != null) {
-                                                                    imgBackgroundTop.setImageBitmap(bit);
-                                                                }
-                                                            }
-
-                                                        } else {
-                                                            wm.addView(topView, paramsTop);
-                                                            if (paramsTop.height > 0 && bitmap != null) {
-                                                                Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
-                                                                if (imgBackgroundTop != null) {
-                                                                    imgBackgroundTop.setImageBitmap(bit);
-                                                                }
-                                                            }
-
-                                                        }
-                                                    }
-                                                    if (txtMessageBottom.getVisibility() == View.VISIBLE) {
-                                                        txtMessageTop.setVisibility(View.VISIBLE);
-                                                        txtMessageBottom.setVisibility(View.GONE);
-                                                    }
-                                                    if (coverTimeForWindow > 0 && coverTimeForWindow < 6) {
-                                                        lnrRotateTop.setVisibility(View
-                                                                .VISIBLE);
-                                                        lnrRotateBottom
-                                                                .setVisibility(View.GONE);
+                                                    if (paramsBottom
+                                                            .gravity == Gravity
+                                                            .BOTTOM) {
+                                                        paramsBottom.height = bottomView.getHeight() / 2;
+                                                        paramsTop.height = paramsBottom.height;
+                                                        paramsTop
+                                                                .width = ViewGroup.LayoutParams.MATCH_PARENT;
+                                                        paramsBottom
+                                                                .width = ViewGroup.LayoutParams.MATCH_PARENT;
                                                     } else {
-                                                        lnrRotateTop.setVisibility(View.GONE);
+                                                        paramsBottom.width =
+                                                                bottomView.getWidth()
+                                                                        / 2;
+                                                        paramsTop.width =
+                                                                paramsBottom.width;
+                                                        paramsTop
+                                                                .height = ViewGroup
+                                                                .LayoutParams.MATCH_PARENT;
+                                                        paramsBottom
+                                                                .height = ViewGroup.LayoutParams.MATCH_PARENT;
                                                     }
-                                                    if (null != linButtonsTop &&
-                                                            linButtonsTop
-                                                                    .getVisibility() == View.VISIBLE) {
-                                                        linButtonsTop
-                                                                .setVisibility(View.GONE);
-                                                    }
-                                                    isBottomViewVisible = true;
-                                                    isTopViewVisible = true;
-                                                }
-                                            } else {
-
-                                                if ((!isLandscape &&
-                                                        paramsBottom.width !=
-                                                                size.x / 9)
-                                                        || (isLandscape
-                                                        && paramsBottom.height !=
-                                                        (size.y - (getNavigationBarHeight()
-                                                                + getStatusBarHeight())) / 9)) {
-                                                    if (bottomView != null) {
-
-                                                        if (paramsBottom
-                                                                .gravity == Gravity
-                                                                .BOTTOM) {
-                                                            paramsBottom.height = bottomView.getHeight() / 2;
-                                                            paramsTop.height = paramsBottom.height;
-                                                            paramsTop
-                                                                    .width = ViewGroup.LayoutParams.MATCH_PARENT;
-                                                            paramsBottom
-                                                                    .width = ViewGroup.LayoutParams.MATCH_PARENT;
-                                                        } else {
-                                                            paramsBottom.width =
-                                                                    bottomView.getWidth()
-                                                                            / 2;
-                                                            paramsTop.width =
-                                                                    paramsBottom.width;
-                                                            paramsTop
-                                                                    .height = ViewGroup
-                                                                    .LayoutParams.MATCH_PARENT;
-                                                            paramsBottom
-                                                                    .height = ViewGroup.LayoutParams.MATCH_PARENT;
-                                                        }
-                                                        isCoverTapped = true;
-                                                        bottomView.setLayoutParams(new ViewGroup.LayoutParams
-                                                                (paramsBottom));
-                                                        wm.updateViewLayout(bottomView, paramsBottom);
-                                                        if (paramsBottom.height > 0 && bitmap != null) {
-                                                            Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
-                                                            if (imgBackgroundBottom != null) {
-                                                                imgBackgroundBottom.setImageBitmap(bitbottom);
-                                                            }
-                                                        }
-                                                        if (paramsBottom
-                                                                .height == screenHeightExclusive * 2 / 9) {
-                                                            strCoverMessage = "Ready for a break? " +
-                                                                    "Tap the clock icon.";
+                                                    isCoverTapped = true;
+                                                    bottomView.setLayoutParams(new ViewGroup.LayoutParams
+                                                            (paramsBottom));
+                                                    wm.updateViewLayout(bottomView, paramsBottom);
+                                                    if (paramsBottom.height > 0 && bitmap != null) {
+                                                        Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
+                                                        if (imgBackgroundBottom != null) {
+                                                            imgBackgroundBottom.setImageBitmap(bitbottom);
                                                         }
                                                     }
-
-                                                    if (null != topView) {
-                                                        topView.setLayoutParams(new ViewGroup.LayoutParams
-                                                                (paramsTop));
-                                                        if (topView.getWindowToken() != null) {
-                                                            wm.updateViewLayout(topView, paramsTop);
-                                                            if (paramsTop.height > 0 && bitmap != null) {
-                                                                Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
-                                                                if (imgBackgroundTop != null) {
-                                                                    imgBackgroundTop.setImageBitmap(bit);
-                                                                }
-                                                            }
-
-                                                        } else {
-                                                            wm.addView(topView, paramsTop);
-                                                            if (paramsTop.height > 0 && bitmap != null) {
-                                                                Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
-                                                                if (imgBackgroundTop != null) {
-                                                                    imgBackgroundTop.setImageBitmap(bit);
-                                                                }
-                                                            }
-
-                                                        }
+                                                    if (paramsBottom
+                                                            .height == screenHeightExclusive * 2 / 9) {
+                                                        strCoverMessage = "Ready for a break? " +
+                                                                "Tap the clock icon.";
                                                     }
-                                                    if (txtMessageBottom.getVisibility() == View.VISIBLE) {
-                                                        txtMessageTop.setVisibility(View.VISIBLE);
-                                                        txtMessageBottom.setVisibility(View.GONE);
-                                                    }
-                                                    if (coverTimeForWindow > 0 && coverTimeForWindow < 6) {
-                                                        lnrRotateTop.setVisibility(View
-                                                                .VISIBLE);
-                                                        lnrRotateBottom
-                                                                .setVisibility(View.GONE);
-                                                    } else {
-                                                        lnrRotateTop.setVisibility(View.GONE);
-                                                    }
-                                                    if (null != linButtonsTop &&
-                                                            linButtonsTop
-                                                                    .getVisibility() == View.VISIBLE) {
-                                                        linButtonsTop
-                                                                .setVisibility(View.GONE);
-                                                    }
-                                                    isBottomViewVisible = true;
-                                                    isTopViewVisible = true;
                                                 }
 
+                                                if (null != topView) {
+                                                    topView.setLayoutParams(new ViewGroup.LayoutParams
+                                                            (paramsTop));
+                                                    if (topView.getWindowToken() != null) {
+                                                        wm.updateViewLayout(topView, paramsTop);
+                                                        if (paramsTop.height > 0 && bitmap != null) {
+                                                            Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
+                                                            if (imgBackgroundTop != null) {
+                                                                imgBackgroundTop.setImageBitmap(bit);
+                                                            }
+                                                        }
 
+                                                    } else {
+                                                        wm.addView(topView, paramsTop);
+                                                        if (paramsTop.height > 0 && bitmap != null) {
+                                                            Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
+                                                            if (imgBackgroundTop != null) {
+                                                                imgBackgroundTop.setImageBitmap(bit);
+                                                            }
+                                                        }
+
+                                                    }
+                                                }
+                                                if (txtMessageBottom.getVisibility() == View.VISIBLE) {
+                                                    txtMessageTop.setVisibility(View.VISIBLE);
+                                                    txtMessageBottom.setVisibility(View.GONE);
+                                                }
+                                                if (coverTimeForWindow > 0 && coverTimeForWindow < 6) {
+                                                    lnrRotateTop.setVisibility(View
+                                                            .VISIBLE);
+                                                    lnrRotateBottom
+                                                            .setVisibility(View.GONE);
+                                                } else {
+                                                    lnrRotateTop.setVisibility(View.GONE);
+                                                }
+                                                if (null != linButtonsTop &&
+                                                        linButtonsTop
+                                                                .getVisibility() == View.VISIBLE) {
+                                                    linButtonsTop
+                                                            .setVisibility(View.GONE);
+                                                }
+                                                isBottomViewVisible = true;
+                                                isTopViewVisible = true;
                                             }
+                                        } else if ((!isLandscape &&
+                                                paramsBottom.width !=
+                                                        size.x / 9)
+                                                || (isLandscape
+                                                && paramsBottom.height !=
+                                                (size.y - (getNavigationBarHeight()
+                                                        + getStatusBarHeight())) / 9)) {
+                                            if (bottomView != null) {
+
+                                                if (paramsBottom
+                                                        .gravity == Gravity
+                                                        .BOTTOM) {
+                                                    paramsBottom.height = bottomView.getHeight() / 2;
+                                                    paramsTop.height = paramsBottom.height;
+                                                    paramsTop
+                                                            .width = ViewGroup.LayoutParams.MATCH_PARENT;
+                                                    paramsBottom
+                                                            .width = ViewGroup.LayoutParams.MATCH_PARENT;
+                                                } else {
+                                                    paramsBottom.width =
+                                                            bottomView.getWidth()
+                                                                    / 2;
+                                                    paramsTop.width =
+                                                            paramsBottom.width;
+                                                    paramsTop
+                                                            .height = ViewGroup
+                                                            .LayoutParams.MATCH_PARENT;
+                                                    paramsBottom
+                                                            .height = ViewGroup.LayoutParams.MATCH_PARENT;
+                                                }
+                                                isCoverTapped = true;
+                                                bottomView.setLayoutParams(new ViewGroup.LayoutParams
+                                                        (paramsBottom));
+                                                wm.updateViewLayout(bottomView, paramsBottom);
+                                                if (paramsBottom.height > 0 && bitmap != null) {
+                                                    Bitmap bitbottom = Bitmap.createBitmap(bitmap, 0, screenHeightExclusive - paramsBottom.height, bitmap.getWidth(), paramsBottom.height);
+                                                    if (imgBackgroundBottom != null) {
+                                                        imgBackgroundBottom.setImageBitmap(bitbottom);
+                                                    }
+                                                }
+                                                if (paramsBottom
+                                                        .height == screenHeightExclusive * 2 / 9) {
+                                                    strCoverMessage = "Ready for a break? " +
+                                                            "Tap the clock icon.";
+                                                }
+                                            }
+
+                                            if (null != topView) {
+                                                topView.setLayoutParams(new ViewGroup.LayoutParams
+                                                        (paramsTop));
+                                                if (topView.getWindowToken() != null) {
+                                                    wm.updateViewLayout(topView, paramsTop);
+                                                    if (paramsTop.height > 0 && bitmap != null) {
+                                                        Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
+                                                        if (imgBackgroundTop != null) {
+                                                            imgBackgroundTop.setImageBitmap(bit);
+                                                        }
+                                                    }
+
+                                                } else {
+                                                    wm.addView(topView, paramsTop);
+                                                    if (paramsTop.height > 0 && bitmap != null) {
+                                                        Bitmap bit = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), paramsTop.height);
+                                                        if (imgBackgroundTop != null) {
+                                                            imgBackgroundTop.setImageBitmap(bit);
+                                                        }
+                                                    }
+
+                                                }
+                                            }
+                                            if (txtMessageBottom.getVisibility() == View.VISIBLE) {
+                                                txtMessageTop.setVisibility(View.VISIBLE);
+                                                txtMessageBottom.setVisibility(View.GONE);
+                                            }
+                                            if (coverTimeForWindow > 0 && coverTimeForWindow < 6) {
+                                                lnrRotateTop.setVisibility(View
+                                                        .VISIBLE);
+                                                lnrRotateBottom
+                                                        .setVisibility(View.GONE);
+                                            } else {
+                                                lnrRotateTop.setVisibility(View.GONE);
+                                            }
+                                            if (null != linButtonsTop &&
+                                                    linButtonsTop
+                                                            .getVisibility() == View.VISIBLE) {
+                                                linButtonsTop
+                                                        .setVisibility(View.GONE);
+                                            }
+                                            isBottomViewVisible = true;
+                                            isTopViewVisible = true;
                                         }
 
                                     }
@@ -3205,7 +3190,7 @@ public class StatusBarService extends Service {
         if (!strImage.equalsIgnoreCase("")) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (ContextCompat.checkSelfPermission(context,
-                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     bindArrayOfImage(strImage);
                 }
             } else {

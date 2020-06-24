@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="isSleepEnable"
+        android:summary="@string/message_sleep_mode"
+        android:title="@string/sleep" />
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="isDnDEnable"
+        android:summary="@string/message_dnd_mode"
+        android:title="@string/dnd" />
+</PreferenceScreen>
