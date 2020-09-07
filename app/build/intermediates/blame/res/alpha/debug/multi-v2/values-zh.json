@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\merged.dir\\values-zh\\values-zh.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\famil\\.gradle\\caches\\transforms-2\\files-2.1\\734f4328616dc635b6520b23b8b80948\\jetified-AppUpdater-2.6.4\\res\\values-zh\\values-zh.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,111,165,218,280,403,534,630,719,785",
+                        "endColumns": "55,53,52,61,122,130,95,88,65,87",
+                        "endOffsets": "106,160,213,275,398,529,625,714,780,868"
+                    }
+                }
+            ]
+        }
+    ]
+}

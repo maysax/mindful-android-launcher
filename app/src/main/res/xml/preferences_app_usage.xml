@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="is_icon_branding"
+        android:summary="@string/iconbranding_description_setting"
+        android:title="@string/hide_icon_branding" />
+    <ListPreference
+        android:defaultValue="-1"
+        android:dialogTitle="Deter after"
+        android:entries="@array/deter_after_dialog"
+        android:entryValues="@array/deter_after_entries"
+        android:key="deter_after_minutes"
+        android:summary="@string/reduce_overuse_Flagged_description_setting"
+        android:title="@string/reduce_overuse_flagged" />
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="is_randomize_junkfood"
+        android:summary="@string/junkfood_description_setting"
+        android:title="@string/randomize_junkfood" />
+    <Preference
+        android:key="choose_flagged_apps"
+        android:summary="@string/choose_app_flag_desc"
+        android:title="@string/choose_app_flag" />
+</PreferenceScreen>

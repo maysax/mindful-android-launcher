@@ -1,0 +1,2 @@
+11:13:15.71 [Execution worker for ':' Thread 5] ERROR o.a.i.h.AndroidManifestFinder:151 - Could not find the AndroidManifest.xml file, using  generation folder [F:\Privat\Siempo\app\build\generated\ap_generated_sources\alphaDebug\out])
+11:16:48.697 [Execution worker for ':' Thread 3] ERROR o.a.i.h.AndroidManifestFinder:151 - Could not find the AndroidManifest.xml file, using  generation folder [F:\Privat\Siempo\app\build\generated\ap_generated_sources\alphaDebug\out])

@@ -1,0 +1,144 @@
+apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao'
+apply plugin: 'io.fabric'
+apply plugin: 'com.google.firebase.firebase-perf'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        applicationId "co.siempo.phone"
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        buildConfigField("String", "GIT_SHA", "\"${gitSha}\"")
+        buildConfigField("String", "BUILD_TIME", "\"${buildTime}\"")
+
+        multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
+
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
+
+    lintOptions {
+        // To suppress STRING_TOO_LARGE error TODO: find cause and fix
+        abortOnError false
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    flavorDimensions "Siempo"
+    productFlavors {
+        alpha {
+            dimension "Siempo"
+            versionCode 12301
+            versionName "0.0.12.3"
+        }
+        beta {
+            dimension "Siempo"
+            versionCode 12316
+            versionName "0.1.7.0"
+        }
+    }
+
+    buildFeatures { viewBinding = true }
+
+    // this allows to reference 2^16 instead of 2^32 strings in the dex file.
+    // try enabling this when the build fails
+    // dexOptions { jumboMode = true }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    // workaround for "duplicate files during packaging of APK" issueOnPrefer
+    // see https://groups.google.com/d/msg/adt-dev/bl5Rc4Szpzg/wC8cylTWuIEJ
+    packagingOptions {
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
+}
+
+greendao {
+    schemaVersion 4
+}
+
+repositories {
+    // needed for AppUpdater
+    maven { url "https://jitpack.io" }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation project(path: ':chips')
+    /**
+     * Support libraries
+     */
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.preference:preference:1.1.1'
+    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    //implementation 'androidx.multidex:multidex:2.0.1'
+
+    /**
+     * Play services and firebase
+     */
+    implementation "com.google.android.gms:play-services-location:17.0.0"
+    implementation 'com.google.firebase:firebase-core:17.4.3'
+    implementation 'com.google.firebase:firebase-database:19.3.0'
+    implementation 'com.google.firebase:firebase-perf:19.0.7'
+
+    /**
+     * Graphics libraries
+     */
+    implementation 'com.github.clans:fab:1.6.4'
+    implementation 'me.relex:circleindicator:1.2.2'
+    implementation 'com.commit451:PhotoView:1.2.4'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation 'rongi.rotate-layout:rotate-layout:3.0.0'
+    implementation 'com.jaeger.statusbarutil:library:1.4.0'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
+
+    /**
+     * Utility libraries
+     */
+    implementation 'org.greenrobot:greendao:3.3.0'
+    implementation 'org.greenrobot:eventbus:3.2.0'
+    implementation 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v1.3.0'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+    implementation 'com.amitshekhar.android:android-networking:0.3.0'
+    implementation 'org.jsoup:jsoup:1.13.1'
+    implementation 'com.orhanobut:logger:1.11'
+    implementation 'gun0912.ted:tedpermission:2.2.0'
+    implementation 'com.github.javiersantos:AppUpdater:2.7'
+    implementation 'com.rvalerio:fgchecker:1.1.0'
+    // currently unused, should be removed in the future
+    implementation 'org.androidannotations:androidannotations-api:4.7.0'
+
+    /**
+     * Evernote
+     */
+    implementation 'com.evernote:android-sdk:2.0.0-RC4'
+
+    testImplementation 'junit:junit:4.13'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    // ADD THIS AT THE BOTTOM
+    apply plugin: 'com.google.gms.google-services'
+}

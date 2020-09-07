@@ -1,0 +1,418 @@
+[
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\color_picker_dialog.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\color_picker_dialog.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\gray_scale_layout_reverse.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\gray_scale_layout_reverse.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\notification_card.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\notification_card.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\fragment_contribute.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_contribute.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\fragment_old_menu.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_old_menu.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\debug_layout.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\debug_layout.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\custom_toolbar_with_settings.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\custom_toolbar_with_settings.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\view_count_footer.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\view_count_footer.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_main.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\fragment_intention.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_intention.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_favorite_selection.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_favorite_selection.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\tools_app_list_row.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\tools_app_list_row.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_permission.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_permission.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_intention_edit.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_intention_edit.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\fragment_favorite_pane.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_favorite_pane.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_email_request.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_email_request.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_enable_tempo.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_enable_tempo.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\layout_pane_guided_tour.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\layout_pane_guided_tour.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\fragment_privacy_policy.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_privacy_policy.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_favorite_apps_positioning.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_favorite_apps_positioning.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_help.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_help.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\toolbar.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\toolbar.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\color_picker_swatch.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\color_picker_swatch.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\search_layout.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\search_layout.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\fragment_feedback.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_feedback.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_update.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_update.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\row_spinner.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\row_spinner.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\fragment_pause_pref.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_pause_pref.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\header.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\header.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\installed_app_list_row.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\installed_app_list_row.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_siempo_settings_default.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_siempo_settings_default.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_main_notes.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_main_notes.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\installed_app_bottom_sheet.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\installed_app_bottom_sheet.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_siempo_alpha_settings.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_siempo_alpha_settings.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_tool_selection.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_tool_selection.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\fragment_faq.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_faq.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\row_subscription.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\row_subscription.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\fragment_tempo_settings.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_tempo_settings.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\list_view_note.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\list_view_note.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\fragment_app_menu.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_app_menu.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_app_assignement.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_app_assignement.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\list_item.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\list_item.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_dashboard.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_dashboard.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_tempo_settings.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_tempo_settings.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\choose_background_grid_item.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\choose_background_grid_item.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\fragment_icon_labels.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_icon_labels.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\fragment_tools_pane.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_tools_pane.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\layout_appland_tour.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\layout_appland_tour.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\layout_top_dock_junk.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\layout_top_dock_junk.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\list_application_item_grid_junk.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\list_application_item_grid_junk.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\row.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\row.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\notification_blog4_expanded.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\notification_blog4_expanded.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_settings_main.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_settings_main.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\custom_notification_card_collapse.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\custom_notification_card_collapse.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\notification_blog3_collapsed.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\notification_blog3_collapsed.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\list_item_action.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\list_item_action.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\fragment_pause_item.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_pause_item.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\shortcuts_bottom.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\shortcuts_bottom.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\fragment_tempo_tbd.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_tempo_tbd.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\shortcuts_wallpaper.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\shortcuts_wallpaper.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_siempo_settings.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_siempo_settings.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_edit.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_edit.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\fragment_tempo_home.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_tempo_home.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\email_row.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\email_row.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\list_application_item_grid.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\list_application_item_grid.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\fragment_tempo_update_email.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_tempo_update_email.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\list_item_contact_numbers.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\list_item_contact_numbers.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\layout_appland_draw_permission.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\layout_appland_draw_permission.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\fragment_tempo_notifications.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_tempo_notifications.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_choose_background.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_choose_background.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_in_app_item_list.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_in_app_item_list.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\fragment_junkfood_pane.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_junkfood_pane.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\fragment_tempo_account_settings.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_tempo_account_settings.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\dialog_open_with.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\dialog_open_with.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_tool_positioning.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_tool_positioning.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\list_item_junkfoodflag.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\list_item_junkfoodflag.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_siempo_supress_notification.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_siempo_supress_notification.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\list_main_settings.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\list_main_settings.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\home_popup.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\home_popup.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\fragment_intention_field.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_intention_field.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\tooltip_launcher.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\tooltip_launcher.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_native_settings.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_native_settings.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\fragment_doubletap_control.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_doubletap_control.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\tempo_section_header_layout.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\tempo_section_header_layout.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\layout_default_launcher.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\layout_default_launcher.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\gray_scale_layout.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\gray_scale_layout.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\list_item_contacts.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\list_item_contacts.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\tempo_installed_app_list_row.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\tempo_installed_app_list_row.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\list_item_grid.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\list_item_grid.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\list_item_junkfoodflag_red.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\list_item_junkfoodflag_red.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\layout_top_dock.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\layout_top_dock.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_tempo.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_tempo.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\fragment_help.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_help.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_junkfood_flagging.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_junkfood_flagging.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\layout_tools_tour.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\layout_tools_tour.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\installed_app_grid_row.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\installed_app_grid_row.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\list_item_apps.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\list_item_apps.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\fragment_pane.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_pane.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\fragment_terms_services.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\fragment_terms_services.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_installed_app_list.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_installed_app_list.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\list_item_app_assignment.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\list_item_app_assignment.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_update_background.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_update_background.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\activity_tempo_list_notification.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\activity_tempo_list_notification.xml"
+    },
+    {
+        "merged": "F:\\Privat\\Siempo\\app\\build\\intermediates\\incremental\\mergeAlphaDebugResources\\stripped.dir\\layout\\custom_notification_card.xml",
+        "source": "F:\\Privat\\Siempo\\app\\src\\main\\res\\layout\\custom_notification_card.xml"
+    }
+]

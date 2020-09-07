@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:fragment="co.siempo.phone.preferences.AppearancePreferencesFragment"
+        android:title="@string/home_screen" />
+    <Preference
+        android:fragment="co.siempo.phone.preferences.AppUsagePreferencesFragment"
+        android:title="@string/app_menus" />
+    <Preference
+        android:fragment="co.siempo.phone.preferences.NotificationPreferencesFragment"
+        android:title="@string/string_notification_title" />
+    <Preference
+        android:fragment="co.siempo.phone.preferences.DoubleTapPreferencesFragment"
+        android:title="@string/string_doubletap_title" />
+    <Preference
+        android:fragment="co.siempo.phone.preferences.AccountPreferencesFragment"
+        android:title="@string/string_account_service_title" />
+    <Preference
+        android:key="alpha"
+        android:persistent="false"
+        android:title="@string/alpha_settings" />
+</PreferenceScreen>

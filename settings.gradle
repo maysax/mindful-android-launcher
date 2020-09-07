@@ -1,0 +1,3 @@
+include ':chips'
+include ':app'
+rootProject.name = "Siempo"

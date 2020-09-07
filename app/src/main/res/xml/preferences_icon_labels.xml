@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <SwitchPreferenceCompat
+        android:key="default_tools_o"
+        android:title="@string/icon_tools_screen" />
+    <SwitchPreferenceCompat
+        android:key="default_favorite_o"
+        android:title="@string/icon_favorite_screen" />
+    <SwitchPreferenceCompat
+        android:key="default_junkfood_o"
+        android:title="@string/icon_junkfood_screen" />
+</PreferenceScreen>

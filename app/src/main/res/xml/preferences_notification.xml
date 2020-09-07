@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:icon="@drawable/ic_tempo_dailog"
+        android:key="select_apps_that_may_interrupt"
+        android:summary="@string/notification_interrupt_description"
+        android:title="@string/notification_interrupt_title" />
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:summaryOff="@string/msg_allowpeaking"
+        android:summaryOn="@string/msg_allowpeakingon"
+        android:title="@string/allow_peaking" />
+</PreferenceScreen>
